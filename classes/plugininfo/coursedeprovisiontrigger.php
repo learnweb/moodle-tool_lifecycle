@@ -23,14 +23,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_couse_deprovision\plugininfo;
+namespace local_course_deprovision\plugininfo;
 
 use core\plugininfo\base;
 
 defined('MOODLE_INTERNAL') || die();
 
 
-class trigger extends base {
+class coursedeprovisiontrigger extends base {
     public function is_uninstall_allowed() {
         if ($this->is_standard()) {
             return false;
