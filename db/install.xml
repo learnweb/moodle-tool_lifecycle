@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <XMLDB PATH="local/course_deprovision/db" VERSION="2017040900" COMMENT="XMLDB file for Moodle local/course_deprovision"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
->
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
   <TABLES>
-
+    <TABLE NAME="local_coursedeprov_process" COMMENT="table containing the state of all courses currently within the deprovision process">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true" COMMENT="id of the process"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="course id"/>
+        <FIELD NAME="subplugin_id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the subplugin currently responsible for this course"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid_fk" TYPE="unique" FIELDS="courseid" COMMENT="Foreign key on course table"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>
