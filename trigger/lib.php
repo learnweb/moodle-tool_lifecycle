@@ -23,11 +23,11 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace local_course_deprovision;
+namespace local_course_deprovision\trigger;
 
 defined('MOODLE_INTERNAL') || die();
 
-public interface trigger_base {
+interface base {
 
 
     /**

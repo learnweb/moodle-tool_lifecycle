@@ -26,7 +26,7 @@ namespace local_course_deprovision;
 
 defined('MOODLE_INTERNAL') || die();
 
-public class SubpluginResponse {
+class SubpluginResponse {
 
     const NOTTRIGGERED = 'nottriggered';
     const TRIGGERED = 'triggered';
