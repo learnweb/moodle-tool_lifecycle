@@ -26,4 +26,4 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->version  = 2017040900;
-$plugin->component = 'local_course_deprovision_trigger_startdatedelay';
+$plugin->component = 'coursedeprovisiontrigger_startdatedelay';

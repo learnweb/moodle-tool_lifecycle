@@ -29,4 +29,4 @@ $string['pluginname'] = 'Course Deprovision';
 $string['plugintitle'] = 'Course Deprovision';
 
 $string['subplugintype_coursedeprovisiontrigger'] = 'Trigger for starting the course deprovision';
-$string['subplugintype_coursedeprovisiontriggerplural'] = 'Triggers for starting the course deprovision';
+$string['subplugintype_coursedeprovisiontrigger_plural'] = 'Triggers for starting the course deprovision';

@@ -22,7 +22,8 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
-$subplgins = array(
+$subplugins = array(
   'coursedeprovisiontrigger' => 'local/course_deprovision/trigger',
 );
