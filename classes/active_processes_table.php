@@ -32,7 +32,9 @@ class active_processes_table extends \table_sql {
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
+        global $PAGE;
         $this->set_sql("courseid, subplugin_id", '{local_coursedeprov_process}', "TRUE");
+        $this->define_baseurl($PAGE->url);
         $this->init();
     }
 
