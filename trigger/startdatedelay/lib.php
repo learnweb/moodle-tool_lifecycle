@@ -26,7 +26,7 @@
 namespace local_course_deprovision\trigger;
 
 defined('MOODLE_INTERNAL') || die();
-require_once(__DIR__.'../lib.php');
+require_once(__DIR__.'/../lib.php');
 
 /**
  * Class which implements the basic methods necessary for a course deprovision trigger subplugin
