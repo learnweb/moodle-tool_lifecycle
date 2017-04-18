@@ -15,20 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course Deprovision langauge strings.
+ * Table listing active processes
  *
- * @package    local
+ * @package local
  * @subpackage course_deprovision
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace local_course_deprovision;
 
+defined('MOODLE_INTERNAL') || die;
 
+require_once($CFG->libdir . '/tablelib.php');
 
-$string['pluginname'] = 'Course Deprovision';
-$string['plugintitle'] = 'Course Deprovision';
+class active_processes_table extends \table_sql {
 
-$string['subplugintype_coursedeprovisiontrigger'] = 'Trigger for starting the course deprovision';
-$string['subplugintype_coursedeprovisiontrigger_plural'] = 'Triggers for starting the course deprovision';
+    public function __construct($uniqueid) {
+        parent::__construct($uniqueid);
+        $this->set_sql("courseid, subplugin_id", '{local_coursedeprov_process}', "TRUE");
+        $this->init();
+    }
 
-$string['active_processes_list_header'] = 'List of Active Course Deprovision Processes';
+    public function init() {
+        $this->define_columns(['courseid', 'subplugin_id']);
+        $this->define_headers(['c', 's']);
+        $this->setup();
+    }
+}

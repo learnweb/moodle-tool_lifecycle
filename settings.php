@@ -15,20 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course Deprovision langauge strings.
+ * Settings page which gives an overview over running deprovision processes.
  *
- * @package    local
+ * @package local
  * @subpackage course_deprovision
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die;
 
+if ($hassiteconfig) { // needs this condition or there is error on login page
+    require_once(__DIR__ . '/adminlib.php');
 
-
-$string['pluginname'] = 'Course Deprovision';
-$string['plugintitle'] = 'Course Deprovision';
-
-$string['subplugintype_coursedeprovisiontrigger'] = 'Trigger for starting the course deprovision';
-$string['subplugintype_coursedeprovisiontrigger_plural'] = 'Triggers for starting the course deprovision';
-
-$string['active_processes_list_header'] = 'List of Active Course Deprovision Processes';
+    $ADMIN->add('localplugins', new local_course_deprovision\admin_page_active_processes());
+}

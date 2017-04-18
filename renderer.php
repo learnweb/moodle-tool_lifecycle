@@ -15,20 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course Deprovision langauge strings.
+ * Renderer for course deprovision
  *
- * @package    local
- * @subpackage course_deprovision
+ * @package local
+ * @subpackage course deprovision
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
+class local_course_deprovision_renderer extends plugin_renderer_base {
 
-
-$string['pluginname'] = 'Course Deprovision';
-$string['plugintitle'] = 'Course Deprovision';
-
-$string['subplugintype_coursedeprovisiontrigger'] = 'Trigger for starting the course deprovision';
-$string['subplugintype_coursedeprovisiontrigger_plural'] = 'Triggers for starting the course deprovision';
-
-$string['active_processes_list_header'] = 'List of Active Course Deprovision Processes';
+}
