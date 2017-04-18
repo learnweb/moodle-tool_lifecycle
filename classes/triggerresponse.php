@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Possible Responses of a Subplugin
+ * Possible Responses of a Trigger Subplugin
  *
  * @package local
  * @subpackage course_deprovision
@@ -26,15 +26,16 @@ namespace local_course_deprovision;
 
 defined('MOODLE_INTERNAL') || die();
 
-class SubpluginResponse {
+class TriggerResponse {
 
-    const PROCEED = 'proceed';
-    const WAITING = 'waiting';
+    const NEXT = 'next';
+    const EXCLUDE = 'exclude';
+    const TRIGGER = 'trigger';
 
     private $value;
 
     /**
-     * Creates an instance of a SubpluginResponse
+     * Creates an instance of a TriggerResponse
      * @param string $responsetype code of the response
      */
     private function __construct($responsetype) {
@@ -42,17 +43,28 @@ class SubpluginResponse {
     }
 
     /**
-     * Creates a SubpluginResponse telling that the subplugin finished processing the course.
+     * Creates a TriggerResponse telling that the subplugin does not want to process the course.
+     * This means that the course can be passed to the next trigger.
+     * @return TriggerResponse
      */
-    public static function proceed() {
-        return new SubpluginResponse(self::PROCEED);
+    public static function next() {
+        return new TriggerResponse(self::NEXT);
     }
 
     /**
-     * Creates a SubpluginResponse telling that the subplugin is still processing the course.
+     * Creates a TriggerResponse telling that the subplugin wants to exlude the course from deprovision.
+     * @return TriggerResponse
      */
-    public static function waiting() {
-        return new SubpluginResponse(self::WAITING);
+    public static function exclude() {
+        return new TriggerResponse(self::EXCLUDE);
+    }
+
+    /**
+     * Creates a TriggerResponse telling that the subplugin wants to trigger the deprovision process for the course.
+     * @return TriggerResponse
+     */
+    public static function trigger() {
+        return new TriggerResponse(self::TRIGGER);
     }
 
 

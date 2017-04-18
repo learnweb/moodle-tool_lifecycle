@@ -25,8 +25,11 @@
  */
 namespace local_course_deprovision\trigger;
 
+use local_course_deprovision\TriggerResponse;
+
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__.'/../lib.php');
+require_once(__DIR__.'/../../classes/triggerresponse.php');
 
 /**
  * Class which implements the basic methods necessary for a course deprovision trigger subplugin
@@ -38,10 +41,10 @@ class startdatedelay implements base {
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
      * @param $course object to be processed.
-     * @return SubpluginResponse
+     * @return TriggerResponse
      */
     public function check_course($course) {
-        return true;
+        return TriggerResponse::trigger();
     }
 
 }

@@ -24,8 +24,6 @@
  */
 namespace local_course_deprovision;
 
-use local_course_deprovision\trigger\startdatedelay;
-
 defined('MOODLE_INTERNAL') || die;
 
 class deprovision_processor {
@@ -43,15 +41,35 @@ class deprovision_processor {
             $extendedclass = "local_course_deprovision\\trigger\\$class";
             $triggerclasses[$class] = new $extendedclass();
         }
-        $recordset = $DB->get_recordset_select('course', null);
+        $recordset = $DB->get_recordset_sql('SELECT {course}.* from {course} '.
+            'left join {local_coursedeprov_process} '.
+            'ON {course}.id = {local_coursedeprov_process}.courseid '.
+            'WHERE {local_coursedeprov_process}.courseid is null');
         while ($recordset->valid()) {
             $course = $recordset->current();
-            /* @var $trigger trigger\base */
+            /* @var $trigger trigger\base -> Implementation of the subplugin trigger interface */
             foreach ($triggerclasses as $id => $trigger) {
-                $trigger->check_course($course);
+                $response = $trigger->check_course($course);
+                if ($response == TriggerResponse::next()) {
+                    continue;
+                }
+                if ($response == TriggerResponse::exclude()) {
+                    break;
+                }
+                if ($response == TriggerResponse::trigger()) {
+                    $this->trigger_course($course->id);
+                }
             }
             $recordset->next();
         }
+    }
+
+    private function trigger_course($courseid) {
+        global $DB;
+        $record = new \stdClass();
+        $record->courseid = $courseid;
+        $record->subplugin_id = 3;
+        $DB->insert_record('local_coursedeprov_process', $record);
     }
 
 }

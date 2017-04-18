@@ -24,5 +24,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2017040901;
+$plugin->version  = 2017040904;
 $plugin->component = 'local_course_deprovision';
