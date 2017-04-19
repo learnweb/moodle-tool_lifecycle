@@ -24,8 +24,22 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-if ($hassiteconfig) { // needs this condition or there is error on login page
+if ($hassiteconfig) {
     require_once(__DIR__ . '/adminlib.php');
 
     $ADMIN->add('localplugins', new local_course_deprovision\admin_page_active_processes());
+    $settings = new admin_settingpage('local_course_deprovision',
+        get_string('general_config_header', 'local_course_deprovision'));
+
+    if ($ADMIN->fulltree) {
+        $triggers = core_component::get_plugin_list('coursedeprovisiontrigger');
+        foreach ($triggers as $trigger => $path) {
+            if (file_exists($settingsfile = $path . '/settings.php')) {
+                $settings->add(new admin_setting_heading('coursedeprovisiontriggersetting'.$trigger,
+                    get_string('trigger', 'local_course_deprovision') .
+                    ' - ' . get_string('pluginname', 'local_course_deprovision_' . $trigger), ''));
+                include($settingsfile);
+            }
+        }
+    }
 }
