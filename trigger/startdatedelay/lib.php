@@ -18,8 +18,8 @@
  * Interface for the subplugintype trigger
  * It has to be implemented by all subplugins.
  *
- * @package local
- * @subpackage course_deprovision
+ * @package local_course_deprovision_trigger
+ * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,7 +35,7 @@ require_once(__DIR__.'/../../classes/triggerresponse.php');
  * Class which implements the basic methods necessary for a course deprovision trigger subplugin
  * @package local_course_deprovision\trigger
  */
-class startdatedelay implements base {
+class startdatedelay_trigger implements base {
 
 
     /**

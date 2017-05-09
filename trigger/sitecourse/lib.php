@@ -35,7 +35,7 @@ require_once(__DIR__.'/../../classes/triggerresponse.php');
  * Class which implements the basic methods necessary for a course deprovision trigger subplugin
  * @package local_course_deprovision\trigger
  */
-class sitecourse implements base {
+class sitecourse_trigger implements base {
 
 
     /**
