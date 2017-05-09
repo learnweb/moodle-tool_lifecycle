@@ -17,12 +17,11 @@
 /**
  * Version details.
  *
- * @package    local
- * @subpackage course_deprovision
+ * @package    tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2017040904;
-$plugin->component = 'local_course_deprovision';
+$plugin->version  = 2017050901;
+$plugin->component = 'tool_cleanupcourses';

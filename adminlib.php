@@ -14,14 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_course_deprovision;
+namespace tool_cleanupcourses;
 
 defined('MOODLE_INTERNAL') || die;
 /**
- * External Page for showing active deprovision processes
+ * External Page for showing active cleanup processes
  *
- * @package local
- * @subpackage course_deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,9 +33,9 @@ class admin_page_active_processes extends \admin_externalpage
      *
      */
     public function __construct() {
-        $url = new \moodle_url('/local/course_deprovision/activeprocesses.php');
+        $url = new \moodle_url('/admin/tool/cleanupcourses/activeprocesses.php');
         parent::__construct('activeprocesses',
-            get_string('active_processes_list_header', 'local_course_deprovision'),
+            get_string('active_processes_list_header', 'tool_cleanupcourses'),
             $url);
     }
 }

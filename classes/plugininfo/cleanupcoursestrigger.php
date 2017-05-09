@@ -15,22 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Pluginfo for course deprovision trigger
+ * Pluginfo for cleanup courses trigger
  *
- * @package local
- * @subpackage course_deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_course_deprovision\plugininfo;
+namespace tool_cleanupcourses\plugininfo;
 
 use core\plugininfo\base;
 
 defined('MOODLE_INTERNAL') || die();
 
 
-class coursedeprovisiontrigger extends base {
+class cleanupcoursestrigger extends base {
     public function is_uninstall_allowed() {
         if ($this->is_standard()) {
             return false;

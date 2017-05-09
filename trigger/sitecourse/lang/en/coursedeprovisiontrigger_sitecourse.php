@@ -17,7 +17,7 @@
 /**
  * Lang strings for site course trigger
  *
- * @package local_course_deprovision_trigger
+ * @package tool_cleanupcourses_trigger
  * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,4 +25,4 @@
 
 $string['pluginname'] = 'Exclude site course trigger';
 
-$string['delay'] = 'This module will exclude the site course from deprovisioning';
+$string['delay'] = 'This module will exclude the site course from cleanup';

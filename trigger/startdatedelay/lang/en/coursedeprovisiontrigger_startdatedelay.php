@@ -17,7 +17,7 @@
 /**
  * Lang strings for start date delay trigger
  *
- * @package local_course_deprovision_trigger
+ * @package tool_cleanupcourses_trigger
  * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,4 +25,4 @@
 
 $string['pluginname'] = 'Start date delay trigger';
 
-$string['delay'] = 'Delay from start of course til deprovisioning';
+$string['delay'] = 'Delay from start of course til cleanup';

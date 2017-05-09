@@ -17,13 +17,12 @@
 /**
  * Definition of subplugins
  *
- * @package local
- * @subpackage  course_deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
 $subplugins = array(
-  'coursedeprovisiontrigger' => 'local/course_deprovision/trigger',
+  'cleanupcoursestrigger' => 'admin/tool/cleanupcourses/trigger',
 );

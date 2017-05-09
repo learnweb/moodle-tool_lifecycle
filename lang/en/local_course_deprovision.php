@@ -15,24 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course Deprovision langauge strings.
+ * Course Cleanup langauge strings.
  *
- * @package    local
- * @subpackage course_deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
 
-$string['pluginname'] = 'Course Deprovision';
-$string['plugintitle'] = 'Course Deprovision';
+$string['pluginname'] = 'Cleanup Courses';
+$string['plugintitle'] = 'Cleanup Courses';
 
-$string['general_config_header'] = "Course Deprovision Settings";
+$string['general_config_header'] = "Cleanup Courses Settings";
 
 $string['trigger'] = 'Trigger';
 
-$string['subplugintype_coursedeprovisiontrigger'] = 'Trigger for starting the course deprovision';
-$string['subplugintype_coursedeprovisiontrigger_plural'] = 'Triggers for starting the course deprovision';
+$string['subplugintype_cleanupcoursestrigger'] = 'Trigger for starting the course cleanup';
+$string['subplugintype_cleanupcoursestrigger_plural'] = 'Triggers for starting the course cleanup';
 
-$string['active_processes_list_header'] = 'List of Active Course Deprovision Processes';
+$string['active_processes_list_header'] = 'List of Active Course Cleanup Processes';

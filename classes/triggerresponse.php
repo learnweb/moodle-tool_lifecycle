@@ -17,12 +17,11 @@
 /**
  * Possible Responses of a Trigger Subplugin
  *
- * @package local
- * @subpackage course_deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace local_course_deprovision;
+namespace tool_cleanupcourses;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -52,7 +51,7 @@ class TriggerResponse {
     }
 
     /**
-     * Creates a TriggerResponse telling that the subplugin wants to exlude the course from deprovision.
+     * Creates a TriggerResponse telling that the subplugin wants to exlude the course from cleanup.
      * @return TriggerResponse
      */
     public static function exclude() {
@@ -60,7 +59,7 @@ class TriggerResponse {
     }
 
     /**
-     * Creates a TriggerResponse telling that the subplugin wants to trigger the deprovision process for the course.
+     * Creates a TriggerResponse telling that the subplugin wants to trigger the cleanup process for the course.
      * @return TriggerResponse
      */
     public static function trigger() {

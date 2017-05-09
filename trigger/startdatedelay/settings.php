@@ -17,7 +17,7 @@
 /**
  * Settings for start date delay
  *
- * @package local_course_deprovision_trigger
+ * @package tool_cleanupcourses_trigger
  * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/lib.php');
 
-$settings->add(new admin_setting_configduration('coursedeprovisiontrigger_startdatedelay_delay',
-    get_string('delay', 'coursedeprovisiontrigger_startdatedelay'),
-    get_string('delay', 'coursedeprovisiontrigger_startdatedelay'), 16416000));
+$settings->add(new admin_setting_configduration('cleanupcoursestrigger_startdatedelay_delay',
+    get_string('delay', 'cleanupcoursestrigger_startdatedelay'),
+    get_string('delay', 'cleanupcoursestrigger_startdatedelay'), 16416000));
 

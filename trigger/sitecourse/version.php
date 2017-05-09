@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course Deprovision Site Course Trigger
+ * Cleanup Courses Site Course Trigger
  *
- * @package local_course_deprovision_trigger
+ * @package tool_cleanupcourses_trigger
  * @subpackage enddate
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,4 +26,4 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->version  = 2017050900;
-$plugin->component = 'coursedeprovisiontrigger_sitecourse';
+$plugin->component = 'cleanupcoursestrigger_sitecourse';

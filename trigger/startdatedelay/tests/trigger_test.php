@@ -14,24 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_course_deprovision\trigger;
+namespace tool_cleanupcourses\trigger;
 
-use local_course_deprovision\TriggerResponse;
+use tool_cleanupcourses\TriggerResponse;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__.'/../lib.php');
+require_once(__DIR__ . '/../lib.php');
 
 /**
  * Trigger test for start date delay trigger.
  *
- * @package    local_course_deprovision_trigger
+ * @package    tool_cleanupcourses_trigger
  * @category   startdatedelay
- * @group local_course_deprovision_trigger
+ * @group tool_cleanupcourses_trigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_course_deprovision_trigger_startdatedelay_testcase extends \advanced_testcase {
+class tool_cleanupcourses_trigger_startdatedelay_testcase extends \advanced_testcase {
 
     /**
      * Tests if courses, which are newer than the default of 190 days are not triggered by this plugin.

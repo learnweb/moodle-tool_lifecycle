@@ -1,4 +1,4 @@
-# moodle-local_course_deprovision
+# moodle-tool_cleanupcourses
 
 This module is currently in development.
 The goal is to create a modular plugin, which allows the deprovision of moodle courses. 

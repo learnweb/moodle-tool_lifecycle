@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course Deprovision Startdate Trigger
+ * Cleanup Courses Startdate Trigger
  *
- * @package local_course_deprovision_trigger
+ * @package tool_cleanupcourses_trigger
  * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,4 +26,4 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->version  = 2017050900;
-$plugin->component = 'coursedeprovisiontrigger_startdatedelay';
+$plugin->component = 'cleanupcoursestrigger_startdatedelay';

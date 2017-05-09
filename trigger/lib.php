@@ -18,12 +18,12 @@
  * Interface for the subplugintype trigger
  * It has to be implemented by all subplugins.
  *
- * @package local
- * @subpackage course_deprovision
+ * @package tool_cleanupcourses
+ * @subpackage trigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace local_course_deprovision\trigger;
+namespace tool_cleanupcourses\trigger;
 
 defined('MOODLE_INTERNAL') || die();
 

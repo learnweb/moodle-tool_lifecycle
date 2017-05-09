@@ -15,18 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Offers functionality to trigger, process and finish deprovision processes.
+ * Offers functionality to trigger, process and finish cleanup processes.
  *
- * @package local
- * @subpackage course_deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace local_course_deprovision;
+namespace tool_cleanupcourses;
 
 defined('MOODLE_INTERNAL') || die;
 
-class deprovision_processor {
+class cleanup_processor {
 
     public function __construct() {
 
@@ -36,11 +35,11 @@ class deprovision_processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
-        $triggerlist = \core_component::get_plugin_list('coursedeprovisiontrigger');
+        $triggerlist = \core_component::get_plugin_list('cleanupcoursestrigger');
         $triggerclasses = [];
         foreach ($triggerlist as $class => $classdir) {
             require_once($classdir.'/lib.php');
-            $extendedclass = "local_course_deprovision\\trigger\\$class";
+            $extendedclass = "tool_cleanupcourses\\trigger\\$class";
             $triggerclasses[$class] = new $extendedclass();
         }
         $recordset = $this->get_course_recordset();
@@ -65,15 +64,15 @@ class deprovision_processor {
 
     /**
      * Returns a record set with all relevant courses.
-     * Relevant means that there is currently no deprovisioning process running for this course.
+     * Relevant means that there is currently no cleanup process running for this course.
      * @return \moodle_recordset with relevant courses.
      */
     public function get_course_recordset() {
         global $DB;
         $sql = 'SELECT {course}.* from {course} '.
-            'left join {local_coursedeprov_process} '.
-            'ON {course}.id = {local_coursedeprov_process}.courseid '.
-            'WHERE {local_coursedeprov_process}.courseid is null';
+            'left join {tool_cleanupcourses_process} '.
+            'ON {course}.id = {tool_cleanupcourses_process}.courseid '.
+            'WHERE {tool_cleanupcourses_process}.courseid is null';
         return $DB->get_recordset_sql($sql);
     }
 
@@ -82,7 +81,7 @@ class deprovision_processor {
         $record = new \stdClass();
         $record->courseid = $courseid;
         $record->subplugin_id = 3;
-        $DB->insert_record('local_coursedeprov_process', $record);
+        $DB->insert_record('tool_cleanupcourses_process', $record);
     }
 
 }

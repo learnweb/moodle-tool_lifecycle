@@ -17,12 +17,11 @@
 /**
  * Table listing active processes
  *
- * @package local
- * @subpackage course_deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace local_course_deprovision;
+namespace tool_cleanupcourses;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -33,7 +32,7 @@ class active_processes_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("courseid, subplugin_id", '{local_coursedeprov_process}', "TRUE");
+        $this->set_sql("courseid, subplugin_id", '{tool_cleanupcourses_process}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->init();
     }

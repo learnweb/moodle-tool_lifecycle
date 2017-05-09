@@ -15,25 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Scheduled task for processing the deprovisioning
+ * Scheduled task for processing the cleanup
  *
- * @package local
- * @subpackage course_deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace local_course_deprovision;
+namespace tool_cleanupcourses;
 
 defined('MOODLE_INTERNAL') || die;
 
-class process_deprovision extends \core\task\scheduled_task {
+class process_cleanup extends \core\task\scheduled_task {
 
     public function get_name() {
-        return get_string('process_deprovision', 'local_course_deprovision');
+        return get_string('process_cleanup', 'tool_cleanupcourses');
     }
 
     public function execute() {
-        $processor = new deprovision_processor();
+        $processor = new cleanup_processor();
         $processor->call_trigger();
     }
 }

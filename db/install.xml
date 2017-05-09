@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/course_deprovision/db" VERSION="2017040900" COMMENT="XMLDB file for Moodle local/course_deprovision"
+<XMLDB PATH="admin/tool/cleanupcourses/db" VERSION="2017040900" COMMENT="XMLDB file for Moodle tool/cleanupcourses"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
   <TABLES>
-    <TABLE NAME="local_coursedeprov_process" COMMENT="table containing the state of all courses currently within the deprovision process">
+    <TABLE NAME="tool_cleanupcourses_process" COMMENT="table containing the state of all courses currently within the cleanup process">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true" COMMENT="id of the process"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="course id"/>

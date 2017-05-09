@@ -15,15 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Renderer for course deprovision
+ * Renderer for cleanup courses
  *
- * @package local
- * @subpackage course deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
-class local_course_deprovision_renderer extends plugin_renderer_base {
+class tool_cleanupcourses_renderer extends plugin_renderer_base {
 
 }

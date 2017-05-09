@@ -18,22 +18,21 @@
  * Interface for the subplugintype trigger
  * It has to be implemented by all subplugins.
  *
- * @package local
- * @subpackage course_deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace local_course_deprovision\trigger;
+namespace tool_cleanupcourses\trigger;
 
-use local_course_deprovision\TriggerResponse;
+use tool_cleanupcourses\TriggerResponse;
 
 defined('MOODLE_INTERNAL') || die();
-require_once(__DIR__.'/../lib.php');
-require_once(__DIR__.'/../../classes/triggerresponse.php');
+require_once(__DIR__ . '/../lib.php');
+require_once(__DIR__ . '/../../classes/triggerresponse.php');
 
 /**
- * Class which implements the basic methods necessary for a course deprovision trigger subplugin
- * @package local_course_deprovision\trigger
+ * Class which implements the basic methods necessary for a cleanup courses trigger subplugin
+ * @package tool_cleanupcourses\trigger
  */
 class sitecourse_trigger implements base {
 

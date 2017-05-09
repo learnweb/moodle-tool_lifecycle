@@ -18,22 +18,22 @@
  * Interface for the subplugintype trigger
  * It has to be implemented by all subplugins.
  *
- * @package local_course_deprovision_trigger
+ * @package tool_cleanupcourses_trigger
  * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace local_course_deprovision\trigger;
+namespace tool_cleanupcourses\trigger;
 
-use local_course_deprovision\TriggerResponse;
+use tool_cleanupcourses\TriggerResponse;
 
 defined('MOODLE_INTERNAL') || die();
-require_once(__DIR__.'/../lib.php');
-require_once(__DIR__.'/../../classes/triggerresponse.php');
+require_once(__DIR__ . '/../lib.php');
+require_once(__DIR__ . '/../../classes/triggerresponse.php');
 
 /**
- * Class which implements the basic methods necessary for a course deprovision trigger subplugin
- * @package local_course_deprovision\trigger
+ * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin
+ * @package tool_cleanupcourses_trigger
  */
 class startdatedelay_trigger implements base {
 
@@ -45,7 +45,7 @@ class startdatedelay_trigger implements base {
      */
     public function check_course($course) {
         global $CFG;
-        $delay = $CFG->coursedeprovisiontrigger_startdatedelay_delay;
+        $delay = $CFG->cleanupcoursestrigger_startdatedelay_delay;
         $now = time();
         if ($course->startdate + $delay < $now) {
             return TriggerResponse::trigger();

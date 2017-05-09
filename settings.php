@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Settings page which gives an overview over running deprovision processes.
+ * Settings page which gives an overview over running cleanup processes.
  *
- * @package local
- * @subpackage course_deprovision
+ * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,18 +26,18 @@ defined('MOODLE_INTERNAL') || die;
 if ($hassiteconfig) {
     require_once(__DIR__ . '/adminlib.php');
 
-    $ADMIN->add('localplugins', new local_course_deprovision\admin_page_active_processes());
-    $settings = new admin_settingpage('local_course_deprovision',
-        get_string('general_config_header', 'local_course_deprovision'));
-    $ADMIN->add('localplugins', $settings);
+    $ADMIN->add('tools', new tool_cleanupcourses\admin_page_active_processes());
+    $settings = new admin_settingpage('tool_cleanupcourses',
+        get_string('general_config_header', 'tool_cleanupcourses'));
+    $ADMIN->add('tools', $settings);
 
     if ($ADMIN->fulltree) {
-        $triggers = core_component::get_plugin_list('coursedeprovisiontrigger');
+        $triggers = core_component::get_plugin_list('cleanupcoursestrigger');
         foreach ($triggers as $trigger => $path) {
             if (file_exists($settingsfile = $path . '/settings.php')) {
-                $settings->add(new admin_setting_heading('coursedeprovisiontriggersetting'.$trigger,
-                    get_string('trigger', 'local_course_deprovision') .
-                    ' - ' . get_string('pluginname', 'coursedeprovisiontrigger_' . $trigger), ''));
+                $settings->add(new admin_setting_heading('cleanupcoursestriggersetting'.$trigger,
+                    get_string('trigger', 'tool_cleanupcourses') .
+                    ' - ' . get_string('pluginname', 'cleanupcoursestrigger_' . $trigger), ''));
                 include($settingsfile);
             }
         }
