@@ -44,7 +44,13 @@ class startdatedelay_trigger implements base {
      * @return TriggerResponse
      */
     public function check_course($course) {
-        return TriggerResponse::trigger();
+        global $CFG;
+        $delay = $CFG->coursedeprovisiontrigger_startdatedelay_delay;
+        $now = time();
+        if ($course->startdate + $delay < $now) {
+            return TriggerResponse::trigger();
+        }
+        return TriggerResponse::next();
     }
 
 }
