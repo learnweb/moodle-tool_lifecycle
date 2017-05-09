@@ -30,6 +30,7 @@ if ($hassiteconfig) {
     $ADMIN->add('localplugins', new local_course_deprovision\admin_page_active_processes());
     $settings = new admin_settingpage('local_course_deprovision',
         get_string('general_config_header', 'local_course_deprovision'));
+    $ADMIN->add('localplugins', $settings);
 
     if ($ADMIN->fulltree) {
         $triggers = core_component::get_plugin_list('coursedeprovisiontrigger');
