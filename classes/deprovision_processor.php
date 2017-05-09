@@ -32,8 +32,10 @@ class deprovision_processor {
 
     }
 
+    /**
+     * Processes the trigger plugins for all relevant courses.
+     */
     public function call_trigger() {
-        global $DB;
         $triggerlist = \core_component::get_plugin_list('coursedeprovisiontrigger');
         $triggerclasses = [];
         foreach ($triggerlist as $class => $classdir) {
@@ -41,10 +43,7 @@ class deprovision_processor {
             $extendedclass = "local_course_deprovision\\trigger\\$class";
             $triggerclasses[$class] = new $extendedclass();
         }
-        $recordset = $DB->get_recordset_sql('SELECT {course}.* from {course} '.
-            'left join {local_coursedeprov_process} '.
-            'ON {course}.id = {local_coursedeprov_process}.courseid '.
-            'WHERE {local_coursedeprov_process}.courseid is null');
+        $recordset = $this->get_course_recordset();
         while ($recordset->valid()) {
             $course = $recordset->current();
             /* @var $trigger trigger\base -> Implementation of the subplugin trigger interface */
@@ -62,6 +61,20 @@ class deprovision_processor {
             }
             $recordset->next();
         }
+    }
+
+    /**
+     * Returns a record set with all relevant courses.
+     * Relevant means that there is currently no deprovisioning process running for this course.
+     * @return \moodle_recordset with relevant courses.
+     */
+    public function get_course_recordset() {
+        global $DB;
+        $sql = 'SELECT {course}.* from {course} '.
+            'left join {local_coursedeprov_process} '.
+            'ON {course}.id = {local_coursedeprov_process}.courseid '.
+            'WHERE {local_coursedeprov_process}.courseid is null';
+        return $DB->get_recordset_sql($sql);
     }
 
     private function trigger_course($courseid) {
