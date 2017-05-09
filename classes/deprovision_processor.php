@@ -47,7 +47,7 @@ class deprovision_processor {
         while ($recordset->valid()) {
             $course = $recordset->current();
             /* @var $trigger trigger\base -> Implementation of the subplugin trigger interface */
-            foreach ($triggerclasses as $id => $trigger) {
+            foreach ($triggerclasses as $trigger) {
                 $response = $trigger->check_course($course);
                 if ($response == TriggerResponse::next()) {
                     continue;
