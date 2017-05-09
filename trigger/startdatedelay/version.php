@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course Deprovision Enddate Trigger
+ * Course Deprovision Startdate Trigger
  *
  * @package local_course_deprovision_trigger
  * @subpackage enddate
@@ -25,5 +25,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2017040900;
+$plugin->version  = 2017050900;
 $plugin->component = 'coursedeprovisiontrigger_startdatedelay';
