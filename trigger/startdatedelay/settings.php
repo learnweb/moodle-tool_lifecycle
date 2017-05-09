@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/lib.php');
 
-$settings->add(new admin_setting_configduration('coursedeprovisiontrigger_startdatedelay/delay',
+$settings->add(new admin_setting_configduration('coursedeprovisiontrigger_startdatedelay_delay',
     get_string('delay', 'coursedeprovisiontrigger_startdatedelay'),
     get_string('delay', 'coursedeprovisiontrigger_startdatedelay'), 16416000));
 
