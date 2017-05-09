@@ -29,5 +29,5 @@ require_once(__DIR__ . '/lib.php');
 
 $settings->add(new admin_setting_configduration('coursedeprovisiontrigger_startdatedelay/delay',
     get_string('delay', 'coursedeprovisiontrigger_startdatedelay'),
-    get_string('delay', 'coursedeprovisiontrigger_startdatedelay'), 190));
+    get_string('delay', 'coursedeprovisiontrigger_startdatedelay'), 16416000));
 
