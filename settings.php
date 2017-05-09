@@ -37,7 +37,7 @@ if ($hassiteconfig) {
             if (file_exists($settingsfile = $path . '/settings.php')) {
                 $settings->add(new admin_setting_heading('coursedeprovisiontriggersetting'.$trigger,
                     get_string('trigger', 'local_course_deprovision') .
-                    ' - ' . get_string('pluginname', 'local_course_deprovision_' . $trigger), ''));
+                    ' - ' . get_string('pluginname', 'coursedeprovisiontrigger_' . $trigger), ''));
                 include($settingsfile);
             }
         }

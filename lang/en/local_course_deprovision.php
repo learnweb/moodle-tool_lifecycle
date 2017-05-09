@@ -28,6 +28,10 @@
 $string['pluginname'] = 'Course Deprovision';
 $string['plugintitle'] = 'Course Deprovision';
 
+$string['general_config_header'] = "Course Deprovision Settings";
+
+$string['trigger'] = 'Trigger';
+
 $string['subplugintype_coursedeprovisiontrigger'] = 'Trigger for starting the course deprovision';
 $string['subplugintype_coursedeprovisiontrigger_plural'] = 'Triggers for starting the course deprovision';
 

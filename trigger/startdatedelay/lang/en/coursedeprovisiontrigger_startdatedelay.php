@@ -24,3 +24,5 @@
  */
 
 $string['pluginname'] = 'Start date delay trigger';
+
+$string['delay'] = 'Delay from start of course til deprovisioning';
