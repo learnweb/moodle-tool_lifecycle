@@ -25,4 +25,24 @@ defined('MOODLE_INTERNAL') || die();
 
 class tool_cleanupcourses_renderer extends plugin_renderer_base {
 
+    /**
+     * Write the page footer
+     *
+     * @return string
+     */
+    public function render_footer() {
+        global $OUTPUT;
+        echo $OUTPUT->footer();
+    }
+
+    /**
+     * Write the page header
+     *
+     * @return string
+     */
+    public function render_header() {
+        global $OUTPUT;
+        echo $OUTPUT->header();
+    }
+
 }

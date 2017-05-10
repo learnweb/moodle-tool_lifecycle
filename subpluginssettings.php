@@ -22,23 +22,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__) . '/../../../config.php');
+require_once(__DIR__ . '/adminlib.php');
 
-require_login();
+// Create the class for this controller.
+$subpluginsettings = new tool_cleanupcourses\subplugin_settings();
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/activeprocesses.php'));
 
-$table = new tool_cleanupcourses\active_processes_table('tool_cleanupcourses_active_processes');
-
-$PAGE->set_title("Title");
-$PAGE->set_heading("Heading");
-
-$renderer = $PAGE->get_renderer('tool_cleanupcourses');
-
-echo $renderer->header();
-
-$table->out(50000, false);
-
-echo $renderer->footer();
-
-
+// Execute the controller.
+$subpluginsettings->execute(optional_param('action', null, PARAM_TEXT),
+    optional_param('subplugin', null, PARAM_INT));

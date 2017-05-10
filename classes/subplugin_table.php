@@ -15,27 +15,36 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course Cleanup langauge strings.
+ * Table listing active processes
  *
  * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_cleanupcourses;
 
+defined('MOODLE_INTERNAL') || die;
 
+require_once($CFG->libdir . '/tablelib.php');
 
-$string['pluginname'] = 'Cleanup Courses';
-$string['plugintitle'] = 'Cleanup Courses';
+class subplugin_table extends \table_sql {
 
-$string['general_config_header'] = "Cleanup Courses Settings";
+    public function __construct($uniqueid) {
+        parent::__construct($uniqueid);
+        global $PAGE;
+        $this->set_sql("name, type, enabled", '{tool_cleanupcourses_plugin}', "TRUE");
+        $this->define_baseurl($PAGE->url);
+        $this->pageable(false);
+        $this->init();
+    }
 
-$string['trigger'] = 'Trigger';
-
-$string['subplugintype_cleanupcoursestrigger'] = 'Trigger for starting the course cleanup';
-$string['subplugintype_cleanupcoursestrigger_plural'] = 'Triggers for starting the course cleanup';
-
-$string['active_processes_list_header'] = 'List of Active Course Cleanup Processes';
-$string['subpluginssettings_heading'] = 'Subplugin Settings Cleanup Courses';
-$string['subplugin_name'] = 'Subplugin Name';
-$string['subplugin_type'] = 'Subplugin Type';
-$string['subplugin_enabled'] = 'Enabled';
+    public function init() {
+        $this->define_columns(['name', 'type', 'enabled']);
+        $this->define_headers([
+            get_string('subplugin_name', 'tool_cleanupcourses'),
+            get_string('subplugin_type', 'tool_cleanupcourses'),
+            get_string('subplugin_enabled', 'tool_cleanupcourses')
+            ]);
+        $this->setup();
+    }
+}
