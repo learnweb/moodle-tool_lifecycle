@@ -47,4 +47,29 @@ class subplugin_table extends \table_sql {
             ]);
         $this->setup();
     }
+
+    /**
+     * Render name column.
+     * @param $row
+     * @return string pluginname of the subplugin
+     */
+    public function col_name($row) {
+
+        $name = $row->name;
+        $type = $row->type;
+
+        return get_string('pluginname', $type . '_' . $name);
+    }
+
+    /**
+     * Render type column.
+     * @param $row
+     * @return string type of the subplugin
+     */
+    public function col_type($row) {
+
+        $type = $row->type;
+
+        return get_string($type, 'tool_cleanupcourses');
+    }
 }

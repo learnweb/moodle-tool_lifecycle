@@ -37,5 +37,7 @@ $string['subplugin_enabled'] = 'Enabled';
 
 $string['trigger'] = 'Trigger';
 
+$string['cleanupcoursestrigger'] = 'Trigger';
+
 $string['subplugintype_cleanupcoursestrigger'] = 'Trigger for starting the course cleanup';
 $string['subplugintype_cleanupcoursestrigger_plural'] = 'Triggers for starting the course cleanup';
