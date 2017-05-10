@@ -15,15 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Cleanup Courses Startdate Trigger
+ * Uninstall script for course cleanup subplugin
  *
  * @package tool_cleanupcourses_trigger
- * @subpackage startdatedelay
+ * @subpackage sitecourse
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+use tool_cleanupcourses\subplugin_manager;
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2017050901;
-$plugin->component = 'cleanupcoursestrigger_startdatedelay';
+function xmldb_cleanupcoursestrigger_sitecourse_uninstall() {
+    $manager = new subplugin_manager();
+    $manager->deregister_trigger('sitecourse');
+}
