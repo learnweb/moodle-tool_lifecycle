@@ -26,5 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 function xmldb_tool_cleanupcourses_upgrade($oldversion) {
 
+    global $DB;
+    $dbman = $DB->get_manager(); // loads ddl manager and xmldb classes
+
     return true;
 }
