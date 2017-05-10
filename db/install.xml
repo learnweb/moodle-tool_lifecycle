@@ -14,7 +14,7 @@
         <KEY NAME="courseid_fk" TYPE="unique" FIELDS="courseid" COMMENT="Foreign key on course table"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="tool_cleanupcourses_subplugin" COMMENT="Subplugins for the cleanup courses">
+    <TABLE NAME="tool_cleanupcourses_plugin" COMMENT="Subplugins for the cleanup courses">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
