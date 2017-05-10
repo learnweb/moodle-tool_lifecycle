@@ -16,6 +16,8 @@
 
 namespace tool_cleanupcourses;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Subplugin class
  *

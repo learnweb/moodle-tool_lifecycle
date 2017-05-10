@@ -90,7 +90,7 @@ class subplugin_manager {
      * Persists a subplugin to the database.
      * @param subplugin $subplugin
      */
-    private function persist(subplugin &$subplugin){
+    private function persist(subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         $record = array(
@@ -109,7 +109,7 @@ class subplugin_manager {
      * Removes a subplugin from the database.
      * @param subplugin $subplugin
      */
-    private function remove(subplugin &$subplugin){
+    private function remove(subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         $record = array(
