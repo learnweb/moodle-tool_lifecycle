@@ -135,5 +135,5 @@ class subplugin_settings {
         $this->check_permissions();
         $this->view_plugins_table();
     }
-    
+
 }

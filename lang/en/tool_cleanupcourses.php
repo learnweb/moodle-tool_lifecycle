@@ -27,15 +27,15 @@
 $string['pluginname'] = 'Cleanup Courses';
 $string['plugintitle'] = 'Cleanup Courses';
 
-$string['general_config_header'] = "Cleanup Courses Settings";
+$string['general_config_header'] = "General & Subplugins";
+$string['active_processes_list_header'] = 'Active Processes';
+$string['subpluginssettings_heading'] = 'Subplugin Workflow';
+
+$string['subplugin_name'] = 'Subplugin Name';
+$string['subplugin_type'] = 'Subplugin Type';
+$string['subplugin_enabled'] = 'Enabled';
 
 $string['trigger'] = 'Trigger';
 
 $string['subplugintype_cleanupcoursestrigger'] = 'Trigger for starting the course cleanup';
 $string['subplugintype_cleanupcoursestrigger_plural'] = 'Triggers for starting the course cleanup';
-
-$string['active_processes_list_header'] = 'List of Active Course Cleanup Processes';
-$string['subpluginssettings_heading'] = 'Subplugin Settings Cleanup Courses';
-$string['subplugin_name'] = 'Subplugin Name';
-$string['subplugin_type'] = 'Subplugin Type';
-$string['subplugin_enabled'] = 'Enabled';

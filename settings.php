@@ -26,11 +26,15 @@ defined('MOODLE_INTERNAL') || die;
 if ($hassiteconfig) {
     require_once(__DIR__ . '/adminlib.php');
 
-    $ADMIN->add('tools', new tool_cleanupcourses\admin_page_active_processes());
-    $ADMIN->add('tools', new tool_cleanupcourses\admin_page_sublugins());
+    $category = new admin_category('cleanupcourses_category',
+        get_string('pluginname', 'tool_cleanupcourses'));
+    $ADMIN->add('tools', $category);
     $settings = new admin_settingpage('tool_cleanupcourses',
         get_string('general_config_header', 'tool_cleanupcourses'));
-    $ADMIN->add('tools', $settings);
+    $ADMIN->add('cleanupcourses_category', $settings);
+    
+    $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_active_processes());
+    $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_sublugins());
 
     if ($ADMIN->fulltree) {
         $triggers = core_component::get_plugin_list('cleanupcoursestrigger');
