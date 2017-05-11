@@ -43,7 +43,7 @@ class tool_cleanupcourses_trigger_startdatedelay_testcase extends \advanced_test
 
         $course = $this->getDataGenerator()->create_course(array('startdate' => time() - 50 * 24 * 60 * 60));
 
-        $trigger = new startdatedelay_trigger();
+        $trigger = new startdatedelay();
         $response = $trigger->check_course($course);
         $this->assertEquals($response, TriggerResponse::next());
 
@@ -59,7 +59,7 @@ class tool_cleanupcourses_trigger_startdatedelay_testcase extends \advanced_test
 
         $course = $this->getDataGenerator()->create_course(array('startdate' => time() - 200 * 24 * 60 * 60));
 
-        $trigger = new startdatedelay_trigger();
+        $trigger = new startdatedelay();
         $response = $trigger->check_course($course);
         $this->assertEquals($response, TriggerResponse::trigger());
 

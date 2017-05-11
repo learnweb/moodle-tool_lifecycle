@@ -34,7 +34,7 @@ require_once(__DIR__ . '/../../classes/triggerresponse.php');
  * Class which implements the basic methods necessary for a cleanup courses trigger subplugin
  * @package tool_cleanupcourses\trigger
  */
-class sitecourse_trigger implements base {
+class sitecourse implements base {
 
 
     /**

@@ -43,7 +43,7 @@ class tool_cleanupcourses_trigger_sitecourse_testcase extends \advanced_testcase
 
         $course = get_site();
 
-        $trigger = new sitecourse_trigger();
+        $trigger = new sitecourse();
         $response = $trigger->check_course($course);
         $this->assertEquals($response, TriggerResponse::exclude());
 
@@ -59,7 +59,7 @@ class tool_cleanupcourses_trigger_sitecourse_testcase extends \advanced_testcase
 
         $course = $this->getDataGenerator()->create_course();
 
-        $trigger = new sitecourse_trigger();
+        $trigger = new sitecourse();
         $response = $trigger->check_course($course);
         $this->assertEquals($response, TriggerResponse::next());
 

@@ -25,6 +25,8 @@
  */
 namespace tool_cleanupcourses\trigger;
 
+use tool_cleanupcourses\TriggerResponse;
+
 defined('MOODLE_INTERNAL') || die();
 
 interface base {

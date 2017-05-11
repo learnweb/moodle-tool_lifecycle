@@ -35,7 +35,7 @@ require_once(__DIR__ . '/../../classes/triggerresponse.php');
  * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin
  * @package tool_cleanupcourses_trigger
  */
-class startdatedelay_trigger implements base {
+class startdatedelay implements base {
 
 
     /**
