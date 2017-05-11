@@ -107,6 +107,39 @@ class subplugin_manager {
     }
 
     /**
+     * Changes the sortindex of a subplugin by swapping it with another.
+     * @param int $subpluginid id of the subplugin
+     * @param bool $up tells if the subplugin should be set up or down
+     */
+    public function change_sortindex($subpluginid, $up) {
+        global $DB;
+        $subplugin = $this->get_subplugin_by_id($subpluginid);
+        if ($subplugin->sortindex === 1 && $up) {
+            return;
+        }
+        if ($subplugin->sortindex === $this->count_enabled_trigger() && !$up) {
+            return;
+        }
+        $index = $subplugin->sortindex;
+        if ($up) {
+            $otherindex = $index - 1;
+        } else {
+            $otherindex = $index + 1;
+        }
+        $transaction = $DB->start_delegated_transaction();
+
+        $otherrecord = $DB->get_record('tool_cleanupcourses_plugin', array('sortindex' => $otherindex));
+        $othersubplugin = $subplugin::from_record($otherrecord);
+
+        $subplugin->sortindex = $otherindex;
+        $othersubplugin->sortindex = $index;
+        $this->insert_or_update($subplugin);
+        $this->insert_or_update($othersubplugin);
+
+        $transaction->allow_commit();
+    }
+
+    /**
      * Removes a subplugin from the sortindex and adjusts all other indizes.
      * @param subplugin $toberemoved
      */

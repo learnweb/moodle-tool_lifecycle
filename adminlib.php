@@ -141,7 +141,12 @@ class subplugin_settings {
         if ($action === ACTION_DISABLE_SUBPLUGIN){
             $subpluginmanager->change_enabled($subplugin, false);
         }
-
+        if ($action === ACTION_UP_SUBPLUGIN){
+            $subpluginmanager->change_sortindex($subplugin, true);
+        }
+        if ($action === ACTION_DOWN_SUBPLUGIN){
+            $subpluginmanager->change_sortindex($subplugin, false);
+        }
         $this->view_plugins_table();
     }
 

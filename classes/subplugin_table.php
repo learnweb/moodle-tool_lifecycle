@@ -47,6 +47,7 @@ class subplugin_table extends \table_sql {
             get_string('subplugin_enabled', 'tool_cleanupcourses'),
             get_string('subplugin_sortindex', 'tool_cleanupcourses')
             ]);
+        $this->sortable(false, 'sortindex');
         $this->setup();
     }
 
