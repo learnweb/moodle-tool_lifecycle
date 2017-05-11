@@ -9,6 +9,9 @@ cache:
 php:
  - 7.1
 
+addons:
+  postgresql: "9.3"
+
 matrix:
   allow_failures:
     - env: DB=pgsql MOODLE_BRANCH=master
