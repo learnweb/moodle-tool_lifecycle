@@ -34,6 +34,7 @@ $string['subpluginssettings_heading'] = 'Subplugin Workflow';
 $string['subplugin_name'] = 'Subplugin Name';
 $string['subplugin_type'] = 'Subplugin Type';
 $string['subplugin_enabled'] = 'Enabled';
+$string['subplugin_sortindex'] = 'Up/Down';
 
 $string['trigger'] = 'Trigger';
 

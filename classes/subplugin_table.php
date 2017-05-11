@@ -33,18 +33,19 @@ class subplugin_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, name, type, enabled", '{tool_cleanupcourses_plugin}', "TRUE");
+        $this->set_sql("id, name, type, enabled, sortindex", '{tool_cleanupcourses_plugin}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['name', 'type', 'enabled']);
+        $this->define_columns(['name', 'type', 'enabled', 'sortindex']);
         $this->define_headers([
             get_string('subplugin_name', 'tool_cleanupcourses'),
             get_string('subplugin_type', 'tool_cleanupcourses'),
-            get_string('subplugin_enabled', 'tool_cleanupcourses')
+            get_string('subplugin_enabled', 'tool_cleanupcourses'),
+            get_string('subplugin_sortindex', 'tool_cleanupcourses')
             ]);
         $this->setup();
     }
@@ -75,9 +76,9 @@ class subplugin_table extends \table_sql {
     }
 
     /**
-     * Render type column.
+     * Render enabled column.
      * @param $row
-     * @return string type of the subplugin
+     * @return string action button for enabling/disabling of the subplugin
      */
     public function col_enabled($row) {
 
@@ -92,6 +93,37 @@ class subplugin_table extends \table_sql {
         }
 
         return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+    }
+
+    /**
+     * Render sortindex column.
+     * @param $row
+     * @return string action buttons for changing sortorder of the subplugin
+     */
+    public function col_sortindex($row) {
+        global $OUTPUT;
+        $output = '';
+        if ($row->sortindex !== null) {
+            if ($row->sortindex > 1) {
+                $alt = 'up';
+                $icon = 't/up';
+                $action = ACTION_UP_SUBPLUGIN;
+                $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+            } else {
+                $output .= $OUTPUT->spacer();
+            }
+            $manager = new subplugin_manager();
+            if ($row->sortindex < $manager->count_enabled_trigger()) {
+                $alt = 'down';
+                $icon = 't/down';
+                $action = ACTION_DOWN_SUBPLUGIN;
+                $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+            } else {
+                $output .= $OUTPUT->spacer();
+            }
+        }
+
+        return  $output;
     }
 
     /**

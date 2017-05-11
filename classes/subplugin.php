@@ -37,6 +37,9 @@ class subplugin {
     /** string type of subplugin */
     public $type;
 
+    /** int sortindex of subplugin */
+    public $sortindex;
+
     /**
      * Creates a subplugin with name and type.
      * @param string $name name of the subplugin

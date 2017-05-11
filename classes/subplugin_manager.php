@@ -95,8 +95,30 @@ class subplugin_manager {
         $subplugin = $this->get_subplugin_by_id($subpluginid);
         if ($subplugin) {
             $subplugin->enabled = $enabled;
+            if ($enabled) {
+                $subplugin->sortindex = $this->count_enabled_trigger() + 1;
+            } else {
+                if (isset($subplugin->sortindex)) {
+                    $this->remove_from_sortindex($subplugin);
+                }
+            }
             $this->insert_or_update($subplugin);
         }
+    }
+
+    /**
+     * Removes a subplugin from the sortindex and adjusts all other indizes.
+     * @param subplugin $toberemoved
+     */
+    private function remove_from_sortindex(&$toberemoved) {
+        global $DB;
+        $subplugins = $DB->get_records_select('tool_cleanupcourses_plugin', "sortindex > $toberemoved->sortindex");
+        foreach ($subplugins as $record) {
+            $subplugin = subplugin::from_record($record);
+            $subplugin->sortindex--;
+            $this->insert_or_update($subplugin);
+        }
+        $toberemoved->sortindex = null;
     }
 
     /**
@@ -118,7 +140,7 @@ class subplugin_manager {
     private function insert_or_update(subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
-        if (object_property_exists($subplugin, 'id')) {
+        if ($subplugin->id !== null) {
             $DB->update_record('tool_cleanupcourses_plugin', $subplugin);
         }
         $record = array(
@@ -149,6 +171,19 @@ class subplugin_manager {
             $subplugin = subplugin::from_record($record);
         }
         $transaction->allow_commit();
+    }
+
+    /**
+     * Gets the count of currently enabled trigger subplugins.
+     * @return int count of enabled trigger subplugins.
+     */
+    public function count_enabled_trigger(){
+        global $DB;
+        return $DB->count_records('tool_cleanupcourses_plugin',
+            array(
+                'enabled' => 1,
+                'type' => 'cleanupcoursestrigger')
+        );
     }
 
 }

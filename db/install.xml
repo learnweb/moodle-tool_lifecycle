@@ -21,10 +21,10 @@
         <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="subplugin type of the subplugin"/>
         <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="tells if the subplugin is enabled"/>
         <FIELD NAME="followedby" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="tells which subplugin follows this one in the cleanup process"/>
+        <FIELD NAME="sortindex" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Sortindex of the subplugins"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="unique subplugin" TYPE="unique" FIELDS="name, type"/>
       </KEYS>
     </TABLE>
   </TABLES>
