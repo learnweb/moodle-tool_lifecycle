@@ -32,14 +32,31 @@ class active_processes_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("courseid, subplugin_id", '{tool_cleanupcourses_process}', "TRUE");
+        $this->set_sql("c.fullname as course, s.name as name, s.type as type",
+            '{tool_cleanupcourses_process} p join' .
+            '{course} c on p.courseid = c.id join' .
+            '{tool_cleanupcourses_plugin} s on p.subplugin_id = s.id',
+            "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['courseid', 'subplugin_id']);
-        $this->define_headers(['c', 's']);
+        $this->define_columns(['course', 'subplugin']);
+        $this->define_headers([get_string('course'), get_string('')]);
         $this->setup();
+    }
+
+    /**
+     * Render subplugin column.
+     * @param $row
+     * @return string pluginname of the subplugin
+     */
+    public function col_subplugin($row) {
+
+        $name = $row->name;
+        $type = $row->type;
+
+        return get_string('pluginname', $type . '_' . $name);
     }
 }
