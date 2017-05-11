@@ -213,7 +213,7 @@ class subplugin_manager {
      * Gets the count of currently enabled trigger subplugins.
      * @return int count of enabled trigger subplugins.
      */
-    public function count_enabled_trigger(){
+    public function count_enabled_trigger() {
         global $DB;
         return $DB->count_records('tool_cleanupcourses_plugin',
             array(
