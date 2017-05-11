@@ -19,6 +19,7 @@ namespace tool_cleanupcourses;
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/adminlib.php');
+require_once(__DIR__ . '/lib.php');
 
 /**
  * External Page for showing active cleanup processes
@@ -133,6 +134,14 @@ class subplugin_settings {
      */
     public function execute($action, $subplugin) {
         $this->check_permissions();
+        $subpluginmanager = new subplugin_manager();
+        if ($action === ACTION_ENABLE_SUBPLUGIN){
+            $subpluginmanager->change_enabled($subplugin, true);
+        }
+        if ($action === ACTION_DISABLE_SUBPLUGIN){
+            $subpluginmanager->change_enabled($subplugin, false);
+        }
+
         $this->view_plugins_table();
     }
 

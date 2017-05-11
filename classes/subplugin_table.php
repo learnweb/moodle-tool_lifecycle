@@ -81,15 +81,17 @@ class subplugin_table extends \table_sql {
      */
     public function col_enabled($row) {
 
-        if ($row->enabled === 1) {
-            $alt = 'enable';
-            $icon = 't/show';
-        } else {
+        if ($row->enabled == 1) {
             $alt = 'disable';
             $icon = 't/hide';
+            $action = ACTION_DISABLE_SUBPLUGIN;
+        } else {
+            $alt = 'enable';
+            $icon = 't/show';
+            $action = ACTION_ENABLE_SUBPLUGIN;
         }
 
-        return  $this->format_icon_link(ACTION_ENABLE_SUBPLUGIN, $row->id, $icon, get_string($alt));
+        return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
     }
 
     /**

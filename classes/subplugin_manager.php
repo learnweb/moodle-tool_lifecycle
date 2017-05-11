@@ -70,7 +70,7 @@ class subplugin_manager {
     private function register_subplugin($subpluginname, $subplugintype) {
         if ($this->is_subplugin($subpluginname, $subplugintype)) {
             $subplugin = new subplugin($subpluginname, $subplugintype);
-            $this->persist($subplugin);
+            $this->insert_or_update($subplugin);
         }
     }
 
@@ -87,12 +87,40 @@ class subplugin_manager {
     }
 
     /**
+     * Changes the state of a subplugin.
+     * @param int $subpluginid id of the subplugin
+     * @param bool $enabled new state
+     */
+    public function change_enabled($subpluginid, $enabled) {
+        $subplugin = $this->get_subplugin_by_id($subpluginid);
+        if ($subplugin) {
+            $subplugin->enabled = $enabled;
+            $this->insert_or_update($subplugin);
+        }
+    }
+
+    /**
+     * Returns a subplugin object.
+     * @param int $subpluginid id of the subplugin
+     * @return subplugin
+     */
+    private function get_subplugin_by_id($subpluginid) {
+        global $DB;
+        $record = $DB->get_record('tool_cleanupcourses_plugin', array('id' => $subpluginid));
+        $subplugin = subplugin::from_record($record);
+        return $subplugin;
+    }
+
+    /**
      * Persists a subplugin to the database.
      * @param subplugin $subplugin
      */
-    private function persist(subplugin &$subplugin) {
+    private function insert_or_update(subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
+        if (object_property_exists($subplugin, 'id')) {
+            $DB->update_record('tool_cleanupcourses_plugin', $subplugin);
+        }
         $record = array(
             'name' => $subplugin->name,
             'type' => $subplugin->type,

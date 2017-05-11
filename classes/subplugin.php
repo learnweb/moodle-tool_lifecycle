@@ -62,8 +62,8 @@ class subplugin {
             return null;
         }
         $instance = new self($record->name, $record->type);
-        foreach (get_object_vars($record) as $field) {
-            if (object_property_exists($record, $field)) {
+        foreach (array_keys((array) $record) as $field) {
+            if (object_property_exists($instance, $field)) {
                 $instance->$field = $record->$field;
             }
         }
