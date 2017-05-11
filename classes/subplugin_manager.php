@@ -117,10 +117,12 @@ class subplugin_manager {
     public function change_sortindex($subpluginid, $up) {
         global $DB;
         $subplugin = $this->get_subplugin_by_id($subpluginid);
-        if ($subplugin->sortindex === 1 && $up) {
+        // Prevent first entry to be put up even more.
+        if ($subplugin->sortindex == 1 && $up) {
             return;
         }
-        if ($subplugin->sortindex === $this->count_enabled_trigger() && !$up) {
+        // Prevent last entry to be put down even more.
+        if ($subplugin->sortindex == $this->count_enabled_trigger() && !$up) {
             return;
         }
         $index = $subplugin->sortindex;
