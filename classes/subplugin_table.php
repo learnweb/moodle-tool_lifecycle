@@ -26,13 +26,14 @@ namespace tool_cleanupcourses;
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
+require_once(__DIR__ . '/../lib.php');
 
 class subplugin_table extends \table_sql {
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("name, type, enabled", '{tool_cleanupcourses_plugin}', "TRUE");
+        $this->set_sql("id, name, type, enabled", '{tool_cleanupcourses_plugin}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
@@ -72,4 +73,41 @@ class subplugin_table extends \table_sql {
 
         return get_string($type, 'tool_cleanupcourses');
     }
+
+    /**
+     * Render type column.
+     * @param $row
+     * @return string type of the subplugin
+     */
+    public function col_enabled($row) {
+
+        if ($row->enabled === 1) {
+            $alt = 'enable';
+            $icon = 't/show';
+        } else {
+            $alt = 'disable';
+            $icon = 't/hide';
+        }
+
+        return  $this->format_icon_link(ACTION_ENABLE_SUBPLUGIN, $row->id, $icon, get_string($alt));
+    }
+
+    /**
+     * Util function for writing an action icon link
+     *
+     * @param string $action URL parameter to include in the link
+     * @param string $subpluginid URL parameter to include in the link
+     * @param string $icon The key to the icon to use (e.g. 't/up')
+     * @param string $alt The string description of the link used as the title and alt text
+     * @return string The icon/link
+     */
+    private function format_icon_link($action, $subpluginid, $icon, $alt) {
+        global $PAGE, $OUTPUT;
+
+        return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
+                array('action' => $action, 'subplugin'=> $subpluginid, 'sesskey' => sesskey())),
+                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                null , array('title' => $alt)) . ' ';
+    }
+
 }
