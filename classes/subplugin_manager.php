@@ -222,4 +222,18 @@ class subplugin_manager {
         );
     }
 
+    /**
+     * Gets the list of currently enabled trigger subplugins.
+     * @return array of enabled trigger subplugins.
+     */
+    public function get_enabled_trigger() {
+        global $DB;
+        return $DB->get_records('tool_cleanupcourses_plugin',
+            array(
+                'enabled' => 1,
+                'type' => 'cleanupcoursestrigger'),
+            'sortindex ASC'
+        );
+    }
+
 }

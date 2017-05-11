@@ -35,19 +35,21 @@ class cleanup_processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
+        $manager = new subplugin_manager();
+        $enabledtrigger = $manager->get_enabled_trigger();
         $triggerlist = \core_component::get_plugin_list('cleanupcoursestrigger');
         $triggerclasses = [];
-        foreach ($triggerlist as $class => $classdir) {
-            require_once($classdir.'/lib.php');
-            $extendedclass = "tool_cleanupcourses\\trigger\\$class";
-            $triggerclasses[$class] = new $extendedclass();
+        foreach ($enabledtrigger as $trigger) {
+            require_once($triggerlist[$trigger->name].'/lib.php');
+            $extendedclass = "tool_cleanupcourses\\trigger\\$trigger->name";
+            $triggerclasses[$trigger->name] = new $extendedclass();
         }
         $recordset = $this->get_course_recordset();
         while ($recordset->valid()) {
             $course = $recordset->current();
             /* @var $trigger trigger\base -> Implementation of the subplugin trigger interface */
-            foreach ($triggerclasses as $trigger) {
-                $response = $trigger->check_course($course);
+            foreach ($enabledtrigger as $trigger) {
+                $response = $triggerclasses[$trigger->name]->check_course($course);
                 if ($response == TriggerResponse::next()) {
                     continue;
                 }
@@ -55,7 +57,8 @@ class cleanup_processor {
                     break;
                 }
                 if ($response == TriggerResponse::trigger()) {
-                    $this->trigger_course($course->id);
+                    $this->trigger_course($course->id, $trigger->id);
+                    break;
                 }
             }
             $recordset->next();
@@ -76,11 +79,11 @@ class cleanup_processor {
         return $DB->get_recordset_sql($sql);
     }
 
-    private function trigger_course($courseid) {
+    private function trigger_course($courseid, $subpluginid) {
         global $DB;
         $record = new \stdClass();
         $record->courseid = $courseid;
-        $record->subplugin_id = 3;
+        $record->subplugin_id = $subpluginid;
         $DB->insert_record('tool_cleanupcourses_process', $record);
     }
 
