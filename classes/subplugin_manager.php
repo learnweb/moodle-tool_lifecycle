@@ -236,4 +236,24 @@ class subplugin_manager {
         );
     }
 
+    /**
+     * Handles an action of the subplugin_settings.
+     * @param string $action action to be executed
+     * @param int $subplugin id of the subplugin
+     */
+    public function handle_action($action, $subplugin) {
+        if ($action === ACTION_ENABLE_SUBPLUGIN) {
+            $this->change_enabled($subplugin, true);
+        }
+        if ($action === ACTION_DISABLE_SUBPLUGIN) {
+            $this->change_enabled($subplugin, false);
+        }
+        if ($action === ACTION_UP_SUBPLUGIN) {
+            $this->change_sortindex($subplugin, true);
+        }
+        if ($action === ACTION_DOWN_SUBPLUGIN) {
+            $this->change_sortindex($subplugin, false);
+        }
+    }
+
 }
