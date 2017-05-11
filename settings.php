@@ -32,7 +32,7 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('tool_cleanupcourses',
         get_string('general_config_header', 'tool_cleanupcourses'));
     $ADMIN->add('cleanupcourses_category', $settings);
-    
+
     $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_active_processes());
     $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_sublugins());
 
