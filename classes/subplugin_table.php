@@ -105,7 +105,7 @@ class subplugin_table extends \table_sql {
         global $PAGE, $OUTPUT;
 
         return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
-                array('action' => $action, 'subplugin'=> $subpluginid, 'sesskey' => sesskey())),
+                array('action' => $action, 'subplugin' => $subpluginid, 'sesskey' => sesskey())),
                 new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
                 null , array('title' => $alt)) . ' ';
     }
