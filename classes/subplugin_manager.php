@@ -92,6 +92,8 @@ class subplugin_manager {
      * @param bool $enabled new state
      */
     public function change_enabled($subpluginid, $enabled) {
+        global $DB;
+        $transaction = $DB->start_delegated_transaction();
         $subplugin = $this->get_subplugin_by_id($subpluginid);
         if ($subplugin) {
             $subplugin->enabled = $enabled;
@@ -104,6 +106,7 @@ class subplugin_manager {
             }
             $this->insert_or_update($subplugin);
         }
+        $transaction->allow_commit();
     }
 
     /**
