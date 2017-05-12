@@ -78,8 +78,7 @@ class subplugin_settings {
     private $pageurl;
 
     /**
-     * Constructor for this assignment plugin manager
-     * @param string $subtype - either assignsubmission or assignfeedback
+     * Constructor for this subplugin settings
      */
     public function __construct() {
         $this->pageurl = new \moodle_url('/admin/tool/cleanupcourses/subpluginssettings.php');
@@ -93,7 +92,7 @@ class subplugin_settings {
         // Set up the table.
         $this->view_header();
 
-        $table = new subplugin_table('tool_cleanupcourses_subplugins');
+        $table = new trigger_table('tool_cleanupcourses_triggers');
 
         $table->out(5000, false);
 

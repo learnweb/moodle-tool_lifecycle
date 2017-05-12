@@ -29,16 +29,15 @@ class tool_cleanupcourses_generator extends testing_module_generator {
 
     public static function setup_test_plugins() {
         global $DB;
-        $DB->delete_records('tool_cleanupcourses_plugin');
+        $DB->delete_records('tool_cleanupcourses_trigger');
         for ($i = 1; $i <= 3; $i++) {
             $record = array(
                     'id' => $i,
                     'name' => 'subplugin'.$i,
-                    'type' => 'cleanupcoursestrigger',
                     'enabled' => 1,
                     'sortindex' => $i,
             );
-            $DB->insert_record_raw('tool_cleanupcourses_plugin', $record, true, true, true);
+            $DB->insert_record_raw('tool_cleanupcourses_trigger', $record, true, true, true);
         }
     }
 }

@@ -69,7 +69,7 @@ class subplugin_manager {
      */
     private function register_subplugin($subpluginname, $subplugintype) {
         if ($this->is_subplugin($subpluginname, $subplugintype)) {
-            $subplugin = new subplugin($subpluginname, $subplugintype);
+            $subplugin = new trigger_subplugin($subpluginname);
             $this->insert_or_update($subplugin);
         }
     }
@@ -81,7 +81,7 @@ class subplugin_manager {
      */
     private function deregister_subplugin($subpluginname, $subplugintype) {
         if ($this->is_subplugin($subpluginname, $subplugintype)) {
-            $subplugin = new subplugin($subpluginname, $subplugintype);
+            $subplugin = new trigger_subplugin($subpluginname);
             $this->remove($subplugin);
         }
     }
@@ -133,8 +133,8 @@ class subplugin_manager {
         }
         $transaction = $DB->start_delegated_transaction();
 
-        $otherrecord = $DB->get_record('tool_cleanupcourses_plugin', array('sortindex' => $otherindex));
-        $othersubplugin = $subplugin::from_record($otherrecord);
+        $otherrecord = $DB->get_record('tool_cleanupcourses_trigger', array('sortindex' => $otherindex));
+        $othersubplugin = trigger_subplugin::from_record($otherrecord);
 
         $subplugin->sortindex = $otherindex;
         $othersubplugin->sortindex = $index;
@@ -146,13 +146,13 @@ class subplugin_manager {
 
     /**
      * Removes a subplugin from the sortindex and adjusts all other indizes.
-     * @param subplugin $toberemoved
+     * @param trigger_subplugin $toberemoved
      */
     private function remove_from_sortindex(&$toberemoved) {
         global $DB;
-        $subplugins = $DB->get_records_select('tool_cleanupcourses_plugin', "sortindex > $toberemoved->sortindex");
+        $subplugins = $DB->get_records_select('tool_cleanupcourses_trigger', "sortindex > $toberemoved->sortindex");
         foreach ($subplugins as $record) {
-            $subplugin = subplugin::from_record($record);
+            $subplugin = trigger_subplugin::from_record($record);
             $subplugin->sortindex--;
             $this->insert_or_update($subplugin);
         }
@@ -162,51 +162,49 @@ class subplugin_manager {
     /**
      * Returns a subplugin object.
      * @param int $subpluginid id of the subplugin
-     * @return subplugin
+     * @return trigger_subplugin
      */
     private function get_subplugin_by_id($subpluginid) {
         global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_plugin', array('id' => $subpluginid));
-        $subplugin = subplugin::from_record($record);
+        $record = $DB->get_record('tool_cleanupcourses_trigger', array('id' => $subpluginid));
+        $subplugin = trigger_subplugin::from_record($record);
         return $subplugin;
     }
 
     /**
      * Persists a subplugin to the database.
-     * @param subplugin $subplugin
+     * @param trigger_subplugin $subplugin
      */
-    private function insert_or_update(subplugin &$subplugin) {
+    private function insert_or_update(trigger_subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         if ($subplugin->id !== null) {
-            $DB->update_record('tool_cleanupcourses_plugin', $subplugin);
+            $DB->update_record('tool_cleanupcourses_trigger', $subplugin);
         }
         $record = array(
             'name' => $subplugin->name,
-            'type' => $subplugin->type,
         );
-        if (!$DB->record_exists('tool_cleanupcourses_plugin', $record)) {
-            $subplugin->id = $DB->insert_record('tool_cleanupcourses_plugin', $record);
-            $record = $DB->get_record('tool_cleanupcourses_plugin', (array) $subplugin);
-            $subplugin = subplugin::from_record($record);
+        if (!$DB->record_exists('tool_cleanupcourses_trigger', $record)) {
+            $subplugin->id = $DB->insert_record('tool_cleanupcourses_trigger', $record);
+            $record = $DB->get_record('tool_cleanupcourses_trigger', array('id' => $subplugin->id));
+            $subplugin = trigger_subplugin::from_record($record);
         }
         $transaction->allow_commit();
     }
 
     /**
      * Removes a subplugin from the database.
-     * @param subplugin $subplugin
+     * @param trigger_subplugin $subplugin
      */
-    private function remove(subplugin &$subplugin) {
+    private function remove(trigger_subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         $record = array(
             'name' => $subplugin->name,
-            'type' => $subplugin->type,
         );
-        if ($record = $DB->get_record('tool_cleanupcourses_plugin', $record)) {
-            $DB->delete_records('tool_cleanupcourses_plugin', (array) $record);
-            $subplugin = subplugin::from_record($record);
+        if ($record = $DB->get_record('tool_cleanupcourses_trigger', $record)) {
+            $DB->delete_records('tool_cleanupcourses_trigger', (array) $record);
+            $subplugin = trigger_subplugin::from_record($record);
         }
         $transaction->allow_commit();
     }
@@ -217,10 +215,9 @@ class subplugin_manager {
      */
     public function count_enabled_trigger() {
         global $DB;
-        return $DB->count_records('tool_cleanupcourses_plugin',
+        return $DB->count_records('tool_cleanupcourses_trigger',
             array(
-                'enabled' => 1,
-                'type' => 'cleanupcoursestrigger')
+                'enabled' => 1)
         );
     }
 
@@ -230,10 +227,9 @@ class subplugin_manager {
      */
     public function get_enabled_trigger() {
         global $DB;
-        return $DB->get_records('tool_cleanupcourses_plugin',
+        return $DB->get_records('tool_cleanupcourses_trigger',
             array(
-                'enabled' => 1,
-                'type' => 'cleanupcoursestrigger'),
+                'enabled' => 1),
             'sortindex ASC'
         );
     }

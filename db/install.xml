@@ -14,14 +14,23 @@
         <KEY NAME="courseid_fk" TYPE="unique" FIELDS="courseid" COMMENT="Foreign key on course table"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="tool_cleanupcourses_plugin" COMMENT="Subplugins for the cleanup courses">
+    <TABLE NAME="tool_cleanupcourses_trigger" COMMENT="Trigger subplugins for the cleanup courses">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
-        <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="subplugin type of the subplugin"/>
         <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="tells if the subplugin is enabled"/>
         <FIELD NAME="followedby" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="tells which subplugin follows this one in the cleanup process"/>
         <FIELD NAME="sortindex" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Sortindex of the subplugins"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="tool_cleanupcourses_step" COMMENT="Step subplugins for the cleanup courses">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
+        <FIELD NAME="followedby" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="tells which subplugin follows this one in the cleanup process"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

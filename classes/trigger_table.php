@@ -28,22 +28,21 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../lib.php');
 
-class subplugin_table extends \table_sql {
+class trigger_table extends \table_sql {
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, name, type, enabled, sortindex", '{tool_cleanupcourses_plugin}', "TRUE");
+        $this->set_sql("id, name, enabled, sortindex", '{tool_cleanupcourses_trigger}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['name', 'type', 'enabled', 'sortindex']);
+        $this->define_columns(['name', 'enabled', 'sortindex']);
         $this->define_headers([
             get_string('subplugin_name', 'tool_cleanupcourses'),
-            get_string('subplugin_type', 'tool_cleanupcourses'),
             get_string('subplugin_enabled', 'tool_cleanupcourses'),
             get_string('subplugin_sortindex', 'tool_cleanupcourses')
             ]);
@@ -59,21 +58,8 @@ class subplugin_table extends \table_sql {
     public function col_name($row) {
 
         $name = $row->name;
-        $type = $row->type;
 
-        return get_string('pluginname', $type . '_' . $name);
-    }
-
-    /**
-     * Render type column.
-     * @param $row
-     * @return string type of the subplugin
-     */
-    public function col_type($row) {
-
-        $type = $row->type;
-
-        return get_string($type, 'tool_cleanupcourses');
+        return get_string('pluginname', 'cleanupcoursestrigger_' . $name);
     }
 
     /**
