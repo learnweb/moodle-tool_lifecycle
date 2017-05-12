@@ -33,18 +33,19 @@ class trigger_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, name, enabled, sortindex", '{tool_cleanupcourses_trigger}', "TRUE");
+        $this->set_sql("id, name, enabled, sortindex, followedby", '{tool_cleanupcourses_trigger}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['name', 'enabled', 'sortindex']);
+        $this->define_columns(['name', 'enabled', 'sortindex', 'followedby']);
         $this->define_headers([
             get_string('subplugin_name', 'tool_cleanupcourses'),
             get_string('subplugin_enabled', 'tool_cleanupcourses'),
-            get_string('subplugin_sortindex', 'tool_cleanupcourses')
+            get_string('subplugin_sortindex', 'tool_cleanupcourses'),
+            get_string('subplugin_followedby', 'tool_cleanupcourses'),
             ]);
         $this->sortable(false, 'sortindex');
         $this->setup();
@@ -129,6 +130,32 @@ class trigger_table extends \table_sql {
                 array('action' => $action, 'subplugin' => $subpluginid, 'sesskey' => sesskey())),
                 new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
                 null , array('title' => $alt)) . ' ';
+    }
+
+    /**
+     * Render followedby column.
+     * @param $row
+     * @return string action button for enabling/disabling of the subplugin
+     */
+    public function col_followedby($row) {
+        global $PAGE, $OUTPUT;
+
+        $manager = new step_manager();
+        $steps = $manager->get_steps();
+        $options = array();
+        foreach ($steps as $id => $step) {
+            $options[$id] = get_string('pluginname', 'cleanupcoursesstep_' . $step->name);
+        }
+
+        // Determine, which step is selected.
+        $selected = '';
+        if ($row->followedby !== null) {
+            $selected = (int) $row->followedby;
+        }
+
+        return $OUTPUT->single_select(new \moodle_url($PAGE->url,
+            array('action' => ACTION_FOLLOWEDBY_SUBPLUGIN, 'subplugin' => $row->id, 'sesskey' => sesskey())),
+            'followedby', $options, $selected);
     }
 
 }

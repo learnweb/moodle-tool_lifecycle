@@ -56,11 +56,15 @@ class step_manager extends subplugin_manager {
      * @param int $subpluginid id of the subplugin
      * @return trigger_subplugin
      */
-    private function get_subplugin_by_id($subpluginid) {
+    public function get_subplugin_by_id($subpluginid) {
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $subpluginid));
-        $subplugin = subplugin::from_record($record);
-        return $subplugin;
+        if ($record) {
+            $subplugin = subplugin::from_record($record);
+            return $subplugin;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -99,6 +103,15 @@ class step_manager extends subplugin_manager {
             $subplugin = trigger_subplugin::from_record($record);
         }
         $transaction->allow_commit();
+    }
+
+    /**
+     * Gets the list of currently enabled trigger subplugins.
+     * @return array of enabled trigger subplugins.
+     */
+    public function get_steps() {
+        global $DB;
+        return $DB->get_records('tool_cleanupcourses_step');
     }
 
 }

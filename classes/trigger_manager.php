@@ -110,6 +110,34 @@ class trigger_manager extends subplugin_manager {
     }
 
     /**
+     * Changes the followedby of a trigger.
+     * @param int $subpluginid id of the trigger
+     * @param int $followedby id of the step
+     */
+    public function change_followedby($subpluginid, $followedby) {
+        global $DB;
+        $transaction = $DB->start_delegated_transaction();
+
+        $subplugin = $this->get_subplugin_by_id($subpluginid);
+        if (!$subplugin) {
+            return; //TODO: Throw error.
+        }
+        $step_manager = new step_manager();
+        $step = $step_manager->get_subplugin_by_id($followedby);
+
+        // If step is not defined clear followedby.
+        if ($step) {
+            $subplugin->followedby = $step->id;
+        } else {
+            $subplugin->followedby = null;
+        }
+
+        $this->insert_or_update($subplugin);
+
+        $transaction->allow_commit();
+    }
+
+    /**
      * Removes a subplugin from the sortindex and adjusts all other indizes.
      * @param trigger_subplugin $toberemoved
      */
@@ -132,8 +160,12 @@ class trigger_manager extends subplugin_manager {
     private function get_subplugin_by_id($subpluginid) {
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_trigger', array('id' => $subpluginid));
-        $subplugin = trigger_subplugin::from_record($record);
-        return $subplugin;
+        if ($record) {
+            $subplugin = trigger_subplugin::from_record($record);
+            return $subplugin;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -216,6 +248,9 @@ class trigger_manager extends subplugin_manager {
         }
         if ($action === ACTION_DOWN_SUBPLUGIN) {
             $this->change_sortindex($subplugin, false);
+        }
+        if ($action === ACTION_FOLLOWEDBY_SUBPLUGIN) {
+            $this->change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
         }
     }
 

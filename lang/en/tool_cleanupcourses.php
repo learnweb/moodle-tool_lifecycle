@@ -35,6 +35,7 @@ $string['subplugin_name'] = 'Subplugin Name';
 $string['subplugin_type'] = 'Subplugin Type';
 $string['subplugin_enabled'] = 'Enabled';
 $string['subplugin_sortindex'] = 'Up/Down';
+$string['subplugin_followedby'] = 'Followed by';
 
 $string['trigger'] = 'Trigger';
 $string['step'] = 'Process step';

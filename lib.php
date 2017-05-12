@@ -26,3 +26,4 @@ define('ACTION_ENABLE_SUBPLUGIN', 'enable');
 define('ACTION_DISABLE_SUBPLUGIN', 'disable');
 define('ACTION_UP_SUBPLUGIN', 'up');
 define('ACTION_DOWN_SUBPLUGIN', 'down');
+define('ACTION_FOLLOWEDBY_SUBPLUGIN', 'followedby');
