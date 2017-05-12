@@ -108,4 +108,79 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 3, 'sortindex' => 3)));
     }
 
+    /**
+     * Test to disable the first subplugin.y
+     */
+    public function test_disable_first() {
+        global $DB;
+        $manager = new subplugin_manager();
+        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 1);
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 1, 'enabled' => 0,'sortindex' => null)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 2, 'enabled' => 1,'sortindex' => 1)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 3, 'enabled' => 1,'sortindex' => 2)));
+    }
+
+    /**
+     * Test to disable the second subplugin.
+     */
+    public function test_disable_second() {
+        global $DB;
+        $manager = new subplugin_manager();
+        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 2);
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 1, 'enabled' => 1,'sortindex' => 1)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 2, 'enabled' => 0,'sortindex' => null)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 3, 'enabled' => 1,'sortindex' => 2)));
+    }
+
+    /**
+     * Test to disable the third subplugin.
+     */
+    public function test_disable_third() {
+        global $DB;
+        $manager = new subplugin_manager();
+        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 3);
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 1, 'enabled' => 1,'sortindex' => 1)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 2, 'enabled' => 1,'sortindex' => 2)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 3, 'enabled' => 0,'sortindex' => null)));
+    }
+
+    /**
+     * Test to disable and enable the first subplugin.
+     */
+    public function test_disable_and_enable_first() {
+        global $DB;
+        $manager = new subplugin_manager();
+        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 1);
+        $manager->handle_action(ACTION_ENABLE_SUBPLUGIN, 1);
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 1, 'enabled' => 1,'sortindex' => 3)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 2, 'enabled' => 1,'sortindex' => 1)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 3, 'enabled' => 1,'sortindex' => 2)));
+    }
+
+    /**
+     * Test to disable and enable the second subplugin.
+     */
+    public function test_disable_and_enable_second() {
+        global $DB;
+        $manager = new subplugin_manager();
+        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 2);
+        $manager->handle_action(ACTION_ENABLE_SUBPLUGIN, 2);
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 1, 'enabled' => 1,'sortindex' => 1)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 2, 'enabled' => 1,'sortindex' => 3)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 3, 'enabled' => 1,'sortindex' => 2)));
+    }
+
+    /**
+     * Test to disable and enable the third subplugin.
+     */
+    public function test_disable_and_enable_third() {
+        global $DB;
+        $manager = new subplugin_manager();
+        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 3);
+        $manager->handle_action(ACTION_ENABLE_SUBPLUGIN, 3);
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 1, 'enabled' => 1,'sortindex' => 1)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 2, 'enabled' => 1,'sortindex' => 2)));
+        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_plugin', array('id' => 3, 'enabled' => 1,'sortindex' => 3)));
+    }
+
 }
