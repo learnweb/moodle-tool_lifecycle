@@ -35,7 +35,7 @@ class active_processes_table extends \table_sql {
         $this->set_sql('c.fullname as course, s.name as name ',
             '{tool_cleanupcourses_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
-            '{tool_cleanupcourses_step} s on p.subplugin_id = s.id',
+            '{tool_cleanupcourses_step} s on p.stepid = s.id',
             "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->init();

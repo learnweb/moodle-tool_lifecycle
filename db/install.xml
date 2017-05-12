@@ -7,7 +7,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true" COMMENT="id of the process"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="course id"/>
-        <FIELD NAME="subplugin_id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the subplugin currently responsible for this course"/>
+        <FIELD NAME="stepid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the step currently responsible for this course"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

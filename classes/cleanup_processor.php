@@ -83,7 +83,7 @@ class cleanup_processor {
         global $DB;
         $record = new \stdClass();
         $record->courseid = $courseid;
-        $record->subplugin_id = $subpluginid;
+        $record->stepid = 1;
         $DB->insert_record('tool_cleanupcourses_process', $record);
     }
 
