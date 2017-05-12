@@ -57,7 +57,7 @@ class cleanup_processor {
                     break;
                 }
                 if ($response == trigger_respone::trigger()) {
-                    $this->trigger_course($course->id, $trigger->id);
+                    $this->trigger_course($course->id, trigger_subplugin::from_record($trigger));
                     break;
                 }
             }
@@ -79,12 +79,19 @@ class cleanup_processor {
         return $DB->get_recordset_sql($sql);
     }
 
-    private function trigger_course($courseid, $subpluginid) {
+    /**
+     * Creates a process for the course which is at the respective step the trigger is followed by.
+     * @param int $courseid id of the course
+     * @param trigger_subplugin $trigger
+     */
+    private function trigger_course($courseid, $trigger) {
         global $DB;
-        $record = new \stdClass();
-        $record->courseid = $courseid;
-        $record->stepid = 1;
-        $DB->insert_record('tool_cleanupcourses_process', $record);
+        if ($trigger->followedby !== null) {
+            $record = new \stdClass();
+            $record->courseid = $courseid;
+            $record->stepid = $trigger->followedby;
+            $DB->insert_record('tool_cleanupcourses_process', $record);
+        }
     }
 
 }
