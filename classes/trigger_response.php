@@ -25,7 +25,7 @@ namespace tool_cleanupcourses;
 
 defined('MOODLE_INTERNAL') || die();
 
-class TriggerResponse {
+class trigger_respone {
 
     const NEXT = 'next';
     const EXCLUDE = 'exclude';
@@ -44,26 +44,26 @@ class TriggerResponse {
     /**
      * Creates a TriggerResponse telling that the subplugin does not want to process the course.
      * This means that the course can be passed to the next trigger.
-     * @return TriggerResponse
+     * @return trigger_respone
      */
     public static function next() {
-        return new TriggerResponse(self::NEXT);
+        return new trigger_respone(self::NEXT);
     }
 
     /**
      * Creates a TriggerResponse telling that the subplugin wants to exlude the course from cleanup.
-     * @return TriggerResponse
+     * @return trigger_respone
      */
     public static function exclude() {
-        return new TriggerResponse(self::EXCLUDE);
+        return new trigger_respone(self::EXCLUDE);
     }
 
     /**
      * Creates a TriggerResponse telling that the subplugin wants to trigger the cleanup process for the course.
-     * @return TriggerResponse
+     * @return trigger_respone
      */
     public static function trigger() {
-        return new TriggerResponse(self::TRIGGER);
+        return new trigger_respone(self::TRIGGER);
     }
 
 

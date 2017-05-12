@@ -25,10 +25,11 @@ namespace tool_cleanupcourses;
 
 defined('MOODLE_INTERNAL') || die();
 
-class SubpluginResponse {
+class step_response {
 
     const PROCEED = 'proceed';
     const WAITING = 'waiting';
+    const ROLLBACK = 'rollback';
 
     private $value;
 
@@ -41,17 +42,24 @@ class SubpluginResponse {
     }
 
     /**
-     * Creates a SubpluginResponse telling that the subplugin finished processing the course.
+     * Creates a step_response telling that the subplugin finished processing the course.
      */
     public static function proceed() {
-        return new SubpluginResponse(self::PROCEED);
+        return new step_response(self::PROCEED);
     }
 
     /**
-     * Creates a SubpluginResponse telling that the subplugin is still processing the course.
+     * Creates a step_response telling that the subplugin is still processing the course.
      */
     public static function waiting() {
-        return new SubpluginResponse(self::WAITING);
+        return new step_response(self::WAITING);
+    }
+
+    /**
+     * Creates a step_response telling that a rollback for the process of this course is necessary.
+     */
+    public static function rollback() {
+        return new step_response(self::ROLLBACK);
     }
 
 

@@ -16,7 +16,7 @@
 
 namespace tool_cleanupcourses\trigger;
 
-use tool_cleanupcourses\TriggerResponse;
+use tool_cleanupcourses\trigger_respone;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -45,7 +45,7 @@ class tool_cleanupcourses_trigger_startdatedelay_testcase extends \advanced_test
 
         $trigger = new startdatedelay();
         $response = $trigger->check_course($course);
-        $this->assertEquals($response, TriggerResponse::next());
+        $this->assertEquals($response, trigger_respone::next());
 
     }
 
@@ -61,7 +61,7 @@ class tool_cleanupcourses_trigger_startdatedelay_testcase extends \advanced_test
 
         $trigger = new startdatedelay();
         $response = $trigger->check_course($course);
-        $this->assertEquals($response, TriggerResponse::trigger());
+        $this->assertEquals($response, trigger_respone::trigger());
 
     }
 }

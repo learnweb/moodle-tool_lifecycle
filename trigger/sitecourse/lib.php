@@ -24,11 +24,11 @@
  */
 namespace tool_cleanupcourses\trigger;
 
-use tool_cleanupcourses\TriggerResponse;
+use tool_cleanupcourses\trigger_respone;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
-require_once(__DIR__ . '/../../classes/triggerresponse.php');
+require_once(__DIR__ . '/../../classes/trigger_response.php');
 
 /**
  * Class which implements the basic methods necessary for a cleanup courses trigger subplugin
@@ -40,13 +40,13 @@ class sitecourse implements base {
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
      * @param $course object to be processed.
-     * @return TriggerResponse
+     * @return trigger_respone
      */
     public function check_course($course) {
         if ($course->id == SITEID) {
-            return TriggerResponse::exclude();
+            return trigger_respone::exclude();
         }
-        return TriggerResponse::next();
+        return trigger_respone::next();
     }
 
 }

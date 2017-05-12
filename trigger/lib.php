@@ -25,7 +25,7 @@
  */
 namespace tool_cleanupcourses\trigger;
 
-use tool_cleanupcourses\TriggerResponse;
+use tool_cleanupcourses\trigger_respone;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -35,7 +35,7 @@ interface base {
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
      * @param $course object to be processed.
-     * @return TriggerResponse
+     * @return trigger_respone
      */
     public function check_course($course);
 

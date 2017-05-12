@@ -50,13 +50,13 @@ class cleanup_processor {
             /* @var $trigger trigger\base -> Implementation of the subplugin trigger interface */
             foreach ($enabledtrigger as $trigger) {
                 $response = $triggerclasses[$trigger->name]->check_course($course);
-                if ($response == TriggerResponse::next()) {
+                if ($response == trigger_respone::next()) {
                     continue;
                 }
-                if ($response == TriggerResponse::exclude()) {
+                if ($response == trigger_respone::exclude()) {
                     break;
                 }
-                if ($response == TriggerResponse::trigger()) {
+                if ($response == trigger_respone::trigger()) {
                     $this->trigger_course($course->id, $trigger->id);
                     break;
                 }
