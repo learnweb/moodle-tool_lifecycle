@@ -15,15 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of subplugins
+ * Pluginfo for cleanup courses step
  *
  * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace tool_cleanupcourses\plugininfo;
+
+use core\plugininfo\base;
+
 defined('MOODLE_INTERNAL') || die();
 
-$subplugins = array(
-    'cleanupcoursestrigger' => 'admin/tool/cleanupcourses/trigger',
-    'cleanupcoursesstep' => 'admin/tool/cleanupcourses/step',
-);
+
+class cleanupcoursesstep extends base {
+    public function is_uninstall_allowed() {
+        if ($this->is_standard()) {
+            return false;
+        }
+        return true;
+    }
+}

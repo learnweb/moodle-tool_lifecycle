@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of subplugins
+ * Cleanup Courses Dummy Step
  *
- * @package tool_cleanupcourses
+ * @package tool_cleanupcourses_step
+ * @subpackage dummy
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
-$subplugins = array(
-    'cleanupcoursestrigger' => 'admin/tool/cleanupcourses/trigger',
-    'cleanupcoursesstep' => 'admin/tool/cleanupcourses/step',
-);
+defined('MOODLE_INTERNAL') || die;
+
+$plugin->version  = 2017050901;
+$plugin->component = 'cleanupcoursesstep_dummy';

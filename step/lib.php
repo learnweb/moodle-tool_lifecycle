@@ -15,15 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of subplugins
+ * Interface for the subplugintype step
+ * It has to be implemented by all subplugins.
  *
  * @package tool_cleanupcourses
+ * @subpackage step
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_cleanupcourses\step;
+
+use tool_cleanupcourses\step_response;
+
 defined('MOODLE_INTERNAL') || die();
 
-$subplugins = array(
-    'cleanupcoursestrigger' => 'admin/tool/cleanupcourses/trigger',
-    'cleanupcoursesstep' => 'admin/tool/cleanupcourses/step',
-);
+interface base {
+
+
+    /**
+     * Processes the course and returns a repsonse.
+     * The response tells either
+     *  - that the subplugin is finished processing.
+     *  - that the subplugin is not yet finished processing.
+     *  - that a rollback for this course is necessary.
+     * @param $course object to be processed.
+     * @return step_response
+     */
+    public function process_course($course);
+
+}

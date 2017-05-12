@@ -37,8 +37,12 @@ $string['subplugin_enabled'] = 'Enabled';
 $string['subplugin_sortindex'] = 'Up/Down';
 
 $string['trigger'] = 'Trigger';
+$string['step'] = 'Process step';
 
 $string['cleanupcoursestrigger'] = 'Trigger';
+$string['cleanupcoursesstep'] = 'Process step';
 
 $string['subplugintype_cleanupcoursestrigger'] = 'Trigger for starting the course cleanup';
 $string['subplugintype_cleanupcoursestrigger_plural'] = 'Triggers for starting the course cleanup';
+$string['subplugintype_cleanupcoursesstep'] = 'Step within a course cleanup process';
+$string['subplugintype_cleanupcoursesstep_plural'] = 'Steps within a course cleanup process';

@@ -32,10 +32,10 @@ class active_processes_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("c.fullname as course, s.name as name",
-            '{tool_cleanupcourses_process} p join' .
-            '{course} c on p.courseid = c.id join' .
-            '{tool_cleanupcourses_trigger} s on p.subplugin_id = s.id',
+        $this->set_sql('c.fullname as course, s.name as name ',
+            '{tool_cleanupcourses_process} p join ' .
+            '{course} c on p.courseid = c.id join ' .
+            '{tool_cleanupcourses_step} s on p.subplugin_id = s.id',
             "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->init();
@@ -43,7 +43,7 @@ class active_processes_table extends \table_sql {
 
     public function init() {
         $this->define_columns(['course', 'subplugin']);
-        $this->define_headers([get_string('course'), get_string('')]);
+        $this->define_headers([get_string('course'), get_string('step', 'tool_cleanupcourses')]);
         $this->setup();
     }
 

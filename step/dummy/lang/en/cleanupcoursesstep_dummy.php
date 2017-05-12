@@ -15,15 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of subplugins
+ * Lang strings for start date delay trigger
  *
- * @package tool_cleanupcourses
+ * @package tool_cleanupcourses_trigger
+ * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
-$subplugins = array(
-    'cleanupcoursestrigger' => 'admin/tool/cleanupcourses/trigger',
-    'cleanupcoursesstep' => 'admin/tool/cleanupcourses/step',
-);
+$string['pluginname'] = 'Dummy trigger';

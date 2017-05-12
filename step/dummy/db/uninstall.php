@@ -15,15 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of subplugins
+ * Uninstall script for course cleanup subplugin
  *
- * @package tool_cleanupcourses
+ * @package tool_cleanupcourses_trigger
+ * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+use tool_cleanupcourses\subplugin_manager;
+
 defined('MOODLE_INTERNAL') || die();
 
-$subplugins = array(
-    'cleanupcoursestrigger' => 'admin/tool/cleanupcourses/trigger',
-    'cleanupcoursesstep' => 'admin/tool/cleanupcourses/step',
-);
+function xmldb_cleanupcoursesstep_dummy_uninstall() {
+    $manager = new subplugin_manager();
+//    $manager->deregister_step('dummy');
+}
