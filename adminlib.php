@@ -133,7 +133,7 @@ class subplugin_settings {
      */
     public function execute($action, $subplugin) {
         $this->check_permissions();
-        $subpluginmanager = new subplugin_manager();
+        $subpluginmanager = new trigger_manager();
         $subpluginmanager->handle_action($action, $subplugin);
         $this->view_plugins_table();
     }

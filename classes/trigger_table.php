@@ -99,7 +99,7 @@ class trigger_table extends \table_sql {
             } else {
                 $output .= $OUTPUT->spacer();
             }
-            $manager = new subplugin_manager();
+            $manager = new trigger_manager();
             if ($row->sortindex < $manager->count_enabled_trigger()) {
                 $alt = 'down';
                 $icon = 't/down';

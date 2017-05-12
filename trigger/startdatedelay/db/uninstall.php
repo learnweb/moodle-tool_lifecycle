@@ -22,11 +22,11 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-use tool_cleanupcourses\subplugin_manager;
+use tool_cleanupcourses\trigger_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_cleanupcoursestrigger_startdatedelay_uninstall() {
-    $manager = new subplugin_manager();
-    $manager->deregister_trigger('startdatedelay');
+    $manager = new trigger_manager();
+    $manager->deregister('startdatedelay');
 }

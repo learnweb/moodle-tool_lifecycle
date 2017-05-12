@@ -35,7 +35,7 @@ class cleanup_processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
-        $manager = new subplugin_manager();
+        $manager = new trigger_manager();
         $enabledtrigger = $manager->get_enabled_trigger();
         $triggerlist = \core_component::get_plugin_list('cleanupcoursestrigger');
         $triggerclasses = [];

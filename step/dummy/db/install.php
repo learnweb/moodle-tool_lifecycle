@@ -22,11 +22,11 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-use tool_cleanupcourses\subplugin_manager;
+use tool_cleanupcourses\step_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_cleanupcoursesstep_dummy_install() {
-    $manager = new subplugin_manager();
-//    $manager->register_step('dummy');
+    $manager = new step_manager();
+    $manager->register('dummy');
 }

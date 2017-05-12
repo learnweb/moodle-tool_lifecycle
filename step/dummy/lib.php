@@ -44,7 +44,7 @@ class dummy implements base {
      * @param $course object to be processed.
      * @return step_response
      */
-    public function process_course($course){
+    public function process_course($course) {
 
     }
 
