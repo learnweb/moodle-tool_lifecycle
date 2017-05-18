@@ -174,7 +174,7 @@ class subplugin_settings {
         $stepmanager->handle_action($action, $subplugin);
 
         $steptomodify = null;
-        if ($stepid = optional_param('stepid', null, PARAM_INT)) {
+        if ($stepid = optional_param('subplugin', null, PARAM_INT)) {
             $steptomodify = $stepmanager->get_subplugin_by_id($stepid);
         }
         $form = new form_step_instance($PAGE->url, $steptomodify);

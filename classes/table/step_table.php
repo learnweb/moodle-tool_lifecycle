@@ -97,7 +97,7 @@ class step_table extends \table_sql {
 
         $alt = 'edit';
         $icon = 't/edit';
-        $action = ACTION_STEP_INSTANCE_EDIT;
+        $action = ACTION_STEP_INSTANCE_FORM;
 
         return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
     }
