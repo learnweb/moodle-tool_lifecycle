@@ -28,30 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 class step_manager extends subplugin_manager {
 
     /**
-     * Registers a step subplugin.
-     * This has to be called, when installing step subplugins!
-     * @param string $subpluginname name of the plugin
-     */
-    public function register($subpluginname) {
-        if ($this->is_subplugin($subpluginname, 'cleanupcoursesstep')) {
-            $subplugin = new trigger_subplugin($subpluginname);
-            $this->insert_or_update($subplugin);
-        }
-    }
-
-    /**
-     * Deregisters a step subplugin.
-     * This has to be called, when uninstalling step subplugins!
-     * @param string $subpluginname name of the plugin
-     */
-    public function deregister($subpluginname) {
-        if ($this->is_subplugin($subpluginname, 'cleanupcoursesstep')) {
-            $subplugin = new trigger_subplugin($subpluginname);
-            $this->remove($subplugin);
-        }
-    }
-
-    /**
      * Returns a subplugin object.
      * @param int $subpluginid id of the subplugin
      * @return trigger_subplugin

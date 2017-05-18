@@ -28,20 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 abstract class subplugin_manager {
 
     /**
-     * Registers a subplugin.
-     * This has to be called, when installing a subplugins!
-     * @param string $subpluginname name of the subplugin
-     */
-    abstract function register($subpluginname);
-
-    /**
-     * Deregisters a trigger subplugin.
-     * This has to be called, when uninstalling a subplugins!
-     * @param string $subpluginname name of the subplugin
-     */
-    abstract function deregister($subpluginname);
-
-    /**
      * Determines if there exists a subplugin for the given name and type
      * @param $subpluginname
      * @param $subplugintype
