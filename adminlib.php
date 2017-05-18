@@ -96,6 +96,9 @@ class subplugin_settings {
 
         $table->out(5000, false);
 
+        $table = new step_table('tool_cleanupcourses_steps');
+        $table->out(5000, false);
+
         $this->view_footer();
     }
 
