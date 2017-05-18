@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Table listing active processes
+ * Table listing triggers
  *
  * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
@@ -42,10 +42,10 @@ class trigger_table extends \table_sql {
     public function init() {
         $this->define_columns(['name', 'enabled', 'sortindex', 'followedby']);
         $this->define_headers([
-            get_string('subplugin_name', 'tool_cleanupcourses'),
-            get_string('subplugin_enabled', 'tool_cleanupcourses'),
-            get_string('subplugin_sortindex', 'tool_cleanupcourses'),
-            get_string('subplugin_followedby', 'tool_cleanupcourses'),
+            get_string('trigger_name', 'tool_cleanupcourses'),
+            get_string('trigger_enabled', 'tool_cleanupcourses'),
+            get_string('trigger_sortindex', 'tool_cleanupcourses'),
+            get_string('trigger_followedby', 'tool_cleanupcourses'),
             ]);
         $this->sortable(false, 'sortindex');
         $this->setup();
@@ -73,11 +73,11 @@ class trigger_table extends \table_sql {
         if ($row->enabled == 1) {
             $alt = 'disable';
             $icon = 't/hide';
-            $action = ACTION_DISABLE_SUBPLUGIN;
+            $action = ACTION_DISABLE_TRIGGER;
         } else {
             $alt = 'enable';
             $icon = 't/show';
-            $action = ACTION_ENABLE_SUBPLUGIN;
+            $action = ACTION_ENABLE_TRIGGER;
         }
 
         return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
@@ -95,7 +95,7 @@ class trigger_table extends \table_sql {
             if ($row->sortindex > 1) {
                 $alt = 'up';
                 $icon = 't/up';
-                $action = ACTION_UP_SUBPLUGIN;
+                $action = ACTION_UP_TRIGGER;
                 $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
             } else {
                 $output .= $OUTPUT->spacer();
@@ -104,7 +104,7 @@ class trigger_table extends \table_sql {
             if ($row->sortindex < $manager->count_enabled_trigger()) {
                 $alt = 'down';
                 $icon = 't/down';
-                $action = ACTION_DOWN_SUBPLUGIN;
+                $action = ACTION_DOWN_TRIGGER;
                 $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
             } else {
                 $output .= $OUTPUT->spacer();
@@ -141,7 +141,7 @@ class trigger_table extends \table_sql {
         global $PAGE, $OUTPUT;
 
         $manager = new step_manager();
-        $steps = $manager->get_steps();
+        $steps = $manager->get_step_instances();
         $options = array();
         foreach ($steps as $id => $step) {
             $options[$id] = get_string('pluginname', 'cleanupcoursesstep_' . $step->name);
@@ -154,7 +154,7 @@ class trigger_table extends \table_sql {
         }
 
         return $OUTPUT->single_select(new \moodle_url($PAGE->url,
-            array('action' => ACTION_FOLLOWEDBY_SUBPLUGIN, 'subplugin' => $row->id, 'sesskey' => sesskey())),
+            array('action' => ACTION_FOLLOWEDBY_TRIGGER, 'subplugin' => $row->id, 'sesskey' => sesskey())),
             'followedby', $options, $selected);
     }
 

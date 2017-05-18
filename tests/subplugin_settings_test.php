@@ -42,7 +42,7 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_up_first() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_UP_SUBPLUGIN, 1);
+        $manager->handle_action(ACTION_UP_TRIGGER, 1);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 2)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
@@ -54,7 +54,7 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_up_second() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_UP_SUBPLUGIN, 2);
+        $manager->handle_action(ACTION_UP_TRIGGER, 2);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 2)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
@@ -66,7 +66,7 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_up_third() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_UP_SUBPLUGIN, 3);
+        $manager->handle_action(ACTION_UP_TRIGGER, 3);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 3)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 2)));
@@ -78,7 +78,7 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_down_first() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_DOWN_SUBPLUGIN, 1);
+        $manager->handle_action(ACTION_DOWN_TRIGGER, 1);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 2)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
@@ -90,7 +90,7 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_down_second() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_DOWN_SUBPLUGIN, 2);
+        $manager->handle_action(ACTION_DOWN_TRIGGER, 2);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 3)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 2)));
@@ -102,7 +102,7 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_down_third() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_DOWN_SUBPLUGIN, 3);
+        $manager->handle_action(ACTION_DOWN_TRIGGER, 3);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 2)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
@@ -114,7 +114,7 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_disable_first() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 1);
+        $manager->handle_action(ACTION_DISABLE_TRIGGER, 1);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger',
             array('id' => 1, 'enabled' => 0, 'sortindex' => null)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger',
@@ -129,7 +129,7 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_disable_second() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 2);
+        $manager->handle_action(ACTION_DISABLE_TRIGGER, 2);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger',
             array('id' => 1, 'enabled' => 1, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger',
@@ -144,7 +144,7 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_disable_third() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 3);
+        $manager->handle_action(ACTION_DISABLE_TRIGGER, 3);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger',
             array('id' => 1, 'enabled' => 1, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger',
@@ -159,8 +159,8 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_disable_and_enable_first() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 1);
-        $manager->handle_action(ACTION_ENABLE_SUBPLUGIN, 1);
+        $manager->handle_action(ACTION_DISABLE_TRIGGER, 1);
+        $manager->handle_action(ACTION_ENABLE_TRIGGER, 1);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'enabled' => 1, 'sortindex' => 3)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'enabled' => 1, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'enabled' => 1, 'sortindex' => 2)));
@@ -172,8 +172,8 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_disable_and_enable_second() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 2);
-        $manager->handle_action(ACTION_ENABLE_SUBPLUGIN, 2);
+        $manager->handle_action(ACTION_DISABLE_TRIGGER, 2);
+        $manager->handle_action(ACTION_ENABLE_TRIGGER, 2);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'enabled' => 1, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'enabled' => 1, 'sortindex' => 3)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'enabled' => 1, 'sortindex' => 2)));
@@ -185,8 +185,8 @@ class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase
     public function test_disable_and_enable_third() {
         global $DB;
         $manager = new trigger_manager();
-        $manager->handle_action(ACTION_DISABLE_SUBPLUGIN, 3);
-        $manager->handle_action(ACTION_ENABLE_SUBPLUGIN, 3);
+        $manager->handle_action(ACTION_DISABLE_TRIGGER, 3);
+        $manager->handle_action(ACTION_ENABLE_TRIGGER, 3);
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'enabled' => 1, 'sortindex' => 1)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'enabled' => 1, 'sortindex' => 2)));
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'enabled' => 1, 'sortindex' => 3)));

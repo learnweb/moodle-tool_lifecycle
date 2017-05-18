@@ -106,10 +106,10 @@ class step_manager extends subplugin_manager {
     }
 
     /**
-     * Gets the list of currently enabled trigger subplugins.
-     * @return array of enabled trigger subplugins.
+     * Gets the list of step instances.
+     * @return array of step instances.
      */
-    public function get_steps() {
+    public function get_step_instances() {
         global $DB;
         return $DB->get_records('tool_cleanupcourses_step');
     }

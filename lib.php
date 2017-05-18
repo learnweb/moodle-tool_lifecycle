@@ -22,8 +22,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-define('ACTION_ENABLE_SUBPLUGIN', 'enable');
-define('ACTION_DISABLE_SUBPLUGIN', 'disable');
-define('ACTION_UP_SUBPLUGIN', 'up');
-define('ACTION_DOWN_SUBPLUGIN', 'down');
-define('ACTION_FOLLOWEDBY_SUBPLUGIN', 'followedby');
+define('ACTION_ENABLE_TRIGGER', 'enable');
+define('ACTION_DISABLE_TRIGGER', 'disable');
+define('ACTION_UP_TRIGGER', 'up');
+define('ACTION_DOWN_TRIGGER', 'down');
+define('ACTION_FOLLOWEDBY_TRIGGER', 'followedby_trigger');
+define('ACTION_FOLLOWEDBY_STEP', 'followedby_step');

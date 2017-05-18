@@ -31,11 +31,14 @@ $string['general_config_header'] = "General & Subplugins";
 $string['active_processes_list_header'] = 'Active Processes';
 $string['subpluginssettings_heading'] = 'Subplugin Workflow';
 
-$string['subplugin_name'] = 'Subplugin Name';
-$string['subplugin_type'] = 'Subplugin Type';
-$string['subplugin_enabled'] = 'Enabled';
-$string['subplugin_sortindex'] = 'Up/Down';
-$string['subplugin_followedby'] = 'Followed by';
+$string['trigger_name'] = 'Subplugin Name';
+$string['trigger_enabled'] = 'Enabled';
+$string['trigger_sortindex'] = 'Up/Down';
+$string['trigger_followedby'] = 'Followed by';
+
+$string['step_name'] = 'Step Type';
+$string['step_instancename'] = 'Instance Name';
+$string['step_followedby'] = 'Followed by';
 
 $string['trigger'] = 'Trigger';
 $string['step'] = 'Process step';

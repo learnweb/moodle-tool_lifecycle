@@ -237,19 +237,19 @@ class trigger_manager extends subplugin_manager {
      * @param int $subplugin id of the subplugin
      */
     public function handle_action($action, $subplugin) {
-        if ($action === ACTION_ENABLE_SUBPLUGIN) {
+        if ($action === ACTION_ENABLE_TRIGGER) {
             $this->change_enabled($subplugin, true);
         }
-        if ($action === ACTION_DISABLE_SUBPLUGIN) {
+        if ($action === ACTION_DISABLE_TRIGGER) {
             $this->change_enabled($subplugin, false);
         }
-        if ($action === ACTION_UP_SUBPLUGIN) {
+        if ($action === ACTION_UP_TRIGGER) {
             $this->change_sortindex($subplugin, true);
         }
-        if ($action === ACTION_DOWN_SUBPLUGIN) {
+        if ($action === ACTION_DOWN_TRIGGER) {
             $this->change_sortindex($subplugin, false);
         }
-        if ($action === ACTION_FOLLOWEDBY_SUBPLUGIN) {
+        if ($action === ACTION_FOLLOWEDBY_TRIGGER) {
             $this->change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
         }
     }
