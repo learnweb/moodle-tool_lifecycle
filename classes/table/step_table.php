@@ -42,11 +42,13 @@ class step_table extends \table_sql {
     }
 
     public function init() {
-        $this->define_columns(['instancename', 'name', 'followedby']);
+        $this->define_columns(['instancename', 'name', 'followedby', 'edit', 'delete']);
         $this->define_headers([
             get_string('step_instancename', 'tool_cleanupcourses'),
             get_string('step_name', 'tool_cleanupcourses'),
             get_string('step_followedby', 'tool_cleanupcourses'),
+            get_string('step_edit', 'tool_cleanupcourses'),
+            get_string('step_delete', 'tool_cleanupcourses'),
             ]);
         $this->sortable(false);
         $this->setup();
@@ -84,6 +86,52 @@ class step_table extends \table_sql {
         return $OUTPUT->single_select(new \moodle_url($PAGE->url,
             array('action' => ACTION_FOLLOWEDBY_STEP, 'subplugin' => $row->id, 'sesskey' => sesskey())),
             'followedby', $steps, $selected);
+    }
+
+    /**
+     * Render edit column.
+     * @param $row
+     * @return string action button for editing of the subplugin
+     */
+    public function col_edit($row) {
+
+        $alt = 'edit';
+        $icon = 't/edit';
+        $action = ACTION_STEP_INSTANCE_EDIT;
+
+        return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+    }
+
+    /**
+     * Render delete column.
+     * @param $row
+     * @return string action button for deleting the subplugin
+     */
+    public function col_delete($row) {
+
+        $alt = 'delete';
+        $icon = 't/delete';
+        $action = ACTION_STEP_INSTANCE_DELETE;
+
+        return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+    }
+
+    /**
+     * Util function for writing an action icon link
+     *
+     * @param string $action URL parameter to include in the link
+     * @param string $subpluginid URL parameter to include in the link
+     * @param string $icon The key to the icon to use (e.g. 't/up')
+     * @param string $alt The string description of the link used as the title and alt text
+     * @return string The icon/link
+     */
+    private function format_icon_link($action, $subpluginid, $icon, $alt) {
+        global $PAGE, $OUTPUT;
+
+        return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
+                array('action' => $action, 'subplugin' => $subpluginid, 'sesskey' => sesskey())),
+                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                null , array('title' => $alt)) . ' ';
     }
 
 }

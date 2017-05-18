@@ -24,6 +24,8 @@
 namespace tool_cleanupcourses\manager;
 
 use tool_cleanupcourses\object\step_subplugin;
+use tool_cleanupcourses\object\trigger_subplugin;
+use tool_cleanupcourses\manager\trigger_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -63,18 +65,29 @@ class step_manager extends subplugin_manager {
     }
 
     /**
-     * Removes a subplugin from the database.
-     * @param step_subplugin $subplugin
+     * Removes a step instance from the database.
+     * @param int $stepinstanceid step instance id
      */
-    private function remove(step_subplugin &$subplugin) {
+    private function remove($stepinstanceid) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
-        $record = array(
-            'name' => $subplugin->name,
-        );
-        if ($record = $DB->get_record('tool_cleanupcourses_step', $record)) {
+        if ($record = $DB->get_record('tool_cleanupcourses_step', array('id' => $stepinstanceid))) {
+
+            $othersteps = $DB->get_records('tool_cleanupcourses_step', array('followedby' => $stepinstanceid));
+            foreach ($othersteps as $steprecord) {
+                $step = step_subplugin::from_record($steprecord);
+                $step->followedby = null;
+                $this->insert_or_update($step);
+            }
+
+            $othertrigger = $DB->get_records('tool_cleanupcourses_trigger', array('followedby' => $stepinstanceid));
+            foreach ($othertrigger as $triggerrecord) {
+                $trigger = trigger_subplugin::from_record($triggerrecord);
+                $trigger->followedby = null;
+                $triggermanager = new trigger_manager();
+                $triggermanager->insert_or_update($trigger);
+            }
             $DB->delete_records('tool_cleanupcourses_step', (array) $record);
-            $subplugin = step_subplugin::from_record($record);
         }
         $transaction->allow_commit();
     }
@@ -141,6 +154,9 @@ class step_manager extends subplugin_manager {
     public function handle_action($action, $subplugin) {
         if ($action === ACTION_FOLLOWEDBY_STEP) {
             $this->change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
+        }
+        if ($action === ACTION_STEP_INSTANCE_DELETE) {
+            $this->remove($subplugin);
         }
     }
 }

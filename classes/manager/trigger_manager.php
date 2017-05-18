@@ -174,7 +174,7 @@ class trigger_manager extends subplugin_manager {
      * Persists a subplugin to the database.
      * @param trigger_subplugin $subplugin
      */
-    private function insert_or_update(trigger_subplugin &$subplugin) {
+    public function insert_or_update(trigger_subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         if ($subplugin->id !== null) {

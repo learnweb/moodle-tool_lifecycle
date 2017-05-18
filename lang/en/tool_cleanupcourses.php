@@ -44,6 +44,8 @@ $string['trigger_followedby'] = 'Followed by';
 $string['step_name'] = 'Step Type';
 $string['step_instancename'] = 'Instance Name';
 $string['step_followedby'] = 'Followed by';
+$string['step_edit'] = 'Edit';
+$string['step_delete'] = 'Delete';
 
 $string['trigger'] = 'Trigger';
 $string['step'] = 'Process step';
