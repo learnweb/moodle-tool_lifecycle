@@ -21,7 +21,9 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses;
+namespace tool_cleanupcourses\manager;
+
+use tool_cleanupcourses\object\trigger_subplugin;
 
 defined('MOODLE_INTERNAL') || die();
 

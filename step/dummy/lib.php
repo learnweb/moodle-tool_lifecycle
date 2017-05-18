@@ -25,12 +25,11 @@
  */
 namespace tool_cleanupcourses\step;
 
-use tool_cleanupcourses\step_response;
+use tool_cleanupcourses\response\step_response;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
-require_once(__DIR__ . '/../../classes/step_response.php');
 
 class dummy implements base {
 

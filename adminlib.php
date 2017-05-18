@@ -16,6 +16,11 @@
 
 namespace tool_cleanupcourses;
 
+use tool_cleanupcourses\manager\step_manager;
+use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\table\step_table;
+use tool_cleanupcourses\table\trigger_table;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/adminlib.php');

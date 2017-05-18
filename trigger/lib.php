@@ -25,7 +25,7 @@
  */
 namespace tool_cleanupcourses\trigger;
 
-use tool_cleanupcourses\trigger_respone;
+use tool_cleanupcourses\response\trigger_respone;
 
 defined('MOODLE_INTERNAL') || die();
 

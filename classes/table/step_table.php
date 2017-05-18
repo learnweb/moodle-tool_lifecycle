@@ -21,12 +21,14 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses;
+namespace tool_cleanupcourses\table;
+
+use tool_cleanupcourses\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
-require_once(__DIR__ . '/../lib.php');
+require_once(__DIR__ . '/../../lib.php');
 
 class step_table extends \table_sql {
 

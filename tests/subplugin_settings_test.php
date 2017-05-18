@@ -19,7 +19,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 
-use \tool_cleanupcourses\trigger_manager;
+use \tool_cleanupcourses\manager\trigger_manager;
 
 /**
  * Tests the different state changes of the subplugin_settings.

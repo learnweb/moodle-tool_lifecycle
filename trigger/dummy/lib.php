@@ -25,11 +25,10 @@
  */
 namespace tool_cleanupcourses\trigger;
 
-use tool_cleanupcourses\trigger_respone;
+use tool_cleanupcourses\response\trigger_respone;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
-require_once(__DIR__ . '/../../classes/trigger_response.php');
 
 /**
  * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin

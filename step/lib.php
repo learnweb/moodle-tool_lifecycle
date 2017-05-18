@@ -25,7 +25,7 @@
  */
 namespace tool_cleanupcourses\step;
 
-use tool_cleanupcourses\step_response;
+use tool_cleanupcourses\response\step_response;
 
 defined('MOODLE_INTERNAL') || die();
 

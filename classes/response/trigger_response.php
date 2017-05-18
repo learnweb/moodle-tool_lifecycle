@@ -21,11 +21,11 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses;
+namespace tool_cleanupcourses\response;
 
 defined('MOODLE_INTERNAL') || die();
 
-class trigger_respone {
+class trigger_response {
 
     const NEXT = 'next';
     const EXCLUDE = 'exclude';
@@ -44,26 +44,26 @@ class trigger_respone {
     /**
      * Creates a TriggerResponse telling that the subplugin does not want to process the course.
      * This means that the course can be passed to the next trigger.
-     * @return trigger_respone
+     * @return trigger_response
      */
     public static function next() {
-        return new trigger_respone(self::NEXT);
+        return new trigger_response(self::NEXT);
     }
 
     /**
      * Creates a TriggerResponse telling that the subplugin wants to exlude the course from cleanup.
-     * @return trigger_respone
+     * @return trigger_response
      */
     public static function exclude() {
-        return new trigger_respone(self::EXCLUDE);
+        return new trigger_response(self::EXCLUDE);
     }
 
     /**
      * Creates a TriggerResponse telling that the subplugin wants to trigger the cleanup process for the course.
-     * @return trigger_respone
+     * @return trigger_response
      */
     public static function trigger() {
-        return new trigger_respone(self::TRIGGER);
+        return new trigger_response(self::TRIGGER);
     }
 
 

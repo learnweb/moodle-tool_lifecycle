@@ -28,7 +28,7 @@ require_login();
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/activeprocesses.php'));
 
-$table = new tool_cleanupcourses\active_processes_table('tool_cleanupcourses_active_processes');
+$table = new tool_cleanupcourses\table\active_processes_table('tool_cleanupcourses_active_processes');
 
 $PAGE->set_title("Title");
 $PAGE->set_heading("Heading");

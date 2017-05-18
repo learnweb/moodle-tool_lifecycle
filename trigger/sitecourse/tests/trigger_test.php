@@ -16,7 +16,7 @@
 
 namespace tool_cleanupcourses\trigger;
 
-use tool_cleanupcourses\trigger_respone;
+use tool_cleanupcourses\response\trigger_response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -45,7 +45,7 @@ class tool_cleanupcourses_trigger_sitecourse_testcase extends \advanced_testcase
 
         $trigger = new sitecourse();
         $response = $trigger->check_course($course);
-        $this->assertEquals($response, trigger_respone::exclude());
+        $this->assertEquals($response, trigger_response::exclude());
 
     }
 
@@ -61,7 +61,7 @@ class tool_cleanupcourses_trigger_sitecourse_testcase extends \advanced_testcase
 
         $trigger = new sitecourse();
         $response = $trigger->check_course($course);
-        $this->assertEquals($response, trigger_respone::next());
+        $this->assertEquals($response, trigger_response::next());
 
     }
 }
