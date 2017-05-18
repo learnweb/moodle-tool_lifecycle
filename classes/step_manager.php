@@ -101,7 +101,7 @@ class step_manager extends subplugin_manager {
 
         $step = $this->get_subplugin_by_id($subpluginid);
         if (!$step) {
-            return; //TODO: Throw error.
+            return; // TODO: Throw error.
         }
         $followedby = $this->get_subplugin_by_id($followedby);
 

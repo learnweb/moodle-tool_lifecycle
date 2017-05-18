@@ -120,10 +120,10 @@ class trigger_manager extends subplugin_manager {
 
         $subplugin = $this->get_subplugin_by_id($subpluginid);
         if (!$subplugin) {
-            return; //TODO: Throw error.
+            return; // TODO: Throw error.
         }
-        $step_manager = new step_manager();
-        $step = $step_manager->get_subplugin_by_id($followedby);
+        $stepmanager = new step_manager();
+        $step = $stepmanager->get_subplugin_by_id($followedby);
 
         // If step is not defined clear followedby.
         if ($step) {
