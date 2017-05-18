@@ -144,7 +144,7 @@ class trigger_table extends \table_sql {
         $steps = $manager->get_step_instances();
         $options = array();
         foreach ($steps as $id => $step) {
-            $options[$id] = get_string('pluginname', 'cleanupcoursesstep_' . $step->name);
+            $options[$id] = $step->instancename;
         }
 
         // Determine, which step is selected.
