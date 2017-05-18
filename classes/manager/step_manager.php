@@ -49,17 +49,13 @@ class step_manager extends subplugin_manager {
      * Persists a subplugin to the database.
      * @param step_subplugin $subplugin
      */
-    private function insert_or_update(step_subplugin &$subplugin) {
+    public function insert_or_update(step_subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
-        if ($subplugin->id !== null) {
+        if ($subplugin->id) {
             $DB->update_record('tool_cleanupcourses_step', $subplugin);
-        }
-        $record = array(
-            'name' => $subplugin->name,
-        );
-        if (!$DB->record_exists('tool_cleanupcourses_step', $record)) {
-            $subplugin->id = $DB->insert_record('tool_cleanupcourses_step', $record);
+        } else {
+            $subplugin->id = $DB->insert_record('tool_cleanupcourses_step', $subplugin);
             $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $subplugin->id));
             $subplugin = step_subplugin::from_record($record);
         }
@@ -90,6 +86,19 @@ class step_manager extends subplugin_manager {
     public function get_step_instances() {
         global $DB;
         return $DB->get_records('tool_cleanupcourses_step');
+    }
+
+    /**
+     * Gets the list of step subplugins.
+     * @return array of step subplugins.
+     */
+    public function get_step_types() {
+        $subplugins = \core_component::get_plugin_list('cleanupcoursesstep');
+        $result = array();
+        foreach ($subplugins as $id => $plugin) {
+            $result[$id] = get_string('pluginname', 'cleanupcoursesstep_' . $id);
+        }
+        return $result;
     }
 
     /**

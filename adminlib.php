@@ -18,6 +18,7 @@ namespace tool_cleanupcourses;
 
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\object\step_subplugin;
 use tool_cleanupcourses\table\step_table;
 use tool_cleanupcourses\table\trigger_table;
 
@@ -86,23 +87,48 @@ class subplugin_settings {
      * Constructor for this subplugin settings
      */
     public function __construct() {
+        global $PAGE;
         $this->pageurl = new \moodle_url('/admin/tool/cleanupcourses/subpluginssettings.php');
+        $PAGE->set_url($this->pageurl);
     }
 
     /**
      * Write the HTML for the submission plugins table.
      */
     private function view_plugins_table() {
+        global $OUTPUT, $PAGE;
 
         // Set up the table.
         $this->view_header();
 
-        $table = new trigger_table('tool_cleanupcourses_triggers');
+        echo $OUTPUT->heading(get_string('subpluginssettings_trigger_heading', 'tool_cleanupcourses'));
 
+        $table = new trigger_table('tool_cleanupcourses_triggers');
         $table->out(5000, false);
+
+        echo $OUTPUT->heading(get_string('subpluginssettings_step_heading', 'tool_cleanupcourses'));
+
+        echo $OUTPUT->single_button(new \moodle_url($PAGE->url, array('action' => ACTION_STEP_INSTANCE_FORM)),
+            get_string('add_instance', 'tool_cleanupcourses'));
 
         $table = new step_table('tool_cleanupcourses_steps');
         $table->out(5000, false);
+
+        $this->view_footer();
+    }
+
+    /**
+     * Write the HTML for the step instance form.
+     */
+    private function view_step_instance_form($form) {
+        global $OUTPUT;
+
+        // Set up the table.
+        $this->view_header();
+
+        echo $OUTPUT->heading(get_string('subpluginssettings_edit_instance_heading', 'tool_cleanupcourses'));
+
+        echo $form->render();
 
         $this->view_footer();
     }
@@ -115,7 +141,6 @@ class subplugin_settings {
         admin_externalpage_setup('subpluginssettings');
         // Print the page heading.
         echo $OUTPUT->header();
-        echo $OUTPUT->heading(get_string('subpluginssettings_heading', 'tool_cleanupcourses'));
     }
 
     /**
@@ -140,12 +165,29 @@ class subplugin_settings {
      * This is the entry point for this controller class.
      */
     public function execute($action, $subplugin) {
+        global $PAGE;
         $this->check_permissions();
+
         $triggermanager = new trigger_manager();
         $triggermanager->handle_action($action, $subplugin);
         $stepmanager = new step_manager();
         $stepmanager->handle_action($action, $subplugin);
-        $this->view_plugins_table();
+
+        $steptomodify = null;
+        if ($stepid = optional_param('stepid', null, PARAM_INT)) {
+            $steptomodify = $stepmanager->get_subplugin_by_id($stepid);
+        }
+        $form = new form_step_instance($PAGE->url, $steptomodify);
+
+        if ($action === ACTION_STEP_INSTANCE_FORM) {
+            $this->view_step_instance_form($form);
+        } else {
+            if ($form->is_submitted() && !$form->is_cancelled()) {
+                $step = step_subplugin::from_record($form->get_submitted_data());
+                $stepmanager->insert_or_update($step);
+            }
+            $this->view_plugins_table();
+        }
     }
 
 }

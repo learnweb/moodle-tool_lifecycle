@@ -30,6 +30,11 @@ $string['plugintitle'] = 'Cleanup Courses';
 $string['general_config_header'] = "General & Subplugins";
 $string['active_processes_list_header'] = 'Active Processes';
 $string['subpluginssettings_heading'] = 'Subplugin Workflow';
+$string['subpluginssettings_trigger_heading'] = 'Trigger Definition';
+$string['subpluginssettings_step_heading'] = 'Step Workflow';
+$string['subpluginssettings_edit_instance_heading'] = 'Step Instance';
+$string['add_instance'] = 'Add Instance';
+
 
 $string['trigger_name'] = 'Subplugin Name';
 $string['trigger_enabled'] = 'Enabled';
@@ -45,6 +50,9 @@ $string['step'] = 'Process step';
 
 $string['cleanupcoursestrigger'] = 'Trigger';
 $string['cleanupcoursesstep'] = 'Process step';
+
+$string['step_instancename'] = 'Instance Name';
+$string['step_name'] = 'Step Type';
 
 $string['subplugintype_cleanupcoursestrigger'] = 'Trigger for starting the course cleanup';
 $string['subplugintype_cleanupcoursestrigger_plural'] = 'Triggers for starting the course cleanup';
