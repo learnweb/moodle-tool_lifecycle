@@ -90,4 +90,41 @@ class step_manager extends subplugin_manager {
         return $DB->get_records('tool_cleanupcourses_step');
     }
 
+    /**
+     * Changes the followedby of a trigger.
+     * @param int $subpluginid id of the trigger
+     * @param int $followedby id of the step
+     */
+    public function change_followedby($subpluginid, $followedby) {
+        global $DB;
+        $transaction = $DB->start_delegated_transaction();
+
+        $step = $this->get_subplugin_by_id($subpluginid);
+        if (!$step) {
+            return; //TODO: Throw error.
+        }
+        $followedby = $this->get_subplugin_by_id($followedby);
+
+        // If step is not defined clear followedby.
+        if ($followedby) {
+            $step->followedby = $followedby->id;
+        } else {
+            $step->followedby = null;
+        }
+
+        $this->insert_or_update($step);
+
+        $transaction->allow_commit();
+    }
+
+    /**
+     * Handles an action of the subplugin_settings.
+     * @param string $action action to be executed
+     * @param int $subplugin id of the subplugin
+     */
+    public function handle_action($action, $subplugin) {
+        if ($action === ACTION_FOLLOWEDBY_STEP) {
+            $this->change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
+        }
+    }
 }
