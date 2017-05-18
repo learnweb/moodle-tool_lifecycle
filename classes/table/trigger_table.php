@@ -145,10 +145,6 @@ class trigger_table extends \table_sql {
 
         $manager = new step_manager();
         $steps = $manager->get_step_instances();
-        $options = array();
-        foreach ($steps as $id => $step) {
-            $options[$id] = $step->instancename;
-        }
 
         // Determine, which step is selected.
         $selected = '';
@@ -158,7 +154,7 @@ class trigger_table extends \table_sql {
 
         return $OUTPUT->single_select(new \moodle_url($PAGE->url,
             array('action' => ACTION_FOLLOWEDBY_TRIGGER, 'subplugin' => $row->id, 'sesskey' => sesskey())),
-            'followedby', $options, $selected);
+            'followedby', $steps, $selected);
     }
 
 }

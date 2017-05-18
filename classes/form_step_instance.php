@@ -70,6 +70,11 @@ class form_step_instance extends \moodleform {
             $stepmanager->get_step_types());
         $mform->setType($elementname, PARAM_TEXT);
 
+        $elementname = 'followedby';
+        $mform->addElement('select', $elementname, get_string('step_followedby', 'tool_cleanupcourses'),
+            $stepmanager->get_step_instances());
+        $mform->setType($elementname, PARAM_TEXT);
+
         $this->add_action_buttons();
     }
 
@@ -83,6 +88,7 @@ class form_step_instance extends \moodleform {
             $mform->setDefault('id', $this->step->id);
             $mform->setDefault('instancename', $this->step->instancename);
             $mform->setDefault('name', $this->step->name);
+            $mform->setDefault('followedby', $this->step->followedby);
         } else {
             $mform->setDefault('id', '');
         }

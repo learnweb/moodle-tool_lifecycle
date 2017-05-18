@@ -85,7 +85,12 @@ class step_manager extends subplugin_manager {
      */
     public function get_step_instances() {
         global $DB;
-        return $DB->get_records('tool_cleanupcourses_step');
+        $records = $DB->get_records('tool_cleanupcourses_step');
+        $steps = array();
+        foreach ($records as $id => $record) {
+            $steps[$id] = $record->instancename;
+        }
+        return $steps;
     }
 
     /**

@@ -51,9 +51,6 @@ $string['step'] = 'Process step';
 $string['cleanupcoursestrigger'] = 'Trigger';
 $string['cleanupcoursesstep'] = 'Process step';
 
-$string['step_instancename'] = 'Instance Name';
-$string['step_name'] = 'Step Type';
-
 $string['subplugintype_cleanupcoursestrigger'] = 'Trigger for starting the course cleanup';
 $string['subplugintype_cleanupcoursestrigger_plural'] = 'Triggers for starting the course cleanup';
 $string['subplugintype_cleanupcoursesstep'] = 'Step within a course cleanup process';
