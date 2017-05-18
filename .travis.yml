@@ -48,5 +48,5 @@ script:
   - moodle-plugin-ci phpunit --coverage-clover
   - moodle-plugin-ci behat
 
-#after_success:
-#  - bash <(curl -s https://codecov.io/bash)
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

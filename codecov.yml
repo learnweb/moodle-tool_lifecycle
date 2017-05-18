@@ -1,0 +1,9 @@
+fixes:
+	- "moodle/admin/tool/cleanupcourses/::"
+ignore:
+    # artificial/Moodle API files
+    - "tests/**/*"
+    - "lang/**/*"
+    - "db/**/*"
+    - "db/.*"
+    - "version.php"
