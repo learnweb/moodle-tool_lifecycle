@@ -30,13 +30,13 @@ class step_manager extends subplugin_manager {
     /**
      * Returns a subplugin object.
      * @param int $subpluginid id of the subplugin
-     * @return trigger_subplugin
+     * @return step_subplugin
      */
     public function get_subplugin_by_id($subpluginid) {
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $subpluginid));
         if ($record) {
-            $subplugin = subplugin::from_record($record);
+            $subplugin = step_subplugin::from_record($record);
             return $subplugin;
         } else {
             return null;
@@ -45,9 +45,9 @@ class step_manager extends subplugin_manager {
 
     /**
      * Persists a subplugin to the database.
-     * @param trigger_subplugin $subplugin
+     * @param step_subplugin $subplugin
      */
-    private function insert_or_update(trigger_subplugin &$subplugin) {
+    private function insert_or_update(step_subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         if ($subplugin->id !== null) {
@@ -59,16 +59,16 @@ class step_manager extends subplugin_manager {
         if (!$DB->record_exists('tool_cleanupcourses_step', $record)) {
             $subplugin->id = $DB->insert_record('tool_cleanupcourses_step', $record);
             $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $subplugin->id));
-            $subplugin = subplugin::from_record($record);
+            $subplugin = step_subplugin::from_record($record);
         }
         $transaction->allow_commit();
     }
 
     /**
      * Removes a subplugin from the database.
-     * @param trigger_subplugin $subplugin
+     * @param step_subplugin $subplugin
      */
-    private function remove(trigger_subplugin &$subplugin) {
+    private function remove(step_subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         $record = array(
@@ -76,7 +76,7 @@ class step_manager extends subplugin_manager {
         );
         if ($record = $DB->get_record('tool_cleanupcourses_step', $record)) {
             $DB->delete_records('tool_cleanupcourses_step', (array) $record);
-            $subplugin = trigger_subplugin::from_record($record);
+            $subplugin = step_subplugin::from_record($record);
         }
         $transaction->allow_commit();
     }
