@@ -29,6 +29,7 @@
     <TABLE NAME="tool_cleanupcourses_step" COMMENT="Step subplugins for the cleanup courses">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="instancename" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="instancename of the step"/>
         <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
         <FIELD NAME="followedby" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="tells which step follows this one in the cleanup process"/>
       </FIELDS>
