@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for start date delay trigger
+ * Lang strings for dummy step
  *
- * @package tool_cleanupcourses_trigger
- * @subpackage startdatedelay
+ * @package tool_cleanupcourses_step
+ * @subpackage dummy
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

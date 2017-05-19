@@ -40,7 +40,7 @@ class startdatedelay implements base {
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
      * @param $course object to be processed.
-     * @return trigger_respone
+     * @return trigger_response
      */
     public function check_course($course) {
         global $CFG;

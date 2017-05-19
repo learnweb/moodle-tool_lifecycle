@@ -18,7 +18,7 @@ namespace tool_cleanupcourses;
 
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\object\step_subplugin;
+use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\table\step_table;
 use tool_cleanupcourses\table\trigger_table;
 

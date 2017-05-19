@@ -14,28 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tool_cleanupcourses\object;
+namespace tool_cleanupcourses\entity;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Subplugin class
+ * Trigger subplugin class
  *
  * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class subplugin{
+class trigger_subplugin extends subplugin{
 
-    /** int Id of subplugin */
-    public $id;
+    /** bool is the subplugin enabled*/
+    public $enabled;
 
-    /** string name of subplugin */
-    public $name;
-
-    /** subplugin this subplugin is followed by in the cleanup process*/
-    public $followedby;
+    /** int sortindex of subplugin */
+    public $sortindex;
 
     /**
      * Creates a subplugin with name and optional id.
@@ -43,8 +40,7 @@ class subplugin{
      * @param int $id id of the subplugin
      */
     public function __construct($name, $id = null) {
-        $this->name = $name;
-        $this->id = $id;
+        parent::__construct($name, $id);
     }
 
     /**

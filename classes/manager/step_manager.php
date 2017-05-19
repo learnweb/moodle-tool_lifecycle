@@ -23,9 +23,8 @@
  */
 namespace tool_cleanupcourses\manager;
 
-use tool_cleanupcourses\object\step_subplugin;
-use tool_cleanupcourses\object\trigger_subplugin;
-use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\entity\step_subplugin;
+use tool_cleanupcourses\entity\trigger_subplugin;
 
 defined('MOODLE_INTERNAL') || die();
 

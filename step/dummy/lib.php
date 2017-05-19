@@ -18,8 +18,8 @@
  * Interface for the subplugintype step
  * It has to be implemented by all subplugins.
  *
- * @package tool_cleanupcourses
- * @subpackage step
+ * @package tool_cleanupcourses_step
+ * @subpackage dummy
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

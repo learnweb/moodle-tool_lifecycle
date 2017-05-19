@@ -23,6 +23,11 @@
  */
 namespace tool_cleanupcourses;
 
+use tool_cleanupcourses\entity\trigger_subplugin;
+use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\response\trigger_response;
+
+
 defined('MOODLE_INTERNAL') || die;
 
 class cleanup_processor {
@@ -47,16 +52,15 @@ class cleanup_processor {
         $recordset = $this->get_course_recordset();
         while ($recordset->valid()) {
             $course = $recordset->current();
-            /* @var $trigger trigger\base -> Implementation of the subplugin trigger interface */
             foreach ($enabledtrigger as $trigger) {
                 $response = $triggerclasses[$trigger->name]->check_course($course);
-                if ($response == trigger_respone::next()) {
+                if ($response == trigger_response::next()) {
                     continue;
                 }
-                if ($response == trigger_respone::exclude()) {
+                if ($response == trigger_response::exclude()) {
                     break;
                 }
-                if ($response == trigger_respone::trigger()) {
+                if ($response == trigger_response::trigger()) {
                     $this->trigger_course($course->id, trigger_subplugin::from_record($trigger));
                     break;
                 }
