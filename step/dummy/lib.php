@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
-class dummy implements base {
+class dummy extends base {
 
 
     /**
@@ -47,4 +47,7 @@ class dummy implements base {
 
     }
 
+    public function get_subpluginname() {
+        return 'dummy';
+    }
 }

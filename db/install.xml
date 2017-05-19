@@ -37,5 +37,17 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="tool_cleanupcourses_settings" COMMENT="Settings for step instances">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the step instance"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the settings field"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="value of the setting"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="instanceid_fk" TYPE="foreign" FIELDS="instanceid" REFTABLE="tool_cleanupcourses_step" REFFIELDS="id" COMMENT="Foreignkey for step instance"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>

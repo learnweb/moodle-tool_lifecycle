@@ -25,11 +25,12 @@
  */
 namespace tool_cleanupcourses\step;
 
+use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\response\step_response;
 
 defined('MOODLE_INTERNAL') || die();
 
-interface base {
+abstract class base {
 
 
     /**
@@ -41,6 +42,50 @@ interface base {
      * @param $course object to be processed.
      * @return step_response
      */
-    public function process_course($course);
+    public abstract function process_course($course);
+
+    public abstract function get_subpluginname();
+
+    /**
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
+    public function instance_settings() {
+        return array();
+    }
+
+    public function get_settings($instanceid) {
+        global $DB;
+        $manager = new step_manager();
+        $stepinstance = $manager->get_step_instance($instanceid);
+
+        if (!$stepinstance || $stepinstance->name !== $this->get_subpluginname()) {
+            return null;
+        }
+
+        $settingsvalues = array();
+        foreach ($this->instance_settings() as $setting) {
+            $record = $DB->get_record('tool_cleanupcourses_settings',
+                array('instanceid' => $instanceid,
+                    'name' => $setting->name));
+            if ($record) {
+                $value = clean_param($record->value, $setting->paramtype);
+                $settingsvalues[$setting->name] = $value;
+            }
+        }
+        return $settingsvalues;
+    }
+
+}
+
+class instance_setting {
+
+    public $name;
+
+    public $paramtype;
+
+    public function __construct($name, $paramtype) {
+        $this->name = $name;
+        $this->paramtype = $paramtype;
+    }
 
 }
