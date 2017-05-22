@@ -24,8 +24,11 @@
 namespace tool_cleanupcourses;
 
 use tool_cleanupcourses\entity\trigger_subplugin;
+use tool_cleanupcourses\manager\process_manager;
+use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\trigger_manager;
 use tool_cleanupcourses\manager\lib_manager;
+use tool_cleanupcourses\response\step_response;
 use tool_cleanupcourses\response\trigger_response;
 
 
@@ -56,7 +59,7 @@ class cleanup_processor {
                     break;
                 }
                 if ($response === trigger_response::trigger()) {
-                    $this->trigger_course($course->id, trigger_subplugin::from_record($trigger));
+                    process_manager::create_process($course->id, trigger_subplugin::from_record($trigger));
                     break;
                 }
             }
@@ -65,32 +68,40 @@ class cleanup_processor {
     }
 
     /**
+     * Calls the process_course() method of each step submodule currently responsible for a given course.
+     */
+    public function process_courses() {
+        foreach (process_manager::get_processes() as $process) {
+            while(true) {
+                $step = step_manager::get_subplugin_by_instance_id($process->stepid);
+                $lib = lib_manager::get_step_lib($step->subpluginname);
+                $course = get_course($process->courseid);
+                $result = $lib->process_course($course);
+                if ($result === step_response::waiting()) {
+                    break;
+                } elseif ($result === step_response::proceed()) {
+                    process_manager::proceed_process($process);
+                } elseif ($result === step_response::rollback()){
+                    // TODO: Implement Rollback!
+                    break;
+                }
+            }
+        }
+
+    }
+
+    /**
      * Returns a record set with all relevant courses.
      * Relevant means that there is currently no cleanup process running for this course.
      * @return \moodle_recordset with relevant courses.
      */
-    public function get_course_recordset() {
+    private function get_course_recordset() {
         global $DB;
         $sql = 'SELECT {course}.* from {course} '.
             'left join {tool_cleanupcourses_process} '.
             'ON {course}.id = {tool_cleanupcourses_process}.courseid '.
             'WHERE {tool_cleanupcourses_process}.courseid is null';
         return $DB->get_recordset_sql($sql);
-    }
-
-    /**
-     * Creates a process for the course which is at the respective step the trigger is followed by.
-     * @param int $courseid id of the course
-     * @param trigger_subplugin $trigger
-     */
-    private function trigger_course($courseid, $trigger) {
-        global $DB;
-        if ($trigger->followedby !== null) {
-            $record = new \stdClass();
-            $record->courseid = $courseid;
-            $record->stepid = $trigger->followedby;
-            $DB->insert_record('tool_cleanupcourses_process', $record);
-        }
     }
 
 }
