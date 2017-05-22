@@ -25,6 +25,7 @@ namespace tool_cleanupcourses;
 
 use tool_cleanupcourses\entity\trigger_subplugin;
 use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\manager\lib_manager;
 use tool_cleanupcourses\response\trigger_response;
 
 
@@ -40,14 +41,12 @@ class cleanup_processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
-        $manager = new trigger_manager();
-        $enabledtrigger = $manager->get_enabled_trigger();
-        $triggerlist = \core_component::get_plugin_list('cleanupcoursestrigger');
+        $triggermanager = new trigger_manager();
+        $libmanager = new lib_manager();
+        $enabledtrigger = $triggermanager->get_enabled_trigger();
         $triggerclasses = [];
         foreach ($enabledtrigger as $trigger) {
-            require_once($triggerlist[$trigger->subpluginname].'/lib.php');
-            $extendedclass = "tool_cleanupcourses\\trigger\\$trigger->subpluginname";
-            $triggerclasses[$trigger->subpluginname] = new $extendedclass();
+            $triggerclasses[$trigger->subpluginname] = $libmanager->get_trigger_lib($trigger->subpluginname);
         }
         $recordset = $this->get_course_recordset();
         while ($recordset->valid()) {
