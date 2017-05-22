@@ -52,13 +52,13 @@ class cleanup_processor {
             foreach ($enabledtrigger as $trigger) {
                 $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
                 $response = $lib->check_course($course);
-                if ($response === trigger_response::next()) {
+                if ($response == trigger_response::next()) {
                     continue;
                 }
-                if ($response === trigger_response::exclude()) {
+                if ($response == trigger_response::exclude()) {
                     break;
                 }
-                if ($response === trigger_response::trigger()) {
+                if ($response == trigger_response::trigger()) {
                     process_manager::create_process($course->id, trigger_subplugin::from_record($trigger));
                     break;
                 }
@@ -77,13 +77,17 @@ class cleanup_processor {
                 $lib = lib_manager::get_step_lib($step->subpluginname);
                 $course = get_course($process->courseid);
                 $result = $lib->process_course($course);
-                if ($result === step_response::waiting()) {
+                if ($result == step_response::waiting()) {
                     break;
-                } elseif ($result === step_response::proceed()) {
-                    process_manager::proceed_process($process);
-                } elseif ($result === step_response::rollback()){
+                } elseif ($result == step_response::proceed()) {
+                    if (!process_manager::proceed_process($process)) {
+                        break;
+                    }
+                } elseif ($result == step_response::rollback()){
                     // TODO: Implement Rollback!
                     break;
+                } else {
+                    throw new \moodle_exception('Return code \''. var_dump($result) . '\' is not allowed!');
                 }
             }
         }

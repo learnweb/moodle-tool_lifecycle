@@ -62,18 +62,21 @@ class process_manager {
     /**
      * Proceeds the process to the next step.
      * @param process $process
+     * @return true, if followedby another step; otherwise false.
      */
     public static function proceed_process(&$process) {
         global $DB;
         $step = step_manager::get_step_instance($process->stepid);
-        if ($step->followedby !== null) {
+        if ($step->followedby) {
             $process->stepid = $step->followedby;
             $DB->update_record('tool_cleanupcourses_process', $process);
+            return true;
         } else {
             if (get_course($process->courseid)) {
                 debugging('Course should no longer exist!!!!');
             }
-            $DB->delete_records('tool_cleanupcourses_process', $process);
+            $DB->delete_records('tool_cleanupcourses_process', (array) $process);
+            return false;
         }
     }
 

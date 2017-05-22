@@ -34,5 +34,6 @@ class process_cleanup extends \core\task\scheduled_task {
     public function execute() {
         $processor = new cleanup_processor();
         $processor->call_trigger();
+        $processor->process_courses();
     }
 }
