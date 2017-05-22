@@ -53,28 +53,6 @@ abstract class base {
         return array();
     }
 
-    public function get_settings($instanceid) {
-        global $DB;
-        $manager = new step_manager();
-        $stepinstance = $manager->get_step_instance($instanceid);
-
-        if (!$stepinstance || $stepinstance->subpluginname !== $this->get_subpluginname()) {
-            return null;
-        }
-
-        $settingsvalues = array();
-        foreach ($this->instance_settings() as $setting) {
-            $record = $DB->get_record('tool_cleanupcourses_settings',
-                array('instanceid' => $instanceid,
-                    'name' => $setting->name));
-            if ($record) {
-                $value = clean_param($record->value, $setting->paramtype);
-                $settingsvalues[$setting->name] = $value;
-            }
-        }
-        return $settingsvalues;
-    }
-
     /**
      * This method can be overriden, to add form elements to the form_step_instance.
      * It is called in definition().
