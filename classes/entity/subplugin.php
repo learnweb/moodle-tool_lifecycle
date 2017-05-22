@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class subplugin{
+abstract class subplugin{
 
     /** int Id of subplugin */
     public $id;
@@ -45,25 +45,6 @@ class subplugin{
     public function __construct($subpluginname, $id = null) {
         $this->subpluginname = $subpluginname;
         $this->id = $id;
-    }
-
-    /**
-     * Creates a subplugin from a db record.
-     * @param $record
-     * @return trigger_subplugin
-     */
-    public static function from_record($record) {
-        if (!object_property_exists($record, 'subpluginname')) {
-            return null;
-        }
-        $instance = new self($record->subpluginname);
-        foreach (array_keys((array) $record) as $field) {
-            if (object_property_exists($instance, $field)) {
-                $instance->$field = $record->$field;
-            }
-        }
-
-        return $instance;
     }
 
 }

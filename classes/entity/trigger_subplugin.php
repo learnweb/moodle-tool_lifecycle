@@ -35,15 +35,6 @@ class trigger_subplugin extends subplugin{
     public $sortindex;
 
     /**
-     * Creates a subplugin with subpluginname and optional id.
-     * @param string $subpluginname name of the subplugin
-     * @param int $id id of the subplugin
-     */
-    public function __construct($subpluginname, $id = null) {
-        parent::__construct($subpluginname, $id);
-    }
-
-    /**
      * Creates a subplugin from a db record.
      * @param $record
      * @return trigger_subplugin
