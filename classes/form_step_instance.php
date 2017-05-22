@@ -25,6 +25,8 @@ namespace tool_cleanupcourses;
 
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\step_manager;
+use tool_cleanupcourses\manager\lib_manager;
+use tool_cleanupcourses\step\base;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -42,13 +44,32 @@ class form_step_instance extends \moodleform {
     public $step;
 
     /**
+     * @var string name of the subplugin to be created
+     */
+    public $subpluginname;
+
+    /**
+     * @var base name of the subplugin to be created
+     */
+    public $lib;
+
+    /**
      * Constructor
      * @param string $url
      * @param step_subplugin $step
      */
-    public function __construct($url, $step) {
+    public function __construct($url, $step, $subpluginname = null) {
         parent::__construct($url);
         $this->step = $step;
+        if ($step) {
+            $this->subpluginname = $step->subpluginname;
+        } elseif ($subpluginname) {
+            $this->subpluginname = $subpluginname;
+        } else {
+            throw new \moodle_exception('One of the parameters $step or $subpluginname have to be set!');
+        }
+        $libmanager = new lib_manager();
+        $this->lib = $libmanager->get_step_lib($this->subpluginname);
     }
 
     /**
@@ -65,9 +86,11 @@ class form_step_instance extends \moodleform {
         $mform->setType($elementname, PARAM_TEXT);
 
         $stepmanager = new step_manager();
+        $elementname = 'subpluginnamestatic';
+        $mform->addElement('static', $elementname, get_string('step_subpluginname', 'tool_cleanupcourses'));
+        $mform->setType($elementname, PARAM_TEXT);
         $elementname = 'subpluginname';
-        $mform->addElement('select', $elementname, get_string('step_subpluginname', 'tool_cleanupcourses'),
-            $stepmanager->get_step_types());
+        $mform->addElement('hidden', $elementname);
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'followedby';
@@ -87,11 +110,15 @@ class form_step_instance extends \moodleform {
         if ($this->step) {
             $mform->setDefault('id', $this->step->id);
             $mform->setDefault('instancename', $this->step->instancename);
-            $mform->setDefault('subpluginname', $this->step->subpluginname);
+            $subpluginname = $this->step->subpluginname;
             $mform->setDefault('followedby', $this->step->followedby);
         } else {
             $mform->setDefault('id', '');
+            $subpluginname = $this->subpluginname;
         }
+        $mform->setDefault('subpluginnamestatic',
+            get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname));
+        $mform->setDefault('subpluginname', $subpluginname);
     }
 
 }

@@ -177,10 +177,14 @@ class subplugin_settings {
         $stepmanager->handle_action($action, $subplugin);
 
         $steptomodify = null;
+        $subpluginname = null;
         if ($stepid = optional_param('subplugin', null, PARAM_INT)) {
             $steptomodify = $stepmanager->get_subplugin_by_id($stepid);
+        } elseif ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+            $subpluginname = $name;
         }
-        $form = new form_step_instance($PAGE->url, $steptomodify);
+
+        $form = new form_step_instance($PAGE->url, $steptomodify, $subpluginname);
 
         if ($action === ACTION_STEP_INSTANCE_FORM) {
             $this->view_step_instance_form($form);
