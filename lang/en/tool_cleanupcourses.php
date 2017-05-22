@@ -34,7 +34,9 @@ $string['subpluginssettings_trigger_heading'] = 'Trigger Definition';
 $string['subpluginssettings_step_heading'] = 'Step Workflow';
 $string['subpluginssettings_edit_instance_heading'] = 'Step Instance';
 $string['add_new_step_instance'] = 'Add New Step Instance...';
-
+$string['step_settings_header'] = 'Specific settings of the step type';
+$string['general_settings_header'] = 'General Settings';
+$string['followedby_none'] = 'None';
 
 $string['trigger_subpluginname'] = 'Subplugin Name';
 $string['trigger_enabled'] = 'Enabled';

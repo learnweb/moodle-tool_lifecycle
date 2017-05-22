@@ -24,3 +24,6 @@
  */
 
 $string['pluginname'] = 'Email Step';
+
+$string['email_subject'] = 'Subject Template';
+$string['email_content'] = 'Content Template';

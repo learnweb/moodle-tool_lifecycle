@@ -18,6 +18,7 @@ namespace tool_cleanupcourses;
 
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\table\step_table;
 use tool_cleanupcourses\table\trigger_table;
@@ -182,6 +183,9 @@ class subplugin_settings {
             $steptomodify = $stepmanager->get_subplugin_by_id($stepid);
         } elseif ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
             $subpluginname = $name;
+        } else {
+            $this->view_plugins_table();
+            return;
         }
 
         $form = new form_step_instance($PAGE->url, $steptomodify, $subpluginname);
@@ -189,9 +193,12 @@ class subplugin_settings {
         if ($action === ACTION_STEP_INSTANCE_FORM) {
             $this->view_step_instance_form($form);
         } else {
-            if ($form->is_submitted() && !$form->is_cancelled()) {
-                $step = step_subplugin::from_record($form->get_submitted_data());
+            if ($form->is_submitted() && !$form->is_cancelled() && $data = $form->get_submitted_data()) {
+                $step = step_subplugin::from_record($data);
                 $stepmanager->insert_or_update($step);
+                // Save local subplugin settings.
+                $settingsmanager = new settings_manager();
+                $settingsmanager->save_settings($form->subpluginname, $data);
             }
             $this->view_plugins_table();
         }
