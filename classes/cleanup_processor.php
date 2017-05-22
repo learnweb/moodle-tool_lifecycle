@@ -44,15 +44,13 @@ class cleanup_processor {
         $triggermanager = new trigger_manager();
         $libmanager = new lib_manager();
         $enabledtrigger = $triggermanager->get_enabled_trigger();
-        $triggerclasses = [];
-        foreach ($enabledtrigger as $trigger) {
-            $triggerclasses[$trigger->subpluginname] = $libmanager->get_trigger_lib($trigger->subpluginname);
-        }
+
         $recordset = $this->get_course_recordset();
         while ($recordset->valid()) {
             $course = $recordset->current();
             foreach ($enabledtrigger as $trigger) {
-                $response = $triggerclasses[$trigger->subpluginname]->check_course($course);
+                $lib = $libmanager->get_trigger_lib($trigger->subpluginname);
+                $response = $lib ->check_course($course);
                 if ($response == trigger_response::next()) {
                     continue;
                 }
