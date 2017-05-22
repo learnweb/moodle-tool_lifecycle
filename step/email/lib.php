@@ -57,4 +57,14 @@ class email extends base {
     public function get_subpluginname() {
         return 'email';
     }
+
+    public function extend_add_instance_form_definition($mform) {
+        $elementname = 'subject';
+        $mform->addElement('text', $elementname, get_string('email_subject', 'cleanupcoursesstep_email'));
+        $mform->setType($elementname, PARAM_TEXT);
+
+        $elementname = 'content';
+        $mform->addElement('textarea', $elementname, get_string('email_content', 'cleanupcoursesstep_email'));
+        $mform->setType($elementname, PARAM_TEXT);
+    }
 }
