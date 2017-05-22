@@ -72,18 +72,18 @@ class cleanup_processor {
      */
     public function process_courses() {
         foreach (process_manager::get_processes() as $process) {
-            while(true) {
+            while (true) {
                 $step = step_manager::get_subplugin_by_instance_id($process->stepid);
                 $lib = lib_manager::get_step_lib($step->subpluginname);
                 $course = get_course($process->courseid);
                 $result = $lib->process_course($course);
                 if ($result == step_response::waiting()) {
                     break;
-                } elseif ($result == step_response::proceed()) {
+                } else if ($result == step_response::proceed()) {
                     if (!process_manager::proceed_process($process)) {
                         break;
                     }
-                } elseif ($result == step_response::rollback()){
+                } else if ($result == step_response::rollback()) {
                     // TODO: Implement Rollback!
                     break;
                 } else {

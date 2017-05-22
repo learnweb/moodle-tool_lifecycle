@@ -76,7 +76,7 @@ class step_manager extends subplugin_manager {
             foreach ($othersteps as $steprecord) {
                 $step = step_subplugin::from_record($steprecord);
                 $step->followedby = null;
-                step_manager::insert_or_update($step);
+                self::insert_or_update($step);
             }
 
             $othertrigger = $DB->get_records('tool_cleanupcourses_trigger', array('followedby' => $stepinstanceid));
@@ -140,11 +140,11 @@ class step_manager extends subplugin_manager {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
 
-        $step = step_manager::get_subplugin_by_instance_id($subpluginid);
+        $step = self::get_subplugin_by_instance_id($subpluginid);
         if (!$step) {
             return; // TODO: Throw error.
         }
-        $followedby = step_manager::get_subplugin_by_instance_id($followedby);
+        $followedby = self::get_subplugin_by_instance_id($followedby);
 
         // If step is not defined clear followedby.
         if ($followedby) {
@@ -153,7 +153,7 @@ class step_manager extends subplugin_manager {
             $step->followedby = null;
         }
 
-        step_manager::insert_or_update($step);
+        self::insert_or_update($step);
 
         $transaction->allow_commit();
     }
@@ -165,10 +165,10 @@ class step_manager extends subplugin_manager {
      */
     public static function handle_action($action, $subplugin) {
         if ($action === ACTION_FOLLOWEDBY_STEP) {
-            step_manager::change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
+            self::change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
         }
         if ($action === ACTION_STEP_INSTANCE_DELETE) {
-            step_manager::remove($subplugin);
+            self::remove($subplugin);
         }
     }
 }

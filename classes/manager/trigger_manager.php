@@ -35,9 +35,9 @@ class trigger_manager extends subplugin_manager {
      * @param string $subpluginname name of the plugin
      */
     public static function register($subpluginname) {
-        if (trigger_manager::is_subplugin($subpluginname, 'cleanupcoursestrigger')) {
+        if (self::is_subplugin($subpluginname, 'cleanupcoursestrigger')) {
             $subplugin = new trigger_subplugin($subpluginname);
-            trigger_manager::insert_or_update($subplugin);
+            self::insert_or_update($subplugin);
         }
     }
 
@@ -47,9 +47,9 @@ class trigger_manager extends subplugin_manager {
      * @param string $subpluginname name of the plugin
      */
     public static function deregister($subpluginname) {
-        if (trigger_manager::is_subplugin($subpluginname, 'cleanupcoursestrigger')) {
+        if (self::is_subplugin($subpluginname, 'cleanupcoursestrigger')) {
             $subplugin = new trigger_subplugin($subpluginname);
-            trigger_manager::remove($subplugin);
+            self::remove($subplugin);
         }
     }
 
@@ -61,17 +61,17 @@ class trigger_manager extends subplugin_manager {
     public static function change_enabled($subpluginid, $enabled) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
-        $subplugin = trigger_manager::get_subplugin_by_id($subpluginid);
+        $subplugin = self::get_subplugin_by_id($subpluginid);
         if ($subplugin) {
             $subplugin->enabled = $enabled;
             if ($enabled) {
-                $subplugin->sortindex = trigger_manager::count_enabled_trigger() + 1;
+                $subplugin->sortindex = self::count_enabled_trigger() + 1;
             } else {
                 if (isset($subplugin->sortindex)) {
-                    trigger_manager::remove_from_sortindex($subplugin);
+                    self::remove_from_sortindex($subplugin);
                 }
             }
-            trigger_manager::insert_or_update($subplugin);
+            self::insert_or_update($subplugin);
         }
         $transaction->allow_commit();
     }
@@ -83,13 +83,13 @@ class trigger_manager extends subplugin_manager {
      */
     public static function change_sortindex($subpluginid, $up) {
         global $DB;
-        $subplugin = trigger_manager::get_subplugin_by_id($subpluginid);
+        $subplugin = self::get_subplugin_by_id($subpluginid);
         // Prevent first entry to be put up even more.
         if ($subplugin->sortindex == 1 && $up) {
             return;
         }
         // Prevent last entry to be put down even more.
-        if ($subplugin->sortindex == trigger_manager::count_enabled_trigger() && !$up) {
+        if ($subplugin->sortindex == self::count_enabled_trigger() && !$up) {
             return;
         }
         $index = $subplugin->sortindex;
@@ -105,8 +105,8 @@ class trigger_manager extends subplugin_manager {
 
         $subplugin->sortindex = $otherindex;
         $othersubplugin->sortindex = $index;
-        trigger_manager::insert_or_update($subplugin);
-        trigger_manager::insert_or_update($othersubplugin);
+        self::insert_or_update($subplugin);
+        self::insert_or_update($othersubplugin);
 
         $transaction->allow_commit();
     }
@@ -120,7 +120,7 @@ class trigger_manager extends subplugin_manager {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
 
-        $subplugin = trigger_manager::get_subplugin_by_id($subpluginid);
+        $subplugin = self::get_subplugin_by_id($subpluginid);
         if (!$subplugin) {
             return; // TODO: Throw error.
         }
@@ -134,7 +134,7 @@ class trigger_manager extends subplugin_manager {
             $subplugin->followedby = null;
         }
 
-        trigger_manager::insert_or_update($subplugin);
+        self::insert_or_update($subplugin);
 
         $transaction->allow_commit();
     }
@@ -149,7 +149,7 @@ class trigger_manager extends subplugin_manager {
         foreach ($subplugins as $record) {
             $subplugin = trigger_subplugin::from_record($record);
             $subplugin->sortindex--;
-            trigger_manager::insert_or_update($subplugin);
+            self::insert_or_update($subplugin);
         }
         $toberemoved->sortindex = null;
     }
@@ -240,19 +240,19 @@ class trigger_manager extends subplugin_manager {
      */
     public static function handle_action($action, $subplugin) {
         if ($action === ACTION_ENABLE_TRIGGER) {
-            trigger_manager::change_enabled($subplugin, true);
+            self::change_enabled($subplugin, true);
         }
         if ($action === ACTION_DISABLE_TRIGGER) {
-            trigger_manager::change_enabled($subplugin, false);
+            self::change_enabled($subplugin, false);
         }
         if ($action === ACTION_UP_TRIGGER) {
-            trigger_manager::change_sortindex($subplugin, true);
+            self::change_sortindex($subplugin, true);
         }
         if ($action === ACTION_DOWN_TRIGGER) {
-            trigger_manager::change_sortindex($subplugin, false);
+            self::change_sortindex($subplugin, false);
         }
         if ($action === ACTION_FOLLOWEDBY_TRIGGER) {
-            trigger_manager::change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
+            self::change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
         }
     }
 

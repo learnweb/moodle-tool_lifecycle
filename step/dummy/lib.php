@@ -44,7 +44,7 @@ class dummy extends base {
      * @return step_response
      */
     public function process_course($course) {
-
+        return step_response::proceed();
     }
 
     public function get_subpluginname() {

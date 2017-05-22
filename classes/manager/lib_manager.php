@@ -33,7 +33,7 @@ class lib_manager {
      * @return \tool_cleanupcourses\trigger\base
      */
     public static function get_trigger_lib($subpluginname) {
-        return lib_manager::get_lib($subpluginname, 'trigger');
+        return self::get_lib($subpluginname, 'trigger');
     }
 
     /**
@@ -42,7 +42,7 @@ class lib_manager {
      * @return \tool_cleanupcourses\step\base
      */
     public static function get_step_lib($subpluginname) {
-        return lib_manager::get_lib($subpluginname, 'step');
+        return self::get_lib($subpluginname, 'step');
     }
 
     /**

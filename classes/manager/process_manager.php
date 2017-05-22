@@ -54,7 +54,7 @@ class process_manager {
         $records = $DB->get_records('tool_cleanupcourses_process');
         $processes = array();
         foreach ($records as $record) {
-            $processes []= process::from_record($record);
+            $processes [] = process::from_record($record);
         }
         return $processes;
     }
