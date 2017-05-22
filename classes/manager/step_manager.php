@@ -35,7 +35,7 @@ class step_manager extends subplugin_manager {
      * @param int $subpluginid id of the subplugin
      * @return step_subplugin
      */
-    public static function get_subplugin_by_id($subpluginid) {
+    public static function get_subplugin_by_instance_id($stepinstanceid) {
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $subpluginid));
         if ($record) {
@@ -140,11 +140,11 @@ class step_manager extends subplugin_manager {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
 
-        $step = step_manager::get_subplugin_by_id($subpluginid);
+        $step = step_manager::get_subplugin_by_instance_id($subpluginid);
         if (!$step) {
             return; // TODO: Throw error.
         }
-        $followedby = step_manager::get_subplugin_by_id($followedby);
+        $followedby = step_manager::get_subplugin_by_instance_id($followedby);
 
         // If step is not defined clear followedby.
         if ($followedby) {
