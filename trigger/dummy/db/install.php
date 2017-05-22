@@ -27,6 +27,5 @@ use tool_cleanupcourses\manager\trigger_manager;
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_cleanupcoursestrigger_dummy_install() {
-    $manager = new trigger_manager();
-    $manager->register('dummy');
+    trigger_manager::register('dummy');
 }

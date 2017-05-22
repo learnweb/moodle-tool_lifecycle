@@ -103,8 +103,7 @@ class trigger_table extends \table_sql {
             } else {
                 $output .= $OUTPUT->spacer();
             }
-            $manager = new trigger_manager();
-            if ($row->sortindex < $manager->count_enabled_trigger()) {
+            if ($row->sortindex < trigger_manager::count_enabled_trigger()) {
                 $alt = 'down';
                 $icon = 't/down';
                 $action = ACTION_DOWN_TRIGGER;
@@ -143,8 +142,7 @@ class trigger_table extends \table_sql {
     public function col_followedby($row) {
         global $PAGE, $OUTPUT;
 
-        $manager = new step_manager();
-        $steps = $manager->get_step_instances();
+        $steps = step_manager::get_step_instances();
 
         // Determine, which step is selected.
         $selected = '';

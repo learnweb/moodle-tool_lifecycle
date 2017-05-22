@@ -33,10 +33,9 @@ class settings_manager {
      * @param mixed $data submitted data of the form.
      * @throws \moodle_exception
      */
-    public function save_settings($subpluginname, $data) {
+    public static function save_settings($subpluginname, $data) {
         global $DB;
-        $libmanager = new lib_manager();
-        $lib = $libmanager->get_step_lib($subpluginname);
+        $lib = lib_manager::get_step_lib($subpluginname);
 
         $settingsfields = $lib->instance_settings();
         if (!object_property_exists($data, 'id')) {
@@ -71,17 +70,16 @@ class settings_manager {
      * @param int $instanceid id of the step instance
      * @return array|null settings key-value pairs
      */
-    public function get_settings($instanceid) {
+    public static function get_settings($instanceid) {
         global $DB;
-        $manager = new step_manager();
 
-        $stepinstance = $manager->get_step_instance($instanceid);
+        $stepinstance = step_manager::get_step_instance($instanceid);
 
         if (!$stepinstance) {
             return null;
         }
-        $libmanager = new lib_manager();
-        $lib = $libmanager->get_step_lib($stepinstance->subpluginname);
+
+        $lib = lib_manager::get_step_lib($stepinstance->subpluginname);
 
         if ($stepinstance->subpluginname !== $lib->get_subpluginname()) {
             return null;

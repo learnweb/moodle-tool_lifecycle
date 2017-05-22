@@ -27,6 +27,5 @@ use tool_cleanupcourses\manager\trigger_manager;
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_cleanupcoursestrigger_sitecourse_uninstall() {
-    $manager = new trigger_manager();
-    $manager->deregister('sitecourse');
+    trigger_manager::deregister('sitecourse');
 }

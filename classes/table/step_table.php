@@ -74,8 +74,7 @@ class step_table extends \table_sql {
     public function col_followedby($row) {
         global $PAGE, $OUTPUT;
 
-        $manager = new step_manager();
-        $steps = $manager->get_step_instances();
+        $steps = step_manager::get_step_instances();
 
         // Determine, which step is selected.
         $selected = '';

@@ -35,7 +35,7 @@ class step_manager extends subplugin_manager {
      * @param int $subpluginid id of the subplugin
      * @return step_subplugin
      */
-    public function get_subplugin_by_id($subpluginid) {
+    public static function get_subplugin_by_id($subpluginid) {
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $subpluginid));
         if ($record) {
@@ -50,7 +50,7 @@ class step_manager extends subplugin_manager {
      * Persists a subplugin to the database.
      * @param step_subplugin $subplugin
      */
-    public function insert_or_update(step_subplugin &$subplugin) {
+    public static function insert_or_update(step_subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         if ($subplugin->id) {
@@ -67,7 +67,7 @@ class step_manager extends subplugin_manager {
      * Removes a step instance from the database.
      * @param int $stepinstanceid step instance id
      */
-    private function remove($stepinstanceid) {
+    private static function remove($stepinstanceid) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         if ($record = $DB->get_record('tool_cleanupcourses_step', array('id' => $stepinstanceid))) {
@@ -76,15 +76,14 @@ class step_manager extends subplugin_manager {
             foreach ($othersteps as $steprecord) {
                 $step = step_subplugin::from_record($steprecord);
                 $step->followedby = null;
-                $this->insert_or_update($step);
+                step_manager::insert_or_update($step);
             }
 
             $othertrigger = $DB->get_records('tool_cleanupcourses_trigger', array('followedby' => $stepinstanceid));
             foreach ($othertrigger as $triggerrecord) {
                 $trigger = trigger_subplugin::from_record($triggerrecord);
                 $trigger->followedby = null;
-                $triggermanager = new trigger_manager();
-                $triggermanager->insert_or_update($trigger);
+                trigger_manager::insert_or_update($trigger);
             }
             $DB->delete_records('tool_cleanupcourses_step', (array) $record);
         }
@@ -95,7 +94,7 @@ class step_manager extends subplugin_manager {
      * Gets the list of step instances.
      * @return array of step instances.
      */
-    public function get_step_instances() {
+    public static function get_step_instances() {
         global $DB;
         $records = $DB->get_records('tool_cleanupcourses_step');
         $steps = array();
@@ -110,7 +109,7 @@ class step_manager extends subplugin_manager {
      * @param int $instanceid id of the instance
      * @return step_subplugin step instance.
      */
-    public function get_step_instance($instanceid) {
+    public static function get_step_instance($instanceid) {
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $instanceid));
         if ($record) {
@@ -123,7 +122,7 @@ class step_manager extends subplugin_manager {
      * Gets the list of step subplugins.
      * @return array of step subplugins.
      */
-    public function get_step_types() {
+    public static function get_step_types() {
         $subplugins = \core_component::get_plugin_list('cleanupcoursesstep');
         $result = array();
         foreach ($subplugins as $id => $plugin) {
@@ -137,15 +136,15 @@ class step_manager extends subplugin_manager {
      * @param int $subpluginid id of the trigger
      * @param int $followedby id of the step
      */
-    public function change_followedby($subpluginid, $followedby) {
+    public static function change_followedby($subpluginid, $followedby) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
 
-        $step = $this->get_subplugin_by_id($subpluginid);
+        $step = step_manager::get_subplugin_by_id($subpluginid);
         if (!$step) {
             return; // TODO: Throw error.
         }
-        $followedby = $this->get_subplugin_by_id($followedby);
+        $followedby = step_manager::get_subplugin_by_id($followedby);
 
         // If step is not defined clear followedby.
         if ($followedby) {
@@ -154,7 +153,7 @@ class step_manager extends subplugin_manager {
             $step->followedby = null;
         }
 
-        $this->insert_or_update($step);
+        step_manager::insert_or_update($step);
 
         $transaction->allow_commit();
     }
@@ -164,12 +163,12 @@ class step_manager extends subplugin_manager {
      * @param string $action action to be executed
      * @param int $subplugin id of the subplugin
      */
-    public function handle_action($action, $subplugin) {
+    public static function handle_action($action, $subplugin) {
         if ($action === ACTION_FOLLOWEDBY_STEP) {
-            $this->change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
+            step_manager::change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
         }
         if ($action === ACTION_STEP_INSTANCE_DELETE) {
-            $this->remove($subplugin);
+            step_manager::remove($subplugin);
         }
     }
 }

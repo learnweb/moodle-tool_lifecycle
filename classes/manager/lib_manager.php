@@ -32,8 +32,8 @@ class lib_manager {
      * @param string $subpluginname name of the subplugin
      * @return \tool_cleanupcourses\trigger\base
      */
-    public function get_trigger_lib($subpluginname) {
-        return $this->get_lib($subpluginname, 'trigger');
+    public static function get_trigger_lib($subpluginname) {
+        return lib_manager::get_lib($subpluginname, 'trigger');
     }
 
     /**
@@ -41,8 +41,8 @@ class lib_manager {
      * @param string $subpluginname name of the subplugin
      * @return \tool_cleanupcourses\step\base
      */
-    public function get_step_lib($subpluginname) {
-        return $this->get_lib($subpluginname, 'step');
+    public static function get_step_lib($subpluginname) {
+        return lib_manager::get_lib($subpluginname, 'step');
     }
 
     /**
@@ -51,7 +51,7 @@ class lib_manager {
      * @param string $subplugintype type of the subplugin (e.g. trigger, step)
      * @return
      */
-    private function get_lib($subpluginname, $subplugintype) {
+    private static function get_lib($subpluginname, $subplugintype) {
         $triggerlist = \core_component::get_plugin_list('cleanupcourses' . $subplugintype);
         if (!array_key_exists($subpluginname, $triggerlist)) {
             return null;

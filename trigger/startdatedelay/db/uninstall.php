@@ -27,6 +27,5 @@ use tool_cleanupcourses\manager\trigger_manager;
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_cleanupcoursestrigger_startdatedelay_uninstall() {
-    $manager = new trigger_manager();
-    $manager->deregister('startdatedelay');
+    trigger_manager::deregister('startdatedelay');
 }

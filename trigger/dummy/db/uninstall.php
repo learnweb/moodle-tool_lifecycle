@@ -27,6 +27,5 @@ use tool_cleanupcourses\manager\trigger_manager;
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_cleanupcoursestrigger_dummy_uninstall() {
-    $manager = new trigger_manager();
-    $manager->deregister('dummy');
+    trigger_manager::deregister('dummy');
 }

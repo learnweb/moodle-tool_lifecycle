@@ -41,23 +41,21 @@ class cleanup_processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
-        $triggermanager = new trigger_manager();
-        $libmanager = new lib_manager();
-        $enabledtrigger = $triggermanager->get_enabled_trigger();
+        $enabledtrigger = trigger_manager::get_enabled_trigger();
 
         $recordset = $this->get_course_recordset();
         while ($recordset->valid()) {
             $course = $recordset->current();
             foreach ($enabledtrigger as $trigger) {
-                $lib = $libmanager->get_trigger_lib($trigger->subpluginname);
+                $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
                 $response = $lib->check_course($course);
-                if ($response == trigger_response::next()) {
+                if ($response === trigger_response::next()) {
                     continue;
                 }
-                if ($response == trigger_response::exclude()) {
+                if ($response === trigger_response::exclude()) {
                     break;
                 }
-                if ($response == trigger_response::trigger()) {
+                if ($response === trigger_response::trigger()) {
                     $this->trigger_course($course->id, trigger_subplugin::from_record($trigger));
                     break;
                 }

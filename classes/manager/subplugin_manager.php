@@ -33,7 +33,7 @@ abstract class subplugin_manager {
      * @param $subplugintype
      * @return bool
      */
-    protected function is_subplugin($subpluginname, $subplugintype) {
+    protected static function is_subplugin($subpluginname, $subplugintype) {
         $subplugintypes = \core_component::get_subplugins('tool_cleanupcourses');
         if (array_key_exists($subplugintype, $subplugintypes)) {
             $subplugins = $subplugintypes[$subplugintype];

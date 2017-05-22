@@ -72,8 +72,7 @@ class form_step_instance extends \moodleform {
         } else {
             throw new \moodle_exception('One of the parameters $step or $subpluginname have to be set!');
         }
-        $libmanager = new lib_manager();
-        $this->lib = $libmanager->get_step_lib($this->subpluginname);
+        $this->lib = lib_manager::get_step_lib($this->subpluginname);
         $this->stepsettings = $stepsettings;
 
         parent::__construct($url);
@@ -94,7 +93,6 @@ class form_step_instance extends \moodleform {
         $mform->addElement('text', $elementname, get_string('step_instancename', 'tool_cleanupcourses'));
         $mform->setType($elementname, PARAM_TEXT);
 
-        $stepmanager = new step_manager();
         $elementname = 'subpluginnamestatic';
         $mform->addElement('static', $elementname, get_string('step_subpluginname', 'tool_cleanupcourses'));
         $mform->setType($elementname, PARAM_TEXT);
@@ -105,7 +103,7 @@ class form_step_instance extends \moodleform {
         $elementname = 'followedby';
         $select = $mform->createElement('select', $elementname, get_string('step_followedby', 'tool_cleanupcourses'));
         $select->addOption(get_string('followedby_none', 'tool_cleanupcourses'), null);
-        foreach ($stepmanager->get_step_instances() as $key => $value) {
+        foreach (step_manager::get_step_instances() as $key => $value) {
             $select->addOption($value, $key);
         }
         $mform->addElement($select);

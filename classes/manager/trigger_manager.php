@@ -34,10 +34,10 @@ class trigger_manager extends subplugin_manager {
      * This has to be called, when installing trigger plugins!
      * @param string $subpluginname name of the plugin
      */
-    public function register($subpluginname) {
-        if ($this->is_subplugin($subpluginname, 'cleanupcoursestrigger')) {
+    public static function register($subpluginname) {
+        if (trigger_manager::is_subplugin($subpluginname, 'cleanupcoursestrigger')) {
             $subplugin = new trigger_subplugin($subpluginname);
-            $this->insert_or_update($subplugin);
+            trigger_manager::insert_or_update($subplugin);
         }
     }
 
@@ -46,10 +46,10 @@ class trigger_manager extends subplugin_manager {
      * This has to be called, when uninstalling trigger plugins!
      * @param string $subpluginname name of the plugin
      */
-    public function deregister($subpluginname) {
-        if ($this->is_subplugin($subpluginname, 'cleanupcoursestrigger')) {
+    public static function deregister($subpluginname) {
+        if (trigger_manager::is_subplugin($subpluginname, 'cleanupcoursestrigger')) {
             $subplugin = new trigger_subplugin($subpluginname);
-            $this->remove($subplugin);
+            trigger_manager::remove($subplugin);
         }
     }
 
@@ -58,20 +58,20 @@ class trigger_manager extends subplugin_manager {
      * @param int $subpluginid id of the subplugin
      * @param bool $enabled new state
      */
-    public function change_enabled($subpluginid, $enabled) {
+    public static function change_enabled($subpluginid, $enabled) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
-        $subplugin = $this->get_subplugin_by_id($subpluginid);
+        $subplugin = trigger_manager::get_subplugin_by_id($subpluginid);
         if ($subplugin) {
             $subplugin->enabled = $enabled;
             if ($enabled) {
-                $subplugin->sortindex = $this->count_enabled_trigger() + 1;
+                $subplugin->sortindex = trigger_manager::count_enabled_trigger() + 1;
             } else {
                 if (isset($subplugin->sortindex)) {
-                    $this->remove_from_sortindex($subplugin);
+                    trigger_manager::remove_from_sortindex($subplugin);
                 }
             }
-            $this->insert_or_update($subplugin);
+            trigger_manager::insert_or_update($subplugin);
         }
         $transaction->allow_commit();
     }
@@ -81,15 +81,15 @@ class trigger_manager extends subplugin_manager {
      * @param int $subpluginid id of the subplugin
      * @param bool $up tells if the subplugin should be set up or down
      */
-    public function change_sortindex($subpluginid, $up) {
+    public static function change_sortindex($subpluginid, $up) {
         global $DB;
-        $subplugin = $this->get_subplugin_by_id($subpluginid);
+        $subplugin = trigger_manager::get_subplugin_by_id($subpluginid);
         // Prevent first entry to be put up even more.
         if ($subplugin->sortindex == 1 && $up) {
             return;
         }
         // Prevent last entry to be put down even more.
-        if ($subplugin->sortindex == $this->count_enabled_trigger() && !$up) {
+        if ($subplugin->sortindex == trigger_manager::count_enabled_trigger() && !$up) {
             return;
         }
         $index = $subplugin->sortindex;
@@ -105,8 +105,8 @@ class trigger_manager extends subplugin_manager {
 
         $subplugin->sortindex = $otherindex;
         $othersubplugin->sortindex = $index;
-        $this->insert_or_update($subplugin);
-        $this->insert_or_update($othersubplugin);
+        trigger_manager::insert_or_update($subplugin);
+        trigger_manager::insert_or_update($othersubplugin);
 
         $transaction->allow_commit();
     }
@@ -116,16 +116,16 @@ class trigger_manager extends subplugin_manager {
      * @param int $subpluginid id of the trigger
      * @param int $followedby id of the step
      */
-    public function change_followedby($subpluginid, $followedby) {
+    public static function change_followedby($subpluginid, $followedby) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
 
-        $subplugin = $this->get_subplugin_by_id($subpluginid);
+        $subplugin = trigger_manager::get_subplugin_by_id($subpluginid);
         if (!$subplugin) {
             return; // TODO: Throw error.
         }
-        $stepmanager = new step_manager();
-        $step = $stepmanager->get_subplugin_by_id($followedby);
+
+        $step = step_manager::get_subplugin_by_id($followedby);
 
         // If step is not defined clear followedby.
         if ($step) {
@@ -134,7 +134,7 @@ class trigger_manager extends subplugin_manager {
             $subplugin->followedby = null;
         }
 
-        $this->insert_or_update($subplugin);
+        trigger_manager::insert_or_update($subplugin);
 
         $transaction->allow_commit();
     }
@@ -143,13 +143,13 @@ class trigger_manager extends subplugin_manager {
      * Removes a subplugin from the sortindex and adjusts all other indizes.
      * @param trigger_subplugin $toberemoved
      */
-    private function remove_from_sortindex(&$toberemoved) {
+    private static function remove_from_sortindex(&$toberemoved) {
         global $DB;
         $subplugins = $DB->get_records_select('tool_cleanupcourses_trigger', "sortindex > $toberemoved->sortindex");
         foreach ($subplugins as $record) {
             $subplugin = trigger_subplugin::from_record($record);
             $subplugin->sortindex--;
-            $this->insert_or_update($subplugin);
+            trigger_manager::insert_or_update($subplugin);
         }
         $toberemoved->sortindex = null;
     }
@@ -159,7 +159,7 @@ class trigger_manager extends subplugin_manager {
      * @param int $subpluginid id of the subplugin
      * @return trigger_subplugin
      */
-    private function get_subplugin_by_id($subpluginid) {
+    private static function get_subplugin_by_id($subpluginid) {
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_trigger', array('id' => $subpluginid));
         if ($record) {
@@ -174,7 +174,7 @@ class trigger_manager extends subplugin_manager {
      * Persists a subplugin to the database.
      * @param trigger_subplugin $subplugin
      */
-    public function insert_or_update(trigger_subplugin &$subplugin) {
+    public static function insert_or_update(trigger_subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         if ($subplugin->id !== null) {
@@ -195,7 +195,7 @@ class trigger_manager extends subplugin_manager {
      * Removes a subplugin from the database.
      * @param trigger_subplugin $subplugin
      */
-    private function remove(trigger_subplugin &$subplugin) {
+    private static function remove(trigger_subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         $record = array(
@@ -212,7 +212,7 @@ class trigger_manager extends subplugin_manager {
      * Gets the count of currently enabled trigger subplugins.
      * @return int count of enabled trigger subplugins.
      */
-    public function count_enabled_trigger() {
+    public static function count_enabled_trigger() {
         global $DB;
         return $DB->count_records('tool_cleanupcourses_trigger',
             array(
@@ -224,7 +224,7 @@ class trigger_manager extends subplugin_manager {
      * Gets the list of currently enabled trigger subplugins.
      * @return array of enabled trigger subplugins.
      */
-    public function get_enabled_trigger() {
+    public static function get_enabled_trigger() {
         global $DB;
         return $DB->get_records('tool_cleanupcourses_trigger',
             array(
@@ -238,21 +238,21 @@ class trigger_manager extends subplugin_manager {
      * @param string $action action to be executed
      * @param int $subplugin id of the subplugin
      */
-    public function handle_action($action, $subplugin) {
+    public static function handle_action($action, $subplugin) {
         if ($action === ACTION_ENABLE_TRIGGER) {
-            $this->change_enabled($subplugin, true);
+            trigger_manager::change_enabled($subplugin, true);
         }
         if ($action === ACTION_DISABLE_TRIGGER) {
-            $this->change_enabled($subplugin, false);
+            trigger_manager::change_enabled($subplugin, false);
         }
         if ($action === ACTION_UP_TRIGGER) {
-            $this->change_sortindex($subplugin, true);
+            trigger_manager::change_sortindex($subplugin, true);
         }
         if ($action === ACTION_DOWN_TRIGGER) {
-            $this->change_sortindex($subplugin, false);
+            trigger_manager::change_sortindex($subplugin, false);
         }
         if ($action === ACTION_FOLLOWEDBY_TRIGGER) {
-            $this->change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
+            trigger_manager::change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
         }
     }
 

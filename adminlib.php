@@ -109,8 +109,7 @@ class subplugin_settings {
 
         echo $OUTPUT->heading(get_string('subpluginssettings_step_heading', 'tool_cleanupcourses'));
 
-        $manager = new step_manager();
-        $steps = $manager->get_step_types();
+        $steps = step_manager::get_step_types();
         echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
             array('action' => ACTION_STEP_INSTANCE_FORM, 'sesskey' => sesskey())),
             'subpluginname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_cleanupcourses')));
@@ -172,18 +171,15 @@ class subplugin_settings {
         global $PAGE;
         $this->check_permissions();
 
-        $triggermanager = new trigger_manager();
-        $triggermanager->handle_action($action, $subplugin);
-        $stepmanager = new step_manager();
-        $stepmanager->handle_action($action, $subplugin);
-        $settingsmanager = new settings_manager();
+        trigger_manager::handle_action($action, $subplugin);
+        step_manager::handle_action($action, $subplugin);
 
         $steptomodify = null;
         $subpluginname = null;
         $stepsettings = null;
         if ($stepid = optional_param('subplugin', null, PARAM_INT)) {
-            $steptomodify = $stepmanager->get_subplugin_by_id($stepid);
-            $stepsettings = $settingsmanager->get_settings($stepid);
+            $steptomodify = step_manager::get_subplugin_by_id($stepid);
+            $stepsettings = settings_manager::get_settings($stepid);
         } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
             $subpluginname = $name;
         } else {
@@ -198,9 +194,9 @@ class subplugin_settings {
         } else {
             if ($form->is_submitted() && !$form->is_cancelled() && $data = $form->get_submitted_data()) {
                 $step = step_subplugin::from_record($data);
-                $stepmanager->insert_or_update($step);
+                step_manager::insert_or_update($step);
                 // Save local subplugin settings.
-                $settingsmanager->save_settings($form->subpluginname, $data);
+                settings_manager::save_settings($form->subpluginname, $data);
             }
             $this->view_plugins_table();
         }
