@@ -17,7 +17,7 @@
     <TABLE NAME="tool_cleanupcourses_trigger" COMMENT="Trigger subplugins for the cleanup courses">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
+        <FIELD NAME="subpluginname" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
         <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="tells if the subplugin is enabled"/>
         <FIELD NAME="followedby" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="tells which step follows this one in the cleanup process"/>
         <FIELD NAME="sortindex" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Sortindex of the subplugins"/>
@@ -30,7 +30,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="instancename" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="instancename of the step"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
+        <FIELD NAME="subpluginname" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
         <FIELD NAME="followedby" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="tells which step follows this one in the cleanup process"/>
       </FIELDS>
       <KEYS>

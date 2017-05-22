@@ -58,7 +58,7 @@ abstract class base {
         $manager = new step_manager();
         $stepinstance = $manager->get_step_instance($instanceid);
 
-        if (!$stepinstance || $stepinstance->name !== $this->get_subpluginname()) {
+        if (!$stepinstance || $stepinstance->subpluginname !== $this->get_subpluginname()) {
             return null;
         }
 

@@ -33,7 +33,7 @@ class tool_cleanupcourses_generator extends testing_module_generator {
         for ($i = 1; $i <= 3; $i++) {
             $record = array(
                     'id' => $i,
-                    'name' => 'subplugin'.$i,
+                    'subpluginname' => 'subplugin'.$i,
                     'enabled' => 1,
                     'sortindex' => $i,
             );

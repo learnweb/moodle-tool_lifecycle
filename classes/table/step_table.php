@@ -35,17 +35,17 @@ class step_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, name, instancename, followedby", '{tool_cleanupcourses_step}', "TRUE");
+        $this->set_sql("id, subpluginname, instancename, followedby", '{tool_cleanupcourses_step}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['instancename', 'name', 'followedby', 'edit', 'delete']);
+        $this->define_columns(['instancename', 'subpluginname', 'followedby', 'edit', 'delete']);
         $this->define_headers([
             get_string('step_instancename', 'tool_cleanupcourses'),
-            get_string('step_name', 'tool_cleanupcourses'),
+            get_string('step_subpluginname', 'tool_cleanupcourses'),
             get_string('step_followedby', 'tool_cleanupcourses'),
             get_string('step_edit', 'tool_cleanupcourses'),
             get_string('step_delete', 'tool_cleanupcourses'),
@@ -55,15 +55,15 @@ class step_table extends \table_sql {
     }
 
     /**
-     * Render name column.
+     * Render subpluginname column.
      * @param $row
      * @return string pluginname of the subplugin
      */
-    public function col_name($row) {
+    public function col_subpluginname($row) {
 
-        $name = $row->name;
+        $subpluginname = $row->subpluginname;
 
-        return get_string('pluginname', 'cleanupcoursesstep_' . $name);
+        return get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname);
     }
 
     /**

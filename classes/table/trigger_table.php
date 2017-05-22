@@ -36,16 +36,16 @@ class trigger_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, name, enabled, sortindex, followedby", '{tool_cleanupcourses_trigger}', "TRUE");
+        $this->set_sql("id, subpluginname, enabled, sortindex, followedby", '{tool_cleanupcourses_trigger}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['name', 'enabled', 'sortindex', 'followedby']);
+        $this->define_columns(['subpluginname', 'enabled', 'sortindex', 'followedby']);
         $this->define_headers([
-            get_string('trigger_name', 'tool_cleanupcourses'),
+            get_string('trigger_subpluginname', 'tool_cleanupcourses'),
             get_string('trigger_enabled', 'tool_cleanupcourses'),
             get_string('trigger_sortindex', 'tool_cleanupcourses'),
             get_string('trigger_followedby', 'tool_cleanupcourses'),
@@ -55,15 +55,15 @@ class trigger_table extends \table_sql {
     }
 
     /**
-     * Render name column.
+     * Render subpluginname column.
      * @param $row
      * @return string pluginname of the subplugin
      */
-    public function col_name($row) {
+    public function col_subpluginname($row) {
 
-        $name = $row->name;
+        $subpluginname = $row->subpluginname;
 
-        return get_string('pluginname', 'cleanupcoursestrigger_' . $name);
+        return get_string('pluginname', 'cleanupcoursestrigger_' . $subpluginname);
     }
 
     /**

@@ -32,18 +32,18 @@ class subplugin{
     public $id;
 
     /** string name of subplugin */
-    public $name;
+    public $subpluginname;
 
     /** subplugin this subplugin is followed by in the cleanup process*/
     public $followedby;
 
     /**
-     * Creates a subplugin with name and optional id.
-     * @param string $name name of the subplugin
+     * Creates a subplugin with subpluginname and optional id.
+     * @param string $subpluginname name of the subplugin
      * @param int $id id of the subplugin
      */
-    public function __construct($name, $id = null) {
-        $this->name = $name;
+    public function __construct($subpluginname, $id = null) {
+        $this->subpluginname = $subpluginname;
         $this->id = $id;
     }
 
@@ -53,10 +53,10 @@ class subplugin{
      * @return trigger_subplugin
      */
     public static function from_record($record) {
-        if (!object_property_exists($record, 'name')) {
+        if (!object_property_exists($record, 'subpluginname')) {
             return null;
         }
-        $instance = new self($record->name);
+        $instance = new self($record->subpluginname);
         foreach (array_keys((array) $record) as $field) {
             if (object_property_exists($instance, $field)) {
                 $instance->$field = $record->$field;

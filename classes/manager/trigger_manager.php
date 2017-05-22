@@ -181,7 +181,7 @@ class trigger_manager extends subplugin_manager {
             $DB->update_record('tool_cleanupcourses_trigger', $subplugin);
         }
         $record = array(
-            'name' => $subplugin->name,
+            'subpluginname' => $subplugin->subpluginname,
         );
         if (!$DB->record_exists('tool_cleanupcourses_trigger', $record)) {
             $subplugin->id = $DB->insert_record('tool_cleanupcourses_trigger', $record);
@@ -199,7 +199,7 @@ class trigger_manager extends subplugin_manager {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         $record = array(
-            'name' => $subplugin->name,
+            'subpluginname' => $subplugin->subpluginname,
         );
         if ($record = $DB->get_record('tool_cleanupcourses_trigger', $record)) {
             $DB->delete_records('tool_cleanupcourses_trigger', (array) $record);

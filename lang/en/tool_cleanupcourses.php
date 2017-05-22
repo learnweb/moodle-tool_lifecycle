@@ -36,12 +36,12 @@ $string['subpluginssettings_edit_instance_heading'] = 'Step Instance';
 $string['add_new_step_instance'] = 'Add New Step Instance...';
 
 
-$string['trigger_name'] = 'Subplugin Name';
+$string['trigger_subpluginname'] = 'Subplugin Name';
 $string['trigger_enabled'] = 'Enabled';
 $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_followedby'] = 'Followed by';
 
-$string['step_name'] = 'Step Type';
+$string['step_subpluginname'] = 'Step Type';
 $string['step_instancename'] = 'Instance Name';
 $string['step_followedby'] = 'Followed by';
 $string['step_edit'] = 'Edit';

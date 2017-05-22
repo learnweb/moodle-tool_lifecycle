@@ -32,12 +32,12 @@ class step_subplugin extends subplugin {
     public $instancename;
 
     /**
-     * Creates a subplugin with name and optional id.
-     * @param string $name name of the subplugin
+     * Creates a subplugin with subpluginname and optional id.
+     * @param string $subpluginname name of the subplugin
      * @param int $id id of the subplugin
      */
-    public function __construct($instancename, $name, $id = null) {
-        parent::__construct($name, $id);
+    public function __construct($instancename, $subpluginname, $id = null) {
+        parent::__construct($subpluginname, $id);
         $this->instancename = $instancename;
     }
 
@@ -47,13 +47,13 @@ class step_subplugin extends subplugin {
      * @return step_subplugin
      */
     public static function from_record($record) {
-        if (!object_property_exists($record, 'name')) {
+        if (!object_property_exists($record, 'subpluginname')) {
             return null;
         }
         if (!object_property_exists($record, 'instancename')) {
             return null;
         }
-        $instance = new self($record->instancename, $record->name);
+        $instance = new self($record->instancename, $record->subpluginname);
         foreach (array_keys((array) $record) as $field) {
             if (object_property_exists($instance, $field)) {
                 $instance->$field = $record->$field;

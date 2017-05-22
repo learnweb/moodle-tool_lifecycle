@@ -45,15 +45,15 @@ class cleanup_processor {
         $triggerlist = \core_component::get_plugin_list('cleanupcoursestrigger');
         $triggerclasses = [];
         foreach ($enabledtrigger as $trigger) {
-            require_once($triggerlist[$trigger->name].'/lib.php');
-            $extendedclass = "tool_cleanupcourses\\trigger\\$trigger->name";
-            $triggerclasses[$trigger->name] = new $extendedclass();
+            require_once($triggerlist[$trigger->subpluginname].'/lib.php');
+            $extendedclass = "tool_cleanupcourses\\trigger\\$trigger->subpluginname";
+            $triggerclasses[$trigger->subpluginname] = new $extendedclass();
         }
         $recordset = $this->get_course_recordset();
         while ($recordset->valid()) {
             $course = $recordset->current();
             foreach ($enabledtrigger as $trigger) {
-                $response = $triggerclasses[$trigger->name]->check_course($course);
+                $response = $triggerclasses[$trigger->subpluginname]->check_course($course);
                 if ($response == trigger_response::next()) {
                     continue;
                 }
