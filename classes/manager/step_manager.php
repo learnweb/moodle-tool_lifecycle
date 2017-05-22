@@ -32,12 +32,12 @@ class step_manager extends subplugin_manager {
 
     /**
      * Returns a subplugin object.
-     * @param int $subpluginid id of the subplugin
+     * @param int $subpluginid id of the step instance
      * @return step_subplugin
      */
     public static function get_subplugin_by_instance_id($stepinstanceid) {
         global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $subpluginid));
+        $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $stepinstanceid));
         if ($record) {
             $subplugin = step_subplugin::from_record($record);
             return $subplugin;
