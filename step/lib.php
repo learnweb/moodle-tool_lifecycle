@@ -75,6 +75,22 @@ abstract class base {
         return $settingsvalues;
     }
 
+    /**
+     * This method can be overriden, to add form elements to the form_step_instance.
+     * It is called in definition().
+     * @param \MoodleQuickForm $mform
+     */
+    public function extend_add_instance_form_definition($mform) {
+    }
+
+    /**
+     * This method can be overriden, to set default values to the form_step_instance.
+     * It is called in definition_after_data().
+     * @param \MoodleQuickForm $mform
+     */
+    public function extend_add_instance_form_definition_after_data($mform) {
+    }
+
 }
 
 class instance_setting {

@@ -98,6 +98,9 @@ class form_step_instance extends \moodleform {
             $stepmanager->get_step_instances());
         $mform->setType($elementname, PARAM_TEXT);
 
+        // Insert the subplugin specific settings.
+        $this->lib->extend_add_instance_form_definition($mform);
+
         $this->add_action_buttons();
     }
 
@@ -119,6 +122,9 @@ class form_step_instance extends \moodleform {
         $mform->setDefault('subpluginnamestatic',
             get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname));
         $mform->setDefault('subpluginname', $subpluginname);
+
+        // Insert the subplugin specific settings.
+        $this->lib->extend_add_instance_form_definition_after_data($mform);
     }
 
 }
