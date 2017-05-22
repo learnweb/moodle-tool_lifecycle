@@ -108,8 +108,11 @@ class subplugin_settings {
 
         echo $OUTPUT->heading(get_string('subpluginssettings_step_heading', 'tool_cleanupcourses'));
 
-        echo $OUTPUT->single_button(new \moodle_url($PAGE->url, array('action' => ACTION_STEP_INSTANCE_FORM)),
-            get_string('add_instance', 'tool_cleanupcourses'));
+        $manager = new step_manager();
+        $steps = $manager->get_step_types();
+        echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
+            array('action' => ACTION_STEP_INSTANCE_FORM, 'sesskey' => sesskey())),
+            'name', $steps, '', array('' => get_string('add_new_step_instance', 'tool_cleanupcourses')));
 
         $table = new step_table('tool_cleanupcourses_steps');
         $table->out(5000, false);

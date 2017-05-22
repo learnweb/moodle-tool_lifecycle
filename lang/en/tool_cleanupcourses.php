@@ -33,7 +33,7 @@ $string['subpluginssettings_heading'] = 'Subplugin Workflow';
 $string['subpluginssettings_trigger_heading'] = 'Trigger Definition';
 $string['subpluginssettings_step_heading'] = 'Step Workflow';
 $string['subpluginssettings_edit_instance_heading'] = 'Step Instance';
-$string['add_instance'] = 'Add Instance';
+$string['add_new_step_instance'] = 'Add New Step Instance...';
 
 
 $string['trigger_name'] = 'Subplugin Name';
