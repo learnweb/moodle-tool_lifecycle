@@ -176,11 +176,14 @@ class subplugin_settings {
         $triggermanager->handle_action($action, $subplugin);
         $stepmanager = new step_manager();
         $stepmanager->handle_action($action, $subplugin);
+        $settingsmanager = new settings_manager();
 
         $steptomodify = null;
         $subpluginname = null;
+        $stepsettings = null;
         if ($stepid = optional_param('subplugin', null, PARAM_INT)) {
             $steptomodify = $stepmanager->get_subplugin_by_id($stepid);
+            $stepsettings = $settingsmanager->get_settings($stepid);
         } elseif ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
             $subpluginname = $name;
         } else {
@@ -188,7 +191,7 @@ class subplugin_settings {
             return;
         }
 
-        $form = new form_step_instance($PAGE->url, $steptomodify, $subpluginname);
+        $form = new form_step_instance($PAGE->url, $steptomodify, $subpluginname, $stepsettings);
 
         if ($action === ACTION_STEP_INSTANCE_FORM) {
             $this->view_step_instance_form($form);
@@ -197,7 +200,6 @@ class subplugin_settings {
                 $step = step_subplugin::from_record($data);
                 $stepmanager->insert_or_update($step);
                 // Save local subplugin settings.
-                $settingsmanager = new settings_manager();
                 $settingsmanager->save_settings($form->subpluginname, $data);
             }
             $this->view_plugins_table();

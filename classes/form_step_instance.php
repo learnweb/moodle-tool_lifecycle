@@ -54,11 +54,16 @@ class form_step_instance extends \moodleform {
     public $lib;
 
     /**
+     * @var array/null local settings of the step instance
+     */
+    public $stepsettings;
+
+    /**
      * Constructor
      * @param string $url
      * @param step_subplugin $step
      */
-    public function __construct($url, $step, $subpluginname = null) {
+    public function __construct($url, $step, $subpluginname = null, $stepsettings = null) {
         $this->step = $step;
         if ($step) {
             $this->subpluginname = $step->subpluginname;
@@ -69,6 +74,7 @@ class form_step_instance extends \moodleform {
         }
         $libmanager = new lib_manager();
         $this->lib = $libmanager->get_step_lib($this->subpluginname);
+        $this->stepsettings = $stepsettings;
 
         parent::__construct($url);
     }
@@ -133,6 +139,13 @@ class form_step_instance extends \moodleform {
         $mform->setDefault('subpluginnamestatic',
             get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname));
         $mform->setDefault('subpluginname', $subpluginname);
+
+        // Setting the default values for the local step settings.
+        if ($this->stepsettings) {
+            foreach ($this->stepsettings as $key => $value) {
+                $mform->setDefault($key, $value);
+            }
+        }
 
         // Insert the subplugin specific settings.
         $this->lib->extend_add_instance_form_definition_after_data($mform);
