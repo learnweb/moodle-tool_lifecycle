@@ -67,7 +67,7 @@ class form_step_instance extends \moodleform {
         $this->step = $step;
         if ($step) {
             $this->subpluginname = $step->subpluginname;
-        } elseif ($subpluginname) {
+        } else if ($subpluginname) {
             $this->subpluginname = $subpluginname;
         } else {
             throw new \moodle_exception('One of the parameters $step or $subpluginname have to be set!');
@@ -116,7 +116,6 @@ class form_step_instance extends \moodleform {
             $mform->addElement('header', 'step_settings_header', get_string('step_settings_header', 'tool_cleanupcourses'));
             $this->lib->extend_add_instance_form_definition($mform);
         }
-
 
         $this->add_action_buttons();
     }

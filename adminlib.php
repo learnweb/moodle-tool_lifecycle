@@ -184,7 +184,7 @@ class subplugin_settings {
         if ($stepid = optional_param('subplugin', null, PARAM_INT)) {
             $steptomodify = $stepmanager->get_subplugin_by_id($stepid);
             $stepsettings = $settingsmanager->get_settings($stepid);
-        } elseif ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
             $subpluginname = $name;
         } else {
             $this->view_plugins_table();

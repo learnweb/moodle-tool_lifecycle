@@ -50,7 +50,7 @@ class cleanup_processor {
             $course = $recordset->current();
             foreach ($enabledtrigger as $trigger) {
                 $lib = $libmanager->get_trigger_lib($trigger->subpluginname);
-                $response = $lib ->check_course($course);
+                $response = $lib->check_course($course);
                 if ($response == trigger_response::next()) {
                     continue;
                 }

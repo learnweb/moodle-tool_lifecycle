@@ -56,7 +56,7 @@ class settings_manager {
                     $record->value = $cleanedvalue;
                     $DB->update_record('tool_cleanupcourses_settings', $record);
                 } else {
-                    $newrecord= new \stdClass();
+                    $newrecord = new \stdClass();
                     $newrecord->instanceid = $id;
                     $newrecord->name = $setting->name;
                     $newrecord->value = $cleanedvalue;
