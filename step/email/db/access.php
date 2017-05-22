@@ -15,15 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Cleanup Courses Email Step
- *
- * @package tool_cleanupcourses_step
+ * Capability definitions for the email step subplugin
+ * @package    cleanupcourses_step
  * @subpackage email
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
-defined('MOODLE_INTERNAL') || die;
+$capabilities = array(
 
-$plugin->version  = 2017052203;
-$plugin->component = 'cleanupcoursesstep_email';
+    'cleanupcoursesstep/email:preventdeletion' => array(
+        'contextlevel' => CONTEXT_COURSE,
+        'captype' => 'write',
+        'archetypes' => array(
+            'manager' => CAP_PREVENT,
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_PREVENT,
+            'students' => CAP_PREVENT,
+        ),
+        'clonepermissionsfrom' => 'moodle/course:update'
+    ),
+);
+
+
+
