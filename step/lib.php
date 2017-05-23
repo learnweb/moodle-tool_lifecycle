@@ -90,12 +90,23 @@ abstract class base {
 
 }
 
+/**
+ * Class representing a local settings object for a subplugin instance.
+ * @package tool_cleanupcourses\step
+ */
 class instance_setting {
 
+    /** @var string name of the setting*/
     public $name;
 
+    /** @var string param type of the setting, e.g. PARAM_INT */
     public $paramtype;
 
+    /**
+     * Create a local settings object.
+     * @param string $name name of the setting
+     * @param string $paramtype param type. Used for cleansing and parsing, e.g. PARAM_INT.
+     */
     public function __construct($name, $paramtype) {
         $this->name = $name;
         $this->paramtype = $paramtype;
