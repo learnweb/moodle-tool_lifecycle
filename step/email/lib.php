@@ -101,11 +101,11 @@ class email extends base {
         $patterns = array();
         $replacements = array();
 
-        $patterns []= '##firstname##';
-        $replacements []= $user->firstname;
+        $patterns [] = '##firstname##';
+        $replacements [] = $user->firstname;
 
-        $patterns []= '##lastname##';
-        $replacements []= $user->lastname;
+        $patterns [] = '##lastname##';
+        $replacements [] = $user->lastname;
 
         return str_ireplace($patterns, $replacements, $strings);
     }
