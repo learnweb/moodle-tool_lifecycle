@@ -105,6 +105,20 @@ class step_manager extends subplugin_manager {
     }
 
     /**
+     * Gets the list of step instances for a specific subpluginname.
+     * @return step_subplugin[] array of step instances.
+     */
+    public static function get_step_instances_by_subpluginname($subpluginname) {
+        global $DB;
+        $records = $DB->get_records('tool_cleanupcourses_step', array('subpluginname' => $subpluginname));
+        $steps = array();
+        foreach ($records as $id => $record) {
+            $steps[$id] = step_subplugin::from_record($record);
+        }
+        return $steps;
+    }
+
+    /**
      * Gets a specific step instance.
      * @param int $instanceid id of the instance
      * @return step_subplugin step instance.

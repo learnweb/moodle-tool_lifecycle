@@ -25,7 +25,9 @@
  */
 namespace tool_cleanupcourses\step;
 
+use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\response\step_response;
+use tool_cleanupcourses\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -56,6 +58,31 @@ class email extends base {
             $DB->insert_record('cleanupcoursesstep_email', $record);
         }
         return step_response::waiting();
+    }
+
+    public function post_processing_bulk_operation() {
+        global $DB;
+        $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
+        foreach ($stepinstances as $step) {
+            $settings = settings_manager::get_settings($step->id);
+            $subject = $settings['subject'];
+            $content = $settings['content'];
+            $userstobeinformed = $DB->get_records('cleanupcoursesstep_email',
+                array('instanceid' => $step->id), '', 'distinct touser');
+            foreach ($userstobeinformed as $user) {
+                $transaction = $DB->start_delegated_transaction();
+                $mailentries = $DB->get_records('cleanupcoursesstep_email',
+                    array('instanceid' => $step->id,
+                        'touser' => $user->touser));
+                // TODO: use course info to parse content template!
+                email_to_user(\core_user::get_user($user->touser), \core_user::get_noreply_user(), $subject, $content);
+                $DB->delete_records('cleanupcoursesstep_email',
+                    array('instanceid' => $step->id,
+                        'touser' => $user->touser));
+                $transaction->allow_commit();
+            }
+        }
+
     }
 
     public function instance_settings() {

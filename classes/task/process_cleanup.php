@@ -39,7 +39,7 @@ class process_cleanup extends \core\task\scheduled_task {
         $processor->call_trigger();
 
         $steps = step_manager::get_step_types();
-        /** @var \tool_cleanupcourses\step\base[] $steplibs stores the lib classes of all step subplugins.*/
+        /* @var \tool_cleanupcourses\step\base[] $steplibs stores the lib classes of all step subplugins.*/
         $steplibs = array();
         foreach ($steps as $id => $step) {
             $steplibs[$id] = lib_manager::get_step_lib($id);
