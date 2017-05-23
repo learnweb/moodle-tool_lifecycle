@@ -23,6 +23,9 @@
  */
 namespace tool_cleanupcourses;
 
+use tool_cleanupcourses\manager\lib_manager;
+use tool_cleanupcourses\manager\step_manager;
+
 defined('MOODLE_INTERNAL') || die;
 
 class process_cleanup extends \core\task\scheduled_task {
@@ -34,6 +37,17 @@ class process_cleanup extends \core\task\scheduled_task {
     public function execute() {
         $processor = new cleanup_processor();
         $processor->call_trigger();
+
+        $steps = step_manager::get_step_types();
+        /** @var \tool_cleanupcourses\step\base[] $steplibs stores the lib classes of all step subplugins.*/
+        $steplibs = array();
+        foreach ($steps as $id => $step) {
+            $steplibs[$id] = lib_manager::get_step_lib($id);
+            $steplibs[$id]->pre_processing_bulk_operation();
+        }
         $processor->process_courses();
+        foreach ($steps as $id => $step) {
+            $steplibs[$id]->post_processing_bulk_operation();
+        }
     }
 }

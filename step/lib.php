@@ -45,6 +45,24 @@ abstract class base {
      */
     public abstract function process_course($instanceid, $course);
 
+    /**
+     * Can be overridden to define actions to take place before
+     * process_course() is called for every relevant course.
+     */
+    public function pre_processing_bulk_operation() {
+    }
+
+    /**
+     * Can be overridden to define actions to take place after
+     * process_course() is called for every relevant course.
+     */
+    public function post_processing_bulk_operation() {
+    }
+
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public abstract function get_subpluginname();
 
     /**
