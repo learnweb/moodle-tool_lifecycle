@@ -65,24 +65,49 @@ class email extends base {
         $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
         foreach ($stepinstances as $step) {
             $settings = settings_manager::get_settings($step->id);
-            $subject = $settings['subject'];
-            $content = $settings['content'];
+
             $userstobeinformed = $DB->get_records('cleanupcoursesstep_email',
                 array('instanceid' => $step->id), '', 'distinct touser');
-            foreach ($userstobeinformed as $user) {
+            foreach ($userstobeinformed as $userrecord) {
+                $user = \core_user::get_user($userrecord->touser);
                 $transaction = $DB->start_delegated_transaction();
                 $mailentries = $DB->get_records('cleanupcoursesstep_email',
                     array('instanceid' => $step->id,
-                        'touser' => $user->touser));
+                        'touser' => $user->id));
+
+                $parsedsettings = $this->replace_placeholders($settings, $user);
+
+                $subject = $parsedsettings['subject'];
+                $content = $parsedsettings['content'];
                 // TODO: use course info to parse content template!
-                email_to_user(\core_user::get_user($user->touser), \core_user::get_noreply_user(), $subject, $content);
+                email_to_user($user, \core_user::get_noreply_user(), $subject, $content);
                 $DB->delete_records('cleanupcoursesstep_email',
                     array('instanceid' => $step->id,
-                        'touser' => $user->touser));
+                        'touser' => $user->id));
                 $transaction->allow_commit();
             }
         }
 
+    }
+
+    /**
+     * Replaces certain placeholders within the mail template.
+     * @param string[] $strings array of mail templates.
+     * @param mixed $user user object
+     * @return string[] array of mail text.
+     */
+    private function replace_placeholders($strings, $user) {
+
+        $patterns = array();
+        $replacements = array();
+
+        $patterns []= '##firstname##';
+        $replacements []= $user->firstname;
+
+        $patterns []= '##lastname##';
+        $replacements []= $user->lastname;
+
+        return str_ireplace($patterns, $replacements, $strings);
     }
 
     public function instance_settings() {
