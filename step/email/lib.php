@@ -45,6 +45,16 @@ class email extends base {
      * @return step_response
      */
     public function process_course($instanceid, $course) {
+        global $DB;
+        $coursecontext = \context_course::instance($course->id);
+        $userstobeinformed = get_users_by_capability($coursecontext, 'cleanupcoursesstep/email:preventdeletion');
+        foreach ($userstobeinformed as $user) {
+            $record = new \stdClass();
+            $record->touser = $user->id;
+            $record->courseid = $course->id;
+            $record->instanceid = $instanceid;
+            $DB->insert_record('cleanupcoursesstep_email', $record);
+        }
         return step_response::waiting();
     }
 

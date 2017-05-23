@@ -25,5 +25,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2017052203;
+$plugin->version  = 2017052302;
 $plugin->component = 'cleanupcoursesstep_email';
