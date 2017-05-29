@@ -196,7 +196,7 @@ class subplugin_settings {
                 $step = step_subplugin::from_record($data);
                 step_manager::insert_or_update($step);
                 // Save local subplugin settings.
-                settings_manager::save_settings($form->subpluginname, $data);
+                settings_manager::save_settings($step->id, $form->subpluginname, $data);
             }
             $this->view_plugins_table();
         }

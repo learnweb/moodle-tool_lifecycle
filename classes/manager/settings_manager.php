@@ -29,26 +29,26 @@ class settings_manager {
 
     /**
      * Saves the local settings for a subplugin step instance.
+     * @param int $instanceid id of the subplugininstance.
      * @param string $subpluginname name of the subplugin.
      * @param mixed $data submitted data of the form.
      * @throws \moodle_exception
      */
-    public static function save_settings($subpluginname, $data) {
+    public static function save_settings($instanceid, $subpluginname, $data) {
         global $DB;
         $lib = lib_manager::get_step_lib($subpluginname);
 
         $settingsfields = $lib->instance_settings();
-        if (!object_property_exists($data, 'id')) {
+        if (!$instanceid) {
             throw new \moodle_exception('id of the step instance has to be set!');
         }
-        $id = $data->id;
         foreach ($settingsfields as $setting) {
             if (object_property_exists($data, $setting->name)) {
                 $value = $data->{$setting->name};
                 $cleanedvalue = clean_param($value, $setting->paramtype);
                 $record = $DB->get_record('tool_cleanupcourses_settings',
                     array(
-                        'instanceid' => $id,
+                        'instanceid' => $instanceid,
                         'name' => $setting->name)
                 );
                 if ($record) {
@@ -56,7 +56,7 @@ class settings_manager {
                     $DB->update_record('tool_cleanupcourses_settings', $record);
                 } else {
                     $newrecord = new \stdClass();
-                    $newrecord->instanceid = $id;
+                    $newrecord->instanceid = $instanceid;
                     $newrecord->name = $setting->name;
                     $newrecord->value = $cleanedvalue;
                     $DB->insert_record('tool_cleanupcourses_settings', $newrecord);
