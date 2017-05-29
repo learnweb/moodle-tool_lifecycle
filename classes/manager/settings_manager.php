@@ -45,6 +45,10 @@ class settings_manager {
         foreach ($settingsfields as $setting) {
             if (object_property_exists($data, $setting->name)) {
                 $value = $data->{$setting->name};
+                // Needed for editor support.
+                if (is_array($value) && array_key_exists('text', $value)) {
+                    $value = $value['text'];
+                }
                 $cleanedvalue = clean_param($value, $setting->paramtype);
                 $record = $DB->get_record('tool_cleanupcourses_settings',
                     array(

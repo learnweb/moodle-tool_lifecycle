@@ -65,6 +65,8 @@ class email extends base {
         $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
         foreach ($stepinstances as $step) {
             $settings = settings_manager::get_settings($step->id);
+            // Format the raw string in the DB to FORMAT_HTML.
+            $settings['contenthtml'] = format_text($settings['contenthtml'], FORMAT_HTML);
 
             $userstobeinformed = $DB->get_records('cleanupcoursesstep_email',
                 array('instanceid' => $step->id), '', 'distinct touser');
@@ -79,8 +81,9 @@ class email extends base {
 
                 $subject = $parsedsettings['subject'];
                 $content = $parsedsettings['content'];
+                $contenthtml = $parsedsettings['contenthtml'];
                 // TODO: use course info to parse content template!
-                email_to_user($user, \core_user::get_noreply_user(), $subject, $content);
+                email_to_user($user, \core_user::get_noreply_user(), $subject, $content, $contenthtml);
                 $DB->delete_records('cleanupcoursesstep_email',
                     array('instanceid' => $step->id,
                         'touser' => $user->id));
@@ -113,7 +116,8 @@ class email extends base {
     public function instance_settings() {
         return array(
             new instance_setting('subject', PARAM_TEXT),
-            new instance_setting('content', PARAM_TEXT),
+            new instance_setting('content', PARAM_RAW),
+            new instance_setting('contenthtml', PARAM_RAW),
         );
     }
 
@@ -129,5 +133,13 @@ class email extends base {
         $elementname = 'content';
         $mform->addElement('textarea', $elementname, get_string('email_content', 'cleanupcoursesstep_email'));
         $mform->setType($elementname, PARAM_TEXT);
+
+        $elementname = 'contenthtml';
+        $mform->addElement('editor', $elementname, get_string('email_content_html', 'cleanupcoursesstep_email'));
+        $mform->setType($elementname, PARAM_RAW);
+    }
+
+    public function extend_add_instance_form_definition_after_data($mform, $settings) {
+        $mform->setDefault('contenthtml', array('text' => $settings['contenthtml'], 'format' => FORMAT_HTML));
     }
 }

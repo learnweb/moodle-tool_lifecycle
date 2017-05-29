@@ -145,7 +145,7 @@ class form_step_instance extends \moodleform {
         }
 
         // Insert the subplugin specific settings.
-        $this->lib->extend_add_instance_form_definition_after_data($mform);
+        $this->lib->extend_add_instance_form_definition_after_data($mform, $this->stepsettings);
     }
 
 }

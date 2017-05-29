@@ -27,4 +27,5 @@ $string['pluginname'] = 'Email Step';
 
 $string['email_subject'] = 'Subject Template';
 $string['email_content'] = 'Content Template';
+$string['email_content_html'] = 'Content HTML Template';
 $string['email:preventdeletion'] = 'Prevent Deletion';
