@@ -179,6 +179,11 @@ class subplugin_settings {
         $stepsettings = null;
         if ($stepid = optional_param('subplugin', null, PARAM_INT)) {
             $steptomodify = step_manager::get_subplugin_by_instance_id($stepid);
+            // If step was removed!
+            if (!$steptomodify) {
+                $this->view_plugins_table();
+                return;
+            }
             $stepsettings = settings_manager::get_settings($stepid);
         } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
             $subpluginname = $name;
