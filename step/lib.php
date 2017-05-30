@@ -30,7 +30,7 @@ use tool_cleanupcourses\response\step_response;
 
 defined('MOODLE_INTERNAL') || die();
 
-abstract class base {
+abstract class libbase {
 
 
     /**

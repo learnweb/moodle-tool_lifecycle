@@ -26,7 +26,7 @@ namespace tool_cleanupcourses;
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\lib_manager;
-use tool_cleanupcourses\step\base;
+use tool_cleanupcourses\step\libbase;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -49,7 +49,7 @@ class form_step_instance extends \moodleform {
     public $subpluginname;
 
     /**
-     * @var base name of the subplugin to be created
+     * @var libbase name of the subplugin to be created
      */
     public $lib;
 

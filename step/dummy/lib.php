@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
-class dummy extends base {
+class dummy extends libbase {
 
 
     /**

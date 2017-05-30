@@ -39,7 +39,7 @@ class lib_manager {
     /**
      * Gets the step class of a subplugin lib.
      * @param string $subpluginname name of the subplugin
-     * @return \tool_cleanupcourses\step\base
+     * @return \tool_cleanupcourses\step\libbase
      */
     public static function get_step_lib($subpluginname) {
         return self::get_lib($subpluginname, 'step');
