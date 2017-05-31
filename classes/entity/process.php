@@ -37,10 +37,14 @@ class process {
     /** int id of the course*/
     public $courseid;
 
-    public function __construct($id, $stepid, $courseid) {
+    /** bool true if course is in status waiting*/
+    public $waiting;
+
+    public function __construct($id, $stepid, $courseid, $waiting = false) {
         $this->id = $id;
         $this->stepid = $stepid;
         $this->courseid = $courseid;
+        $this->waiting = $waiting;
     }
 
     /**
