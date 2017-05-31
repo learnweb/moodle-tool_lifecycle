@@ -46,18 +46,28 @@ class lib_manager {
     }
 
     /**
+     * Gets the step class of a subplugin lib.
+     * @param string $subpluginname name of the subplugin
+     * @return \tool_cleanupcourses\step\interactionlibbase
+     */
+    public static function get_step_interactionlib($subpluginname) {
+        return self::get_lib($subpluginname, 'step', 'interaction');
+    }
+
+    /**
      * Gets the base class of a subplugin lib with a specific type and name.
      * @param string $subpluginname name of the subplugin
      * @param string $subplugintype type of the subplugin (e.g. trigger, step)
+     * @param string $libsubtype allows to query different lib classes.
      * @return
      */
-    private static function get_lib($subpluginname, $subplugintype) {
+    private static function get_lib($subpluginname, $subplugintype, $libsubtype = '') {
         $triggerlist = \core_component::get_plugin_list('cleanupcourses' . $subplugintype);
         if (!array_key_exists($subpluginname, $triggerlist)) {
             return null;
         }
-        require_once($triggerlist[$subpluginname].'/lib.php');
-        $extendedclass = "tool_cleanupcourses\\$subplugintype\\$subpluginname";
+        require_once($triggerlist[$subpluginname].'/'.$libsubtype.'lib.php');
+        $extendedclass = "tool_cleanupcourses\\$subplugintype\\$libsubtype.$subpluginname";
         return new $extendedclass();
     }
 }
