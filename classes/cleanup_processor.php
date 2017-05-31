@@ -76,8 +76,13 @@ class cleanup_processor {
                 $step = step_manager::get_subplugin_by_instance_id($process->stepid);
                 $lib = lib_manager::get_step_lib($step->subpluginname);
                 $course = get_course($process->courseid);
-                $result = $lib->process_course($process->stepid, $course);
+                if ($process->waiting) {
+                    $result = $lib->process_waiting_course($process->stepid, $course);
+                } else {
+                    $result = $lib->process_course($process->stepid, $course);
+                }
                 if ($result == step_response::waiting()) {
+                    process_manager::set_process_waiting($process);
                     break;
                 } else if ($result == step_response::proceed()) {
                     if (!process_manager::proceed_process($process)) {
