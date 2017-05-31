@@ -69,6 +69,7 @@ class process_manager {
         $step = step_manager::get_step_instance($process->stepid);
         if ($step->followedby) {
             $process->stepid = $step->followedby;
+            $process->waiting = false;
             $DB->update_record('tool_cleanupcourses_process', $process);
             return true;
         } else {
@@ -78,6 +79,16 @@ class process_manager {
             $DB->delete_records('tool_cleanupcourses_process', (array) $process);
             return false;
         }
+    }
+
+    /**
+     * Sets the process status on waiting.
+     * @param process $process
+     */
+    public static function set_process_waiting(&$process) {
+        global $DB;
+        $process->waiting = true;
+        $DB->update_record('tool_cleanupcourses_process', $process);
     }
 
 }
