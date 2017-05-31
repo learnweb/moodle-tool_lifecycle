@@ -15,8 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype step
- * It has to be implemented by all subplugins.
+ * Interface for the interactions of the subplugintype step
+ * It has to be implemented by all subplugins that want to use the interaction view.
  *
  * @package tool_cleanupcourses
  * @subpackage step
@@ -27,7 +27,11 @@ namespace tool_cleanupcourses\step;
 
 defined('MOODLE_INTERNAL') || die();
 
-abstract class responselibbase {
+abstract class interactionlibbase {
 
-
+    /**
+     * Returns the capability a user has to have to make decisions for a specific course.
+     * @return string capability string.
+     */
+    public abstract function get_relevant_capability();
 }
