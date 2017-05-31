@@ -46,6 +46,20 @@ abstract class libbase {
     public abstract function process_course($instanceid, $course);
 
     /**
+     * Processes the course in status waiting and returns a repsonse.
+     * The response tells either
+     *  - that the subplugin is finished processing.
+     *  - that the subplugin is not yet finished processing.
+     *  - that a rollback for this course is necessary.
+     * @param int $instanceid of the step instance.
+     * @param mixed $course to be processed.
+     * @return step_response
+     */
+    public function process_waiting_course($instanceid, $course){
+        return step_response::proceed();
+    }
+
+    /**
      * Can be overridden to define actions to take place before
      * process_course() is called for every relevant course.
      */
