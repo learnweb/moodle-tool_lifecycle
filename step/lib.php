@@ -55,7 +55,7 @@ abstract class libbase {
      * @param mixed $course to be processed.
      * @return step_response
      */
-    public function process_waiting_course($instanceid, $course){
+    public function process_waiting_course($instanceid, $course) {
         return step_response::proceed();
     }
 

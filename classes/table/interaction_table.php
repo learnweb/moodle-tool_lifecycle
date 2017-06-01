@@ -47,10 +47,10 @@ class interaction_table extends \table_sql {
                 '{course} c on p.courseid = c.id join ' .
                 '{tool_cleanupcourses_step} s on p.stepid = s.id';
         if (interaction_manager::show_relevant_courses_instance_dependent($this->stepinstance->subpluginname)) {
-            $where ='p.stepid = :stepid';
+            $where = 'p.stepid = :stepid';
             $params = array('stepid' => $stepid);
         } else {
-            $where ='s.subpluginname = :subpluginname';
+            $where = 's.subpluginname = :subpluginname';
             $params = array('subpluginname' => $this->stepinstance->subpluginname);
         }
 
