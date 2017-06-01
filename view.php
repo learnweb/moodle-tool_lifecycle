@@ -9,6 +9,8 @@
  */
 require_once(dirname(__FILE__) . '/../../../config.php');
 
+use tool_cleanupcourses\manager\step_manager;
+use tool_cleanupcourses\manager\interaction_manager;
 use tool_cleanupcourses\table\interaction_table;
 
 require_login();
@@ -16,10 +18,11 @@ require_login();
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/view.php'));
 
-$subpluginid = required_param('subpluginid', PARAM_INT);
+$stepid = required_param('stepid', PARAM_INT);
 $action = optional_param('action', null, PARAM_ALPHA);
+$processid = optional_param('processid', null, PARAM_INT);
 
-$table = new interaction_table('tool_cleanupcourses_interaction');
+$stepinstance = step_manager::get_step_instance($stepid);
 
 $PAGE->set_title("Title");
 $PAGE->set_heading("Heading");
@@ -28,6 +31,17 @@ $renderer = $PAGE->get_renderer('tool_cleanupcourses');
 
 echo $renderer->header();
 
-$table->out(50000, false);
+if (interaction_manager::interaction_available($stepinstance->subpluginname)) {
+    if ($action && $processid) {
+        interaction_manager::handle_interaction($action, $processid);
+    }
+
+    $table = new interaction_table('tool_cleanupcourses_interaction', $stepinstance->id);
+
+    $table->out(5000, false);
+
+} else {
+    echo get_string('nointeractioninterface', 'tool_cleanupcourses');
+}
 
 echo $renderer->footer();

@@ -23,6 +23,7 @@
  */
 namespace tool_cleanupcourses\table;
 
+use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\interaction_manager;
 use tool_cleanupcourses\manager\step_manager;
 
@@ -32,26 +33,54 @@ require_once($CFG->libdir . '/tablelib.php');
 
 class interaction_table extends \table_sql {
 
+    /** @var step_subplugin $stepinstance */
+    private $stepinstance;
+
     public function __construct($uniqueid, $stepid) {
         parent::__construct('tool_cleanupcourses_interaction_table');
 
-        $stepinstance = step_manager::get_step_instance($stepid);
-        global $PAGE, $USER;
-        $this->set_sql('c.id as courseid, c.fullname as coursename, s.subpluginname as subpluginname ',
-            '{tool_cleanupcourses_process} p join ' .
-            '{course} c on p.courseid = c.id join ' .
-            '{tool_cleanupcourses_step} s on p.stepid = s.id',
-            "TRUE");
+        $this->stepinstance = step_manager::get_step_instance($stepid);
+        global $PAGE, $USER, $DB;
+
+        $fields = 'p.id as processid, c.id as courseid, c.fullname as coursename';
+        $from = '{tool_cleanupcourses_process} p join ' .
+                '{course} c on p.courseid = c.id join ' .
+                '{tool_cleanupcourses_step} s on p.stepid = s.id';
+        if (interaction_manager::show_relevant_courses_instance_dependent($this->stepinstance->subpluginname)) {
+            $where ='p.stepid = :stepid';
+            $params = array('stepid' => $stepid);
+        } else {
+            $where ='s.subpluginname = :subpluginname';
+            $params = array('subpluginname' => $this->stepinstance->subpluginname);
+        }
+
+        $capability = interaction_manager::get_relevant_capability($this->stepinstance->subpluginname);
+        $courses = get_user_capability_course($capability, $USER, false);
+        if ($courses) {
+            $listofcourseids = array_reduce($courses, function ($course1, $course2) {
+                if (!$course1) {
+                    return $course2->id;
+                }
+                if (!$course2) {
+                    return $course1->id;
+                }
+                return $course1->id . ',' . $course2->id;
+            });
+            $where .= ' AND c.id in (:listofcourseids)';
+            $params['listofcourseids'] = $listofcourseids;
+        } else {
+            $where .= ' AND FALSE';
+        }
+
+        $this->set_sql($fields, $from, $where, $params);
         $this->define_baseurl($PAGE->url);
         $this->init();
 
-        $capability = interaction_manager::get_relevant_capability($stepinstance->subpluginname);
-        $courses = get_user_capability_course($capability, $USER, false);
     }
 
     public function init() {
-        $this->define_columns(['course', 'subplugin']);
-        $this->define_headers([get_string('course'), get_string('step', 'tool_cleanupcourses')]);
+        $this->define_columns(['course', 'tools']);
+        $this->define_headers([get_string('course'), get_string('tools', 'tool_cleanupcourses')]);
         $this->setup();
     }
 
@@ -69,10 +98,35 @@ class interaction_table extends \table_sql {
      * @param $row
      * @return string pluginname of the subplugin
      */
-    public function col_subplugin($row) {
+    public function col_tools($row) {
+        $output = '';
+        $tools = interaction_manager::get_action_tools($this->stepinstance->subpluginname);
+        foreach ($tools as $tool) {
+            $output .= $this->format_icon_link($tool['action'], $row->processid, $tool['icon'], $tool['alt']);
+        }
+        return $output;
+    }
 
-        $subpluginname = $row->subpluginname;
+    /**
+     * Util function for writing an action icon link
+     *
+     * @param string $action URL parameter to include in the link
+     * @param string $processid URL parameter to include in the link
+     * @param string $icon The key to the icon to use (e.g. 't/up')
+     * @param string $alt The string description of the link used as the title and alt text
+     * @return string The icon/link
+     */
+    private function format_icon_link($action, $processid, $icon, $alt) {
+        global $PAGE, $OUTPUT;
 
-        return get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname);
+        return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
+                array(
+                    'stepid' => $this->stepinstance->id,
+                    'action' => $action,
+                    '$processid' => $processid,
+                    'sesskey' => sesskey()
+                )),
+                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                null , array('title' => $alt)) . ' ';
     }
 }

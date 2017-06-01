@@ -59,3 +59,6 @@ $string['subplugintype_cleanupcoursestrigger'] = 'Trigger for starting the cours
 $string['subplugintype_cleanupcoursestrigger_plural'] = 'Triggers for starting the course cleanup';
 $string['subplugintype_cleanupcoursesstep'] = 'Step within a course cleanup process';
 $string['subplugintype_cleanupcoursesstep_plural'] = 'Steps within a course cleanup process';
+
+$string['nointeractioninterface'] = 'No Interaction Interface available!';
+$string['tools'] = 'Tools';
