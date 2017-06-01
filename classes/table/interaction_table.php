@@ -123,7 +123,7 @@ class interaction_table extends \table_sql {
                 array(
                     'stepid' => $this->stepinstance->id,
                     'action' => $action,
-                    '$processid' => $processid,
+                    'processid' => $processid,
                     'sesskey' => sesskey()
                 )),
                 new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
