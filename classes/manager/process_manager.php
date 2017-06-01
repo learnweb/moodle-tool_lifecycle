@@ -60,6 +60,17 @@ class process_manager {
     }
 
     /**
+     * Creates a process for the course which is at the respective step the trigger is followed by.
+     * @param int $processid id of the process
+     * @return process
+     */
+    public static function get_process_by_id($processid) {
+        global $DB;
+        $record = $DB->get_record('tool_cleanupcourses_process', array('id' => $processid));
+        return process::from_record($record);
+    }
+
+    /**
      * Proceeds the process to the next step.
      * @param process $process
      * @return true, if followedby another step; otherwise false.
