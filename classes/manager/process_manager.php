@@ -94,6 +94,7 @@ class process_manager {
                 }
             } catch (\dml_missing_record_exception $e) {
                 // Expected behaviour!
+                debugging('Course deleted properly.');
             }
             $DB->delete_records('tool_cleanupcourses_process', (array) $process);
             return false;
