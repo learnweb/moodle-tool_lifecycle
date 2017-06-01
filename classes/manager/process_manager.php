@@ -67,7 +67,11 @@ class process_manager {
     public static function get_process_by_id($processid) {
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_process', array('id' => $processid));
-        return process::from_record($record);
+        if ($record) {
+            return process::from_record($record);
+        } else {
+            return null;
+        }
     }
 
     /**
