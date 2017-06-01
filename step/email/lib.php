@@ -60,6 +60,10 @@ class email extends libbase {
         return step_response::waiting();
     }
 
+    public function process_waiting_course($instanceid, $course) {
+        return step_response::waiting();
+    }
+
     public function post_processing_bulk_operation() {
         global $DB;
         $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
