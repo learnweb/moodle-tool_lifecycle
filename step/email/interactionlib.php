@@ -63,7 +63,7 @@ class interactionemail extends interactionlibbase {
      * @param process $process instance of the process the action was triggered upon.
      * @param string $action action string
      */
-    public function handle_interaction($process, $action){
+    public function handle_interaction($process, $action) {
         echo 'Test';
     }
 }
