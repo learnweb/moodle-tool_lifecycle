@@ -28,6 +28,18 @@ defined('MOODLE_INTERNAL') || die();
 class interaction_manager {
 
     /**
+     * Tells if the subplugin specifies an interaction interface.
+     * @param string $subpluginname name of the subplugin
+     * @return true, if the subplugin specifies an interaction interface; otherwise false.
+     */
+    public static function interaction_available($subpluginname) {
+        if (lib_manager::get_step_interactionlib($subpluginname)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Called by the view.php for redirecting the interactions to the respective subplugin.
      * @param int $subpluginid id of the step instance
      * @param string $action action string
