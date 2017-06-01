@@ -29,3 +29,5 @@ $string['email_subject'] = 'Subject Template';
 $string['email_content'] = 'Content Template';
 $string['email_content_html'] = 'Content HTML Template';
 $string['email:preventdeletion'] = 'Prevent Deletion';
+
+$string['keep_course'] = 'Keep Course';

@@ -27,13 +27,32 @@ namespace tool_cleanupcourses\step;
 
 defined('MOODLE_INTERNAL') || die();
 
-abstract class interactionlibbase {
+require_once(__DIR__ . '/../interactionlib.php');
+
+class interactionemail extends interactionlibbase {
 
     /**
      * Returns the capability a user has to have to make decisions for a specific course.
      * @return string capability string.
      */
-    public static function get_relevant_capability() {
+    public function get_relevant_capability() {
         return 'cleanupcoursesstep/email:preventdeletion';
+    }
+
+    /**
+     * Returns an array of interaction tools to be displayed to be displayed on the view.php
+     * Every entry is itself an array which consist of three elements:
+     *  'action' => an action string, which is later passed to handle_action
+     *  'icon' => an icon string
+     *  'alt' => a string description of the link
+     * @return array of action tools
+     */
+    public function get_action_tools() {
+        return array(
+            array('action' => 'keep',
+                'icon' => 't/locktime',
+                'alt' => get_string('keep_course', 'cleanupcoursesstep_email'),
+                ),
+        );
     }
 }

@@ -34,4 +34,22 @@ abstract class interactionlibbase {
      * @return string capability string.
      */
     public abstract function get_relevant_capability();
+
+    /**
+     * Returns if only the courses of a step instance should be shown or all courses for the submodule.
+     * @return bool true, if only the courses of a step instance should be shown; otherwise false.
+     */
+    public function show_relevant_courses_instance_dependent() {
+        return false;
+    }
+
+    /**
+     * Returns an array of interaction tools to be displayed to be displayed on the view.php
+     * Every entry is itself an array which consist of three elements:
+     *  'action' => an action string, which is later passed to handle_action
+     *  'icon' => an icon string
+     *  'alt' => a string description of the link
+     * @return array of action tools
+     */
+    public abstract function get_action_tools();
 }

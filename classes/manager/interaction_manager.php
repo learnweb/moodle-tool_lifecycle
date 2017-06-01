@@ -58,4 +58,29 @@ class interaction_manager {
         return $interactionlib->get_relevant_capability();
     }
 
+    /**
+     * Returns for this submodule if only the courses of a step instance should be shown
+     * or all courses for the submodule.
+     * @param string $subpluginname name of the step
+     * @return bool true, if only the courses of a step instance should be shown; otherwise false.
+     */
+    public static function show_relevant_courses_instance_dependent($subpluginname) {
+        $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
+        return $interactionlib->show_relevant_courses_instance_dependent();
+    }
+
+    /**
+     * Returns an array of interaction tools to be displayed to be displayed on the view.php
+     * Every entry is itself an array which consist of three elements:
+     *  'action' => an action string, which is later passed to handle_action
+     *  'icon' => an icon string
+     *  'alt' => a string description of the link
+     * @param string $subpluginname name of the step
+     * @return array of action tools
+     */
+    public static function get_action_tools($subpluginname) {
+        $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
+        return $interactionlib->get_action_tools();
+    }
+
 }
