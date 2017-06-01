@@ -62,8 +62,13 @@ class process {
         if (!object_property_exists($record, 'courseid')) {
             return null;
         }
+        if ($record->waiting) {
+            $waiting = true;
+        } else {
+            $waiting = false;
+        }
 
-        $instance = new self($record->id, $record->stepid, $record->courseid);
+        $instance = new self($record->id, $record->stepid, $record->courseid, $waiting);
 
         return $instance;
     }
