@@ -46,7 +46,7 @@ class process_manager {
     }
 
     /**
-     * Creates a process for the course which is at the respective step the trigger is followed by.
+     * Returns all current active processes.
      * @return process[]
      */
     public static function get_processes() {
