@@ -88,8 +88,12 @@ class process_manager {
             $DB->update_record('tool_cleanupcourses_process', $process);
             return true;
         } else {
-            if (get_course($process->courseid)) {
-                debugging('Course should no longer exist!!!!');
+            try {
+                if (get_course($process->courseid)) {
+                    debugging('Course should no longer exist!!!!');
+                }
+            } catch (\dml_missing_record_exception $e) {
+                // Expected behaviour!
             }
             $DB->delete_records('tool_cleanupcourses_process', (array) $process);
             return false;

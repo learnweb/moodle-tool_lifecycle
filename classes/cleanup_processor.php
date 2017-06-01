@@ -75,7 +75,12 @@ class cleanup_processor {
             while (true) {
                 $step = step_manager::get_subplugin_by_instance_id($process->stepid);
                 $lib = lib_manager::get_step_lib($step->subpluginname);
-                $course = get_course($process->courseid);
+                try {
+                    $course = get_course($process->courseid);
+                } catch (\dml_missing_record_exception $e) {
+                    // Course no longer exists!
+                    break;
+                }
                 if ($process->waiting) {
                     $result = $lib->process_waiting_course($process->stepid, $course);
                 } else {
