@@ -66,8 +66,14 @@ class lib_manager {
         if (!array_key_exists($subpluginname, $triggerlist)) {
             return null;
         }
-        require_once($triggerlist[$subpluginname].'/'.$libsubtype.'lib.php');
-        $extendedclass = "tool_cleanupcourses\\$subplugintype\\$libsubtype.$subpluginname";
-        return new $extendedclass();
+        $filename = $triggerlist[$subpluginname].'/'.$libsubtype.'lib.php';
+        if (file_exists($filename)) {
+            require_once($filename);
+            $extendedclass = "tool_cleanupcourses\\$subplugintype\\$libsubtype$subpluginname";
+            if (class_exists($extendedclass)) {
+                return new $extendedclass();
+            }
+        }
+        return null;
     }
 }
