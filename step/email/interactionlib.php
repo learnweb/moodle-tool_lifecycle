@@ -25,6 +25,8 @@
  */
 namespace tool_cleanupcourses\step;
 
+use tool_cleanupcourses\entity\process;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../interactionlib.php');
@@ -54,5 +56,14 @@ class interactionemail extends interactionlibbase {
                 'alt' => get_string('keep_course', 'cleanupcoursesstep_email'),
                 ),
         );
+    }
+
+    /**
+     * Called when a user triggered an action for a process instance.
+     * @param process $process instance of the process the action was triggered upon.
+     * @param string $action action string
+     */
+    public function handle_interaction($process, $action){
+        echo 'Test';
     }
 }

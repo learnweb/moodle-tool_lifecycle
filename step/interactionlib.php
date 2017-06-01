@@ -25,6 +25,8 @@
  */
 namespace tool_cleanupcourses\step;
 
+use tool_cleanupcourses\entity\process;
+
 defined('MOODLE_INTERNAL') || die();
 
 abstract class interactionlibbase {
@@ -52,4 +54,11 @@ abstract class interactionlibbase {
      * @return array of action tools
      */
     public abstract function get_action_tools();
+
+    /**
+     * Called when a user triggered an action for a process instance.
+     * @param process $process instance of the process the action was triggered upon.
+     * @param string $action action string
+     */
+    public abstract function handle_interaction($process, $action);
 }

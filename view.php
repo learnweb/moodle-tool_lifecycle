@@ -47,7 +47,7 @@ echo $renderer->header();
 
 if (interaction_manager::interaction_available($stepinstance->subpluginname)) {
     if ($action && $processid) {
-        interaction_manager::handle_interaction($action, $processid);
+        interaction_manager::handle_interaction($stepinstance->id, $processid, $action);
     }
 
     $table = new interaction_table('tool_cleanupcourses_interaction', $stepinstance->id);
