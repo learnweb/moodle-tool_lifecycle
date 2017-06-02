@@ -44,7 +44,7 @@ class admin_page_active_processes extends \admin_externalpage {
      */
     public function __construct() {
         $url = new \moodle_url('/admin/tool/cleanupcourses/activeprocesses.php');
-        parent::__construct('activeprocesses',
+        parent::__construct('tool_cleanupcourses_activeprocesses',
             get_string('active_processes_list_header', 'tool_cleanupcourses'),
             $url);
     }
@@ -66,7 +66,7 @@ class admin_page_sublugins extends \admin_externalpage {
      */
     public function __construct() {
         $url = new \moodle_url('/admin/tool/cleanupcourses/subpluginssettings.php');
-        parent::__construct('subpluginssettings',
+        parent::__construct('tool_cleanupcourses_subpluginssettings',
             get_string('subpluginssettings_heading', 'tool_cleanupcourses'),
             $url);
     }
@@ -141,7 +141,6 @@ class subplugin_settings {
      */
     private function view_header() {
         global $OUTPUT;
-        admin_externalpage_setup('subpluginssettings');
         // Print the page heading.
         echo $OUTPUT->header();
     }
@@ -170,6 +169,9 @@ class subplugin_settings {
     public function execute($action, $subplugin) {
         global $PAGE;
         $this->check_permissions();
+
+        // Has to be called before moodleform is created!
+        admin_externalpage_setup('tool_cleanupcourses_subpluginssettings');
 
         trigger_manager::handle_action($action, $subplugin);
         step_manager::handle_action($action, $subplugin);

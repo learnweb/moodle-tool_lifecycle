@@ -25,6 +25,10 @@ require_once(dirname(__FILE__) . '/../../../config.php');
 
 require_login();
 
+require_once($CFG->libdir . '/adminlib.php');
+
+admin_externalpage_setup('tool_cleanupcourses_activeprocesses');
+
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/activeprocesses.php'));
 
@@ -37,7 +41,7 @@ $renderer = $PAGE->get_renderer('tool_cleanupcourses');
 
 echo $renderer->header();
 
-$table->out(50000, false);
+$table->out(50, false);
 
 echo $renderer->footer();
 
