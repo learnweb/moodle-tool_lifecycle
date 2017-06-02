@@ -60,8 +60,11 @@ class form_step_instance extends \moodleform {
 
     /**
      * Constructor
-     * @param string $url
-     * @param step_subplugin $step
+     * @param \moodle_url $url.
+     * @param step_subplugin $step step entity.
+     * @param string $subpluginname name of the subplugin.
+     * @param array $stepsettings settings of the step.
+     * @throws \moodle_exception if neither step nor subpluginname are set.
      */
     public function __construct($url, $step, $subpluginname = null, $stepsettings = null) {
         $this->step = $step;
