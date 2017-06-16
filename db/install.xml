@@ -50,5 +50,19 @@
         <KEY NAME="instanceid_fk" TYPE="foreign" FIELDS="instanceid" REFTABLE="tool_cleanupcourses_step" REFFIELDS="id" COMMENT="Foreignkey for step instance"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="tool_cleanupcourses_procdata" COMMENT="Stores the process data in a key/value-store">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="processid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="id of the process"/>
+        <FIELD NAME="stepid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the step"/>
+        <FIELD NAME="key" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="key of the key/value-pair"/>
+        <FIELD NAME="value" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" COMMENT="value of the key/value-pair"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="processid_fk" TYPE="foreign" FIELDS="processid" REFTABLE="tool_cleanupcourses_process" REFFIELDS="id" COMMENT="Foreign key on process table"/>
+        <KEY NAME="stepid_fk" TYPE="foreign" FIELDS="stepid" REFTABLE="tool_cleanupcourses_step" REFFIELDS="id" COMMENT="Foreign key on step table"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>
