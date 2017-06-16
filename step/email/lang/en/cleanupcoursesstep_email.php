@@ -25,6 +25,7 @@
 
 $string['pluginname'] = 'Email Step';
 
+$string['email_responsetimeout'] = 'Time the user has for the response';
 $string['email_subject'] = 'Subject Template';
 $string['email_content'] = 'Content Template';
 $string['email_content_html'] = 'Content HTML Template';

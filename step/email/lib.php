@@ -25,6 +25,7 @@
  */
 namespace tool_cleanupcourses\step;
 
+use tool_cleanupcourses\manager\process_manager;
 use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\response\step_response;
 use tool_cleanupcourses\manager\step_manager;
@@ -80,6 +81,11 @@ class email extends libbase {
             if ($keep === '1') {
                 return step_response::rollback();
             }
+        }
+        // When time runs up and no one wants to keep the course, then proceed.
+        $process = process_manager::get_process_by_id($processid);
+        if ($process->timestepchanged < time() - settings_manager::get_settings($instanceid)['responsetimeout']) {
+            return step_response::proceed();
         }
         return step_response::waiting();
     }
@@ -139,6 +145,7 @@ class email extends libbase {
 
     public function instance_settings() {
         return array(
+            new instance_setting('responsetimeout', PARAM_INT),
             new instance_setting('subject', PARAM_TEXT),
             new instance_setting('content', PARAM_RAW),
             new instance_setting('contenthtml', PARAM_RAW),
@@ -150,6 +157,9 @@ class email extends libbase {
     }
 
     public function extend_add_instance_form_definition($mform) {
+        $elementname = 'responsetimeout';
+        $mform->addElement('duration', $elementname, get_string('email_responsetimeout', 'cleanupcoursesstep_email'));
+        $mform->setType($elementname, PARAM_INT);
         $elementname = 'subject';
         $mform->addElement('text', $elementname, get_string('email_subject', 'cleanupcoursesstep_email'));
         $mform->setType($elementname, PARAM_TEXT);

@@ -50,6 +50,8 @@ class process {
         $this->waiting = $waiting;
         if ($timestepchanged === null) {
             $this->timestepchanged = time();
+        } else {
+            $this->timestepchanged = $timestepchanged;
         }
     }
 
