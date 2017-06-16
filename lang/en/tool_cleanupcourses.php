@@ -62,3 +62,6 @@ $string['subplugintype_cleanupcoursesstep_plural'] = 'Steps within a course clea
 
 $string['nointeractioninterface'] = 'No Interaction Interface available!';
 $string['tools'] = 'Tools';
+
+$string['nostepfound'] = 'A step with the given stepid could not be found!';
+$string['noprocessfound'] = 'A process with the given processid could not be found!';
