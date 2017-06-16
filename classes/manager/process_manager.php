@@ -98,7 +98,7 @@ class process_manager {
                 // Expected behaviour!
                 debugging('Course deleted properly.');
             }
-            $DB->delete_records('tool_cleanupcourses_process', (array) $process);
+            self::remove_process($process);
             return false;
         }
     }
@@ -113,4 +113,22 @@ class process_manager {
         $DB->update_record('tool_cleanupcourses_process', $process);
     }
 
+    /**
+     * Currently only removes the current process.
+     * @param process $process process the rollback should be triggered for.
+     */
+    public static function rollback_process($process) {
+        // TODO: Add logic to revert changes made by steps.
+        self::remove_process($process);
+    }
+
+    /**
+     * Removes the process and all data connected to it.
+     * @param process $process process to be deleted.
+     */
+    private static function remove_process($process) {
+        global $DB;
+        $DB->delete_records('tool_cleanupcourses_procdata', array('processid' => $process->id));
+        $DB->delete_records('tool_cleanupcourses_process', (array) $process);
+    }
 }

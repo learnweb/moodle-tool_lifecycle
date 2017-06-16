@@ -94,7 +94,7 @@ class cleanup_processor {
                         break;
                     }
                 } else if ($result == step_response::rollback()) {
-                    // TODO: Implement Rollback!
+                    process_manager::rollback_process($process);
                     break;
                 } else {
                     throw new \moodle_exception('Return code \''. var_dump($result) . '\' is not allowed!');
