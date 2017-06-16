@@ -129,4 +129,18 @@ class interaction_table extends \table_sql {
                 new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
                 null , array('title' => $alt)) . ' ';
     }
+
+    /**
+     * This function is not part of the public api.
+     */
+    function print_nothing_to_display() {
+        global $OUTPUT;
+
+        // Render button to allow user to reset table preferences.
+        echo $this->render_reset_button();
+
+        $this->print_initials_bar();
+
+        echo $OUTPUT->heading(get_string('nocoursestodisplay', 'tool_cleanupcourses'));
+    }
 }
