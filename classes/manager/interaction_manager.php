@@ -47,6 +47,7 @@ class interaction_manager {
      * @param int $stepid id of the step instance
      * @param int $processid id of the process, the triggered action belongs to.
      * @param string $action action string
+     * @throws \invalid_parameter_exception
      */
     public static function handle_interaction($stepid, $processid, $action) {
         $step = step_manager::get_step_instance($stepid);
@@ -58,7 +59,7 @@ class interaction_manager {
             throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
         }
         $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
-        return $interactionlib->handle_interaction($process, $step, $action);
+        $interactionlib->handle_interaction($process, $step, $action);
     }
 
     /**

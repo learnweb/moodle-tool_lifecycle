@@ -52,7 +52,7 @@ if (interaction_manager::interaction_available($stepinstance->subpluginname)) {
 
     $table = new interaction_table('tool_cleanupcourses_interaction', $stepinstance->id);
 
-    $table->out(5000, false);
+    $table->out(50, false);
 
 } else {
     echo get_string('nointeractioninterface', 'tool_cleanupcourses');
