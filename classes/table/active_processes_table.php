@@ -55,12 +55,30 @@ class active_processes_table extends \table_sql {
     }
 
     /**
-     * Render course column.
+     * Render courseid column.
      * @param $row
      * @return string course link
      */
-    public function col_course($row) {
-        return \html_writer::link(course_get_url($row->courseid), $row->coursename);
+    public function col_courseid($row) {
+        return \html_writer::link(course_get_url($row->courseid), $row->courseid);
+    }
+
+    /**
+     * Render courseshortname column.
+     * @param $row
+     * @return string course link
+     */
+    public function col_courseshortname($row) {
+        return \html_writer::link(course_get_url($row->courseid), $row->courseshortname);
+    }
+
+    /**
+     * Render coursefullname column.
+     * @param $row
+     * @return string course link
+     */
+    public function col_coursefullname($row) {
+        return \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
     }
 
     /**
