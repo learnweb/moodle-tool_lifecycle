@@ -53,15 +53,33 @@ class interactionemail extends interactionlibbase {
      *  'action' => an action string, which is later passed to handle_action
      *  'icon' => an icon string
      *  'alt' => a string description of the link
+     * @param process $process process the action tools are requested for
      * @return array of action tools
      */
-    public function get_action_tools() {
+    public function get_action_tools($process) {
+        $keep = process_data_manager::get_process_data($process->id, $process->stepid, EMAIL_PROCDATA_KEY_KEEP);
+        if ($keep === '1') {
+            return array();
+        }
         return array(
             array('action' => self::ACTION_KEEP,
                 'icon' => 't/locktime',
                 'alt' => get_string('keep_course', 'cleanupcoursesstep_email'),
-                ),
+            ),
         );
+    }
+
+    /**
+     * Returns the status message for the given process.
+     * @param process $process process the status message is requested for
+     * @return string status message
+     */
+    public function get_status_message($process) {
+        $keep = process_data_manager::get_process_data($process->id, $process->stepid, EMAIL_PROCDATA_KEY_KEEP);
+        if ($keep === '1') {
+            return get_string('status_message_decision_keep', 'cleanupcoursesstep_email');
+        }
+        return get_string('status_message_requiresattention', 'cleanupcoursesstep_email');
     }
 
     /**

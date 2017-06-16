@@ -47,14 +47,23 @@ abstract class interactionlibbase {
     }
 
     /**
-     * Returns an array of interaction tools to be displayed to be displayed on the view.php
+     * Returns an array of interaction tools to be displayed to be displayed on the view.php for the given process
      * Every entry is itself an array which consist of three elements:
      *  'action' => an action string, which is later passed to handle_action
      *  'icon' => an icon string
      *  'alt' => a string description of the link
+     * @param process $process process the action tools are requested for
      * @return array of action tools
      */
-    public abstract function get_action_tools();
+    public abstract function get_action_tools($process);
+
+
+    /**
+     * Returns the status message for the given process.
+     * @param process $process process the status message is requested for
+     * @return string status message
+     */
+    public abstract function get_status_message($process);
 
     /**
      * Called when a user triggered an action for a process instance.

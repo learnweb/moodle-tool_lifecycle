@@ -23,6 +23,9 @@
  */
 namespace tool_cleanupcourses\manager;
 
+use tool_cleanupcourses\entity\step_subplugin;
+use tool_cleanupcourses\entity\process;
+
 defined('MOODLE_INTERNAL') || die();
 
 class interaction_manager {
@@ -86,11 +89,33 @@ class interaction_manager {
      *  'icon' => an icon string
      *  'alt' => a string description of the link
      * @param string $subpluginname name of the step
+     * @param int $processid if of the process the action tools are requested for
      * @return array of action tools
+     * @throws \invalid_parameter_exception
      */
-    public static function get_action_tools($subpluginname) {
+    public static function get_action_tools($subpluginname, $processid) {
         $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
-        return $interactionlib->get_action_tools();
+        $process = process_manager::get_process_by_id($processid);
+        if (!$process) {
+            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
+        }
+        return $interactionlib->get_action_tools($process);
+    }
+
+    /**
+     * Returns the status message for the given process.
+     * @param string $subpluginname name of the step subplugin
+     * @param int $processid id of the process the status message is requested for
+     * @return string status message
+     * @throws \invalid_parameter_exception
+     */
+    public static function get_status_message($subpluginname, $processid) {
+        $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
+        $process = process_manager::get_process_by_id($processid);
+        if (!$process) {
+            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
+        }
+        return $interactionlib->get_status_message($process);
     }
 
 }

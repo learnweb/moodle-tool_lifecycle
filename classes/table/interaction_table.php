@@ -42,7 +42,7 @@ class interaction_table extends \table_sql {
         $this->stepinstance = step_manager::get_step_instance($stepid);
         global $PAGE, $USER, $DB;
 
-        $fields = 'p.id as processid, c.id as courseid, c.fullname as coursename';
+        $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname';
         $from = '{tool_cleanupcourses_process} p join ' .
                 '{course} c on p.courseid = c.id join ' .
                 '{tool_cleanupcourses_step} s on p.stepid = s.id';
@@ -79,32 +79,65 @@ class interaction_table extends \table_sql {
     }
 
     public function init() {
-        $this->define_columns(['course', 'tools']);
-        $this->define_headers([get_string('course'), get_string('tools', 'tool_cleanupcourses')]);
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'tools', 'status']);
+        $this->define_headers([
+            get_string('course'),
+            get_string('shortnamecourse'),
+            get_string('fullnamecourse'),
+            get_string('tools', 'tool_cleanupcourses'),
+            get_string('status', 'tool_cleanupcourses'),
+            ]);
         $this->setup();
     }
 
     /**
-     * Render course column.
+     * Render courseid column.
      * @param $row
      * @return string course link
      */
-    public function col_course($row) {
-        return \html_writer::link(course_get_url($row->courseid), $row->coursename);
+    public function col_courseid($row) {
+        return \html_writer::link(course_get_url($row->courseid), $row->courseid);
     }
 
     /**
-     * Render subplugin column.
+     * Render courseshortname column.
+     * @param $row
+     * @return string course link
+     */
+    public function col_courseshortname($row) {
+        return \html_writer::link(course_get_url($row->courseid), $row->courseshortname);
+    }
+
+    /**
+     * Render coursefullname column.
+     * @param $row
+     * @return string course link
+     */
+    public function col_coursefullname($row) {
+        return \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
+    }
+
+    /**
+     * Render tools column.
      * @param $row
      * @return string pluginname of the subplugin
      */
     public function col_tools($row) {
         $output = '';
-        $tools = interaction_manager::get_action_tools($this->stepinstance->subpluginname);
+        $tools = interaction_manager::get_action_tools($this->stepinstance->subpluginname, $row->processid);
         foreach ($tools as $tool) {
             $output .= $this->format_icon_link($tool['action'], $row->processid, $tool['icon'], $tool['alt']);
         }
         return $output;
+    }
+
+    /**
+     * Render status column.
+     * @param $row
+     * @return string pluginname of the subplugin
+     */
+    public function col_status($row) {
+        return interaction_manager::get_status_message($this->stepinstance->subpluginname, $row->processid);
     }
 
     /**
