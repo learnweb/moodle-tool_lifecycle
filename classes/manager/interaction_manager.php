@@ -41,15 +41,15 @@ class interaction_manager {
 
     /**
      * Called by the view.php for redirecting the interactions to the respective subplugin.
-     * @param int $subpluginid id of the step instance
+     * @param int $stepid id of the step instance
      * @param int $processid id of the process, the triggered action belongs to.
      * @param string $action action string
      */
-    public static function handle_interaction($subpluginid, $processid, $action) {
-        $step = step_manager::get_step_instance($subpluginid);
+    public static function handle_interaction($stepid, $processid, $action) {
+        $step = step_manager::get_step_instance($stepid);
         $process = process_manager::get_process_by_id($processid);
         $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
-        return $interactionlib->handle_interaction($process, $action);
+        return $interactionlib->handle_interaction($process, $step, $action);
     }
 
     /**

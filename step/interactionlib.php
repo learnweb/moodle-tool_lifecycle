@@ -26,6 +26,7 @@
 namespace tool_cleanupcourses\step;
 
 use tool_cleanupcourses\entity\process;
+use tool_cleanupcourses\entity\step_subplugin;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -58,7 +59,8 @@ abstract class interactionlibbase {
     /**
      * Called when a user triggered an action for a process instance.
      * @param process $process instance of the process the action was triggered upon.
+     * @param step_subplugin $step instance of the step the process is currently in.
      * @param string $action action string
      */
-    public abstract function handle_interaction($process, $action);
+    public abstract function handle_interaction($process, $step, $action);
 }

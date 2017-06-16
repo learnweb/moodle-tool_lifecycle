@@ -45,11 +45,12 @@ class createbackup extends libbase {
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
+     * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
      */
-    public function process_course($instanceid, $course) {
+    public function process_course($processid, $instanceid, $course) {
         $bc = new \backup_controller(\backup::TYPE_1COURSE, $course->id, \backup::FORMAT_MOODLE,
             \backup::INTERACTIVE_NO, \backup::MODE_AUTOMATED, get_admin()->id);
         $bc->execute_plan();

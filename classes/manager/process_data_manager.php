@@ -40,7 +40,7 @@ class process_data_manager {
      * @param string $key key the value is stored at.
      * @return string | null value for the given parameters.
      */
-    public function get_process_data($processid, $stepid, $key) {
+    public static function get_process_data($processid, $stepid, $key) {
         global $DB;
         if ($value = $DB->get_record('tool_cleanupcourses_procdata',
             array(
@@ -48,7 +48,7 @@ class process_data_manager {
                 'stepid' => $stepid,
                 'key' => $key,
             ))) {
-            return $value;
+            return $value->value;
         }
         return null;
     }
@@ -60,7 +60,7 @@ class process_data_manager {
      * @param string $key key the value is stored at.
      * @param string $value value for the given parameters.
      */
-    public function set_process_data($processid, $stepid, $key, $value) {
+    public static function set_process_data($processid, $stepid, $key, $value) {
         global $DB;
         $entry = array(
             'processid' => $processid,
@@ -71,7 +71,7 @@ class process_data_manager {
             $oldentry->value = $value;
             $DB->update_record('tool_cleanupcourses_procdata', $oldentry);
         } else {
-            $entry->value = $value;
+            $entry['value'] = $value;
             $DB->insert_record('tool_cleanupcourses_procdata', (object) $entry);
         }
     }

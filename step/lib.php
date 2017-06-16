@@ -39,11 +39,12 @@ abstract class libbase {
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
+     * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
      */
-    public abstract function process_course($instanceid, $course);
+    public abstract function process_course($processid, $instanceid, $course);
 
     /**
      * Processes the course in status waiting and returns a repsonse.
@@ -51,11 +52,12 @@ abstract class libbase {
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
+     * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
      */
-    public function process_waiting_course($instanceid, $course) {
+    public function process_waiting_course($processid, $instanceid, $course) {
         return step_response::proceed();
     }
 

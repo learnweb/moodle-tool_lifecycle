@@ -28,10 +28,13 @@ namespace tool_cleanupcourses\step;
 use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\response\step_response;
 use tool_cleanupcourses\manager\step_manager;
+use tool_cleanupcourses\manager\process_data_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
+
+define('EMAIL_PROCDATA_KEY_KEEP', 'keep');
 
 class email extends libbase {
 
@@ -42,11 +45,12 @@ class email extends libbase {
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
+     * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
      */
-    public function process_course($instanceid, $course) {
+    public function process_course($processid, $instanceid, $course) {
         global $DB;
         $coursecontext = \context_course::instance($course->id);
         $userstobeinformed = get_users_by_capability($coursecontext, 'cleanupcoursesstep/email:preventdeletion');
@@ -60,7 +64,23 @@ class email extends libbase {
         return step_response::waiting();
     }
 
-    public function process_waiting_course($instanceid, $course) {
+    /**
+     * Processes the course in status waiting and returns a repsonse.
+     * The response tells either
+     *  - that the subplugin is finished processing.
+     *  - that the subplugin is not yet finished processing.
+     *  - that a rollback for this course is necessary.
+     * @param int $processid of the respective process.
+     * @param int $instanceid of the step instance.
+     * @param mixed $course to be processed.
+     * @return step_response
+     */
+    public function process_waiting_course($processid, $instanceid, $course) {
+        if ($keep = process_data_manager::get_process_data($processid, $instanceid, EMAIL_PROCDATA_KEY_KEEP)) {
+            if ($keep === '1') {
+                return step_response::rollback();
+            }
+        }
         return step_response::waiting();
     }
 

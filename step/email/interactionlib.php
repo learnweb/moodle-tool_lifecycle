@@ -26,12 +26,18 @@
 namespace tool_cleanupcourses\step;
 
 use tool_cleanupcourses\entity\process;
+use tool_cleanupcourses\entity\step_subplugin;
+use tool_cleanupcourses\manager\process_data_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../interactionlib.php');
+require_once(__DIR__ . '/lib.php');
+
 
 class interactionemail extends interactionlibbase {
+
+    const ACTION_KEEP = 'keep';
 
     /**
      * Returns the capability a user has to have to make decisions for a specific course.
@@ -51,7 +57,7 @@ class interactionemail extends interactionlibbase {
      */
     public function get_action_tools() {
         return array(
-            array('action' => 'keep',
+            array('action' => self::ACTION_KEEP,
                 'icon' => 't/locktime',
                 'alt' => get_string('keep_course', 'cleanupcoursesstep_email'),
                 ),
@@ -61,9 +67,12 @@ class interactionemail extends interactionlibbase {
     /**
      * Called when a user triggered an action for a process instance.
      * @param process $process instance of the process the action was triggered upon.
+     * @param step_subplugin $step instance of the step the process is currently in.
      * @param string $action action string
      */
-    public function handle_interaction($process, $action) {
-        echo 'Test';
+    public function handle_interaction($process, $step, $action) {
+        if ($action == self::ACTION_KEEP) {
+            process_data_manager::set_process_data($process->id, $step->id, EMAIL_PROCDATA_KEY_KEEP, '1');
+        }
     }
 }

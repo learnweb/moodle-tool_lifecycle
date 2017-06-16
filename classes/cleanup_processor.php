@@ -82,9 +82,9 @@ class cleanup_processor {
                     break;
                 }
                 if ($process->waiting) {
-                    $result = $lib->process_waiting_course($process->stepid, $course);
+                    $result = $lib->process_waiting_course($process->id, $process->stepid, $course);
                 } else {
-                    $result = $lib->process_course($process->stepid, $course);
+                    $result = $lib->process_course($process->id, $process->stepid, $course);
                 }
                 if ($result == step_response::waiting()) {
                     process_manager::set_process_waiting($process);
