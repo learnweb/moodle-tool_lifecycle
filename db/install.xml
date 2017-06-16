@@ -9,6 +9,7 @@
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="course id"/>
         <FIELD NAME="stepid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the step currently responsible for this course"/>
         <FIELD NAME="waiting" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="tells if the process is in status waiting"/>
+        <FIELD NAME="timestepchanged" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="unix timestamp - time the step instance of the process was changed last."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

@@ -40,11 +40,17 @@ class process {
     /** bool true if course is in status waiting*/
     public $waiting;
 
-    public function __construct($id, $stepid, $courseid, $waiting = false) {
+    /** timestamp date the process was moved to the current step instance */
+    public $timestepchanged;
+
+    public function __construct($id, $stepid, $courseid, $waiting = false, $timestepchanged = null) {
         $this->id = $id;
         $this->stepid = $stepid;
         $this->courseid = $courseid;
         $this->waiting = $waiting;
+        if ($timestepchanged === null) {
+            $this->timestepchanged = time();
+        }
     }
 
     /**
@@ -62,13 +68,16 @@ class process {
         if (!object_property_exists($record, 'courseid')) {
             return null;
         }
+        if (!object_property_exists($record, 'timestepchanged')) {
+            return null;
+        }
         if ($record->waiting) {
             $waiting = true;
         } else {
             $waiting = false;
         }
 
-        $instance = new self($record->id, $record->stepid, $record->courseid, $waiting);
+        $instance = new self($record->id, $record->stepid, $record->courseid, $waiting, $record->timestepchanged);
 
         return $instance;
     }

@@ -41,6 +41,7 @@ class process_manager {
             $record = new \stdClass();
             $record->courseid = $courseid;
             $record->stepid = $trigger->followedby;
+            $record->timestepchanged = time();
             $DB->insert_record('tool_cleanupcourses_process', $record);
         }
     }
@@ -85,6 +86,7 @@ class process_manager {
         if ($step->followedby) {
             $process->stepid = $step->followedby;
             $process->waiting = false;
+            $process->timestepchanged = time();
             $DB->update_record('tool_cleanupcourses_process', $process);
             return true;
         } else {
