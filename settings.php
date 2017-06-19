@@ -33,6 +33,11 @@ if ($hassiteconfig) {
         get_string('general_config_header', 'tool_cleanupcourses'));
     $ADMIN->add('cleanupcourses_category', $settings);
 
+    $settings->add(new admin_setting_configduration('cleanupcourses_duration',
+        get_string('config_delay_duration', 'tool_cleanupcourses'),
+        get_string('config_delay_duration_desc', 'tool_cleanupcourses'),
+        183 * 24 * 60 * 60)); // Dafault value is 180 days.
+
     $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_active_processes());
     $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_sublugins());
 

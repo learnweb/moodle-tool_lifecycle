@@ -119,8 +119,9 @@ class process_manager {
      * @param process $process process the rollback should be triggered for.
      */
     public static function rollback_process($process) {
+        global $CFG;
         // TODO: Add logic to revert changes made by steps.
-        delayed_courses_manager::set_course_delayed($process->courseid, 60);
+        delayed_courses_manager::set_course_delayed($process->courseid, $CFG->cleanupcourses_duration);
         self::remove_process($process);
     }
 
@@ -132,6 +133,5 @@ class process_manager {
         global $DB;
         $DB->delete_records('tool_cleanupcourses_procdata', array('processid' => $process->id));
         $DB->delete_records('tool_cleanupcourses_process', (array) $process);
-        delayed_courses_manager::remove_delay_entry($process->courseid);
     }
 }

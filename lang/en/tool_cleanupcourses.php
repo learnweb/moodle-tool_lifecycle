@@ -28,6 +28,8 @@ $string['pluginname'] = 'Cleanup Courses';
 $string['plugintitle'] = 'Cleanup Courses';
 
 $string['general_config_header'] = "General & Subplugins";
+$string['config_delay_duration'] = 'Duration of a course delay';
+$string['config_delay_duration_desc'] = 'Defines the time frame, which a course is excluded from the cleanup course, when rolled back via user interaction.';
 $string['active_processes_list_header'] = 'Active Processes';
 $string['subpluginssettings_heading'] = 'Subplugin Workflow';
 $string['subpluginssettings_trigger_heading'] = 'Trigger Definition';
