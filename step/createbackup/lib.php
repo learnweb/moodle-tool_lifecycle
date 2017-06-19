@@ -26,6 +26,7 @@
 namespace tool_cleanupcourses\step;
 
 use tool_cleanupcourses\response\step_response;
+use tool_cleanupcourses\manager\backup_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -51,11 +52,10 @@ class createbackup extends libbase {
      * @return step_response
      */
     public function process_course($processid, $instanceid, $course) {
-        $bc = new \backup_controller(\backup::TYPE_1COURSE, $course->id, \backup::FORMAT_MOODLE,
-            \backup::INTERACTIVE_NO, \backup::MODE_AUTOMATED, get_admin()->id);
-        $bc->execute_plan();
-        $results = $bc->get_results();
-        return step_response::proceed();
+        if (backup_manager::create_course_backup($course->id)) {
+            return step_response::proceed();
+        }
+        return step_response::waiting();
     }
 
     public function get_subpluginname() {
