@@ -25,6 +25,7 @@ namespace tool_cleanupcourses\manager;
 
 use tool_cleanupcourses\entity\process;
 use tool_cleanupcourses\entity\trigger_subplugin;
+use tool_cleanupcourses\manager\delayed_courses_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -119,6 +120,7 @@ class process_manager {
      */
     public static function rollback_process($process) {
         // TODO: Add logic to revert changes made by steps.
+        delayed_courses_manager::set_course_delayed($process->courseid, 60);
         self::remove_process($process);
     }
 
@@ -130,5 +132,6 @@ class process_manager {
         global $DB;
         $DB->delete_records('tool_cleanupcourses_procdata', array('processid' => $process->id));
         $DB->delete_records('tool_cleanupcourses_process', (array) $process);
+        delayed_courses_manager::remove_delay_entry($process->courseid);
     }
 }

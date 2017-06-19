@@ -13,7 +13,18 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="courseid_fk" TYPE="unique" FIELDS="courseid" COMMENT="Foreign key on course table"/>
+        <KEY NAME="courseid_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" COMMENT="Foreign key on course table"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="tool_cleanupcourses_delayed" COMMENT="List of courses, for which the next check is delayed until a certain timestamp.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="id of the course"/>
+        <FIELD NAME="delayeduntil" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="The timestamp till when the course is delayed"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" COMMENT="Foreign key on course table"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="tool_cleanupcourses_trigger" COMMENT="Trigger subplugins for the cleanup courses">

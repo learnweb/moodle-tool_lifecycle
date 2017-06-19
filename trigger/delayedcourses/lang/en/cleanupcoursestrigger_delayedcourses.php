@@ -15,13 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Lang strings for site course trigger
  *
- * @package    tool_cleanupcourses
+ * @package tool_cleanupcourses_trigger
+ * @subpackage delayedcourses
  * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+$string['pluginname'] = 'Exclude delayed courses trigger';
 
-$plugin->version  = 2017061901;
-$plugin->component = 'tool_cleanupcourses';
+$string['delay'] = 'This module will exclude all courses, which were delayed by user interaction';

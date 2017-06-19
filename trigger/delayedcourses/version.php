@@ -15,13 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Cleanup Courses Site Course Trigger
  *
- * @package    tool_cleanupcourses
+ * @package tool_cleanupcourses_trigger
+ * @subpackage delayedcourses
  * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2017061901;
-$plugin->component = 'tool_cleanupcourses';
+$plugin->version  = 2017061900;
+$plugin->component = 'cleanupcoursestrigger_delayedcourses';

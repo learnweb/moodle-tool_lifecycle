@@ -15,13 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Uninstall script for course cleanup subplugin
  *
- * @package    tool_cleanupcourses
+ * @package tool_cleanupcourses_trigger
+ * @subpackage delayedcourses
  * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+use tool_cleanupcourses\manager\trigger_manager;
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2017061901;
-$plugin->component = 'tool_cleanupcourses';
+function xmldb_cleanupcoursestrigger_delayedcourses_uninstall() {
+    trigger_manager::deregister('delayedcourses');
+}
