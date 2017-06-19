@@ -18,7 +18,7 @@
  * Cleanup Courses Site Course Trigger
  *
  * @package tool_cleanupcourses_trigger
- * @subpackage enddate
+ * @subpackage sitecourse
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
