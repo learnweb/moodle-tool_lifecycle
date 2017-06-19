@@ -39,6 +39,7 @@ if ($hassiteconfig) {
         183 * 24 * 60 * 60)); // Dafault value is 180 days.
 
     $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_active_processes());
+    $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_course_backups());
     $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_sublugins());
 
     if ($ADMIN->fulltree) {

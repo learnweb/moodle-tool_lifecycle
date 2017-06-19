@@ -70,3 +70,6 @@ $string['nostepfound'] = 'A step with the given stepid could not be found!';
 $string['noprocessfound'] = 'A process with the given processid could not be found!';
 
 $string['nocoursestodisplay'] = 'There are currently no courses, which require your attention!';
+
+$string['course_backups_list_header'] = 'Course Backups';
+$string['backupcreated'] = 'Created at';

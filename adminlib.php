@@ -51,6 +51,28 @@ class admin_page_active_processes extends \admin_externalpage {
 }
 
 /**
+ * External Page for showing course backups
+ *
+ * @package tool_cleanupcourses
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+class admin_page_course_backups extends \admin_externalpage {
+
+    /**
+     * The constructor - calls parent constructor
+     *
+     */
+    public function __construct() {
+        $url = new \moodle_url('/admin/tool/cleanupcourses/coursebackups.php');
+        parent::__construct('tool_cleanupcourses_coursebackups',
+            get_string('course_backups_list_header', 'tool_cleanupcourses'),
+            $url);
+    }
+}
+
+/**
  * External Page for defining settings for subplugins
  *
  * @package tool_cleanupcourses
