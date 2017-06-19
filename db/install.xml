@@ -76,5 +76,18 @@
         <KEY NAME="stepid_fk" TYPE="foreign" FIELDS="stepid" REFTABLE="tool_cleanupcourses_step" REFFIELDS="id" COMMENT="Foreign key on step table"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="tool_cleanupcourses_backups" COMMENT="Saves the location of course backups and the relevant information of the course.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="id of the course the backup belongs to"/>
+        <FIELD NAME="fullname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The fullname of the course"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Shortname of the course"/>
+        <FIELD NAME="backupfile" TYPE="char" LENGTH="120" NOTNULL="false" SEQUENCE="false" COMMENT="Name of the backup file"/>
+        <FIELD NAME="backupcreated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="timestamp the backup was created"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>

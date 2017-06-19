@@ -35,10 +35,18 @@ class backup_manager {
      * @return bool tells if the backup was completed successfully.
      */
     public static function create_course_backup($courseid) {
-        global $CFG;
+        global $CFG, $DB;
         try {
+            $course = get_course($courseid);
+            $record = new \stdClass();
+            $record->courseid = $courseid;
+            $record->fullname = $course->fullname;
+            $record->shortname = $course->shortname;
+            $recordid = $DB->insert_record('tool_cleanupcourses_backups', $record, true);
+            $record->id = $recordid;
+
             // Build filename.
-            $archivefile = date("Y-m-d") . "-ID-{$courseid}.mbz";
+            $archivefile = date("Y-m-d") . "-ID-{$recordid}-COURSE-{$courseid}.mbz";
 
             // Path of backup folder.
             $path = $CFG->dataroot . '/cleanupcourses_backups';
@@ -61,6 +69,16 @@ class backup_manager {
             }
             $bc->destroy();
             unset($bc);
+
+            // First check if the file was created.
+            if (!file_exists($path . '/' . $archivefile)) {
+                return false;
+            }
+
+            $record->backupfile = $archivefile;
+            $record->backupcreated = time();
+            $DB->update_record('tool_cleanupcourses_backups', $record, true);
+
             return true;
         } catch (\moodle_exception $e) {
             debugging('There was a problem during backup!');
