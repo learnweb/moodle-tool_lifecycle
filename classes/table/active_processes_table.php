@@ -35,7 +35,7 @@ class active_processes_table extends \table_sql {
         $this->set_sql('c.id as courseid, ' .
             'c.fullname as coursefullname, ' .
             'c.shortname as courseshortname, ' .
-            'subpluginname as subpluginname ',
+            'instancename as instancename ',
             '{tool_cleanupcourses_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
             '{tool_cleanupcourses_step} s on p.stepid = s.id',
@@ -88,8 +88,6 @@ class active_processes_table extends \table_sql {
      */
     public function col_subplugin($row) {
 
-        $subpluginname = $row->subpluginname;
-
-        return get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname);
+        return $row->instancename;
     }
 }
