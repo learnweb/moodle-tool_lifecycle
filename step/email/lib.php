@@ -107,7 +107,7 @@ class email extends libbase {
                     array('instanceid' => $step->id,
                         'touser' => $user->id));
 
-                $parsedsettings = $this->replace_placeholders($settings, $user, $step->id);
+                $parsedsettings = $this->replace_placeholders($settings, $user, $step->id, $mailentries);
 
                 $subject = $parsedsettings['subject'];
                 $content = $parsedsettings['content'];
@@ -129,27 +129,70 @@ class email extends libbase {
      * @param mixed $user user object
      * @return string[] array of mail text.
      */
-    private function replace_placeholders($strings, $user, $stepid) {
+    private function replace_placeholders($strings, $user, $stepid, $mailentries) {
         global $CFG;
 
         $patterns = array();
         $replacements = array();
 
+        // Replaces firstname of the user.
         $patterns [] = '##firstname##';
         $replacements [] = $user->firstname;
 
+        // Replaces lastname of the user.
         $patterns [] = '##lastname##';
         $replacements [] = $user->lastname;
 
+        // Replace link to interaction page.
         $url = $CFG->wwwroot . '/' . $this->get_interaction_link($stepid)->out();
-
         $patterns [] = '##link##';
         $replacements [] = $url;
 
+        // Replace html link to interaction page.
         $patterns [] = '##link-html##';
         $replacements [] = \html_writer::link($url, $url);
 
+        // Replace courses list.
+        $patterns [] = '##courses##';
+        $coursesstring = '';
+        $coursesstring .= $this->parse_course(array_pop($mailentries)->courseid);
+        foreach ($mailentries as $entry) {
+            $coursesstring .= "\n" . $this->parse_course($entry->courseid);
+        }
+        $replacements [] = $coursesstring;
+
+        // Replace courses html.
+        $patterns [] = '##courses-html##';
+        $coursestabledata = array();
+        foreach ($mailentries as $entry) {
+            $coursestabledata[$entry->courseid] = $this->parse_course_row_data($entry->courseid);
+        }
+        $coursestable = new \html_table();
+        $coursestable->data = $coursestabledata;
+        $replacements [] = \html_writer::table($coursestable);
+
         return str_ireplace($patterns, $replacements, $strings);
+    }
+
+    /**
+     * Parses a course for the non html format.
+     * @param int $courseid id of the course
+     * @return string
+     */
+    private function parse_course($courseid) {
+        $course = get_course($courseid);
+        $result = $course->fullname;
+        return $result;
+    }
+
+    /**
+     * Parses a course for the html format.
+     * @param int $courseid id of the course
+     * @return array column of a course
+     */
+    private function parse_course_row_data($courseid) {
+        $course = get_course($courseid);
+        return array($course->fullname);
     }
 
     public function instance_settings() {
