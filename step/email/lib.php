@@ -107,7 +107,7 @@ class email extends libbase {
                     array('instanceid' => $step->id,
                         'touser' => $user->id));
 
-                $parsedsettings = $this->replace_placeholders($settings, $user);
+                $parsedsettings = $this->replace_placeholders($settings, $user, $step->id);
 
                 $subject = $parsedsettings['subject'];
                 $content = $parsedsettings['content'];
@@ -129,7 +129,8 @@ class email extends libbase {
      * @param mixed $user user object
      * @return string[] array of mail text.
      */
-    private function replace_placeholders($strings, $user) {
+    private function replace_placeholders($strings, $user, $stepid) {
+        global $CFG;
 
         $patterns = array();
         $replacements = array();
@@ -139,6 +140,14 @@ class email extends libbase {
 
         $patterns [] = '##lastname##';
         $replacements [] = $user->lastname;
+
+        $url = $CFG->wwwroot . '/' . $this->get_interaction_link($stepid)->out();
+
+        $patterns [] = '##link##';
+        $replacements [] = $url;
+
+        $patterns [] = '##link-html##';
+        $replacements [] = \html_writer::link($url, $url);
 
         return str_ireplace($patterns, $replacements, $strings);
     }

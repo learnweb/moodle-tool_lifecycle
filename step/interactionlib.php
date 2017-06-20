@@ -72,4 +72,5 @@ abstract class interactionlibbase {
      * @param string $action action string
      */
     public abstract function handle_interaction($process, $step, $action);
+
 }
