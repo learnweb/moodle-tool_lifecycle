@@ -43,8 +43,7 @@ class delayed_courses_manager {
             $record->delayeduntil = $delayeduntil;
             $DB->insert_record('tool_cleanupcourses_delayed', $record);
         } else {
-            if ($record['delayeduntil'] < $delayeduntil) {
-                $record = (object) $record;
+            if ($record->delayeduntil < $delayeduntil) {
                 $record->delayeduntil = $delayeduntil;
                 $DB->update_record('tool_cleanupcourses_delayed', $record);
             }
