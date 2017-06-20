@@ -64,10 +64,15 @@ class interaction_table extends \table_sql {
                 if (!$course2) {
                     return $course1->id;
                 }
-                return $course1->id . ',' . $course2->id;
+                if (is_object($course1) && object_property_exists($course1, 'id')) {
+                    $course1 = $course1->id;
+                }
+                if (is_object($course2) && object_property_exists($course2, 'id')) {
+                    $course2 = $course2->id;
+                }
+                return $course1 . ',' . $course2;
             });
-            $where .= ' AND c.id in (:listofcourseids)';
-            $params['listofcourseids'] = $listofcourseids;
+            $where .= ' AND p.courseid IN ('. $listofcourseids . ')';
         } else {
             $where .= ' AND FALSE';
         }
