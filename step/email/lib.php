@@ -154,17 +154,19 @@ class email extends libbase {
 
         // Replace courses list.
         $patterns [] = '##courses##';
+        $courses = $mailentries;
         $coursesstring = '';
-        $coursesstring .= $this->parse_course(array_pop($mailentries)->courseid);
-        foreach ($mailentries as $entry) {
+        $coursesstring .= $this->parse_course(array_pop($courses)->courseid);
+        foreach ($courses as $entry) {
             $coursesstring .= "\n" . $this->parse_course($entry->courseid);
         }
         $replacements [] = $coursesstring;
 
         // Replace courses html.
         $patterns [] = '##courses-html##';
+        $courses = $mailentries;
         $coursestabledata = array();
-        foreach ($mailentries as $entry) {
+        foreach ($courses as $entry) {
             $coursestabledata[$entry->courseid] = $this->parse_course_row_data($entry->courseid);
         }
         $coursestable = new \html_table();
