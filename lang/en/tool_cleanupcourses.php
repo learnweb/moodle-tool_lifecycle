@@ -73,3 +73,4 @@ $string['nocoursestodisplay'] = 'There are currently no courses, which require y
 
 $string['course_backups_list_header'] = 'Course Backups';
 $string['backupcreated'] = 'Created at';
+$string['restore'] = 'restore';

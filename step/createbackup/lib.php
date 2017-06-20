@@ -58,6 +58,10 @@ class createbackup extends libbase {
         return step_response::waiting();
     }
 
+    public function process_waiting_course($processid, $instanceid, $course) {
+        return $this->process_course($processid, $instanceid, $course);
+    }
+
     public function get_subpluginname() {
         return 'createbackup';
     }

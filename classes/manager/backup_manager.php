@@ -23,9 +23,11 @@
  */
 namespace tool_cleanupcourses\manager;
 
-use WebDriver\Exception;
-
 defined('MOODLE_INTERNAL') || die();
+
+// Get the necessary files to perform backup and restore.
+require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
+require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
 
 class backup_manager {
 
@@ -60,9 +62,10 @@ class backup_manager {
             }
             // Perform Backup.
             $bc = new \backup_controller(\backup::TYPE_1COURSE, $courseid, \backup::FORMAT_MOODLE,
-                \backup::INTERACTIVE_NO, \backup::MODE_AUTOMATED, get_admin()->id);
+                \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, get_admin()->id);
             $bc->execute_plan();  // Execute backup.
             $results = $bc->get_results(); // Get the file information needed.
+            /* @var $file \stored_file instance of the backup file*/
             $file = $results['backup_destination'];
             if (!empty($file)) {
                 $file->copy_content_to($path . '/' . $archivefile);
@@ -87,4 +90,45 @@ class backup_manager {
         }
     }
 
+    /**
+     * Restores a course backup via a backupid
+     * The function copies the backup file from the cleanupcourse backup folder to a temporary folder.
+     * It then redirects to the backup/restore.php, which leads the user through the interactive restore process.
+     * @param int $backupid id of backup entry.
+     * @throws \moodle_exception
+     * @throws \restore_controller_exception
+     */
+    public static function restore_course_backup($backupid) {
+        global $DB, $CFG;
+        $backuprecord = $DB->get_record('tool_cleanupcourses_backups', array('id' => $backupid));
+
+        // Check if backup tmp dir exists.
+        $backuptmpdir = $CFG->tempdir . '/backup';
+        if (!check_dir_exists($backuptmpdir, true, true)) {
+            throw new \restore_controller_exception('cannot_create_backup_temp_dir');
+        }
+
+        // Create the file location in the backup temp.
+        $targetfilename = \restore_controller::get_tempdir_name($backuprecord->courseid, get_admin()->id);
+        $target = $backuptmpdir . '/' . $targetfilename;
+        // Create the location of the actual backup file.
+        $source = $CFG->dataroot . '/cleanupcourses_backups/' . $backuprecord->backupfile;
+        // Check if the backup file exists.
+        if (!file_exists($source)) {
+            throw new \moodle_exception('errorbackupfiledoesnotexist', 'tool_cleanupprocess', $source);
+        }
+
+        // Copy the file to the backup temp dir.
+        copy($source, $target);
+
+        $context = \context_system::instance();
+        $restoreurl = new \moodle_url('/backup/restore.php',
+            array(
+                'contextid' => $context->id,
+                'filename' => $targetfilename,
+            )
+        );
+        redirect($restoreurl);
+
+    }
 }

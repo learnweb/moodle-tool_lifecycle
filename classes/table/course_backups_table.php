@@ -40,12 +40,13 @@ class course_backups_table extends \table_sql {
     }
 
     public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'backupcreated']);
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'backupcreated', 'tools']);
         $this->define_headers([
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
-            get_string('backupcreated', 'tool_cleanupcourses')]);
+            get_string('backupcreated', 'tool_cleanupcourses'),
+            get_string('tools', 'tool_cleanupcourses')]);
         $this->setup();
     }
 
@@ -95,5 +96,17 @@ class course_backups_table extends \table_sql {
      */
     public function col_backupcreated($row) {
         return userdate($row->backupcreated);
+    }
+
+    /**
+     * Render tools column.
+     * @param $row
+     * @return string action buttons for restoring a course.
+     */
+    public function col_tools($row) {
+        return \html_writer::link(
+            new \moodle_url('/admin/tool/cleanupcourses/restore.php', array('backupid' => $row->id)),
+                get_string('restore', 'tool_cleanupcourses')
+        );
     }
 }
