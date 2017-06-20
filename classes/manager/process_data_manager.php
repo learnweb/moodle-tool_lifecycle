@@ -42,12 +42,16 @@ class process_data_manager {
      */
     public static function get_process_data($processid, $stepid, $key) {
         global $DB;
-        if ($value = $DB->get_record('tool_cleanupcourses_procdata',
-            array(
-                'processid' => $processid,
-                'stepid' => $stepid,
-                'key' => $key,
-            ))) {
+        $params = array(
+            'processid' => $processid,
+            'key' => $key,
+        );
+        if (step_manager::is_process_data_instance_dependent($stepid)) {
+            $params['stepid'] = $stepid;
+        } else {
+            $params['subpluginname'] = step_manager::get_step_instance($stepid)->subpluginname;
+        }
+        if ($value = $DB->get_record('tool_cleanupcourses_procdata', $params)) {
             return $value->value;
         }
         return null;
@@ -64,9 +68,13 @@ class process_data_manager {
         global $DB;
         $entry = array(
             'processid' => $processid,
-            'stepid' => $stepid,
             'key' => $key,
         );
+        if (step_manager::is_process_data_instance_dependent($stepid)) {
+            $entry['stepid'] = $stepid;
+        } else {
+            $entry['subpluginname'] = step_manager::get_step_instance($stepid)->subpluginname;
+        }
         if ($oldentry = $DB->get_record('tool_cleanupcourses_procdata', $entry)) {
             $oldentry->value = $value;
             $DB->update_record('tool_cleanupcourses_procdata', $oldentry);

@@ -185,4 +185,20 @@ class step_manager extends subplugin_manager {
             self::remove($subplugin);
         }
     }
+
+    /**
+     * Returns if the process data is saved instance or subplugin dependent.
+     * Default if false. Can be overriden in show_relevant_courses_instance_dependent() of the interactionlib.
+     * @param int $stepid id of the step process data should be saved for.
+     * @return bool if true data is saved instance dependent.
+     * Otherwise it does not matter which instance of a subplugin created the data.
+     */
+    public static function is_process_data_instance_dependent($stepid) {
+        $step = self::get_step_instance($stepid);
+        $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
+        if (!$interactionlib) {
+            return false;
+        }
+        return $interactionlib->show_relevant_courses_instance_dependent();
+    }
 }

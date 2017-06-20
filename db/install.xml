@@ -66,7 +66,8 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="processid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="id of the process"/>
-        <FIELD NAME="stepid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the step"/>
+        <FIELD NAME="stepid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="id of the step"/>
+        <FIELD NAME="subpluginname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="name of the subplugin"/>
         <FIELD NAME="key" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="key of the key/value-pair"/>
         <FIELD NAME="value" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" COMMENT="value of the key/value-pair"/>
       </FIELDS>
