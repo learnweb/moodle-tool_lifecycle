@@ -40,6 +40,8 @@ $string['step_settings_header'] = 'Specific settings of the step type';
 $string['general_settings_header'] = 'General Settings';
 $string['followedby_none'] = 'None';
 
+$string['process_cleanup'] = 'Run the cleanup courses processes';
+
 $string['trigger_subpluginname'] = 'Subplugin Name';
 $string['trigger_enabled'] = 'Enabled';
 $string['trigger_sortindex'] = 'Up/Down';

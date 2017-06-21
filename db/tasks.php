@@ -15,13 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Definition of cleanup courses scheduled tasks.
  *
- * @package    tool_cleanupcourses
+ * @package   tool_cleanupcourses
+ * @category  task
  * @copyright  2017 Tobias Reischmann WWU
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2017062100;
-$plugin->component = 'tool_cleanupcourses';
+$tasks = array(
+    array(
+        'classname' => 'tool_cleanupcourses\task\process_cleanup',
+        'blocking' => 0,
+        'minute' => '*',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+        'faildelay' => 1,
+    )
+);

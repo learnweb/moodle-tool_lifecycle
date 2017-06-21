@@ -21,7 +21,7 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses;
+namespace tool_cleanupcourses\task;
 
 use tool_cleanupcourses\manager\lib_manager;
 use tool_cleanupcourses\manager\step_manager;
