@@ -25,6 +25,7 @@ namespace tool_cleanupcourses\task;
 
 use tool_cleanupcourses\manager\lib_manager;
 use tool_cleanupcourses\manager\step_manager;
+use tool_cleanupcourses\cleanup_processor;
 
 defined('MOODLE_INTERNAL') || die;
 
