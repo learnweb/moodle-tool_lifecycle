@@ -34,8 +34,8 @@ $PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/activeprocesses.php')
 
 $table = new tool_cleanupcourses\table\active_processes_table('tool_cleanupcourses_active_processes');
 
-$PAGE->set_title("Title");
-$PAGE->set_heading("Heading");
+$PAGE->set_title(get_string('active_processes_list_header', 'tool_cleanupcourses'));
+$PAGE->set_heading(get_string('active_processes_list_header', 'tool_cleanupcourses'));
 
 $renderer = $PAGE->get_renderer('tool_cleanupcourses');
 

@@ -30,7 +30,7 @@ class tool_cleanupcourses_renderer extends plugin_renderer_base {
      *
      * @return string
      */
-    public function render_footer() {
+    public function footer() {
         global $OUTPUT;
         echo $OUTPUT->footer();
     }
@@ -40,9 +40,10 @@ class tool_cleanupcourses_renderer extends plugin_renderer_base {
      *
      * @return string
      */
-    public function render_header() {
-        global $OUTPUT;
+    public function header() {
+        global $OUTPUT, $PAGE;
         echo $OUTPUT->header();
+        echo $OUTPUT->heading($PAGE->heading);
     }
 
 }
