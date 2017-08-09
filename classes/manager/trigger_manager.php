@@ -67,9 +67,7 @@ class trigger_manager extends subplugin_manager {
             if ($enabled) {
                 $subplugin->sortindex = self::count_enabled_trigger() + 1;
             } else {
-                if (isset($subplugin->sortindex)) {
-                    self::remove_from_sortindex($subplugin);
-                }
+                self::remove_from_sortindex($subplugin);
             }
             self::insert_or_update($subplugin);
         }
@@ -145,13 +143,15 @@ class trigger_manager extends subplugin_manager {
      */
     private static function remove_from_sortindex(&$toberemoved) {
         global $DB;
-        $subplugins = $DB->get_records_select('tool_cleanupcourses_trigger', "sortindex > $toberemoved->sortindex");
-        foreach ($subplugins as $record) {
-            $subplugin = trigger_subplugin::from_record($record);
-            $subplugin->sortindex--;
-            self::insert_or_update($subplugin);
+        if (isset($toberemoved->sortindex)) {
+            $subplugins = $DB->get_records_select('tool_cleanupcourses_trigger', "sortindex > $toberemoved->sortindex");
+            foreach ($subplugins as $record) {
+                $subplugin = trigger_subplugin::from_record($record);
+                $subplugin->sortindex--;
+                self::insert_or_update($subplugin);
+            }
+            $toberemoved->sortindex = null;
         }
-        $toberemoved->sortindex = null;
     }
 
     /**
