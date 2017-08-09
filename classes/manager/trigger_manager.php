@@ -202,8 +202,9 @@ class trigger_manager extends subplugin_manager {
             'subpluginname' => $subplugin->subpluginname,
         );
         if ($record = $DB->get_record('tool_cleanupcourses_trigger', $record)) {
-            $DB->delete_records('tool_cleanupcourses_trigger', (array) $record);
             $subplugin = trigger_subplugin::from_record($record);
+            self::remove_from_sortindex($subplugin);
+            $DB->delete_records('tool_cleanupcourses_trigger', (array) $record);
         }
         $transaction->allow_commit();
     }
