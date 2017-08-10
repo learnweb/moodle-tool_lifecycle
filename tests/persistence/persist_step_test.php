@@ -25,7 +25,7 @@ use \tool_cleanupcourses\manager\step_manager;
  * Tests creating storing and retrieving a step object.
  * @package    tool_cleanupcourses
  * @category   test
- * @group      tool_cleanupcourses_persist
+ * @group      tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
