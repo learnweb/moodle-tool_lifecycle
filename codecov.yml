@@ -2,11 +2,11 @@ fixes:
 	- "moodle/admin/tool/cleanupcourses/::"
 ignore:
     # artificial/Moodle API files
+    - "classes/plugininfo/*"
     - "tests/**/*"
     - "lang/**/*"
     - "db/**/*"
     - "db/.*"
-    - "settings.php"
     - "version.php"
     - "step/**/lang"
     - "step/**/db"
@@ -16,4 +16,12 @@ ignore:
     - "trigger/**/lang"
     - "trigger/**/settings.php"
     - "trigger/**/version.php"
-
+    # UI classes
+    - "classes/table/*"
+    - "activeprocesses.php"
+    - "coursebackups.php"
+    - "renderer.php"
+    - "restore.php"
+    - "settings.php"
+    - "subpluginssettings.php"
+    - "view.php"
