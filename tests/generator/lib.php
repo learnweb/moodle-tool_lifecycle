@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use tool_cleanupcourses\entity\trigger_subplugin;
+use tool_cleanupcourses\entity\step_subplugin;
+use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\manager\step_manager;
+
+
 /**
  * tool_cleanupcourses generator tests
  *
@@ -39,5 +45,27 @@ class tool_cleanupcourses_generator extends testing_module_generator {
             );
             $DB->insert_record_raw('tool_cleanupcourses_trigger', $record, true, true, true);
         }
+    }
+
+    /**
+     * Creates an artificial trigger instance.
+     */
+    public static function create_trigger_with_workflow() {
+        // Create Second Step.
+        $step2 = new step_subplugin('mystepinstance', 'stepname');
+        step_manager::insert_or_update($step2);
+
+        // Create First Step.
+        $step1 = new step_subplugin('mystepinstance', 'stepname');
+        step_manager::insert_or_update($step1);
+        step_manager::change_followedby($step1->id, $step2->id);
+
+        //Create trigger.
+        $record = new stdClass();
+        $record->subpluginname = 'mytrigger';
+        $record->followedby = $step1->id;
+        $trigger = trigger_subplugin::from_record($record);
+        trigger_manager::insert_or_update($trigger);
+        return $trigger;
     }
 }
