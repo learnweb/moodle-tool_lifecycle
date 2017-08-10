@@ -22,84 +22,18 @@ require_once(__DIR__ . '/../lib.php');
 use \tool_cleanupcourses\manager\trigger_manager;
 
 /**
- * Tests the different state changes of the subplugin_settings.
+ * Tests the different state changes of the trigger sortindex for enable and disable action.
  * @package    tool_cleanupcourses
  * @category   test
  * @group      tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_subplugin_settings_testcase extends \advanced_testcase {
+class tool_cleanupcourses_trigger_sortindex_disable_testcase extends \advanced_testcase {
 
     public function setUp() {
         $this->resetAfterTest(true);
         tool_cleanupcourses_generator::setup_test_plugins();
-    }
-
-    /**
-     * Test to put up the first subplugin.
-     */
-    public function test_up_first() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_UP_TRIGGER, 1);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 2)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
-    }
-
-    /**
-     * Test to put up the second subplugin.
-     */
-    public function test_up_second() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_UP_TRIGGER, 2);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 2)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
-    }
-
-    /**
-     * Test to put up the thrid subplugin.
-     */
-    public function test_up_third() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_UP_TRIGGER, 3);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 3)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 2)));
-    }
-
-    /**
-     * Test to put down the first subplugin.
-     */
-    public function test_down_first() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_DOWN_TRIGGER, 1);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 2)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
-    }
-
-    /**
-     * Test to put down the second subplugin.
-     */
-    public function test_down_second() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_DOWN_TRIGGER, 2);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 3)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 2)));
-    }
-
-    /**
-     * Test to put down the third subplugin.
-     */
-    public function test_down_third() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_DOWN_TRIGGER, 3);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 2)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
     }
 
     /**

@@ -22,14 +22,14 @@ require_once(__DIR__ . '/../lib.php');
 use \tool_cleanupcourses\manager\trigger_manager;
 
 /**
- * Tests the state changes of the trigger table for registering and unregistering new trigger.
+ * Tests the different state changes of the trigger sortindex for registering and deregistering new trigger.
  * @package    tool_cleanupcourses
  * @category   test
  * @group      tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_subplugin_install_sortindex_testcase extends \advanced_testcase {
+class tool_cleanupcourses_trigger_sortindex_register_testcase extends \advanced_testcase {
 
     const EXISTINGTRIGGER = 'startdatedelay';
 
