@@ -19,6 +19,8 @@ use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\trigger_manager;
 use tool_cleanupcourses\manager\step_manager;
 
+defined('MOODLE_INTERNAL') || die();
+
 
 /**
  * tool_cleanupcourses generator tests
@@ -28,9 +30,6 @@ use tool_cleanupcourses\manager\step_manager;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
 class tool_cleanupcourses_generator extends testing_module_generator {
 
     public static function setup_test_plugins() {
@@ -60,7 +59,7 @@ class tool_cleanupcourses_generator extends testing_module_generator {
         step_manager::insert_or_update($step1);
         step_manager::change_followedby($step1->id, $step2->id);
 
-        //Create trigger.
+        // Create trigger.
         $record = new stdClass();
         $record->subpluginname = 'mytrigger';
         $record->followedby = $step1->id;
