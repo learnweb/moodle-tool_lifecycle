@@ -32,7 +32,7 @@ class step_manager extends subplugin_manager {
 
     /**
      * Returns a subplugin object.
-     * @param int $subpluginid id of the step instance
+     * @param int $stepinstanceid id of the step instance
      * @return step_subplugin
      */
     public static function get_subplugin_by_instance_id($stepinstanceid) {

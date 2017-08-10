@@ -37,10 +37,10 @@ class interaction_table extends \table_sql {
     private $stepinstance;
 
     public function __construct($uniqueid, $stepid) {
-        parent::__construct('tool_cleanupcourses_interaction_table');
+        parent::__construct($uniqueid);
 
         $this->stepinstance = step_manager::get_step_instance($stepid);
-        global $PAGE, $USER, $DB;
+        global $PAGE, $USER;
 
         $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname';
         $from = '{tool_cleanupcourses_process} p join ' .
