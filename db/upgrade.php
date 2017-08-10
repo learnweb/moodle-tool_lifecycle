@@ -42,7 +42,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         $table->add_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
         $table->add_key('stepid_fk', XMLDB_KEY_FOREIGN, array('stepid'), 'tool_cleanupcourses_step', array('id'));
 
-        // Conditionally launch add field id.
+        // Conditionally create the table.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
@@ -55,7 +55,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         $table->add_field('timeacive', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'active');
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
-        // Conditionally launch add field id.
+        // Conditionally create the table.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
