@@ -73,7 +73,7 @@ class cleanup_processor {
     public function process_courses() {
         foreach (process_manager::get_processes() as $process) {
             while (true) {
-                $step = step_manager::get_subplugin_by_instance_id($process->stepid);
+                $step = step_manager::get_step_instance($process->stepid);
                 $lib = lib_manager::get_step_lib($step->subpluginname);
                 try {
                     $course = get_course($process->courseid);
