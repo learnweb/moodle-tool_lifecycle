@@ -72,10 +72,23 @@ class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
      */
     public function test_remove() {
         step_manager::insert_or_update($this->step);
-        $id = $this->step->id;
-        step_manager::handle_action(ACTION_STEP_INSTANCE_DELETE, $id);
-        $loadedstep = step_manager::get_step_instance($id);
+        $stepid = $this->step->id;
+
+        // Create a second step, which is followed by the one under test.
+        $step2 = new step_subplugin(self::INSTANCENAME, self::STEPNAME);
+        step_manager::insert_or_update($step2);
+        step_manager::change_followedby($step2->id, $stepid);
+        $step2 = step_manager::get_step_instance($step2->id);
+        $this->assertEquals($stepid, $step2->followedby);
+
+        // Delete the step under test and assert it was correctly removed from the DB.
+        step_manager::handle_action(ACTION_STEP_INSTANCE_DELETE, $stepid);
+        $loadedstep = step_manager::get_step_instance($stepid);
         $this->assertNull($loadedstep);
+
+        // Check if the step under test was removed as followedby from the second steps record.
+        $step2 = step_manager::get_step_instance($step2->id);
+        $this->assertNull($step2->followedby);
     }
 
 }
