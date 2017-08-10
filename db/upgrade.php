@@ -39,6 +39,8 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         $table->add_field('stepid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'workflowid');
         $table->add_field('sortindex', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, null, 'stepid');
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
+        $table->add_key('stepid_fk', XMLDB_KEY_FOREIGN, array('stepid'), 'tool_cleanupcourses_step', array('id'));
 
         // Conditionally launch add field id.
         if (!$dbman->table_exists($table)) {
@@ -52,8 +54,6 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         $table->add_field('active', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'title');
         $table->add_field('timeacive', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'active');
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
-        $table->add_key('stepid_fk', XMLDB_KEY_FOREIGN, array('stepid'), 'tool_cleanupcourses_step', array('id'));
 
         // Conditionally launch add field id.
         if (!$dbman->table_exists($table)) {
@@ -77,7 +77,6 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         // Cleanupcourses savepoint reached.
         upgrade_plugin_savepoint(true, 2017081000, 'tool', 'cleanupcourses');
     }
-
 
     return true;
 }
