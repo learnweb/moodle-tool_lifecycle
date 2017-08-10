@@ -121,13 +121,8 @@ class tool_cleanupcourses_trigger_sortindex_register_testcase extends \advanced_
      * Test the proper deregistering of a trigger subplugin, when disabled.
      */
     public function test_deregister_disabled_trigger() {
-        global $DB;
         trigger_manager::deregister(self::EXISTINGTRIGGER);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 2)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
-        $this->assertEmpty($DB->get_records('tool_cleanupcourses_trigger',
-            array('subpluginname' => self::EXISTINGTRIGGER)));
+        $this->check_new_trigger_correctly_deregistered();
     }
 
     /**
@@ -138,11 +133,7 @@ class tool_cleanupcourses_trigger_sortindex_register_testcase extends \advanced_
         $record = $DB->get_record('tool_cleanupcourses_trigger', array('subpluginname' => self::EXISTINGTRIGGER), 'id');
         trigger_manager::handle_action(ACTION_ENABLE_TRIGGER, $record->id);
         trigger_manager::deregister(self::EXISTINGTRIGGER);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 2)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
-        $this->assertEmpty($DB->get_records('tool_cleanupcourses_trigger',
-            array('subpluginname' => self::EXISTINGTRIGGER)));
+        $this->check_new_trigger_correctly_deregistered();
     }
 
     /**
@@ -154,14 +145,7 @@ class tool_cleanupcourses_trigger_sortindex_register_testcase extends \advanced_
         trigger_manager::handle_action(ACTION_ENABLE_TRIGGER, $record->id);
         trigger_manager::handle_action(ACTION_UP_TRIGGER, $record->id);
         trigger_manager::deregister(self::EXISTINGTRIGGER);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)),
-            'First sortindex is wrong.');
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 2)),
-            'Second sortindex is wrong.');
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)),
-            'Third sortindex is wrong.');
-        $this->assertEmpty($DB->get_records('tool_cleanupcourses_trigger',
-            array('subpluginname' => self::EXISTINGTRIGGER)));
+        $this->check_new_trigger_correctly_deregistered();
     }
 
     /**
@@ -175,6 +159,15 @@ class tool_cleanupcourses_trigger_sortindex_register_testcase extends \advanced_
         trigger_manager::handle_action(ACTION_UP_TRIGGER, $record->id);
         trigger_manager::handle_action(ACTION_UP_TRIGGER, $record->id);
         trigger_manager::deregister(self::EXISTINGTRIGGER);
+        $this->check_new_trigger_correctly_deregistered();
+    }
+
+    /**
+     * Checks that the new trigger is correctly deregistered and
+     * that the sortindizes of all other triggers are in the initial order.
+     */
+    private function check_new_trigger_correctly_deregistered() {
+        global $DB;
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)),
             'First sortindex is wrong.');
         $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 2)),
