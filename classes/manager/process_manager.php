@@ -35,16 +35,21 @@ class process_manager {
      * Creates a process for the course which is at the respective step the trigger is followed by.
      * @param int $courseid id of the course
      * @param trigger_subplugin $trigger
+     * @return process|null
      */
     public static function create_process($courseid, $trigger) {
         global $DB;
         if ($trigger->followedby !== null) {
             $record = new \stdClass();
+            $record->id = null;
             $record->courseid = $courseid;
             $record->stepid = $trigger->followedby;
             $record->timestepchanged = time();
-            $DB->insert_record('tool_cleanupcourses_process', $record);
+            $process = process::from_record($record);
+            $process->id = $DB->insert_record('tool_cleanupcourses_process', $process);
+            return $process;
         }
+        return null;
     }
 
     /**
