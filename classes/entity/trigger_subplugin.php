@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 class trigger_subplugin extends subplugin{
 
     /** bool is the subplugin enabled*/
-    public $enabled;
+    public $enabled = false;
 
     /** int sortindex of subplugin */
     public $sortindex;
