@@ -38,7 +38,7 @@ class workflow {
     public $steps;
 
     /** bool true if workflow is active*/
-    public $avtive;
+    public $active;
 
     /** timestamp the workflow was set active */
     public $timeactive;
@@ -46,7 +46,7 @@ class workflow {
     private function __construct($id, $title, $active, $timeactive) {
         $this->id = $id;
         $this->title = $title;
-        $this->acvtive = $active;
+        $this->active = $active;
         $this->timeactive = $timeactive;
     }
 
@@ -74,7 +74,7 @@ class workflow {
             $timeactive = $record->timeactive;
         }
 
-        $instance = new self($record->id, $record->title, $record->active, $active, $timeactive);
+        $instance = new self($record->id, $record->title, $active, $timeactive);
 
         return $instance;
     }
