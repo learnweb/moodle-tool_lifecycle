@@ -90,5 +90,29 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="tool_cleanupcourses_workflow" COMMENT="Workflow definitions for processes">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Title of a workflow"/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="active status of a workflow"/>
+        <FIELD NAME="timeactive" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="timestamp the workflow was set active"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="tool_cleanupcourses_wf_steps" COMMENT="Assignment of steps to a workflow">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="workflowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the workflow"/>
+        <FIELD NAME="stepid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the step instance"/>
+        <FIELD NAME="order" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="Order in which the steps are executed"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_cleanupcourses_workflow" REFFIELDS="id"/>
+        <KEY NAME="stepid_fk" TYPE="foreign" FIELDS="stepid" REFTABLE="tool_cleanupcourses_step" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>
