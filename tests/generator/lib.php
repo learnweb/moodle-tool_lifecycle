@@ -67,4 +67,27 @@ class tool_cleanupcourses_generator extends testing_module_generator {
         trigger_manager::insert_or_update($trigger);
         return $trigger;
     }
+
+    /**
+     * Creates an trigger instance from delayedcourses and
+     * creates two instances of createbackup, which it is followed by.
+     */
+    public static function create_real_trigger_with_workflow() {
+        // Create Second Step.
+        $step2 = new step_subplugin('mystepinstance2', 'createbackup');
+        step_manager::insert_or_update($step2);
+
+        // Create First Step.
+        $step1 = new step_subplugin('mystepinstance1', 'createbackup');
+        step_manager::insert_or_update($step1);
+        step_manager::change_followedby($step1->id, $step2->id);
+
+        // Create trigger.
+        $record = new stdClass();
+        $record->subpluginname = 'delayedcourses';
+        $record->followedby = $step1->id;
+        $trigger = trigger_subplugin::from_record($record);
+        trigger_manager::insert_or_update($trigger);
+        return $trigger;
+    }
 }
