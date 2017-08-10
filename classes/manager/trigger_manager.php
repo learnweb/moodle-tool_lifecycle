@@ -120,7 +120,7 @@ class trigger_manager extends subplugin_manager {
 
         $subplugin = self::get_subplugin_by_id($subpluginid);
         if (!$subplugin) {
-            return; // TODO: Throw error.
+            throw new \coding_exception('The subplugin instance your are looking for does not exist.');
         }
 
         $step = step_manager::get_step_instance($followedby);
