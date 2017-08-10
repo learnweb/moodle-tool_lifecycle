@@ -184,9 +184,7 @@ class trigger_manager extends subplugin_manager {
             'subpluginname' => $subplugin->subpluginname,
         );
         if (!$DB->record_exists('tool_cleanupcourses_trigger', $record)) {
-            $subplugin->id = $DB->insert_record('tool_cleanupcourses_trigger', $record);
-            $record = $DB->get_record('tool_cleanupcourses_trigger', array('id' => $subplugin->id));
-            $subplugin = trigger_subplugin::from_record($record);
+            $subplugin->id = $DB->insert_record('tool_cleanupcourses_trigger', $subplugin);
         }
         $transaction->allow_commit();
     }
