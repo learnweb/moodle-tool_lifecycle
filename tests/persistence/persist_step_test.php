@@ -60,6 +60,11 @@ class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
         $id = $this->step->id;
         $loadedstep = step_manager::get_step_instance($id);
         $this->assertEquals($this->step, $loadedstep);
+        $loadedsteps = step_manager::get_step_instances();
+        $this->assertEquals(1, count($loadedsteps));
+        $loadedsteps = step_manager::get_step_instances_by_subpluginname(self::STEPNAME);
+        $this->assertEquals(1, count($loadedsteps));
+
     }
 
     /**
