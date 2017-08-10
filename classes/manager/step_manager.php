@@ -31,11 +31,11 @@ defined('MOODLE_INTERNAL') || die();
 class step_manager extends subplugin_manager {
 
     /**
-     * Returns a subplugin object.
+     * Returns a step instance if one with the is is available.
      * @param int $stepinstanceid id of the step instance
-     * @return step_subplugin
+     * @return step_subplugin|null
      */
-    public static function get_subplugin_by_instance_id($stepinstanceid) {
+    public static function get_step_instance($stepinstanceid) {
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $stepinstanceid));
         if ($record) {
@@ -119,20 +119,6 @@ class step_manager extends subplugin_manager {
     }
 
     /**
-     * Gets a specific step instance.
-     * @param int $instanceid id of the instance
-     * @return step_subplugin step instance.
-     */
-    public static function get_step_instance($instanceid) {
-        global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $instanceid));
-        if ($record) {
-            return step_subplugin::from_record($record);
-        }
-        return null;
-    }
-
-    /**
      * Gets the list of step subplugins.
      * @return array of step subplugins.
      */
@@ -154,11 +140,11 @@ class step_manager extends subplugin_manager {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
 
-        $step = self::get_subplugin_by_instance_id($subpluginid);
+        $step = self::get_step_instance($subpluginid);
         if (!$step) {
             return; // TODO: Throw error.
         }
-        $followedby = self::get_subplugin_by_instance_id($followedby);
+        $followedby = self::get_step_instance($followedby);
 
         // If step is not defined clear followedby.
         if ($followedby) {
