@@ -34,9 +34,6 @@ class workflow {
     /** title of the workflow */
     public $title;
 
-    /** array of step instances*/
-    public $steps;
-
     /** bool true if workflow is active*/
     public $active;
 

@@ -34,6 +34,9 @@ class trigger_subplugin extends subplugin{
     /** int sortindex of subplugin */
     public $sortindex;
 
+    /** int id of the workflow, which is started by this trigger*/
+    public $worflowid;
+
     /**
      * Creates a subplugin from a db record.
      * @param $record
