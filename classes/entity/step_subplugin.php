@@ -32,7 +32,7 @@ class step_subplugin extends subplugin {
     public $instancename;
 
     /** int id of the workflow this step belongs to*/
-    public $worflowid;
+    public $workflowid;
 
     /** int sort index, which defines the order,
      * in which the steps wihtin a workflow are executed*/
@@ -43,9 +43,10 @@ class step_subplugin extends subplugin {
      * @param string $subpluginname name of the subplugin
      * @param int $id id of the subplugin
      */
-    public function __construct($instancename, $subpluginname, $id = null) {
+    public function __construct($instancename, $subpluginname, $workflowid, $id = null) {
         parent::__construct($subpluginname, $id);
         $this->instancename = $instancename;
+        $this->workflowid = $workflowid;
     }
 
     /**
@@ -63,10 +64,7 @@ class step_subplugin extends subplugin {
         if (!object_property_exists($record, 'workflowid')) {
             return null;
         }
-        if (!object_property_exists($record, 'sortindex')) {
-            return null;
-        }
-        $instance = new self($record->instancename, $record->subpluginname);
+        $instance = new self($record->instancename, $record->subpluginname, $record->workflowid);
         foreach (array_keys((array) $record) as $field) {
             if (object_property_exists($instance, $field)) {
                 $instance->$field = $record->$field;
