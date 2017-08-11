@@ -106,7 +106,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_key($table, $key);
         }
 
-        $field = new xmldb_field('sortindex', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, null, 'workflowid');
+        $field = new xmldb_field('stepindex', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, null, 'workflowid');
 
         // Conditionally create the field.
         if (!$dbman->field_exists($table, $field)) {
