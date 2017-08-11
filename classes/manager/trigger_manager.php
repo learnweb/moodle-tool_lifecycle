@@ -250,7 +250,6 @@ class trigger_manager extends subplugin_manager {
         }
         if ($action === ACTION_WORKFLOW_TRIGGER) {
             self::change_workflow($subplugin, optional_param('workflow', null, PARAM_INT));
-            // TODO: Adjust the param to 'workflow' in the GUI.
         }
     }
 

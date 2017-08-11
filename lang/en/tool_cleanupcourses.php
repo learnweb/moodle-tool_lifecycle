@@ -45,7 +45,7 @@ $string['process_cleanup'] = 'Run the cleanup courses processes';
 $string['trigger_subpluginname'] = 'Subplugin Name';
 $string['trigger_enabled'] = 'Enabled';
 $string['trigger_sortindex'] = 'Up/Down';
-$string['trigger_followedby'] = 'Followed by';
+$string['trigger_workflow'] = 'Workflow';
 
 $string['step_subpluginname'] = 'Step Type';
 $string['step_instancename'] = 'Instance Name';
