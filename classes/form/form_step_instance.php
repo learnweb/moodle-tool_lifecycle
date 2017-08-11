@@ -21,7 +21,7 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses;
+namespace tool_cleanupcourses\form;
 
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\step_manager;
@@ -59,6 +59,11 @@ class form_step_instance extends \moodleform {
     public $stepsettings;
 
     /**
+     * @var int id of the workflow
+     */
+    private $workflowid;
+
+    /**
      * Constructor
      * @param \moodle_url $url.
      * @param step_subplugin $step step entity.
@@ -66,8 +71,9 @@ class form_step_instance extends \moodleform {
      * @param array $stepsettings settings of the step.
      * @throws \moodle_exception if neither step nor subpluginname are set.
      */
-    public function __construct($url, $step, $subpluginname = null, $stepsettings = null) {
+    public function __construct($url, $step, $workflowid, $subpluginname = null, $stepsettings = null) {
         $this->step = $step;
+        $this->workflowid = $workflowid;
         if ($step) {
             $this->subpluginname = $step->subpluginname;
         } else if ($subpluginname) {
@@ -90,6 +96,9 @@ class form_step_instance extends \moodleform {
         $mform->addElement('hidden', 'id'); // Save the record's id.
         $mform->setType('id', PARAM_TEXT);
 
+        $mform->addElement('hidden', 'workflowid'); // Save the record's id.
+        $mform->setType('workflowid', PARAM_INT);
+
         $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_cleanupcourses'));
 
         $elementname = 'instancename';
@@ -101,15 +110,6 @@ class form_step_instance extends \moodleform {
         $mform->setType($elementname, PARAM_TEXT);
         $elementname = 'subpluginname';
         $mform->addElement('hidden', $elementname);
-        $mform->setType($elementname, PARAM_TEXT);
-
-        $elementname = 'followedby';
-        $select = $mform->createElement('select', $elementname, get_string('step_followedby', 'tool_cleanupcourses'));
-        $select->addOption(get_string('followedby_none', 'tool_cleanupcourses'), null);
-        foreach (step_manager::get_step_instances() as $key => $value) {
-            $select->addOption($value, $key);
-        }
-        $mform->addElement($select);
         $mform->setType($elementname, PARAM_TEXT);
 
         // Insert the subplugin specific settings.
@@ -127,11 +127,12 @@ class form_step_instance extends \moodleform {
     public function definition_after_data() {
         $mform = $this->_form;
 
+        $mform->setDefault('workflowid', $this->workflowid);
+
         if ($this->step) {
             $mform->setDefault('id', $this->step->id);
             $mform->setDefault('instancename', $this->step->instancename);
             $subpluginname = $this->step->subpluginname;
-            $mform->setDefault('followedby', $this->step->followedby);
         } else {
             $mform->setDefault('id', '');
             $subpluginname = $this->subpluginname;

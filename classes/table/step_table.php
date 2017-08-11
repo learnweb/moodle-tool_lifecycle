@@ -32,25 +32,31 @@ require_once(__DIR__ . '/../../lib.php');
 
 class step_table extends \table_sql {
 
-    public function __construct($uniqueid) {
+    /** int workflowid */
+    private $workflowid;
+
+    public function __construct($uniqueid, $workflowid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, subpluginname, instancename, followedby", '{tool_cleanupcourses_step}', "TRUE");
+        $this->workflowid = $workflowid;
+        $this->set_sql("id, subpluginname, instancename, sortindex",
+            '{tool_cleanupcourses_step}',
+            "workflowid = $workflowid");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['instancename', 'subpluginname', 'followedby', 'edit', 'delete']);
+        $this->define_columns(['instancename', 'subpluginname', 'sortindex', 'edit', 'delete']);
         $this->define_headers([
             get_string('step_instancename', 'tool_cleanupcourses'),
             get_string('step_subpluginname', 'tool_cleanupcourses'),
-            get_string('step_followedby', 'tool_cleanupcourses'),
+            get_string('step_sortindex', 'tool_cleanupcourses'),
             get_string('step_edit', 'tool_cleanupcourses'),
             get_string('step_delete', 'tool_cleanupcourses'),
             ]);
-        $this->sortable(false);
+        $this->sortable(false, 'sortindex');
         $this->setup();
     }
 
@@ -67,24 +73,33 @@ class step_table extends \table_sql {
     }
 
     /**
-     * Render followedby column.
+     * Render sortindex column.
      * @param $row
-     * @return string action button for enabling/disabling of the subplugin
+     * @return string action buttons for changing sortorder of the subplugin
      */
-    public function col_followedby($row) {
-        global $PAGE, $OUTPUT;
-
-        $steps = step_manager::get_step_instances();
-
-        // Determine, which step is selected.
-        $selected = '';
-        if ($row->followedby !== null) {
-            $selected = (int) $row->followedby;
+    public function col_sortindex($row) {
+        global $OUTPUT;
+        $output = '';
+        if ($row->sortindex !== null) {
+            if ($row->sortindex > 1) {
+                $alt = 'up';
+                $icon = 't/up';
+                $action = ACTION_UP_STEP;
+                $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+            } else {
+                $output .= $OUTPUT->spacer();
+            }
+            if ($row->sortindex < step_manager::count_steps_of_workflow($this->workflowid)) {
+                $alt = 'down';
+                $icon = 't/down';
+                $action = ACTION_DOWN_STEP;
+                $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+            } else {
+                $output .= $OUTPUT->spacer();
+            }
         }
 
-        return $OUTPUT->single_select(new \moodle_url($PAGE->url,
-            array('action' => ACTION_FOLLOWEDBY_STEP, 'subplugin' => $row->id, 'sesskey' => sesskey())),
-            'followedby', $steps, $selected);
+        return  $output;
     }
 
     /**
@@ -128,9 +143,12 @@ class step_table extends \table_sql {
         global $PAGE, $OUTPUT;
 
         return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
-                array('action' => $action, 'subplugin' => $subpluginid, 'sesskey' => sesskey())),
+                array('action' => $action,
+                    'subplugin' => $subpluginid,
+                    'sesskey' => sesskey(),
+                    'workflowid' => $this->workflowid)),
                 new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                null , array('title' => $alt)) . ' ';
+                null, array('title' => $alt)) . ' ';
     }
 
 }

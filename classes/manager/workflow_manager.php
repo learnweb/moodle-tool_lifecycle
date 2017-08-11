@@ -69,8 +69,17 @@ class workflow_manager {
         $records = $DB->get_records('tool_cleanupcourses_workflow', array('active' => true));
         $result = array();
         foreach ($records as $record) {
-            $result []= workflow::from_record($record);
+            $result [] = workflow::from_record($record);
         }
         return $result;
+    }
+
+    /**
+     * Handles an action of the subplugin_settings.
+     * @param string $action action to be executed
+     * @param int $workflowid id of the workflow
+     */
+    public static function handle_action($action, $workflowid) {
+
     }
 }

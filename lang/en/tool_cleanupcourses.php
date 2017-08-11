@@ -47,9 +47,15 @@ $string['trigger_enabled'] = 'Enabled';
 $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_workflow'] = 'Workflow';
 
+$string['add_workflow'] = 'Add Workflow';
+$string['workflow_title'] = 'Title';
+$string['workflow_active'] = 'Active';
+$string['workflow_timeactive'] = 'Active since';
+$string['workflow_tools'] = 'Tools';
+
 $string['step_subpluginname'] = 'Step Type';
 $string['step_instancename'] = 'Instance Name';
-$string['step_followedby'] = 'Followed by';
+$string['step_sortindex'] = 'Up/Down';
 $string['step_edit'] = 'Edit';
 $string['step_delete'] = 'Delete';
 
@@ -76,3 +82,5 @@ $string['nocoursestodisplay'] = 'There are currently no courses, which require y
 $string['course_backups_list_header'] = 'Course Backups';
 $string['backupcreated'] = 'Created at';
 $string['restore'] = 'restore';
+
+$string['workflownotfound'] = 'Workflow with id {$a} could not be found';

@@ -31,3 +31,4 @@ define('ACTION_UP_STEP', 'up_step');
 define('ACTION_DOWN_STEP', 'down_step');
 define('ACTION_STEP_INSTANCE_FORM', 'step_instance_form');
 define('ACTION_STEP_INSTANCE_DELETE', 'step_instance_delete');
+define('ACTION_ADD_WORKFLOW', 'add_workflow');
