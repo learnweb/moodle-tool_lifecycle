@@ -31,6 +31,13 @@ class step_subplugin extends subplugin {
     /** string instancename of the step*/
     public $instancename;
 
+    /** int id of the workflow this step belongs to*/
+    public $worflowid;
+
+    /** int sort index, which defines the order,
+     * in which the steps wihtin a workflow are executed*/
+    public $sortindex;
+
     /**
      * Creates a subplugin with subpluginname and optional id.
      * @param string $subpluginname name of the subplugin
@@ -51,6 +58,12 @@ class step_subplugin extends subplugin {
             return null;
         }
         if (!object_property_exists($record, 'instancename')) {
+            return null;
+        }
+        if (!object_property_exists($record, 'workflowid')) {
+            return null;
+        }
+        if (!object_property_exists($record, 'sortindex')) {
             return null;
         }
         $instance = new self($record->instancename, $record->subpluginname);

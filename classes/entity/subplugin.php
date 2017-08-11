@@ -34,9 +34,6 @@ abstract class subplugin{
     /** string name of subplugin */
     public $subpluginname;
 
-    /** int id of the step instance this trigger or step instance is followed by in the cleanup process*/
-    public $followedby;
-
     /**
      * Creates a subplugin with subpluginname and optional id.
      * @param string $subpluginname name of the subplugin
