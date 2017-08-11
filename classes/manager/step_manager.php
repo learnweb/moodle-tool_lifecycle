@@ -160,7 +160,8 @@ class step_manager extends subplugin_manager {
      * @param int $workflowid id of the workflow
      * @return array of step instances.
      */
-    public static function get_step_instances($workflowid) { //TODO: Alter calls to include workflow id.
+    public static function get_step_instances($workflowid) {
+        // TODO: Alter calls to include workflow id.
         global $DB;
         $records = $DB->get_records('tool_cleanupcourses_step',
             array(

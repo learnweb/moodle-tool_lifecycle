@@ -51,7 +51,7 @@ class tool_cleanupcourses_generator extends testing_module_generator {
      * Creates an artificial workflow without steps.
      */
     public static function create_active_workflow() {
-        // Create Workflow
+        // Create Workflow.
         $record = new stdClass();
         $record->id = null;
         $record->title = 'myworkflow';
@@ -90,7 +90,7 @@ class tool_cleanupcourses_generator extends testing_module_generator {
      * creates two instances of createbackup, which it is followed by.
      */
     public static function create_real_trigger_with_workflow() {
-        // Create Workflow
+        // Create Workflow.
         $record = new stdClass();
         $record->id = null;
         $record->title = 'myworkflow';

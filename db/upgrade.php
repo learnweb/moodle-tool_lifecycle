@@ -44,11 +44,11 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->create_table($table);
         }
 
-        // Changing precision of field followedby on table tool_cleanupcourses_step to (10).
+        // Changing structure of table tool_cleanupcourses_step.
         $table = new xmldb_table('tool_cleanupcourses_step');
         $field = new xmldb_field('followedby');
 
-        // Conditionally drop followedby field
+        // Conditionally drop followedby field.
         if ($dbman->field_exists($table, $field)) {
             $dbman->drop_field($table, $field);
         }
@@ -73,12 +73,12 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         $table = new xmldb_table('tool_cleanupcourses_trigger');
         $field = new xmldb_field('followedby');
 
-        // Conditionally drop followedby field
+        // Conditionally drop followedby field.
         if ($dbman->field_exists($table, $field)) {
             $dbman->drop_field($table, $field);
         }
 
-        // Add workflowfield to trigger
+        // Add workflowfield to trigger.
         $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'enabled');
         $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
 
@@ -92,7 +92,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         $table = new xmldb_table('tool_cleanupcourses_process');
         $field = new xmldb_field('stepid');
 
-        // Conditionally drop followedby field
+        // Conditionally drop followedby field.
         if ($dbman->field_exists($table, $field)) {
             $dbman->drop_field($table, $field);
         }
