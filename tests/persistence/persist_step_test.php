@@ -18,7 +18,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
 
-use \tool_cleanupcourses\entity\step_subplugin;
+use \tool_cleanupcourses\entity\workflow;
 use \tool_cleanupcourses\manager\step_manager;
 
 /**
@@ -31,8 +31,8 @@ use \tool_cleanupcourses\manager\step_manager;
  */
 class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
 
-    /** step_subplugin */
-    private $step;
+    /** workflow */
+    private $workflow;
 
     const INSTANCENAME = 'myinstance';
     const STEPNAME = 'stepname';
@@ -40,55 +40,102 @@ class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
 
     public function setUp() {
         $this->resetAfterTest(true);
-        $this->step = new step_subplugin(self::INSTANCENAME, self::STEPNAME);
+        $this->workflow = tool_cleanupcourses_generator::create_active_workflow();
     }
 
     /**
      * Test that after an insert the id from the database is set within the step object.
      */
-    public function test_set_step_id() {
-        $this->assertEmpty($this->step->id);
-        step_manager::insert_or_update($this->step);
-        $this->assertNotEmpty($this->step->id);
+    public function test_add_step() {
+        $step = tool_cleanupcourses_generator::create_step(
+            'instance1',
+            'subpluginname',
+            $this->workflow->id);
+        $this->assertNotEmpty($step->id);
+        $this->assertEquals($this->workflow->id, $step->workflowid);
+        $this->assertEquals(1, $step->sortindex);
     }
 
     /**
-     * Test that the object which is stored in the database is the same as the one being retrieved from it.
+     * Test that sortindizes are created correclty when creating multiple steps.
      */
-    public function test_insert_and_get() {
-        step_manager::insert_or_update($this->step);
-        $id = $this->step->id;
-        $loadedstep = step_manager::get_step_instance($id);
-        $this->assertEquals($this->step, $loadedstep);
-        $loadedsteps = step_manager::get_step_instances();
-        $this->assertEquals(1, count($loadedsteps));
-        $loadedsteps = step_manager::get_step_instances_by_subpluginname(self::STEPNAME);
-        $this->assertEquals(1, count($loadedsteps));
-
+    public function test_add_multiple_steps() {
+        $step1 = tool_cleanupcourses_generator::create_step(
+            'instance1',
+            'subpluginname',
+            $this->workflow->id);
+        $step2 = tool_cleanupcourses_generator::create_step(
+            'instance2',
+            'subpluginname',
+            $this->workflow->id);
+        $step3 = tool_cleanupcourses_generator::create_step(
+            'instance3',
+            'subpluginname',
+            $this->workflow->id);
+        $this->assertEquals(1, $step1->sortindex);
+        $this->assertEquals(2, $step2->sortindex);
+        $this->assertEquals(3, $step3->sortindex);
     }
 
     /**
      * Test that the step can be removed correctly.
      */
-    public function test_remove() {
-        step_manager::insert_or_update($this->step);
-        $stepid = $this->step->id;
-
-        // Create a second step, which is followed by the one under test.
-        $step2 = new step_subplugin(self::INSTANCENAME, self::STEPNAME);
-        step_manager::insert_or_update($step2);
-        step_manager::change_followedby($step2->id, $stepid);
+    public function test_remove_step() {
+        $step1 = tool_cleanupcourses_generator::create_step(
+            'instance1',
+            'subpluginname',
+            $this->workflow->id);
+        $step2 = tool_cleanupcourses_generator::create_step(
+            'instance2',
+            'subpluginname',
+            $this->workflow->id);
+        $step3 = tool_cleanupcourses_generator::create_step(
+            'instance3',
+            'subpluginname',
+            $this->workflow->id);
+        // Delete first step.
+        step_manager::handle_action(ACTION_STEP_INSTANCE_DELETE, $step1->id);
+        $step1 = step_manager::get_step_instance($step1->id);
         $step2 = step_manager::get_step_instance($step2->id);
-        $this->assertEquals($stepid, $step2->followedby);
-
-        // Delete the step under test and assert it was correctly removed from the DB.
-        step_manager::handle_action(ACTION_STEP_INSTANCE_DELETE, $stepid);
-        $loadedstep = step_manager::get_step_instance($stepid);
-        $this->assertNull($loadedstep);
-
-        // Check if the step under test was removed as followedby from the second steps record.
+        $step3 = step_manager::get_step_instance($step3->id);
+        $this->assertNull($step1);
+        $this->assertEquals(1, $step2->sortindex);
+        $this->assertEquals(2, $step3->sortindex);
+        // Delete third step.
+        step_manager::handle_action(ACTION_STEP_INSTANCE_DELETE, $step3->id);
+        $step3 = step_manager::get_step_instance($step3->id);
         $step2 = step_manager::get_step_instance($step2->id);
-        $this->assertNull($step2->followedby);
+        $this->assertNull($step3);
+        $this->assertEquals(1, $step2->sortindex);
+    }
+
+    /**
+     * Test that sortindizes are still created correctly, when some steps were already removed.
+     */
+    public function test_add_after_remove_step() {
+        $step1 = tool_cleanupcourses_generator::create_step(
+            'instance1',
+            'subpluginname',
+            $this->workflow->id);
+        $step2 = tool_cleanupcourses_generator::create_step(
+            'instance2',
+            'subpluginname',
+            $this->workflow->id);
+
+        // Delete first step.
+        step_manager::handle_action(ACTION_STEP_INSTANCE_DELETE, $step1->id);
+
+        $step3 = tool_cleanupcourses_generator::create_step(
+            'instance3',
+            'subpluginname',
+            $this->workflow->id);
+
+        $step1 = step_manager::get_step_instance($step1->id);
+        $step2 = step_manager::get_step_instance($step2->id);
+        $step3 = step_manager::get_step_instance($step3->id);
+        $this->assertNull($step1);
+        $this->assertEquals(1, $step2->sortindex);
+        $this->assertEquals(2, $step3->sortindex);
     }
 
 }
