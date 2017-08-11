@@ -31,8 +31,8 @@ class process {
     /** int id of the process*/
     public $id;
 
-    /** int id of the step instance*/
-    public $stepid;
+    /** int id of the workflow */
+    public $workflowid;
 
     /** int id of the course*/
     public $courseid;
@@ -40,14 +40,18 @@ class process {
     /** bool true if course is in status waiting*/
     public $waiting;
 
+    /** int sortindex of the step within the workflow */
+    public $stepindex;
+
     /** timestamp date the process was moved to the current step instance */
     public $timestepchanged;
 
-    public function __construct($id, $stepid, $courseid, $waiting = false, $timestepchanged = null) {
+    public function __construct($id, $workflowid, $courseid, $stepindex = 1, $waiting = false, $timestepchanged = null) {
         $this->id = $id;
-        $this->stepid = $stepid;
+        $this->workflowid = $workflowid;
         $this->courseid = $courseid;
         $this->waiting = $waiting;
+        $this->stepindex = $stepindex;
         if ($timestepchanged === null) {
             $this->timestepchanged = time();
         } else {
@@ -64,7 +68,7 @@ class process {
         if (!object_property_exists($record, 'id')) {
             return null;
         }
-        if (!object_property_exists($record, 'stepid')) {
+        if (!object_property_exists($record, 'workflowid')) {
             return null;
         }
         if (!object_property_exists($record, 'courseid')) {
@@ -79,7 +83,13 @@ class process {
             $waiting = false;
         }
 
-        $instance = new self($record->id, $record->stepid, $record->courseid, $waiting, $record->timestepchanged);
+        if (!object_property_exists($record, 'stepindex') && $record->stepindex) {
+            $stepindex = $record->stepindex;
+        } else {
+            $stepindex = 1;
+        }
+
+        $instance = new self($record->id, $record->workflowid, $record->courseid, $stepindex, $waiting, $record->timestepchanged);
 
         return $instance;
     }
