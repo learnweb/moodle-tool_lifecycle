@@ -43,4 +43,20 @@ class workflow_manager {
         }
         $transaction->allow_commit();
     }
+
+    /**
+     * Returns a workflow instance if one with the is is available.
+     * @param int $workflowid id of the workflow
+     * @return workflow|null
+     */
+    public static function get_workflow($workflowid) {
+        global $DB;
+        $record = $DB->get_record('tool_cleanupcourses_workflow', array('id' => $workflowid));
+        if ($record) {
+            $workflow = workflow::from_record($record);
+            return $workflow;
+        } else {
+            return null;
+        }
+    }
 }
