@@ -73,7 +73,7 @@ class cleanup_processor {
     public function process_courses() {
         foreach (process_manager::get_processes() as $process) {
             while (true) {
-                $step = step_manager::get_step_instance($process->stepid);
+                $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
                 $lib = lib_manager::get_step_lib($step->subpluginname);
                 try {
                     $course = get_course($process->courseid);
@@ -82,9 +82,9 @@ class cleanup_processor {
                     break;
                 }
                 if ($process->waiting) {
-                    $result = $lib->process_waiting_course($process->id, $process->stepid, $course);
+                    $result = $lib->process_waiting_course($process->id, $step->id, $course);
                 } else {
-                    $result = $lib->process_course($process->id, $process->stepid, $course);
+                    $result = $lib->process_course($process->id, $step->id, $course);
                 }
                 if ($result == step_response::waiting()) {
                     process_manager::set_process_waiting($process);
