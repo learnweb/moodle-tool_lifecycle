@@ -59,7 +59,7 @@ class cleanup_processor {
                     break;
                 }
                 if ($response == trigger_response::trigger()) {
-                    process_manager::create_process($course->id, trigger_subplugin::from_record($trigger));
+                    process_manager::create_process($course->id, $trigger->workflowid);
                     break;
                 }
             }

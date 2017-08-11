@@ -74,16 +74,13 @@ class process {
         if (!object_property_exists($record, 'courseid')) {
             return null;
         }
-        if (!object_property_exists($record, 'timestepchanged')) {
-            return null;
-        }
         if (object_property_exists($record, 'waiting') && $record->waiting) {
             $waiting = true;
         } else {
             $waiting = false;
         }
 
-        if (!object_property_exists($record, 'stepindex') && $record->stepindex) {
+        if (object_property_exists($record, 'stepindex') && $record->stepindex) {
             $stepindex = $record->stepindex;
         } else {
             $stepindex = 1;
