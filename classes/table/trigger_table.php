@@ -25,6 +25,7 @@ namespace tool_cleanupcourses\table;
 
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -36,19 +37,19 @@ class trigger_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, subpluginname, enabled, sortindex, followedby", '{tool_cleanupcourses_trigger}', "TRUE");
+        $this->set_sql("id, subpluginname, enabled, sortindex, workflowid", '{tool_cleanupcourses_trigger}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['subpluginname', 'enabled', 'sortindex', 'followedby']);
+        $this->define_columns(['subpluginname', 'enabled', 'sortindex', 'workflowid']);
         $this->define_headers([
             get_string('trigger_subpluginname', 'tool_cleanupcourses'),
             get_string('trigger_enabled', 'tool_cleanupcourses'),
             get_string('trigger_sortindex', 'tool_cleanupcourses'),
-            get_string('trigger_followedby', 'tool_cleanupcourses'),
+            get_string('trigger_workflow', 'tool_cleanupcourses'),
             ]);
         $this->sortable(false, 'sortindex');
         $this->setup();
@@ -135,24 +136,29 @@ class trigger_table extends \table_sql {
     }
 
     /**
-     * Render followedby column.
+     * Render workflowid column.
      * @param $row
      * @return string action button for enabling/disabling of the subplugin
      */
-    public function col_followedby($row) {
+    public function col_workflowid($row) {
         global $PAGE, $OUTPUT;
 
-        $steps = step_manager::get_step_instances();
+        $workflows = workflow_manager::get_active_workflows();
 
         // Determine, which step is selected.
         $selected = '';
-        if ($row->followedby !== null) {
-            $selected = (int) $row->followedby;
+        if ($row->workflowid !== null) {
+            $selected = (int) $row->workflowid;
+        }
+
+        $options = array();
+        foreach ($workflows as $workflow) {
+            $options[$workflow->id] = $workflow->title;
         }
 
         return $OUTPUT->single_select(new \moodle_url($PAGE->url,
             array('action' => ACTION_WORKFLOW_TRIGGER, 'subplugin' => $row->id, 'sesskey' => sesskey())),
-            'followedby', $steps, $selected);
+            'workflow', $options, $selected);
     }
 
 }
