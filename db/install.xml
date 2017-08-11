@@ -44,10 +44,12 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="instancename" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="instancename of the step"/>
         <FIELD NAME="subpluginname" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
-        <FIELD NAME="followedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="tells which step follows this one in the cleanup process"/>
+        <FIELD NAME="workflowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the workflow"/>
+        <FIELD NAME="sortindex" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="Order within the workflow in which the steps are executed"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_cleanupcourses_workflow" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="tool_cleanupcourses_settings" COMMENT="Settings for step instances">
@@ -99,19 +101,6 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="tool_cleanupcourses_wf_steps" COMMENT="Assignment of steps to a workflow">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="workflowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the workflow"/>
-        <FIELD NAME="stepid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the step instance"/>
-        <FIELD NAME="order" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="Order in which the steps are executed"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_cleanupcourses_workflow" REFFIELDS="id"/>
-        <KEY NAME="stepid_fk" TYPE="foreign" FIELDS="stepid" REFTABLE="tool_cleanupcourses_step" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>
