@@ -187,4 +187,16 @@ class step_manager extends subplugin_manager {
         }
         return $interactionlib->show_relevant_courses_instance_dependent();
     }
+
+    /**
+     * Gets the count of steps belonging to a workflow.
+     * @param int $workflowid id of the workflow.
+     * @return int count of the steps.
+     */
+    public static function count_steps_of_workflow($workflowid) {
+        global $DB;
+        return $DB->count_records('tool_cleanupcourses_step',
+            array('workflowid' => $workflowid)
+        );
+    }
 }
