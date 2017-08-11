@@ -56,9 +56,8 @@ class step_manager extends subplugin_manager {
         if ($subplugin->id) {
             $DB->update_record('tool_cleanupcourses_step', $subplugin);
         } else {
+            $subplugin->sortindex = self::count_steps_of_workflow($subplugin->worflowid) + 1;
             $subplugin->id = $DB->insert_record('tool_cleanupcourses_step', $subplugin);
-            $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $subplugin->id));
-            $subplugin = step_subplugin::from_record($record);
         }
         $transaction->allow_commit();
     }
@@ -71,22 +70,71 @@ class step_manager extends subplugin_manager {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         if ($record = $DB->get_record('tool_cleanupcourses_step', array('id' => $stepinstanceid))) {
-
-            $othersteps = $DB->get_records('tool_cleanupcourses_step', array('followedby' => $stepinstanceid));
-            foreach ($othersteps as $steprecord) {
-                $step = step_subplugin::from_record($steprecord);
-                $step->followedby = null;
-                self::insert_or_update($step);
-            }
-
-            $othertrigger = $DB->get_records('tool_cleanupcourses_trigger', array('followedby' => $stepinstanceid));
-            foreach ($othertrigger as $triggerrecord) {
-                $trigger = trigger_subplugin::from_record($triggerrecord);
-                $trigger->followedby = null;
-                trigger_manager::insert_or_update($trigger);
-            }
-            $DB->delete_records('tool_cleanupcourses_step', (array) $record);
+            $step = step_subplugin::from_record($record);
+            self::remove_from_sortindex($step);
+            $DB->delete_records('tool_cleanupcourses_step', (array) $step);
         }
+        $transaction->allow_commit();
+    }
+
+    /**
+     * Removes a subplugin from the sortindex of a workflow and adjusts all other indizes.
+     * @param step_subplugin $toberemoved
+     */
+    private static function remove_from_sortindex(&$toberemoved) {
+        global $DB;
+        $transaction = $DB->start_delegated_transaction();
+        if (isset($toberemoved->sortindex)) {
+            $subplugins = $DB->get_records_select('tool_cleanupcourses_step',
+                "sortindex > $toberemoved->sortindex",
+                array('workflowid' => $toberemoved->worflowid));
+            foreach ($subplugins as $record) {
+                $subplugin = step_subplugin::from_record($record);
+                $subplugin->sortindex--;
+                self::insert_or_update($subplugin);
+            }
+            $toberemoved->sortindex = null;
+            self::insert_or_update($toberemoved);
+        }
+        $transaction->allow_commit();
+    }
+
+    /**
+     * Changes the sortindex of a step by swapping it with another.
+     * @param int $stepid id of the step
+     * @param bool $up tells if the step should be set up or down
+     */
+    public static function change_sortindex($stepid, $up) {
+        global $DB;
+        $step = self::get_step_instance($stepid);
+        // Prevent first entry to be put up even more.
+        if ($step->sortindex == 1 && $up) {
+            return;
+        }
+        // Prevent last entry to be put down even more.
+        if ($step->sortindex == self::count_steps_of_workflow($step->worflowid) && !$up) {
+            return;
+        }
+        $index = $step->sortindex;
+        if ($up) {
+            $otherindex = $index - 1;
+        } else {
+            $otherindex = $index + 1;
+        }
+        $transaction = $DB->start_delegated_transaction();
+
+        $otherrecord = $DB->get_record('tool_cleanupcourses_step',
+            array(
+                'sortindex' => $otherindex,
+                'workflowid' => $step->worflowid)
+        );
+        $otherstep = step_subplugin::from_record($otherrecord);
+
+        $step->sortindex = $otherindex;
+        $otherstep->sortindex = $index;
+        self::insert_or_update($step);
+        self::insert_or_update($otherstep);
+
         $transaction->allow_commit();
     }
 
@@ -132,43 +180,19 @@ class step_manager extends subplugin_manager {
     }
 
     /**
-     * Changes the followedby of a trigger.
-     * @param int $subpluginid id of the trigger
-     * @param int $followedby id of the step
-     */
-    public static function change_followedby($subpluginid, $followedby) {
-        global $DB;
-        $transaction = $DB->start_delegated_transaction();
-
-        $step = self::get_step_instance($subpluginid);
-        if (!$step) {
-            return; // TODO: Throw error.
-        }
-        $followedby = self::get_step_instance($followedby);
-
-        // If step is not defined clear followedby.
-        if ($followedby) {
-            $step->followedby = $followedby->id;
-        } else {
-            $step->followedby = null;
-        }
-
-        self::insert_or_update($step);
-
-        $transaction->allow_commit();
-    }
-
-    /**
      * Handles an action of the subplugin_settings.
      * @param string $action action to be executed
-     * @param int $subplugin id of the subplugin
+     * @param int $subpluginid id of the subplugin
      */
-    public static function handle_action($action, $subplugin) {
-        if ($action === ACTION_FOLLOWEDBY_STEP) {
-            self::change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
+    public static function handle_action($action, $subpluginid) {
+        if ($action === ACTION_UP_STEP) {
+            self::change_sortindex($subpluginid, true);
+        }
+        if ($action === ACTION_DOWN_STEP) {
+            self::change_sortindex($subpluginid, false);
         }
         if ($action === ACTION_STEP_INSTANCE_DELETE) {
-            self::remove($subplugin);
+            self::remove($subpluginid);
         }
     }
 
