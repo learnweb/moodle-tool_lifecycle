@@ -75,11 +75,29 @@ class workflow_manager {
     }
 
     /**
+     * Activate a workflow
+     * @param int $workflowid id of the workflow
+     */
+    private static function activate_workflow($workflowid) {
+        global $DB;
+        $transaction = $DB->start_delegated_transaction();
+        $workflow = self::get_workflow($workflowid);
+        if (!$workflow->active) {
+            $workflow->active = true;
+            $workflow->timeactive = time();
+            self::insert_or_update($workflow);
+        }
+        $transaction->allow_commit();
+    }
+
+    /**
      * Handles an action of the subplugin_settings.
      * @param string $action action to be executed
      * @param int $workflowid id of the workflow
      */
     public static function handle_action($action, $workflowid) {
-
+        if ($action === ACTION_WORKFLOW_ACTIVATE) {
+            self::activate_workflow($workflowid);
+        }
     }
 }

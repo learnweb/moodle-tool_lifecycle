@@ -55,6 +55,7 @@ $string['workflow_tools'] = 'Tools';
 $string['viewsteps'] = 'View Workflow Steps';
 $string['editworkflow'] = 'Edit Title';
 $string['deleteworkflow'] = 'Delete Workflow';
+$string['activateworkflow'] = 'Activate';
 
 $string['step_subpluginname'] = 'Step Type';
 $string['step_instancename'] = 'Instance Name';
