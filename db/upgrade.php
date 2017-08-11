@@ -29,23 +29,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2017081000) {
-
-        // Create table tool_cleanupcourses_wf_steps.
-        $table = new xmldb_table('tool_cleanupcourses_wf_steps');
-
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
-        $table->add_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
-        $table->add_field('stepid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'workflowid');
-        $table->add_field('sortindex', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, null, 'stepid');
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
-        $table->add_key('stepid_fk', XMLDB_KEY_FOREIGN, array('stepid'), 'tool_cleanupcourses_step', array('id'));
-
-        // Conditionally create the table.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
+    if ($oldversion < 2017081100) {
 
         // Create table tool_cleanupcourses_workflow.
         $table = new xmldb_table('tool_cleanupcourses_workflow');
@@ -62,20 +46,50 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
 
         // Changing precision of field followedby on table tool_cleanupcourses_step to (10).
         $table = new xmldb_table('tool_cleanupcourses_step');
-        $field = new xmldb_field('followedby', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'subpluginname');
+        $field = new xmldb_field('followedby');
 
-        // Launch change of precision for field followedby.
-        $dbman->change_field_precision($table, $field);
+        // Conditionally drop followedby field
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'subpluginname');
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
+
+        // Conditionally create the field.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+            $dbman->add_key($table, $key);
+        }
+
+        $field = new xmldb_field('sortindex', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, null, 'workflowid');
+
+        // Conditionally create the field.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
         // Changing precision of field followedby on table tool_cleanupcourses_trigger to (10).
         $table = new xmldb_table('tool_cleanupcourses_trigger');
-        $field = new xmldb_field('followedby', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'enabled');
+        $field = new xmldb_field('followedby');
 
-        // Launch change of precision for field followedby.
-        $dbman->change_field_precision($table, $field);
+        // Conditionally drop followedby field
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Add workflowfield to trigger
+        $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'enabled');
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
+
+        // Conditionally create the field.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+            $dbman->add_key($table, $key);
+        }
 
         // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2017081000, 'tool', 'cleanupcourses');
+        upgrade_plugin_savepoint(true, 2017081100, 'tool', 'cleanupcourses');
     }
 
     return true;
