@@ -38,7 +38,8 @@ class active_processes_table extends \table_sql {
             'instancename as instancename ',
             '{tool_cleanupcourses_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
-            '{tool_cleanupcourses_step} s on p.stepid = s.id',
+            '{tool_cleanupcourses_step} s '.
+            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex',
             "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->init();
