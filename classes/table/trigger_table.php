@@ -151,7 +151,7 @@ class trigger_table extends \table_sql {
         }
 
         return $OUTPUT->single_select(new \moodle_url($PAGE->url,
-            array('action' => ACTION_FOLLOWEDBY_TRIGGER, 'subplugin' => $row->id, 'sesskey' => sesskey())),
+            array('action' => ACTION_WORKFLOW_TRIGGER, 'subplugin' => $row->id, 'sesskey' => sesskey())),
             'followedby', $steps, $selected);
     }
 

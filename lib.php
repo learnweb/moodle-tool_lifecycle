@@ -26,7 +26,7 @@ define('ACTION_ENABLE_TRIGGER', 'enable');
 define('ACTION_DISABLE_TRIGGER', 'disable');
 define('ACTION_UP_TRIGGER', 'up');
 define('ACTION_DOWN_TRIGGER', 'down');
-define('ACTION_FOLLOWEDBY_TRIGGER', 'followedby_trigger');
+define('ACTION_WORKFLOW_TRIGGER', 'workflow_trigger');
 define('ACTION_FOLLOWEDBY_STEP', 'followedby_step');
 define('ACTION_STEP_INSTANCE_FORM', 'step_instance_form');
 define('ACTION_STEP_INSTANCE_DELETE', 'step_instance_delete');
