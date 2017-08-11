@@ -56,7 +56,7 @@ class step_manager extends subplugin_manager {
         if ($subplugin->id) {
             $DB->update_record('tool_cleanupcourses_step', $subplugin);
         } else {
-            $subplugin->sortindex = self::count_steps_of_workflow($subplugin->worflowid) + 1;
+            $subplugin->sortindex = self::count_steps_of_workflow($subplugin->workflowid) + 1;
             $subplugin->id = $DB->insert_record('tool_cleanupcourses_step', $subplugin);
         }
         $transaction->allow_commit();
@@ -83,20 +83,16 @@ class step_manager extends subplugin_manager {
      */
     private static function remove_from_sortindex(&$toberemoved) {
         global $DB;
-        $transaction = $DB->start_delegated_transaction();
         if (isset($toberemoved->sortindex)) {
             $subplugins = $DB->get_records_select('tool_cleanupcourses_step',
                 "sortindex > $toberemoved->sortindex",
-                array('workflowid' => $toberemoved->worflowid));
+                array('workflowid' => $toberemoved->workflowid));
             foreach ($subplugins as $record) {
                 $subplugin = step_subplugin::from_record($record);
                 $subplugin->sortindex--;
                 self::insert_or_update($subplugin);
             }
-            $toberemoved->sortindex = null;
-            self::insert_or_update($toberemoved);
         }
-        $transaction->allow_commit();
     }
 
     /**
@@ -112,7 +108,7 @@ class step_manager extends subplugin_manager {
             return;
         }
         // Prevent last entry to be put down even more.
-        if ($step->sortindex == self::count_steps_of_workflow($step->worflowid) && !$up) {
+        if ($step->sortindex == self::count_steps_of_workflow($step->workflowid) && !$up) {
             return;
         }
         $index = $step->sortindex;
@@ -126,7 +122,7 @@ class step_manager extends subplugin_manager {
         $otherrecord = $DB->get_record('tool_cleanupcourses_step',
             array(
                 'sortindex' => $otherindex,
-                'workflowid' => $step->worflowid)
+                'workflowid' => $step->workflowid)
         );
         $otherstep = step_subplugin::from_record($otherrecord);
 
@@ -139,12 +135,16 @@ class step_manager extends subplugin_manager {
     }
 
     /**
-     * Gets the list of step instances.
+     * Gets the list of step instances of a workflow.
+     * @param int $workflowid id of the workflow
      * @return array of step instances.
      */
-    public static function get_step_instances() {
+    public static function get_step_instances($workflowid) { //TODO: Alter calls to include workflow id.
         global $DB;
-        $records = $DB->get_records('tool_cleanupcourses_step');
+        $records = $DB->get_records('tool_cleanupcourses_step',
+            array(
+                'workflowid' => $workflowid
+            ));
         $steps = array();
         foreach ($records as $id => $record) {
             $steps[$id] = $record->instancename;
