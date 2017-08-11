@@ -27,12 +27,20 @@ require_login();
 
 require_once(__DIR__ . '/adminlib.php');
 
+$workflowid = required_param('workflowid', PARAM_INT);
+
+$workflow = tool_cleanupcourses\manager\workflow_manager::get_workflow($workflowid);
+
+if (!$workflow) {
+    throw new moodle_exception('workflownotfound', 'tool_cleanupcourses',
+        new \moodle_url('/admin/tool/cleanupcourses/subpluginssettings.php'), $workflowid);
+}
+
 // Create the class for this controller.
-$subpluginsettings = new tool_cleanupcourses\subplugin_settings();
+$workflowsettings = new tool_cleanupcourses\workflow_settings($workflowid);
 
 $PAGE->set_context(context_system::instance());
 
 // Execute the controller.
-$subpluginsettings->execute(optional_param('action', null, PARAM_TEXT),
-    optional_param('subplugin', null, PARAM_INT),
-    optional_param('workflow', null, PARAM_INT));
+$workflowsettings->execute(optional_param('action', null, PARAM_TEXT),
+    optional_param('subplugin', null, PARAM_INT));
