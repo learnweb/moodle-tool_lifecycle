@@ -45,9 +45,10 @@ class interaction_table extends \table_sql {
         $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname';
         $from = '{tool_cleanupcourses_process} p join ' .
                 '{course} c on p.courseid = c.id join ' .
-                '{tool_cleanupcourses_step} s on p.stepid = s.id';
+                '{tool_cleanupcourses_step} s '.
+            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex';
         if (interaction_manager::show_relevant_courses_instance_dependent($this->stepinstance->subpluginname)) {
-            $where = 'p.stepid = :stepid';
+            $where = 's.id = :stepid';
             $params = array('stepid' => $stepid);
         } else {
             $where = 's.subpluginname = :subpluginname';
