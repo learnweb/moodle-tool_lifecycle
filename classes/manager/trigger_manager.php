@@ -110,11 +110,12 @@ class trigger_manager extends subplugin_manager {
     }
 
     /**
-     * Changes the followedby of a trigger.
+     * Changes the workflow of a trigger.
      * @param int $subpluginid id of the trigger
-     * @param int $followedby id of the step
+     * @param int $workflowid id of the workflow
+     * @throws \coding_exception if subplugin does not exist.
      */
-    public static function change_followedby($subpluginid, $followedby) {
+    public static function change_workflow($subpluginid, $workflowid) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
 
@@ -123,16 +124,13 @@ class trigger_manager extends subplugin_manager {
             throw new \coding_exception('The subplugin instance your are looking for does not exist.');
         }
 
-        $step = step_manager::get_step_instance($followedby);
+        $workflow = workflow_manager::get_workflow($workflowid);
 
-        // If step is not defined clear followedby.
-        if ($step) {
-            $subplugin->followedby = $step->id;
-        } else {
-            $subplugin->followedby = null;
+        // If workflow is not defined or inactive, do nothing.
+        if ($workflow && $workflow->active) {
+            $subplugin->workflowid = $workflow->id;
+            self::insert_or_update($subplugin);
         }
-
-        self::insert_or_update($subplugin);
 
         $transaction->allow_commit();
     }
@@ -251,7 +249,8 @@ class trigger_manager extends subplugin_manager {
             self::change_sortindex($subplugin, false);
         }
         if ($action === ACTION_FOLLOWEDBY_TRIGGER) {
-            self::change_followedby($subplugin, optional_param('followedby', null, PARAM_INT));
+            self::change_workflow($subplugin, optional_param('workflow', null, PARAM_INT));
+            //TODO: Adjust the param to 'workflow' in the GUI
         }
     }
 
