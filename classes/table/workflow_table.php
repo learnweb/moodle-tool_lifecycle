@@ -55,6 +55,23 @@ class workflow_table extends \table_sql {
     }
 
     /**
+     * Render activate column.
+     * @param $row
+     * @return string activate time for workflows
+     */
+    public function col_timeactive($row) {
+        global $OUTPUT, $PAGE;
+        if ($row->timeactive) {
+            return userdate($row->timeactive, get_string('strftimedatetime'), 0);
+        }
+        return $OUTPUT->single_button(new \moodle_url($PAGE->url,
+            array('action' => ACTION_WORKFLOW_ACTIVATE,
+                'sesskey' => sesskey(),
+                'workflowid' => $row->id)),
+            get_string('activateworkflow', 'tool_cleanupcourses'));
+    }
+
+    /**
      * Render tools column.
      * @param $row
      * @return string action buttons for workflows
