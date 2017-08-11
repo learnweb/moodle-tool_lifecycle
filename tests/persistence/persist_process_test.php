@@ -30,15 +30,15 @@ use \tool_cleanupcourses\manager\process_manager;
  */
 class tool_cleanupcourses_persist_process_testcase extends \advanced_testcase {
 
-    /** trigger_subplugin */
-    private $trigger;
+    /** workflow */
+    private $workflow;
 
     /** course */
     private $course;
 
     public function setUp() {
         $this->resetAfterTest(true);
-        $this->trigger = tool_cleanupcourses_generator::create_trigger_with_workflow();
+        $this->workflow = tool_cleanupcourses_generator::create_active_workflow_with_steps();
         $this->course = $this->getDataGenerator()->create_course();
     }
 
@@ -46,7 +46,7 @@ class tool_cleanupcourses_persist_process_testcase extends \advanced_testcase {
      * Test the creation of a process.
      */
     public function test_create() {
-        $process = process_manager::create_process($this->course->id, $this->trigger);
+        $process = process_manager::create_process($this->course->id, $this->workflow->id);
         $this->assertNotNull($process);
         $this->assertNotEmpty($process->id);
         $processes = process_manager::get_processes();
@@ -59,7 +59,7 @@ class tool_cleanupcourses_persist_process_testcase extends \advanced_testcase {
      * Tests setting a process on waiting.
      */
     public function test_process_waiting() {
-        $process = process_manager::create_process($this->course->id, $this->trigger);
+        $process = process_manager::create_process($this->course->id, $this->workflow->id);
         $this->assertFalse($process->waiting);
         process_manager::set_process_waiting($process);
         $loadedprocess = process_manager::get_process_by_id($process->id);
@@ -70,7 +70,7 @@ class tool_cleanupcourses_persist_process_testcase extends \advanced_testcase {
      * Tests deletion of a process when rolledback.
      */
     public function test_process_rollback() {
-        $process = process_manager::create_process($this->course->id, $this->trigger);
+        $process = process_manager::create_process($this->course->id, $this->workflow->id);
         process_manager::rollback_process($process);
         $loadedprocess = process_manager::get_process_by_id($process->id);
         $this->assertNull($loadedprocess);
@@ -80,14 +80,11 @@ class tool_cleanupcourses_persist_process_testcase extends \advanced_testcase {
      * Tests proceeding a process to the next step.
      */
     public function test_process_proceed() {
-        $process = process_manager::create_process($this->course->id, $this->trigger);
-        $step1 = $process->stepid;
+        $process = process_manager::create_process($this->course->id, $this->workflow->id);
+        $this->assertEquals(1, $process->stepindex);
         process_manager::proceed_process($process);
-        $step2 = $process->stepid;
         $loadedprocess = process_manager::get_process_by_id($process->id);
-        $this->assertEquals($step2, $loadedprocess->stepid);
-        $this->assertNotEquals($step1, $loadedprocess->stepid);
-        $this->assertNotEmpty($loadedprocess->stepid);
+        $this->assertEquals(2, $loadedprocess->stepindex);
     }
 
 }
