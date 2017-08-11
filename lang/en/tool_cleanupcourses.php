@@ -52,6 +52,9 @@ $string['workflow_title'] = 'Title';
 $string['workflow_active'] = 'Active';
 $string['workflow_timeactive'] = 'Active since';
 $string['workflow_tools'] = 'Tools';
+$string['viewsteps'] = 'View Workflow Steps';
+$string['editworkflow'] = 'Edit Title';
+$string['deleteworkflow'] = 'Delete Workflow';
 
 $string['step_subpluginname'] = 'Step Type';
 $string['step_instancename'] = 'Instance Name';

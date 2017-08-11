@@ -137,7 +137,7 @@ class subplugin_settings {
         echo $OUTPUT->heading(get_string('subpluginssettings_step_heading', 'tool_cleanupcourses'));
 
         echo $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            array('action' => ACTION_ADD_WORKFLOW, 'sesskey' => sesskey())),
+            array('action' => ACTION_WORKFLOW_INSTANCE_FROM, 'sesskey' => sesskey())),
             get_string('add_workflow', 'tool_cleanupcourses'));
 
         $table = new workflow_table('tool_cleanupcourses_workflows');
@@ -203,9 +203,9 @@ class subplugin_settings {
         trigger_manager::handle_action($action, $subpluginid);
         workflow_manager::handle_action($action, $workflowid);
 
-        $form = new form_workflow_instance($PAGE->url, $workflowid);
+        $form = new form_workflow_instance($PAGE->url, workflow_manager::get_workflow($workflowid));
 
-        if ($action === ACTION_ADD_WORKFLOW) {
+        if ($action === ACTION_WORKFLOW_INSTANCE_FROM) {
             $this->view_workflow_instance_form($form);
         } else {
             if ($form->is_submitted() && !$form->is_cancelled() && $data = $form->get_submitted_data()) {

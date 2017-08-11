@@ -35,4 +35,4 @@ $PAGE->set_context(context_system::instance());
 // Execute the controller.
 $subpluginsettings->execute(optional_param('action', null, PARAM_TEXT),
     optional_param('subplugin', null, PARAM_INT),
-    optional_param('workflow', null, PARAM_INT));
+    optional_param('workflowid', null, PARAM_INT));

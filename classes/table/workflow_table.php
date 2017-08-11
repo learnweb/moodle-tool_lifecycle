@@ -63,12 +63,22 @@ class workflow_table extends \table_sql {
         global $OUTPUT;
         $output = '';
 
-        $alt = 'edit';
-        $icon = 't/edit';
+        $alt = get_string('viewsteps', 'tool_cleanupcourses');
+        $icon = 't/viewdetails';
         $url = new \moodle_url('/admin/tool/cleanupcourses/workflowsettings.php',
             array('workflowid' => $row->id, 'sesskey' => sesskey()));
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null , array('title' => $alt));
+
+        $action = ACTION_WORKFLOW_INSTANCE_FROM;
+        $alt = get_string('editworkflow', 'tool_cleanupcourses');
+        $icon = 't/edit';
+        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+
+        $action = ACTION_WORKFLOW_DELETE;
+        $alt = get_string('deleteworkflow', 'tool_cleanupcourses');
+        $icon = 't/delete';
+        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
         return $output;
     }
@@ -77,19 +87,18 @@ class workflow_table extends \table_sql {
      * Util function for writing an action icon link
      *
      * @param string $action URL parameter to include in the link
-     * @param string $subpluginid URL parameter to include in the link
+     * @param string $workflowid URL parameter to include in the link
      * @param string $icon The key to the icon to use (e.g. 't/up')
      * @param string $alt The string description of the link used as the title and alt text
      * @return string The icon/link
      */
-    private function format_icon_link($action, $subpluginid, $icon, $alt) {
+    private function format_icon_link($action, $workflowid, $icon, $alt) {
         global $PAGE, $OUTPUT;
 
         return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
                 array('action' => $action,
-                    'subplugin' => $subpluginid,
                     'sesskey' => sesskey(),
-                    'workflowid' => $this->workflowid)),
+                    'workflowid' => $workflowid)),
                 new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
                 null , array('title' => $alt)) . ' ';
     }
