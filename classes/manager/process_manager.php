@@ -39,11 +39,11 @@ class process_manager {
      */
     public static function create_process($courseid, $trigger) {
         global $DB;
-        if ($trigger->followedby !== null) {
+        if ($trigger->worflowid !== null) {
             $record = new \stdClass();
             $record->id = null;
             $record->courseid = $courseid;
-            $record->stepid = $trigger->followedby;
+            $record->worflowid = $trigger->worflowid;
             $record->timestepchanged = time();
             $process = process::from_record($record);
             $process->id = $DB->insert_record('tool_cleanupcourses_process', $process);
@@ -88,9 +88,9 @@ class process_manager {
      */
     public static function proceed_process(&$process) {
         global $DB;
-        $step = step_manager::get_step_instance($process->stepid);
-        if ($step->followedby) {
-            $process->stepid = $step->followedby;
+        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
+        if ($step) {
+            $process->stepindex++;
             $process->waiting = false;
             $process->timestepchanged = time();
             $DB->update_record('tool_cleanupcourses_process', $process);

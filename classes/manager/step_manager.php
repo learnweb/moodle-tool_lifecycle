@@ -47,6 +47,27 @@ class step_manager extends subplugin_manager {
     }
 
     /**
+     * Returns a step instance for a workflow with a specific sortindex.
+     * @param int $workflowid id of the workflow
+     * @param int $sortindex sortindex of the step within the workflow
+     * @return step_subplugin|null
+     */
+    public static function get_step_instance_by_workflow_index($workflowid, $sortindex) {
+        global $DB;
+        $record = $DB->get_record('tool_cleanupcourses_step',
+            array(
+                'workflowid' => $workflowid,
+                'sortindex' => $sortindex)
+        );
+        if ($record) {
+            $subplugin = step_subplugin::from_record($record);
+            return $subplugin;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Persists a subplugin to the database.
      * @param step_subplugin $subplugin
      */
