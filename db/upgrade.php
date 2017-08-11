@@ -29,7 +29,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2017081100) {
+    if ($oldversion < 2017081101) {
 
         // Create table tool_cleanupcourses_workflow.
         $table = new xmldb_table('tool_cleanupcourses_workflow');
@@ -69,7 +69,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Changing precision of field followedby on table tool_cleanupcourses_trigger to (10).
+        // Changing structure of table tool_cleanupcourses_trigger.
         $table = new xmldb_table('tool_cleanupcourses_trigger');
         $field = new xmldb_field('followedby');
 
@@ -88,8 +88,33 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_key($table, $key);
         }
 
+        // Changing structure of table tool_cleanupcourses_process.
+        $table = new xmldb_table('tool_cleanupcourses_process');
+        $field = new xmldb_field('stepid');
+
+        // Conditionally drop followedby field
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'courseid');
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
+
+        // Conditionally create the field.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+            $dbman->add_key($table, $key);
+        }
+
+        $field = new xmldb_field('sortindex', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, null, 'workflowid');
+
+        // Conditionally create the field.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
         // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2017081100, 'tool', 'cleanupcourses');
+        upgrade_plugin_savepoint(true, 2017081101, 'tool', 'cleanupcourses');
     }
 
     return true;
