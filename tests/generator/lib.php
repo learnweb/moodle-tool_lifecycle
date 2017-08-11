@@ -48,7 +48,7 @@ class tool_cleanupcourses_generator extends testing_module_generator {
     }
 
     /**
-     * Creates an artificial workflow with two steps.
+     * Creates an artificial workflow without steps.
      */
     public static function create_active_workflow() {
         // Create Workflow
@@ -72,6 +72,17 @@ class tool_cleanupcourses_generator extends testing_module_generator {
         $step = new step_subplugin($instancename, $subpluginname, $workflowid);
         step_manager::insert_or_update($step);
         return $step;
+    }
+
+    /**
+     * Creates an artificial workflow with three steps.
+     */
+    public static function create_active_workflow_with_steps() {
+        $workflow = self::create_active_workflow();
+        self::create_step('instance1', 'subpluginname', $workflow->id);
+        self::create_step('instance2', 'subpluginname', $workflow->id);
+        self::create_step('instance3', 'subpluginname', $workflow->id);
+        return $workflow;
     }
 
     /**

@@ -32,18 +32,18 @@ defined('MOODLE_INTERNAL') || die();
 class process_manager {
 
     /**
-     * Creates a process for the course which is at the respective step the trigger is followed by.
+     * Creates a process for the course for a certain workflow.
      * @param int $courseid id of the course
-     * @param trigger_subplugin $trigger
+     * @param int $workflowid id of the workflow
      * @return process|null
      */
-    public static function create_process($courseid, $trigger) {
+    public static function create_process($courseid, $workflowid) {
         global $DB;
-        if ($trigger->worflowid !== null) {
+        if ($workflowid !== null) {
             $record = new \stdClass();
             $record->id = null;
             $record->courseid = $courseid;
-            $record->worflowid = $trigger->worflowid;
+            $record->workflowid = $workflowid;
             $record->timestepchanged = time();
             $process = process::from_record($record);
             $process->id = $DB->insert_record('tool_cleanupcourses_process', $process);

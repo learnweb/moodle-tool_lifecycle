@@ -20,6 +20,7 @@ require_once(__DIR__ . '/../../lib.php');
 
 use \tool_cleanupcourses\manager\process_manager;
 use \tool_cleanupcourses\manager\process_data_manager;
+use \tool_cleanupcourses\manager\step_manager;
 
 /**
  * Tests creating storing and retrieving process data.
@@ -39,24 +40,25 @@ class tool_cleanupcourses_persist_process_data_testcase extends \advanced_testca
 
     public function setUp() {
         $this->resetAfterTest(true);
-        $trigger = tool_cleanupcourses_generator::create_trigger_with_workflow();
+        $workflow = tool_cleanupcourses_generator::create_active_workflow_with_steps();
         $course = $this->getDataGenerator()->create_course();
-        $this->process = process_manager::create_process($course->id, $trigger);
+        $this->process = process_manager::create_process($course->id, $workflow->id);
     }
 
     /**
      * Test the getting and setting of process data.
      */
     public function test_get_set_process_data() {
+        $step = step_manager::get_step_instance_by_workflow_index($this->process->workflowid, $this->process->stepindex);
         process_data_manager::set_process_data(
             $this->process->id,
-            $this->process->stepid,
+            $step->id,
             self::KEY,
             self::VALUE
         );
         $value = process_data_manager::get_process_data(
             $this->process->id,
-            $this->process->stepid,
+            $step->id,
             self::KEY
         );
         $this->assertEquals(self::VALUE, $value);
