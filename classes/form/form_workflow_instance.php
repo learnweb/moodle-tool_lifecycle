@@ -24,9 +24,6 @@
 namespace tool_cleanupcourses\form;
 
 use tool_cleanupcourses\entity\workflow;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\lib_manager;
-use tool_cleanupcourses\step\libbase;
 
 defined('MOODLE_INTERNAL') || die();
 
