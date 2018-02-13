@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Table listing all workflow definitions.
+ * Table listing all active workflows.
  *
  * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
@@ -32,12 +32,13 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
-class workflow_definition_table extends \table_sql {
+class active_workflows_table extends \table_sql {
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
-        global $PAGE;
-        $this->set_sql("id, title, timeactive", '{tool_cleanupcourses_workflow}', "TRUE");
+        global $PAGE, $DB;
+        list($sqlwhere, $params) = $DB->get_in_or_equal(true);
+        $this->set_sql("id, title, timeactive", '{tool_cleanupcourses_workflow}', 'active ' . $sqlwhere, $params);
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
