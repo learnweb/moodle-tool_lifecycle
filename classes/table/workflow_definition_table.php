@@ -50,7 +50,7 @@ class workflow_definition_table extends \table_sql {
             get_string('workflow_timeactive', 'tool_cleanupcourses'),
             get_string('workflow_tools', 'tool_cleanupcourses'),
             ]);
-        $this->sortable(false, 'workflow_timeactive');
+        $this->sortable(false, 'title');
         $this->setup();
     }
 
