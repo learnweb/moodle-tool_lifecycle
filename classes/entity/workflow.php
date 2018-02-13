@@ -67,7 +67,7 @@ class workflow {
         }
 
         $timeactive = null;
-        if (object_property_exists($record, '$timeactive') && $record->timeactive) {
+        if (object_property_exists($record, 'timeactive') && $record->timeactive) {
             $timeactive = $record->timeactive;
         }
 
