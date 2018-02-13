@@ -157,6 +157,15 @@ class trigger_manager extends subplugin_manager {
      * @param int $subpluginid id of the subplugin
      * @return trigger_subplugin
      */
+    public static function get_instance($instanceid) {
+        return self::get_subplugin_by_id($instanceid);
+    }
+
+    /**
+     * Returns a subplugin object.
+     * @param int $subpluginid id of the subplugin
+     * @return trigger_subplugin
+     */
     private static function get_subplugin_by_id($subpluginid) {
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_trigger', array('id' => $subpluginid));
