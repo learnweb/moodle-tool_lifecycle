@@ -38,20 +38,21 @@ class active_workflows_table extends \table_sql {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
         list($sqlwhere, $params) = $DB->get_in_or_equal(true);
-        $this->set_sql("id, title, timeactive", '{tool_cleanupcourses_workflow}', 'active ' . $sqlwhere, $params);
+        $this->set_sql("id, title, timeactive, sortindex", '{tool_cleanupcourses_workflow}', 'active ' . $sqlwhere, $params);
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['title', 'timeactive', 'tools']);
+        $this->define_columns(['title', 'timeactive', 'sortindex', 'tools']);
         $this->define_headers([
             get_string('workflow_title', 'tool_cleanupcourses'),
             get_string('workflow_timeactive', 'tool_cleanupcourses'),
+            get_string('workflow_sortindex', 'tool_cleanupcourses'),
             get_string('workflow_tools', 'tool_cleanupcourses'),
             ]);
-        $this->sortable(false, 'workflow_timeactive');
+        $this->sortable(false, 'sortindex');
         $this->setup();
     }
 
@@ -70,6 +71,36 @@ class active_workflows_table extends \table_sql {
                 'sesskey' => sesskey(),
                 'workflowid' => $row->id)),
             get_string('activateworkflow', 'tool_cleanupcourses'));
+    }
+
+    /**
+     * Render sortindex column.
+     * @param $row
+     * @return string action buttons for changing sortorder of active workflows
+     */
+    public function col_sortindex($row) {
+        global $OUTPUT;
+        $output = '';
+        if ($row->sortindex !== null) {
+            if ($row->sortindex > 1) {
+                $alt = 'up';
+                $icon = 't/up';
+                $action = ACTION_UP_WORKFLOW;
+                $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+            } else {
+                $output .= $OUTPUT->spacer();
+            }
+            if ($row->sortindex < count(workflow_manager::get_active_workflows())) {
+                $alt = 'down';
+                $icon = 't/down';
+                $action = ACTION_DOWN_WORKFLOW;
+                $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+            } else {
+                $output .= $OUTPUT->spacer();
+            }
+        }
+
+        return  $output;
     }
 
     /**

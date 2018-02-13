@@ -29,6 +29,8 @@ define('ACTION_DOWN_TRIGGER', 'down_trigger');
 define('ACTION_WORKFLOW_TRIGGER', 'workflow_trigger');
 define('ACTION_UP_STEP', 'up_step');
 define('ACTION_DOWN_STEP', 'down_step');
+define('ACTION_UP_WORKFLOW', 'up_workflow');
+define('ACTION_DOWN_WORKFLOW', 'down_workflow');
 define('ACTION_STEP_INSTANCE_FORM', 'step_instance_form');
 define('ACTION_STEP_INSTANCE_DELETE', 'step_instance_delete');
 define('ACTION_WORKFLOW_INSTANCE_FROM', 'workflow_instance_form');
