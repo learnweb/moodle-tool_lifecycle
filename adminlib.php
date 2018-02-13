@@ -24,7 +24,7 @@ use tool_cleanupcourses\manager\trigger_manager;
 use tool_cleanupcourses\entity\workflow;
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\workflow_manager;
-use tool_cleanupcourses\table\workflow_table;
+use tool_cleanupcourses\table\workflow_definition_table;
 use tool_cleanupcourses\table\trigger_table;
 use tool_cleanupcourses\table\step_table;
 
@@ -140,7 +140,7 @@ class subplugin_settings {
             array('action' => ACTION_WORKFLOW_INSTANCE_FROM, 'sesskey' => sesskey())),
             get_string('add_workflow', 'tool_cleanupcourses'));
 
-        $table = new workflow_table('tool_cleanupcourses_workflows');
+        $table = new workflow_definition_table('tool_cleanupcourses_workflows');
         $table->out(5000, false);
 
         $this->view_footer();
