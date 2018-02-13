@@ -203,14 +203,12 @@ class subplugin_settings {
         trigger_manager::handle_action($action, $subpluginid);
         workflow_manager::handle_action($action, $workflowid);
 
-        if ($workflowid != null) {
-            $form = new form_workflow_instance($PAGE->url, workflow_manager::get_workflow($workflowid));
-        }
+        $form = new form_workflow_instance($PAGE->url, workflow_manager::get_workflow($workflowid));
 
-        if (isset($form) && $action === ACTION_WORKFLOW_INSTANCE_FROM) {
+        if ($action === ACTION_WORKFLOW_INSTANCE_FROM) {
             $this->view_workflow_instance_form($form);
         } else {
-            if (isset($form) && $form->is_submitted() && !$form->is_cancelled() && $data = $form->get_submitted_data()) {
+            if ($form->is_submitted() && !$form->is_cancelled() && $data = $form->get_submitted_data()) {
                 if ($data->id) {
                     $workflow = workflow_manager::get_workflow($data->id);
                     $workflow->title = $data->title;
