@@ -25,7 +25,7 @@ use tool_cleanupcourses\entity\workflow;
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\workflow_manager;
 use tool_cleanupcourses\table\workflow_definition_table;
-use tool_cleanupcourses\table\trigger_table;
+use tool_cleanupcourses\table\active_workflows_table;
 use tool_cleanupcourses\table\step_table;
 
 defined('MOODLE_INTERNAL') || die;
@@ -131,7 +131,7 @@ class subplugin_settings {
 
         echo $OUTPUT->heading(get_string('active_workflows_heading', 'tool_cleanupcourses'));
 
-        $table = new trigger_table('tool_cleanupcourses_triggers');
+        $table = new active_workflows_table('tool_cleanupcourses_active_workflows');
         $table->out(5000, false);
 
         echo $OUTPUT->heading(get_string('workflow_definition_heading', 'tool_cleanupcourses'));
@@ -140,7 +140,7 @@ class subplugin_settings {
             array('action' => ACTION_WORKFLOW_INSTANCE_FROM, 'sesskey' => sesskey())),
             get_string('add_workflow', 'tool_cleanupcourses'));
 
-        $table = new workflow_definition_table('tool_cleanupcourses_workflows');
+        $table = new workflow_definition_table('tool_cleanupcourses_workflow_definitions');
         $table->out(5000, false);
 
         $this->view_footer();
