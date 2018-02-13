@@ -28,25 +28,19 @@ defined('MOODLE_INTERNAL') || die();
 
 class step_subplugin extends subplugin {
 
-    /** string instancename of the step*/
-    public $instancename;
-
-    /** int id of the workflow this step belongs to*/
-    public $workflowid;
-
     /** int sort index, which defines the order,
      * in which the steps wihtin a workflow are executed*/
     public $sortindex;
 
     /**
      * Creates a subplugin with subpluginname and optional id.
+     * @oaram string $instancename name of the subplugin instance
      * @param string $subpluginname name of the subplugin
+     * @param int $workflowid id of the workflow the subplugin belongs to
      * @param int $id id of the subplugin
      */
     public function __construct($instancename, $subpluginname, $workflowid, $id = null) {
-        parent::__construct($subpluginname, $id);
-        $this->instancename = $instancename;
-        $this->workflowid = $workflowid;
+        parent::__construct($instancename, $subpluginname, $workflowid, $id);
     }
 
     /**
