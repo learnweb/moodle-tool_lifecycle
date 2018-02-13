@@ -30,13 +30,21 @@ class settings_manager {
     /**
      * Saves the local settings for a subplugin step instance.
      * @param int $instanceid id of the subplugininstance.
+     * @param 'step'|'trigger' $type type of the subplugin.
      * @param string $subpluginname name of the subplugin.
      * @param mixed $data submitted data of the form.
      * @throws \moodle_exception
      */
-    public static function save_settings($instanceid, $subpluginname, $data) {
+    public static function save_settings($instanceid, $type, $subpluginname, $data) {
         global $DB;
-        $lib = lib_manager::get_step_lib($subpluginname);
+        if ($type !== 'trigger' && $type !== 'step') {
+            throw new \coding_exception('Invalid type value. "step" or "trigger" expected.');
+        }
+        if ($type == 'trigger') {
+            $lib = lib_manager::get_step_lib($subpluginname);
+        } else {
+            $lib = lib_manager::get_trigger_lib($subpluginname);
+        }
 
         $settingsfields = $lib->instance_settings();
         if (!$instanceid) {
@@ -53,6 +61,7 @@ class settings_manager {
                 $record = $DB->get_record('tool_cleanupcourses_settings',
                     array(
                         'instanceid' => $instanceid,
+                        'type' => $type,
                         'name' => $setting->name)
                 );
                 if ($record) {
@@ -63,6 +72,7 @@ class settings_manager {
                     $newrecord->instanceid = $instanceid;
                     $newrecord->name = $setting->name;
                     $newrecord->value = $cleanedvalue;
+                    $newrecord->type = $type;
                     $DB->insert_record('tool_cleanupcourses_settings', $newrecord);
                 }
             }
@@ -72,20 +82,32 @@ class settings_manager {
     /**
      * Returns an array of local step settings for a given instance id
      * @param int $instanceid id of the step instance
+     * @param 'step'|'trigger' $type type of the subplugin.
      * @return array|null settings key-value pairs
      */
-    public static function get_settings($instanceid) {
+    public static function get_settings($instanceid, $type) {
         global $DB;
 
-        $stepinstance = step_manager::get_step_instance($instanceid);
+        if ($type !== 'trigger' && $type !== 'step') {
+            throw new \coding_exception('Invalid type value. "step" or "trigger" expected.');
+        }
+        if ($type == 'trigger') {
+            $instance = trigger_manager::get_instance($instanceid);
+        } else {
+            $instance = step_manager::get_step_instance($instanceid);
+        }
 
-        if (!$stepinstance) {
+        if (!$instance) {
             return null;
         }
 
-        $lib = lib_manager::get_step_lib($stepinstance->subpluginname);
+        if ($type == 'trigger') {
+            $lib = lib_manager::get_trigger_lib($instance->subpluginname);
+        } else {
+            $lib = lib_manager::get_step_lib($instance->subpluginname);
+        }
 
-        if ($stepinstance->subpluginname !== $lib->get_subpluginname()) {
+        if ($instance->subpluginname !== $lib->get_subpluginname()) {
             return null;
         }
 
@@ -93,6 +115,7 @@ class settings_manager {
         foreach ($lib->instance_settings() as $setting) {
             $record = $DB->get_record('tool_cleanupcourses_settings',
                 array('instanceid' => $instanceid,
+                    'type' => $type,
                     'name' => $setting->name));
             if ($record) {
                 $value = clean_param($record->value, $setting->paramtype);
