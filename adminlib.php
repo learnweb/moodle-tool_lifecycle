@@ -353,8 +353,8 @@ class workflow_settings {
             $this->view_step_instance_form($form);
         } else {
             if ($form->is_submitted() && !$form->is_cancelled() && $data = $form->get_submitted_data()) {
-                $step = step_manager::get_step_instance($data->id);
-                if ($step) {
+                if (!empty($data->id)) {
+                    $step = step_manager::get_step_instance($data->id);
                     $step->instancename = $data->instancename;
                 } else {
                     $step = step_subplugin::from_record($data);
