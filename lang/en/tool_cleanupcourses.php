@@ -35,6 +35,7 @@ $string['subpluginssettings_heading'] = 'Subplugin Workflow';
 $string['active_workflows_heading'] = 'Active Workflows';
 $string['workflow_definition_heading'] = 'Workflow Definitions';
 $string['subpluginssettings_edit_workflow_definition_heading'] = 'Workflow Definition';
+$string['subpluginssettings_workflow_definition_steps_heading'] = 'Workflow Steps';
 $string['subpluginssettings_edit_instance_heading'] = 'Step Instance';
 $string['add_new_step_instance'] = 'Add New Step Instance...';
 $string['step_settings_header'] = 'Specific settings of the step type';

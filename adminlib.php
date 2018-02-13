@@ -260,7 +260,7 @@ class workflow_settings {
         // Set up the table.
         $this->view_header();
 
-        echo $OUTPUT->heading(get_string('subpluginssettings_step_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('subpluginssettings_workflow_definition_steps_heading', 'tool_cleanupcourses'));
 
         $steps = step_manager::get_step_types();
         echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
