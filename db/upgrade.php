@@ -133,6 +133,23 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018021300, 'tool', 'cleanupcourses');
     }
 
+    if ($oldversion < 2018021301) {
+
+        // Define field type to be added to tool_cleanupcourses_settings.
+        $table = new xmldb_table('tool_cleanupcourses_settings');
+        $field = new xmldb_field('type', XMLDB_TYPE_CHAR, '7', null, XMLDB_NOTNULL, null, null, 'instanceid');
+
+        // Conditionally launch add field type.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $DB->execute('update {tool_cleanupcourses_settings} set type = \'step\'');
+
+        // Cleanupcourses savepoint reached.
+        upgrade_plugin_savepoint(true, 2018021301, 'tool', 'cleanupcourses');
+    }
+
 
     return true;
 }

@@ -28,14 +28,16 @@ defined('MOODLE_INTERNAL') || die();
 
 class trigger_subplugin extends subplugin{
 
-    /** bool is the subplugin enabled*/
-    public $enabled = false;
-
-    /** int sortindex of subplugin */
-    public $sortindex;
-
-    /** int id of the workflow, which is started by this trigger*/
-    public $worflowid;
+    /**
+     * Creates a subplugin with subpluginname and optional id.
+     * @oaram string $instancename name of the subplugin instance
+     * @param string $subpluginname name of the subplugin
+     * @param int $workflowid id of the workflow the subplugin belongs to
+     * @param int $id id of the subplugin
+     */
+    public function __construct($instancename, $subpluginname, $workflowid, $id = null) {
+        parent::__construct($instancename, $subpluginname, $workflowid, $id);
+    }
 
     /**
      * Creates a subplugin from a db record.
@@ -44,6 +46,12 @@ class trigger_subplugin extends subplugin{
      */
     public static function from_record($record) {
         if (!object_property_exists($record, 'subpluginname')) {
+            return null;
+        }
+        if (!object_property_exists($record, 'instancename')) {
+            return null;
+        }
+        if (!object_property_exists($record, 'workflowid')) {
             return null;
         }
         $instance = new self($record->subpluginname);

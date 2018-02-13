@@ -31,16 +31,26 @@ abstract class subplugin{
     /** int Id of subplugin */
     public $id;
 
+    /** string instancename of the step*/
+    public $instancename;
+
+    /** int id of the workflow this step belongs to*/
+    public $workflowid;
+
     /** string name of subplugin */
     public $subpluginname;
 
     /**
      * Creates a subplugin with subpluginname and optional id.
+     * @oaram string $instancename name of the subplugin instance
      * @param string $subpluginname name of the subplugin
+     * @param int $workflowid id of the workflow the subplugin belongs to
      * @param int $id id of the subplugin
      */
-    public function __construct($subpluginname, $id = null) {
+    public function __construct($instancename, $subpluginname, $workflowid, $id = null) {
         $this->subpluginname = $subpluginname;
+        $this->instancename = $instancename;
+        $this->workflowid = $workflowid;
         $this->id = $id;
     }
 
