@@ -253,4 +253,21 @@ class trigger_manager extends subplugin_manager {
         }
     }
 
+    /**
+     * Returns the trigger instance for the workflow id.
+     * @param $workflowid int id of the workflow definition.
+     * @return null|trigger_subplugin returns null, if there is no trigger instance for the workflow.
+     * Otherwise, the trigger instance is returned.
+     */
+    public static function get_trigger_for_workflow($workflowid) {
+        global $DB;
+        $record = $DB->get_record('tool_cleanupcourses_trigger', array('workflowid' => $workflowid));
+        if ($record) {
+            $subplugin = trigger_subplugin::from_record($record);
+            return $subplugin;
+        } else {
+            return null;
+        }
+    }
+
 }
