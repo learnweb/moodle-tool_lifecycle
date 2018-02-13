@@ -85,6 +85,7 @@ class workflow_manager {
         if (!$workflow->active) {
             $workflow->active = true;
             $workflow->timeactive = time();
+            $workflow->sortindex = count(self::get_active_workflows()) + 1;
             self::insert_or_update($workflow);
         }
         $transaction->allow_commit();
@@ -99,5 +100,54 @@ class workflow_manager {
         if ($action === ACTION_WORKFLOW_ACTIVATE) {
             self::activate_workflow($workflowid);
         }
+        if ($action === ACTION_UP_WORKFLOW) {
+            self::change_sortindex($workflowid, true);
+        }
+        if ($action === ACTION_DOWN_WORKFLOW) {
+            self::change_sortindex($workflowid, false);
+        }
     }
+
+    /**
+     * Changes the sortindex of a workflow by swapping it with another.
+     * @param int $workflowid id of the workflow
+     * @param bool $up tells if the workflow should be set up or down
+     */
+    public static function change_sortindex($workflowid, $up) {
+        global $DB;
+        $workflow = self::get_workflow($workflowid);
+        // Prevent first entry to be put up even more.
+        if ($workflow->sortindex == 1 && $up) {
+            return;
+        }
+        // Prevent inactive workflows to change sortindex.
+        if (!$workflow->active) {
+            return;
+        }
+        // Prevent last entry to be put down even more.
+        if ($workflow->sortindex == count(self::get_active_workflows()) && !$up) {
+            return;
+        }
+        $index = $workflow->sortindex;
+        if ($up) {
+            $otherindex = $index - 1;
+        } else {
+            $otherindex = $index + 1;
+        }
+        $transaction = $DB->start_delegated_transaction();
+
+        $otherrecord = $DB->get_record('tool_cleanupcourses_workflow',
+            array(
+                'sortindex' => $otherindex)
+        );
+        $otherworkflow = workflow::from_record($otherrecord);
+
+        $workflow->sortindex = $otherindex;
+        $otherworkflow->sortindex = $index;
+        self::insert_or_update($workflow);
+        self::insert_or_update($otherworkflow);
+
+        $transaction->allow_commit();
+    }
+
 }

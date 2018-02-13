@@ -117,5 +117,22 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2017081101, 'tool', 'cleanupcourses');
     }
 
+    if ($oldversion < 2018021300) {
+
+        // Define field sortindex to be added to tool_cleanupcourses_workflow.
+        $table = new xmldb_table('tool_cleanupcourses_workflow');
+        $field = new xmldb_field('sortindex', XMLDB_TYPE_INTEGER, '3', null, null, null, null, 'timeactive');
+
+        // Conditionally launch add field sortindex.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+
+        // Cleanupcourses savepoint reached.
+        upgrade_plugin_savepoint(true, 2018021300, 'tool', 'cleanupcourses');
+    }
+
+
     return true;
 }

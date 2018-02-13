@@ -40,11 +40,15 @@ class workflow {
     /** timestamp the workflow was set active */
     public $timeactive;
 
-    private function __construct($id, $title, $active, $timeactive) {
+    /** int sort index of all active workflows */
+    public $sortindex;
+
+    private function __construct($id, $title, $active, $timeactive, $sortindex) {
         $this->id = $id;
         $this->title = $title;
         $this->active = $active;
         $this->timeactive = $timeactive;
+        $this->sortindex = $sortindex;
     }
 
     /**
@@ -71,7 +75,12 @@ class workflow {
             $timeactive = $record->timeactive;
         }
 
-        $instance = new self($record->id, $record->title, $active, $timeactive);
+        $sortindex = null;
+        if (object_property_exists($record, 'sortindex')) {
+            $sortindex = $record->sortindex;
+        }
+
+        $instance = new self($record->id, $record->title, $active, $timeactive, $sortindex);
 
         return $instance;
     }

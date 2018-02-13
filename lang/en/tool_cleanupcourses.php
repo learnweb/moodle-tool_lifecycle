@@ -53,6 +53,7 @@ $string['add_workflow'] = 'Add Workflow';
 $string['workflow_title'] = 'Title';
 $string['workflow_active'] = 'Active';
 $string['workflow_timeactive'] = 'Active since';
+$string['workflow_sortindex'] = 'Up/Down';
 $string['workflow_tools'] = 'Tools';
 $string['viewsteps'] = 'View Workflow Steps';
 $string['editworkflow'] = 'Edit Title';
