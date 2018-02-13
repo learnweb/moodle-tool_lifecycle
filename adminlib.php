@@ -156,7 +156,7 @@ class subplugin_settings {
         // Set up the table.
         $this->view_header();
 
-        echo $OUTPUT->heading(get_string('subpluginssettings_edit_workflow_instance_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('subpluginssettings_edit_workflow_definition_heading', 'tool_cleanupcourses'));
 
         echo $form->render();
 
