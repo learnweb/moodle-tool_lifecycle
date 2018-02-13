@@ -129,12 +129,12 @@ class subplugin_settings {
         // Set up the table.
         $this->view_header();
 
-        echo $OUTPUT->heading(get_string('subpluginssettings_trigger_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('active_workflows_heading', 'tool_cleanupcourses'));
 
         $table = new trigger_table('tool_cleanupcourses_triggers');
         $table->out(5000, false);
 
-        echo $OUTPUT->heading(get_string('subpluginssettings_step_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('workflow_definition_heading', 'tool_cleanupcourses'));
 
         echo $OUTPUT->single_button(new \moodle_url($PAGE->url,
             array('action' => ACTION_WORKFLOW_INSTANCE_FROM, 'sesskey' => sesskey())),
