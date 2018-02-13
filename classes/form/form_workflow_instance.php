@@ -64,14 +64,18 @@ class form_workflow_instance extends \moodleform {
         $elementname = 'id';
         $mform->addElement('hidden', $elementname); // Save the record's id.
         $mform->setType($elementname, PARAM_TEXT);
-        $mform->setDefault($elementname, $this->workflow->id);
+        if (isset($this->workflow)) {
+            $mform->setDefault($elementname, $this->workflow->id);
+        }
 
         $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_cleanupcourses'));
 
         $elementname = 'title';
         $mform->addElement('text', $elementname, get_string('workflow_title', 'tool_cleanupcourses'));
         $mform->setType($elementname, PARAM_TEXT);
-        $mform->setDefault($elementname, $this->workflow->title);
+        if (isset($this->workflow)) {
+            $mform->setDefault($elementname, $this->workflow->title);
+        }
 
         $this->add_action_buttons();
     }
