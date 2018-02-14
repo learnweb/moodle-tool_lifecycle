@@ -184,13 +184,9 @@ class trigger_manager extends subplugin_manager {
     public static function insert_or_update(trigger_subplugin &$subplugin) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
-        if ($subplugin->id !== null) {
+        if ($subplugin->id) {
             $DB->update_record('tool_cleanupcourses_trigger', $subplugin);
-        }
-        $record = array(
-            'subpluginname' => $subplugin->subpluginname,
-        );
-        if (!$DB->record_exists('tool_cleanupcourses_trigger', $record)) {
+        } else {
             $subplugin->id = $DB->insert_record('tool_cleanupcourses_trigger', $subplugin);
         }
         $transaction->allow_commit();
@@ -277,6 +273,19 @@ class trigger_manager extends subplugin_manager {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Gets the list of step subplugins.
+     * @return array of step subplugins.
+     */
+    public static function get_trigger_types() {
+        $subplugins = \core_component::get_plugin_list('cleanupcoursestrigger');
+        $result = array();
+        foreach ($subplugins as $id => $plugin) {
+            $result[$id] = get_string('pluginname', 'cleanupcoursestrigger_' . $id);
+        }
+        return $result;
     }
 
 }
