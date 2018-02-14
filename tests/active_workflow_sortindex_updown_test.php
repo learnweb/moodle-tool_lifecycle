@@ -19,87 +19,191 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 
-use \tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\manager\workflow_manager;
+use tool_cleanupcourses\entity\workflow;
 
 /**
- * Tests the different state changes of the trigger sortindex for up and down action.
+ * Tests the different state changes of the workflow sortindex for up and down action.
  * @package    tool_cleanupcourses
  * @category   test
  * @group      tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_trigger_sortindex_updown_testcase extends \advanced_testcase {
+class tool_cleanupcourses_workflow_sortindex_updown_testcase extends \advanced_testcase {
+
+    private $workflow1;
+    private $workflow2;
+    private $workflow3;
 
     public function setUp() {
+        global $DB;
         $this->resetAfterTest(true);
-        tool_cleanupcourses_generator::setup_test_plugins();
+        // Remove preset workflows.
+        $workflows = workflow_manager::get_active_workflows();
+        foreach ($workflows as $workflow) {
+            workflow_manager::remove($workflow->id);
+        }
+
+        $this->workflow1 = tool_cleanupcourses_generator::create_workflow();
+        $this->workflow2 = tool_cleanupcourses_generator::create_workflow();
+        $this->workflow3 = tool_cleanupcourses_generator::create_workflow();
+
+        $this->assertFalse($this->workflow1->active);
+        $this->assertFalse($this->workflow2->active);
+        $this->assertFalse($this->workflow3->active);
+        $this->assertNull($this->workflow1->sortindex);
+        $this->assertNull($this->workflow2->sortindex);
+        $this->assertNull($this->workflow3->sortindex);
     }
 
     /**
-     * Test to put up the first subplugin.
+     * Test to activate the first workflow.
      */
-    public function test_up_first() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_UP_TRIGGER, 1);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 2)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
+    public function test_activate_first() {
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
+        $this->assertTrue(workflow_manager::is_active($this->workflow1->id));
+        $this->assertEquals(1, $reloadworkflow->sortindex);
     }
 
     /**
-     * Test to put up the second subplugin.
+     * Test to activate the first and the second workflow.
      */
-    public function test_up_second() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_UP_TRIGGER, 2);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 2)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
+    public function test_activate_second() {
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow2->id);
+        $this->assertTrue(workflow_manager::is_active($this->workflow2->id));
+        $this->assertEquals(2, $reloadworkflow->sortindex);
     }
 
     /**
-     * Test to put up the thrid subplugin.
+     * Test to activate all three workflow.
      */
-    public function test_up_third() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_UP_TRIGGER, 3);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 3)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 2)));
+    public function test_activate_third() {
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow3->id);
+        $this->assertTrue(workflow_manager::is_active($this->workflow3->id));
+        $this->assertEquals(3, $reloadworkflow->sortindex);
     }
 
     /**
-     * Test to put down the first subplugin.
+     * Test to put down the first workflow.
      */
     public function test_down_first() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_DOWN_TRIGGER, 1);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 2)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(ACTION_DOWN_WORKFLOW, $this->workflow1->id);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
+        $this->assertEquals(2, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow2->id);
+        $this->assertEquals(1, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow3->id);
+        $this->assertEquals(3, $reloadworkflow->sortindex);
     }
 
     /**
-     * Test to put down the second subplugin.
+     * Test to put down the second workflow.
      */
     public function test_down_second() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_DOWN_TRIGGER, 2);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 3)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 2)));
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(ACTION_DOWN_WORKFLOW, $this->workflow2->id);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
+        $this->assertEquals(1, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow2->id);
+        $this->assertEquals(3, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow3->id);
+        $this->assertEquals(2, $reloadworkflow->sortindex);
     }
 
     /**
-     * Test to put down the third subplugin.
+     * Test to put down the third workflow.
      */
     public function test_down_third() {
-        global $DB;
-        trigger_manager::handle_action(ACTION_DOWN_TRIGGER, 3);
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 1, 'sortindex' => 1)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 2, 'sortindex' => 2)));
-        $this->assertNotEmpty($DB->get_records('tool_cleanupcourses_trigger', array('id' => 3, 'sortindex' => 3)));
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(ACTION_DOWN_WORKFLOW, $this->workflow3->id);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
+        $this->assertEquals(1, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow2->id);
+        $this->assertEquals(2, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow3->id);
+        $this->assertEquals(3, $reloadworkflow->sortindex);
+    }
+
+    /**
+     * Test to put up the third workflow.
+     */
+    public function test_up_first() {
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(ACTION_UP_WORKFLOW, $this->workflow1->id);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
+        $this->assertEquals(1, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow2->id);
+        $this->assertEquals(2, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow3->id);
+        $this->assertEquals(3, $reloadworkflow->sortindex);
+    }
+
+    /**
+     * Test to put up the third workflow.
+     */
+    public function test_up_second() {
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(ACTION_UP_WORKFLOW, $this->workflow2->id);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
+        $this->assertEquals(2, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow2->id);
+        $this->assertEquals(1, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow3->id);
+        $this->assertEquals(3, $reloadworkflow->sortindex);
+    }
+
+    /**
+     * Test to put up the third workflow.
+     */
+    public function test_up_third() {
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(ACTION_UP_WORKFLOW, $this->workflow3->id);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
+        $this->assertEquals(1, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow2->id);
+        $this->assertEquals(3, $reloadworkflow->sortindex);
+
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow3->id);
+        $this->assertEquals(2, $reloadworkflow->sortindex);
     }
 
 }

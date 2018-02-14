@@ -40,7 +40,7 @@ class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
 
     public function setUp() {
         $this->resetAfterTest(true);
-        $this->workflow = tool_cleanupcourses_generator::create_active_workflow();
+        $this->workflow = tool_cleanupcourses_generator::create_workflow();
     }
 
     /**
