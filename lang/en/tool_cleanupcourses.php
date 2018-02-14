@@ -57,6 +57,7 @@ $string['trigger_workflow'] = 'Workflow';
 $string['add_workflow'] = 'Add Workflow';
 $string['workflow_title'] = 'Title';
 $string['workflow_active'] = 'Active';
+$string['workflow_processes'] = 'Active processes';
 $string['workflow_timeactive'] = 'Active since';
 $string['workflow_sortindex'] = 'Up/Down';
 $string['workflow_tools'] = 'Tools';
