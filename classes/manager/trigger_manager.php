@@ -43,6 +43,7 @@ class trigger_manager extends subplugin_manager {
         $record->workflowid = $workflow->id;
         $trigger = trigger_subplugin::from_record($record);
         trigger_manager::insert_or_update($trigger);
+        workflow_manager::activate_workflow($workflow->id);
     }
 
     /**
