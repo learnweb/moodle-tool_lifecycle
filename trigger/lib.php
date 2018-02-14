@@ -29,7 +29,7 @@ use tool_cleanupcourses\response\trigger_response;
 
 defined('MOODLE_INTERNAL') || die();
 
-interface base {
+abstract class base {
 
 
     /**
@@ -37,6 +37,70 @@ interface base {
      * @param $course object to be processed.
      * @return trigger_response
      */
-    public function check_course($course);
+    public abstract function check_course($course);
+
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
+    public abstract function get_subpluginname();
+
+    /**
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
+    public function instance_settings() {
+        return array();
+    }
+
+    /**
+     * This method can be overriden, to add form elements to the form_step_instance.
+     * It is called in definition().
+     * @param \MoodleQuickForm $mform
+     */
+    public function extend_add_instance_form_definition($mform) {
+    }
+
+    /**
+     * This method can be overriden, to set default values to the form_step_instance.
+     * It is called in definition_after_data().
+     * @param \MoodleQuickForm $mform
+     * @param array $settings array containing the settings from the db.
+     */
+    public function extend_add_instance_form_definition_after_data($mform, $settings) {
+    }
+
+
+    /**
+     * Generates the link to the interaction table of the respective step
+     * @param int $stepid id of the step
+     * @return \moodle_url
+     */
+    public function get_interaction_link($stepid) {
+        return new \moodle_url('admin/tool/cleanupcourses/view.php', array('stepid' => $stepid));
+    }
+
+}
+
+/**
+ * Class representing a local settings object for a subplugin instance.
+ * @package tool_cleanupcourses\trigger
+ */
+class instance_setting {
+
+    /** @var string name of the setting*/
+    public $name;
+
+    /** @var string param type of the setting, e.g. PARAM_INT */
+    public $paramtype;
+
+    /**
+     * Create a local settings object.
+     * @param string $name name of the setting
+     * @param string $paramtype param type. Used for cleansing and parsing, e.g. PARAM_INT.
+     */
+    public function __construct($name, $paramtype) {
+        $this->name = $name;
+        $this->paramtype = $paramtype;
+    }
 
 }
