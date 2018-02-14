@@ -192,12 +192,14 @@ class workflow_manager {
     /**
      * Creates a workflow with a specific title. Is used to create preset workflows for trigger plugins.
      * @param $title string title of the workflow. Usually the pluginname of the trigger.
+     * @return workflow the created workflow.
      */
     public static function create_workflow($title) {
         $record = new \stdClass();
         $record->title = $title;
         $workflow = workflow::from_record($record);
         self::insert_or_update($workflow);
+        return $workflow;
     }
 
 }
