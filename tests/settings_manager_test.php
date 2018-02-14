@@ -48,8 +48,8 @@ class tool_cleanupcourses_settings_manager_testcase extends \advanced_testcase {
     public function test_set_get_settings() {
         $data = new stdClass();
         $data->subject = self::VALUE;
-        settings_manager::save_settings($this->step->id, $this->step->subpluginname, $data);
-        $settings = settings_manager::get_settings($this->step->id);
+        settings_manager::save_settings($this->step->id, SETTINGS_TYPE_STEP, $this->step->subpluginname, $data);
+        $settings = settings_manager::get_settings($this->step->id, SETTINGS_TYPE_STEP);
         $this->assertArrayHasKey('subject', $settings, 'No key \'subject\' in returned settings array');
         $this->assertEquals(self::VALUE, $settings['subject']);
     }
