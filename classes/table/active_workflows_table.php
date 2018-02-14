@@ -143,16 +143,6 @@ class active_workflows_table extends \table_sql {
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null , array('title' => $alt));
 
-        $action = ACTION_WORKFLOW_INSTANCE_FROM;
-        $alt = get_string('editworkflow', 'tool_cleanupcourses');
-        $icon = 't/edit';
-        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
-
-        $action = ACTION_WORKFLOW_DELETE;
-        $alt = get_string('deleteworkflow', 'tool_cleanupcourses');
-        $icon = 't/delete';
-        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
-
         return $output;
     }
 
