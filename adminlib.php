@@ -94,21 +94,21 @@ class admin_page_sublugins extends \admin_externalpage {
      *
      */
     public function __construct() {
-        $url = new \moodle_url('/admin/tool/cleanupcourses/subpluginssettings.php');
-        parent::__construct('tool_cleanupcourses_subpluginssettings',
-            get_string('subpluginssettings_heading', 'tool_cleanupcourses'),
+        $url = new \moodle_url('/admin/tool/cleanupcourses/adminsettings.php');
+        parent::__construct('tool_cleanupcourses_adminsettings',
+            get_string('adminsettings_heading', 'tool_cleanupcourses'),
             $url);
     }
 }
 
 /**
- * Class that handles the display and configuration of the subplugin settings.
+ * Class that handles the display and configuration the settings.
  *
  * @package   tool_cleanupcourses
  * @copyright 2015 Tobias Reischmann
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class subplugin_settings {
+class admin_settings {
 
     /** @var object the url of the subplugin settings page */
     private $pageurl;
@@ -118,7 +118,7 @@ class subplugin_settings {
      */
     public function __construct() {
         global $PAGE;
-        $this->pageurl = new \moodle_url('/admin/tool/cleanupcourses/subpluginssettings.php');
+        $this->pageurl = new \moodle_url('/admin/tool/cleanupcourses/adminsettings.php');
         $PAGE->set_url($this->pageurl);
     }
 
@@ -158,7 +158,7 @@ class subplugin_settings {
         // Set up the table.
         $this->view_header();
 
-        echo $OUTPUT->heading(get_string('subpluginssettings_edit_workflow_definition_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('adminsettings_edit_workflow_definition_heading', 'tool_cleanupcourses'));
 
         echo $form->render();
 
@@ -206,12 +206,12 @@ class subplugin_settings {
     /**
      * This is the entry point for this controller class.
      */
-    public function execute($action, $subpluginid, $workflowid) {
+    public function execute($action, $workflowid) {
         global $PAGE;
         $this->check_permissions();
 
         // Has to be called before moodleform is created!
-        admin_externalpage_setup('tool_cleanupcourses_subpluginssettings');
+        admin_externalpage_setup('tool_cleanupcourses_adminsettings');
 
         workflow_manager::handle_action($action, $workflowid);
 
@@ -264,7 +264,7 @@ class workflow_settings {
     public function __construct($workflowid) {
         global $PAGE;
         // Has to be called before moodleform is created!
-        admin_externalpage_setup('tool_cleanupcourses_subpluginssettings');
+        admin_externalpage_setup('tool_cleanupcourses_adminssettings');
         $this->pageurl = new \moodle_url('/admin/tool/cleanupcourses/workflowsettings.php');
         $PAGE->set_url($this->pageurl);
         $this->workflowid = $workflowid;
@@ -279,13 +279,13 @@ class workflow_settings {
         // Set up the table.
         $this->view_header();
 
-        echo $OUTPUT->heading(get_string('subpluginssettings_workflow_definition_steps_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('adminsettings_workflow_definition_steps_heading', 'tool_cleanupcourses'));
 
         $steps = step_manager::get_step_types();
         echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
             array('action' => ACTION_STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
             'subpluginname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_cleanupcourses')));
-        echo $OUTPUT->single_button( new \moodle_url('/admin/tool/cleanupcourses/subpluginssettings.php'),
+        echo $OUTPUT->single_button( new \moodle_url('/admin/tool/cleanupcourses/adminsettings.php'),
             get_string('back'));
 
         $table = new step_table('tool_cleanupcourses_workflows', $this->workflowid);
@@ -301,7 +301,7 @@ class workflow_settings {
     private function view_step_instance_form($form) {
         $workflow = workflow_manager::get_workflow($this->workflowid);
         $this->view_instance_form($form,
-            get_string('subpluginssettings_edit_step_instance_heading', 'tool_cleanupcourses',
+            get_string('adminsettings_edit_step_instance_heading', 'tool_cleanupcourses',
                 $workflow->title));
     }
 
@@ -312,7 +312,7 @@ class workflow_settings {
     private function view_trigger_instance_form($form) {
         $workflow = workflow_manager::get_workflow($this->workflowid);
         $this->view_instance_form($form,
-            get_string('subpluginssettings_edit_trigger_instance_heading', 'tool_cleanupcourses',
+            get_string('adminsettings_edit_trigger_instance_heading', 'tool_cleanupcourses',
                 $workflow->title));
     }
 

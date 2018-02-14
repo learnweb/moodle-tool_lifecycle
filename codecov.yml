@@ -23,5 +23,5 @@ ignore:
     - "renderer.php"
     - "restore.php"
     - "settings.php"
-    - "subpluginssettings.php"
+    - "adminsettings.php"
     - "view.php"
