@@ -108,7 +108,6 @@ class form_trigger_instance extends \moodleform {
         $mform->setType('action', PARAM_TEXT);
         $mform->setDefault('action', ACTION_TRIGGER_INSTANCE_FORM);
 
-
         $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_cleanupcourses'));
 
         $elementname = 'instancename';
@@ -143,8 +142,8 @@ class form_trigger_instance extends \moodleform {
      */
     private function add_cancel_button() {
         $mform =& $this->_form;
-        //when two elements we need a group
-        $buttonarray=array();
+
+        $buttonarray = array();
         $buttonarray[] = &$mform->createElement('cancel');
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
         $mform->closeHeaderBefore('buttonar');
@@ -164,7 +163,6 @@ class form_trigger_instance extends \moodleform {
         }
         $mform->setDefault('subpluginname', $this->subpluginname);
 
-
         // Setting the default values for the local trigger settings.
         if ($this->settings) {
             foreach ($this->settings as $key => $value) {
@@ -179,7 +177,7 @@ class form_trigger_instance extends \moodleform {
 
         // For active workflows, we do not want the form to be editable.
         if ($this->workflowid && workflow_manager::is_active($this->workflowid)) {
-            // buttonar is the button array of submit buttons. For inactive workflows this is only a cancel button.
+            // The group buttonar is the array of submit buttons. For inactive workflows this is only a cancel button.
             $mform->hardFreezeAllVisibleExcept(array('buttonar'));
         }
     }
@@ -190,8 +188,8 @@ class form_trigger_instance extends \moodleform {
             $error['instancename'] = get_string('required');
         }
 
-        $required_settings = $this->lib->instance_settings();
-        foreach ($required_settings as $setting) {
+        $requiredsettings = $this->lib->instance_settings();
+        foreach ($requiredsettings as $setting) {
             if (!array_key_exists($setting->name, $data) || empty($data[$setting->name])) {
                 $error[$setting->name] = get_string('required');
             }

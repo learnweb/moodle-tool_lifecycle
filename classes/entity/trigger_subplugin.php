@@ -29,17 +29,6 @@ defined('MOODLE_INTERNAL') || die();
 class trigger_subplugin extends subplugin{
 
     /**
-     * Creates a subplugin with subpluginname and optional id.
-     * @oaram string $instancename name of the subplugin instance
-     * @param string $subpluginname name of the subplugin
-     * @param int $workflowid id of the workflow the subplugin belongs to
-     * @param int $id id of the subplugin
-     */
-    public function __construct($instancename, $subpluginname, $workflowid, $id = null) {
-        parent::__construct($instancename, $subpluginname, $workflowid, $id);
-    }
-
-    /**
      * Creates a subplugin from a db record.
      * @param $record
      * @return trigger_subplugin
