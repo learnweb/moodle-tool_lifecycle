@@ -258,4 +258,13 @@ class step_manager extends subplugin_manager {
             array('workflowid' => $workflowid)
         );
     }
+
+    /**
+     * Removes all instances, which belong to the workflow instance.
+     * @param $workflowid int id of the workflow.
+     */
+    public static function remove_instances_of_workflow($workflowid) {
+        global $DB;
+        $DB->delete_records('tool_cleanupcourses_step', array('workflowid' => $workflowid));
+    }
 }

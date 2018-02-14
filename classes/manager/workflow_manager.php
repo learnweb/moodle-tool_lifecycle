@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 class workflow_manager {
 
     /**
-     * Persists a workflow to the database.
+     * Remove a workflow from the database.
      * @param workflow $workflow
      */
     public static function insert_or_update(workflow &$workflow) {
@@ -42,6 +42,17 @@ class workflow_manager {
             $workflow->id = $DB->insert_record('tool_cleanupcourses_workflow', $workflow);
         }
         $transaction->allow_commit();
+    }
+
+    /**
+     * Persists a workflow to the database.
+     * @param int $workflowid id of the workflow
+     */
+    public static function remove($workflowid) {
+        global $DB;
+        trigger_manager::remove_instances_of_workflow($workflowid);
+        step_manager::remove_instances_of_workflow($workflowid);
+        $DB->delete_records('tool_cleanupcourses_workflow', array('id' => $workflowid));
     }
 
     /**
@@ -106,6 +117,9 @@ class workflow_manager {
         }
         if ($action === ACTION_DOWN_WORKFLOW) {
             self::change_sortindex($workflowid, false);
+        }
+        if ($action === ACTION_WORKFLOW_DELETE) {
+            self::remove($workflowid);
         }
     }
 
