@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display the list of active processes
+ * Displays the settings associated with one single workflow and handles action for it.
  *
  * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
@@ -33,7 +33,7 @@ $workflow = tool_cleanupcourses\manager\workflow_manager::get_workflow($workflow
 
 if (!$workflow) {
     throw new moodle_exception('workflownotfound', 'tool_cleanupcourses',
-        new \moodle_url('/admin/tool/cleanupcourses/subpluginssettings.php'), $workflowid);
+        new \moodle_url('/admin/tool/cleanupcourses/adminsettings.php'), $workflowid);
 }
 
 // Create the class for this controller.

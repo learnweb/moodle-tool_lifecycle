@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display the list of active processes
+ * Displays the tables of active and inactive workflow definitions and handles all action associated with it.
  *
  * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
@@ -28,11 +28,10 @@ require_login();
 require_once(__DIR__ . '/adminlib.php');
 
 // Create the class for this controller.
-$subpluginsettings = new tool_cleanupcourses\subplugin_settings();
+$adminsettings = new tool_cleanupcourses\admin_settings();
 
 $PAGE->set_context(context_system::instance());
 
 // Execute the controller.
-$subpluginsettings->execute(optional_param('action', null, PARAM_TEXT),
-    optional_param('subplugin', null, PARAM_INT),
+$adminsettings->execute(optional_param('action', null, PARAM_TEXT),
     optional_param('workflowid', null, PARAM_INT));
