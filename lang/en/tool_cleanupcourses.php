@@ -43,6 +43,8 @@ $string['step_settings_header'] = 'Specific settings of the step type';
 $string['trigger_settings_header'] = 'Specific settings of the trigger type';
 $string['general_settings_header'] = 'General Settings';
 $string['followedby_none'] = 'None';
+$string['invalid_workflow'] = 'Invalid workflow configuration';
+$string['invalid_workflow_details'] = 'Go to details view, to create a trigger for this workflow';
 
 $string['process_cleanup'] = 'Run the cleanup courses processes';
 
