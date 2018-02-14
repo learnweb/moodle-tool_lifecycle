@@ -89,7 +89,7 @@ class step_manager extends subplugin_manager {
      * @param string $subpluginname step instance id
      */
     public static function remove_all_instances($subpluginname) {
-        $steps = step_manager::get_step_instances_by_subpluginname($subpluginname);
+        $steps = self::get_step_instances_by_subpluginname($subpluginname);
         foreach ($steps as $step) {
             self::remove($step->id);
         }
