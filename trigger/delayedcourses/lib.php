@@ -55,4 +55,12 @@ class delayedcourses extends base {
         return 'delayedcourses';
     }
 
+    /**
+     * Has only one instance and results in a preset workflow.
+     * @return bool
+     */
+    public function has_multiple_instances() {
+        return false;
+    }
+
 }

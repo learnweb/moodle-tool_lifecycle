@@ -88,7 +88,7 @@ abstract class base {
      * @return bool
      */
     public function has_multiple_instances() {
-        return false;
+        return true;
     }
 
 }
