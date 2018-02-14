@@ -34,7 +34,7 @@ require_once(__DIR__ . '/../lib.php');
  * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin
  * @package tool_cleanupcourses_trigger
  */
-class startdatedelay implements base {
+class startdatedelay extends base {
 
 
     /**
@@ -52,4 +52,26 @@ class startdatedelay implements base {
         return trigger_response::next();
     }
 
+    public function get_subpluginname() {
+        return 'startdatedelay';
+    }
+
+    public function instance_settings() {
+        return array(
+            new instance_setting('delay', PARAM_INT)
+        );
+    }
+
+    public function extend_add_instance_form_definition($mform) {
+        $mform->addElement('duration', 'delay', get_string('delay', 'cleanupcoursestrigger_startdatedelay'));
+    }
+
+    public function extend_add_instance_form_definition_after_data($mform, $settings) {
+        if (is_array($settings) && array_key_exists('delay', $settings)) {
+            $default = $settings['delay'];
+        } else {
+            $default = 16416000;
+        }
+        $mform->setDefault('delay', $default);
+    }
 }

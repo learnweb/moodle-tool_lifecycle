@@ -33,7 +33,7 @@ require_once(__DIR__ . '/../lib.php');
  * Class which implements the basic methods necessary for a cleanup courses trigger subplugin
  * @package tool_cleanupcourses\trigger
  */
-class sitecourse implements base {
+class sitecourse extends base {
 
 
     /**
@@ -46,6 +46,10 @@ class sitecourse implements base {
             return trigger_response::exclude();
         }
         return trigger_response::next();
+    }
+
+    public function get_subpluginname() {
+        return 'sitecourse';
     }
 
 }
