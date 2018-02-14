@@ -40,9 +40,10 @@ class dummy extends base {
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
      * @param $course object to be processed.
+     * @param $triggerid int id of the trigger instance.
      * @return trigger_response
      */
-    public function check_course($course) {
+    public function check_course($course, $triggerid) {
         return trigger_response::next();
     }
 

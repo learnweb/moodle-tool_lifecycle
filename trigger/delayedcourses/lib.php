@@ -40,9 +40,10 @@ class delayedcourses extends base {
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
      * @param $course object to be processed.
+     * @param $triggerid int id of the trigger instance.
      * @return trigger_response
      */
-    public function check_course($course) {
+    public function check_course($course, $triggerid) {
         $delayeduntil = delayed_courses_manager::get_course_delayed($course->id);
         if ($delayeduntil !== null && time() < $delayeduntil) {
             return trigger_response::exclude();

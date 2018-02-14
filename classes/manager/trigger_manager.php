@@ -24,108 +24,25 @@
 namespace tool_cleanupcourses\manager;
 
 use tool_cleanupcourses\entity\trigger_subplugin;
+use tool_cleanupcourses\entity\workflow;
 
 defined('MOODLE_INTERNAL') || die();
 
 class trigger_manager extends subplugin_manager {
 
     /**
-     * Changes the state of a subplugin.
-     * @param int $subpluginid id of the subplugin
-     * @param bool $enabled new state
+     * Creates a preset workflow for the trigger subplugin.
+     * @param $subpluginname string name of the trigger subplugin.
      */
-    public static function change_enabled($subpluginid, $enabled) {
-        global $DB;
-        $transaction = $DB->start_delegated_transaction();
-        $subplugin = self::get_subplugin_by_id($subpluginid);
-        if ($subplugin) {
-            $subplugin->enabled = $enabled;
-            if ($enabled) {
-                $subplugin->sortindex = self::count_enabled_trigger() + 1;
-            } else {
-                self::remove_from_sortindex($subplugin);
-            }
-            self::insert_or_update($subplugin);
-        }
-        $transaction->allow_commit();
-    }
-
-    /**
-     * Changes the sortindex of a subplugin by swapping it with another.
-     * @param int $subpluginid id of the subplugin
-     * @param bool $up tells if the subplugin should be set up or down
-     */
-    public static function change_sortindex($subpluginid, $up) {
-        global $DB;
-        $subplugin = self::get_subplugin_by_id($subpluginid);
-        // Prevent first entry to be put up even more.
-        if ($subplugin->sortindex == 1 && $up) {
-            return;
-        }
-        // Prevent last entry to be put down even more.
-        if ($subplugin->sortindex == self::count_enabled_trigger() && !$up) {
-            return;
-        }
-        $index = $subplugin->sortindex;
-        if ($up) {
-            $otherindex = $index - 1;
-        } else {
-            $otherindex = $index + 1;
-        }
-        $transaction = $DB->start_delegated_transaction();
-
-        $otherrecord = $DB->get_record('tool_cleanupcourses_trigger', array('sortindex' => $otherindex));
-        $othersubplugin = trigger_subplugin::from_record($otherrecord);
-
-        $subplugin->sortindex = $otherindex;
-        $othersubplugin->sortindex = $index;
-        self::insert_or_update($subplugin);
-        self::insert_or_update($othersubplugin);
-
-        $transaction->allow_commit();
-    }
-
-    /**
-     * Changes the workflow of a trigger.
-     * @param int $subpluginid id of the trigger
-     * @param int $workflowid id of the workflow
-     * @throws \coding_exception if subplugin does not exist.
-     */
-    public static function change_workflow($subpluginid, $workflowid) {
-        global $DB;
-        $transaction = $DB->start_delegated_transaction();
-
-        $subplugin = self::get_subplugin_by_id($subpluginid);
-        if (!$subplugin) {
-            throw new \coding_exception('The subplugin instance your are looking for does not exist.');
-        }
-
-        $workflow = workflow_manager::get_workflow($workflowid);
-
-        // If workflow is not defined or inactive, do nothing.
-        if ($workflow && $workflow->active) {
-            $subplugin->workflowid = $workflow->id;
-            self::insert_or_update($subplugin);
-        }
-
-        $transaction->allow_commit();
-    }
-
-    /**
-     * Removes a subplugin from the sortindex and adjusts all other indizes.
-     * @param trigger_subplugin $toberemoved
-     */
-    private static function remove_from_sortindex(&$toberemoved) {
-        global $DB;
-        if (isset($toberemoved->sortindex)) {
-            $subplugins = $DB->get_records_select('tool_cleanupcourses_trigger', "sortindex > $toberemoved->sortindex");
-            foreach ($subplugins as $record) {
-                $subplugin = trigger_subplugin::from_record($record);
-                $subplugin->sortindex--;
-                self::insert_or_update($subplugin);
-            }
-            $toberemoved->sortindex = null;
-        }
+    public static function register_workflow($subpluginname) {
+        $workflow = workflow_manager::create_workflow(
+            get_string('pluginname', 'cleanupcoursestrigger_' . $subpluginname));
+        $record = new \stdClass();
+        $record->subpluginname = $subpluginname;
+        $record->instancename = get_string('pluginname', 'cleanupcoursestrigger_' . $subpluginname);
+        $record->workflowid = $workflow->id;
+        $trigger = trigger_subplugin::from_record($record);
+        trigger_manager::insert_or_update($trigger);
     }
 
     /**
@@ -135,6 +52,22 @@ class trigger_manager extends subplugin_manager {
      */
     public static function get_instance($instanceid) {
         return self::get_subplugin_by_id($instanceid);
+    }
+
+    /**
+     * Returns all instances for a trigger subplugin.
+     * @param string $subpluginname name of the subplugin
+     * @return trigger_subplugin[]
+     */
+    public static function get_instances($subpluginname) {
+        global $DB;
+        $result = array();
+        $records = $DB->get_records('tool_cleanupcourses_trigger', array('subpluginname' => $subpluginname));
+        foreach ($records as $record) {
+            $subplugin = trigger_subplugin::from_record($record);
+            $result [] = $subplugin;
+        }
+        return $result;
     }
 
     /**

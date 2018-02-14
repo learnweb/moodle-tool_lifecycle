@@ -25,6 +25,7 @@
  */
 namespace tool_cleanupcourses\trigger;
 
+use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\response\trigger_response;
 
 defined('MOODLE_INTERNAL') || die();
@@ -40,11 +41,11 @@ class startdatedelay extends base {
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
      * @param $course object to be processed.
+     * @param $triggerid int id of the trigger instance.
      * @return trigger_response
      */
-    public function check_course($course) {
-        global $CFG;
-        $delay = $CFG->cleanupcoursestrigger_startdatedelay_delay;
+    public function check_course($course, $triggerid) {
+        $delay = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['delay'];
         $now = time();
         if ($course->startdate + $delay < $now) {
             return trigger_response::trigger();
