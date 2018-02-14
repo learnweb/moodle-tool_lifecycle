@@ -84,7 +84,8 @@ class email extends libbase {
         }
         // When time runs up and no one wants to keep the course, then proceed.
         $process = process_manager::get_process_by_id($processid);
-        if ($process->timestepchanged < time() - settings_manager::get_settings($instanceid)['responsetimeout']) {
+        if ($process->timestepchanged < time() -
+            settings_manager::get_settings($instanceid, SETTINGS_TYPE_STEP)['responsetimeout']) {
             return step_response::proceed();
         }
         return step_response::waiting();
@@ -94,7 +95,7 @@ class email extends libbase {
         global $DB;
         $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
         foreach ($stepinstances as $step) {
-            $settings = settings_manager::get_settings($step->id);
+            $settings = settings_manager::get_settings($step->id, SETTINGS_TYPE_STEP);
             // Format the raw string in the DB to FORMAT_HTML.
             $settings['contenthtml'] = format_text($settings['contenthtml'], FORMAT_HTML);
 
