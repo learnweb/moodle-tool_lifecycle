@@ -66,7 +66,8 @@ class workflow_manager {
      */
     public static function get_active_workflows() {
         global $DB;
-        $records = $DB->get_records('tool_cleanupcourses_workflow', array('active' => true));
+        $records = $DB->get_records('tool_cleanupcourses_workflow', array('active' => true),
+            'sortindex ASC');
         $result = array();
         foreach ($records as $record) {
             $result [] = workflow::from_record($record);

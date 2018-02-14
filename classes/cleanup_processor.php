@@ -28,6 +28,7 @@ use tool_cleanupcourses\manager\process_manager;
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\trigger_manager;
 use tool_cleanupcourses\manager\lib_manager;
+use tool_cleanupcourses\manager\workflow_manager;
 use tool_cleanupcourses\response\step_response;
 use tool_cleanupcourses\response\trigger_response;
 
@@ -44,12 +45,13 @@ class cleanup_processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
-        $enabledtrigger = trigger_manager::get_enabled_trigger();
+        $activeworkflows = workflow_manager::get_active_workflows();
 
         $recordset = $this->get_course_recordset();
         while ($recordset->valid()) {
             $course = $recordset->current();
-            foreach ($enabledtrigger as $trigger) {
+            foreach ($activeworkflows as $workflow) {
+                $trigger = trigger_manager::get_trigger_for_workflow($workflow->id);
                 $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
                 $response = $lib->check_course($course);
                 if ($response == trigger_response::next()) {
