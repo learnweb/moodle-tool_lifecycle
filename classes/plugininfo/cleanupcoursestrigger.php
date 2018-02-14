@@ -25,8 +25,11 @@
 namespace tool_cleanupcourses\plugininfo;
 
 use core\plugininfo\base;
+use tool_cleanupcourses\manager\lib_manager;
+use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\trigger_manager;
 use tool_cleanupcourses\manager\workflow_manager;
+use tool_usertours\step;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -47,6 +50,20 @@ class cleanupcoursestrigger extends base {
     }
 
     public function uninstall(\progress_trace $progress) {
-        trigger_manager::remove_all_instances($this->name);
+        $lib = lib_manager::get_trigger_lib($this->name);
+        if ($lib->has_multiple_instances()) {
+            trigger_manager::remove_all_instances($this->name);
+        } else {
+            $instances = trigger_manager::get_instances($this->name);
+            if (count($instances) != 1) {
+                throw new \moodle_exception('There should be exactly one workflow for the trigger ' . $this->name);
+            }
+            $workflow = workflow_manager::get_workflow(array_shift($instances)->workflowid);
+            if (step_manager::count_steps_of_workflow($workflow->id) > 0) {
+                throw new \moodle_exception('There should be no steps for the workflow of the trigger ' . $this->name);
+            }
+            workflow_manager::remove($workflow->id);
+        }
+        return true;
     }
 }
