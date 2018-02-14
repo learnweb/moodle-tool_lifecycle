@@ -27,5 +27,5 @@ use tool_cleanupcourses\manager\trigger_manager;
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_cleanupcoursestrigger_delayedcourses_uninstall() {
-    // trigger_manager::deregister('delayedcourses');
+    trigger_manager::deregister_workflow('delayedcourses');
 }

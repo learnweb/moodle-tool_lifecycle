@@ -25,6 +25,8 @@
 namespace tool_cleanupcourses\plugininfo;
 
 use core\plugininfo\base;
+use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -34,6 +36,17 @@ class cleanupcoursestrigger extends base {
         if ($this->is_standard()) {
             return false;
         }
+        // Only allow uninstall, if no active workflow for the trigger is present.
+        $triggers = trigger_manager::get_instances($this->name);
+        foreach ($triggers as $trigger) {
+            if (workflow_manager::is_active($trigger->workflowid)) {
+                return false;
+            }
+        }
         return true;
+    }
+
+    public function uninstall(\progress_trace $progress) {
+        trigger_manager::remove_all_instances($this->name);
     }
 }
