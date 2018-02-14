@@ -77,10 +77,11 @@ class form_trigger_instance extends \moodleform {
         $this->trigger = $trigger;
         $this->workflowid = $workflowid;
         $this->settings = $settings;
-        if ($trigger) {
-            $this->subpluginname = $trigger->subpluginname;
-        } else if ($subpluginname) {
+        // Subpluginname has priority over trigger, since it could have been overriden by the form.
+        if ($subpluginname) {
             $this->subpluginname = $subpluginname;
+        } else if ($trigger) {
+            $this->subpluginname = $trigger->subpluginname;
         } else {
             $triggertypes = trigger_manager::get_trigger_types();
             $this->subpluginname = array_pop($triggertypes);

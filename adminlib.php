@@ -373,7 +373,8 @@ class workflow_settings {
             $settings = null;
             if ($trigger = trigger_manager::get_trigger_for_workflow($this->workflowid)) {
                 $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
-            } else if (!$trigger && $name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+            }
+            if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
                 $subpluginname = $name;
             }
             $form = new form_trigger_instance($PAGE->url, $this->workflowid, $trigger, $subpluginname, $settings);
@@ -389,6 +390,7 @@ class workflow_settings {
                     } else {
                         if (!empty($data->id)) {
                             $trigger = trigger_manager::get_instance($data->id);
+                            $trigger->subpluginname = $data->subpluginname;
                             $trigger->instancename = $data->instancename;
                         } else {
                             $trigger = trigger_subplugin::from_record($data);
