@@ -80,7 +80,7 @@ class settings_manager {
     }
 
     /**
-     * Returns an array of local step settings for a given instance id
+     * Returns an array of local subplugin settings for a given instance id
      * @param int $instanceid id of the step instance
      * @param 'step'|'trigger' $type type of the subplugin.
      * @return array|null settings key-value pairs
@@ -123,6 +123,23 @@ class settings_manager {
             }
         }
         return $settingsvalues;
+    }
+
+    /**
+     * Removes all local settings for a given instance id
+     * @param int $instanceid id of the step instance
+     * @param 'step'|'trigger' $type type of the subplugin.
+     */
+    public static function remove_settings($instanceid, $type) {
+        global $DB;
+
+        if ($type !== SETTINGS_TYPE_TRIGGER && $type !== SETTINGS_TYPE_STEP) {
+            throw new \coding_exception('Invalid type value. "step" or "trigger" expected.');
+        }
+
+        $DB->delete_records('tool_cleanupcourses_settings',
+                array('instanceid' => $instanceid,
+                    'type' => $type));
     }
 
 }

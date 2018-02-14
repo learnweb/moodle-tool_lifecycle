@@ -84,6 +84,18 @@ class step_manager extends subplugin_manager {
     }
 
     /**
+     * Removes all step instances from the database.
+     * Should only be used, when uninstalling the subplugin.
+     * @param string $subpluginname step instance id
+     */
+    public static function remove_all_instances($subpluginname) {
+        $steps = step_manager::get_step_instances_by_subpluginname($subpluginname);
+        foreach ($steps as $step) {
+            self::remove($step->id);
+        }
+    }
+
+    /**
      * Removes a step instance from the database.
      * @param int $stepinstanceid step instance id
      */
@@ -93,6 +105,7 @@ class step_manager extends subplugin_manager {
         if ($record = $DB->get_record('tool_cleanupcourses_step', array('id' => $stepinstanceid))) {
             $step = step_subplugin::from_record($record);
             self::remove_from_sortindex($step);
+            settings_manager::remove_settings($step->id, SETTINGS_TYPE_STEP);
             $DB->delete_records('tool_cleanupcourses_step', (array) $step);
         }
         $transaction->allow_commit();

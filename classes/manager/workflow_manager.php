@@ -79,7 +79,7 @@ class workflow_manager {
      * Activate a workflow
      * @param int $workflowid id of the workflow
      */
-    private static function activate_workflow($workflowid) {
+    public static function activate_workflow($workflowid) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         $workflow = self::get_workflow($workflowid);
@@ -173,6 +173,17 @@ class workflow_manager {
     public static function is_active($workflowid) {
         $workflow = self::get_workflow($workflowid);
         return $workflow->active;
+    }
+
+    /**
+     * Creates a workflow with a specific title. Is used to create preset workflows for trigger plugins.
+     * @param $title string title of the workflow. Usually the pluginname of the trigger.
+     */
+    public static function create_workflow($title) {
+        $record = new \stdClass();
+        $record->title = $title;
+        $workflow = workflow::from_record($record);
+        self::insert_or_update($workflow);
     }
 
 }

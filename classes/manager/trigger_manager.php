@@ -102,69 +102,17 @@ class trigger_manager extends subplugin_manager {
     }
 
     /**
-     * Removes a subplugin from the database.
-     * @param trigger_subplugin $subplugin
+     * Removes all trigger instances from the database.
+     * Should only be used, when uninstalling the subplugin.
+     * @param string $subpluginname trigger instance id
      */
-    private static function remove(trigger_subplugin &$subplugin) {
+    public static function remove_all_instances($subpluginname) {
         global $DB;
-        $transaction = $DB->start_delegated_transaction();
-        $record = array(
-            'subpluginname' => $subplugin->subpluginname,
-        );
-        if ($record = $DB->get_record('tool_cleanupcourses_trigger', $record)) {
-            $subplugin = trigger_subplugin::from_record($record);
-            self::remove_from_sortindex($subplugin);
-            $DB->delete_records('tool_cleanupcourses_trigger', (array) $record);
+        $records = $DB->get_records('tool_cleanupcourses_trigger', array('subpluginname' => $subpluginname));
+        foreach ($records as $record) {
+            settings_manager::remove_settings($record->id, SETTINGS_TYPE_TRIGGER);
         }
-        $transaction->allow_commit();
-    }
-
-    /**
-     * Gets the count of currently enabled trigger subplugins.
-     * @return int count of enabled trigger subplugins.
-     */
-    public static function count_enabled_trigger() {
-        global $DB;
-        return $DB->count_records('tool_cleanupcourses_trigger',
-            array(
-                'enabled' => 1)
-        );
-    }
-
-    /**
-     * Gets the list of currently enabled trigger subplugins.
-     * @return array of enabled trigger subplugins.
-     */
-    public static function get_enabled_trigger() {
-        global $DB;
-        return $DB->get_records('tool_cleanupcourses_trigger',
-            array(
-                'enabled' => 1),
-            'sortindex ASC'
-        );
-    }
-
-    /**
-     * Handles an action of the subplugin_settings.
-     * @param string $action action to be executed
-     * @param int $subplugin id of the subplugin
-     */
-    public static function handle_action($action, $subplugin) {
-        if ($action === ACTION_ENABLE_TRIGGER) {
-            self::change_enabled($subplugin, true);
-        }
-        if ($action === ACTION_DISABLE_TRIGGER) {
-            self::change_enabled($subplugin, false);
-        }
-        if ($action === ACTION_UP_TRIGGER) {
-            self::change_sortindex($subplugin, true);
-        }
-        if ($action === ACTION_DOWN_TRIGGER) {
-            self::change_sortindex($subplugin, false);
-        }
-        if ($action === ACTION_WORKFLOW_TRIGGER) {
-            self::change_workflow($subplugin, optional_param('workflow', null, PARAM_INT));
-        }
+        $DB->delete_records('tool_cleanupcourses_trigger', array('subpluginname' => $subpluginname));
     }
 
     /**
