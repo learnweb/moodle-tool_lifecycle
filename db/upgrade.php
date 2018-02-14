@@ -150,6 +150,63 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018021301, 'tool', 'cleanupcourses');
     }
 
+    if ($oldversion < 2018021302) {
+
+        // Define field workflowid to be added to tool_cleanupcourses_trigger.
+        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'subpluginname');
+
+        // Conditionally launch add field workflowid.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field instancename to be added to tool_cleanupcourses_trigger.
+        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        $field = new xmldb_field('instancename', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, 'workflowid');
+
+        // Conditionally launch add field instancename.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field enabled to be dropped from tool_cleanupcourses_trigger.
+        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        $field = new xmldb_field('enabled');
+
+        // Conditionally launch drop field enabled.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define field sortindex to be dropped from tool_cleanupcourses_trigger.
+        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        $field = new xmldb_field('sortindex');
+
+        // Conditionally launch drop field sortindex.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define field sortindex to be dropped from tool_cleanupcourses_trigger.
+        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        $field = new xmldb_field('sortindex');
+
+        // Conditionally launch drop field sortindex.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define key workflowid_fk (foreign) to be added to tool_cleanupcourses_trigger.
+        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
+
+        // Launch add key workflowid_fk.
+        $dbman->add_key($table, $key);
+
+        // Cleanupcourses savepoint reached.
+        upgrade_plugin_savepoint(true, 2018021302, 'tool', 'cleanupcourses');
+    }
 
     return true;
 }
