@@ -57,8 +57,9 @@ class workflow {
      * @return workflow
      */
     public static function from_record($record) {
-        if (!object_property_exists($record, 'id')) {
-            return null;
+        $id = null;
+        if (object_property_exists($record, 'id') && $record->id) {
+            $id = $record->id;
         }
         if (!object_property_exists($record, 'title')) {
             return null;
@@ -80,7 +81,7 @@ class workflow {
             $sortindex = $record->sortindex;
         }
 
-        $instance = new self($record->id, $record->title, $active, $timeactive, $sortindex);
+        $instance = new self($id, $record->title, $active, $timeactive, $sortindex);
 
         return $instance;
     }
