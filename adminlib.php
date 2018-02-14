@@ -264,7 +264,7 @@ class workflow_settings {
     public function __construct($workflowid) {
         global $PAGE;
         // Has to be called before moodleform is created!
-        admin_externalpage_setup('tool_cleanupcourses_adminssettings');
+        admin_externalpage_setup('tool_cleanupcourses_adminsettings');
         $this->pageurl = new \moodle_url('/admin/tool/cleanupcourses/workflowsettings.php');
         $PAGE->set_url($this->pageurl);
         $this->workflowid = $workflowid;
