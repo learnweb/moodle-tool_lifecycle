@@ -46,6 +46,7 @@ $string['followedby_none'] = 'None';
 $string['invalid_workflow'] = 'Invalid workflow configuration';
 $string['invalid_workflow_details'] = 'Go to details view, to create a trigger for this workflow';
 $string['active_workflow_not_changeable'] = 'The workflow instance is active. It is not possible to change any of its steps.';
+$string['active_workflow_not_removeable'] = 'The workflow instance is active. It is not possible to remove it.';
 
 $string['process_cleanup'] = 'Run the cleanup courses processes';
 

@@ -109,6 +109,7 @@ class workflow_manager {
      * @param int $workflowid id of the workflow
      */
     public static function handle_action($action, $workflowid) {
+        global $OUTPUT;
         if ($action === ACTION_WORKFLOW_ACTIVATE) {
             self::activate_workflow($workflowid);
         }
@@ -119,7 +120,13 @@ class workflow_manager {
             self::change_sortindex($workflowid, false);
         }
         if ($action === ACTION_WORKFLOW_DELETE) {
-            self::remove($workflowid);
+            if (self::is_active($workflowid)) {
+                echo $OUTPUT->notification(get_string('active_workflow_not_removeable', 'tool_cleanupcourses')
+                    , 'warning');
+
+            } else {
+                self::remove($workflowid);
+            }
         }
     }
 
