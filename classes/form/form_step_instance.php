@@ -26,6 +26,7 @@ namespace tool_cleanupcourses\form;
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\lib_manager;
+use tool_cleanupcourses\manager\workflow_manager;
 use tool_cleanupcourses\step\libbase;
 
 defined('MOODLE_INTERNAL') || die();
@@ -122,7 +123,24 @@ class form_step_instance extends \moodleform {
             $this->lib->extend_add_instance_form_definition($mform);
         }
 
-        $this->add_action_buttons();
+        // For active workflows, we do not want the form to be editable.
+        if ($this->workflowid && workflow_manager::is_active($this->workflowid)) {
+            $this->add_cancel_button();
+        } else {
+            $this->add_action_buttons();
+        }
+    }
+
+    /**
+     * In case of read only mode only the cancel button is rendered.
+     */
+    private function add_cancel_button() {
+        $mform =& $this->_form;
+        //when two elements we need a group
+        $buttonarray=array();
+        $buttonarray[] = &$mform->createElement('cancel');
+        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->closeHeaderBefore('buttonar');
     }
 
     /**
@@ -154,6 +172,12 @@ class form_step_instance extends \moodleform {
 
         // Insert the subplugin specific settings.
         $this->lib->extend_add_instance_form_definition_after_data($mform, $this->stepsettings);
+
+        // For active workflows, we do not want the form to be editable.
+        if ($this->workflowid && workflow_manager::is_active($this->workflowid)) {
+            // buttonar is the button array of submit buttons. For inactive workflows this is only a cancel button.
+            $mform->hardFreezeAllVisibleExcept(array('buttonar'));
+        }
     }
 
 }
