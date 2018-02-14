@@ -166,6 +166,17 @@ class subplugin_settings {
     }
 
     /**
+     * Redirect to workflow details page.
+     * @param $workflowid int id of the workflow.
+     * @throws \moodle_exception
+     */
+    private function view_workflow_details($workflowid) {
+        $url = new \moodle_url('/admin/tool/cleanupcourses/workflowsettings.php',
+            array('workflowid' => $workflowid, 'sesskey' => sesskey()));
+        redirect($url);
+    }
+
+    /**
      * Write the page header
      */
     private function view_header() {
@@ -214,10 +225,17 @@ class subplugin_settings {
                 if ($data->id) {
                     $workflow = workflow_manager::get_workflow($data->id);
                     $workflow->title = $data->title;
+                    $newworkflow = false;
                 } else {
                     $workflow = workflow::from_record($data);
+                    $newworkflow = true;
                 }
                 workflow_manager::insert_or_update($workflow);
+                // If a new workflow was created, redirect to details page to directly create a trigger.
+                if ($newworkflow) {
+                    $this->view_workflow_details($workflow->id);
+                    return;
+                }
             }
             $this->view_plugins_table();
         }
