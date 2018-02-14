@@ -54,13 +54,11 @@ class trigger_subplugin extends subplugin{
         if (!object_property_exists($record, 'workflowid')) {
             return null;
         }
-        $instance = new self($record->subpluginname);
-        foreach (array_keys((array) $record) as $field) {
-            if (object_property_exists($instance, $field)) {
-                $instance->$field = $record->$field;
-            }
+        $id = null;
+        if (object_property_exists($record, 'id') && !empty($record->id)) {
+            $id = $record->id;
         }
-
+        $instance = new self($record->instancename, $record->subpluginname, $record->workflowid, $id);
         return $instance;
     }
 
