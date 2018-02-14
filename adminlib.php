@@ -366,7 +366,7 @@ class workflow_settings {
      * This is the entry point for this controller class.
      */
     public function execute($action, $subplugin) {
-        global $PAGE;
+        global $PAGE, $OUTPUT;
         $this->check_permissions();
 
         if ($action === ACTION_TRIGGER_INSTANCE_FORM) {
@@ -382,15 +382,22 @@ class workflow_settings {
             if ($form->is_cancelled()) {
                 // Skip this part and continue with requiring a trigger if still null.
             } else if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
-                if (!empty($data->id)) {
-                    $trigger = trigger_manager::get_instance($data->id);
-                    $trigger->instancename = $data->instancename;
+                // In case the workflow is active, we do not allow changes to the steps or trigger.
+                if (workflow_manager::is_active($this->workflowid)) {
+                    echo $OUTPUT->notification(
+                        get_string('active_workflow_not_changeable', 'tool_cleanupcourses'),
+                        'warning');
                 } else {
-                    $trigger = trigger_subplugin::from_record($data);
+                    if (!empty($data->id)) {
+                        $trigger = trigger_manager::get_instance($data->id);
+                        $trigger->instancename = $data->instancename;
+                    } else {
+                        $trigger = trigger_subplugin::from_record($data);
+                    }
+                    trigger_manager::insert_or_update($trigger);
+                    // Save local subplugin settings.
+                    settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $data->subpluginname, $data);
                 }
-                trigger_manager::insert_or_update($trigger);
-                // Save local subplugin settings.
-                settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $data->subpluginname, $data);
                 $this->view_plugins_table();
                 return;
             } else {
@@ -437,16 +444,23 @@ class workflow_settings {
             if ($form->is_cancelled()) {
                 $this->view_plugins_table();
                 return;
-            } else if ($form->is_submitted() && $data = $form->get_submitted_data()) {
-                if (!empty($data->id)) {
-                    $step = step_manager::get_step_instance($data->id);
-                    $step->instancename = $data->instancename;
+            } else if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
+                // In case the workflow is active, we do not allow changes to the steps or trigger.
+                if (workflow_manager::is_active($this->workflowid)) {
+                    echo $OUTPUT->notification(
+                        get_string('active_workflow_not_changeable', 'tool_cleanupcourses'),
+                        'warning');
                 } else {
-                    $step = step_subplugin::from_record($data);
+                    if (!empty($data->id)) {
+                        $step = step_manager::get_step_instance($data->id);
+                        $step->instancename = $data->instancename;
+                    } else {
+                        $step = step_subplugin::from_record($data);
+                    }
+                    step_manager::insert_or_update($step);
+                    // Save local subplugin settings.
+                    settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, $form->subpluginname, $data);
                 }
-                step_manager::insert_or_update($step);
-                // Save local subplugin settings.
-                settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, $form->subpluginname, $data);
                 $this->view_plugins_table();
                 return;
             } else {

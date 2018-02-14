@@ -164,4 +164,14 @@ class workflow_manager {
         return true;
     }
 
+    /**
+     * Checks if the workflow is active.
+     * @param $workflowid int id of the workflow.
+     * @return bool true, if the workflow is active.
+     */
+    public static function is_active($workflowid) {
+        $workflow = self::get_workflow($workflowid);
+        return $workflow->active;
+    }
+
 }
