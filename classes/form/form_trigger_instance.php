@@ -23,10 +23,10 @@
  */
 namespace tool_cleanupcourses\form;
 
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\manager\step_manager;
+use tool_cleanupcourses\entity\trigger_subplugin;
 use tool_cleanupcourses\manager\lib_manager;
-use tool_cleanupcourses\step\libbase;
+use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\trigger\base;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -35,28 +35,28 @@ require_once($CFG->libdir . '/formslib.php');
 /**
  * Provides a form to modify a step instance
  */
-class form_step_instance extends \moodleform {
+class form_trigger_instance extends \moodleform {
 
 
     /**
-     * @var step_subplugin
+     * @var trigger_subplugin
      */
-    public $step;
+    public $trigger;
 
     /**
-     * @var string name of the subplugin to be created
+     * @var string
      */
     public $subpluginname;
 
     /**
-     * @var libbase name of the subplugin to be created
+     * @var array/null local settings of the trigger instance
      */
-    public $lib;
+    public $settings;
 
     /**
-     * @var array/null local settings of the step instance
+     * @var base name of the subplugin to be created
      */
-    public $stepsettings;
+    public $lib;
 
     /**
      * @var int id of the workflow
@@ -66,23 +66,27 @@ class form_step_instance extends \moodleform {
     /**
      * Constructor
      * @param \moodle_url $url.
-     * @param step_subplugin $step step entity.
-     * @param string $subpluginname name of the subplugin.
-     * @param array $stepsettings settings of the step.
+     * @param int $workflowid if of the workflow.
+     * @param trigger_subplugin $trigger step entity.
+     * @param string $subpluginname name of the trigger subplugin.
+     * @param array $settings settings of the step.
      * @throws \moodle_exception if neither step nor subpluginname are set.
      */
-    public function __construct($url, $step, $workflowid, $subpluginname = null, $stepsettings = null) {
-        $this->step = $step;
+    public function __construct($url, $workflowid, $trigger = null, $subpluginname = null, $settings = null) {
+        $this->trigger = $trigger;
         $this->workflowid = $workflowid;
-        if ($step) {
-            $this->subpluginname = $step->subpluginname;
+        $this->settings = $settings;
+        if ($trigger) {
+            $this->subpluginname = $trigger->subpluginname;
         } else if ($subpluginname) {
             $this->subpluginname = $subpluginname;
         } else {
-            throw new \moodle_exception('One of the parameters $step or $subpluginname have to be set!');
+            $triggertypes = trigger_manager::get_trigger_types();
+            $this->subpluginname = array_pop($triggertypes);
         }
-        $this->lib = lib_manager::get_step_lib($this->subpluginname);
-        $this->stepsettings = $stepsettings;
+        if ($this->subpluginname) {
+            $this->lib = lib_manager::get_trigger_lib($this->subpluginname);
+        }
 
         parent::__construct($url);
     }
@@ -101,26 +105,29 @@ class form_step_instance extends \moodleform {
 
         $mform->addElement('hidden', 'action'); // Save the current action.
         $mform->setType('action', PARAM_TEXT);
-        $mform->setDefault('action', ACTION_STEP_INSTANCE_FORM);
+        $mform->setDefault('action', ACTION_TRIGGER_INSTANCE_FORM);
+
 
         $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_cleanupcourses'));
 
         $elementname = 'instancename';
-        $mform->addElement('text', $elementname, get_string('step_instancename', 'tool_cleanupcourses'));
+        $mform->addElement('text', $elementname, get_string('trigger_instancename', 'tool_cleanupcourses'));
         $mform->setType($elementname, PARAM_TEXT);
 
-        $elementname = 'subpluginnamestatic';
-        $mform->addElement('static', $elementname, get_string('step_subpluginname', 'tool_cleanupcourses'));
-        $mform->setType($elementname, PARAM_TEXT);
         $elementname = 'subpluginname';
-        $mform->addElement('hidden', $elementname);
+        $mform->addElement('select', $elementname,
+            get_string('trigger_subpluginname', 'tool_cleanupcourses'),
+            trigger_manager::get_trigger_types());
         $mform->setType($elementname, PARAM_TEXT);
 
         // Insert the subplugin specific settings.
-        if (!empty($this->lib->instance_settings())) {
-            $mform->addElement('header', 'step_settings_header', get_string('step_settings_header', 'tool_cleanupcourses'));
+        if (isset($this->lib) && !empty($this->lib->instance_settings())) {
+            $mform->addElement('header', 'trigger_settings_header', get_string('trigger_settings_header', 'tool_cleanupcourses'));
             $this->lib->extend_add_instance_form_definition($mform);
         }
+
+        $mform->addElement('submit', 'reload', 'reload');
+        $mform->registerNoSubmitButton('reload');
 
         $this->add_action_buttons();
     }
@@ -133,27 +140,39 @@ class form_step_instance extends \moodleform {
 
         $mform->setDefault('workflowid', $this->workflowid);
 
-        if ($this->step) {
-            $mform->setDefault('id', $this->step->id);
-            $mform->setDefault('instancename', $this->step->instancename);
-            $subpluginname = $this->step->subpluginname;
-        } else {
-            $mform->setDefault('id', '');
-            $subpluginname = $this->subpluginname;
+        if ($this->trigger) {
+            $mform->setDefault('id', $this->trigger->id);
+            $mform->setDefault('instancename', $this->trigger->instancename);
         }
-        $mform->setDefault('subpluginnamestatic',
-            get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname));
-        $mform->setDefault('subpluginname', $subpluginname);
+        $mform->setDefault('subpluginname', $this->subpluginname);
 
-        // Setting the default values for the local step settings.
-        if ($this->stepsettings) {
-            foreach ($this->stepsettings as $key => $value) {
+
+        // Setting the default values for the local trigger settings.
+        if ($this->settings) {
+            foreach ($this->settings as $key => $value) {
                 $mform->setDefault($key, $value);
             }
         }
 
         // Insert the subplugin specific settings.
-        $this->lib->extend_add_instance_form_definition_after_data($mform, $this->stepsettings);
+        if (isset($this->lib) && !empty($this->lib->instance_settings())) {
+            $this->lib->extend_add_instance_form_definition_after_data($mform, $this->settings);
+        }
+    }
+
+    public function validation($data, $files) {
+        $error = parent::validation($data, $files);
+        if (empty($data['instancename'])) {
+            $error['instancename'] = get_string('required');
+        }
+
+        $required_settings = $this->lib->instance_settings();
+        foreach ($required_settings as $setting) {
+            if (!array_key_exists($setting->name, $data) || empty($data[$setting->name])) {
+                $error[$setting->name] = get_string('required');
+            }
+        }
+        return $error;
     }
 
 }

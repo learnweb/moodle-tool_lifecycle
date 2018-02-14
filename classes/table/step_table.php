@@ -23,7 +23,10 @@
  */
 namespace tool_cleanupcourses\table;
 
+use tool_cleanupcourses\entity\trigger_subplugin;
 use tool_cleanupcourses\manager\step_manager;
+use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -37,19 +40,35 @@ class step_table extends \table_sql {
 
     public function __construct($uniqueid, $workflowid) {
         parent::__construct($uniqueid);
-        global $PAGE;
+        global $PAGE, $DB;
         $this->workflowid = $workflowid;
+        list($sqlwhere, $params) = $DB->get_in_or_equal($workflowid);
         $this->set_sql("id, subpluginname, instancename, sortindex",
             '{tool_cleanupcourses_step}',
-            "workflowid = $workflowid");
+            "workflowid " . $sqlwhere, $params);
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
     }
 
+    public function build_table() {
+        $trigger = trigger_manager::get_trigger_for_workflow($this->workflowid);
+        $this->format_and_add_array_of_rows(array(
+            array(
+                'id' => $trigger->id,
+                'type' => 'trigger',
+                'subpluginname' => $trigger->subpluginname,
+                'sortindex' => null,
+                'instancename' => 'Test',
+            )
+        ), false);
+        return parent::build_table();
+    }
+
     public function init() {
-        $this->define_columns(['instancename', 'subpluginname', 'sortindex', 'edit', 'delete']);
+        $this->define_columns(['type', 'instancename', 'subpluginname', 'sortindex', 'edit', 'delete']);
         $this->define_headers([
+            get_string('step_type', 'tool_cleanupcourses'),
             get_string('step_instancename', 'tool_cleanupcourses'),
             get_string('step_subpluginname', 'tool_cleanupcourses'),
             get_string('step_sortindex', 'tool_cleanupcourses'),
@@ -61,6 +80,18 @@ class step_table extends \table_sql {
     }
 
     /**
+     * Render the type column. This column displays Trigger or Step, depending of the type of the subplugin.
+     * @param $row
+     * @return string type of the subplugin
+     */
+    public function col_type($row) {
+        if (empty($row->type)) {
+            return get_string('step', 'tool_cleanupcourses');
+        }
+        return get_string('trigger', 'tool_cleanupcourses');
+    }
+
+    /**
      * Render subpluginname column.
      * @param $row
      * @return string pluginname of the subplugin
@@ -68,8 +99,11 @@ class step_table extends \table_sql {
     public function col_subpluginname($row) {
 
         $subpluginname = $row->subpluginname;
-
-        return get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname);
+        if (empty($row->type)) {
+            return get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname);
+        } else {
+            return get_string('pluginname', 'cleanupcoursestrigger_' . $subpluginname);
+        }
     }
 
     /**
@@ -111,7 +145,11 @@ class step_table extends \table_sql {
 
         $alt = 'edit';
         $icon = 't/edit';
-        $action = ACTION_STEP_INSTANCE_FORM;
+        if (empty($row->type)) {
+            $action = ACTION_STEP_INSTANCE_FORM;
+        } else {
+            $action = ACTION_TRIGGER_INSTANCE_FORM;
+        }
 
         return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
     }
@@ -122,12 +160,14 @@ class step_table extends \table_sql {
      * @return string action button for deleting the subplugin
      */
     public function col_delete($row) {
+        if (empty($row->type)) {
+            $alt = 'delete';
+            $icon = 't/delete';
+            $action = ACTION_STEP_INSTANCE_DELETE;
 
-        $alt = 'delete';
-        $icon = 't/delete';
-        $action = ACTION_STEP_INSTANCE_DELETE;
-
-        return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+            return $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+        }
+        return '';
     }
 
     /**

@@ -36,15 +36,18 @@ $string['active_workflows_heading'] = 'Active Workflows';
 $string['workflow_definition_heading'] = 'Workflow Definitions';
 $string['subpluginssettings_edit_workflow_definition_heading'] = 'Workflow Definition';
 $string['subpluginssettings_workflow_definition_steps_heading'] = 'Workflow Steps';
-$string['subpluginssettings_edit_instance_heading'] = 'Step Instance';
+$string['subpluginssettings_edit_trigger_instance_heading'] = 'Trigger for workflow \'{$a}\'';
+$string['subpluginssettings_edit_step_instance_heading'] = 'Step Instance for workflow \'{$a}\'';
 $string['add_new_step_instance'] = 'Add New Step Instance...';
 $string['step_settings_header'] = 'Specific settings of the step type';
+$string['trigger_settings_header'] = 'Specific settings of the trigger type';
 $string['general_settings_header'] = 'General Settings';
 $string['followedby_none'] = 'None';
 
 $string['process_cleanup'] = 'Run the cleanup courses processes';
 
 $string['trigger_subpluginname'] = 'Subplugin Name';
+$string['trigger_instancename'] = 'Instance Name';
 $string['trigger_enabled'] = 'Enabled';
 $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_workflow'] = 'Workflow';
@@ -60,7 +63,8 @@ $string['editworkflow'] = 'Edit Title';
 $string['deleteworkflow'] = 'Delete Workflow';
 $string['activateworkflow'] = 'Activate';
 
-$string['step_subpluginname'] = 'Step Type';
+$string['step_type'] = 'Type';
+$string['step_subpluginname'] = 'Subplugin Name';
 $string['step_instancename'] = 'Instance Name';
 $string['step_sortindex'] = 'Up/Down';
 $string['step_edit'] = 'Edit';
@@ -68,6 +72,8 @@ $string['step_delete'] = 'Delete';
 
 $string['trigger'] = 'Trigger';
 $string['step'] = 'Process step';
+
+$string['workflow_trigger'] = 'Trigger for the workflow';
 
 $string['cleanupcoursestrigger'] = 'Trigger';
 $string['cleanupcoursesstep'] = 'Process step';

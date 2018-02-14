@@ -16,8 +16,10 @@
 
 namespace tool_cleanupcourses;
 
+use tool_cleanupcourses\entity\trigger_subplugin;
 use tool_cleanupcourses\form\form_workflow_instance;
 use tool_cleanupcourses\form\form_step_instance;
+use tool_cleanupcourses\form\form_trigger_instance;
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\manager\trigger_manager;
@@ -277,14 +279,38 @@ class workflow_settings {
 
     /**
      * Write the HTML for the step instance form.
+     * @param $form \moodleform form to be displayed.
      */
     private function view_step_instance_form($form) {
+        $workflow = workflow_manager::get_workflow($this->workflowid);
+        $this->view_instance_form($form,
+            get_string('subpluginssettings_edit_step_instance_heading', 'tool_cleanupcourses',
+                $workflow->title));
+    }
+
+    /**
+     * Write the HTML for the trigger instance form.
+     * @param $form \moodleform form to be displayed.
+     */
+    private function view_trigger_instance_form($form) {
+        $workflow = workflow_manager::get_workflow($this->workflowid);
+        $this->view_instance_form($form,
+            get_string('subpluginssettings_edit_trigger_instance_heading', 'tool_cleanupcourses',
+                $workflow->title));
+    }
+
+    /**
+     * Write the HTML for subplugin instance form with specific header.
+     * @param $form \moodleform form to be displayed.
+     * @param $header string header of the form.
+     */
+    private function view_instance_form($form, $header) {
         global $OUTPUT;
 
         // Set up the table.
         $this->view_header();
 
-        echo $OUTPUT->heading(get_string('subpluginssettings_edit_instance_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading($header);
 
         echo $form->render();
 
@@ -325,32 +351,75 @@ class workflow_settings {
         global $PAGE;
         $this->check_permissions();
 
-        step_manager::handle_action($action, $subplugin);
+        if ($action === ACTION_TRIGGER_INSTANCE_FORM) {
+            $subpluginname = null;
+            $settings = null;
+            if ($trigger = trigger_manager::get_trigger_for_workflow($this->workflowid)) {
+                $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
+            } else if (!$trigger && $name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+                $subpluginname = $name;
+            }
+            $form = new form_trigger_instance($PAGE->url, $this->workflowid, $trigger, $subpluginname, $settings);
 
-        $steptomodify = null;
-        $subpluginname = null;
-        $stepsettings = null;
-        if ($stepid = optional_param('subplugin', null, PARAM_INT)) {
-            $steptomodify = step_manager::get_step_instance($stepid);
-            // If step was removed!
-            if (!$steptomodify) {
+            if ($form->is_cancelled()) {
+                // Skip this part and continue with requiring a trigger if still null.
+            } else if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
+                if (!empty($data->id)) {
+                    $trigger = trigger_manager::get_instance($data->id);
+                    $trigger->instancename = $data->instancename;
+                } else {
+                    $trigger = trigger_subplugin::from_record($data);
+                }
+                trigger_manager::insert_or_update($trigger);
+                // Save local subplugin settings.
+                settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $data->subpluginname, $data);
                 $this->view_plugins_table();
                 return;
+            } else {
+                $this->view_trigger_instance_form($form);
+                return;
             }
-            $stepsettings = settings_manager::get_settings($stepid);
-        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
-            $subpluginname = $name;
-        } else {
-            $this->view_plugins_table();
+        }
+
+        // If trigger is not yet set, redirect to trigger form!
+        $trigger = trigger_manager::get_trigger_for_workflow($this->workflowid);
+        if ($trigger === null) {
+            $subpluginname = null;
+            if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+                $subpluginname = $name;
+            }
+            $triggerform = new form_trigger_instance($PAGE->url, $this->workflowid, null, $subpluginname);
+            $this->view_trigger_instance_form($triggerform);
             return;
         }
 
-        $form = new form_step_instance($PAGE->url, $steptomodify, $this->workflowid, $subpluginname, $stepsettings);
+        step_manager::handle_action($action, $subplugin);
 
         if ($action === ACTION_STEP_INSTANCE_FORM) {
-            $this->view_step_instance_form($form);
-        } else {
-            if ($form->is_submitted() && !$form->is_cancelled() && $data = $form->get_submitted_data()) {
+            $steptomodify = null;
+            $subpluginname = null;
+            $stepsettings = null;
+            if ($stepid = optional_param('subplugin', null, PARAM_INT)) {
+                $steptomodify = step_manager::get_step_instance($stepid);
+                // If step was removed!
+                if (!$steptomodify) {
+                    $this->view_plugins_table();
+                    return;
+                }
+                $stepsettings = settings_manager::get_settings($stepid, SETTINGS_TYPE_STEP);
+            } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+                $subpluginname = $name;
+            } else {
+                $this->view_plugins_table();
+                return;
+            }
+
+            $form = new form_step_instance($PAGE->url, $steptomodify, $this->workflowid, $subpluginname, $stepsettings);
+
+            if ($form->is_cancelled()) {
+                $this->view_plugins_table();
+                return;
+            } else if ($form->is_submitted() && $data = $form->get_submitted_data()) {
                 if (!empty($data->id)) {
                     $step = step_manager::get_step_instance($data->id);
                     $step->instancename = $data->instancename;
@@ -359,10 +428,15 @@ class workflow_settings {
                 }
                 step_manager::insert_or_update($step);
                 // Save local subplugin settings.
-                settings_manager::save_settings($step->id, $form->subpluginname, $data);
+                settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, $form->subpluginname, $data);
+                $this->view_plugins_table();
+                return;
+            } else {
+                $this->view_step_instance_form($form);
+                return;
             }
-            $this->view_plugins_table();
         }
+        $this->view_plugins_table();
     }
 
 }
