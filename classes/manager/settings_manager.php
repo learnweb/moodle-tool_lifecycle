@@ -37,13 +37,13 @@ class settings_manager {
      */
     public static function save_settings($instanceid, $type, $subpluginname, $data) {
         global $DB;
-        if ($type !== 'trigger' && $type !== 'step') {
+        if ($type !== SETTINGS_TYPE_TRIGGER && $type !== SETTINGS_TYPE_STEP) {
             throw new \coding_exception('Invalid type value. "step" or "trigger" expected.');
         }
-        if ($type == 'trigger') {
-            $lib = lib_manager::get_step_lib($subpluginname);
-        } else {
+        if ($type == SETTINGS_TYPE_TRIGGER) {
             $lib = lib_manager::get_trigger_lib($subpluginname);
+        } else {
+            $lib = lib_manager::get_step_lib($subpluginname);
         }
 
         $settingsfields = $lib->instance_settings();
@@ -88,10 +88,10 @@ class settings_manager {
     public static function get_settings($instanceid, $type) {
         global $DB;
 
-        if ($type !== 'trigger' && $type !== 'step') {
+        if ($type !== SETTINGS_TYPE_TRIGGER && $type !== SETTINGS_TYPE_STEP) {
             throw new \coding_exception('Invalid type value. "step" or "trigger" expected.');
         }
-        if ($type == 'trigger') {
+        if ($type == SETTINGS_TYPE_TRIGGER) {
             $instance = trigger_manager::get_instance($instanceid);
         } else {
             $instance = step_manager::get_step_instance($instanceid);
@@ -101,7 +101,7 @@ class settings_manager {
             return null;
         }
 
-        if ($type == 'trigger') {
+        if ($type == SETTINGS_TYPE_TRIGGER) {
             $lib = lib_manager::get_trigger_lib($instance->subpluginname);
         } else {
             $lib = lib_manager::get_step_lib($instance->subpluginname);
