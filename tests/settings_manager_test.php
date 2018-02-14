@@ -37,7 +37,7 @@ class tool_cleanupcourses_settings_manager_testcase extends \advanced_testcase {
 
     public function setUp() {
         $this->resetAfterTest(false);
-        $workflow = tool_cleanupcourses_generator::create_active_workflow();
+        $workflow = tool_cleanupcourses_generator::create_workflow();
         $this->step = new step_subplugin('instancename', 'email', $workflow->id);
         step_manager::insert_or_update($this->step);
     }

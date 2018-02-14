@@ -33,31 +33,23 @@ use tool_cleanupcourses\manager\workflow_manager;
  */
 class tool_cleanupcourses_generator extends testing_module_generator {
 
-    public static function setup_test_plugins() {
-        global $DB;
-        $DB->delete_records('tool_cleanupcourses_trigger');
-        for ($i = 1; $i <= 3; $i++) {
-            $record = array(
-                    'id' => $i,
-                    'subpluginname' => 'subplugin'.$i,
-                    'enabled' => 1,
-                    'sortindex' => $i,
-            );
-            $DB->insert_record_raw('tool_cleanupcourses_trigger', $record, true, true, true);
-        }
-    }
-
     /**
      * Creates an artificial workflow without steps.
      */
-    public static function create_active_workflow() {
+    public static function create_workflow() {
         // Create Workflow.
         $record = new stdClass();
         $record->id = null;
         $record->title = 'myworkflow';
-        $record->active = true;
         $workflow = workflow::from_record($record);
         workflow_manager::insert_or_update($workflow);
+        // Create trigger.
+        $record = new stdClass();
+        $record->subpluginname = 'delayedcourses';
+        $record->instancename = 'delayedcourses';
+        $record->workflowid = $workflow->id;
+        $trigger = trigger_subplugin::from_record($record);
+        trigger_manager::insert_or_update($trigger);
         return $workflow;
     }
 
@@ -77,41 +69,11 @@ class tool_cleanupcourses_generator extends testing_module_generator {
     /**
      * Creates an artificial workflow with three steps.
      */
-    public static function create_active_workflow_with_steps() {
-        $workflow = self::create_active_workflow();
+    public static function create_workflow_with_steps() {
+        $workflow = self::create_workflow();
         self::create_step('instance1', 'subpluginname', $workflow->id);
         self::create_step('instance2', 'subpluginname', $workflow->id);
         self::create_step('instance3', 'subpluginname', $workflow->id);
         return $workflow;
-    }
-
-    /**
-     * Creates an trigger instance from delayedcourses and
-     * creates two instances of createbackup, which it is followed by.
-     */
-    public static function create_real_trigger_with_workflow() {
-        // Create Workflow.
-        $record = new stdClass();
-        $record->id = null;
-        $record->title = 'myworkflow';
-        $record->active = true;
-        $workflow = workflow::from_record($record);
-        workflow_manager::insert_or_update($workflow);
-
-        // Create First Step.
-        $step1 = new step_subplugin('mystepinstance1', 'createbackup', $workflow->id);
-        step_manager::insert_or_update($step1);
-
-        // Create Second Step.
-        $step2 = new step_subplugin('mystepinstance2', 'createbackup', $workflow->id);
-        step_manager::insert_or_update($step2);
-
-        // Create trigger.
-        $record = new stdClass();
-        $record->subpluginname = 'delayedcourses';
-        $record->followedby = $step1->id;
-        $trigger = trigger_subplugin::from_record($record);
-        trigger_manager::insert_or_update($trigger);
-        return $trigger;
     }
 }
