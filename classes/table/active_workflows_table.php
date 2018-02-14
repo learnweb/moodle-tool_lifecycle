@@ -23,6 +23,7 @@
  */
 namespace tool_cleanupcourses\table;
 
+use tool_cleanupcourses\manager\process_manager;
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\trigger_manager;
 use tool_cleanupcourses\manager\workflow_manager;
@@ -45,10 +46,12 @@ class active_workflows_table extends \table_sql {
     }
 
     public function init() {
-        $this->define_columns(['title', 'timeactive', 'sortindex', 'tools']);
+        $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'sortindex', 'tools']);
         $this->define_headers([
             get_string('workflow_title', 'tool_cleanupcourses'),
             get_string('workflow_timeactive', 'tool_cleanupcourses'),
+            get_string('trigger', 'tool_cleanupcourses'),
+            get_string('workflow_processes', 'tool_cleanupcourses'),
             get_string('workflow_sortindex', 'tool_cleanupcourses'),
             get_string('workflow_tools', 'tool_cleanupcourses'),
             ]);
@@ -101,6 +104,27 @@ class active_workflows_table extends \table_sql {
         }
 
         return  $output;
+    }
+
+    /**
+     * Render the trigger column.
+     * @param $row
+     * @return string instancename of the trigger
+     */
+    public function col_trigger($row) {
+        $trigger = trigger_manager::get_trigger_for_workflow($row->id);
+        if ($trigger) {
+            return $trigger->instancename;
+        }
+    }
+
+    /**
+     * Render the processes column. It shows the number of active processes for the workflow instance.
+     * @param $row
+     * @return string instancename of the trigger
+     */
+    public function col_processes($row) {
+        return process_manager::count_processes_by_workflow($row->id);
     }
 
     /**

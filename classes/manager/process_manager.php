@@ -82,6 +82,16 @@ class process_manager {
     }
 
     /**
+     * Counts all processes for the given workflow id.
+     * @param int $workflowid id of the workflow
+     * @return int number of processes.
+     */
+    public static function count_processes_by_workflow($workflowid) {
+        global $DB;
+        return $DB->count_records('tool_cleanupcourses_process', array('workflowid' => $workflowid));
+    }
+
+    /**
      * Proceeds the process to the next step.
      * @param process $process
      * @return true, if followedby another step; otherwise false.
