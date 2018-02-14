@@ -379,30 +379,31 @@ class workflow_settings {
             }
             $form = new form_trigger_instance($PAGE->url, $this->workflowid, $trigger, $subpluginname, $settings);
 
-            if ($form->is_cancelled()) {
-                // Skip this part and continue with requiring a trigger if still null.
-            } else if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
-                // In case the workflow is active, we do not allow changes to the steps or trigger.
-                if (workflow_manager::is_active($this->workflowid)) {
-                    echo $OUTPUT->notification(
-                        get_string('active_workflow_not_changeable', 'tool_cleanupcourses'),
-                        'warning');
-                } else {
-                    if (!empty($data->id)) {
-                        $trigger = trigger_manager::get_instance($data->id);
-                        $trigger->instancename = $data->instancename;
+            // Skip this part and continue with requiring a trigger if still null.
+            if (!$form->is_cancelled()) {
+                if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
+                    // In case the workflow is active, we do not allow changes to the steps or trigger.
+                    if (workflow_manager::is_active($this->workflowid)) {
+                        echo $OUTPUT->notification(
+                            get_string('active_workflow_not_changeable', 'tool_cleanupcourses'),
+                            'warning');
                     } else {
-                        $trigger = trigger_subplugin::from_record($data);
+                        if (!empty($data->id)) {
+                            $trigger = trigger_manager::get_instance($data->id);
+                            $trigger->instancename = $data->instancename;
+                        } else {
+                            $trigger = trigger_subplugin::from_record($data);
+                        }
+                        trigger_manager::insert_or_update($trigger);
+                        // Save local subplugin settings.
+                        settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $data->subpluginname, $data);
                     }
-                    trigger_manager::insert_or_update($trigger);
-                    // Save local subplugin settings.
-                    settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $data->subpluginname, $data);
+                    $this->view_plugins_table();
+                    return;
+                } else {
+                    $this->view_trigger_instance_form($form);
+                    return;
                 }
-                $this->view_plugins_table();
-                return;
-            } else {
-                $this->view_trigger_instance_form($form);
-                return;
             }
         }
 

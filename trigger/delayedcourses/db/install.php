@@ -27,5 +27,5 @@ use tool_cleanupcourses\manager\trigger_manager;
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_cleanupcoursestrigger_delayedcourses_install() {
-//    trigger_manager::register('delayedcourses');
+    // trigger_manager::register('delayedcourses');
 }
