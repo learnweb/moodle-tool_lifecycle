@@ -213,7 +213,6 @@ class subplugin_settings {
         // Has to be called before moodleform is created!
         admin_externalpage_setup('tool_cleanupcourses_subpluginssettings');
 
-        trigger_manager::handle_action($action, $subpluginid);
         workflow_manager::handle_action($action, $workflowid);
 
         $form = new form_workflow_instance($PAGE->url, workflow_manager::get_workflow($workflowid));
