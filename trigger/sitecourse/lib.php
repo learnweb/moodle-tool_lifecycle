@@ -53,4 +53,12 @@ class sitecourse extends base {
         return 'sitecourse';
     }
 
+    /**
+     * Has only one instance and results in a preset workflow.
+     * @return bool
+     */
+    public function has_multiple_instances() {
+        return false;
+    }
+
 }

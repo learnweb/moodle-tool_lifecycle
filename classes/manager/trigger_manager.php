@@ -147,6 +147,22 @@ class trigger_manager extends subplugin_manager {
     }
 
     /**
+     * Gets the list of step subplugins, which are not preset and can therefore be chosen from trigger form dropdown..
+     * @return array of step subplugins.
+     */
+    public static function get_chooseable_trigger_types() {
+        $triggers = self::get_trigger_types();
+        $result = array();
+        foreach ($triggers as $id => $trigger) {
+            $lib = lib_manager::get_trigger_lib($id);
+            if ($lib->has_multiple_instances()) {
+                $result[$id] = $trigger;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * Removes all instances, which belong to the workflow instance.
      * @param $workflowid int id of the workflow.
      */

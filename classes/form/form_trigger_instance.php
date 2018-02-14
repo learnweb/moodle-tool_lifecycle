@@ -115,10 +115,17 @@ class form_trigger_instance extends \moodleform {
         $mform->addElement('text', $elementname, get_string('trigger_instancename', 'tool_cleanupcourses'));
         $mform->setType($elementname, PARAM_TEXT);
 
+        // If workflow is active, then all trigger types have to be used to also show the preset triggers.
+        if ($this->workflowid && workflow_manager::is_active($this->workflowid)) {
+            $triggers = trigger_manager::get_trigger_types();
+        } else {
+            $triggers = trigger_manager::get_chooseable_trigger_types();
+        }
+
         $elementname = 'subpluginname';
         $mform->addElement('select', $elementname,
             get_string('trigger_subpluginname', 'tool_cleanupcourses'),
-            trigger_manager::get_trigger_types());
+            $triggers);
         $mform->setType($elementname, PARAM_TEXT);
 
         // Insert the subplugin specific settings.
