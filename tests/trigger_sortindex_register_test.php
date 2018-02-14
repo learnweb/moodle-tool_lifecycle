@@ -36,7 +36,7 @@ class tool_cleanupcourses_trigger_sortindex_register_testcase extends \advanced_
     public function setUp() {
         $this->resetAfterTest(true);
         tool_cleanupcourses_generator::setup_test_plugins();
-        trigger_manager::register(self::EXISTINGTRIGGER);
+        //trigger_manager::register(self::EXISTINGTRIGGER);
     }
 
     /**
@@ -121,7 +121,7 @@ class tool_cleanupcourses_trigger_sortindex_register_testcase extends \advanced_
      * Test the proper deregistering of a trigger subplugin, when disabled.
      */
     public function test_deregister_disabled_trigger() {
-        trigger_manager::deregister(self::EXISTINGTRIGGER);
+//        trigger_manager::deregister(self::EXISTINGTRIGGER);
         $this->check_new_trigger_correctly_deregistered();
     }
 
@@ -132,7 +132,7 @@ class tool_cleanupcourses_trigger_sortindex_register_testcase extends \advanced_
         global $DB;
         $record = $DB->get_record('tool_cleanupcourses_trigger', array('subpluginname' => self::EXISTINGTRIGGER), 'id');
         trigger_manager::handle_action(ACTION_ENABLE_TRIGGER, $record->id);
-        trigger_manager::deregister(self::EXISTINGTRIGGER);
+//        trigger_manager::deregister(self::EXISTINGTRIGGER);
         $this->check_new_trigger_correctly_deregistered();
     }
 
@@ -144,7 +144,7 @@ class tool_cleanupcourses_trigger_sortindex_register_testcase extends \advanced_
         $record = $DB->get_record('tool_cleanupcourses_trigger', array('subpluginname' => self::EXISTINGTRIGGER), 'id');
         trigger_manager::handle_action(ACTION_ENABLE_TRIGGER, $record->id);
         trigger_manager::handle_action(ACTION_UP_TRIGGER, $record->id);
-        trigger_manager::deregister(self::EXISTINGTRIGGER);
+//        trigger_manager::deregister(self::EXISTINGTRIGGER);
         $this->check_new_trigger_correctly_deregistered();
     }
 
@@ -158,7 +158,7 @@ class tool_cleanupcourses_trigger_sortindex_register_testcase extends \advanced_
         trigger_manager::handle_action(ACTION_UP_TRIGGER, $record->id);
         trigger_manager::handle_action(ACTION_UP_TRIGGER, $record->id);
         trigger_manager::handle_action(ACTION_UP_TRIGGER, $record->id);
-        trigger_manager::deregister(self::EXISTINGTRIGGER);
+//        trigger_manager::deregister(self::EXISTINGTRIGGER);
         $this->check_new_trigger_correctly_deregistered();
     }
 

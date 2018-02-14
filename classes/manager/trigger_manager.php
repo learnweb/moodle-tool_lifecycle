@@ -30,30 +30,6 @@ defined('MOODLE_INTERNAL') || die();
 class trigger_manager extends subplugin_manager {
 
     /**
-     * Registers a trigger subplugin.
-     * This has to be called, when installing trigger plugins!
-     * @param string $subpluginname name of the plugin
-     */
-    public static function register($subpluginname) {
-        if (self::is_subplugin($subpluginname, 'cleanupcoursestrigger')) {
-            $subplugin = new trigger_subplugin($subpluginname);
-            self::insert_or_update($subplugin);
-        }
-    }
-
-    /**
-     * Deregisters a trigger subplugin.
-     * This has to be called, when uninstalling trigger plugins!
-     * @param string $subpluginname name of the plugin
-     */
-    public static function deregister($subpluginname) {
-        if (self::is_subplugin($subpluginname, 'cleanupcoursestrigger')) {
-            $subplugin = new trigger_subplugin($subpluginname);
-            self::remove($subplugin);
-        }
-    }
-
-    /**
      * Changes the state of a subplugin.
      * @param int $subpluginid id of the subplugin
      * @param bool $enabled new state
