@@ -145,4 +145,13 @@ class trigger_manager extends subplugin_manager {
         return $result;
     }
 
+    /**
+     * Removes all instances, which belong to the workflow instance.
+     * @param $workflowid int id of the workflow.
+     */
+    public static function remove_instances_of_workflow($workflowid) {
+        global $DB;
+        $DB->delete_records('tool_cleanupcourses_trigger', array('workflowid' => $workflowid));
+    }
+
 }

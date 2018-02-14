@@ -421,6 +421,7 @@ class workflow_settings {
         }
 
         step_manager::handle_action($action, $subplugin);
+        workflow_manager::handle_action($action, $subplugin);
 
         if ($action === ACTION_STEP_INSTANCE_FORM) {
             $steptomodify = null;

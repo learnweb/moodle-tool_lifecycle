@@ -48,5 +48,6 @@ class cleanupcoursesstep extends base {
 
     public function uninstall(\progress_trace $progress) {
         step_manager::remove_all_instances($this->name);
+        return true;
     }
 }
