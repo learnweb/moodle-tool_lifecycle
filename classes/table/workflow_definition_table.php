@@ -23,6 +23,7 @@
  */
 namespace tool_cleanupcourses\table;
 
+use tool_cleanupcourses\manager\lib_manager;
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\trigger_manager;
 use tool_cleanupcourses\manager\workflow_manager;
@@ -90,17 +91,25 @@ class workflow_definition_table extends \table_sql {
         $url = new \moodle_url('/admin/tool/cleanupcourses/workflowsettings.php',
             array('workflowid' => $row->id, 'sesskey' => sesskey()));
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-            null , array('title' => $alt));
+            null, array('title' => $alt));
 
-        $action = ACTION_WORKFLOW_INSTANCE_FROM;
-        $alt = get_string('editworkflow', 'tool_cleanupcourses');
-        $icon = 't/edit';
-        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+        $trigger = trigger_manager::get_trigger_for_workflow($row->id);
+        if ($trigger) {
+            $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+        }
 
-        $action = ACTION_WORKFLOW_DELETE;
-        $alt = get_string('deleteworkflow', 'tool_cleanupcourses');
-        $icon = 't/delete';
-        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+        if (!isset($lib) || $lib->has_multiple_instances()) {
+
+            $action = ACTION_WORKFLOW_INSTANCE_FROM;
+            $alt = get_string('editworkflow', 'tool_cleanupcourses');
+            $icon = 't/edit';
+            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+
+            $action = ACTION_WORKFLOW_DELETE;
+            $alt = get_string('deleteworkflow', 'tool_cleanupcourses');
+            $icon = 't/delete';
+            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+        }
 
         return $output;
     }
