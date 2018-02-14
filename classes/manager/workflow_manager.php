@@ -150,4 +150,18 @@ class workflow_manager {
         $transaction->allow_commit();
     }
 
+    /**
+     * Checks if the workflow definition is valid.
+     * The main purpose of this function is, to check if a trigger definition exists and if this definition is complete.
+     * @param $workflowid int id of the workflow.
+     * @return bool true, if the definition is valid.
+     */
+    public static function is_valid($workflowid) {
+        $trigger = trigger_manager::get_trigger_for_workflow($workflowid);
+        if ($trigger === null) {
+            return false;
+        }
+        return true;
+    }
+
 }

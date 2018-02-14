@@ -64,11 +64,16 @@ class workflow_definition_table extends \table_sql {
         if ($row->timeactive) {
             return userdate($row->timeactive, get_string('strftimedatetime'), 0);
         }
-        return $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            array('action' => ACTION_WORKFLOW_ACTIVATE,
-                'sesskey' => sesskey(),
-                'workflowid' => $row->id)),
-            get_string('activateworkflow', 'tool_cleanupcourses'));
+        if (workflow_manager::is_valid($row->id)) {
+            return $OUTPUT->single_button(new \moodle_url($PAGE->url,
+                array('action' => ACTION_WORKFLOW_ACTIVATE,
+                    'sesskey' => sesskey(),
+                    'workflowid' => $row->id)),
+                get_string('activateworkflow', 'tool_cleanupcourses'));
+        } else {
+            return $OUTPUT->pix_icon('i/warning', get_string('invalid_workflow_details', 'tool_cleanupcourses')) .
+                get_string('invalid_workflow', 'tool_cleanupcourses');
+        }
     }
 
     /**
