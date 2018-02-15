@@ -273,4 +273,22 @@ class step_manager extends subplugin_manager {
         global $DB;
         $DB->delete_records('tool_cleanupcourses_step', array('workflowid' => $workflowid));
     }
+
+    /**
+     * Copies all steps of a workflow to a new one.
+     * @param $oldworkflowid int id of the old workflow
+     * @param $newworkflowid int id of the new workflow
+     */
+    public static function duplicate_steps($oldworkflowid, $newworkflowid) {
+        $steps = self::get_step_instances($oldworkflowid);
+        foreach ($steps as $step) {
+            $settings = settings_manager::get_settings($step->id, SETTINGS_TYPE_STEP);
+
+            $step->id = null;
+            $step->workflowid = $newworkflowid;
+            self::insert_or_update($step);
+
+            settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, $step->subpluginname, $settings);
+        }
+    }
 }
