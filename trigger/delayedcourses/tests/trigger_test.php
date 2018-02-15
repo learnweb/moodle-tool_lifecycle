@@ -22,6 +22,7 @@ use tool_cleanupcourses\manager\delayed_courses_manager;
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
+require_once(__DIR__ . '/generator/lib.php');
 
 /**
  * Trigger test for delayed courses trigger.
@@ -34,18 +35,24 @@ require_once(__DIR__ . '/../lib.php');
  */
 class tool_cleanupcourses_trigger_delayedcourses_testcase extends \advanced_testcase {
 
+    private $triggerinstance;
+
+    public function setUp() {
+        $this->resetAfterTest(true);
+        $this->setAdminUser();
+
+        $this->triggerinstance = \tool_cleanupcourses_trigger_delayedcourses_generator::create_trigger_with_workflow();
+    }
+
     /**
      * Tests that a course is not excluded by this plugin, when there exists no dalayed entry, yet.
      */
     public function test_course_not_delayed() {
 
-        $this->resetAfterTest();
-        $this->setAdminUser();
-
         $course = $this->getDataGenerator()->create_course();
 
         $trigger = new delayedcourses();
-        $response = $trigger->check_course($course);
+        $response = $trigger->check_course($course, $this->triggerinstance->id);
         $this->assertEquals($response, trigger_response::next());
     }
 
@@ -54,15 +61,12 @@ class tool_cleanupcourses_trigger_delayedcourses_testcase extends \advanced_test
      */
     public function test_course_delayed() {
 
-        $this->resetAfterTest();
-        $this->setAdminUser();
-
         $course = $this->getDataGenerator()->create_course();
 
         delayed_courses_manager::set_course_delayed($course->id, 2000);
 
         $trigger = new delayedcourses();
-        $response = $trigger->check_course($course);
+        $response = $trigger->check_course($course, $this->triggerinstance->id);
         $this->assertEquals($response, trigger_response::exclude());
     }
 
@@ -71,15 +75,12 @@ class tool_cleanupcourses_trigger_delayedcourses_testcase extends \advanced_test
      */
     public function test_course_delay_expired() {
 
-        $this->resetAfterTest();
-        $this->setAdminUser();
-
         $course = $this->getDataGenerator()->create_course();
 
         delayed_courses_manager::set_course_delayed($course->id, -2000);
 
         $trigger = new delayedcourses();
-        $response = $trigger->check_course($course);
+        $response = $trigger->check_course($course, $this->triggerinstance->id);
         $this->assertEquals($response, trigger_response::next());
     }
 }

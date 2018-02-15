@@ -21,6 +21,7 @@ use tool_cleanupcourses\response\trigger_response;
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
+require_once(__DIR__ . '/generator/lib.php');
 
 /**
  * Trigger test for start date delay trigger.
@@ -33,18 +34,24 @@ require_once(__DIR__ . '/../lib.php');
  */
 class tool_cleanupcourses_trigger_startdatedelay_testcase extends \advanced_testcase {
 
+    private $triggerinstance;
+
+    public function setUp() {
+        $this->resetAfterTest(true);
+        $this->setAdminUser();
+
+        $this->triggerinstance = \tool_cleanupcourses_trigger_startdatedelay_generator::create_trigger_with_workflow();
+    }
+
     /**
      * Tests if courses, which are newer than the default of 190 days are not triggered by this plugin.
      */
     public function test_young_course() {
 
-        $this->resetAfterTest();
-        $this->setAdminUser();
-
         $course = $this->getDataGenerator()->create_course(array('startdate' => time() - 50 * 24 * 60 * 60));
 
         $trigger = new startdatedelay();
-        $response = $trigger->check_course($course);
+        $response = $trigger->check_course($course, $this->triggerinstance->id);
         $this->assertEquals($response, trigger_response::next());
 
     }
@@ -54,13 +61,10 @@ class tool_cleanupcourses_trigger_startdatedelay_testcase extends \advanced_test
      */
     public function test_old_course() {
 
-        $this->resetAfterTest();
-        $this->setAdminUser();
-
         $course = $this->getDataGenerator()->create_course(array('startdate' => time() - 200 * 24 * 60 * 60));
 
         $trigger = new startdatedelay();
-        $response = $trigger->check_course($course);
+        $response = $trigger->check_course($course, $this->triggerinstance->id);
         $this->assertEquals($response, trigger_response::trigger());
 
     }
