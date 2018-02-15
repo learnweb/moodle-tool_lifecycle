@@ -37,7 +37,7 @@ class settings_manager {
      */
     public static function save_settings($instanceid, $type, $subpluginname, $data) {
         global $DB;
-        self::validate_type();
+        self::validate_type($type);
 
         if ($type == SETTINGS_TYPE_TRIGGER) {
             $lib = lib_manager::get_trigger_lib($subpluginname);
@@ -87,7 +87,7 @@ class settings_manager {
     public static function get_settings($instanceid, $type) {
         global $DB;
 
-        self::validate_type();
+        self::validate_type($type);
 
         if ($type == SETTINGS_TYPE_TRIGGER) {
             $instance = trigger_manager::get_instance($instanceid);
@@ -130,7 +130,7 @@ class settings_manager {
      */
     public static function remove_settings($instanceid, $type) {
         global $DB;
-        self::validate_type();
+        self::validate_type($type);
 
         $DB->delete_records('tool_cleanupcourses_settings',
                 array('instanceid' => $instanceid,
