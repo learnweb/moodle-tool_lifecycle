@@ -37,9 +37,8 @@ class settings_manager {
      */
     public static function save_settings($instanceid, $type, $subpluginname, $data) {
         global $DB;
-        if ($type !== SETTINGS_TYPE_TRIGGER && $type !== SETTINGS_TYPE_STEP) {
-            throw new \coding_exception('Invalid type value. "step" or "trigger" expected.');
-        }
+        self::validate_type();
+
         if ($type == SETTINGS_TYPE_TRIGGER) {
             $lib = lib_manager::get_trigger_lib($subpluginname);
         } else {
@@ -88,9 +87,8 @@ class settings_manager {
     public static function get_settings($instanceid, $type) {
         global $DB;
 
-        if ($type !== SETTINGS_TYPE_TRIGGER && $type !== SETTINGS_TYPE_STEP) {
-            throw new \coding_exception('Invalid type value. "step" or "trigger" expected.');
-        }
+        self::validate_type();
+
         if ($type == SETTINGS_TYPE_TRIGGER) {
             $instance = trigger_manager::get_instance($instanceid);
         } else {
@@ -132,14 +130,22 @@ class settings_manager {
      */
     public static function remove_settings($instanceid, $type) {
         global $DB;
-
-        if ($type !== SETTINGS_TYPE_TRIGGER && $type !== SETTINGS_TYPE_STEP) {
-            throw new \coding_exception('Invalid type value. "step" or "trigger" expected.');
-        }
+        self::validate_type();
 
         $DB->delete_records('tool_cleanupcourses_settings',
                 array('instanceid' => $instanceid,
                     'type' => $type));
+    }
+
+    /**
+     * Validates the type param for the two possibilities 'step' and 'trigger'.
+     * @param $type string type subplugin the settings should be saved, queried or removed.
+     * @throws \coding_exception
+     */
+    private static function validate_type($type) {
+        if ($type !== SETTINGS_TYPE_TRIGGER && $type !== SETTINGS_TYPE_STEP) {
+            throw new \coding_exception('Invalid type value. "step" or "trigger" expected.');
+        }
     }
 
 }
