@@ -39,6 +39,15 @@ class settings_manager {
         global $DB;
         self::validate_type($type);
 
+        if (!$data) {
+            return;
+        }
+
+        // Cast data to array.
+        if (is_object($data)) {
+            $data = (array) $data;
+        }
+
         if ($type == SETTINGS_TYPE_TRIGGER) {
             $lib = lib_manager::get_trigger_lib($subpluginname);
         } else {
@@ -50,8 +59,8 @@ class settings_manager {
             throw new \moodle_exception('id of the step instance has to be set!');
         }
         foreach ($settingsfields as $setting) {
-            if (object_property_exists($data, $setting->name)) {
-                $value = $data->{$setting->name};
+            if (array_key_exists($setting->name, $data)) {
+                $value = $data[$setting->name];
                 // Needed for editor support.
                 if (is_array($value) && array_key_exists('text', $value)) {
                     $value = $value['text'];

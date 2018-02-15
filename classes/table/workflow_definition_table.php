@@ -100,6 +100,11 @@ class workflow_definition_table extends \table_sql {
 
         if (!isset($lib) || $lib->has_multiple_instances()) {
 
+            $action = ACTION_WORKFLOW_DUPLICATE;
+            $alt = get_string('duplicateworkflow', 'tool_cleanupcourses');
+            $icon = 't/copy';
+            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+
             $action = ACTION_WORKFLOW_INSTANCE_FROM;
             $alt = get_string('editworkflow', 'tool_cleanupcourses');
             $icon = 't/edit';

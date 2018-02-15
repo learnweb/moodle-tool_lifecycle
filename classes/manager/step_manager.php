@@ -181,7 +181,7 @@ class step_manager extends subplugin_manager {
             ));
         $steps = array();
         foreach ($records as $id => $record) {
-            $steps[$id] = $record->instancename;
+            $steps[$id] = step_subplugin::from_record($record);
         }
         return $steps;
     }
@@ -287,8 +287,9 @@ class step_manager extends subplugin_manager {
             $step->id = null;
             $step->workflowid = $newworkflowid;
             self::insert_or_update($step);
-
-            settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, $step->subpluginname, $settings);
+            if ($settings) {
+                settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, $step->subpluginname, $settings);
+            }
         }
     }
 }
