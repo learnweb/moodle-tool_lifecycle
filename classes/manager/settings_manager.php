@@ -96,17 +96,13 @@ class settings_manager {
         }
 
         if (!$instance) {
-            return null;
+            throw new \coding_exception('The subplugin instance does not exist.');
         }
 
         if ($type == SETTINGS_TYPE_TRIGGER) {
             $lib = lib_manager::get_trigger_lib($instance->subpluginname);
         } else {
             $lib = lib_manager::get_step_lib($instance->subpluginname);
-        }
-
-        if ($instance->subpluginname !== $lib->get_subpluginname()) {
-            return null;
         }
 
         $settingsvalues = array();
