@@ -171,4 +171,20 @@ class trigger_manager extends subplugin_manager {
         $DB->delete_records('tool_cleanupcourses_trigger', array('workflowid' => $workflowid));
     }
 
+    /**
+     * Copies the trigger of a workflow to a new one.
+     * @param $oldworkflowid int id of the old workflow
+     * @param $newworkflowid int id of the new workflow
+     */
+    public static function duplicate_trigger($oldworkflowid, $newworkflowid) {
+        $trigger = self::get_trigger_for_workflow($oldworkflowid);
+        $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
+
+        $trigger->id = null;
+        $trigger->workflowid = $newworkflowid;
+        self::insert_or_update($trigger);
+
+        settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
+    }
+
 }

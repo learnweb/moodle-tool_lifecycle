@@ -67,6 +67,7 @@ $string['viewsteps'] = 'View Workflow Steps';
 $string['editworkflow'] = 'Edit Title';
 $string['deleteworkflow'] = 'Delete Workflow';
 $string['activateworkflow'] = 'Activate';
+$string['workflow_duplicate_title'] = '{$a} (Copy)';
 
 $string['step_type'] = 'Type';
 $string['step_subpluginname'] = 'Subplugin Name';

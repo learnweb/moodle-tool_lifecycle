@@ -209,4 +209,24 @@ class workflow_manager {
         return $workflow;
     }
 
+    /**
+     * Duplicates a workflow including its trigger, all its steps and their settings.
+     * @param $workflowid int id of the workflow to copy.
+     * @return workflow the created workflow.
+     */
+    public static function duplicate_workflow($workflowid) {
+        $oldworkflow = self::get_workflow($workflowid);
+        try {
+            $newtitle = get_string('workflow_duplicate_title', 'tool_cleanupcourses', $oldworkflow->title);
+        } catch (\coding_exception $e) {
+            $newtitle = $oldworkflow->title;
+        }
+        $newworkflow = self::create_workflow($newtitle);
+        self::insert_or_update($newworkflow);
+        // Copy trigger and steps using the new workflow id.
+        trigger_manager::duplicate_trigger($workflowid, $newworkflow->id);
+        step_manager::duplicate_steps($workflowid, $newworkflow->id);
+        return $newworkflow;
+    }
+
 }
