@@ -21,6 +21,7 @@ use tool_cleanupcourses\response\trigger_response;
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
+require_once(__DIR__ . '/generator/lib.php');
 
 /**
  * Trigger test for course site trigger.
@@ -33,18 +34,24 @@ require_once(__DIR__ . '/../lib.php');
  */
 class tool_cleanupcourses_trigger_sitecourse_testcase extends \advanced_testcase {
 
+    private $triggerinstance;
+
+    public function setUp() {
+        $this->resetAfterTest(true);
+        $this->setAdminUser();
+
+        $this->triggerinstance = \tool_cleanupcourses_trigger_sitecourse_generator::create_trigger_with_workflow();
+    }
+
     /**
      * Tests if the site course is excluded by this plugin.
      */
     public function test_sitecourse_course() {
 
-        $this->resetAfterTest();
-        $this->setAdminUser();
-
         $course = get_site();
 
         $trigger = new sitecourse();
-        $response = $trigger->check_course($course);
+        $response = $trigger->check_course($course, $this->triggerinstance->id);
         $this->assertEquals($response, trigger_response::exclude());
 
     }
@@ -54,13 +61,10 @@ class tool_cleanupcourses_trigger_sitecourse_testcase extends \advanced_testcase
      */
     public function test_normal_course() {
 
-        $this->resetAfterTest();
-        $this->setAdminUser();
-
         $course = $this->getDataGenerator()->create_course();
 
         $trigger = new sitecourse();
-        $response = $trigger->check_course($course);
+        $response = $trigger->check_course($course, $this->triggerinstance->id);
         $this->assertEquals($response, trigger_response::next());
 
     }
