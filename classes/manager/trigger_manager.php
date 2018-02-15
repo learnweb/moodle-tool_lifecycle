@@ -140,8 +140,8 @@ class trigger_manager extends subplugin_manager {
     public static function get_trigger_types() {
         $subplugins = \core_component::get_plugin_list('cleanupcoursestrigger');
         $result = array();
-        foreach ($subplugins as $id => $plugin) {
-            $result[$id] = get_string('pluginname', 'cleanupcoursestrigger_' . $id);
+        foreach (array_keys($subplugins) as $plugin) {
+            $result[$plugin] = get_string('pluginname', 'cleanupcoursestrigger_' . $plugin);
         }
         return $result;
     }

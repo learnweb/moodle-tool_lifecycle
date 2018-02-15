@@ -207,8 +207,8 @@ class step_manager extends subplugin_manager {
     public static function get_step_types() {
         $subplugins = \core_component::get_plugin_list('cleanupcoursesstep');
         $result = array();
-        foreach ($subplugins as $id => $plugin) {
-            $result[$id] = get_string('pluginname', 'cleanupcoursesstep_' . $id);
+        foreach (array_keys($subplugins) as $plugin) {
+            $result[$plugin] = get_string('pluginname', 'cleanupcoursesstep_' . $plugin);
         }
         return $result;
     }

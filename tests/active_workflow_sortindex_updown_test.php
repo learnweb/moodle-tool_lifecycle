@@ -37,7 +37,6 @@ class tool_cleanupcourses_workflow_sortindex_updown_testcase extends \advanced_t
     private $workflow3;
 
     public function setUp() {
-        global $DB;
         $this->resetAfterTest(true);
         // Remove preset workflows.
         $workflows = workflow_manager::get_active_workflows();
