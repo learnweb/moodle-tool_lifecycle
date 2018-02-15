@@ -50,7 +50,7 @@ class tool_cleanupcourses_trigger_startdatedelay_generator extends testing_modul
         $record->workflowid = $workflow->id;
         $trigger = trigger_subplugin::from_record($record);
         trigger_manager::insert_or_update($trigger);
-        // Set delay setting
+        // Set delay setting.
         $settings = new stdClass();
         $settings->delay = 16416000;
         settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
