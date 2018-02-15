@@ -45,8 +45,8 @@ class tool_cleanupcourses_generator extends testing_module_generator {
         workflow_manager::insert_or_update($workflow);
         // Create trigger.
         $record = new stdClass();
-        $record->subpluginname = 'delayedcourses';
-        $record->instancename = 'delayedcourses';
+        $record->subpluginname = 'startdatedelay';
+        $record->instancename = 'startdatedelay';
         $record->workflowid = $workflow->id;
         $trigger = trigger_subplugin::from_record($record);
         trigger_manager::insert_or_update($trigger);
