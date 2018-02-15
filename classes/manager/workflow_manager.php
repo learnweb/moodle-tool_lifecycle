@@ -119,6 +119,9 @@ class workflow_manager {
         if ($action === ACTION_DOWN_WORKFLOW) {
             self::change_sortindex($workflowid, false);
         }
+        if ($action === ACTION_WORKFLOW_DUPLICATE) {
+            self::duplicate_workflow($workflowid);
+        }
         if ($action === ACTION_WORKFLOW_DELETE) {
             if (self::is_active($workflowid)) {
                 echo $OUTPUT->notification(get_string('active_workflow_not_removeable', 'tool_cleanupcourses')
