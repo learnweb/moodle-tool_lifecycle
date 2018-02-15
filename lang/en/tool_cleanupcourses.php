@@ -73,6 +73,7 @@ $string['step_subpluginname'] = 'Subplugin Name';
 $string['step_instancename'] = 'Instance Name';
 $string['step_sortindex'] = 'Up/Down';
 $string['step_edit'] = 'Edit';
+$string['step_show'] = 'Show';
 $string['step_delete'] = 'Delete';
 
 $string['trigger'] = 'Trigger';
