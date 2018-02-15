@@ -66,15 +66,24 @@ class step_table extends \table_sql {
     }
 
     public function init() {
-        $this->define_columns(['type', 'instancename', 'subpluginname', 'sortindex', 'edit', 'delete']);
-        $this->define_headers([
+        $columns = ['type', 'instancename', 'subpluginname', 'sortindex'];
+        $headers = [
             get_string('step_type', 'tool_cleanupcourses'),
             get_string('step_instancename', 'tool_cleanupcourses'),
             get_string('step_subpluginname', 'tool_cleanupcourses'),
             get_string('step_sortindex', 'tool_cleanupcourses'),
-            get_string('step_edit', 'tool_cleanupcourses'),
-            get_string('step_delete', 'tool_cleanupcourses'),
-            ]);
+            ];
+        if (workflow_manager::is_active($this->workflowid)) {
+            $columns [] = 'show';
+            $headers [] = get_string('step_show', 'tool_cleanupcourses');
+        } else {
+            $columns [] = 'edit';
+            $headers [] = get_string('step_edit', 'tool_cleanupcourses');
+            $columns [] = 'delete';
+            $headers [] = get_string('step_delete', 'tool_cleanupcourses');
+        }
+        $this->define_columns($columns);
+        $this->define_headers($headers);
         $this->sortable(false, 'sortindex');
         $this->setup();
     }
@@ -145,6 +154,24 @@ class step_table extends \table_sql {
 
         $alt = 'edit';
         $icon = 't/edit';
+        if (empty($row->type)) {
+            $action = ACTION_STEP_INSTANCE_FORM;
+        } else {
+            $action = ACTION_TRIGGER_INSTANCE_FORM;
+        }
+
+        return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+    }
+
+    /**
+     * Render show column.
+     * @param $row
+     * @return string action button for editing of the subplugin
+     */
+    public function col_show($row) {
+
+        $alt = 'view';
+        $icon = 't/viewdetails';
         if (empty($row->type)) {
             $action = ACTION_STEP_INSTANCE_FORM;
         } else {
