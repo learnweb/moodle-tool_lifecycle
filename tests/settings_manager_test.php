@@ -32,26 +32,41 @@ class tool_cleanupcourses_settings_manager_testcase extends \advanced_testcase {
 
     /** step_subplugin */
     private $step;
+    private $trigger;
 
-    const VALUE = 'value';
+    const EMAIL_VALUE = 'value';
+    const STARTDELAY_VALUE = 100;
 
     public function setUp() {
         $this->resetAfterTest(false);
         $workflow = tool_cleanupcourses_generator::create_workflow();
         $this->step = new step_subplugin('instancename', 'email', $workflow->id);
         step_manager::insert_or_update($this->step);
+        $this->trigger = \tool_cleanupcourses\manager\trigger_manager::get_trigger_for_workflow($workflow->id);
     }
 
     /**
      * Test setting and getting settings data for steps.
      */
-    public function test_set_get_settings() {
+    public function test_set_get_step_settings() {
         $data = new stdClass();
-        $data->subject = self::VALUE;
+        $data->subject = self::EMAIL_VALUE ;
         settings_manager::save_settings($this->step->id, SETTINGS_TYPE_STEP, $this->step->subpluginname, $data);
         $settings = settings_manager::get_settings($this->step->id, SETTINGS_TYPE_STEP);
         $this->assertArrayHasKey('subject', $settings, 'No key \'subject\' in returned settings array');
-        $this->assertEquals(self::VALUE, $settings['subject']);
+        $this->assertEquals(self::EMAIL_VALUE, $settings['subject']);
+    }
+
+    /**
+     * Test setting and getting settings data for steps.
+     */
+    public function test_set_get_trigger_settings() {
+        $data = new stdClass();
+        $data->delay = self::STARTDELAY_VALUE;
+        settings_manager::save_settings($this->trigger->id, SETTINGS_TYPE_TRIGGER, $this->trigger->subpluginname, $data);
+        $settings = settings_manager::get_settings($this->trigger->id, SETTINGS_TYPE_TRIGGER);
+        $this->assertArrayHasKey('delay', $settings, 'No key \'delay\' in returned settings array');
+        $this->assertEquals(self::STARTDELAY_VALUE, $settings['delay']);
     }
 
 }
