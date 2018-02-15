@@ -24,7 +24,6 @@
 namespace tool_cleanupcourses\manager;
 
 use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\entity\trigger_subplugin;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -215,19 +214,26 @@ class step_manager extends subplugin_manager {
     }
 
     /**
-     * Handles an action of the subplugin_settings.
+     * Handles an action for a workflow step.
      * @param string $action action to be executed
-     * @param int $subpluginid id of the subplugin
+     * @param int $subpluginid id of the step instance
      */
     public static function handle_action($action, $subpluginid) {
-        if ($action === ACTION_UP_STEP) {
-            self::change_sortindex($subpluginid, true);
-        }
-        if ($action === ACTION_DOWN_STEP) {
-            self::change_sortindex($subpluginid, false);
-        }
-        if ($action === ACTION_STEP_INSTANCE_DELETE) {
-            self::remove($subpluginid);
+        global $OUTPUT;
+        if ($step = self::get_step_instance($subpluginid)) {
+            if (!workflow_manager::is_active($step->workflowid)) {
+                if ($action === ACTION_UP_STEP) {
+                    self::change_sortindex($subpluginid, true);
+                }
+                if ($action === ACTION_DOWN_STEP) {
+                    self::change_sortindex($subpluginid, false);
+                }
+                if ($action === ACTION_STEP_INSTANCE_DELETE) {
+                    self::remove($subpluginid);
+                }
+            } else {
+                echo $OUTPUT->notification(get_string('active_workflow_not_changeable', 'tool_cleanupcourses'), 'warning');
+            }
         }
     }
 
