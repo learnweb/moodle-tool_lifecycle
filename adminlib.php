@@ -281,10 +281,12 @@ class workflow_settings {
 
         echo $OUTPUT->heading(get_string('adminsettings_workflow_definition_steps_heading', 'tool_cleanupcourses'));
 
-        $steps = step_manager::get_step_types();
-        echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
-            array('action' => ACTION_STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
-            'subpluginname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_cleanupcourses')));
+        if (!workflow_manager::is_active($this->workflowid)) {
+            $steps = step_manager::get_step_types();
+            echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
+                array('action' => ACTION_STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
+                'subpluginname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_cleanupcourses')));
+        }
         echo $OUTPUT->single_button( new \moodle_url('/admin/tool/cleanupcourses/adminsettings.php'),
             get_string('back'));
 
