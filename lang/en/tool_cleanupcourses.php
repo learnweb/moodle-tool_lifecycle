@@ -27,7 +27,7 @@
 $string['pluginname'] = 'Cleanup Courses';
 $string['plugintitle'] = 'Cleanup Courses';
 
-$string['view:managecourse'] = 'May manage courses in tool_cleanupcourses';
+$string['cleanupcourses:managecourses'] = 'May manage courses in tool_cleanupcourses';
 
 $string['general_config_header'] = "General & Subplugins";
 $string['config_delay_duration'] = 'Duration of a course delay';
@@ -108,3 +108,8 @@ $string['backupcreated'] = 'Created at';
 $string['restore'] = 'restore';
 
 $string['workflownotfound'] = 'Workflow with id {$a} could not be found';
+
+// View.php.
+$string['tablecoursesrequiringattention'] = 'Courses that require your attention';
+$string['tablecoursesremaining'] = 'Remaining courses';
+$string['viewheading'] = 'Manage courses';

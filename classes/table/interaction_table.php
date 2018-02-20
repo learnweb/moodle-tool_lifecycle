@@ -36,7 +36,7 @@ class interaction_table extends \table_sql {
     /** @var step_subplugin $stepinstance */
     private $stepinstance;
 
-    public function __construct($uniqueid) {
+    public function __construct($uniqueid, $courseids) {
         parent::__construct($uniqueid);
         global $PAGE, $USER;
 
@@ -45,36 +45,11 @@ class interaction_table extends \table_sql {
                 '{course} c on p.courseid = c.id join ' .
                 '{tool_cleanupcourses_step} s '.
             'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex';
-//        if (interaction_manager::show_relevant_courses_instance_dependent($this->stepinstance->subpluginname)) {
-//            $where = 's.id = :stepid';
-//            $params = array('stepid' => $stepid);
-//        } else {
-//            $where = 's.subpluginname = :subpluginname';
-//            $params = array('subpluginname' => $this->stepinstance->subpluginname);
-//        }
 
-        //$capability = interaction_manager::get_relevant_capability($this->stepinstance->subpluginname);
-        $courses = get_user_capability_course('tool_cleanupcourses/view:managecourse', $USER, false);
-        if ($courses) {
-            $listofcourseids = array_reduce($courses, function ($course1, $course2) {
-                if (!$course1) {
-                    return $course2->id;
-                }
-                if (!$course2) {
-                    return $course1->id;
-                }
-                if (is_object($course1) && object_property_exists($course1, 'id')) {
-                    $course1 = $course1->id;
-                }
-                if (is_object($course2) && object_property_exists($course2, 'id')) {
-                    $course2 = $course2->id;
-                }
-                return $course1 . ',' . $course2;
-            });
-            $where = 'p.courseid IN ('. $listofcourseids . ')';
-        } else {
-            $where = 'FALSE';
-        }
+        $ids = join(',', $courseids);
+
+        $where = 'p.courseid IN ('. $ids . ')';
+
 
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
@@ -129,16 +104,10 @@ class interaction_table extends \table_sql {
     public function col_tools($row) {
         $output = '';
         $step = step_manager::get_step_instance($row->stepinstanceid);
-        $capability = interaction_manager::get_relevant_capability($step->subpluginname);
 
-        if(has_capability($capability, \context_course::instance($row->courseid), null, false)) {
-            $tools = interaction_manager::get_action_tools($step->subpluginname, $row->processid);
-            foreach ($tools as $tool) {
-                $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['icon'], $tool['alt']);
-            }
-        }
-        else {
-            // TODO show explanation.
+        $tools = interaction_manager::get_action_tools($step->subpluginname, $row->processid);
+        foreach ($tools as $tool) {
+            $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['icon'], $tool['alt']);
         }
 
         return $output;
@@ -190,6 +159,6 @@ class interaction_table extends \table_sql {
 
         $this->print_initials_bar();
 
-        echo $OUTPUT->heading(get_string('nocoursestodisplay', 'tool_cleanupcourses'));
+        echo $OUTPUT->box(get_string('nocoursestodisplay', 'tool_cleanupcourses'));
     }
 }
