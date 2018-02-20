@@ -39,7 +39,7 @@ class tool_cleanupcourses_workflow_sortindex_updown_testcase extends \advanced_t
     public function setUp() {
         $this->resetAfterTest(true);
         // Remove preset workflows.
-        $workflows = workflow_manager::get_active_workflows();
+        $workflows = workflow_manager::get_active_automatic_workflows();
         foreach ($workflows as $workflow) {
             workflow_manager::remove($workflow->id);
         }

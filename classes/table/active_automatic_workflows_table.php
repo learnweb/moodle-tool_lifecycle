@@ -97,7 +97,7 @@ class active_automatic_workflows_table extends \table_sql {
             } else {
                 $output .= $OUTPUT->spacer();
             }
-            if ($row->sortindex < count(workflow_manager::get_active_workflows())) {
+            if ($row->sortindex < count(workflow_manager::get_active_automatic_workflows())) {
                 $alt = 'down';
                 $icon = 't/down';
                 $action = ACTION_DOWN_WORKFLOW;
