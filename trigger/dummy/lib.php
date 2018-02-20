@@ -34,7 +34,7 @@ require_once(__DIR__ . '/../lib.php');
  * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin
  * @package tool_cleanupcourses_trigger
  */
-class dummy extends base {
+class dummy extends base_automatic {
 
 
     /**

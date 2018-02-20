@@ -29,16 +29,12 @@ use tool_cleanupcourses\response\trigger_response;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * This class bundles different functions necessary for every trigger of a workflow.
+ * This class should not be extended directly. Please use base_manual or base_automatic.
+ * @package tool_cleanupcourses\trigger
+ */
 abstract class base {
-
-
-    /**
-     * Checks the course and returns a repsonse, which tells if the course should be further processed.
-     * @param $course object to be processed.
-     * @param $triggerid int id of the trigger instance.
-     * @return trigger_response
-     */
-    public abstract function check_course($course, $triggerid);
 
     /**
      * The return value should be equivalent with the name of the subplugin folder.
@@ -84,6 +80,29 @@ abstract class base {
 
 }
 
+/**
+ * This class represents an automatic trigger.
+ * It is used when workflow should be started based on a specific logic.
+ * @package tool_cleanupcourses\trigger
+ */
+abstract class base_automatic extends base {
+
+    /**
+     * Checks the course and returns a repsonse, which tells if the course should be further processed.
+     * @param $course object to be processed.
+     * @param $triggerid int id of the trigger instance.
+     * @return trigger_response
+     */
+    public abstract function check_course($course, $triggerid);
+
+}
+
+/**
+ * This class represents a manual trigger.
+ * It is used to enable user to manually start processes for workflows.
+ * @package tool_cleanupcourses\trigger
+ */
+abstract class base_manual extends base {}
 /**
  * Class representing a local settings object for a subplugin instance.
  * @package tool_cleanupcourses\trigger

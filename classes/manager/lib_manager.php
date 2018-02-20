@@ -23,6 +23,9 @@
  */
 namespace tool_cleanupcourses\manager;
 
+use tool_cleanupcourses\trigger\base_automatic;
+use tool_cleanupcourses\trigger\base_manual;
+
 defined('MOODLE_INTERNAL') || die();
 
 class lib_manager {
@@ -35,6 +38,36 @@ class lib_manager {
     public static function get_trigger_lib($subpluginname) {
         return self::get_lib($subpluginname, 'trigger');
     }
+
+    /**
+     * Gets the lib class for an manual trigger subplugin.
+     * @param string $subpluginname name of the subplugin
+     * @return \tool_cleanupcourses\trigger\base_manual
+     * @throws \coding_exception
+     */
+    public static function get_manual_trigger_lib($subpluginname) {
+        $lib = self::get_lib($subpluginname, 'trigger');
+        if (! $lib instanceof base_manual) {
+            throw new \coding_exception("The requested trigger is no manual trigger.");
+        }
+        return $lib;
+    }
+
+    /**
+     * Gets the lib class for an automatic trigger subplugin.
+     * @param string $subpluginname name of the subplugin
+     * @return \tool_cleanupcourses\trigger\base_automatic
+     * @throws \coding_exception
+     */
+    public static function get_automatic_trigger_lib($subpluginname) {
+        $lib = self::get_lib($subpluginname, 'trigger');
+        if (! $lib instanceof base_automatic) {
+            throw new \coding_exception("The requested trigger is no automatic trigger.");
+        }
+        return $lib;
+    }
+
+
 
     /**
      * Gets the step class of a subplugin lib.

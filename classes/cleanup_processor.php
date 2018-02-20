@@ -52,8 +52,9 @@ class cleanup_processor {
             $course = $recordset->current();
             foreach ($activeworkflows as $workflow) {
                 $trigger = trigger_manager::get_trigger_for_workflow($workflow->id);
+                // TODO: replace by automatic trigger only.
                 $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-                $response = $lib->check_course($course);
+                $response = $lib->check_course($course, $trigger->id);
                 if ($response == trigger_response::next()) {
                     continue;
                 }
