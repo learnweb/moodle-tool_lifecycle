@@ -94,7 +94,7 @@ class workflow_manager {
         global $DB, $OUTPUT;
         if (!self::is_valid($workflowid)) {
             echo $OUTPUT->notification(
-                get_string('invalid_workflow_cannot_be_activated','tool_cleanupcourses'),
+                get_string('invalid_workflow_cannot_be_activated', 'tool_cleanupcourses'),
                 'warning');
             return;
         }
