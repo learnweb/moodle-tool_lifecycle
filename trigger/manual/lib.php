@@ -38,4 +38,31 @@ class manual extends base_manual {
         return 'manual';
     }
 
+    /**
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
+    public function instance_settings() {
+        return [new instance_setting('icon',  PARAM_SAFEPATH),
+            new instance_setting('displayname',  PARAM_TEXT),
+            new instance_setting('capability',  PARAM_CAPABILITY),
+            ];
+    }
+
+    /**
+     * This method can be overriden, to add form elements to the form_step_instance.
+     * It is called in definition().
+     * @param \MoodleQuickForm $mform
+     */
+    public function extend_add_instance_form_definition($mform) {
+    }
+
+    /**
+     * This method can be overriden, to set default values to the form_step_instance.
+     * It is called in definition_after_data().
+     * @param \MoodleQuickForm $mform
+     * @param array $settings array containing the settings from the db.
+     */
+    public function extend_add_instance_form_definition_after_data($mform, $settings) {
+    }
+
 }
