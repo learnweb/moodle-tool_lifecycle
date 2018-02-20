@@ -24,6 +24,7 @@
 namespace tool_cleanupcourses\manager;
 
 defined('MOODLE_INTERNAL') || die();
+require_once (__DIR__.'/../../lib.php');
 
 class settings_manager {
 

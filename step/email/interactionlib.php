@@ -28,6 +28,7 @@ namespace tool_cleanupcourses\step;
 use tool_cleanupcourses\entity\process;
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\process_data_manager;
+use tool_cleanupcourses\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -57,7 +58,8 @@ class interactionemail extends interactionlibbase {
      * @return array of action tools
      */
     public function get_action_tools($process) {
-        $keep = process_data_manager::get_process_data($process->id, $process->stepid, EMAIL_PROCDATA_KEY_KEEP);
+        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
+        $keep = process_data_manager::get_process_data($process->id, $step->id, EMAIL_PROCDATA_KEY_KEEP);
         if ($keep === '1') {
             return array();
         }
@@ -75,7 +77,8 @@ class interactionemail extends interactionlibbase {
      * @return string status message
      */
     public function get_status_message($process) {
-        $keep = process_data_manager::get_process_data($process->id, $process->stepid, EMAIL_PROCDATA_KEY_KEEP);
+        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
+        $keep = process_data_manager::get_process_data($process->id, $step->id, EMAIL_PROCDATA_KEY_KEEP);
         if ($keep === '1') {
             return get_string('status_message_decision_keep', 'cleanupcoursesstep_email');
         }
