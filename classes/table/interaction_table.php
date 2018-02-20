@@ -36,27 +36,25 @@ class interaction_table extends \table_sql {
     /** @var step_subplugin $stepinstance */
     private $stepinstance;
 
-    public function __construct($uniqueid, $stepid) {
+    public function __construct($uniqueid) {
         parent::__construct($uniqueid);
-
-        $this->stepinstance = step_manager::get_step_instance($stepid);
         global $PAGE, $USER;
 
-        $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname';
+        $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname';
         $from = '{tool_cleanupcourses_process} p join ' .
                 '{course} c on p.courseid = c.id join ' .
                 '{tool_cleanupcourses_step} s '.
             'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex';
-        if (interaction_manager::show_relevant_courses_instance_dependent($this->stepinstance->subpluginname)) {
-            $where = 's.id = :stepid';
-            $params = array('stepid' => $stepid);
-        } else {
-            $where = 's.subpluginname = :subpluginname';
-            $params = array('subpluginname' => $this->stepinstance->subpluginname);
-        }
+//        if (interaction_manager::show_relevant_courses_instance_dependent($this->stepinstance->subpluginname)) {
+//            $where = 's.id = :stepid';
+//            $params = array('stepid' => $stepid);
+//        } else {
+//            $where = 's.subpluginname = :subpluginname';
+//            $params = array('subpluginname' => $this->stepinstance->subpluginname);
+//        }
 
-        $capability = interaction_manager::get_relevant_capability($this->stepinstance->subpluginname);
-        $courses = get_user_capability_course($capability, $USER, false);
+        //$capability = interaction_manager::get_relevant_capability($this->stepinstance->subpluginname);
+        $courses = get_user_capability_course('tool_cleanupcourses/view:managecourse', $USER, false);
         if ($courses) {
             $listofcourseids = array_reduce($courses, function ($course1, $course2) {
                 if (!$course1) {
@@ -73,12 +71,12 @@ class interaction_table extends \table_sql {
                 }
                 return $course1 . ',' . $course2;
             });
-            $where .= ' AND p.courseid IN ('. $listofcourseids . ')';
+            $where = 'p.courseid IN ('. $listofcourseids . ')';
         } else {
-            $where .= ' AND FALSE';
+            $where = 'FALSE';
         }
 
-        $this->set_sql($fields, $from, $where, $params);
+        $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
         $this->init();
 
@@ -130,10 +128,19 @@ class interaction_table extends \table_sql {
      */
     public function col_tools($row) {
         $output = '';
-        $tools = interaction_manager::get_action_tools($this->stepinstance->subpluginname, $row->processid);
-        foreach ($tools as $tool) {
-            $output .= $this->format_icon_link($tool['action'], $row->processid, $tool['icon'], $tool['alt']);
+        $step = step_manager::get_step_instance($row->stepinstanceid);
+        $capability = interaction_manager::get_relevant_capability($step->subpluginname);
+
+        if(has_capability($capability, \context_course::instance($row->courseid), null, false)) {
+            $tools = interaction_manager::get_action_tools($step->subpluginname, $row->processid);
+            foreach ($tools as $tool) {
+                $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['icon'], $tool['alt']);
+            }
         }
+        else {
+            // TODO show explanation.
+        }
+
         return $output;
     }
 
@@ -143,24 +150,27 @@ class interaction_table extends \table_sql {
      * @return string pluginname of the subplugin
      */
     public function col_status($row) {
-        return interaction_manager::get_status_message($this->stepinstance->subpluginname, $row->processid);
+        $step = step_manager::get_step_instance($row->stepinstanceid);
+        return interaction_manager::get_status_message($step->subpluginname, $row->processid);
     }
 
     /**
      * Util function for writing an action icon link
      *
-     * @param string $action URL parameter to include in the link
+     * @param string $action    URL parameter to include in the link
      * @param string $processid URL parameter to include in the link
-     * @param string $icon The key to the icon to use (e.g. 't/up')
-     * @param string $alt The string description of the link used as the title and alt text
+     * @param int    $stepinstanceid ID of the step instance
+     * @param string $icon      The key to the icon to use (e.g. 't/up')
+     * @param string $alt       The string description of the link used as the title and alt text
+     *
      * @return string The icon/link
      */
-    private function format_icon_link($action, $processid, $icon, $alt) {
+    private function format_icon_link($action, $processid, $stepinstanceid, $icon, $alt) {
         global $PAGE, $OUTPUT;
 
         return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
                 array(
-                    'stepid' => $this->stepinstance->id,
+                    'stepid' => $stepinstanceid,
                     'action' => $action,
                     'processid' => $processid,
                     'sesskey' => sesskey()

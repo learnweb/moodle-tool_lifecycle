@@ -108,7 +108,7 @@ class process_manager {
         } else {
             try {
                 if (get_course($process->courseid)) {
-                    debugging('Course should no longer exist!!!!');
+                    debugging('Course exists, but shouldn\'t!!!!'); // TODO This plugin is not just for deleting anymore!
                 }
             } catch (\dml_missing_record_exception $e) {
                 // Expected behaviour!

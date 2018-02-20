@@ -27,6 +27,8 @@
 $string['pluginname'] = 'Cleanup Courses';
 $string['plugintitle'] = 'Cleanup Courses';
 
+$string['view:managecourse'] = 'May manage courses in tool_cleanupcourses';
+
 $string['general_config_header'] = "General & Subplugins";
 $string['config_delay_duration'] = 'Duration of a course delay';
 $string['config_delay_duration_desc'] = 'Defines the time frame, which a course is excluded from the cleanup course, when rolled back via user interaction.';

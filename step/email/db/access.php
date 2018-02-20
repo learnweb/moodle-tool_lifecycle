@@ -34,7 +34,7 @@ $capabilities = array(
             'teacher' => CAP_PREVENT,
             'students' => CAP_PREVENT,
         ),
-        'clonepermissionsfrom' => 'moodle/course:update'
+        'clonepermissionsfrom' => 'tool_cleanupcourses/view:managecourse'
     ),
 );
 
