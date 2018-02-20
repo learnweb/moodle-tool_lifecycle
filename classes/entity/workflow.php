@@ -87,9 +87,9 @@ class workflow {
 
         $manual = null;
         if (object_property_exists($record, 'manual')) {
-            if ($record->manual) {
+            if ($record->manual === 1) {
                 $manual = true;
-            } else {
+            } else if ($record->manual === 0) {
                 $manual = false;
             }
         }
