@@ -44,7 +44,7 @@ class process_data_manager {
         global $DB;
         $params = array(
             'processid' => $processid,
-            'key' => $key,
+            'keyname' => $key,
         );
         if (step_manager::is_process_data_instance_dependent($stepid)) {
             $params['stepid'] = $stepid;
@@ -68,7 +68,7 @@ class process_data_manager {
         global $DB;
         $entry = array(
             'processid' => $processid,
-            'key' => $key,
+            'keyname' => $key,
         );
         if (step_manager::is_process_data_instance_dependent($stepid)) {
             $entry['stepid'] = $stepid;

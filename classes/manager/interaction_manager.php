@@ -36,7 +36,7 @@ class interaction_manager {
      * @return true, if the subplugin specifies an interaction interface; otherwise false.
      */
     public static function interaction_available($subpluginname) {
-        if (lib_manager::get_step_interactionlib($subpluginname)) {
+        if (lib_manager::get_step_interactionlib($subpluginname) !== null) {
             return true;
         }
         return false;
