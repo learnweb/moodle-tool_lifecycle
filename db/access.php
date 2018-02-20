@@ -24,7 +24,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
 
-    'tool/cleanupcourses:managecourse' => array(
+    'tool/cleanupcourses:managecourses' => array(
         'contextlevel' => CONTEXT_COURSE,
         'captype' => 'write',
         'archetypes' => array(

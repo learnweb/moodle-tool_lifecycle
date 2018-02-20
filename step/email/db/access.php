@@ -34,7 +34,7 @@ $capabilities = array(
             'teacher' => CAP_PREVENT,
             'students' => CAP_PREVENT,
         ),
-        'clonepermissionsfrom' => 'tool/cleanupcourses:managecourse'
+        'clonepermissionsfrom' => 'tool/cleanupcourses:managecourses'
     ),
 );
 

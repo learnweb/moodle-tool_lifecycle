@@ -30,13 +30,11 @@ use tool_cleanupcourses\table\interaction_table;
 require_login();
 
 $PAGE->set_context(context_system::instance());
+$PAGE->set_pagelayout('admin');
 $PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/view.php'));
 
-//$stepid = required_param('stepid', PARAM_INT);
 $action = optional_param('action', null, PARAM_ALPHA);
 $processid = optional_param('processid', null, PARAM_INT);
-
-//$stepinstance = step_manager::get_step_instance($stepid);
 
 $PAGE->set_title("Title");
 $PAGE->set_heading("Heading");
@@ -45,17 +43,8 @@ $renderer = $PAGE->get_renderer('tool_cleanupcourses');
 
 echo $renderer->header();
 
-//if (interaction_manager::interaction_available($stepinstance->subpluginname)) {
-//    if ($action && $processid) {
-//        interaction_manager::handle_interaction($stepinstance->id, $processid, $action);
-//    }
+$controller = new \tool_cleanupcourses\view_controller();
+$controller->handle_view();
 
-$table = new interaction_table('tool_cleanupcourses_interaction');
-
-$table->out(50, false);
-
-//} else {
-//    echo get_string('nointeractioninterface', 'tool_cleanupcourses');
-//}
 
 echo $renderer->footer();

@@ -27,7 +27,7 @@
 $string['pluginname'] = 'Cleanup Courses';
 $string['plugintitle'] = 'Cleanup Courses';
 
-$string['cleanupcourses:managecourse'] = 'May manage courses in tool_cleanupcourses';
+$string['cleanupcourses:managecourses'] = 'May manage courses in tool_cleanupcourses';
 
 $string['general_config_header'] = "General & Subplugins";
 $string['config_delay_duration'] = 'Duration of a course delay';
