@@ -31,31 +31,7 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
 
-class interaction_table extends \table_sql {
-
-    /** @var step_subplugin $stepinstance */
-    private $stepinstance;
-
-    public function __construct($uniqueid, $courseids) {
-        parent::__construct($uniqueid);
-        global $PAGE, $USER;
-
-        $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname';
-        $from = '{tool_cleanupcourses_process} p join ' .
-                '{course} c on p.courseid = c.id join ' .
-                '{tool_cleanupcourses_step} s '.
-            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex';
-
-        $ids = join(',', $courseids);
-
-        $where = 'p.courseid IN ('. $ids . ')';
-
-
-        $this->set_sql($fields, $from, $where, []);
-        $this->define_baseurl($PAGE->url);
-        $this->init();
-
-    }
+abstract class interaction_table extends \table_sql {
 
     public function init() {
         $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'tools', 'status']);
@@ -101,52 +77,14 @@ class interaction_table extends \table_sql {
      * @param $row
      * @return string pluginname of the subplugin
      */
-    public function col_tools($row) {
-        $output = '';
-        $step = step_manager::get_step_instance($row->stepinstanceid);
-
-        $tools = interaction_manager::get_action_tools($step->subpluginname, $row->processid);
-        foreach ($tools as $tool) {
-            $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['icon'], $tool['alt']);
-        }
-
-        return $output;
-    }
+    public abstract function col_tools($row);
 
     /**
      * Render status column.
      * @param $row
      * @return string pluginname of the subplugin
      */
-    public function col_status($row) {
-        $step = step_manager::get_step_instance($row->stepinstanceid);
-        return interaction_manager::get_status_message($step->subpluginname, $row->processid);
-    }
-
-    /**
-     * Util function for writing an action icon link
-     *
-     * @param string $action    URL parameter to include in the link
-     * @param string $processid URL parameter to include in the link
-     * @param int    $stepinstanceid ID of the step instance
-     * @param string $icon      The key to the icon to use (e.g. 't/up')
-     * @param string $alt       The string description of the link used as the title and alt text
-     *
-     * @return string The icon/link
-     */
-    private function format_icon_link($action, $processid, $stepinstanceid, $icon, $alt) {
-        global $PAGE, $OUTPUT;
-
-        return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
-                array(
-                    'stepid' => $stepinstanceid,
-                    'action' => $action,
-                    'processid' => $processid,
-                    'sesskey' => sesskey()
-                )),
-                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                null , array('title' => $alt)) . ' ';
-    }
+    public abstract function col_status($row);
 
     /**
      * This function is not part of the public api.

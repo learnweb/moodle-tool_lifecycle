@@ -25,7 +25,7 @@ require_once(dirname(__FILE__) . '/../../../config.php');
 
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\interaction_manager;
-use tool_cleanupcourses\table\interaction_table;
+use tool_cleanupcourses\table\interaction_attention_table;
 
 require_login();
 

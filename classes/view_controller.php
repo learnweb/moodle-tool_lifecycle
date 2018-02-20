@@ -24,7 +24,8 @@
 namespace tool_cleanupcourses;
 use tool_cleanupcourses\manager\interaction_manager;
 use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\table\interaction_table;
+use tool_cleanupcourses\table\interaction_remaining_table;
+use tool_cleanupcourses\table\interaction_attention_table;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -76,12 +77,12 @@ class view_controller {
 
 
         echo $OUTPUT->heading(get_string('tablecoursesrequiringattention', 'tool_cleanupcourses'), 3);
-        $table1 = new interaction_table('tool_cleanupcourses_interaction', $requiresinteraction);
+        $table1 = new interaction_attention_table('tool_cleanupcourses_interaction', $requiresinteraction);
 
         $table1->out(50, false);
 
         echo $OUTPUT->heading(get_string('tablecoursesremaining', 'tool_cleanupcourses'), 3);
-        $table2 = new interaction_table('tool_cleanupcourses_remaining', $arrayofcourseids);
+        $table2 = new interaction_remaining_table('tool_cleanupcourses_remaining', $arrayofcourseids);
 
         $table2->out(50, false);
     }
