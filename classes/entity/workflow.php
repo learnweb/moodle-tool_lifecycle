@@ -87,7 +87,11 @@ class workflow {
 
         $manual = null;
         if (object_property_exists($record, 'manual')) {
-            $manual = $record->manual;
+            if ($record->manual) {
+                $manual = true;
+            } else {
+                $manual = false;
+            }
         }
 
         $instance = new self($id, $record->title, $active, $timeactive, $sortindex, $manual);
