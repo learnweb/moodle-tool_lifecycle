@@ -108,3 +108,8 @@ $string['backupcreated'] = 'Created at';
 $string['restore'] = 'restore';
 
 $string['workflownotfound'] = 'Workflow with id {$a} could not be found';
+
+// View.php.
+$string['tablecoursesrequiringattention'] = 'Courses that require your attention';
+$string['tablecoursesremaining'] = 'Remaining courses';
+$string['viewheading'] = 'Manage courses';
