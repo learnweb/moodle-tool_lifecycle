@@ -78,6 +78,12 @@ abstract class base {
         return true;
     }
 
+    /**
+     * Specifies if the trigger is a manual or an automatic trigger.
+     * @return boolean
+     */
+    public abstract function is_manual_trigger();
+
 }
 
 /**
@@ -95,6 +101,9 @@ abstract class base_automatic extends base {
      */
     public abstract function check_course($course, $triggerid);
 
+    public function is_manual_trigger() {
+        return false;
+    }
 }
 
 /**
@@ -102,7 +111,12 @@ abstract class base_automatic extends base {
  * It is used to enable user to manually start processes for workflows.
  * @package tool_cleanupcourses\trigger
  */
-abstract class base_manual extends base {}
+abstract class base_manual extends base {
+
+    public function is_manual_trigger() {
+        return true;
+    }
+}
 /**
  * Class representing a local settings object for a subplugin instance.
  * @package tool_cleanupcourses\trigger
