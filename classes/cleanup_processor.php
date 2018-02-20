@@ -45,15 +45,14 @@ class cleanup_processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
-        $activeworkflows = workflow_manager::get_active_workflows();
+        $activeworkflows = workflow_manager::get_active_automatic_workflows();
 
         $recordset = $this->get_course_recordset();
         while ($recordset->valid()) {
             $course = $recordset->current();
             foreach ($activeworkflows as $workflow) {
                 $trigger = trigger_manager::get_trigger_for_workflow($workflow->id);
-                // TODO: replace by automatic trigger only.
-                $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+                $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                 $response = $lib->check_course($course, $trigger->id);
                 if ($response == trigger_response::next()) {
                     continue;

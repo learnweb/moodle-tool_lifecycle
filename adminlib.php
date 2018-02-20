@@ -26,8 +26,9 @@ use tool_cleanupcourses\manager\trigger_manager;
 use tool_cleanupcourses\entity\workflow;
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\workflow_manager;
+use tool_cleanupcourses\table\active_manual_workflows_table;
 use tool_cleanupcourses\table\workflow_definition_table;
-use tool_cleanupcourses\table\active_workflows_table;
+use tool_cleanupcourses\table\active_automatic_workflows_table;
 use tool_cleanupcourses\table\step_table;
 
 defined('MOODLE_INTERNAL') || die;
@@ -131,9 +132,14 @@ class admin_settings {
         // Set up the table.
         $this->view_header();
 
-        echo $OUTPUT->heading(get_string('active_workflows_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('active_automatic_workflows_heading', 'tool_cleanupcourses'));
 
-        $table = new active_workflows_table('tool_cleanupcourses_active_workflows');
+        $table = new active_automatic_workflows_table('tool_cleanupcourses_active_automatic_workflows');
+        $table->out(5000, false);
+
+        echo $OUTPUT->heading(get_string('active_manual_workflows_heading', 'tool_cleanupcourses'));
+
+        $table = new active_manual_workflows_table('tool_cleanupcourses_manual_workflows');
         $table->out(5000, false);
 
         echo $OUTPUT->heading(get_string('workflow_definition_heading', 'tool_cleanupcourses'));

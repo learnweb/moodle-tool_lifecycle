@@ -43,7 +43,7 @@ class workflow {
     /** int sort index of all active workflows */
     public $sortindex;
 
-    /** bool true if workflow is manually triggered*/
+    /** bool|null true if workflow is manually triggered*/
     public $manual;
 
     private function __construct($id, $title, $active, $timeactive, $sortindex, $manual) {
@@ -87,7 +87,11 @@ class workflow {
 
         $manual = null;
         if (object_property_exists($record, 'manual')) {
-            $manual = $record->manual;
+            if ($record->manual == 1) {
+                $manual = true;
+            } else if ($record->manual == 0) {
+                $manual = false;
+            }
         }
 
         $instance = new self($id, $record->title, $active, $timeactive, $sortindex, $manual);

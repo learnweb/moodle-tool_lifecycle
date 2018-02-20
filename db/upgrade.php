@@ -235,5 +235,19 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018022002, 'tool', 'cleanupcourses');
     }
 
+    if ($oldversion < 2018022005) {
+        $workflows = \tool_cleanupcourses\manager\workflow_manager::get_active_workflows();
+        foreach ($workflows as $workflow) {
+            if ($workflow->manual === null) {
+                $trigger = \tool_cleanupcourses\manager\trigger_manager::get_trigger_for_workflow($workflow->id);
+                $lib = \tool_cleanupcourses\manager\lib_manager::get_trigger_lib($trigger->subpluginname);
+                $workflow->manual = $lib->is_manual_trigger();
+                \tool_cleanupcourses\manager\workflow_manager::insert_or_update($workflow);
+            }
+        }
+        // Cleanupcourses savepoint reached.
+        upgrade_plugin_savepoint(true, 2018022005, 'tool', 'cleanupcourses');
+    }
+
     return true;
 }

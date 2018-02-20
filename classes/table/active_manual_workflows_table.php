@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Table listing all active workflows.
+ * Table listing all active manually triggered workflows.
  *
  * @package tool_cleanupcourses
  * @copyright  2017 Tobias Reischmann WWU
@@ -33,29 +33,32 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
-class active_workflows_table extends \table_sql {
+class active_manual_workflows_table extends \table_sql {
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
-        list($sqlwhere, $params) = $DB->get_in_or_equal(true);
-        $this->set_sql("id, title, timeactive, sortindex", '{tool_cleanupcourses_workflow}', 'active ' . $sqlwhere, $params);
+        list($sqlwhereactive, $params) = $DB->get_in_or_equal(true);
+        list($sqlwheremanual, $paramsmanual) = $DB->get_in_or_equal(true);
+        $sqlwhere = 'active ' . $sqlwhereactive . ' AND manual ' . $sqlwheremanual;
+        $params[1] = $paramsmanual[0];
+        $this->set_sql("id, title, timeactive", '{tool_cleanupcourses_workflow}',
+            $sqlwhere, $params);
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'sortindex', 'tools']);
+        $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'tools']);
         $this->define_headers([
             get_string('workflow_title', 'tool_cleanupcourses'),
             get_string('workflow_timeactive', 'tool_cleanupcourses'),
             get_string('trigger', 'tool_cleanupcourses'),
             get_string('workflow_processes', 'tool_cleanupcourses'),
-            get_string('workflow_sortindex', 'tool_cleanupcourses'),
             get_string('workflow_tools', 'tool_cleanupcourses'),
             ]);
-        $this->sortable(false, 'sortindex');
+        $this->sortable(true, 'title');
         $this->setup();
     }
 
@@ -74,36 +77,6 @@ class active_workflows_table extends \table_sql {
                 'sesskey' => sesskey(),
                 'workflowid' => $row->id)),
             get_string('activateworkflow', 'tool_cleanupcourses'));
-    }
-
-    /**
-     * Render sortindex column.
-     * @param $row
-     * @return string action buttons for changing sortorder of active workflows
-     */
-    public function col_sortindex($row) {
-        global $OUTPUT;
-        $output = '';
-        if ($row->sortindex !== null) {
-            if ($row->sortindex > 1) {
-                $alt = 'up';
-                $icon = 't/up';
-                $action = ACTION_UP_WORKFLOW;
-                $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
-            } else {
-                $output .= $OUTPUT->spacer();
-            }
-            if ($row->sortindex < count(workflow_manager::get_active_workflows())) {
-                $alt = 'down';
-                $icon = 't/down';
-                $action = ACTION_DOWN_WORKFLOW;
-                $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
-            } else {
-                $output .= $OUTPUT->spacer();
-            }
-        }
-
-        return  $output;
     }
 
     /**

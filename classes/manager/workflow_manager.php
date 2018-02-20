@@ -87,6 +87,21 @@ class workflow_manager {
     }
 
     /**
+     * Returns all active automatic workflows.
+     * @return workflow[]
+     */
+    public static function get_active_automatic_workflows() {
+        global $DB;
+        $records = $DB->get_records('tool_cleanupcourses_workflow', array('active' => true, 'manual' => false),
+            'sortindex ASC');
+        $result = array();
+        foreach ($records as $record) {
+            $result [] = workflow::from_record($record);
+        }
+        return $result;
+    }
+
+    /**
      * Activate a workflow
      * @param int $workflowid id of the workflow
      */
@@ -94,7 +109,7 @@ class workflow_manager {
         global $DB, $OUTPUT;
         if (!self::is_valid($workflowid)) {
             echo $OUTPUT->notification(
-                get_string('invalid_workflow_cannot_be_activated','tool_cleanupcourses'),
+                get_string('invalid_workflow_cannot_be_activated', 'tool_cleanupcourses'),
                 'warning');
             return;
         }
@@ -106,7 +121,9 @@ class workflow_manager {
             $workflow->manual = $lib->is_manual_trigger();
             $workflow->active = true;
             $workflow->timeactive = time();
-            $workflow->sortindex = count(self::get_active_workflows()) + 1;
+            if (!$workflow->manual) {
+                $workflow->sortindex = count(self::get_active_automatic_workflows()) + 1;
+            }
             self::insert_or_update($workflow);
         }
         $transaction->allow_commit();
@@ -159,7 +176,7 @@ class workflow_manager {
             return;
         }
         // Prevent last entry to be put down even more.
-        if ($workflow->sortindex == count(self::get_active_workflows()) && !$up) {
+        if ($workflow->sortindex == count(self::get_active_automatic_workflows()) && !$up) {
             return;
         }
         $index = $workflow->sortindex;
