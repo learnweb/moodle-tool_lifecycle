@@ -91,10 +91,19 @@ class workflow_manager {
      * @param int $workflowid id of the workflow
      */
     public static function activate_workflow($workflowid) {
-        global $DB;
+        global $DB, $OUTPUT;
+        if (!self::is_valid($workflowid)) {
+            echo $OUTPUT->notification(
+                get_string('invalid_workflow_cannot_be_activated','tool_cleanupcourses'),
+                'warning');
+            return;
+        }
         $transaction = $DB->start_delegated_transaction();
         $workflow = self::get_workflow($workflowid);
         if (!$workflow->active) {
+            $trigger = trigger_manager::get_trigger_for_workflow($workflowid);
+            $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+            $workflow->manual = $lib->is_manual_trigger();
             $workflow->active = true;
             $workflow->timeactive = time();
             $workflow->sortindex = count(self::get_active_workflows()) + 1;
