@@ -30,18 +30,18 @@ use tool_cleanupcourses\entity\workflow;
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_workflow_is_maunal_testcase extends \advanced_testcase {
+class tool_cleanupcourses_workflow_is_manual_testcase extends \advanced_testcase {
 
-    private $maunal_workflow;
+    private $manual_workflow;
     private $automatic_workflow;
 
     public function setUp() {
         $this->resetAfterTest(true);
 
-        $this->maunal_workflow = tool_cleanupcourses_generator::create_manual_workflow();
+        $this->manual_workflow = tool_cleanupcourses_generator::create_manual_workflow();
         $this->automatic_workflow = tool_cleanupcourses_generator::create_workflow();
 
-        $this->assertNull($this->maunal_workflow->manual);
+        $this->assertNull($this->manual_workflow->manual);
         $this->assertNull($this->automatic_workflow->manual);
     }
 
@@ -49,9 +49,9 @@ class tool_cleanupcourses_workflow_is_maunal_testcase extends \advanced_testcase
      * Test to activate the manual workflow.
      */
     public function test_activate_manual() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->maunal_workflow->id);
-        $reloadworkflow = workflow_manager::get_workflow($this->maunal_workflow->id);
-        $this->assertTrue(workflow_manager::is_active($this->maunal_workflow->id));
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->manual_workflow->id);
+        $reloadworkflow = workflow_manager::get_workflow($this->manual_workflow->id);
+        $this->assertTrue(workflow_manager::is_active($this->manual_workflow->id));
         $this->assertTrue($reloadworkflow->manual);
     }
 
@@ -62,6 +62,6 @@ class tool_cleanupcourses_workflow_is_maunal_testcase extends \advanced_testcase
         workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->automatic_workflow->id);
         $reloadworkflow = workflow_manager::get_workflow($this->automatic_workflow->id);
         $this->assertTrue(workflow_manager::is_active($this->automatic_workflow->id));
-        $this->assertFalse($reloadworkflow->manual);
+        $this->assertEquals(false, $reloadworkflow->manual);
     }
 }
