@@ -54,7 +54,7 @@ class interaction_table extends \table_sql {
 //        }
 
         //$capability = interaction_manager::get_relevant_capability($this->stepinstance->subpluginname);
-        $courses = get_user_capability_course('tool_cleanupcourses/view:managecourse', $USER, false);
+        $courses = get_user_capability_course('tool/cleanupcourses:managecourse', $USER, false);
         if ($courses) {
             $listofcourseids = array_reduce($courses, function ($course1, $course2) {
                 if (!$course1) {
