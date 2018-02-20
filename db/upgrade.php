@@ -207,5 +207,20 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018021302, 'tool', 'cleanupcourses');
     }
 
+    if ($oldversion < 2018022000) {
+
+        // Define field manual to be added to tool_cleanupcourses_workflow.
+        $table = new xmldb_table('tool_cleanupcourses_workflow');
+        $field = new xmldb_field('manual', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'sortindex');
+
+        // Conditionally launch add field manual.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Cleanupcourses savepoint reached.
+        upgrade_plugin_savepoint(true, 2018022000, 'tool', 'cleanupcourses');
+    }
+
     return true;
 }
