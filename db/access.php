@@ -15,13 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
- *
+ * Capability definitions for the tool_cleanupcourses plugin
  * @package    tool_cleanupcourses
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2018 Tamara Gunkel, Jan Dageförde (WWU)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
-defined('MOODLE_INTERNAL') || die;
+$capabilities = array(
 
-$plugin->version  = 2018022002;
-$plugin->component = 'tool_cleanupcourses';
+    'tool_cleanupcourses/view:managecourse' => array(
+        'contextlevel' => CONTEXT_SYSTEM,
+        'captype' => 'write',
+        'archetypes' => array(
+            'manager' => CAP_PREVENT,
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_PREVENT,
+            'students' => CAP_PREVENT,
+        ),
+        'clonepermissionsfrom' => 'moodle/course:update'
+    ),
+);
+
+
+

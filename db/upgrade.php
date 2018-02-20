@@ -207,7 +207,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018021302, 'tool', 'cleanupcourses');
     }
 
-    if ($oldversion < 2018022000) {
+    if ($oldversion < 2018022001) {
 
         // Define field manual to be added to tool_cleanupcourses_workflow.
         $table = new xmldb_table('tool_cleanupcourses_workflow');
@@ -219,7 +219,20 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         }
 
         // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2018022000, 'tool', 'cleanupcourses');
+        upgrade_plugin_savepoint(true, 2018022001, 'tool', 'cleanupcourses');
+    }
+
+    if ($oldversion < 2018022002) {
+
+        // Define field manual to be added to tool_cleanupcourses_workflow.
+        $table = new xmldb_table('tool_cleanupcourses_procdata');
+        $field = new xmldb_field('key', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, 'subpluginname');
+
+        // Launch rename field key.
+        $dbman->rename_field($table, $field, 'keyname');
+
+        // Cleanupcourses savepoint reached.
+        upgrade_plugin_savepoint(true, 2018022002, 'tool', 'cleanupcourses');
     }
 
     return true;
