@@ -54,6 +54,26 @@ class tool_cleanupcourses_generator extends testing_module_generator {
     }
 
     /**
+     * Creates an artificial workflow without steps, which is triggered manually.
+     */
+    public static function create_manual_workflow() {
+        // Create Workflow.
+        $record = new stdClass();
+        $record->id = null;
+        $record->title = 'myworkflow';
+        $workflow = workflow::from_record($record);
+        workflow_manager::insert_or_update($workflow);
+        // Create trigger.
+        $record = new stdClass();
+        $record->subpluginname = 'manual';
+        $record->instancename = 'manual';
+        $record->workflowid = $workflow->id;
+        $trigger = trigger_subplugin::from_record($record);
+        trigger_manager::insert_or_update($trigger);
+        return $workflow;
+    }
+
+    /**
      * Creates a step for a given workflow and stores it in the DB
      * @param $instancename
      * @param $subpluginname
