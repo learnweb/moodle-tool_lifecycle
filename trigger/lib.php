@@ -72,15 +72,6 @@ abstract class base {
 
 
     /**
-     * Generates the link to the interaction table of the respective step
-     * @param int $stepid id of the step
-     * @return \moodle_url
-     */
-    public function get_interaction_link($stepid) {
-        return new \moodle_url('admin/tool/cleanupcourses/view.php', array('stepid' => $stepid));
-    }
-
-    /**
      * If true, the trigger can be used to manually define workflows, based on an instance of this trigger.
      * This has to be combined with installing the workflow in db/install.php of the trigger plugin.
      * If false, at installation the trigger will result in a preset workflow, which can not be changed.
