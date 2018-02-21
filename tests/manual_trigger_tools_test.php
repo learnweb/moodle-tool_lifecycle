@@ -35,16 +35,17 @@ class tool_cleanupcourses_manual_trigger_tools_testcase extends \advanced_testca
     const MANUAL_TRIGGER2_ICON = 't/down';
     const MANUAL_TRIGGER2_DISPLAYNAME = 'Down';
     const MANUAL_TRIGGER2_CAPABILITY = 'moodle/course:view';
+    private $workflow1;
     private $workflow2;
 
     public function setUp() {
-        $this->resetAfterTest(false);
+        $this->resetAfterTest(true);
 
         $triggersettings = new stdClass();
         $triggersettings->icon = self::MANUAL_TRIGGER1_ICON;
         $triggersettings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
-        tool_cleanupcourses_generator::create_manual_workflow($triggersettings);
+        $this->workflow1 = tool_cleanupcourses_generator::create_manual_workflow($triggersettings);
 
         $triggersettings = new stdClass();
         $triggersettings->icon = self::MANUAL_TRIGGER2_ICON;
@@ -56,7 +57,7 @@ class tool_cleanupcourses_manual_trigger_tools_testcase extends \advanced_testca
     /**
      * Test getting manual trigger tools of active workflows.
      */
-    public function test_get_manual_trigger_tools_for_active_workflows() {
+    public function test_get_manual_trigger_tools_for_one_active_workflow() {
         workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
         $tools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
         $this->assertCount(1, $tools);
@@ -65,6 +66,49 @@ class tool_cleanupcourses_manual_trigger_tools_testcase extends \advanced_testca
         $tool = new manual_trigger_tool($trigger->id, self::MANUAL_TRIGGER2_ICON,
             self::MANUAL_TRIGGER2_DISPLAYNAME, self::MANUAL_TRIGGER2_CAPABILITY);
         $this->assertEquals($tool, $tools[0]);
+    }
+
+    /**
+     * Test getting manual trigger tools of active workflows.
+     */
+    public function test_get_manual_trigger_tools_for_active_workflows() {
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        $tools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
+        $this->assertCount(2, $tools);
+        $this->assertContainsOnly(\tool_cleanupcourses\local\data\manual_trigger_tool::class, $tools);
+        $trigger = trigger_manager::get_trigger_for_workflow($this->workflow1->id);
+        $expectedtool = new manual_trigger_tool($trigger->id, self::MANUAL_TRIGGER1_ICON,
+            self::MANUAL_TRIGGER1_DISPLAYNAME, self::MANUAL_TRIGGER1_CAPABILITY);
+        $this->assert_tool_exist($expectedtool, $tools);
+
+        $trigger = trigger_manager::get_trigger_for_workflow($this->workflow2->id);
+        $expectedtool = new manual_trigger_tool($trigger->id, self::MANUAL_TRIGGER2_ICON,
+            self::MANUAL_TRIGGER2_DISPLAYNAME, self::MANUAL_TRIGGER2_CAPABILITY);
+        $this->assert_tool_exist($expectedtool, $tools);
+
+    }
+
+    /**
+     * Test if a specific manual_trigger_tool exist within an array.
+     * @param $expectedtool manual_trigger_tool searched trigger_tool.
+     * @param $tools manual_trigger_tool[] haystack.
+     */
+    private function assert_tool_exist($expectedtool, $tools) {
+        $found = false;
+        foreach ($tools as $tool) {
+            $equalvalues = true;
+            foreach ($tool as $key => $value) {
+                if ($expectedtool->$key !== $value) {
+                    $equalvalues = false;
+                }
+            }
+            if ($equalvalues) {
+                $found = true;
+                break;
+            }
+        }
+        $this->assertTrue($found);
     }
 
 }
