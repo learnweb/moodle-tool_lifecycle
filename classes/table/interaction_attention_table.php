@@ -73,11 +73,10 @@ class interaction_attention_table extends interaction_table {
     /**
      * Render status column.
      * @param $row
-     * @return string pluginname of the subplugin
+     * @return string status for the process of this course.
      */
     public function col_status($row) {
-        $step = step_manager::get_step_instance($row->stepinstanceid);
-        return interaction_manager::get_status_message($step->subpluginname, $row->processid);
+        return interaction_manager::get_process_status_message($row->processid);
     }
 
     /**

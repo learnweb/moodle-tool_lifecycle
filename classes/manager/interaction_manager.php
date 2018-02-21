@@ -109,22 +109,6 @@ class interaction_manager {
      * @return string status message
      * @throws \invalid_parameter_exception
      */
-    public static function get_status_message($subpluginname, $processid) {
-        $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
-        $process = process_manager::get_process_by_id($processid);
-        if (!$process) {
-            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
-        }
-        return $interactionlib->get_status_message($process);
-    }
-
-    /**
-     * Returns the status message for the given process.
-     * @param string $subpluginname name of the step subplugin
-     * @param int $processid id of the process the status message is requested for
-     * @return string status message
-     * @throws \invalid_parameter_exception
-     */
     public static function get_process_status_message($processid) {
         $process = process_manager::get_process_by_id($processid);
         if (!$process) {
