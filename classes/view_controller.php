@@ -24,9 +24,11 @@
 namespace tool_cleanupcourses;
 use core\notification;
 use tool_cleanupcourses\manager\interaction_manager;
+use tool_cleanupcourses\manager\lib_manager;
 use tool_cleanupcourses\manager\process_manager;
+use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_cleanupcourses\manager\trigger_manager;
 use tool_cleanupcourses\table\interaction_remaining_table;
 use tool_cleanupcourses\table\interaction_attention_table;
 
@@ -108,7 +110,13 @@ class view_controller {
     public function handle_interaction($action, $processid, $stepid) {
         global $PAGE;
 
+        $process = process_manager::get_process_by_id($processid);
+        $step = step_manager::get_step_instance($stepid);
+        $capability = interaction_manager::get_relevant_capability($step->subpluginname);
+        require_capability($capability, \context_course::instance($process->courseid), null, false);
+
         interaction_manager::handle_interaction($stepid, $processid, $action);
+
         redirect($PAGE->url, get_string('interaction_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
     }
 
@@ -121,11 +129,24 @@ class view_controller {
     public function handle_trigger($triggerid, $courseid) {
         global $PAGE;
 
-        $running_process =process_manager::get_process_by_course_id($courseid);
-        if ($running_process !== null) {
+        // Check if trigger is manual.
+        $trigger = trigger_manager::get_instance($triggerid);
+        $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+        if (!$lib->is_manual_trigger()) {
+            throw new \moodle_exception('error_wrong_trigger_selected', 'tool_cleanupcourses');
+        }
+
+        // Check if user has capability.
+        $triggersettings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
+        require_capability($triggersettings['capability'], \context_course::instance($courseid), null, false);
+
+        // Check if course does not have a running process.
+        $runningprocess = process_manager::get_process_by_course_id($courseid);
+        if ($runningprocess !== null) {
             redirect($PAGE->url, get_string('manual_trigger_process_existed', 'tool_cleanupcourses'), null, notification::ERROR);
         }
 
+        // Actually trigger process.
         process_manager::manually_trigger_process($courseid, $triggerid);
         redirect($PAGE->url, get_string('manual_trigger_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
     }

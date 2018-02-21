@@ -53,6 +53,7 @@ $string['active_workflow_not_removeable'] = 'The workflow instance is active. It
 $string['invalid_workflow_cannot_be_activated'] = 'The workflow definition is invalid, thus it cannot be activated.';
 $string['trigger_does_not_exist'] = 'The requested trigger could not be found.';
 $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not be triggered manually.';
+$string['error_wrong_trigger_selected'] = 'You tried to request a non-manual trigger.';
 
 $string['process_cleanup'] = 'Run the cleanup courses processes';
 
