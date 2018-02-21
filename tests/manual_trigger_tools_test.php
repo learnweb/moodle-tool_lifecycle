@@ -19,6 +19,7 @@ defined('MOODLE_INTERNAL') || die();
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\settings_manager;
+use tool_cleanupcourses\manager\workflow_manager;
 
 /**
  * Tests assembly of manual trigger tools.
@@ -35,6 +36,7 @@ class tool_cleanupcourses_manual_trigger_tools_testcase extends \advanced_testca
     const MANUAL_TRIGGER2_ICON = 't/down';
     const MANUAL_TRIGGER2_DISPLAYNAME = 'Down';
     const MANUAL_TRIGGER2_CAPABILITY = 'moodle/course:view';
+    private $workflow2;
 
     public function setUp() {
         $this->resetAfterTest(false);
@@ -49,15 +51,16 @@ class tool_cleanupcourses_manual_trigger_tools_testcase extends \advanced_testca
         $settings->icon = self::MANUAL_TRIGGER2_ICON;
         $settings->displayname = self::MANUAL_TRIGGER2_DISPLAYNAME;
         $settings->capability = self::MANUAL_TRIGGER2_CAPABILITY;
-        tool_cleanupcourses_generator::create_manual_workflow($settings);
+        $this->workflow2 = tool_cleanupcourses_generator::create_manual_workflow($settings);
     }
 
     /**
      * Test setting and getting settings data for steps.
      */
     public function test_get_manual_trigger_tools_for_active_workflows() {
-        $tools = \tool_cleanupcourses\manager\workflow_manager::get_manual_trigger_tools_for_active_workflows();
-        $this->assertCount(2, $tools);
+        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+        $tools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
+        $this->assertCount(1, $tools);
         $this->assertContainsOnly(\tool_cleanupcourses\local\data\manual_trigger_tool::class, $tools);
     }
 
