@@ -14,16 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_cleanupcourses\local\data;
+
+use renderable;
+
+defined('MOODLE_INTERNAL') || die();
+
 /**
- * Lang strings for manual trigger
+ * Class representing a manual trigger tool
  *
- * @package tool_cleanupcourses_trigger
- * @subpackage manual
+ * @package tool_cleanupcourses
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Manual trigger';
-$string['setting_capability'] = 'Capability';
-$string['setting_icon'] = 'Icon';
-$string['setting_displayname'] = 'Action name';
+class manual_trigger_tool implements renderable {
+
+    /** string icon, which is displayed to the user in the trigger tools menu*/
+    public $icon;
+
+    /** string name, which is displayed to the user in the trigger tools menu*/
+    public $displayname;
+
+    /** string capability required to use and display this tool*/
+    public $capability;
+
+    public function __construct($icon, $displayname, $capability) {
+        $this->icon = $icon;
+        $this->displayname= $displayname;
+        $this->capability = $capability;
+    }
+
+}

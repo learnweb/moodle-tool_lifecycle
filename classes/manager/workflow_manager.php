@@ -23,7 +23,9 @@
  */
 namespace tool_cleanupcourses\manager;
 
+use tool_cleanupcourses\entity\trigger_subplugin;
 use tool_cleanupcourses\entity\workflow;
+use tool_cleanupcourses\local\data\manual_trigger_tool;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -99,6 +101,37 @@ class workflow_manager {
             $result [] = workflow::from_record($record);
         }
         return $result;
+    }
+
+    /**
+     * Returns triggers of active manual workflows.
+     * @return trigger_subplugin[]
+     */
+    public static function get_active_manual_workflow_triggers() {
+        global $DB;
+        $sql = 'SELECT t.* FROM {tool_cleanupcourses_workflow} w JOIN {tool_cleanupcourses_trigger} t ON t.workflowid = w.id'.
+        ' WHERE w.active = ? AND w.manual = ?';
+        $records = $DB->get_records_sql($sql, array(true, true));
+        $result = array();
+        foreach ($records as $record) {
+            $result [] = trigger_subplugin::from_record($record);
+        }
+        return $result;
+    }
+
+    /**
+     * Returns tools for all active manual workflows.
+     * You need to check the capability based on course and user before diplaying it.
+     * @return manual_trigger_tool[] list of tools, available in the whole system.
+     */
+    public static function get_manual_trigger_tools_for_active_workflows() {
+        $triggers = self::get_active_manual_workflow_triggers();
+        $tools = array();
+        foreach ($triggers as $trigger) {
+            $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
+            $tools[] = new manual_trigger_tool($settings['icon'], $settings['displayname'], $settings['capability']);
+        }
+        return $tools;
     }
 
     /**

@@ -38,4 +38,39 @@ class manual extends base_manual {
         return 'manual';
     }
 
+    /**
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
+    public function instance_settings() {
+        return [new instance_setting('icon',  PARAM_SAFEPATH),
+            new instance_setting('displayname',  PARAM_TEXT),
+            new instance_setting('capability',  PARAM_CAPABILITY),
+            ];
+    }
+
+    /**
+     * This method can be overriden, to add form elements to the form_step_instance.
+     * It is called in definition().
+     * @param \MoodleQuickForm $mform
+     */
+    public function extend_add_instance_form_definition($mform) {
+        $elementname = 'icon';
+        $mform->addElement(
+            'text', $elementname, get_string('setting_icon','cleanupcoursestrigger_manual')
+        );
+        $mform->setType($elementname, PARAM_SAFEPATH);
+
+        $elementname = 'displayname';
+        $mform->addElement(
+            'text', $elementname, get_string('setting_displayname','cleanupcoursestrigger_manual')
+        );
+        $mform->setType($elementname, PARAM_TEXT);
+
+        $elementname = 'capability';
+        $mform->addElement(
+            'text', $elementname, get_string('setting_capability','cleanupcoursestrigger_manual')
+        );
+        $mform->setType($elementname, PARAM_CAPABILITY);
+    }
+
 }
