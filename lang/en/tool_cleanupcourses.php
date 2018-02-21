@@ -114,3 +114,5 @@ $string['workflownotfound'] = 'Workflow with id {$a} could not be found';
 $string['tablecoursesrequiringattention'] = 'Courses that require your attention';
 $string['tablecoursesremaining'] = 'Remaining courses';
 $string['viewheading'] = 'Manage courses';
+
+$string['workflow_started'] = 'Workflow started.';

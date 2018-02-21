@@ -119,4 +119,34 @@ class interaction_manager {
         return $interactionlib->get_status_message($process);
     }
 
+    /**
+     * Returns the status message for the given process.
+     * @param string $subpluginname name of the step subplugin
+     * @param int $processid id of the process the status message is requested for
+     * @return string status message
+     * @throws \invalid_parameter_exception
+     */
+    public static function get_process_status_message($processid) {
+        $process = process_manager::get_process_by_id($processid);
+
+        if (!$process) {
+            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
+        }
+
+        if($process->stepindex == 0) {
+            $trigger = trigger_manager::get_trigger_for_workflow($process->workflowid);
+            $triggerlib = lib_manager::get_trigger_lib($trigger->subpluginname);
+            $triggerlib->get_status_message();
+        } else {
+            $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
+            $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
+            if($interactionlib === null) {
+                // TODO return generic status message.
+                return "";
+            }
+
+            return $interactionlib->get_status_message($process);
+        }
+    }
+
 }

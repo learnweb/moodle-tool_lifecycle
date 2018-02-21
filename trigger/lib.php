@@ -84,6 +84,14 @@ abstract class base {
      */
     public abstract function is_manual_trigger();
 
+    /**
+     * Returns the status message for the trigger.
+     * @return string status message
+     */
+    public function get_status_message() {
+        return get_string("workflow_started", "tool_cleanupcourses");
+    }
+
 }
 
 /**
