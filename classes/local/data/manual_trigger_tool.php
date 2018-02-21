@@ -37,7 +37,7 @@ class manual_trigger_tool {
     /** string capability required to use and display this tool*/
     public $capability;
 
-    private function __construct($icon, $displayname, $capability) {
+    public function __construct($icon, $displayname, $capability) {
         $this->icon = $icon;
         $this->displayname= $displayname;
         $this->capability = $capability;
