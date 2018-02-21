@@ -26,6 +26,7 @@ use core\notification;
 use tool_cleanupcourses\manager\interaction_manager;
 use tool_cleanupcourses\manager\process_manager;
 use tool_cleanupcourses\manager\step_manager;
+use tool_cleanupcourses\manager\workflow_manager;
 use tool_cleanupcourses\table\interaction_remaining_table;
 use tool_cleanupcourses\table\interaction_attention_table;
 
@@ -120,7 +121,12 @@ class view_controller {
     public function handle_trigger($triggerid, $courseid) {
         global $PAGE;
 
-        //interaction_manager::handle_interaction($stepid, $processid, $action);
+        $running_process =process_manager::get_process_by_course_id($courseid);
+        if ($running_process !== null) {
+            redirect($PAGE->url, get_string('manual_trigger_process_existed', 'tool_cleanupcourses'), null, notification::ERROR);
+        }
+
+        process_manager::manually_trigger_process($courseid, $triggerid);
         redirect($PAGE->url, get_string('manual_trigger_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
     }
 }

@@ -167,4 +167,14 @@ class process_manager {
         $DB->delete_records('tool_cleanupcourses_procdata', array('processid' => $process->id));
         $DB->delete_records('tool_cleanupcourses_process', (array) $process);
     }
+
+    public static function get_process_by_course_id($courseid) {
+        global $DB;
+        $record = $DB->get_record('tool_cleanupcourses_process', array('courseid' => $courseid));
+        if ($record) {
+            return process::from_record($record);
+        } else {
+            return null;
+        }
+    }
 }

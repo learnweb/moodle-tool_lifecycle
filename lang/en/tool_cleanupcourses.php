@@ -118,6 +118,7 @@ $string['tablecoursesremaining'] = 'Remaining courses';
 $string['viewheading'] = 'Manage courses';
 $string['interaction_success'] = 'Action successfully saved.';
 $string['manual_trigger_success'] = 'Workflow started successfully.';
+$string['manual_trigger_process_existed'] = 'A workflow for this course already exists.';
 
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_is_running'] = 'Workflow is running.';
