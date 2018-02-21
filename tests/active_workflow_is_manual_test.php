@@ -31,6 +31,9 @@ use tool_cleanupcourses\entity\workflow;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_cleanupcourses_workflow_is_manual_testcase extends \advanced_testcase {
+    const MANUAL_TRIGGER1_ICON = 't/up';
+    const MANUAL_TRIGGER1_DISPLAYNAME = 'Up';
+    const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
 
     private $manualworkflow;
     private $automaticworkflow;
@@ -38,7 +41,11 @@ class tool_cleanupcourses_workflow_is_manual_testcase extends \advanced_testcase
     public function setUp() {
         $this->resetAfterTest(true);
 
-        $this->manualworkflow = tool_cleanupcourses_generator::create_manual_workflow();
+        $settings = new stdClass();
+        $settings->icon = self::MANUAL_TRIGGER1_ICON;
+        $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
+        $settings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
+        $this->manualworkflow = tool_cleanupcourses_generator::create_manual_workflow($settings);
         $this->automaticworkflow = tool_cleanupcourses_generator::create_workflow();
 
         $this->assertNull($this->manualworkflow->manual);

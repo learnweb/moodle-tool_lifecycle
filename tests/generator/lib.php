@@ -19,6 +19,7 @@ defined('MOODLE_INTERNAL') || die();
 use tool_cleanupcourses\entity\trigger_subplugin;
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\entity\workflow;
+use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\manager\trigger_manager;
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\workflow_manager;
@@ -55,8 +56,10 @@ class tool_cleanupcourses_generator extends testing_module_generator {
 
     /**
      * Creates an artificial workflow without steps, which is triggered manually.
+     * @param \stdClass $triggersettings settings of the manual trigger
+     * @return workflow
      */
-    public static function create_manual_workflow() {
+    public static function create_manual_workflow($triggersettings) {
         // Create Workflow.
         $record = new stdClass();
         $record->id = null;
@@ -70,6 +73,7 @@ class tool_cleanupcourses_generator extends testing_module_generator {
         $record->workflowid = $workflow->id;
         $trigger = trigger_subplugin::from_record($record);
         trigger_manager::insert_or_update($trigger);
+        settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $triggersettings);
         return $workflow;
     }
 

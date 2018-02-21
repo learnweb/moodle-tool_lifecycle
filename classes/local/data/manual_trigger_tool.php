@@ -16,6 +16,8 @@
 
 namespace tool_cleanupcourses\local\data;
 
+use renderable;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -26,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class manual_trigger_tool {
+class manual_trigger_tool implements renderable {
 
     /** string icon, which is displayed to the user in the trigger tools menu*/
     public $icon;

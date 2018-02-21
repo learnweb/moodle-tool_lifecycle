@@ -73,13 +73,4 @@ class manual extends base_manual {
         $mform->setType($elementname, PARAM_CAPABILITY);
     }
 
-    /**
-     * This method can be overriden, to set default values to the form_step_instance.
-     * It is called in definition_after_data().
-     * @param \MoodleQuickForm $mform
-     * @param array $settings array containing the settings from the db.
-     */
-    public function extend_add_instance_form_definition_after_data($mform, $settings) {
-    }
-
 }
