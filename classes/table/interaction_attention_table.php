@@ -65,9 +65,8 @@ class interaction_attention_table extends interaction_table {
 
         $tools = interaction_manager::get_action_tools($step->subpluginname, $row->processid);
         foreach ($tools as $tool) {
-            $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['icon'], $tool['alt']);
+            $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['alt']);
         }
-
         return $output;
     }
 
@@ -92,17 +91,17 @@ class interaction_attention_table extends interaction_table {
      *
      * @return string The icon/link
      */
-    private function format_icon_link($action, $processid, $stepinstanceid, $icon, $alt) {
+    private function format_icon_link($action, $processid, $stepinstanceid, $alt) {
         global $PAGE, $OUTPUT;
-
-        return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
-                array(
-                    'stepid' => $stepinstanceid,
-                    'action' => $action,
-                    'processid' => $processid,
-                    'sesskey' => sesskey()
-                )),
-                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                null , array('title' => $alt)) . ' ';
+        // TODO Change default
+        $button = new \single_button(new \moodle_url($PAGE->url,
+            array(
+                'stepid' => $stepinstanceid,
+                'action' => $action,
+                'processid' => $processid,
+                'sesskey' => sesskey()
+            )), $alt
+        );
+        return $OUTPUT->render($button);
     }
 }
