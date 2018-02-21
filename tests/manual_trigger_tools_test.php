@@ -16,9 +16,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\manager\workflow_manager;
 
 /**
@@ -55,7 +52,7 @@ class tool_cleanupcourses_manual_trigger_tools_testcase extends \advanced_testca
     }
 
     /**
-     * Test setting and getting settings data for steps.
+     * Test getting manual trigger tools of active workflows.
      */
     public function test_get_manual_trigger_tools_for_active_workflows() {
         workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
