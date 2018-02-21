@@ -73,6 +73,10 @@ class interaction_remaining_table extends interaction_table {
     public function col_tools($row) {
         global $PAGE, $OUTPUT;
 
+        if ($row->processid !== null) {
+            return '';
+        }
+
         $actions = [];
         foreach ($this->availabletools as $tool) {
             if (has_capability($tool->capability, \context_course::instance($row->courseid))) {
