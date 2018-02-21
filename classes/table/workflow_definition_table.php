@@ -38,9 +38,10 @@ class workflow_definition_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, title, timeactive", '{tool_cleanupcourses_workflow}', "TRUE");
+        $this->set_sql("id, title, timeactive, displaytitle", '{tool_cleanupcourses_workflow}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
+        $this->attributes['class'] .=  " workflow_definition_table";
         $this->init();
     }
 
@@ -53,6 +54,14 @@ class workflow_definition_table extends \table_sql {
             ]);
         $this->sortable(false, 'title');
         $this->setup();
+    }
+
+    /**
+     * Render title column.
+     * @param $row
+     */
+    public function col_title($row) {
+        return $row->title . '<br><span class="workflow_displaytitle">' . $row->displaytitle . '</span>';
     }
 
     /**

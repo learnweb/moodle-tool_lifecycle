@@ -1,3 +1,9 @@
 .cleanupcourses-enable-overflow > .no-overflow {
     overflow: initial;
 }
+
+.workflow_definition_table span.workflow_displaytitle {
+    color: #888;
+    font-size: .9em;
+    padding: 0.5em;
+}
