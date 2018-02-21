@@ -22,7 +22,9 @@
  */
 
 namespace tool_cleanupcourses;
+use core\notification;
 use tool_cleanupcourses\manager\interaction_manager;
+use tool_cleanupcourses\manager\process_manager;
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\table\interaction_remaining_table;
 use tool_cleanupcourses\table\interaction_attention_table;
@@ -40,18 +42,11 @@ class view_controller {
     /**
      * Handles actions triggered in the view.php and displays the view.
      *
-     * @param $action    string triggered action code.
-     * @param $processid int id of the process the action was triggered for.
-     * @param $stepid int id of the step the action was triggerd for.
+     * @param \renderer_base $renderer
+     *
      */
-    public function handle_view($action, $processid, $stepid) {
-        global $USER, $DB, $OUTPUT;
-
-        // Handle action for step.
-        if ($action && $processid && $stepid) {
-            interaction_manager::handle_interaction($stepid, $processid, $action);
-            // TODO redirect.
-        }
+    public function handle_view($renderer) {
+        global $USER, $DB;
 
         $courses = get_user_capability_course('tool/cleanupcourses:managecourses', $USER, false);
         if (!$courses) {
@@ -86,19 +81,46 @@ class view_controller {
             }
         }
 
-        echo $OUTPUT->heading(get_string('tablecoursesrequiringattention', 'tool_cleanupcourses'), 3);
+        echo $renderer->heading(get_string('tablecoursesrequiringattention', 'tool_cleanupcourses'), 3);
         $table1 = new interaction_attention_table('tool_cleanupcourses_interaction', $requiresinteraction);
 
-        echo $OUTPUT->box_start();
+        echo $renderer->box_start();
         $table1->out(50, false);
-        echo $OUTPUT->box_end();
+        echo $renderer->box_end();
 
-        echo $OUTPUT->box("");
-        echo $OUTPUT->heading(get_string('tablecoursesremaining', 'tool_cleanupcourses'), 3);
+        echo $renderer->box("");
+        echo $renderer->heading(get_string('tablecoursesremaining', 'tool_cleanupcourses'), 3);
         $table2 = new interaction_remaining_table('tool_cleanupcourses_remaining', $arrayofcourseids);
 
-        echo $OUTPUT->box_start("cleanupcourses-enable-overflow");
+        echo $renderer->box_start("cleanupcourses-enable-overflow");
         $table2->out(50, false);
-        echo $OUTPUT->box_end();
+        echo $renderer->box_end();
+    }
+
+    /**
+     * Handle the case that the user requested interaction.
+     *
+     * @param string $action triggered action code.
+     * @param int $processid id of the process the action was triggered for.
+     * @param int $stepid id of the step the action was triggered for.
+     */
+    public function handle_interaction($action, $processid, $stepid) {
+        global $PAGE;
+
+        interaction_manager::handle_interaction($stepid, $processid, $action);
+        redirect($PAGE->url, get_string('interaction_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
+    }
+
+    /**
+     * Handle the case that the user manually triggered a workflow.
+     *
+     * @param int $triggerid id of the trigger whose workflow was requested.
+     * @param int $courseid id of the course the workflow was requested for.
+     */
+    public function handle_trigger($triggerid, $courseid) {
+        global $PAGE;
+
+        //interaction_manager::handle_interaction($stepid, $processid, $action);
+        redirect($PAGE->url, get_string('manual_trigger_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
     }
 }

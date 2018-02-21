@@ -116,6 +116,8 @@ $string['workflownotfound'] = 'Workflow with id {$a} could not be found';
 $string['tablecoursesrequiringattention'] = 'Courses that require your attention';
 $string['tablecoursesremaining'] = 'Remaining courses';
 $string['viewheading'] = 'Manage courses';
+$string['interaction_success'] = 'Action successfully saved.';
+$string['manual_trigger_success'] = 'Workflow started successfully.';
 
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_is_running'] = 'Workflow is running.';
