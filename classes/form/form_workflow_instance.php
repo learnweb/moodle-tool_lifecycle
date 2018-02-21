@@ -74,6 +74,14 @@ class form_workflow_instance extends \moodleform {
             $mform->setDefault($elementname, $this->workflow->title);
         }
 
+        $elementname = 'displaytitle';
+        $mform->addElement('text', $elementname, get_string('workflow_displaytitle', 'tool_cleanupcourses'));
+        $mform->addHelpButton($elementname, 'workflow_displaytitle', 'tool_cleanupcourses');
+        $mform->setType($elementname, PARAM_TEXT);
+        if (isset($this->workflow)) {
+            $mform->setDefault($elementname, $this->workflow->displaytitle);
+        }
+
         $this->add_action_buttons();
     }
 

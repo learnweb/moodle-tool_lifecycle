@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="admin/tool/cleanupcourses/db" VERSION="2018022101" COMMENT="XMLDB file for Moodle tool/cleanupcourses"
+<XMLDB PATH="admin/tool/cleanupcourses/db" VERSION="2018022102" COMMENT="XMLDB file for Moodle tool/cleanupcourses"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
@@ -104,6 +104,7 @@
         <FIELD NAME="timeactive" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="timestamp the workflow was set active"/>
         <FIELD NAME="sortindex" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Sortindex for active workflows"/>
         <FIELD NAME="manual" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Specifies for active workflows if the workflow is manually or automatically triggered. True, if manual. False, if automatic."/>
+        <FIELD NAME="displaytitle" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

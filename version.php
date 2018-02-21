@@ -23,5 +23,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2018022101;
+$plugin->version  = 2018022102;
 $plugin->component = 'tool_cleanupcourses';

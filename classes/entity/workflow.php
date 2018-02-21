@@ -46,13 +46,17 @@ class workflow {
     /** bool|null true if workflow is manually triggered*/
     public $manual;
 
-    private function __construct($id, $title, $active, $timeactive, $sortindex, $manual) {
+    /** title that is displayed to users */
+    public $displaytitle;
+
+    private function __construct($id, $title, $active, $timeactive, $sortindex, $manual, $displaytitle) {
         $this->id = $id;
         $this->title = $title;
         $this->active = $active;
         $this->timeactive = $timeactive;
         $this->sortindex = $sortindex;
         $this->manual = $manual;
+        $this->displaytitle = $displaytitle;
     }
 
     /**
@@ -94,7 +98,13 @@ class workflow {
             }
         }
 
-        $instance = new self($id, $record->title, $active, $timeactive, $sortindex, $manual);
+        if (!object_property_exists($record, 'displaytitle') || !$record->displaytitle) {
+            $displaytitle = $record->title;
+        } else {
+            $displaytitle = $record->displaytitle;
+        }
+
+        $instance = new self($id, $record->title, $active, $timeactive, $sortindex, $manual, $displaytitle);
 
         return $instance;
     }

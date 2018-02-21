@@ -65,6 +65,8 @@ $string['trigger_workflow'] = 'Workflow';
 
 $string['add_workflow'] = 'Add Workflow';
 $string['workflow_title'] = 'Title';
+$string['workflow_displaytitle'] = 'Displayed workflow title';
+$string['workflow_displaytitle_help'] = 'This title is displayed to users when managing their courses.';
 $string['workflow_active'] = 'Active';
 $string['workflow_processes'] = 'Active processes';
 $string['workflow_timeactive'] = 'Active since';

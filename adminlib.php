@@ -230,6 +230,7 @@ class admin_settings {
                 if ($data->id) {
                     $workflow = workflow_manager::get_workflow($data->id);
                     $workflow->title = $data->title;
+                    $workflow->displaytitle = $data->displaytitle;
                     $newworkflow = false;
                 } else {
                     $workflow = workflow::from_record($data);
