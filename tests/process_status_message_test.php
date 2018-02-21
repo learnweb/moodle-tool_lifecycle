@@ -23,7 +23,7 @@ use tool_cleanupcourses\manager\workflow_manager;
  * @package    tool_cleanupcourses
  * @category   test
  * @group      tool_cleanupcourses
- * @copyright  2018 Tobias Reischmann, Jan Dageforde WWU
+ * @copyright  2018 Tamara Gunkel, Jan Dageforde WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_cleanupcourses_process_status_message_testcase extends \advanced_testcase {
