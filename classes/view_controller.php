@@ -50,6 +50,7 @@ class view_controller {
         // Handle action for step.
         if ($action && $processid && $stepid) {
             interaction_manager::handle_interaction($stepid, $processid, $action);
+            // TODO redirect.
         }
 
         $courses = get_user_capability_course('tool/cleanupcourses:managecourses', $USER, false);
