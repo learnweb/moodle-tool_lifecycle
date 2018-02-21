@@ -23,8 +23,8 @@
  */
 namespace tool_cleanupcourses\manager;
 
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\entity\process;
+use tool_cleanupcourses\cleanup_processor;
+use tool_cleanupcourses\response\step_interactive_response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -47,6 +47,8 @@ class interaction_manager {
      * @param int $stepid id of the step instance
      * @param int $processid id of the process, the triggered action belongs to.
      * @param string $action action string
+     * @return boolean if true, interaction finished.
+     *      If false, the current step is still processing and cares for displaying the view.
      * @throws \invalid_parameter_exception
      */
     public static function handle_interaction($stepid, $processid, $action) {
@@ -59,7 +61,23 @@ class interaction_manager {
             throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
         }
         $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
-        $interactionlib->handle_interaction($process, $step, $action);
+        $response = $interactionlib->handle_interaction($process, $step, $action);
+
+        switch ($response) {
+            case step_interactive_response::STILLPROCESSING:
+                return false;
+                break;
+            case step_interactive_response::NOACTION:
+                break;
+            case step_interactive_response::PROCEED:
+                $processor = new cleanup_processor();
+                return $processor->process_course_interactive($processid);
+                break;
+            case step_interactive_response::ROLLBACK:
+                process_manager::rollback_process($process);
+                break;
+        }
+        return true;
     }
 
     /**
