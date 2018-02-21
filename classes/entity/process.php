@@ -46,7 +46,7 @@ class process {
     /** timestamp date the process was moved to the current step instance */
     public $timestepchanged;
 
-    public function __construct($id, $workflowid, $courseid, $stepindex = 1, $waiting = false, $timestepchanged = null) {
+    private function __construct($id, $workflowid, $courseid, $stepindex, $waiting = false, $timestepchanged = null) {
         $this->id = $id;
         $this->workflowid = $workflowid;
         $this->courseid = $courseid;
@@ -83,7 +83,7 @@ class process {
         if (object_property_exists($record, 'stepindex')) {
             $stepindex = $record->stepindex;
         } else {
-            $stepindex = 1;
+            $stepindex = 0;
         }
 
         $instance = new self($record->id, $record->workflowid, $record->courseid, $stepindex, $waiting, $record->timestepchanged);

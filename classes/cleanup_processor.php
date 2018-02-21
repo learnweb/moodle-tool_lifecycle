@@ -75,6 +75,12 @@ class cleanup_processor {
     public function process_courses() {
         foreach (process_manager::get_processes() as $process) {
             while (true) {
+
+                if ($process->stepindex == 0) {
+                    process_manager::proceed_process($process);
+                    break;
+                }
+
                 $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
                 $lib = lib_manager::get_step_lib($step->subpluginname);
                 try {
