@@ -50,7 +50,7 @@ class interaction_remaining_table extends interaction_table {
 
         $ids = join(',', $courseids);
 
-        $where = 'TRUE';
+        $where = 'FALSE';
         if ($ids) {
             $where = 'c.id IN ('. $ids . ')';
         }

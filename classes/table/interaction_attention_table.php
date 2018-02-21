@@ -47,7 +47,7 @@ class interaction_attention_table extends interaction_table {
 
         $ids = join(',', $courseids);
 
-        $where = 'TRUE';
+        $where = 'FALSE';
         if ($ids) {
             $where = 'p.courseid IN (' . $ids . ')';
         }
