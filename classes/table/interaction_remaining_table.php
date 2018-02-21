@@ -34,36 +34,30 @@ require_once($CFG->libdir . '/tablelib.php');
 class interaction_remaining_table extends interaction_table {
 
     public function __construct($uniqueid, $courseids) {
-        // TODO change query: include courses that are not in a process.
         parent::__construct($uniqueid);
         global $PAGE;
 
-        $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname';
-        $from = '{tool_cleanupcourses_process} p join ' .
-            '{course} c on p.courseid = c.id join ' .
-            '{tool_cleanupcourses_step} s '.
-            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex';
+        $fields = 'c.id as courseid, p.id as processid, c.fullname as coursefullname, c.shortname as courseshortname ';
+        $from = '{course} c left join ' .
+            '{tool_cleanupcourses_process} p on p.courseid = c.id ';
 
+        // TODO implement method get_Status
         $ids = join(',', $courseids);
 
-        $where = 'p.courseid IN ('. $ids . ')';
-
+        $where = 'c.id IN ('. $ids . ')';
 
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
         $this->init();
-
     }
-
     /**
      * Render status column.
      * @param $row
      * @return string pluginname of the subplugin
      */
     public function col_status($row) {
-        return '';
+        return 'default';
     }
-
     /**
      * Render tools column.
      * @param $row
