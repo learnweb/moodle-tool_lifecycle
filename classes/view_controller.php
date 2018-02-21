@@ -89,11 +89,16 @@ class view_controller {
         echo $OUTPUT->heading(get_string('tablecoursesrequiringattention', 'tool_cleanupcourses'), 3);
         $table1 = new interaction_attention_table('tool_cleanupcourses_interaction', $requiresinteraction);
 
+        echo $OUTPUT->box_start();
         $table1->out(50, false);
+        echo $OUTPUT->box_end();
 
+        echo $OUTPUT->box("");
         echo $OUTPUT->heading(get_string('tablecoursesremaining', 'tool_cleanupcourses'), 3);
         $table2 = new interaction_remaining_table('tool_cleanupcourses_remaining', $arrayofcourseids);
 
+        echo $OUTPUT->box_start("cleanupcourses-enable-overflow");
         $table2->out(50, false);
+        echo $OUTPUT->box_end();
     }
 }
