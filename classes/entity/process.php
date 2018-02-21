@@ -80,7 +80,7 @@ class process {
             $waiting = false;
         }
 
-        if (object_property_exists($record, 'stepindex') && $record->stepindex) {
+        if (object_property_exists($record, 'stepindex')) {
             $stepindex = $record->stepindex;
         } else {
             $stepindex = 1;

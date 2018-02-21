@@ -128,7 +128,6 @@ class interaction_manager {
      */
     public static function get_process_status_message($processid) {
         $process = process_manager::get_process_by_id($processid);
-
         if (!$process) {
             throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
         }
@@ -136,7 +135,7 @@ class interaction_manager {
         if($process->stepindex == 0) {
             $trigger = trigger_manager::get_trigger_for_workflow($process->workflowid);
             $triggerlib = lib_manager::get_trigger_lib($trigger->subpluginname);
-            $triggerlib->get_status_message();
+            return $triggerlib->get_status_message();
         } else {
             $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
             $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);

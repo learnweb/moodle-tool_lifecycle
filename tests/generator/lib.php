@@ -16,6 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use tool_cleanupcourses\entity\process;
 use tool_cleanupcourses\entity\trigger_subplugin;
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\entity\workflow;
@@ -99,5 +100,19 @@ class tool_cleanupcourses_generator extends testing_module_generator {
         self::create_step('instance2', 'subpluginname', $workflow->id);
         self::create_step('instance3', 'subpluginname', $workflow->id);
         return $workflow;
+    }
+
+    public static function create_process($courseid, $workflowid) {
+        global $DB;
+
+        $record = new \stdClass();
+        $record->id = null;
+        $record->courseid = $courseid;
+        $record->workflowid = $workflowid;
+        $record->timestepchanged = time();
+        $record->stepindex = 0;
+        $process = process::from_record($record);
+        $process->id = $DB->insert_record('tool_cleanupcourses_process', $process);
+        return $process;
     }
 }
