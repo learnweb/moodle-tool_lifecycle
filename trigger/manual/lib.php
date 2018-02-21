@@ -56,19 +56,19 @@ class manual extends base_manual {
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'icon';
         $mform->addElement(
-            'text', $elementname, get_string('setting_icon','cleanupcoursestrigger_manual')
+            'text', $elementname, get_string('setting_icon', 'cleanupcoursestrigger_manual')
         );
         $mform->setType($elementname, PARAM_SAFEPATH);
 
         $elementname = 'displayname';
         $mform->addElement(
-            'text', $elementname, get_string('setting_displayname','cleanupcoursestrigger_manual')
+            'text', $elementname, get_string('setting_displayname', 'cleanupcoursestrigger_manual')
         );
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'capability';
         $mform->addElement(
-            'text', $elementname, get_string('setting_capability','cleanupcoursestrigger_manual')
+            'text', $elementname, get_string('setting_capability', 'cleanupcoursestrigger_manual')
         );
         $mform->setType($elementname, PARAM_CAPABILITY);
     }

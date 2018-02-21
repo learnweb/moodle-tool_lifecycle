@@ -45,7 +45,7 @@ class manual_trigger_tool implements renderable {
     public function __construct($triggerid, $icon, $displayname, $capability) {
         $this->triggerid = $triggerid;
         $this->icon = $icon;
-        $this->displayname= $displayname;
+        $this->displayname = $displayname;
         $this->capability = $capability;
     }
 

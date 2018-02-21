@@ -56,12 +56,12 @@ class view_controller {
         $courses = get_user_capability_course('tool/cleanupcourses:managecourses', $USER, false);
         if (!$courses) {
             echo 'no courses';
-            // TODO show error
+            // TODO show error.
             return;
         }
 
         $arrayofcourseids = array();
-        foreach($courses as $course) {
+        foreach ($courses as $course) {
             $arrayofcourseids[$course->id] = $course->id;
         }
         $listofcourseids = join(',', $arrayofcourseids);
@@ -80,12 +80,11 @@ class view_controller {
             $step = step_manager::get_step_instance($process->stepinstanceid);
             $capability = interaction_manager::get_relevant_capability($step->subpluginname);
 
-            if(has_capability($capability, \context_course::instance($process->courseid), null, false)) {
+            if (has_capability($capability, \context_course::instance($process->courseid), null, false)) {
                 $requiresinteraction[] = $process->courseid;
                 unset($arrayofcourseids[$process->courseid]);
             }
         }
-
 
         echo $OUTPUT->heading(get_string('tablecoursesrequiringattention', 'tool_cleanupcourses'), 3);
         $table1 = new interaction_attention_table('tool_cleanupcourses_interaction', $requiresinteraction);

@@ -131,14 +131,14 @@ class interaction_manager {
             throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
         }
 
-        if($process->stepindex == 0) {
+        if ($process->stepindex == 0) {
             $trigger = trigger_manager::get_trigger_for_workflow($process->workflowid);
             $triggerlib = lib_manager::get_trigger_lib($trigger->subpluginname);
             return $triggerlib->get_status_message();
         } else {
             $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
             $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
-            if($interactionlib === null) {
+            if ($interactionlib === null) {
                 return get_string("workflow_is_running", "tool_cleanupcourses");
             }
 

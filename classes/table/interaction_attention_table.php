@@ -37,7 +37,8 @@ class interaction_attention_table extends interaction_table {
         parent::__construct($uniqueid);
         global $PAGE;
 
-        $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname';
+        $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, '.
+        's.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname';
         $from = '{tool_cleanupcourses_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
             '{tool_cleanupcourses_step} s '.
@@ -46,7 +47,6 @@ class interaction_attention_table extends interaction_table {
         $ids = join(',', $courseids);
 
         $where = 'p.courseid IN ('. $ids . ')';
-
 
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);

@@ -85,18 +85,18 @@ class interaction_remaining_table extends interaction_table {
         }
 
         $menu = new \action_menu();
-//        $menu->set_owner_selector($ownerselector);
-//        $menu->set_constraint($constraint);
+        // $menu->set_owner_selector($ownerselector);
+        // $menu->set_constraint($constraint);
         $menu->set_alignment(\action_menu::TR, \action_menu::BR);
         $menu->set_menu_trigger(get_string('action'));
 
         foreach ($actions as $action) {
-//            if ($action instanceof \action_menu_link) {
-//                $action->add_class('cm-edit-action');
-//            }
+            // if ($action instanceof \action_menu_link) {
+            // $action->add_class('cm-edit-action');
+            // }
             $menu->add($action);
         }
-//        $menu->attributes['class'] .= ' section-cm-edit-actions commands';
+        // $menu->attributes['class'] .= ' section-cm-edit-actions commands';
 
         // Prioritise the menu ahead of all other actions.
         $menu->prioritise = true;
