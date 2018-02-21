@@ -36,12 +36,22 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class view_controller {
-    public function handle_view() {
+
+    /**
+     * Handles actions triggered in the view.php and displays the view.
+     *
+     * @param $action    string triggered action code.
+     * @param $processid int id of the process the action was triggered for.
+     * @param $stepid int id of the step the action was triggerd for.
+     */
+    public function handle_view($action, $processid, $stepid) {
         global $USER, $DB, $OUTPUT;
 
-//    if ($action && $processid) {
-//        interaction_manager::handle_interaction($stepinstance->id, $processid, $action);
-//    }
+        // Handle action for step.
+        if ($action && $processid && $stepid) {
+            interaction_manager::handle_interaction($stepid, $processid, $action);
+        }
+
         $courses = get_user_capability_course('tool/cleanupcourses:managecourses', $USER, false);
         if (!$courses) {
             echo 'no courses';
