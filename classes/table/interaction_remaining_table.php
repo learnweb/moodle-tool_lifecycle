@@ -74,7 +74,7 @@ class interaction_remaining_table extends interaction_table {
         global $PAGE, $OUTPUT;
 
         $actions = [];
-        foreach($this->availabletools as $tool) {
+        foreach ($this->availabletools as $tool) {
             if (has_capability($tool->capability, \context_course::instance($row->courseid))) {
                 $actions[$tool->triggerid] = new \action_menu_link_secondary(
                     new \moodle_url($PAGE->url, array('triggerid' => $tool->triggerid)),
