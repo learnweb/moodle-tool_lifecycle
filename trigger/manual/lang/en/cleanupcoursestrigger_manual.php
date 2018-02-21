@@ -24,3 +24,6 @@
  */
 
 $string['pluginname'] = 'Manual trigger';
+$string['setting_capability'] = 'Capability';
+$string['setting_icon'] = 'Icon';
+$string['setting_displayname'] = 'Action name';
