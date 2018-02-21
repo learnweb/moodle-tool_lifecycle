@@ -24,8 +24,6 @@
 namespace tool_cleanupcourses\manager;
 
 use tool_cleanupcourses\entity\process;
-use tool_cleanupcourses\entity\trigger_subplugin;
-use tool_cleanupcourses\manager\delayed_courses_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -50,6 +48,26 @@ class process_manager {
             return $process;
         }
         return null;
+    }
+
+    /**
+     * Creates a process based on a manual trigger.
+     * @param $courseid int id of the course to be triggerd.
+     * @param $triggerid int id of the triggering trigger.
+     * @return process the triggered process instance.
+     * @throws \moodle_exception for invalid workflow definition or missing trigger.
+     */
+    public static function manually_trigger_process($courseid, $triggerid) {
+        $trigger = trigger_manager::get_instance($triggerid);
+        if (!$trigger) {
+            throw new \moodle_exception('trigger_does_not_exist', 'tool_cleanupcourses');
+        }
+        $workflow = workflow_manager::get_workflow($trigger->workflowid);
+        if (!$workflow || !workflow_manager::is_active($workflow->id) || !workflow_manager::is_valid($workflow->id) ||
+                $workflow->manual !== true) {
+            throw new \moodle_exception('cannot_trigger_workflow_manually', 'tool_cleanupcourses');
+        }
+        return self::create_process($courseid, $workflow->id);
     }
 
     /**
