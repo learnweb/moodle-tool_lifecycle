@@ -128,10 +128,10 @@ class view_controller {
             redirect($PAGE->url, get_string('manual_trigger_process_existed', 'tool_cleanupcourses'), null, notification::ERROR);
         }
 
-        process_manager::manually_trigger_process($courseid, $triggerid);
+        $process = process_manager::manually_trigger_process($courseid, $triggerid);
 
         $processor = new cleanup_processor();
-        if ($processor->process_course_interactive($runningprocess->id)) {
+        if ($processor->process_course_interactive($process->id)) {
             redirect($PAGE->url, get_string('manual_trigger_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
         }
     }
