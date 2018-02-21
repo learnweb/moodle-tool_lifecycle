@@ -80,7 +80,7 @@ abstract class interactionlibbase {
 
     /**
      * Returns the due date.
-     * @return null
+     * @return null | timestamp
      */
     public function get_due_date($processid, $stepid) {
         return null;
