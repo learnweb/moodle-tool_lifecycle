@@ -17,6 +17,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 use tool_cleanupcourses\manager\workflow_manager;
+use tool_cleanupcourses\manager\trigger_manager;
+use tool_cleanupcourses\local\data\manual_trigger_tool;
 
 /**
  * Tests assembly of manual trigger tools.
@@ -38,17 +40,17 @@ class tool_cleanupcourses_manual_trigger_tools_testcase extends \advanced_testca
     public function setUp() {
         $this->resetAfterTest(false);
 
-        $settings = new stdClass();
-        $settings->icon = self::MANUAL_TRIGGER1_ICON;
-        $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
-        $settings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
-        tool_cleanupcourses_generator::create_manual_workflow($settings);
+        $triggersettings = new stdClass();
+        $triggersettings->icon = self::MANUAL_TRIGGER1_ICON;
+        $triggersettings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
+        $triggersettings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
+        tool_cleanupcourses_generator::create_manual_workflow($triggersettings);
 
-        $settings = new stdClass();
-        $settings->icon = self::MANUAL_TRIGGER2_ICON;
-        $settings->displayname = self::MANUAL_TRIGGER2_DISPLAYNAME;
-        $settings->capability = self::MANUAL_TRIGGER2_CAPABILITY;
-        $this->workflow2 = tool_cleanupcourses_generator::create_manual_workflow($settings);
+        $triggersettings = new stdClass();
+        $triggersettings->icon = self::MANUAL_TRIGGER2_ICON;
+        $triggersettings->displayname = self::MANUAL_TRIGGER2_DISPLAYNAME;
+        $triggersettings->capability = self::MANUAL_TRIGGER2_CAPABILITY;
+        $this->workflow2 = tool_cleanupcourses_generator::create_manual_workflow($triggersettings);
     }
 
     /**
@@ -59,6 +61,10 @@ class tool_cleanupcourses_manual_trigger_tools_testcase extends \advanced_testca
         $tools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
         $this->assertCount(1, $tools);
         $this->assertContainsOnly(\tool_cleanupcourses\local\data\manual_trigger_tool::class, $tools);
+        $trigger = trigger_manager::get_trigger_for_workflow($this->workflow2->id);
+        $tool = new manual_trigger_tool($trigger->id, self::MANUAL_TRIGGER2_ICON,
+            self::MANUAL_TRIGGER2_DISPLAYNAME, self::MANUAL_TRIGGER2_CAPABILITY);
+        $this->assertEquals($tool, $tools[0]);
     }
 
 }
