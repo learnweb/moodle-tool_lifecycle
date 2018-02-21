@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="admin/tool/cleanupcourses/db" VERSION="2018021302" COMMENT="XMLDB file for Moodle tool/cleanupcourses"
+<XMLDB PATH="admin/tool/cleanupcourses/db" VERSION="2018022101" COMMENT="XMLDB file for Moodle tool/cleanupcourses"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
+>
   <TABLES>
     <TABLE NAME="tool_cleanupcourses_process" COMMENT="table containing the state of all courses currently within the cleanup process">
       <FIELDS>
@@ -14,7 +15,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="courseid_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" COMMENT="Foreign key on course table"/>
+        <KEY NAME="courseid_fk" TYPE="foreign-unique" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" COMMENT="Foreign key on course table"/>
         <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_cleanupcourses_workflow" REFFIELDS="id"/>
       </KEYS>
     </TABLE>

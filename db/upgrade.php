@@ -249,5 +249,24 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018022005, 'tool', 'cleanupcourses');
     }
 
+    if ($oldversion < 2018022101) {
+
+        // Define key courseid_fk (foreign) to be dropped form tool_cleanupcourses_process.
+        $table = new xmldb_table('tool_cleanupcourses_process');
+        $key = new xmldb_key('courseid_fk', XMLDB_KEY_FOREIGN, array('courseid'), 'course', array('id'));
+
+        // Launch drop key courseid_fk.
+        $dbman->drop_key($table, $key);
+
+        // Define key courseid_fk (foreign-unique) to be added to tool_cleanupcourses_process.
+        $key = new xmldb_key('courseid_fk', XMLDB_KEY_FOREIGN_UNIQUE, array('courseid'), 'course', array('id'));
+
+        // Launch add key courseid_fk.
+        $dbman->add_key($table, $key);
+
+        // Cleanupcourses savepoint reached.
+        upgrade_plugin_savepoint(true, 2018022101, 'tool', 'cleanupcourses');
+    }
+
     return true;
 }
