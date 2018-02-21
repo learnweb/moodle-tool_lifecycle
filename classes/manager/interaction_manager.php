@@ -140,8 +140,7 @@ class interaction_manager {
             $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
             $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
             if($interactionlib === null) {
-                // TODO return generic status message.
-                return "";
+                return get_string("workflow_is_running", "tool_cleanupcourses");
             }
 
             return $interactionlib->get_status_message($process);

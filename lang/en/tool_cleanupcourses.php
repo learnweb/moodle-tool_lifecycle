@@ -116,3 +116,4 @@ $string['tablecoursesremaining'] = 'Remaining courses';
 $string['viewheading'] = 'Manage courses';
 
 $string['workflow_started'] = 'Workflow started.';
+$string['workflow_is_running'] = 'Workflow is running.';

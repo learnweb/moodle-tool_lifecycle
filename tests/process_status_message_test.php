@@ -57,8 +57,7 @@ class tool_cleanupcourses_process_status_message_testcase extends \advanced_test
 
         \tool_cleanupcourses\manager\process_manager::proceed_process($process);
         $message = \tool_cleanupcourses\manager\interaction_manager::get_process_status_message($process->id);
-        // TODO change message
-        $this->assertEquals("", $message);
+        $this->assertEquals(get_string("workflow_is_running", "tool_cleanupcourses"), $message);
 
         \tool_cleanupcourses\manager\process_manager::proceed_process($process);
         $message = \tool_cleanupcourses\manager\interaction_manager::get_process_status_message($process->id);
