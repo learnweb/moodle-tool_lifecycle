@@ -34,14 +34,14 @@ require_once($CFG->libdir . '/tablelib.php');
 abstract class interaction_table extends \table_sql {
 
     public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'tools', 'status']);
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'status', 'tools']);
         $this->define_headers([
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
-            get_string('tools', 'tool_cleanupcourses'),
             get_string('status', 'tool_cleanupcourses'),
-            ]);
+            get_string('tools', 'tool_cleanupcourses'),
+        ]);
         $this->setup();
     }
 
