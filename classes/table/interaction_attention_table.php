@@ -25,6 +25,7 @@ namespace tool_cleanupcourses\table;
 
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\interaction_manager;
+use tool_cleanupcourses\manager\lib_manager;
 use tool_cleanupcourses\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die;
@@ -38,7 +39,7 @@ class interaction_attention_table extends interaction_table {
         global $PAGE;
 
         $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, '.
-        's.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname';
+        's.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname as subpluginname';
         $from = '{tool_cleanupcourses_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
             '{tool_cleanupcourses_step} s '.
@@ -51,7 +52,22 @@ class interaction_attention_table extends interaction_table {
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
         $this->init();
+    }
 
+    /**
+     * Initialises the columns of the table.
+     */
+    public function init() {
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'status', 'tools', 'date']);
+        $this->define_headers([
+            get_string('course'),
+            get_string('shortnamecourse'),
+            get_string('fullnamecourse'),
+            get_string('status', 'tool_cleanupcourses'),
+            get_string('tools', 'tool_cleanupcourses'),
+            get_string('date', 'tool_cleanupcourses'),
+        ]);
+        $this->setup();
     }
 
     /**
@@ -68,6 +84,22 @@ class interaction_attention_table extends interaction_table {
             $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['alt']);
         }
         return $output;
+    }
+
+    /**
+     * Render date column.
+     * @param $row
+     * @return string pluginname of the subplugin
+     */
+    public function col_date($row) {
+        $lib = lib_manager::get_step_interactionlib($row->subpluginname);
+        $date = $lib->get_due_date($row->processid, $row->stepinstanceid);
+
+        if ($date === null) {
+            return '';
+        }
+
+        return $date;
     }
 
     /**

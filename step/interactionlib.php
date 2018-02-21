@@ -72,4 +72,11 @@ abstract class interactionlibbase {
      */
     public abstract function handle_interaction($process, $step, $action);
 
+    /**
+     * Returns the due date.
+     * @return null
+     */
+    public function get_due_date($processid, $stepid) {
+        return null;
+    }
 }

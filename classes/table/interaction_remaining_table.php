@@ -48,7 +48,6 @@ class interaction_remaining_table extends interaction_table {
         $from = '{course} c left join ' .
             '{tool_cleanupcourses_process} p on p.courseid = c.id ';
 
-        // TODO implement method get_Status
         $ids = join(',', $courseids);
 
         $where = 'c.id IN ('. $ids . ')';
@@ -56,6 +55,21 @@ class interaction_remaining_table extends interaction_table {
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
         $this->init();
+    }
+
+    /**
+     * Initialises the columns of the table.
+     */
+    public function init() {
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'status', 'tools']);
+        $this->define_headers([
+            get_string('course'),
+            get_string('shortnamecourse'),
+            get_string('fullnamecourse'),
+            get_string('status', 'tool_cleanupcourses'),
+            get_string('tools', 'tool_cleanupcourses'),
+        ]);
+        $this->setup();
     }
 
     /**

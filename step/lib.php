@@ -114,7 +114,6 @@ abstract class libbase {
     public function get_interaction_link($stepid) {
         return new \moodle_url('admin/tool/cleanupcourses/view.php', array('stepid' => $stepid));
     }
-
 }
 
 /**

@@ -28,6 +28,8 @@ namespace tool_cleanupcourses\step;
 use tool_cleanupcourses\entity\process;
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\process_data_manager;
+use tool_cleanupcourses\manager\process_manager;
+use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die();
@@ -93,5 +95,16 @@ class interactionemail extends interactionlibbase {
         if ($action == self::ACTION_KEEP) {
             process_data_manager::set_process_data($process->id, $step->id, EMAIL_PROCDATA_KEY_KEEP, '1');
         }
+    }
+
+    /**
+     * Returns the due date.
+     * @return null
+     */
+    public function get_due_date($processid, $stepid) {
+        $settings = settings_manager::get_settings($stepid, SETTINGS_TYPE_STEP);
+        $process = process_manager::get_process_by_id($processid);
+        $date = $settings['responsetimeout'] + $process->timestepchanged;
+        return date('d.m.Y', $date);
     }
 }
