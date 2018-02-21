@@ -129,7 +129,7 @@ class workflow_manager {
         $tools = array();
         foreach ($triggers as $trigger) {
             $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
-            $tools[] = new manual_trigger_tool($settings['icon'], $settings['displayname'], $settings['capability']);
+            $tools[] = new manual_trigger_tool($trigger->id, $settings['icon'], $settings['displayname'], $settings['capability']);
         }
         return $tools;
     }

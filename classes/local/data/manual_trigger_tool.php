@@ -30,6 +30,9 @@ defined('MOODLE_INTERNAL') || die();
 
 class manual_trigger_tool implements renderable {
 
+    /** int id of the trigger the tool belongs to*/
+    public $triggerid;
+
     /** string icon, which is displayed to the user in the trigger tools menu*/
     public $icon;
 
@@ -39,7 +42,8 @@ class manual_trigger_tool implements renderable {
     /** string capability required to use and display this tool*/
     public $capability;
 
-    public function __construct($icon, $displayname, $capability) {
+    public function __construct($triggerid, $icon, $displayname, $capability) {
+        $this->triggerid = $triggerid;
         $this->icon = $icon;
         $this->displayname= $displayname;
         $this->capability = $capability;

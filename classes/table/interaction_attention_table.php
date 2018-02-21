@@ -86,14 +86,13 @@ class interaction_attention_table extends interaction_table {
      * @param string $action    URL parameter to include in the link
      * @param string $processid URL parameter to include in the link
      * @param int    $stepinstanceid ID of the step instance
-     * @param string $icon      The key to the icon to use (e.g. 't/up')
      * @param string $alt       The string description of the link used as the title and alt text
      *
      * @return string The icon/link
      */
     private function format_icon_link($action, $processid, $stepinstanceid, $alt) {
         global $PAGE, $OUTPUT;
-        // TODO Change default
+
         $button = new \single_button(new \moodle_url($PAGE->url,
             array(
                 'stepid' => $stepinstanceid,

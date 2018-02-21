@@ -52,8 +52,7 @@ class interactionemail extends interactionlibbase {
      * Returns an array of interaction tools to be displayed to be displayed on the view.php
      * Every entry is itself an array which consist of three elements:
      *  'action' => an action string, which is later passed to handle_action
-     *  'icon' => an icon string
-     *  'alt' => a string description of the link
+     *  'alt' => a string text of the button
      * @param process $process process the action tools are requested for
      * @return array of action tools
      */
@@ -65,7 +64,6 @@ class interactionemail extends interactionlibbase {
         }
         return array(
             array('action' => self::ACTION_KEEP,
-                'icon' => 't/locktime',
                 'alt' => get_string('keep_course', 'cleanupcoursesstep_email'),
             ),
         );

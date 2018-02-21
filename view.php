@@ -35,6 +35,7 @@ $PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/view.php'));
 
 $action = optional_param('action', null, PARAM_ALPHA);
 $processid = optional_param('processid', null, PARAM_INT);
+$stepid = optional_param('stepid', null, PARAM_INT);
 
 $PAGE->set_title(get_string('viewheading', 'tool_cleanupcourses'));
 $PAGE->set_heading(get_string('viewheading', 'tool_cleanupcourses'));
@@ -44,7 +45,7 @@ $renderer = $PAGE->get_renderer('tool_cleanupcourses');
 echo $renderer->header();
 
 $controller = new \tool_cleanupcourses\view_controller();
-$controller->handle_view();
+$controller->handle_view($action, $processid, $stepid);
 
 
 echo $renderer->footer();
