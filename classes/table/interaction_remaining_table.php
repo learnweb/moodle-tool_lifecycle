@@ -63,7 +63,11 @@ class interaction_remaining_table extends interaction_table {
      * @return string pluginname of the subplugin
      */
     public function col_status($row) {
-        return 'default';
+        if ($row->processid !== null) {
+            return interaction_manager::get_process_status_message($row->processid);
+        }
+
+        return '';
     }
     /**
      * Render tools column.
