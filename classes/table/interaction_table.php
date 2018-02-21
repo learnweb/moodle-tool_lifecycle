@@ -25,7 +25,9 @@ namespace tool_cleanupcourses\table;
 
 use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\interaction_manager;
+use tool_cleanupcourses\manager\process_manager;
 use tool_cleanupcourses\manager\step_manager;
+use tool_cleanupcourses\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -84,7 +86,16 @@ abstract class interaction_table extends \table_sql {
      * @param $row
      * @return string pluginname of the subplugin
      */
-    public abstract function col_status($row);
+    public function col_status($row) {
+        if ($row->processid !== null) {
+            $process = process_manager::get_process_by_id($row->processid);
+            $workflow = workflow_manager::get_workflow($process->workflowid);
+            return interaction_manager::get_process_status_message($row->processid) .
+                '<br><span class="workflow_displaytitle">' . $workflow->displaytitle . '</span>';
+        }
+
+        return '';
+    }
 
     /**
      * This function is not part of the public api.

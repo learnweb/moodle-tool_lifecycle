@@ -71,15 +71,6 @@ class interaction_attention_table extends interaction_table {
     }
 
     /**
-     * Render status column.
-     * @param $row
-     * @return string status for the process of this course.
-     */
-    public function col_status($row) {
-        return interaction_manager::get_process_status_message($row->processid);
-    }
-
-    /**
      * Util function for writing an action icon link
      *
      * @param string $action    URL parameter to include in the link

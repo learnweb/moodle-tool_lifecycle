@@ -57,18 +57,7 @@ class interaction_remaining_table extends interaction_table {
         $this->define_baseurl($PAGE->url);
         $this->init();
     }
-    /**
-     * Render status column.
-     * @param $row
-     * @return string pluginname of the subplugin
-     */
-    public function col_status($row) {
-        if ($row->processid !== null) {
-            return interaction_manager::get_process_status_message($row->processid);
-        }
 
-        return '';
-    }
     /**
      * Render tools column.
      * @param $row
