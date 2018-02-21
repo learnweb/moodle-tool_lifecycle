@@ -22,6 +22,7 @@
  */
 
 namespace tool_cleanupcourses;
+
 use core\notification;
 use tool_cleanupcourses\manager\interaction_manager;
 use tool_cleanupcourses\manager\lib_manager;
@@ -49,9 +50,9 @@ class view_controller {
      *
      */
     public function handle_view($renderer) {
-        global $USER, $DB;
+        global $DB;
 
-        $courses = get_user_capability_course('tool/cleanupcourses:managecourses', $USER, false);
+        $courses = get_user_capability_course('tool/cleanupcourses:managecourses', null, false);
         if (!$courses) {
             echo 'no courses';
             // TODO show error.
@@ -110,14 +111,15 @@ class view_controller {
     public function handle_interaction($action, $processid, $stepid) {
         global $PAGE;
 
+
         $process = process_manager::get_process_by_id($processid);
         $step = step_manager::get_step_instance($stepid);
         $capability = interaction_manager::get_relevant_capability($step->subpluginname);
         require_capability($capability, \context_course::instance($process->courseid), null, false);
 
-        interaction_manager::handle_interaction($stepid, $processid, $action);
-
-        redirect($PAGE->url, get_string('interaction_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
+        if (interaction_manager::handle_interaction($stepid, $processid, $action)) {
+            redirect($PAGE->url, get_string('interaction_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
+        }
     }
 
     /**
@@ -147,7 +149,11 @@ class view_controller {
         }
 
         // Actually trigger process.
-        process_manager::manually_trigger_process($courseid, $triggerid);
-        redirect($PAGE->url, get_string('manual_trigger_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
+        $process = process_manager::manually_trigger_process($courseid, $triggerid);
+
+        $processor = new cleanup_processor();
+        if ($processor->process_course_interactive($process->id)) {
+            redirect($PAGE->url, get_string('manual_trigger_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
+        }
     }
 }

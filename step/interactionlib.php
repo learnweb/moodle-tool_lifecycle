@@ -27,6 +27,7 @@ namespace tool_cleanupcourses\step;
 
 use tool_cleanupcourses\entity\process;
 use tool_cleanupcourses\entity\step_subplugin;
+use tool_cleanupcourses\response\step_interactive_response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -68,9 +69,14 @@ abstract class interactionlibbase {
      * Called when a user triggered an action for a process instance.
      * @param process $process instance of the process the action was triggered upon.
      * @param step_subplugin $step instance of the step the process is currently in.
-     * @param string $action action string
+     * @param string $action action string. The function is called with 'default', during interactive processing.
+     * @return step_interactive_response defines if the step still wants to process this course
+     *      - proceed: the step has finished and respective controller class can take over.
+     *      - stillprocessing: the step still wants to process the course and is responsible for rendering the site.
+     *      - noaction: the action is not defined for the step.
+     *      - rollback: the step has finished and respective controller class should rollback the process.
      */
-    public abstract function handle_interaction($process, $step, $action);
+    public abstract function handle_interaction($process, $step, $action = 'default');
 
     /**
      * Returns the due date.

@@ -31,6 +31,7 @@ use tool_cleanupcourses\manager\process_data_manager;
 use tool_cleanupcourses\manager\process_manager;
 use tool_cleanupcourses\manager\settings_manager;
 use tool_cleanupcourses\manager\step_manager;
+use tool_cleanupcourses\response\step_interactive_response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -90,11 +91,18 @@ class interactionemail extends interactionlibbase {
      * @param process $process instance of the process the action was triggered upon.
      * @param step_subplugin $step instance of the step the process is currently in.
      * @param string $action action string
+     * @return step_interactive_response defines if the step still wants to process this course
+     *      - proceed: the step has finished and respective controller class can take over.
+     *      - stillprocessing: the step still wants to process the course and is responsible for rendering the site.
+     *      - noaction: the action is not defined for the step.
+     *      - rollback: the step has finished and respective controller class should rollback the process.
      */
-    public function handle_interaction($process, $step, $action) {
+    public function handle_interaction($process, $step, $action = 'default') {
         if ($action == self::ACTION_KEEP) {
             process_data_manager::set_process_data($process->id, $step->id, EMAIL_PROCDATA_KEY_KEEP, '1');
+            return step_interactive_response::rollback();
         }
+        return step_interactive_response::no_action();
     }
 
     /**

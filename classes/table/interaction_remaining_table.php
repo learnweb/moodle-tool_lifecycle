@@ -50,7 +50,10 @@ class interaction_remaining_table extends interaction_table {
 
         $ids = join(',', $courseids);
 
-        $where = 'c.id IN ('. $ids . ')';
+        $where = 'TRUE';
+        if ($ids) {
+            $where = 'c.id IN ('. $ids . ')';
+        }
 
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
