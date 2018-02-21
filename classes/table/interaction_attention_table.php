@@ -46,7 +46,10 @@ class interaction_attention_table extends interaction_table {
 
         $ids = join(',', $courseids);
 
-        $where = 'p.courseid IN ('. $ids . ')';
+        $where = 'TRUE';
+        if ($ids) {
+            $where = 'p.courseid IN (' . $ids . ')';
+        }
 
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);

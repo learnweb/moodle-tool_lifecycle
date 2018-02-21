@@ -48,9 +48,9 @@ class view_controller {
      *
      */
     public function handle_view($renderer) {
-        global $USER, $DB;
+        global $DB;
 
-        $courses = get_user_capability_course('tool/cleanupcourses:managecourses', $USER, false);
+        $courses = get_user_capability_course('tool/cleanupcourses:managecourses', null, false);
         if (!$courses) {
             echo 'no courses';
             // TODO show error.
