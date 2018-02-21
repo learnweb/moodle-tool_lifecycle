@@ -23,6 +23,7 @@
  */
 namespace tool_cleanupcourses\manager;
 
+use tool_cleanupcourses\entity\trigger_subplugin;
 use tool_cleanupcourses\entity\workflow;
 
 defined('MOODLE_INTERNAL') || die();
@@ -102,15 +103,17 @@ class workflow_manager {
     }
 
     /**
-     * Returns all active manual workflows.
-     * @return workflow[]
+     * Returns triggers of active manual workflows.
+     * @return trigger_subplugin[]
      */
-    public static function get_active_manual_workflows() {
+    public static function get_active_manual_workflow_triggers() {
         global $DB;
-        $records = $DB->get_records('tool_cleanupcourses_workflow', array('active' => true, 'manual' => true));
+        $sql = 'SELECT t.* FROM {tool_cleanupcourses_workflow} w JOIN {tool_cleanupcourses_trigger} t ON t.workflowid = w.id'.
+        ' WHERE w.active = ? AND w.manual = ?';
+        $records = $DB->get_records_sql($sql, array(true, true));
         $result = array();
         foreach ($records as $record) {
-            $result [] = workflow::from_record($record);
+            $result [] = trigger_subplugin::from_record($record);
         }
         return $result;
     }
