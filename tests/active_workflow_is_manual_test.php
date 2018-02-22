@@ -40,13 +40,14 @@ class tool_cleanupcourses_workflow_is_manual_testcase extends \advanced_testcase
 
     public function setUp() {
         $this->resetAfterTest(true);
+        $generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
 
         $settings = new stdClass();
         $settings->icon = self::MANUAL_TRIGGER1_ICON;
         $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $settings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
-        $this->manualworkflow = tool_cleanupcourses_generator::create_manual_workflow($settings);
-        $this->automaticworkflow = tool_cleanupcourses_generator::create_workflow();
+        $this->manualworkflow = $generator->create_manual_workflow($settings);
+        $this->automaticworkflow = $generator->create_workflow();
 
         $this->assertNull($this->manualworkflow->manual);
         $this->assertNull($this->automaticworkflow->manual);

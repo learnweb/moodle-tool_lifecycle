@@ -38,15 +38,17 @@ class tool_cleanupcourses_workflow_sortindex_updown_testcase extends \advanced_t
 
     public function setUp() {
         $this->resetAfterTest(true);
+        $generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
+
         // Remove preset workflows.
         $workflows = workflow_manager::get_active_automatic_workflows();
         foreach ($workflows as $workflow) {
             workflow_manager::remove($workflow->id);
         }
 
-        $this->workflow1 = tool_cleanupcourses_generator::create_workflow();
-        $this->workflow2 = tool_cleanupcourses_generator::create_workflow();
-        $this->workflow3 = tool_cleanupcourses_generator::create_workflow();
+        $this->workflow1 = $generator->create_workflow();
+        $this->workflow2 = $generator->create_workflow();
+        $this->workflow3 = $generator->create_workflow();
 
         $this->assertFalse($this->workflow1->active);
         $this->assertFalse($this->workflow2->active);

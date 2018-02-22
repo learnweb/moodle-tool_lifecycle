@@ -38,7 +38,9 @@ class tool_cleanupcourses_persist_process_testcase extends \advanced_testcase {
 
     public function setUp() {
         $this->resetAfterTest(true);
-        $this->workflow = tool_cleanupcourses_generator::create_workflow_with_steps();
+        $generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
+
+        $this->workflow = $generator->create_workflow_with_steps();
         $this->course = $this->getDataGenerator()->create_course();
     }
 

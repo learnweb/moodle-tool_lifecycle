@@ -36,18 +36,21 @@ class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
 
     const INSTANCENAME = 'myinstance';
     const STEPNAME = 'stepname';
+    private $generator;
 
 
     public function setUp() {
         $this->resetAfterTest(true);
-        $this->workflow = tool_cleanupcourses_generator::create_workflow();
+        $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
+
+        $this->workflow = $this->generator->create_workflow();
     }
 
     /**
      * Test that after an insert the id from the database is set within the step object.
      */
     public function test_add_step() {
-        $step = tool_cleanupcourses_generator::create_step(
+        $step = $this->generator->create_step(
             'instance1',
             'subpluginname',
             $this->workflow->id);
@@ -60,15 +63,15 @@ class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
      * Test that sortindizes are created correclty when creating multiple steps.
      */
     public function test_add_multiple_steps() {
-        $step1 = tool_cleanupcourses_generator::create_step(
+        $step1 = $this->generator->create_step(
             'instance1',
             'subpluginname',
             $this->workflow->id);
-        $step2 = tool_cleanupcourses_generator::create_step(
+        $step2 = $this->generator->create_step(
             'instance2',
             'subpluginname',
             $this->workflow->id);
-        $step3 = tool_cleanupcourses_generator::create_step(
+        $step3 = $this->generator->create_step(
             'instance3',
             'subpluginname',
             $this->workflow->id);
@@ -81,15 +84,15 @@ class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
      * Test that the step can be removed correctly.
      */
     public function test_remove_step() {
-        $step1 = tool_cleanupcourses_generator::create_step(
+        $step1 = $this->generator->create_step(
             'instance1',
             'subpluginname',
             $this->workflow->id);
-        $step2 = tool_cleanupcourses_generator::create_step(
+        $step2 = $this->generator->create_step(
             'instance2',
             'subpluginname',
             $this->workflow->id);
-        $step3 = tool_cleanupcourses_generator::create_step(
+        $step3 = $this->generator->create_step(
             'instance3',
             'subpluginname',
             $this->workflow->id);
@@ -113,11 +116,11 @@ class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
      * Test that sortindizes are still created correctly, when some steps were already removed.
      */
     public function test_add_after_remove_step() {
-        $step1 = tool_cleanupcourses_generator::create_step(
+        $step1 = $this->generator->create_step(
             'instance1',
             'subpluginname',
             $this->workflow->id);
-        $step2 = tool_cleanupcourses_generator::create_step(
+        $step2 = $this->generator->create_step(
             'instance2',
             'subpluginname',
             $this->workflow->id);
@@ -125,7 +128,7 @@ class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
         // Delete first step.
         step_manager::handle_action(ACTION_STEP_INSTANCE_DELETE, $step1->id);
 
-        $step3 = tool_cleanupcourses_generator::create_step(
+        $step3 = $this->generator->create_step(
             'instance3',
             'subpluginname',
             $this->workflow->id);

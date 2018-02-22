@@ -33,25 +33,28 @@ class tool_cleanupcourses_process_status_message_testcase extends \advanced_test
     private $workflow;
 
 
+    private $generator;
+
     public function setUp() {
         $this->resetAfterTest(false);
+        $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
 
         $settings = new stdClass();
         $settings->icon = self::MANUAL_TRIGGER1_ICON;
         $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $settings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
-        $this->workflow = tool_cleanupcourses_generator::create_manual_workflow($settings);
+        $this->workflow = $this->generator->create_manual_workflow($settings);
         workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow->id);
 
-        tool_cleanupcourses_generator::create_step("instance1", "dummy", $this->workflow->id);
-        tool_cleanupcourses_generator::create_step("instance2", "email", $this->workflow->id);
+        $this->generator->create_step("instance1", "dummy", $this->workflow->id);
+        $this->generator->create_step("instance2", "email", $this->workflow->id);
     }
 
     /**
      * Test getting status message for a process.
      */
     public function test_get_status_message() {
-        $process = tool_cleanupcourses_generator::create_process(2, $this->workflow->id);
+        $process = $this->generator->create_process(2, $this->workflow->id);
         $message = \tool_cleanupcourses\manager\interaction_manager::get_process_status_message($process->id);
         $this->assertEquals(get_string("workflow_started", "tool_cleanupcourses"), $message);
 

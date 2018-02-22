@@ -40,18 +40,19 @@ class tool_cleanupcourses_manual_trigger_tools_testcase extends \advanced_testca
 
     public function setUp() {
         $this->resetAfterTest(true);
+        $generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
 
         $triggersettings = new stdClass();
         $triggersettings->icon = self::MANUAL_TRIGGER1_ICON;
         $triggersettings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
-        $this->workflow1 = tool_cleanupcourses_generator::create_manual_workflow($triggersettings);
+        $this->workflow1 = $generator->create_manual_workflow($triggersettings);
 
         $triggersettings = new stdClass();
         $triggersettings->icon = self::MANUAL_TRIGGER2_ICON;
         $triggersettings->displayname = self::MANUAL_TRIGGER2_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER2_CAPABILITY;
-        $this->workflow2 = tool_cleanupcourses_generator::create_manual_workflow($triggersettings);
+        $this->workflow2 = $generator->create_manual_workflow($triggersettings);
     }
 
     /**

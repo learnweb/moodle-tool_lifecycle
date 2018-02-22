@@ -42,13 +42,14 @@ class tool_cleanupcourses_manually_triggered_process_testcase extends \advanced_
 
     public function setUp() {
         $this->resetAfterTest(true);
+        $generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
 
         $triggersettings = new stdClass();
         $triggersettings->icon = self::MANUAL_TRIGGER1_ICON;
         $triggersettings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
-        $manualworkflow = tool_cleanupcourses_generator::create_manual_workflow($triggersettings);
-        tool_cleanupcourses_generator::create_step("instance1", "dummy", $manualworkflow->id);
+        $manualworkflow = $generator->create_manual_workflow($triggersettings);
+        $generator->create_step("instance1", "dummy", $manualworkflow->id);
 
         workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $manualworkflow->id);
 
