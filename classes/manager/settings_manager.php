@@ -117,14 +117,13 @@ class settings_manager {
 
         $settingsvalues = array();
         foreach ($lib->instance_settings() as $setting) {
-            $record = $DB->get_record('tool_cleanupcourses_settings',
-                array('instanceid' => $instanceid,
+            $record = $DB->get_record('tool_cleanupcourses_settings', array('instanceid' => $instanceid,
                     'type' => $type,
                     'name' => $setting->name));
-                if ($record) {
-                    $value = clean_param($record->value, $setting->paramtype);
-                    $settingsvalues[$setting->name] = $value;
-                }
+            if ($record) {
+                $value = clean_param($record->value, $setting->paramtype);
+                $settingsvalues[$setting->name] = $value;
+            }
         }
         return $settingsvalues;
     }

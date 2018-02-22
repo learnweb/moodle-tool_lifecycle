@@ -175,15 +175,14 @@ class step_manager extends subplugin_manager {
     public static function get_step_instances($workflowid) {
         // TODO: Alter calls to include workflow id.
         global $DB;
-        $records = $DB->get_records('tool_cleanupcourses_step',
-            array(
-                'workflowid' => $workflowid
-            ));
-            $steps = array();
-            foreach ($records as $id => $record) {
-                $steps[$id] = step_subplugin::from_record($record);
-            }
-            return $steps;
+        $records = $DB->get_records('tool_cleanupcourses_step', array(
+            'workflowid' => $workflowid
+        ));
+        $steps = array();
+        foreach ($records as $id => $record) {
+            $steps[$id] = step_subplugin::from_record($record);
+        }
+        return $steps;
     }
 
     /**
