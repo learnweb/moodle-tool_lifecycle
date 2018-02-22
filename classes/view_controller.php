@@ -111,7 +111,6 @@ class view_controller {
     public function handle_interaction($action, $processid, $stepid) {
         global $PAGE;
 
-
         $process = process_manager::get_process_by_id($processid);
         $step = step_manager::get_step_instance($stepid);
         $capability = interaction_manager::get_relevant_capability($step->subpluginname);

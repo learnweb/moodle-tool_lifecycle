@@ -113,7 +113,7 @@ class interactionemail extends interactionlibbase {
         $settings = settings_manager::get_settings($stepid, SETTINGS_TYPE_STEP);
         $process = process_manager::get_process_by_id($processid);
         $date = $settings['responsetimeout'] + $process->timestepchanged;
-        //TODO default format -- seconds -> not in this class !
+        // TODO default format -- seconds -> not in this class !
         return date('d.m.Y', $date);
     }
 }

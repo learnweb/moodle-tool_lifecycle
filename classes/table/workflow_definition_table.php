@@ -41,7 +41,7 @@ class workflow_definition_table extends \table_sql {
         $this->set_sql("id, title, timeactive, displaytitle", '{tool_cleanupcourses_workflow}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
-        $this->attributes['class'] .=  " workflow_definition_table";
+        $this->attributes['class'] .= " workflow_definition_table";
         $this->init();
     }
 

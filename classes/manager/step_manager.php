@@ -179,11 +179,11 @@ class step_manager extends subplugin_manager {
             array(
                 'workflowid' => $workflowid
             ));
-        $steps = array();
-        foreach ($records as $id => $record) {
-            $steps[$id] = step_subplugin::from_record($record);
-        }
-        return $steps;
+            $steps = array();
+            foreach ($records as $id => $record) {
+                $steps[$id] = step_subplugin::from_record($record);
+            }
+            return $steps;
     }
 
     /**

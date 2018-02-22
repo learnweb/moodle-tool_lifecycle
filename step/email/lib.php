@@ -110,17 +110,17 @@ class email extends libbase {
                     array('instanceid' => $step->id,
                         'touser' => $user->id));
 
-                $parsedsettings = $this->replace_placeholders($settings, $user, $step->id, $mailentries);
+                    $parsedsettings = $this->replace_placeholders($settings, $user, $step->id, $mailentries);
 
-                $subject = $parsedsettings['subject'];
-                $content = $parsedsettings['content'];
-                $contenthtml = $parsedsettings['contenthtml'];
-                // TODO: use course info to parse content template!
-                email_to_user($user, \core_user::get_noreply_user(), $subject, $content, $contenthtml);
-                $DB->delete_records('cleanupcoursesstep_email',
+                    $subject = $parsedsettings['subject'];
+                    $content = $parsedsettings['content'];
+                    $contenthtml = $parsedsettings['contenthtml'];
+                    // TODO: use course info to parse content template!
+                    email_to_user($user, \core_user::get_noreply_user(), $subject, $content, $contenthtml);
+                    $DB->delete_records('cleanupcoursesstep_email',
                     array('instanceid' => $step->id,
                         'touser' => $user->id));
-                $transaction->allow_commit();
+                    $transaction->allow_commit();
             }
         }
 
