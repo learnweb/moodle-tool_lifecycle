@@ -2,8 +2,7 @@
     overflow: initial;
 }
 
-.workflow_definition_table span.workflow_displaytitle,
-.managing_courses_tables span.workflow_displaytitle {
+.cleanupcourses-table span.workflow_displaytitle {
     color: #888;
     font-size: .9em;
     padding: 0.5em;

@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
-class workflow_definition_table extends \table_sql {
+class workflow_definition_table extends workflow_table {
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
@@ -41,7 +41,6 @@ class workflow_definition_table extends \table_sql {
         $this->set_sql("id, title, timeactive, displaytitle", '{tool_cleanupcourses_workflow}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
-        $this->attributes['class'] .= " workflow_definition_table";
         $this->init();
     }
 
@@ -54,14 +53,6 @@ class workflow_definition_table extends \table_sql {
             ]);
         $this->sortable(false, 'title');
         $this->setup();
-    }
-
-    /**
-     * Render title column.
-     * @param $row
-     */
-    public function col_title($row) {
-        return $row->title . '<br><span class="workflow_displaytitle">' . $row->displaytitle . '</span>';
     }
 
     /**
@@ -126,26 +117,6 @@ class workflow_definition_table extends \table_sql {
         }
 
         return $output;
-    }
-
-    /**
-     * Util function for writing an action icon link
-     *
-     * @param string $action URL parameter to include in the link
-     * @param string $workflowid URL parameter to include in the link
-     * @param string $icon The key to the icon to use (e.g. 't/up')
-     * @param string $alt The string description of the link used as the title and alt text
-     * @return string The icon/link
-     */
-    private function format_icon_link($action, $workflowid, $icon, $alt) {
-        global $PAGE, $OUTPUT;
-
-        return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
-                array('action' => $action,
-                    'sesskey' => sesskey(),
-                    'workflowid' => $workflowid)),
-                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                null , array('title' => $alt)) . ' ';
     }
 
 }

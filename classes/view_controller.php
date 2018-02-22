@@ -96,7 +96,7 @@ class view_controller {
         echo $renderer->heading(get_string('tablecoursesremaining', 'tool_cleanupcourses'), 3);
         $table2 = new interaction_remaining_table('tool_cleanupcourses_remaining', $arrayofcourseids);
 
-        echo $renderer->box_start("cleanupcourses-enable-overflow managing_courses_tables");
+        echo $renderer->box_start("cleanupcourses-enable-overflow cleanupcourses-table");
         $table2->out(50, false);
         echo $renderer->box_end();
     }

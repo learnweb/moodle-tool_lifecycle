@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
-class active_manual_workflows_table extends \table_sql {
+class active_manual_workflows_table extends workflow_table {
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
@@ -42,7 +42,7 @@ class active_manual_workflows_table extends \table_sql {
         list($sqlwheremanual, $paramsmanual) = $DB->get_in_or_equal(true);
         $sqlwhere = 'active ' . $sqlwhereactive . ' AND manual ' . $sqlwheremanual;
         $params[1] = $paramsmanual[0];
-        $this->set_sql("id, title, timeactive", '{tool_cleanupcourses_workflow}',
+        $this->set_sql("id, title, displaytitle, timeactive", '{tool_cleanupcourses_workflow}',
             $sqlwhere, $params);
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
@@ -60,83 +60,6 @@ class active_manual_workflows_table extends \table_sql {
             ]);
         $this->sortable(true, 'title');
         $this->setup();
-    }
-
-    /**
-     * Render activate column.
-     * @param $row
-     * @return string activate time for workflows
-     */
-    public function col_timeactive($row) {
-        global $OUTPUT, $PAGE;
-        if ($row->timeactive) {
-            return userdate($row->timeactive, get_string('strftimedatetime'), 0);
-        }
-        return $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            array('action' => ACTION_WORKFLOW_ACTIVATE,
-                'sesskey' => sesskey(),
-                'workflowid' => $row->id)),
-            get_string('activateworkflow', 'tool_cleanupcourses'));
-    }
-
-    /**
-     * Render the trigger column.
-     * @param $row
-     * @return string instancename of the trigger
-     */
-    public function col_trigger($row) {
-        $trigger = trigger_manager::get_trigger_for_workflow($row->id);
-        if ($trigger) {
-            return $trigger->instancename;
-        }
-    }
-
-    /**
-     * Render the processes column. It shows the number of active processes for the workflow instance.
-     * @param $row
-     * @return string instancename of the trigger
-     */
-    public function col_processes($row) {
-        return process_manager::count_processes_by_workflow($row->id);
-    }
-
-    /**
-     * Render tools column.
-     * @param $row
-     * @return string action buttons for workflows
-     */
-    public function col_tools($row) {
-        global $OUTPUT;
-        $output = '';
-
-        $alt = get_string('viewsteps', 'tool_cleanupcourses');
-        $icon = 't/viewdetails';
-        $url = new \moodle_url('/admin/tool/cleanupcourses/workflowsettings.php',
-            array('workflowid' => $row->id, 'sesskey' => sesskey()));
-        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-            null , array('title' => $alt));
-
-        return $output;
-    }
-
-    /**
-     * Util function for writing an action icon link
-     *
-     * @param string $action URL parameter to include in the link
-     * @param string $workflowid URL parameter to include in the link
-     * @param string $icon The key to the icon to use (e.g. 't/up')
-     * @param string $alt The string description of the link used as the title and alt text
-     * @return string The icon/link
-     */
-    private function format_icon_link($action, $workflowid, $icon, $alt) {
-        global $PAGE, $OUTPUT;
-
-        return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
-                array('action' => $action,
-                    'sesskey' => sesskey(),
-                    'workflowid' => $workflowid)),
-                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                null , array('title' => $alt)) . ' ';
     }
 
 }
