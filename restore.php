@@ -21,11 +21,13 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(__FILE__) . '/../../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 
 use tool_cleanupcourses\manager\backup_manager;
 
-require_login();
+$PAGE->set_context(context_system::instance());
+require_login(null, false);
+require_capability('moodle/site:config', context_system::instance());
 
 $backupid = required_param('backupid', PARAM_INT);
 

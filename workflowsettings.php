@@ -21,11 +21,12 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(__FILE__) . '/../../../config.php');
-
-require_login();
-
+require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/adminlib.php');
+
+$PAGE->set_context(context_system::instance());
+require_login(null, false);
+require_capability('moodle/site:config', context_system::instance());
 
 $workflowid = required_param('workflowid', PARAM_INT);
 
@@ -38,8 +39,6 @@ if (!$workflow) {
 
 // Create the class for this controller.
 $workflowsettings = new tool_cleanupcourses\workflow_settings($workflowid);
-
-$PAGE->set_context(context_system::instance());
 
 // Execute the controller.
 $workflowsettings->execute(optional_param('action', null, PARAM_TEXT),

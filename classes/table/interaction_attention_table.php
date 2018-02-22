@@ -23,7 +23,6 @@
  */
 namespace tool_cleanupcourses\table;
 
-use tool_cleanupcourses\entity\step_subplugin;
 use tool_cleanupcourses\manager\interaction_manager;
 use tool_cleanupcourses\manager\lib_manager;
 use tool_cleanupcourses\manager\step_manager;
@@ -45,7 +44,7 @@ class interaction_attention_table extends interaction_table {
             '{tool_cleanupcourses_step} s '.
             'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex';
 
-        $ids = join(',', $courseids);
+        $ids = implode(',', $courseids);
 
         $where = 'FALSE';
         if ($ids) {

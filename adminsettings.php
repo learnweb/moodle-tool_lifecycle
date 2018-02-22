@@ -21,16 +21,15 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(__FILE__) . '/../../../config.php');
-
-require_login();
-
+require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/adminlib.php');
+
+$PAGE->set_context(context_system::instance());
+require_login(null, false);
+require_capability('moodle/site:config', context_system::instance());
 
 // Create the class for this controller.
 $adminsettings = new tool_cleanupcourses\admin_settings();
-
-$PAGE->set_context(context_system::instance());
 
 // Execute the controller.
 $adminsettings->execute(optional_param('action', null, PARAM_TEXT),

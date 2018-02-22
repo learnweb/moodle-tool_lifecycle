@@ -21,16 +21,16 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(__FILE__) . '/../../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 
 use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\interaction_manager;
 use tool_cleanupcourses\table\interaction_attention_table;
 
-require_login();
+require_login(null, false);
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_pagelayout('admin');
+$PAGE->set_pagelayout('standard');
 $PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/view.php'));
 
 // Interaction params.

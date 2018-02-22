@@ -21,15 +21,15 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(__FILE__) . '/../../../config.php');
-
-require_login();
-
+require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+
+$PAGE->set_context(context_system::instance());
+require_login(null, false);
+require_capability('moodle/site:config', context_system::instance());
 
 admin_externalpage_setup('tool_cleanupcourses_activeprocesses');
 
-$PAGE->set_context(context_system::instance());
 $PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/activeprocesses.php'));
 
 $table = new tool_cleanupcourses\table\active_processes_table('tool_cleanupcourses_active_processes');

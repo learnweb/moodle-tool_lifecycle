@@ -21,15 +21,15 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(__FILE__) . '/../../../config.php');
-
-require_login();
-
+require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+
+$PAGE->set_context(context_system::instance());
+require_login(null, false);
+require_capability('moodle/site:config', context_system::instance());
 
 admin_externalpage_setup('tool_cleanupcourses_coursebackups');
 
-$PAGE->set_context(context_system::instance());
 $PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/coursebackups.php'));
 
 $table = new tool_cleanupcourses\table\course_backups_table('tool_cleanupcourses_course_backups');
@@ -40,9 +40,7 @@ $PAGE->set_heading(get_string('course_backups_list_header', 'tool_cleanupcourses
 $renderer = $PAGE->get_renderer('tool_cleanupcourses');
 
 echo $renderer->header();
-
 $table->out(50, false);
-
 echo $renderer->footer();
 
 

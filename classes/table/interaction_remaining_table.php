@@ -23,11 +23,7 @@
  */
 namespace tool_cleanupcourses\table;
 
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\manager\interaction_manager;
-use tool_cleanupcourses\manager\step_manager;
 use tool_cleanupcourses\manager\workflow_manager;
-use tool_cleanupcourses\local\data\manual_trigger_tool;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -48,7 +44,7 @@ class interaction_remaining_table extends interaction_table {
         $from = '{course} c left join ' .
             '{tool_cleanupcourses_process} p on p.courseid = c.id ';
 
-        $ids = join(',', $courseids);
+        $ids = implode(',', $courseids);
 
         $where = 'FALSE';
         if ($ids) {

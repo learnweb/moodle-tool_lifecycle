@@ -63,7 +63,7 @@ class view_controller {
         foreach ($courses as $course) {
             $arrayofcourseids[$course->id] = $course->id;
         }
-        $listofcourseids = join(',', $arrayofcourseids);
+        $listofcourseids = implode(',', $arrayofcourseids);
 
         $processes = $DB->get_recordset_sql("SELECT p.id as processid, c.id as courseid, c.fullname as coursefullname, " .
         "c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname " .
