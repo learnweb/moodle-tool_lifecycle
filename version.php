@@ -25,3 +25,4 @@ defined('MOODLE_INTERNAL') || die;
 
 $plugin->version  = 2018022102;
 $plugin->component = 'tool_cleanupcourses';
+$plugin->requires = 2017051500; // Require Moodle 3.3 (or above).
