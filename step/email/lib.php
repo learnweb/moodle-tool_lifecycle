@@ -147,7 +147,8 @@ class email extends libbase {
         $replacements [] = $user->lastname;
 
         // Replace link to interaction page.
-        $url = $CFG->wwwroot . '/' . $this->get_interaction_link($stepid)->out();
+        $interactionlink = new \moodle_url('admin/tool/cleanupcourses/view.php');
+        $url = $CFG->wwwroot . '/' . $interactionlink->out();
         $patterns [] = '##link##';
         $replacements [] = $url;
 
