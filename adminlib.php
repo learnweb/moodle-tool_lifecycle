@@ -136,14 +136,14 @@ class admin_settings {
 
         $table = new active_automatic_workflows_table('tool_cleanupcourses_active_automatic_workflows');
         echo $OUTPUT->box_start("cleanupcourses-enable-overflow cleanupcourses-table");
-        $table->out(5000, false);
+        $table->out(10, false);
         echo $OUTPUT->box_end();
 
         echo $OUTPUT->heading(get_string('active_manual_workflows_heading', 'tool_cleanupcourses'));
 
         $table = new active_manual_workflows_table('tool_cleanupcourses_manual_workflows');
         echo $OUTPUT->box_start("cleanupcourses-enable-overflow cleanupcourses-table");
-        $table->out(5000, false);
+        $table->out(10, false);
         echo $OUTPUT->box_end();
 
         echo $OUTPUT->heading(get_string('workflow_definition_heading', 'tool_cleanupcourses'));
@@ -154,7 +154,7 @@ class admin_settings {
 
         $table = new workflow_definition_table('tool_cleanupcourses_workflow_definitions');
         echo $OUTPUT->box_start("cleanupcourses-enable-overflow cleanupcourses-table");
-        $table->out(5000, false);
+        $table->out(10, false);
         echo $OUTPUT->box_end();
 
         $this->view_footer();
@@ -304,7 +304,7 @@ class workflow_settings {
             get_string('back'));
 
         $table = new step_table('tool_cleanupcourses_workflows', $this->workflowid);
-        $table->out(5000, false);
+        $table->out(50, false);
 
         $this->view_footer();
     }
