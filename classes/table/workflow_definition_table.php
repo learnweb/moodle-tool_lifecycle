@@ -110,10 +110,12 @@ class workflow_definition_table extends workflow_table {
             $icon = 't/edit';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
-            $action = ACTION_WORKFLOW_DELETE;
-            $alt = get_string('deleteworkflow', 'tool_cleanupcourses');
-            $icon = 't/delete';
-            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+            if (!workflow_manager::is_active($row->id)) {
+                $action = ACTION_WORKFLOW_DELETE;
+                $alt = get_string('deleteworkflow', 'tool_cleanupcourses');
+                $icon = 't/delete';
+                $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+            }
         }
 
         return $output;
