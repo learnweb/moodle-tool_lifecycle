@@ -23,6 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Exception\ExpectationException;
+
 require_once(__DIR__ . '/../../../../../lib/behat/behat_base.php');
 
 /**
@@ -48,5 +51,25 @@ class behat_tool_cleanupcourses extends behat_base {
         $xpathtarget = "//table/tbody/tr[contains(@id, '$tablename')]//td[contains(text(),'$rowname')]//parent::tr";
 
         $this->execute('behat_general::i_click_on_in_the', [$this->escape($nodetext), 'link', $xpathtarget, 'xpath_element']);
+    }
+
+    /**
+     * Assume a step being at a certain position
+     *
+     * @When /^the step "([^"]*)" should be at the ([^"]*) position$/
+     *
+     * @param string $stepname
+     * @param int $position
+     * @throws ExpectationException
+     */
+    public function the_step_should_be_at_the_position($stepname, $position) {
+        $xpathelement = "//table/tbody/tr[@id = 'tool_cleanupcourses_workflows_r$position']//td[contains(text(),'$stepname')]";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"' . $stepname . '" step was not found at position ' .
+                $position . ' of the workflow.', $this->getSession());
+        }
     }
 }
