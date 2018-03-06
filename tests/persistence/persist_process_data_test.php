@@ -45,6 +45,8 @@ class tool_cleanupcourses_persist_process_data_testcase extends \advanced_testca
         $workflow = $generator->create_workflow_with_steps();
         $course = $this->getDataGenerator()->create_course();
         $this->process = process_manager::create_process($course->id, $workflow->id);
+        // Move process to the first step.
+        process_manager::proceed_process($this->process);
     }
 
     /**
