@@ -73,7 +73,7 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td[contains(text(),'$rowname')]/parent::tr";
+        $xpathelement = $xpathelement . "/td//a[contains(text(),'$rowname')]/ancestor::tr";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -82,12 +82,12 @@ class behat_tool_cleanupcourses extends behat_base {
                 '" of the table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td/a[@title = '$tool']";
+        $xpathelement = $xpathelement . "[//a[@title = '$tool'] | //span[text() = '$tool']]";
 
         try {
             $this->find('xpath', $xpathelement);
         } catch (ElementNotFoundException $e) {
-            throw new ExpectationException('"The tool ' . $tool . '"  was not found for the row "'. $rowname.
+            throw new ExpectationException('"The tool "' . $tool . '"  was not found for the row "'. $rowname.
                 '" of the table ' . $tablename, $this->getSession());
         }
     }
@@ -111,12 +111,12 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td/a[@title = '$tool']";
+        $xpathelement = $xpathelement . "/td(//a[@title = '$tool'] | //span[text() = '$tool'])";
 
         try {
             $this->find('xpath', $xpathelement);
         } catch (ElementNotFoundException $e) {
-            throw new ExpectationException('"The tool ' . $tool .
+            throw new ExpectationException('"The tool "' . $tool .
                 '"  was not found for at least one row of the table ' . $tablename, $this->getSession());
         }
     }
@@ -140,7 +140,7 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td[contains(text(),'$rowname')]/parent::tr";
+        $xpathelement = $xpathelement . "/td//a[contains(text(),'$rowname')]/ancestor::tr";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -149,14 +149,14 @@ class behat_tool_cleanupcourses extends behat_base {
                 '" of the table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td/a[@title = '$tool']";
+        $xpathelement = $xpathelement . "/td(//a[@title = '$tool'] | //span[text() = '$tool'])";
 
         try {
             $this->find('xpath', $xpathelement);
         } catch (ElementNotFoundException $e) {
             return;
         }
-        throw new ExpectationException('"The tool ' . $tool . '"  was found for the row "'. $rowname.
+        throw new ExpectationException('"The tool "' . $tool . '"  was found for the row "'. $rowname.
             '" of the table ' . $tablename, $this->getSession());
     }
 
@@ -178,14 +178,14 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td/a[@title = '$tool']";
+        $xpathelement = $xpathelement . "/td(//a[@title = '$tool'] | //span[text() = '$tool'])";
 
         try {
             $this->find('xpath', $xpathelement);
         } catch (ElementNotFoundException $e) {
             return;
         }
-        throw new ExpectationException('"The tool ' . $tool . '"  was found for a row  of the table ' .
+        throw new ExpectationException('"The tool "' . $tool . '"  was found for a row  of the table ' .
             $tablename, $this->getSession());
     }
 
@@ -207,5 +207,15 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"' . $stepname . '" step was not found at position ' .
                 $position . ' of the workflow.', $this->getSession());
         }
+    }
+
+
+    /**
+     * Opens Teacher's Courses Overview.
+     *
+     * @Given /^I am on cleanupcourses view$/
+     */
+    public function i_am_on_cleanupcourses_view() {
+        $this->getSession()->visit($this->locate_path('/admin/tool/cleanupcourses/view.php'));
     }
 }
