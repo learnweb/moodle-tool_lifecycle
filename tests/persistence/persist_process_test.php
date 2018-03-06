@@ -83,7 +83,10 @@ class tool_cleanupcourses_persist_process_testcase extends \advanced_testcase {
      */
     public function test_process_proceed() {
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
-        $this->assertEquals(1, $process->stepindex);
+        $this->assertEquals(0, $process->stepindex);
+        process_manager::proceed_process($process);
+        $loadedprocess = process_manager::get_process_by_id($process->id);
+        $this->assertEquals(1, $loadedprocess->stepindex);
         process_manager::proceed_process($process);
         $loadedprocess = process_manager::get_process_by_id($process->id);
         $this->assertEquals(2, $loadedprocess->stepindex);
