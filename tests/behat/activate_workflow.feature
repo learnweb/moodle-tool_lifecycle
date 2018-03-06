@@ -1,7 +1,7 @@
 @tool @tool_cleanupcourses
 Feature: Add a workflow definition activate it
   Further, check that all edit possibilities are disabled.
-  
+
   Scenario: Add a new workflow definition with steps and rearange
     Given I log in as "admin"
     And I navigate to "Workflow Settings" node in "Site administration > Plugins > Cleanup Courses"
