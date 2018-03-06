@@ -98,7 +98,7 @@ Feature: Add a workflow definition
       | Icon                       | t/delete                                  |
       | Action name                | Delete course                             |
       | Capability                 | moodle/course:manageactivities            |
-    
+
   Scenario: Add a new workflow definition with steps and rearange
     Given I log in as "admin"
     And I navigate to "Workflow Settings" node in "Site administration > Plugins > Cleanup Courses"
@@ -139,4 +139,3 @@ Feature: Add a workflow definition
     Then the step "Delete Course 1" should be at the 3 position
     And the step "Delete Course 2" should be at the 1 position
     And the step "Create Backup Step" should be at the 2 position
-

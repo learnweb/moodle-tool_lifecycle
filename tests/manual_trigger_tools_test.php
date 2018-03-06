@@ -62,7 +62,7 @@ class tool_cleanupcourses_manual_trigger_tools_testcase extends \advanced_testca
         workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
         $tools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
         $this->assertCount(1, $tools);
-        $this->assertContainsOnly(\tool_cleanupcourses\local\data\manual_trigger_tool::class, $tools);
+        $this->assertContainsOnly(manual_trigger_tool::class, $tools);
         $trigger = trigger_manager::get_trigger_for_workflow($this->workflow2->id);
         $tool = new manual_trigger_tool($trigger->id, self::MANUAL_TRIGGER2_ICON,
             self::MANUAL_TRIGGER2_DISPLAYNAME, self::MANUAL_TRIGGER2_CAPABILITY);
