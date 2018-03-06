@@ -63,12 +63,10 @@ class tool_cleanupcourses_manually_triggered_process_testcase extends \advanced_
     public function test_proceeding_of_manually_triggered_processes() {
         $process = process_manager::manually_trigger_process($this->course->id, $this->trigger->id);
         $this->assertEquals(0, $process->stepindex);
-        var_dump($process);
 
         $processor = new cleanup_processor();
         $processor->process_courses();
         $process = process_manager::get_process_by_id($process->id);
-        var_dump($process);
 
         $this->assertEquals(1, $process->stepindex);
     }
