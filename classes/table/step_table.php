@@ -66,17 +66,18 @@ class step_table extends \table_sql {
     }
 
     public function init() {
-        $columns = ['type', 'instancename', 'subpluginname', 'sortindex'];
+        $columns = ['type', 'instancename', 'subpluginname'];
         $headers = [
             get_string('step_type', 'tool_cleanupcourses'),
             get_string('step_instancename', 'tool_cleanupcourses'),
             get_string('step_subpluginname', 'tool_cleanupcourses'),
-            get_string('step_sortindex', 'tool_cleanupcourses'),
             ];
         if (workflow_manager::is_active($this->workflowid)) {
             $columns [] = 'show';
             $headers [] = get_string('step_show', 'tool_cleanupcourses');
         } else {
+            $columns [] = 'sortindex';
+            $headers [] = get_string('step_sortindex', 'tool_cleanupcourses');
             $columns [] = 'edit';
             $headers [] = get_string('step_edit', 'tool_cleanupcourses');
             $columns [] = 'delete';
