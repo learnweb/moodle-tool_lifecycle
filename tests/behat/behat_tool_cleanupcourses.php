@@ -46,11 +46,147 @@ class behat_tool_cleanupcourses extends behat_base {
      * @param string $nodetext
      * @param string $rowname
      * @param string $tablename
+     * @throws Exception
      */
     public function click_on_the_tool_in_the_row_of_the_table($nodetext, $rowname, $tablename) {
         $xpathtarget = "//table/tbody/tr[contains(@id, '$tablename')]//td[contains(text(),'$rowname')]//parent::tr";
 
         $this->execute('behat_general::i_click_on_in_the', [$this->escape($nodetext), 'link', $xpathtarget, 'xpath_element']);
+    }
+
+    /**
+     * I should see a tool for a entry of a table.
+     *
+     * @When /^I should see the tool "([^"]*)" in the "([^"]*)" row of the "([^"]*)" table$/
+     *
+     * @param string $tool
+     * @param string $rowname
+     * @param string $tablename
+     * @throws Exception
+     */
+    public function i_should_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
+        $xpathelement = "//table/tbody/tr[contains(@id, '$tablename')]";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        $xpathelement = $xpathelement . "/td[contains(text(),'$rowname')]/parent::tr";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The row "'. $rowname.
+                '" of the table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        $xpathelement = $xpathelement . "/td/a[@title = '$tool']";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The tool ' . $tool . '"  was not found for the row "'. $rowname.
+                '" of the table ' . $tablename, $this->getSession());
+        }
+    }
+
+    /**
+     * I should see a tool for a entry of a table.
+     *
+     * @When /^I should see the tool "([^"]*)" in all rows of the "([^"]*)" table$/
+     *
+     * @param string $tool
+     * @param string $rowname
+     * @param string $tablename
+     * @throws Exception
+     */
+    public function i_should_see_the_tool_in_all_rows_of_the_table($tool, $tablename) {
+        $xpathelement = "//table/tbody/tr[contains(@id, '$tablename') and not(contains(@class, 'emptyrow'))]";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        $xpathelement = $xpathelement . "/td/a[@title = '$tool']";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The tool ' . $tool .
+                '"  was not found for at least one row of the table ' . $tablename, $this->getSession());
+        }
+    }
+
+    /**
+     * I should not see a tool for a entry of a table.
+     *
+     * @When /^I should not see the tool "([^"]*)" in the "([^"]*)" row of the "([^"]*)" table$/
+     *
+     * @param string $tool
+     * @param string $rowname
+     * @param string $tablename
+     * @throws Exception
+     */
+    public function i_should_not_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
+        $xpathelement = "//table/tbody/tr[contains(@id, '$tablename')]";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        $xpathelement = $xpathelement . "/td[contains(text(),'$rowname')]/parent::tr";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The row "'. $rowname.
+                '" of the table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        $xpathelement = $xpathelement . "/td/a[@title = '$tool']";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            return;
+        }
+        throw new ExpectationException('"The tool ' . $tool . '"  was found for the row "'. $rowname.
+            '" of the table ' . $tablename, $this->getSession());
+    }
+
+    /**
+     * I should not see a tool for a entry of a table.
+     *
+     * @When /^I should not see the tool "([^"]*)" in any row of the "([^"]*)" table$/
+     *
+     * @param string $tool
+     * @param string $tablename
+     * @throws Exception
+     */
+    public function i_should_not_see_the_tool_in_any_row_of_the_table($tool, $tablename) {
+        $xpathelement = "//table/tbody/tr[contains(@id, '$tablename')]";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        $xpathelement = $xpathelement . "/td/a[@title = '$tool']";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            return;
+        }
+        throw new ExpectationException('"The tool ' . $tool . '"  was found for a row  of the table ' .
+            $tablename, $this->getSession());
     }
 
     /**
@@ -63,7 +199,7 @@ class behat_tool_cleanupcourses extends behat_base {
      * @throws ExpectationException
      */
     public function the_step_should_be_at_the_position($stepname, $position) {
-        $xpathelement = "//table/tbody/tr[@id = 'tool_cleanupcourses_workflows_r$position']//td[contains(text(),'$stepname')]";
+        $xpathelement = "//table/tbody/tr[@id = 'tool_cleanupcourses_workflows_r$position']/td[contains(text(),'$stepname')]";
 
         try {
             $this->find('xpath', $xpathelement);
