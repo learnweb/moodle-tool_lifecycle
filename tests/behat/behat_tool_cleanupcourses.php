@@ -73,7 +73,7 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td//a[contains(text(),'$rowname')]/ancestor::tr";
+        $xpathelement = $xpathelement . "//*[contains(text(),'$rowname')]/ancestor::tr";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -111,7 +111,7 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td(//a[@title = '$tool'] | //span[text() = '$tool'])";
+        $xpathelement = $xpathelement . "[//a[@title = '$tool'] | //span[text() = '$tool']]";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -140,7 +140,7 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td//a[contains(text(),'$rowname')]/ancestor::tr";
+        $xpathelement = $xpathelement . "//*[contains(text(),'$rowname')]/ancestor::tr";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -149,7 +149,7 @@ class behat_tool_cleanupcourses extends behat_base {
                 '" of the table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td(//a[@title = '$tool'] | //span[text() = '$tool'])";
+        $xpathelement = $xpathelement . "[//a[@title = '$tool'] | //span[text() = '$tool']]";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -178,7 +178,7 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "/td(//a[@title = '$tool'] | //span[text() = '$tool'])";
+        $xpathelement = $xpathelement . "[//a[@title = '$tool'] | //span[text() = '$tool']]";
 
         try {
             $this->find('xpath', $xpathelement);
