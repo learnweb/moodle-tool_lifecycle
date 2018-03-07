@@ -79,7 +79,6 @@ class cleanup_processor {
 
                 if ($process->stepindex == 0) {
                     process_manager::proceed_process($process);
-                    break;
                 }
 
                 $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
