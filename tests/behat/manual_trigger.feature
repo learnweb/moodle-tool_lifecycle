@@ -8,11 +8,12 @@ Feature: Add a manual trigger and activate it as a teacher
     And the following "courses" exist:
       | fullname | shortname | category |
       | Course 1 | C1 | 0 |
+      | Course 2 | C2 | 0 |
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
+      | teacher1 | C2 | editingteacher |
 
-  @wip
   Scenario: Add a new workflow definition with steps and rearange
     Given I log in as "admin"
     And I navigate to "Workflow Settings" node in "Site administration > Plugins > Cleanup Courses"
@@ -45,7 +46,10 @@ Feature: Add a manual trigger and activate it as a teacher
     Then I should see the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
     When I click on the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
     Then I should see "Course 1"
+    And I should see "Course 2"
     And I should not see the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
+    And I should see the tool "Delete course" in the "Course 2" row of the "tool_cleanupcourses_remaining" table
     When I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
     And I am on cleanupcourses view
     Then I should not see "Course 1"
+    And I should see "Course 2"
