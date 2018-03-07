@@ -53,3 +53,8 @@ Feature: Add a manual trigger and activate it as a teacher
     And I am on cleanupcourses view
     Then I should not see "Course 1"
     And I should see "Course 2"
+    When I log out
+    And I log in as "admin"
+    And I navigate to "Course Backups" node in "Site administration > Plugins > Cleanup Courses"
+    Then I should see "Course 1"
+    And I should not see "Course 2"
