@@ -1,5 +1,5 @@
 @tool @tool_cleanupcourses
-Feature: Add a manual trigger and activate it as a teacher
+Feature: Add a manual trigger and test view and actions as a teacher
 
   Background:
     Given the following "users" exist:
@@ -9,12 +9,49 @@ Feature: Add a manual trigger and activate it as a teacher
       | fullname | shortname | category |
       | Course 1 | C1 | 0 |
       | Course 2 | C2 | 0 |
+      | Course 3 | C3 | 0 |
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
       | teacher1 | C2 | editingteacher |
+      | teacher1 | C3 | teacher |
 
-  Scenario: Add a new workflow definition with steps and rearange
+  Scenario: Test displayed action tools for different capabilities
+    Given I log in as "admin"
+    # Allow teacher role to view courses in cleanup courses view
+    # to allow for different visibility levels of manual tools.
+    And I set the following system permissions of "Non-editing teacher" role:
+      | capability | permission |
+      | tool/cleanupcourses:managecourses | Allow |
+    And I navigate to "Workflow Settings" node in "Site administration > Plugins > Cleanup Courses"
+    And I press "Add Workflow"
+    And I set the following fields to these values:
+      | Title                      | My Workflow                               |
+      | Displayed workflow title   | Teachers view on workflow                 |
+    And I press "Save changes"
+    And I set the following fields to these values:
+      | Instance Name              | My Trigger                                |
+      | Subplugin Name             | Manual trigger                            |
+    And I press "reload"
+    And I should see "Specific settings of the trigger type"
+    And I set the following fields to these values:
+      | Icon                       | t/delete                                  |
+      | Action name                | Delete course                            |
+      | Capability                 | moodle/course:manageactivities            |
+    And I press "Save changes"
+    And I press "Back"
+    And I press "Activate"
+    And I log out
+    And I log in as "teacher1"
+    And I am on cleanupcourses view
+    Then I should see "Course 1"
+    And I should see "Course 2"
+    And I should see "Course 3"
+    And I should see the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
+    And I should see the tool "Delete course" in the "Course 2" row of the "tool_cleanupcourses_remaining" table
+    And I should not see the tool "Delete course" in the "Course 3" row of the "tool_cleanupcourses_remaining" table
+
+  Scenario: Manually trigger backup and course deletion
     Given I log in as "admin"
     And I navigate to "Workflow Settings" node in "Site administration > Plugins > Cleanup Courses"
     And I press "Add Workflow"
