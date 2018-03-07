@@ -1,6 +1,5 @@
 @tool @tool_cleanupcourses
-Feature: Add a workflow definition activate it
-  Further, check that all edit possibilities are disabled.
+Feature: Add a manual trigger and activate it as a teacher
 
   Background:
     Given the following "users" exist:

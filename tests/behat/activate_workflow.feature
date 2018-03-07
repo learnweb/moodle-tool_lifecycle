@@ -55,4 +55,3 @@ Feature: Add a workflow definition activate it
     And I should not see the tool "Down" in any row of the "tool_cleanupcourses_workflows" table
     And I should see the tool "View" in all rows of the "tool_cleanupcourses_workflows" table
     And I should not see "Add New Step Instance"
-
