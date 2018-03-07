@@ -113,7 +113,7 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "[//a[@title = '$tool'] | //span[text() = '$tool']]";
+        $xpathelement = $xpathelement . "//a[@title = '$tool'] | " . $xpathelement. "//span[text() = '$tool']/parent::a";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -151,7 +151,7 @@ class behat_tool_cleanupcourses extends behat_base {
                 '" of the table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "[//a[@title = '$tool'] | //span[text() = '$tool']]";
+        $xpathelement = $xpathelement . "//a[@title = '$tool'] | " . $xpathelement. "//span[text() = '$tool']/parent::a";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -180,7 +180,7 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "[//a[@title = '$tool'] | //span[text() = '$tool']]";
+        $xpathelement = $xpathelement . "//a[@title = '$tool'] | " . $xpathelement. "//span[text() = '$tool']/parent::a";
 
         try {
             $this->find('xpath', $xpathelement);
