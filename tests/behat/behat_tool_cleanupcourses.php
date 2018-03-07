@@ -43,15 +43,15 @@ class behat_tool_cleanupcourses extends behat_base {
      *
      * @When /^I click on the tool "([^"]*)" in the "([^"]*)" row of the "([^"]*)" table$/
      *
-     * @param string $nodetext
+     * @param string $tool
      * @param string $rowname
      * @param string $tablename
      * @throws Exception
      */
-    public function click_on_the_tool_in_the_row_of_the_table($nodetext, $rowname, $tablename) {
-        $xpathtarget = "//table/tbody/tr[contains(@id, '$tablename')]//td[contains(text(),'$rowname')]//parent::tr";
+    public function click_on_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
+        $xpathelement = $this->i_should_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename);
 
-        $this->execute('behat_general::i_click_on_in_the', [$this->escape($nodetext), 'link', $xpathtarget, 'xpath_element']);
+        $this->execute('behat_general::i_click_on', [$xpathelement, 'xpath_element']);
     }
 
     /**
@@ -62,6 +62,7 @@ class behat_tool_cleanupcourses extends behat_base {
      * @param string $tool
      * @param string $rowname
      * @param string $tablename
+     * @return string the selector of the searched tool
      * @throws Exception
      */
     public function i_should_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
@@ -82,7 +83,7 @@ class behat_tool_cleanupcourses extends behat_base {
                 '" of the table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "[//a[@title = '$tool'] | //span[text() = '$tool']]";
+        $xpathelement = $xpathelement . "//a[@title = '$tool'] | " . $xpathelement. "//span[text() = '$tool']/parent::a";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -90,6 +91,8 @@ class behat_tool_cleanupcourses extends behat_base {
             throw new ExpectationException('"The tool "' . $tool . '"  was not found for the row "'. $rowname.
                 '" of the table ' . $tablename, $this->getSession());
         }
+
+        return $xpathelement;
     }
 
     /**
@@ -98,7 +101,6 @@ class behat_tool_cleanupcourses extends behat_base {
      * @When /^I should see the tool "([^"]*)" in all rows of the "([^"]*)" table$/
      *
      * @param string $tool
-     * @param string $rowname
      * @param string $tablename
      * @throws Exception
      */

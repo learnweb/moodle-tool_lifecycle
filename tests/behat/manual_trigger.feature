@@ -43,3 +43,9 @@ Feature: Add a manual trigger and activate it as a teacher
     And I log in as "teacher1"
     And I am on cleanupcourses view
     Then I should see the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
+    When I click on the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
+    Then I should see "Course 1"
+    And I should not see the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
+    When I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
+    And I am on cleanupcourses view
+    Then I should not see "Course 1"
