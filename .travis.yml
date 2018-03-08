@@ -46,7 +46,7 @@ matrix:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install --lts
+  - nvm install v8.9.4
   - cd ../..
   - composer selfupdate
   - composer create-project -n --no-dev --prefer-dist moodlerooms/moodle-plugin-ci ci ^2
