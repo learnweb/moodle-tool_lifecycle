@@ -124,14 +124,6 @@ class process_manager {
             $DB->update_record('tool_cleanupcourses_process', $process);
             return true;
         } else {
-            try {
-                if (get_course($process->courseid)) {
-                    debugging('Course exists, but shouldn\'t!!!!'); // TODO This plugin is not just for deleting anymore!
-                }
-            } catch (\dml_missing_record_exception $e) {
-                // Expected behaviour!
-                debugging('Course deleted properly.');
-            }
             self::remove_process($process);
             return false;
         }
