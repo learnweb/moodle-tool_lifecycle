@@ -32,6 +32,7 @@ class active_processes_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
+        $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
         $this->set_sql('c.id as courseid, ' .
             'c.fullname as coursefullname, ' .
             'c.shortname as courseshortname, ' .
