@@ -68,7 +68,7 @@ class tool_cleanupcourses_manually_triggered_process_testcase extends \advanced_
         $processor->process_courses();
         $process = process_manager::get_process_by_id($process->id);
 
-        $this->assertEquals(1, $process->stepindex);
+        $this->assertNull($process);
     }
 
 }
