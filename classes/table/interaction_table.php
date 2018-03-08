@@ -35,6 +35,11 @@ require_once($CFG->libdir . '/tablelib.php');
 
 abstract class interaction_table extends \table_sql {
 
+    public function __construct($uniqueid) {
+        parent::__construct($uniqueid);
+        $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
+    }
+
     /**
      * Initialises the columns of the table. Necessary since attention_table has extra column date.
      */

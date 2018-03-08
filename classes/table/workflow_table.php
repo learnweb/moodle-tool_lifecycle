@@ -35,6 +35,11 @@ require_once(__DIR__ . '/../../lib.php');
 
 abstract class workflow_table extends \table_sql {
 
+    public function __construct($uniqueid) {
+        parent::__construct($uniqueid);
+        $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
+    }
+
     /**
      * Render title column.
      * @param $row

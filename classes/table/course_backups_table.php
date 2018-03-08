@@ -32,6 +32,7 @@ class course_backups_table extends \table_sql {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
+        $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
         $this->set_sql('b.*',
             '{tool_cleanupcourses_backups} b',
             "TRUE");

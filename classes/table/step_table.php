@@ -41,6 +41,7 @@ class step_table extends \table_sql {
     public function __construct($uniqueid, $workflowid) {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
+        $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
         $this->workflowid = $workflowid;
         list($sqlwhere, $params) = $DB->get_in_or_equal($workflowid);
         $this->set_sql("id, subpluginname, instancename, sortindex",
