@@ -43,9 +43,9 @@ class behat_tool_cleanupcourses extends behat_base {
      *
      * @When /^I click on the tool "([^"]*)" in the "([^"]*)" row of the "([^"]*)" table$/
      *
-     * @param string $tool
-     * @param string $rowname
-     * @param string $tablename
+     * @param $tool string identifier of the tool
+     * @param $rowname string identifier of the row
+     * @param $tablename string identifier of the table
      * @throws Exception
      */
     public function click_on_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
@@ -59,9 +59,9 @@ class behat_tool_cleanupcourses extends behat_base {
      *
      * @When /^I should see the tool "([^"]*)" in the "([^"]*)" row of the "([^"]*)" table$/
      *
-     * @param string $tool
-     * @param string $rowname
-     * @param string $tablename
+     * @param $tool string identifier of the tool
+     * @param $rowname string identifier of the row
+     * @param $tablename string identifier of the table
      * @return string the selector of the searched tool
      * @throws Exception
      */
@@ -102,8 +102,8 @@ class behat_tool_cleanupcourses extends behat_base {
      *
      * @When /^I should see the tool "([^"]*)" in all rows of the "([^"]*)" table$/
      *
-     * @param string $tool
-     * @param string $tablename
+     * @param $tool string identifier of the tool
+     * @param $tablename string identifier of the table
      * @throws Exception
      */
     public function i_should_see_the_tool_in_all_rows_of_the_table($tool, $tablename) {
@@ -132,9 +132,9 @@ class behat_tool_cleanupcourses extends behat_base {
      *
      * @When /^I should not see the tool "([^"]*)" in the "([^"]*)" row of the "([^"]*)" table$/
      *
-     * @param string $tool
-     * @param string $rowname
-     * @param string $tablename
+     * @param $tool string identifier of the tool
+     * @param $rowname string identifier of the row
+     * @param $tablename string identifier of the table
      * @throws Exception
      */
     public function i_should_not_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
@@ -173,8 +173,8 @@ class behat_tool_cleanupcourses extends behat_base {
      *
      * @When /^I should not see the tool "([^"]*)" in any row of the "([^"]*)" table$/
      *
-     * @param string $tool
-     * @param string $tablename
+     * @param $tool string identifier of the tool
+     * @param $tablename string identifier of the table
      * @throws Exception
      */
     public function i_should_not_see_the_tool_in_any_row_of_the_table($tool, $tablename) {
