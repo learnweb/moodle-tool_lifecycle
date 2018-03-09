@@ -77,11 +77,6 @@ class email extends libbase {
      * @return step_response
      */
     public function process_waiting_course($processid, $instanceid, $course) {
-        if ($keep = process_data_manager::get_process_data($processid, $instanceid, EMAIL_PROCDATA_KEY_KEEP)) {
-            if ($keep === '1') {
-                return step_response::rollback();
-            }
-        }
         // When time runs up and no one wants to keep the course, then proceed.
         $process = process_manager::get_process_by_id($processid);
         if ($process->timestepchanged < time() - settings_manager::get_settings(

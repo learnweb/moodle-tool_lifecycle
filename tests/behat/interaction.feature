@@ -60,9 +60,12 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
     And I should see the tool "Keep Course" in the "Course 2" row of the "tool_cleanupcourses_interaction" table
     And I should see the tool "Keep Course" in the "Course 3" row of the "tool_cleanupcourses_interaction" table
     When I click on the tool "Keep Course" in the "Course 2" row of the "tool_cleanupcourses_interaction" table
-    Then I should see "Course is still needed" in the "Course 2" "table_row"
-    And I wait "10" seconds
-    When I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
+    Then I should see "Course 1" in the "tool_cleanupcourses_remaining" "table"
+    And I should see "Course 2" in the "tool_cleanupcourses_remaining" "table"
+    And I should see "Course 3" in the "tool_cleanupcourses_interaction" "table"
+    When I wait "10" seconds
+    And I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
     And I am on cleanupcourses view
-    Then I should see "Course 2"
+    Then I should see "Course 1" in the "tool_cleanupcourses_remaining" "table"
+    And I should see "Course 2" in the "tool_cleanupcourses_remaining" "table"
     And I should not see "Course 3"

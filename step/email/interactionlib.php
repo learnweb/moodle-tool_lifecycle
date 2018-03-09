@@ -60,11 +60,6 @@ class interactionemail extends interactionlibbase {
      * @return array of action tools
      */
     public function get_action_tools($process) {
-        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
-        $keep = process_data_manager::get_process_data($process->id, $step->id, EMAIL_PROCDATA_KEY_KEEP);
-        if ($keep === '1') {
-            return array();
-        }
         return array(
             array('action' => self::ACTION_KEEP,
                 'alt' => get_string('keep_course', 'cleanupcoursesstep_email'),
@@ -78,11 +73,6 @@ class interactionemail extends interactionlibbase {
      * @return string status message
      */
     public function get_status_message($process) {
-        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
-        $keep = process_data_manager::get_process_data($process->id, $step->id, EMAIL_PROCDATA_KEY_KEEP);
-        if ($keep === '1') {
-            return get_string('status_message_decision_keep', 'cleanupcoursesstep_email');
-        }
         return get_string('status_message_requiresattention', 'cleanupcoursesstep_email');
     }
 
@@ -99,7 +89,6 @@ class interactionemail extends interactionlibbase {
      */
     public function handle_interaction($process, $step, $action = 'default') {
         if ($action == self::ACTION_KEEP) {
-            process_data_manager::set_process_data($process->id, $step->id, EMAIL_PROCDATA_KEY_KEEP, '1');
             return step_interactive_response::rollback();
         }
         return step_interactive_response::no_action();
