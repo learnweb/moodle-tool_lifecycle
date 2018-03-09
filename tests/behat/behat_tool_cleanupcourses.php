@@ -66,26 +66,7 @@ class behat_tool_cleanupcourses extends behat_base {
      * @throws Exception
      */
     public function i_should_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
-        $xpathelement = "//table/tbody/tr[contains(@id, '$tablename')]";
-
-        try {
-            $this->find('xpath', $xpathelement);
-        } catch (ElementNotFoundException $e) {
-            throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
-        }
-
-        $xpathelement = $xpathelement . "//*[contains(text(),'$rowname')]/ancestor::tr";
-
-        try {
-            $this->find('xpath', $xpathelement);
-        } catch (ElementNotFoundException $e) {
-            throw new ExpectationException('"The row "'. $rowname.
-                '" of the table ' . $tablename . ' was not found.', $this->getSession());
-        }
-
-        $xpathelement = $xpathelement . "//a[@title = '$tool']" .
-            " | " . $xpathelement. "//span[text() = '$tool']/parent::a".
-            " | " . $xpathelement. "//button[text() = '$tool']";
+        $xpathelement = $this->get_xpath_of_tool_in_table($tool, $rowname, $tablename);
 
         try {
             $this->find('xpath', $xpathelement);
@@ -138,6 +119,26 @@ class behat_tool_cleanupcourses extends behat_base {
      * @throws Exception
      */
     public function i_should_not_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
+        $xpathelement = $this->get_xpath_of_tool_in_table($tool, $rowname, $tablename);
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            return;
+        }
+        throw new ExpectationException('"The tool "' . $tool . '"  was found for the row "'. $rowname.
+            '" of the table ' . $tablename, $this->getSession());
+    }
+
+    /**
+     * Build the xpath to the tool element and throws exceptions if either the table or the row are not present.
+     * @param $tool string identifier of the tool
+     * @param $rowname string identifier of the row
+     * @param $tablename string identifier of the table
+     * @return string xpath of the tool
+     * @throws ExpectationException
+     */
+    private function get_xpath_of_tool_in_table($tool, $rowname, $tablename) {
         $xpathelement = "//table/tbody/tr[contains(@id, '$tablename')]";
 
         try {
@@ -156,16 +157,10 @@ class behat_tool_cleanupcourses extends behat_base {
         }
 
         $xpathelement = $xpathelement . "//a[@title = '$tool']" .
-             " | " . $xpathelement. "//span[text() = '$tool']/parent::a".
-             " | " . $xpathelement. "//button[text() = '$tool']";
+            " | " . $xpathelement. "//span[text() = '$tool']/parent::a".
+            " | " . $xpathelement. "//button[text() = '$tool']";
 
-        try {
-            $this->find('xpath', $xpathelement);
-        } catch (ElementNotFoundException $e) {
-            return;
-        }
-        throw new ExpectationException('"The tool "' . $tool . '"  was found for the row "'. $rowname.
-            '" of the table ' . $tablename, $this->getSession());
+        return $xpathelement;
     }
 
     /**
