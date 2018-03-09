@@ -111,7 +111,7 @@ class duplicate extends libbase {
 
         // Context validation.
 
-        if (! ($course = $DB->get_record('course', array('id'=>$params['courseid'])))) {
+        if (! ($course = $DB->get_record('course', array('id' => $params['courseid'])))) {
             throw new \moodle_exception('invalidcourseid', 'error');
         }
 
@@ -167,7 +167,7 @@ class duplicate extends libbase {
         }
 
         // Check if the shortname is used.
-        if ($foundcourses = $DB->get_records('course', array('shortname'=>$shortname))) {
+        if ($foundcourses = $DB->get_records('course', array('shortname' => $shortname))) {
             foreach ($foundcourses as $foundcourse) {
                 $foundcoursenames[] = $foundcourse->fullname;
             }

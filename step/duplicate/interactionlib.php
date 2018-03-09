@@ -105,7 +105,7 @@ class interactionduplicate extends interactionlibbase {
             return step_interactive_response::rollback();
         }
         if ($data = $form->get_submitted_data()) {
-            if ($foundcourses = $DB->get_records('course', array('shortname'=>$data->shortname))) {
+            if ($foundcourses = $DB->get_records('course', array('shortname' => $data->shortname))) {
                 foreach ($foundcourses as $foundcourse) {
                     $foundcoursenames[] = $foundcourse->fullname;
                 }
