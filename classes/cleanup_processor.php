@@ -131,16 +131,16 @@ class cleanup_processor {
             process_manager::proceed_process($process);
             $response = $interactionlib->handle_interaction($process, $step);
             switch ($response) {
-                case step_interactive_response::STILLPROCESSING:
+                case step_interactive_response::still_processing():
                     return false;
                     break;
-                case step_interactive_response::NOACTION:
+                case step_interactive_response::no_action():
                     break;
-                case step_interactive_response::PROCEED:
+                case step_interactive_response::proceed():
                     // In case of proceed, call recursively.
                     return $this->process_course_interactive($processid);
                     break;
-                case step_interactive_response::ROLLBACK:
+                case step_interactive_response::rollback():
                     process_manager::rollback_process($process);
                     break;
             }
