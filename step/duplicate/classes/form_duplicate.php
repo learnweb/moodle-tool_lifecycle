@@ -69,6 +69,9 @@ class form_duplicate extends \moodleform {
         $mform->setType('action', PARAM_TEXT);
         $mform->setDefault('action', 'duplicateform');
 
+        $mform->addElement('header', 'duplicate_course_header',
+            get_string('duplicate_course_header', 'cleanupcoursesstep_duplicate'));
+
         $elementname = 'shortname';
         $mform->addElement('text', $elementname, get_string('shortnamecourse'));
         $mform->setType($elementname, PARAM_TEXT);
