@@ -79,7 +79,8 @@ class view_controller {
             $step = step_manager::get_step_instance($process->stepinstanceid);
             $capability = interaction_manager::get_relevant_capability($step->subpluginname);
 
-            if (has_capability($capability, \context_course::instance($process->courseid), null, false)) {
+            if (has_capability($capability, \context_course::instance($process->courseid), null, false) &&
+                !empty(interaction_manager::get_action_tools($step->subpluginname, $process->processid))) {
                 $requiresinteraction[] = $process->courseid;
                 unset($arrayofcourseids[$process->courseid]);
             }
