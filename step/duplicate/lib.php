@@ -257,5 +257,8 @@ class duplicate extends libbase {
         // Delete the course backup file created by this WebService. Originally located in the course backups area.
         $file->delete();
 
+
+        \cache_helper::purge_by_event('changesincoursecat');
+
     }
 }

@@ -48,7 +48,11 @@ Feature: Add a workflow with a manual trigger and a duplicate step and test the 
       | Course full name           | Course 2                           |
     And I press "Save changes"
     Then I should see "Duplicated course will be available shortly." in the "tool_cleanupcourses_remaining" "table"
-    When I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
+    When I log out
+    And I log in as "admin"
+    And I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
+    And I log out
+    And I log in as "teacher1"
     And I am on cleanupcourses view
     Then I should see "Course 2" in the "tool_cleanupcourses_remaining" "table"
     And I should see "C2" in the "tool_cleanupcourses_remaining" "table"
@@ -69,7 +73,11 @@ Feature: Add a workflow with a manual trigger and a duplicate step and test the 
       | Course full name           | Course 2                           |
     And I press "Save changes"
     Then I should see "Duplicated course will be available shortly." in the "tool_cleanupcourses_remaining" "table"
-    When I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
+    When I log out
+    And I log in as "admin"
+    And I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
+    And I log out
+    And I log in as "teacher1"
     And I am on cleanupcourses view
     Then I should see "Course 2" in the "tool_cleanupcourses_remaining" "table"
     And I should see "C2" in the "tool_cleanupcourses_remaining" "table"
