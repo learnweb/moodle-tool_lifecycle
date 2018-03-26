@@ -17,7 +17,7 @@
 /**
  * Display the list of active processes
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,16 +28,16 @@ $PAGE->set_context(context_system::instance());
 require_login(null, false);
 require_capability('moodle/site:config', context_system::instance());
 
-admin_externalpage_setup('tool_cleanupcourses_activeprocesses');
+admin_externalpage_setup('tool_lifecycle_activeprocesses');
 
-$PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/activeprocesses.php'));
+$PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/activeprocesses.php'));
 
-$table = new tool_cleanupcourses\table\active_processes_table('tool_cleanupcourses_active_processes');
+$table = new tool_lifecycle\table\active_processes_table('tool_lifecycle_active_processes');
 
-$PAGE->set_title(get_string('active_processes_list_header', 'tool_cleanupcourses'));
-$PAGE->set_heading(get_string('active_processes_list_header', 'tool_cleanupcourses'));
+$PAGE->set_title(get_string('active_processes_list_header', 'tool_lifecycle'));
+$PAGE->set_heading(get_string('active_processes_list_header', 'tool_lifecycle'));
 
-$renderer = $PAGE->get_renderer('tool_cleanupcourses');
+$renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
 

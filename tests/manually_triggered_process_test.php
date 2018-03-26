@@ -19,20 +19,20 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 
-use tool_cleanupcourses\manager\workflow_manager;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\manager\process_manager;
-use tool_cleanupcourses\cleanup_processor;
+use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\processor;
 
 /**
  * Manually triggers a process and tests if process courses proceeds the process as expected.
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
- * @group      tool_cleanupcourses
+ * @group      tool_lifecycle
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_manually_triggered_process_testcase extends \advanced_testcase {
+class tool_lifecycle_manually_triggered_process_testcase extends \advanced_testcase {
     const MANUAL_TRIGGER1_ICON = 't/up';
     const MANUAL_TRIGGER1_DISPLAYNAME = 'Up';
     const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
@@ -42,7 +42,7 @@ class tool_cleanupcourses_manually_triggered_process_testcase extends \advanced_
 
     public function setUp() {
         $this->resetAfterTest(true);
-        $generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
+        $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
         $triggersettings = new stdClass();
         $triggersettings->icon = self::MANUAL_TRIGGER1_ICON;
@@ -64,7 +64,7 @@ class tool_cleanupcourses_manually_triggered_process_testcase extends \advanced_
         $process = process_manager::manually_trigger_process($this->course->id, $this->trigger->id);
         $this->assertEquals(0, $process->stepindex);
 
-        $processor = new cleanup_processor();
+        $processor = new processor();
         $processor->process_courses();
         $process = process_manager::get_process_by_id($process->id);
 

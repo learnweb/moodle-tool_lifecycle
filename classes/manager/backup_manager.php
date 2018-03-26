@@ -17,11 +17,11 @@
 /**
  * Manager to create & restore backups for courses
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
 class backup_manager {
 
     /**
-     * Creates a course backup in a specific cleanup courses backup folder
+     * Creates a course backup in a specific life cycle backup folder
      * @param int $courseid id of the course the backup should be created for.
      * @return bool tells if the backup was completed successfully.
      */
@@ -44,20 +44,20 @@ class backup_manager {
             $record->courseid = $courseid;
             $record->fullname = $course->fullname;
             $record->shortname = $course->shortname;
-            $recordid = $DB->insert_record('tool_cleanupcourses_backups', $record, true);
+            $recordid = $DB->insert_record('tool_lifecycle_backups', $record, true);
             $record->id = $recordid;
 
             // Build filename.
             $archivefile = date("Y-m-d") . "-ID-{$recordid}-COURSE-{$courseid}.mbz";
 
             // Path of backup folder.
-            $path = $CFG->dataroot . '/cleanupcourses_backups';
+            $path = $CFG->dataroot . '/lifecycle_backups';
             // If the path doesn't exist, make it so!
             if (!is_dir($path)) {
                 umask(0000);
                 // Create the directory for Backups.
                 if (!mkdir($path, $CFG->directorypermissions, true)) {
-                    throw new \moodle_exception(get_string('errorbackuppath', 'tool_cleanupcourses'));
+                    throw new \moodle_exception(get_string('errorbackuppath', 'tool_lifecycle'));
                 }
             }
             // Perform Backup.
@@ -80,7 +80,7 @@ class backup_manager {
 
             $record->backupfile = $archivefile;
             $record->backupcreated = time();
-            $DB->update_record('tool_cleanupcourses_backups', $record, true);
+            $DB->update_record('tool_lifecycle_backups', $record, true);
 
             return true;
         } catch (\moodle_exception $e) {
@@ -92,7 +92,7 @@ class backup_manager {
 
     /**
      * Restores a course backup via a backupid
-     * The function copies the backup file from the cleanupcourse backup folder to a temporary folder.
+     * The function copies the backup file from the lifecycle backup folder to a temporary folder.
      * It then redirects to the backup/restore.php, which leads the user through the interactive restore process.
      * @param int $backupid id of backup entry.
      * @throws \moodle_exception
@@ -100,7 +100,7 @@ class backup_manager {
      */
     public static function restore_course_backup($backupid) {
         global $DB, $CFG;
-        $backuprecord = $DB->get_record('tool_cleanupcourses_backups', array('id' => $backupid));
+        $backuprecord = $DB->get_record('tool_lifecycle_backups', array('id' => $backupid));
 
         // Check if backup tmp dir exists.
         $backuptmpdir = $CFG->tempdir . '/backup';
@@ -112,10 +112,10 @@ class backup_manager {
         $targetfilename = \restore_controller::get_tempdir_name($backuprecord->courseid, get_admin()->id);
         $target = $backuptmpdir . '/' . $targetfilename;
         // Create the location of the actual backup file.
-        $source = $CFG->dataroot . '/cleanupcourses_backups/' . $backuprecord->backupfile;
+        $source = $CFG->dataroot . '/lifecycle_backups/' . $backuprecord->backupfile;
         // Check if the backup file exists.
         if (!file_exists($source)) {
-            throw new \moodle_exception('errorbackupfiledoesnotexist', 'tool_cleanupprocess', $source);
+            throw new \moodle_exception('errorbackupfiledoesnotexist', 'tool_lifecycle', $source);
         }
 
         // Copy the file to the backup temp dir.

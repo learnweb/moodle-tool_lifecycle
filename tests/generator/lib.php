@@ -16,24 +16,24 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use tool_cleanupcourses\entity\process;
-use tool_cleanupcourses\entity\trigger_subplugin;
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\entity\workflow;
-use tool_cleanupcourses\manager\settings_manager;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_lifecycle\entity\process;
+use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\entity\workflow;
+use tool_lifecycle\manager\settings_manager;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 /**
- * tool_cleanupcourses generator tests
+ * tool_lifecycle generator tests
  *
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_generator extends testing_module_generator {
+class tool_lifecycle_generator extends testing_module_generator {
 
     /**
      * Creates an artificial workflow without steps.
@@ -112,7 +112,7 @@ class tool_cleanupcourses_generator extends testing_module_generator {
         $record->timestepchanged = time();
         $record->stepindex = 0;
         $process = process::from_record($record);
-        $process->id = $DB->insert_record('tool_cleanupcourses_process', $process);
+        $process->id = $DB->insert_record('tool_lifecycle_process', $process);
         return $process;
     }
 }

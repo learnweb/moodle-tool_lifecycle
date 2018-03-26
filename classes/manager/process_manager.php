@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Manager for Cleanup Course Processes
+ * Manager for Life Cycle Processes
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
-use tool_cleanupcourses\entity\process;
+use tool_lifecycle\entity\process;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -44,7 +44,7 @@ class process_manager {
             $record->workflowid = $workflowid;
             $record->timestepchanged = time();
             $process = process::from_record($record);
-            $process->id = $DB->insert_record('tool_cleanupcourses_process', $process);
+            $process->id = $DB->insert_record('tool_lifecycle_process', $process);
             return $process;
         }
         return null;
@@ -60,12 +60,12 @@ class process_manager {
     public static function manually_trigger_process($courseid, $triggerid) {
         $trigger = trigger_manager::get_instance($triggerid);
         if (!$trigger) {
-            throw new \moodle_exception('trigger_does_not_exist', 'tool_cleanupcourses');
+            throw new \moodle_exception('trigger_does_not_exist', 'tool_lifecycle');
         }
         $workflow = workflow_manager::get_workflow($trigger->workflowid);
         if (!$workflow || !workflow_manager::is_active($workflow->id) || !workflow_manager::is_valid($workflow->id) ||
                 $workflow->manual !== true) {
-            throw new \moodle_exception('cannot_trigger_workflow_manually', 'tool_cleanupcourses');
+            throw new \moodle_exception('cannot_trigger_workflow_manually', 'tool_lifecycle');
         }
         return self::create_process($courseid, $workflow->id);
     }
@@ -76,7 +76,7 @@ class process_manager {
      */
     public static function get_processes() {
         global $DB;
-        $records = $DB->get_records('tool_cleanupcourses_process');
+        $records = $DB->get_records('tool_lifecycle_process');
         $processes = array();
         foreach ($records as $record) {
             $processes [] = process::from_record($record);
@@ -91,7 +91,7 @@ class process_manager {
      */
     public static function get_process_by_id($processid) {
         global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_process', array('id' => $processid));
+        $record = $DB->get_record('tool_lifecycle_process', array('id' => $processid));
         if ($record) {
             return process::from_record($record);
         } else {
@@ -106,7 +106,7 @@ class process_manager {
      */
     public static function count_processes_by_workflow($workflowid) {
         global $DB;
-        return $DB->count_records('tool_cleanupcourses_process', array('workflowid' => $workflowid));
+        return $DB->count_records('tool_lifecycle_process', array('workflowid' => $workflowid));
     }
 
     /**
@@ -121,7 +121,7 @@ class process_manager {
             $process->stepindex++;
             $process->waiting = false;
             $process->timestepchanged = time();
-            $DB->update_record('tool_cleanupcourses_process', $process);
+            $DB->update_record('tool_lifecycle_process', $process);
             return true;
         } else {
             self::remove_process($process);
@@ -136,7 +136,7 @@ class process_manager {
     public static function set_process_waiting(&$process) {
         global $DB;
         $process->waiting = true;
-        $DB->update_record('tool_cleanupcourses_process', $process);
+        $DB->update_record('tool_lifecycle_process', $process);
     }
 
     /**
@@ -146,7 +146,7 @@ class process_manager {
     public static function rollback_process($process) {
         global $CFG;
         // TODO: Add logic to revert changes made by steps.
-        delayed_courses_manager::set_course_delayed($process->courseid, $CFG->cleanupcourses_duration);
+        delayed_courses_manager::set_course_delayed($process->courseid, $CFG->lifecycle_duration);
         self::remove_process($process);
     }
 
@@ -156,13 +156,13 @@ class process_manager {
      */
     private static function remove_process($process) {
         global $DB;
-        $DB->delete_records('tool_cleanupcourses_procdata', array('processid' => $process->id));
-        $DB->delete_records('tool_cleanupcourses_process', (array) $process);
+        $DB->delete_records('tool_lifecycle_procdata', array('processid' => $process->id));
+        $DB->delete_records('tool_lifecycle_process', (array) $process);
     }
 
     public static function get_process_by_course_id($courseid) {
         global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_process', array('courseid' => $courseid));
+        $record = $DB->get_record('tool_lifecycle_process', array('courseid' => $courseid));
         if ($record) {
             return process::from_record($record);
         } else {

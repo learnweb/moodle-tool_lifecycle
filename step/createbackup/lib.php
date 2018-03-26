@@ -18,15 +18,15 @@
  * Interface for the subplugintype step
  * It has to be implemented by all subplugins.
  *
- * @package tool_cleanupcourses_step
+ * @package tool_lifecycle_step
  * @subpackage createbackup
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\step;
+namespace tool_lifecycle\step;
 
-use tool_cleanupcourses\response\step_response;
-use tool_cleanupcourses\manager\backup_manager;
+use tool_lifecycle\response\step_response;
+use tool_lifecycle\manager\backup_manager;
 
 defined('MOODLE_INTERNAL') || die();
 

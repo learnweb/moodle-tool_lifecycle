@@ -15,18 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for duplicate step
+ * Lang strings for dummy step
  *
- * @package tool_cleanupcourses_step
- * @subpackage duplicate
- * @copyright  2018 Tobias Reischmann WWU
+ * @package tool_lifecycle_step
+ * @subpackage dummy
+ * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Duplicate Step';
-
-$string['duplicate_form'] = 'Enter data';
-
-$string['duplicate_course_header'] = 'Duplicate Course';
-$string['status_message_duplication'] = 'Duplicated course will be available shortly.';
-$string['status_message_form'] = 'Additional information required';
+$string['pluginname'] = 'Dummy Step';

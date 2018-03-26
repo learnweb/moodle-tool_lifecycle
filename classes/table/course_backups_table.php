@@ -17,11 +17,11 @@
 /**
  * Table listing course backups
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\table;
+namespace tool_lifecycle\table;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -34,7 +34,7 @@ class course_backups_table extends \table_sql {
         global $PAGE;
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
         $this->set_sql('b.*',
-            '{tool_cleanupcourses_backups} b',
+            '{tool_lifecycle_backups} b',
             "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->init();
@@ -46,8 +46,8 @@ class course_backups_table extends \table_sql {
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
-            get_string('backupcreated', 'tool_cleanupcourses'),
-            get_string('tools', 'tool_cleanupcourses')]);
+            get_string('backupcreated', 'tool_lifecycle'),
+            get_string('tools', 'tool_lifecycle')]);
         $this->setup();
     }
 
@@ -106,8 +106,8 @@ class course_backups_table extends \table_sql {
      */
     public function col_tools($row) {
         return \html_writer::link(
-            new \moodle_url('/admin/tool/cleanupcourses/restore.php', array('backupid' => $row->id)),
-                get_string('restore', 'tool_cleanupcourses')
+            new \moodle_url('/admin/tool/lifecycle/restore.php', array('backupid' => $row->id)),
+                get_string('restore', 'tool_lifecycle')
         );
     }
 }

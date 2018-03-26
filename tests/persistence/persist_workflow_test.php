@@ -18,18 +18,18 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
 
-use \tool_cleanupcourses\entity\workflow;
-use \tool_cleanupcourses\manager\workflow_manager;
+use \tool_lifecycle\entity\workflow;
+use \tool_lifecycle\manager\workflow_manager;
 
 /**
  * Tests creating storing and retrieving a workflow object.
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
- * @group      tool_cleanupcourses
+ * @group      tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_persist_workflow_testcase extends \advanced_testcase {
+class tool_lifecycle_persist_workflow_testcase extends \advanced_testcase {
 
     /** workflow */
     private $workflow;

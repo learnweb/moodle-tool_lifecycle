@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Step definition for cleanup courses.
+ * Step definition for life cycle.
  *
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
  * @copyright  2018 Tobias Reischmann
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,14 +29,14 @@ use Behat\Mink\Exception\ExpectationException;
 require_once(__DIR__ . '/../../../../../lib/behat/behat_base.php');
 
 /**
- * Step definition for cleanup courses.
+ * Step definition for life cycle.
  *
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
  * @copyright  2018 Tobias Reischmann
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class behat_tool_cleanupcourses extends behat_base {
+class behat_tool_lifecycle extends behat_base {
 
     /**
      * Click on an entry in the tools menu of a table.
@@ -204,7 +204,7 @@ class behat_tool_cleanupcourses extends behat_base {
      * @throws ExpectationException
      */
     public function the_step_should_be_at_the_position($stepname, $position) {
-        $xpathelement = "//table/tbody/tr[@id = 'tool_cleanupcourses_workflows_r$position']/td[contains(text(),'$stepname')]";
+        $xpathelement = "//table/tbody/tr[@id = 'tool_lifecycle_workflows_r$position']/td[contains(text(),'$stepname')]";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -218,9 +218,9 @@ class behat_tool_cleanupcourses extends behat_base {
     /**
      * Opens Teacher's Courses Overview.
      *
-     * @Given /^I am on cleanupcourses view$/
+     * @Given /^I am on lifecycle view$/
      */
-    public function i_am_on_cleanupcourses_view() {
-        $this->getSession()->visit($this->locate_path('/admin/tool/cleanupcourses/view.php'));
+    public function i_am_on_lifecycle_view() {
+        $this->getSession()->visit($this->locate_path('/admin/tool/lifecycle/view.php'));
     }
 }

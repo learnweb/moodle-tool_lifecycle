@@ -15,24 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Update script for course cleanup
+ * Update script for lifecycle plugin
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-function xmldb_tool_cleanupcourses_upgrade($oldversion) {
+function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     global $DB;
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2017081101) {
 
-        // Create table tool_cleanupcourses_workflow.
-        $table = new xmldb_table('tool_cleanupcourses_workflow');
+        // Create table tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
         $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'id');
         $table->add_field('active', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'title');
@@ -44,8 +44,8 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->create_table($table);
         }
 
-        // Changing structure of table tool_cleanupcourses_step.
-        $table = new xmldb_table('tool_cleanupcourses_step');
+        // Changing structure of table tool_lifecycle_step.
+        $table = new xmldb_table('tool_lifecycle_step');
         $field = new xmldb_field('followedby');
 
         // Conditionally drop followedby field.
@@ -54,7 +54,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         }
 
         $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'subpluginname');
-        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_lifecycle_workflow', array('id'));
 
         // Conditionally create the field.
         if (!$dbman->field_exists($table, $field)) {
@@ -69,8 +69,8 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Changing structure of table tool_cleanupcourses_trigger.
-        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        // Changing structure of table tool_lifecycle_trigger.
+        $table = new xmldb_table('tool_lifecycle_trigger');
         $field = new xmldb_field('followedby');
 
         // Conditionally drop followedby field.
@@ -80,7 +80,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
 
         // Add workflowfield to trigger.
         $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'enabled');
-        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_lifecycle_workflow', array('id'));
 
         // Conditionally create the field.
         if (!$dbman->field_exists($table, $field)) {
@@ -88,8 +88,8 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_key($table, $key);
         }
 
-        // Changing structure of table tool_cleanupcourses_process.
-        $table = new xmldb_table('tool_cleanupcourses_process');
+        // Changing structure of table tool_lifecycle_process.
+        $table = new xmldb_table('tool_lifecycle_process');
         $field = new xmldb_field('stepid');
 
         // Conditionally drop followedby field.
@@ -98,7 +98,7 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
         }
 
         $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'courseid');
-        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_lifecycle_workflow', array('id'));
 
         // Conditionally create the field.
         if (!$dbman->field_exists($table, $field)) {
@@ -113,14 +113,14 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2017081101, 'tool', 'cleanupcourses');
+        // lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2017081101, 'tool', 'lifecycle');
     }
 
     if ($oldversion < 2018021300) {
 
-        // Define field sortindex to be added to tool_cleanupcourses_workflow.
-        $table = new xmldb_table('tool_cleanupcourses_workflow');
+        // Define field sortindex to be added to tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
         $field = new xmldb_field('sortindex', XMLDB_TYPE_INTEGER, '3', null, null, null, null, 'timeactive');
 
         // Conditionally launch add field sortindex.
@@ -128,14 +128,14 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2018021300, 'tool', 'cleanupcourses');
+        // lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2018021300, 'tool', 'lifecycle');
     }
 
     if ($oldversion < 2018021301) {
 
-        // Define field type to be added to tool_cleanupcourses_settings.
-        $table = new xmldb_table('tool_cleanupcourses_settings');
+        // Define field type to be added to tool_lifecycle_settings.
+        $table = new xmldb_table('tool_lifecycle_settings');
         $field = new xmldb_field('type', XMLDB_TYPE_CHAR, '7', null, XMLDB_NOTNULL, null, null, 'instanceid');
 
         // Conditionally launch add field type.
@@ -143,16 +143,16 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        $DB->execute('update {tool_cleanupcourses_settings} set type = \'step\'');
+        $DB->execute('update {tool_lifecycle_settings} set type = \'step\'');
 
-        // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2018021301, 'tool', 'cleanupcourses');
+        // lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2018021301, 'tool', 'lifecycle');
     }
 
     if ($oldversion < 2018021302) {
 
-        // Define field workflowid to be added to tool_cleanupcourses_trigger.
-        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        // Define field workflowid to be added to tool_lifecycle_trigger.
+        $table = new xmldb_table('tool_lifecycle_trigger');
         $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'subpluginname');
 
         // Conditionally launch add field workflowid.
@@ -160,8 +160,8 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Define field instancename to be added to tool_cleanupcourses_trigger.
-        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        // Define field instancename to be added to tool_lifecycle_trigger.
+        $table = new xmldb_table('tool_lifecycle_trigger');
         $field = new xmldb_field('instancename', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, 'workflowid');
 
         // Conditionally launch add field instancename.
@@ -169,8 +169,8 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Define field enabled to be dropped from tool_cleanupcourses_trigger.
-        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        // Define field enabled to be dropped from tool_lifecycle_trigger.
+        $table = new xmldb_table('tool_lifecycle_trigger');
         $field = new xmldb_field('enabled');
 
         // Conditionally launch drop field enabled.
@@ -178,8 +178,8 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->drop_field($table, $field);
         }
 
-        // Define field sortindex to be dropped from tool_cleanupcourses_trigger.
-        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        // Define field sortindex to be dropped from tool_lifecycle_trigger.
+        $table = new xmldb_table('tool_lifecycle_trigger');
         $field = new xmldb_field('sortindex');
 
         // Conditionally launch drop field sortindex.
@@ -187,8 +187,8 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->drop_field($table, $field);
         }
 
-        // Define field sortindex to be dropped from tool_cleanupcourses_trigger.
-        $table = new xmldb_table('tool_cleanupcourses_trigger');
+        // Define field sortindex to be dropped from tool_lifecycle_trigger.
+        $table = new xmldb_table('tool_lifecycle_trigger');
         $field = new xmldb_field('sortindex');
 
         // Conditionally launch drop field sortindex.
@@ -196,21 +196,21 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->drop_field($table, $field);
         }
 
-        // Define key workflowid_fk (foreign) to be added to tool_cleanupcourses_trigger.
-        $table = new xmldb_table('tool_cleanupcourses_trigger');
-        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_cleanupcourses_workflow', array('id'));
+        // Define key workflowid_fk (foreign) to be added to tool_lifecycle_trigger.
+        $table = new xmldb_table('tool_lifecycle_trigger');
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_lifecycle_workflow', array('id'));
 
         // Launch add key workflowid_fk.
         $dbman->add_key($table, $key);
 
-        // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2018021302, 'tool', 'cleanupcourses');
+        // lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2018021302, 'tool', 'lifecycle');
     }
 
     if ($oldversion < 2018022001) {
 
-        // Define field manual to be added to tool_cleanupcourses_workflow.
-        $table = new xmldb_table('tool_cleanupcourses_workflow');
+        // Define field manual to be added to tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
         $field = new xmldb_field('manual', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'sortindex');
 
         // Conditionally launch add field manual.
@@ -218,60 +218,60 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2018022001, 'tool', 'cleanupcourses');
+        // lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2018022001, 'tool', 'lifecycle');
     }
 
     if ($oldversion < 2018022002) {
 
-        // Define field manual to be added to tool_cleanupcourses_workflow.
-        $table = new xmldb_table('tool_cleanupcourses_procdata');
+        // Define field manual to be added to tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_procdata');
         $field = new xmldb_field('key', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, 'subpluginname');
 
         // Launch rename field key.
         $dbman->rename_field($table, $field, 'keyname');
 
-        // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2018022002, 'tool', 'cleanupcourses');
+        // lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2018022002, 'tool', 'lifecycle');
     }
 
     if ($oldversion < 2018022005) {
-        $workflows = \tool_cleanupcourses\manager\workflow_manager::get_active_workflows();
+        $workflows = \tool_lifecycle\manager\workflow_manager::get_active_workflows();
         foreach ($workflows as $workflow) {
             if ($workflow->manual === null) {
-                $trigger = \tool_cleanupcourses\manager\trigger_manager::get_trigger_for_workflow($workflow->id);
-                $lib = \tool_cleanupcourses\manager\lib_manager::get_trigger_lib($trigger->subpluginname);
+                $trigger = \tool_lifecycle\manager\trigger_manager::get_trigger_for_workflow($workflow->id);
+                $lib = \tool_lifecycle\manager\lib_manager::get_trigger_lib($trigger->subpluginname);
                 $workflow->manual = $lib->is_manual_trigger();
-                \tool_cleanupcourses\manager\workflow_manager::insert_or_update($workflow);
+                \tool_lifecycle\manager\workflow_manager::insert_or_update($workflow);
             }
         }
-        // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2018022005, 'tool', 'cleanupcourses');
+        // lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2018022005, 'tool', 'lifecycle');
     }
 
     if ($oldversion < 2018022101) {
 
-        // Define key courseid_fk (foreign) to be dropped form tool_cleanupcourses_process.
-        $table = new xmldb_table('tool_cleanupcourses_process');
+        // Define key courseid_fk (foreign) to be dropped form tool_lifecycle_process.
+        $table = new xmldb_table('tool_lifecycle_process');
         $key = new xmldb_key('courseid_fk', XMLDB_KEY_FOREIGN, array('courseid'), 'course', array('id'));
 
         // Launch drop key courseid_fk.
         $dbman->drop_key($table, $key);
 
-        // Define key courseid_fk (foreign-unique) to be added to tool_cleanupcourses_process.
+        // Define key courseid_fk (foreign-unique) to be added to tool_lifecycle_process.
         $key = new xmldb_key('courseid_fk', XMLDB_KEY_FOREIGN_UNIQUE, array('courseid'), 'course', array('id'));
 
         // Launch add key courseid_fk.
         $dbman->add_key($table, $key);
 
-        // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2018022101, 'tool', 'cleanupcourses');
+        // lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2018022101, 'tool', 'lifecycle');
     }
 
     if ($oldversion < 2018022102) {
 
-        // Define field displaytitle to be added to tool_cleanupcourses_workflow.
-        $table = new xmldb_table('tool_cleanupcourses_workflow');
+        // Define field displaytitle to be added to tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
         $field = new xmldb_field('displaytitle', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'manual');
 
         // Conditionally launch add field displaytitle.
@@ -279,8 +279,8 @@ function xmldb_tool_cleanupcourses_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Cleanupcourses savepoint reached.
-        upgrade_plugin_savepoint(true, 2018022102, 'tool', 'cleanupcourses');
+        // lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2018022102, 'tool', 'lifecycle');
     }
 
     return true;

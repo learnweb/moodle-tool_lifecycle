@@ -17,14 +17,14 @@
 /**
  * Offers the possibility to enter a new coursename
  *
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace cleanupcoursesstep_duplicate;
+namespace lifecyclestep_duplicate;
 
-use tool_cleanupcourses\manager\process_manager;
-use tool_cleanupcourses\step\interactionduplicate;
+use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\step\interactionduplicate;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -70,7 +70,7 @@ class form_duplicate extends \moodleform {
         $mform->setDefault('action', 'duplicateform');
 
         $mform->addElement('header', 'duplicate_course_header',
-            get_string('duplicate_course_header', 'cleanupcoursesstep_duplicate'));
+            get_string('duplicate_course_header', 'lifecyclestep_duplicate'));
 
         $elementname = 'shortname';
         $mform->addElement('text', $elementname, get_string('shortnamecourse'));

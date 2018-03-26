@@ -17,17 +17,17 @@
 /**
  * Table listing all courses for a specific user and a specific subplugin
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\table;
+namespace tool_lifecycle\table;
 
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\manager\interaction_manager;
-use tool_cleanupcourses\manager\process_manager;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\manager\interaction_manager;
+use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -106,6 +106,6 @@ abstract class interaction_table extends \table_sql {
 
         $this->print_initials_bar();
 
-        echo $OUTPUT->box(get_string('nocoursestodisplay', 'tool_cleanupcourses'));
+        echo $OUTPUT->box(get_string('nocoursestodisplay', 'tool_lifecycle'));
     }
 }

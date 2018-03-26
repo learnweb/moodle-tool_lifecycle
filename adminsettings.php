@@ -17,7 +17,7 @@
 /**
  * Displays the tables of active and inactive workflow definitions and handles all action associated with it.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,7 +29,7 @@ require_login(null, false);
 require_capability('moodle/site:config', context_system::instance());
 
 // Create the class for this controller.
-$adminsettings = new tool_cleanupcourses\admin_settings();
+$adminsettings = new tool_lifecycle\admin_settings();
 
 // Execute the controller.
 $adminsettings->execute(optional_param('action', null, PARAM_TEXT),

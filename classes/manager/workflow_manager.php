@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Manager for Cleanup Course Workflows
+ * Manager for Life Cycle Workflows
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
-use tool_cleanupcourses\entity\trigger_subplugin;
-use tool_cleanupcourses\entity\workflow;
-use tool_cleanupcourses\local\data\manual_trigger_tool;
+use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\entity\workflow;
+use tool_lifecycle\local\data\manual_trigger_tool;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -39,9 +39,9 @@ class workflow_manager {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         if ($workflow->id) {
-            $DB->update_record('tool_cleanupcourses_workflow', $workflow);
+            $DB->update_record('tool_lifecycle_workflow', $workflow);
         } else {
-            $workflow->id = $DB->insert_record('tool_cleanupcourses_workflow', $workflow);
+            $workflow->id = $DB->insert_record('tool_lifecycle_workflow', $workflow);
         }
         $transaction->allow_commit();
     }
@@ -54,7 +54,7 @@ class workflow_manager {
         global $DB;
         trigger_manager::remove_instances_of_workflow($workflowid);
         step_manager::remove_instances_of_workflow($workflowid);
-        $DB->delete_records('tool_cleanupcourses_workflow', array('id' => $workflowid));
+        $DB->delete_records('tool_lifecycle_workflow', array('id' => $workflowid));
     }
 
     /**
@@ -64,7 +64,7 @@ class workflow_manager {
      */
     public static function get_workflow($workflowid) {
         global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_workflow', array('id' => $workflowid));
+        $record = $DB->get_record('tool_lifecycle_workflow', array('id' => $workflowid));
         if ($record) {
             $workflow = workflow::from_record($record);
             return $workflow;
@@ -79,7 +79,7 @@ class workflow_manager {
      */
     public static function get_active_workflows() {
         global $DB;
-        $records = $DB->get_records('tool_cleanupcourses_workflow', array('active' => true),
+        $records = $DB->get_records('tool_lifecycle_workflow', array('active' => true),
             'sortindex ASC');
         $result = array();
         foreach ($records as $record) {
@@ -94,7 +94,7 @@ class workflow_manager {
      */
     public static function get_active_automatic_workflows() {
         global $DB;
-        $records = $DB->get_records('tool_cleanupcourses_workflow', array('active' => true, 'manual' => false),
+        $records = $DB->get_records('tool_lifecycle_workflow', array('active' => true, 'manual' => false),
             'sortindex ASC');
         $result = array();
         foreach ($records as $record) {
@@ -109,7 +109,7 @@ class workflow_manager {
      */
     public static function get_active_manual_workflow_triggers() {
         global $DB;
-        $sql = 'SELECT t.* FROM {tool_cleanupcourses_workflow} w JOIN {tool_cleanupcourses_trigger} t ON t.workflowid = w.id'.
+        $sql = 'SELECT t.* FROM {tool_lifecycle_workflow} w JOIN {tool_lifecycle_trigger} t ON t.workflowid = w.id'.
         ' WHERE w.active = ? AND w.manual = ?';
         $records = $DB->get_records_sql($sql, array(true, true));
         $result = array();
@@ -142,7 +142,7 @@ class workflow_manager {
         global $DB, $OUTPUT;
         if (!self::is_valid($workflowid)) {
             echo $OUTPUT->notification(
-                get_string('invalid_workflow_cannot_be_activated', 'tool_cleanupcourses'),
+                get_string('invalid_workflow_cannot_be_activated', 'tool_lifecycle'),
                 'warning');
             return;
         }
@@ -183,7 +183,7 @@ class workflow_manager {
         }
         if ($action === ACTION_WORKFLOW_DELETE) {
             if (self::is_active($workflowid)) {
-                echo $OUTPUT->notification(get_string('active_workflow_not_removeable', 'tool_cleanupcourses')
+                echo $OUTPUT->notification(get_string('active_workflow_not_removeable', 'tool_lifecycle')
                     , 'warning');
 
             } else {
@@ -220,7 +220,7 @@ class workflow_manager {
         }
         $transaction = $DB->start_delegated_transaction();
 
-        $otherrecord = $DB->get_record('tool_cleanupcourses_workflow',
+        $otherrecord = $DB->get_record('tool_lifecycle_workflow',
             array(
                 'sortindex' => $otherindex)
         );
@@ -279,7 +279,7 @@ class workflow_manager {
     public static function duplicate_workflow($workflowid) {
         $oldworkflow = self::get_workflow($workflowid);
         try {
-            $newtitle = get_string('workflow_duplicate_title', 'tool_cleanupcourses', $oldworkflow->title);
+            $newtitle = get_string('workflow_duplicate_title', 'tool_lifecycle', $oldworkflow->title);
         } catch (\coding_exception $e) {
             $newtitle = $oldworkflow->title;
         }

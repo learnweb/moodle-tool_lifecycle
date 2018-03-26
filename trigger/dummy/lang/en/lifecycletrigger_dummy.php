@@ -17,12 +17,10 @@
 /**
  * Lang strings for start date delay trigger
  *
- * @package tool_cleanupcourses_trigger
+ * @package tool_lifecycle_trigger
  * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Start date delay trigger';
-
-$string['delay'] = 'Delay from start of course til cleanup';
+$string['pluginname'] = 'Dummy trigger';

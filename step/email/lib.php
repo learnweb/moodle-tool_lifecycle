@@ -18,18 +18,18 @@
  * Interface for the subplugintype step
  * It has to be implemented by all subplugins.
  *
- * @package tool_cleanupcourses_step
+ * @package tool_lifecycle_step
  * @subpackage email
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\step;
+namespace tool_lifecycle\step;
 
-use tool_cleanupcourses\manager\process_manager;
-use tool_cleanupcourses\manager\settings_manager;
-use tool_cleanupcourses\response\step_response;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\process_data_manager;
+use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\manager\settings_manager;
+use tool_lifecycle\response\step_response;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\process_data_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -54,13 +54,13 @@ class email extends libbase {
     public function process_course($processid, $instanceid, $course) {
         global $DB;
         $coursecontext = \context_course::instance($course->id);
-        $userstobeinformed = get_users_by_capability($coursecontext, 'cleanupcoursesstep/email:preventdeletion');
+        $userstobeinformed = get_users_by_capability($coursecontext, 'lifecyclestep/email:preventdeletion');
         foreach ($userstobeinformed as $user) {
             $record = new \stdClass();
             $record->touser = $user->id;
             $record->courseid = $course->id;
             $record->instanceid = $instanceid;
-            $DB->insert_record('cleanupcoursesstep_email', $record);
+            $DB->insert_record('lifecyclestep_email', $record);
         }
         return step_response::waiting();
     }
@@ -96,12 +96,12 @@ class email extends libbase {
             // Format the raw string in the DB to FORMAT_HTML.
             $settings['contenthtml'] = format_text($settings['contenthtml'], FORMAT_HTML);
 
-            $userstobeinformed = $DB->get_records('cleanupcoursesstep_email',
+            $userstobeinformed = $DB->get_records('lifecyclestep_email',
                 array('instanceid' => $step->id), '', 'distinct touser');
             foreach ($userstobeinformed as $userrecord) {
                 $user = \core_user::get_user($userrecord->touser);
                 $transaction = $DB->start_delegated_transaction();
-                $mailentries = $DB->get_records('cleanupcoursesstep_email',
+                $mailentries = $DB->get_records('lifecyclestep_email',
                     array('instanceid' => $step->id,
                         'touser' => $user->id));
 
@@ -112,7 +112,7 @@ class email extends libbase {
                     $contenthtml = $parsedsettings['contenthtml'];
                     // TODO: use course info to parse content template!
                     email_to_user($user, \core_user::get_noreply_user(), $subject, $content, $contenthtml);
-                    $DB->delete_records('cleanupcoursesstep_email',
+                    $DB->delete_records('lifecyclestep_email',
                     array('instanceid' => $step->id,
                         'touser' => $user->id));
                     $transaction->allow_commit();
@@ -142,7 +142,7 @@ class email extends libbase {
         $replacements [] = $user->lastname;
 
         // Replace link to interaction page.
-        $interactionlink = new \moodle_url('admin/tool/cleanupcourses/view.php');
+        $interactionlink = new \moodle_url('admin/tool/lifecycle/view.php');
         $url = $CFG->wwwroot . '/' . $interactionlink->out();
         $patterns [] = '##link##';
         $replacements [] = $url;
@@ -211,18 +211,18 @@ class email extends libbase {
 
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'responsetimeout';
-        $mform->addElement('duration', $elementname, get_string('email_responsetimeout', 'cleanupcoursesstep_email'));
+        $mform->addElement('duration', $elementname, get_string('email_responsetimeout', 'lifecyclestep_email'));
         $mform->setType($elementname, PARAM_INT);
         $elementname = 'subject';
-        $mform->addElement('text', $elementname, get_string('email_subject', 'cleanupcoursesstep_email'));
+        $mform->addElement('text', $elementname, get_string('email_subject', 'lifecyclestep_email'));
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'content';
-        $mform->addElement('textarea', $elementname, get_string('email_content', 'cleanupcoursesstep_email'));
+        $mform->addElement('textarea', $elementname, get_string('email_content', 'lifecyclestep_email'));
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'contenthtml';
-        $mform->addElement('editor', $elementname, get_string('email_content_html', 'cleanupcoursesstep_email'));
+        $mform->addElement('editor', $elementname, get_string('email_content_html', 'lifecyclestep_email'));
         $mform->setType($elementname, PARAM_RAW);
     }
 

@@ -15,12 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for delete course step
+ * Lang strings for start date delay trigger
  *
- * @package tool_cleanupcourses_step
- * @subpackage deletecourse
+ * @package tool_lifecycle_trigger
+ * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Delete Course Step';
+$string['pluginname'] = 'Start date delay trigger';
+
+$string['delay'] = 'Delay from start of course til starting a process';

@@ -17,16 +17,16 @@
 /**
  * Table listing all active automatically triggered workflows.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\table;
+namespace tool_lifecycle\table;
 
-use tool_cleanupcourses\manager\process_manager;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -42,7 +42,7 @@ class active_automatic_workflows_table extends workflow_table {
         list($sqlwheremanual, $paramsmanual) = $DB->get_in_or_equal(false);
         $sqlwhere = 'active ' . $sqlwhereactive . ' AND manual ' . $sqlwheremanual;
         $params[1] = $paramsmanual[0];
-        $this->set_sql("id, title, displaytitle, timeactive, sortindex", '{tool_cleanupcourses_workflow}',
+        $this->set_sql("id, title, displaytitle, timeactive, sortindex", '{tool_lifecycle_workflow}',
             $sqlwhere, $params);
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
@@ -52,12 +52,12 @@ class active_automatic_workflows_table extends workflow_table {
     public function init() {
         $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'sortindex', 'tools']);
         $this->define_headers([
-            get_string('workflow_title', 'tool_cleanupcourses'),
-            get_string('workflow_timeactive', 'tool_cleanupcourses'),
-            get_string('trigger', 'tool_cleanupcourses'),
-            get_string('workflow_processes', 'tool_cleanupcourses'),
-            get_string('workflow_sortindex', 'tool_cleanupcourses'),
-            get_string('workflow_tools', 'tool_cleanupcourses'),
+            get_string('workflow_title', 'tool_lifecycle'),
+            get_string('workflow_timeactive', 'tool_lifecycle'),
+            get_string('trigger', 'tool_lifecycle'),
+            get_string('workflow_processes', 'tool_lifecycle'),
+            get_string('workflow_sortindex', 'tool_lifecycle'),
+            get_string('workflow_tools', 'tool_lifecycle'),
             ]);
         $this->sortable(false, 'sortindex');
         $this->setup();

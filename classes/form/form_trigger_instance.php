@@ -17,17 +17,17 @@
 /**
  * Offers the possibility to add or modify a step instance.
  *
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\form;
+namespace tool_lifecycle\form;
 
-use tool_cleanupcourses\entity\trigger_subplugin;
-use tool_cleanupcourses\manager\lib_manager;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\manager\workflow_manager;
-use tool_cleanupcourses\trigger\base;
+use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\manager\lib_manager;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\trigger\base;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -109,10 +109,10 @@ class form_trigger_instance extends \moodleform {
         $mform->setType('action', PARAM_TEXT);
         $mform->setDefault('action', ACTION_TRIGGER_INSTANCE_FORM);
 
-        $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_cleanupcourses'));
+        $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_lifecycle'));
 
         $elementname = 'instancename';
-        $mform->addElement('text', $elementname, get_string('trigger_instancename', 'tool_cleanupcourses'));
+        $mform->addElement('text', $elementname, get_string('trigger_instancename', 'tool_lifecycle'));
         $mform->setType($elementname, PARAM_TEXT);
 
         // If workflow is active, then all trigger types have to be used to also show the preset triggers.
@@ -124,13 +124,13 @@ class form_trigger_instance extends \moodleform {
 
         $elementname = 'subpluginname';
         $mform->addElement('select', $elementname,
-            get_string('trigger_subpluginname', 'tool_cleanupcourses'),
+            get_string('trigger_subpluginname', 'tool_lifecycle'),
             $triggers);
         $mform->setType($elementname, PARAM_TEXT);
 
         // Insert the subplugin specific settings.
         if (isset($this->lib) && !empty($this->lib->instance_settings())) {
-            $mform->addElement('header', 'trigger_settings_header', get_string('trigger_settings_header', 'tool_cleanupcourses'));
+            $mform->addElement('header', 'trigger_settings_header', get_string('trigger_settings_header', 'tool_lifecycle'));
             $this->lib->extend_add_instance_form_definition($mform);
         }
 

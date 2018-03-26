@@ -1,4 +1,4 @@
-@tool @tool_cleanupcourses
+@tool @tool_lifecycle
 Feature: Add a manual trigger and test view and actions as a teacher
 
   Background:
@@ -18,12 +18,12 @@ Feature: Add a manual trigger and test view and actions as a teacher
 
   Scenario: Test displayed action tools for different capabilities
     Given I log in as "admin"
-    # Allow teacher role to view courses in cleanup courses view
+    # Allow teacher role to view courses in life cycle view
     # to allow for different visibility levels of manual tools.
     And I set the following system permissions of "Non-editing teacher" role:
       | capability | permission |
-      | tool/cleanupcourses:managecourses | Allow |
-    And I navigate to "Workflow Settings" node in "Site administration > Plugins > Cleanup Courses"
+      | tool/lifecycle:managecourses | Allow |
+    And I navigate to "Workflow Settings" node in "Site administration > Life Cycle"
     And I press "Add Workflow"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
@@ -43,17 +43,17 @@ Feature: Add a manual trigger and test view and actions as a teacher
     And I press "Activate"
     And I log out
     And I log in as "teacher1"
-    And I am on cleanupcourses view
+    And I am on lifecycle view
     Then I should see "Course 1"
     And I should see "Course 2"
     And I should see "Course 3"
-    And I should see the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
-    And I should see the tool "Delete course" in the "Course 2" row of the "tool_cleanupcourses_remaining" table
-    And I should not see the tool "Delete course" in the "Course 3" row of the "tool_cleanupcourses_remaining" table
+    And I should see the tool "Delete course" in the "Course 1" row of the "tool_lifecycle_remaining" table
+    And I should see the tool "Delete course" in the "Course 2" row of the "tool_lifecycle_remaining" table
+    And I should not see the tool "Delete course" in the "Course 3" row of the "tool_lifecycle_remaining" table
 
   Scenario: Manually trigger backup and course deletion
     Given I log in as "admin"
-    And I navigate to "Workflow Settings" node in "Site administration > Plugins > Cleanup Courses"
+    And I navigate to "Workflow Settings" node in "Site administration > Life Cycle"
     And I press "Add Workflow"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
@@ -79,19 +79,19 @@ Feature: Add a manual trigger and test view and actions as a teacher
     And I press "Activate"
     And I log out
     And I log in as "teacher1"
-    And I am on cleanupcourses view
-    Then I should see the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
-    When I click on the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
+    And I am on lifecycle view
+    Then I should see the tool "Delete course" in the "Course 1" row of the "tool_lifecycle_remaining" table
+    When I click on the tool "Delete course" in the "Course 1" row of the "tool_lifecycle_remaining" table
     Then I should see "Course 1"
     And I should see "Course 2"
-    And I should not see the tool "Delete course" in the "Course 1" row of the "tool_cleanupcourses_remaining" table
-    And I should see the tool "Delete course" in the "Course 2" row of the "tool_cleanupcourses_remaining" table
-    When I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
-    And I am on cleanupcourses view
+    And I should not see the tool "Delete course" in the "Course 1" row of the "tool_lifecycle_remaining" table
+    And I should see the tool "Delete course" in the "Course 2" row of the "tool_lifecycle_remaining" table
+    When I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I am on lifecycle view
     Then I should not see "Course 1"
     And I should see "Course 2"
     When I log out
     And I log in as "admin"
-    And I navigate to "Course Backups" node in "Site administration > Plugins > Cleanup Courses"
+    And I navigate to "Course Backups" node in "Site administration > Life Cycle"
     Then I should see "Course 1"
     And I should not see "Course 2"

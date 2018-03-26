@@ -15,12 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for create backup step
+ * Lang strings for manual trigger
  *
- * @package tool_cleanupcourses_step
- * @subpackage createbackup
- * @copyright  2017 Tobias Reischmann WWU
+ * @package tool_lifecycle_trigger
+ * @subpackage manual
+ * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Create Backup Step';
+$string['pluginname'] = 'Manual trigger';
+$string['setting_capability'] = 'Capability';
+$string['setting_icon'] = 'Icon';
+$string['setting_displayname'] = 'Action name';

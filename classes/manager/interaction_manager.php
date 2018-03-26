@@ -17,14 +17,14 @@
 /**
  * Manager to handle interactions by users
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
-use tool_cleanupcourses\cleanup_processor;
-use tool_cleanupcourses\response\step_interactive_response;
+use tool_lifecycle\processor;
+use tool_lifecycle\response\step_interactive_response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -55,10 +55,10 @@ class interaction_manager {
         $step = step_manager::get_step_instance($stepid);
         $process = process_manager::get_process_by_id($processid);
         if (!$step) {
-            throw new \invalid_parameter_exception(get_string('nostepfound', 'tool_cleanupcourses'));
+            throw new \invalid_parameter_exception(get_string('nostepfound', 'tool_lifecycle'));
         }
         if (!$process) {
-            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
+            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_lifecycle'));
         }
         $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
         $response = $interactionlib->handle_interaction($process, $step, $action);
@@ -70,7 +70,7 @@ class interaction_manager {
             case step_interactive_response::no_action():
                 break;
             case step_interactive_response::proceed():
-                $processor = new cleanup_processor();
+                $processor = new processor();
                 return $processor->process_course_interactive($processid);
                 break;
             case step_interactive_response::rollback():
@@ -115,7 +115,7 @@ class interaction_manager {
         $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
         $process = process_manager::get_process_by_id($processid);
         if (!$process) {
-            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
+            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_lifecycle'));
         }
         return $interactionlib->get_action_tools($process);
     }
@@ -130,7 +130,7 @@ class interaction_manager {
     public static function get_process_status_message($processid) {
         $process = process_manager::get_process_by_id($processid);
         if (!$process) {
-            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_cleanupcourses'));
+            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_lifecycle'));
         }
 
         if ($process->stepindex == 0) {
@@ -141,7 +141,7 @@ class interaction_manager {
             $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
             $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
             if ($interactionlib === null) {
-                return get_string("workflow_is_running", "tool_cleanupcourses");
+                return get_string("workflow_is_running", "tool_lifecycle");
             }
 
             return $interactionlib->get_status_message($process);

@@ -17,16 +17,16 @@
 /**
  * Table listing step instances
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\table;
+namespace tool_lifecycle\table;
 
-use tool_cleanupcourses\entity\trigger_subplugin;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -45,7 +45,7 @@ class step_table extends \table_sql {
         $this->workflowid = $workflowid;
         list($sqlwhere, $params) = $DB->get_in_or_equal($workflowid);
         $this->set_sql("id, subpluginname, instancename, sortindex",
-            '{tool_cleanupcourses_step}',
+            '{tool_lifecycle_step}',
             "workflowid " . $sqlwhere, $params);
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
@@ -69,20 +69,20 @@ class step_table extends \table_sql {
     public function init() {
         $columns = ['type', 'instancename', 'subpluginname'];
         $headers = [
-            get_string('step_type', 'tool_cleanupcourses'),
-            get_string('step_instancename', 'tool_cleanupcourses'),
-            get_string('step_subpluginname', 'tool_cleanupcourses'),
+            get_string('step_type', 'tool_lifecycle'),
+            get_string('step_instancename', 'tool_lifecycle'),
+            get_string('step_subpluginname', 'tool_lifecycle'),
             ];
         if (workflow_manager::is_active($this->workflowid)) {
             $columns [] = 'show';
-            $headers [] = get_string('step_show', 'tool_cleanupcourses');
+            $headers [] = get_string('step_show', 'tool_lifecycle');
         } else {
             $columns [] = 'sortindex';
-            $headers [] = get_string('step_sortindex', 'tool_cleanupcourses');
+            $headers [] = get_string('step_sortindex', 'tool_lifecycle');
             $columns [] = 'edit';
-            $headers [] = get_string('step_edit', 'tool_cleanupcourses');
+            $headers [] = get_string('step_edit', 'tool_lifecycle');
             $columns [] = 'delete';
-            $headers [] = get_string('step_delete', 'tool_cleanupcourses');
+            $headers [] = get_string('step_delete', 'tool_lifecycle');
         }
         $this->define_columns($columns);
         $this->define_headers($headers);
@@ -97,9 +97,9 @@ class step_table extends \table_sql {
      */
     public function col_type($row) {
         if (empty($row->type)) {
-            return get_string('step', 'tool_cleanupcourses');
+            return get_string('step', 'tool_lifecycle');
         }
-        return get_string('trigger', 'tool_cleanupcourses');
+        return get_string('trigger', 'tool_lifecycle');
     }
 
     /**
@@ -111,9 +111,9 @@ class step_table extends \table_sql {
 
         $subpluginname = $row->subpluginname;
         if (empty($row->type)) {
-            return get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname);
+            return get_string('pluginname', 'lifecyclestep_' . $subpluginname);
         } else {
-            return get_string('pluginname', 'cleanupcoursestrigger_' . $subpluginname);
+            return get_string('pluginname', 'lifecycletrigger_' . $subpluginname);
         }
     }
 

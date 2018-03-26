@@ -16,20 +16,20 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use tool_cleanupcourses\entity\trigger_subplugin;
-use tool_cleanupcourses\entity\workflow;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\entity\workflow;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 /**
- * cleanupcoursestrigger_delayedcourses generator tests
+ * lifecycletrigger_delayedcourses generator tests
  *
- * @package    cleanupcoursestrigger_delayedcourses
+ * @package    lifecycletrigger_delayedcourses
  * @category   test
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_trigger_delayedcourses_generator extends testing_module_generator {
+class tool_lifecycle_trigger_delayedcourses_generator extends testing_module_generator {
 
     /**
      * Creates a trigger delayedcourses for an artificial workflow without steps.

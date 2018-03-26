@@ -17,15 +17,15 @@
 /**
  * Table listing all courses for a specific user and a specific subplugin
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\table;
+namespace tool_lifecycle\table;
 
-use tool_cleanupcourses\manager\interaction_manager;
-use tool_cleanupcourses\manager\lib_manager;
-use tool_cleanupcourses\manager\step_manager;
+use tool_lifecycle\manager\interaction_manager;
+use tool_lifecycle\manager\lib_manager;
+use tool_lifecycle\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -39,9 +39,9 @@ class interaction_attention_table extends interaction_table {
 
         $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, '.
         's.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname as subpluginname';
-        $from = '{tool_cleanupcourses_process} p join ' .
+        $from = '{tool_lifecycle_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
-            '{tool_cleanupcourses_step} s '.
+            '{tool_lifecycle_step} s '.
             'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex';
 
         $ids = implode(',', $courseids);
@@ -65,9 +65,9 @@ class interaction_attention_table extends interaction_table {
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
-            get_string('status', 'tool_cleanupcourses'),
-            get_string('tools', 'tool_cleanupcourses'),
-            get_string('date', 'tool_cleanupcourses'),
+            get_string('status', 'tool_lifecycle'),
+            get_string('tools', 'tool_lifecycle'),
+            get_string('date', 'tool_lifecycle'),
         ]);
         $this->setup();
     }

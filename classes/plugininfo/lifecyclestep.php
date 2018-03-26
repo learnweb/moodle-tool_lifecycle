@@ -15,23 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Pluginfo for cleanup courses step
+ * Pluginfo for life cycle step
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace tool_cleanupcourses\plugininfo;
+namespace tool_lifecycle\plugininfo;
 
 use core\plugininfo\base;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
 
-class cleanupcoursesstep extends base {
+class lifecyclestep extends base {
     public function is_uninstall_allowed() {
         if ($this->is_standard()) {
             return false;

@@ -1,4 +1,4 @@
-@tool @tool_cleanupcourses
+@tool @tool_lifecycle
 Feature: Add a workflow with an email step and test the interaction as a teacher
 
   Background:
@@ -16,7 +16,7 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
       | teacher1 | C2     | editingteacher |
       | teacher1 | C3     | editingteacher |
     And I log in as "admin"
-    And I navigate to "Workflow Settings" node in "Site administration > Plugins > Cleanup Courses"
+    And I navigate to "Workflow Settings" node in "Site administration > Life Cycle"
     And I press "Add Workflow"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
@@ -48,24 +48,24 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
 
   Scenario: Test interaction of email step
     Given I log in as "teacher1"
-    When I am on cleanupcourses view
-    Then I should see "Course 1" in the "tool_cleanupcourses_remaining" "table"
-    And I should see "Course 2" in the "tool_cleanupcourses_remaining" "table"
-    And I should see "Course 3" in the "tool_cleanupcourses_remaining" "table"
-    When I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
-    And I am on cleanupcourses view
-    Then I should see "Course 1" in the "tool_cleanupcourses_remaining" "table"
-    And I should see "Course 2" in the "tool_cleanupcourses_interaction" "table"
-    And I should see "Course 3" in the "tool_cleanupcourses_interaction" "table"
-    And I should see the tool "Keep Course" in the "Course 2" row of the "tool_cleanupcourses_interaction" table
-    And I should see the tool "Keep Course" in the "Course 3" row of the "tool_cleanupcourses_interaction" table
-    When I click on the tool "Keep Course" in the "Course 2" row of the "tool_cleanupcourses_interaction" table
-    Then I should see "Course 1" in the "tool_cleanupcourses_remaining" "table"
-    And I should see "Course 2" in the "tool_cleanupcourses_remaining" "table"
-    And I should see "Course 3" in the "tool_cleanupcourses_interaction" "table"
+    When I am on lifecycle view
+    Then I should see "Course 1" in the "tool_lifecycle_remaining" "table"
+    And I should see "Course 2" in the "tool_lifecycle_remaining" "table"
+    And I should see "Course 3" in the "tool_lifecycle_remaining" "table"
+    When I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I am on lifecycle view
+    Then I should see "Course 1" in the "tool_lifecycle_remaining" "table"
+    And I should see "Course 2" in the "tool_lifecycle_interaction" "table"
+    And I should see "Course 3" in the "tool_lifecycle_interaction" "table"
+    And I should see the tool "Keep Course" in the "Course 2" row of the "tool_lifecycle_interaction" table
+    And I should see the tool "Keep Course" in the "Course 3" row of the "tool_lifecycle_interaction" table
+    When I click on the tool "Keep Course" in the "Course 2" row of the "tool_lifecycle_interaction" table
+    Then I should see "Course 1" in the "tool_lifecycle_remaining" "table"
+    And I should see "Course 2" in the "tool_lifecycle_remaining" "table"
+    And I should see "Course 3" in the "tool_lifecycle_interaction" "table"
     When I wait "10" seconds
-    And I run the scheduled task "tool_cleanupcourses\task\process_cleanup"
-    And I am on cleanupcourses view
-    Then I should see "Course 1" in the "tool_cleanupcourses_remaining" "table"
-    And I should see "Course 2" in the "tool_cleanupcourses_remaining" "table"
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I am on lifecycle view
+    Then I should see "Course 1" in the "tool_lifecycle_remaining" "table"
+    And I should see "Course 2" in the "tool_lifecycle_remaining" "table"
     And I should not see "Course 3"

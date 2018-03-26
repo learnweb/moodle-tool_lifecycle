@@ -17,14 +17,14 @@
 /**
  * Manager for Trigger subplugins
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
-use tool_cleanupcourses\entity\trigger_subplugin;
-use tool_cleanupcourses\entity\workflow;
+use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\entity\workflow;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -36,10 +36,10 @@ class trigger_manager extends subplugin_manager {
      */
     public static function register_workflow($subpluginname) {
         $workflow = workflow_manager::create_workflow(
-            get_string('pluginname', 'cleanupcoursestrigger_' . $subpluginname));
+            get_string('pluginname', 'lifecycletrigger_' . $subpluginname));
         $record = new \stdClass();
         $record->subpluginname = $subpluginname;
-        $record->instancename = get_string('pluginname', 'cleanupcoursestrigger_' . $subpluginname);
+        $record->instancename = get_string('pluginname', 'lifecycletrigger_' . $subpluginname);
         $record->workflowid = $workflow->id;
         $trigger = trigger_subplugin::from_record($record);
         self::insert_or_update($trigger);
@@ -63,7 +63,7 @@ class trigger_manager extends subplugin_manager {
     public static function get_instances($subpluginname) {
         global $DB;
         $result = array();
-        $records = $DB->get_records('tool_cleanupcourses_trigger', array('subpluginname' => $subpluginname));
+        $records = $DB->get_records('tool_lifecycle_trigger', array('subpluginname' => $subpluginname));
         foreach ($records as $record) {
             $subplugin = trigger_subplugin::from_record($record);
             $result [] = $subplugin;
@@ -78,7 +78,7 @@ class trigger_manager extends subplugin_manager {
      */
     private static function get_subplugin_by_id($subpluginid) {
         global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_trigger', array('id' => $subpluginid));
+        $record = $DB->get_record('tool_lifecycle_trigger', array('id' => $subpluginid));
         if ($record) {
             $subplugin = trigger_subplugin::from_record($record);
             return $subplugin;
@@ -95,9 +95,9 @@ class trigger_manager extends subplugin_manager {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         if ($subplugin->id) {
-            $DB->update_record('tool_cleanupcourses_trigger', $subplugin);
+            $DB->update_record('tool_lifecycle_trigger', $subplugin);
         } else {
-            $subplugin->id = $DB->insert_record('tool_cleanupcourses_trigger', $subplugin);
+            $subplugin->id = $DB->insert_record('tool_lifecycle_trigger', $subplugin);
         }
         $transaction->allow_commit();
     }
@@ -109,11 +109,11 @@ class trigger_manager extends subplugin_manager {
      */
     public static function remove_all_instances($subpluginname) {
         global $DB;
-        $records = $DB->get_records('tool_cleanupcourses_trigger', array('subpluginname' => $subpluginname));
+        $records = $DB->get_records('tool_lifecycle_trigger', array('subpluginname' => $subpluginname));
         foreach ($records as $record) {
             settings_manager::remove_settings($record->id, SETTINGS_TYPE_TRIGGER);
         }
-        $DB->delete_records('tool_cleanupcourses_trigger', array('subpluginname' => $subpluginname));
+        $DB->delete_records('tool_lifecycle_trigger', array('subpluginname' => $subpluginname));
     }
 
     /**
@@ -124,7 +124,7 @@ class trigger_manager extends subplugin_manager {
      */
     public static function get_trigger_for_workflow($workflowid) {
         global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_trigger', array('workflowid' => $workflowid));
+        $record = $DB->get_record('tool_lifecycle_trigger', array('workflowid' => $workflowid));
         if ($record) {
             $subplugin = trigger_subplugin::from_record($record);
             return $subplugin;
@@ -138,10 +138,10 @@ class trigger_manager extends subplugin_manager {
      * @return array of step subplugins.
      */
     public static function get_trigger_types() {
-        $subplugins = \core_component::get_plugin_list('cleanupcoursestrigger');
+        $subplugins = \core_component::get_plugin_list('lifecycletrigger');
         $result = array();
         foreach (array_keys($subplugins) as $plugin) {
-            $result[$plugin] = get_string('pluginname', 'cleanupcoursestrigger_' . $plugin);
+            $result[$plugin] = get_string('pluginname', 'lifecycletrigger_' . $plugin);
         }
         return $result;
     }
@@ -168,7 +168,7 @@ class trigger_manager extends subplugin_manager {
      */
     public static function remove_instances_of_workflow($workflowid) {
         global $DB;
-        $DB->delete_records('tool_cleanupcourses_trigger', array('workflowid' => $workflowid));
+        $DB->delete_records('tool_lifecycle_trigger', array('workflowid' => $workflowid));
     }
 
     /**

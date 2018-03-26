@@ -18,21 +18,21 @@
  * Interface for the subplugintype trigger
  * It has to be implemented by all subplugins.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\trigger;
+namespace tool_lifecycle\trigger;
 
-use tool_cleanupcourses\response\trigger_response;
-use tool_cleanupcourses\manager\delayed_courses_manager;
+use tool_lifecycle\response\trigger_response;
+use tool_lifecycle\manager\delayed_courses_manager;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 
 /**
- * Class which implements the basic methods necessary for a cleanup courses trigger subplugin
- * @package tool_cleanupcourses\trigger
+ * Class which implements the basic methods necessary for a life cycle trigger subplugin
+ * @package tool_lifecycle\trigger
  */
 class delayedcourses extends base_automatic {
 

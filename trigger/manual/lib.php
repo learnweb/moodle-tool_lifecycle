@@ -18,19 +18,19 @@
  * Interface for the subplugintype trigger
  * It has to be implemented by all subplugins.
  *
- * @package tool_cleanupcourses_trigger
+ * @package tool_lifecycle_trigger
  * @subpackage manual
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\trigger;
+namespace tool_lifecycle\trigger;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 
 /**
- * Class which implements the basic methods necessary for a cleanup courses trigger subplugin
- * @package tool_cleanupcourses_trigger
+ * Class which implements the basic methods necessary for a life cycle trigger subplugin
+ * @package tool_lifecycle_trigger
  */
 class manual extends base_manual {
 
@@ -56,19 +56,19 @@ class manual extends base_manual {
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'icon';
         $mform->addElement(
-            'text', $elementname, get_string('setting_icon', 'cleanupcoursestrigger_manual')
+            'text', $elementname, get_string('setting_icon', 'lifecycletrigger_manual')
         );
         $mform->setType($elementname, PARAM_SAFEPATH);
 
         $elementname = 'displayname';
         $mform->addElement(
-            'text', $elementname, get_string('setting_displayname', 'cleanupcoursestrigger_manual')
+            'text', $elementname, get_string('setting_displayname', 'lifecycletrigger_manual')
         );
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'capability';
         $mform->addElement(
-            'text', $elementname, get_string('setting_capability', 'cleanupcoursestrigger_manual')
+            'text', $elementname, get_string('setting_capability', 'lifecycletrigger_manual')
         );
         $mform->setType($elementname, PARAM_CAPABILITY);
     }

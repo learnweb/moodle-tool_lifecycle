@@ -17,7 +17,7 @@
 /**
  * Displays the settings associated with one single workflow and handles action for it.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,15 +30,15 @@ require_capability('moodle/site:config', context_system::instance());
 
 $workflowid = required_param('workflowid', PARAM_INT);
 
-$workflow = tool_cleanupcourses\manager\workflow_manager::get_workflow($workflowid);
+$workflow = tool_lifecycle\manager\workflow_manager::get_workflow($workflowid);
 
 if (!$workflow) {
-    throw new moodle_exception('workflownotfound', 'tool_cleanupcourses',
-        new \moodle_url('/admin/tool/cleanupcourses/adminsettings.php'), $workflowid);
+    throw new moodle_exception('workflownotfound', 'tool_lifecycle',
+        new \moodle_url('/admin/tool/lifecycle/adminsettings.php'), $workflowid);
 }
 
 // Create the class for this controller.
-$workflowsettings = new tool_cleanupcourses\workflow_settings($workflowid);
+$workflowsettings = new tool_lifecycle\workflow_settings($workflowid);
 
 // Execute the controller.
 $workflowsettings->execute(optional_param('action', null, PARAM_TEXT),

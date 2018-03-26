@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Settings page which gives an overview over running cleanup processes.
+ * Settings page which gives an overview over running lifecycle processes.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,29 +26,29 @@ defined('MOODLE_INTERNAL') || die;
 if ($hassiteconfig) {
     require_once(__DIR__ . '/adminlib.php');
 
-    $category = new admin_category('cleanupcourses_category',
-        get_string('pluginname', 'tool_cleanupcourses'));
+    $category = new admin_category('lifecycle_category',
+        get_string('pluginname', 'tool_lifecycle'));
     $ADMIN->add('tools', $category);
-    $settings = new admin_settingpage('tool_cleanupcourses',
-        get_string('general_config_header', 'tool_cleanupcourses'));
-    $ADMIN->add('cleanupcourses_category', $settings);
+    $settings = new admin_settingpage('tool_lifecycle',
+        get_string('general_config_header', 'tool_lifecycle'));
+    $ADMIN->add('lifecycle_category', $settings);
 
-    $settings->add(new admin_setting_configduration('cleanupcourses_duration',
-        get_string('config_delay_duration', 'tool_cleanupcourses'),
-        get_string('config_delay_duration_desc', 'tool_cleanupcourses'),
+    $settings->add(new admin_setting_configduration('lifecycle_duration',
+        get_string('config_delay_duration', 'tool_lifecycle'),
+        get_string('config_delay_duration_desc', 'tool_lifecycle'),
         183 * 24 * 60 * 60)); // Dafault value is 180 days.
 
-    $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_active_processes());
-    $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_course_backups());
-    $ADMIN->add('cleanupcourses_category', new tool_cleanupcourses\admin_page_sublugins());
+    $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_active_processes());
+    $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_course_backups());
+    $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_sublugins());
 
     if ($ADMIN->fulltree) {
-        $triggers = core_component::get_plugin_list('cleanupcoursestrigger');
+        $triggers = core_component::get_plugin_list('lifecycletrigger');
         foreach ($triggers as $trigger => $path) {
             if (file_exists($settingsfile = $path . '/settings.php')) {
-                $settings->add(new admin_setting_heading('cleanupcoursestriggersetting'.$trigger,
-                    get_string('trigger', 'tool_cleanupcourses') .
-                    ' - ' . get_string('pluginname', 'cleanupcoursestrigger_' . $trigger), ''));
+                $settings->add(new admin_setting_heading('lifecycletriggersetting'.$trigger,
+                    get_string('trigger', 'tool_lifecycle') .
+                    ' - ' . get_string('pluginname', 'lifecycletrigger_' . $trigger), ''));
                 include($settingsfile);
             }
         }

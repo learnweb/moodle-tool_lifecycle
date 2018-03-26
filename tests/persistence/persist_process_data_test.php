@@ -18,19 +18,19 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
 
-use \tool_cleanupcourses\manager\process_manager;
-use \tool_cleanupcourses\manager\process_data_manager;
-use \tool_cleanupcourses\manager\step_manager;
+use \tool_lifecycle\manager\process_manager;
+use \tool_lifecycle\manager\process_data_manager;
+use \tool_lifecycle\manager\step_manager;
 
 /**
  * Tests creating storing and retrieving process data.
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
- * @group      tool_cleanupcourses
+ * @group      tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_persist_process_data_testcase extends \advanced_testcase {
+class tool_lifecycle_persist_process_data_testcase extends \advanced_testcase {
 
     /** process*/
     private $process;
@@ -40,7 +40,7 @@ class tool_cleanupcourses_persist_process_data_testcase extends \advanced_testca
 
     public function setUp() {
         $this->resetAfterTest(true);
-        $generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
+        $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
         $workflow = $generator->create_workflow_with_steps();
         $course = $this->getDataGenerator()->create_course();

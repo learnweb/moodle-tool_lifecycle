@@ -17,11 +17,11 @@
 /**
  * Possible Responses of a Trigger Subplugin
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\response;
+namespace tool_lifecycle\response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -51,7 +51,7 @@ class trigger_response {
     }
 
     /**
-     * Creates a TriggerResponse telling that the subplugin wants to exlude the course from cleanup.
+     * Creates a TriggerResponse telling that the subplugin wants to exlude the course from being processed.
      * @return trigger_response
      */
     public static function exclude() {
@@ -59,7 +59,7 @@ class trigger_response {
     }
 
     /**
-     * Creates a TriggerResponse telling that the subplugin wants to trigger the cleanup process for the course.
+     * Creates a TriggerResponse telling that the subplugin wants to trigger a lifecycle process for the course.
      * @return trigger_response
      */
     public static function trigger() {

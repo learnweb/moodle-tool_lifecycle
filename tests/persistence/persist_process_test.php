@@ -18,17 +18,17 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
 
-use \tool_cleanupcourses\manager\process_manager;
+use \tool_lifecycle\manager\process_manager;
 
 /**
  * Tests creating storing and retrieving a process object.
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
- * @group      tool_cleanupcourses
+ * @group      tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_persist_process_testcase extends \advanced_testcase {
+class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
 
     /** workflow */
     private $workflow;
@@ -38,7 +38,7 @@ class tool_cleanupcourses_persist_process_testcase extends \advanced_testcase {
 
     public function setUp() {
         $this->resetAfterTest(true);
-        $generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
+        $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
         $this->workflow = $generator->create_workflow_with_steps();
         $this->course = $this->getDataGenerator()->create_course();

@@ -17,7 +17,7 @@
 /**
  * Display the list of all course backups
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,16 +28,16 @@ $PAGE->set_context(context_system::instance());
 require_login(null, false);
 require_capability('moodle/site:config', context_system::instance());
 
-admin_externalpage_setup('tool_cleanupcourses_coursebackups');
+admin_externalpage_setup('tool_lifecycle_coursebackups');
 
-$PAGE->set_url(new \moodle_url('/admin/tool/cleanupcourses/coursebackups.php'));
+$PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/coursebackups.php'));
 
-$table = new tool_cleanupcourses\table\course_backups_table('tool_cleanupcourses_course_backups');
+$table = new tool_lifecycle\table\course_backups_table('tool_lifecycle_course_backups');
 
-$PAGE->set_title(get_string('course_backups_list_header', 'tool_cleanupcourses'));
-$PAGE->set_heading(get_string('course_backups_list_header', 'tool_cleanupcourses'));
+$PAGE->set_title(get_string('course_backups_list_header', 'tool_lifecycle'));
+$PAGE->set_heading(get_string('course_backups_list_header', 'tool_lifecycle'));
 
-$renderer = $PAGE->get_renderer('tool_cleanupcourses');
+$renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
 $table->out(50, false);

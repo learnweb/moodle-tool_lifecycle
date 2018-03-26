@@ -16,17 +16,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 /**
  * Tests assembly of manual trigger tools.
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
- * @group      tool_cleanupcourses
+ * @group      tool_lifecycle
  * @copyright  2018 Tamara Gunkel, Jan Dageforde WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_process_status_message_testcase extends \advanced_testcase {
+class tool_lifecycle_process_status_message_testcase extends \advanced_testcase {
     const MANUAL_TRIGGER1_ICON = 't/up';
     const MANUAL_TRIGGER1_DISPLAYNAME = 'Up';
     const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
@@ -37,7 +37,7 @@ class tool_cleanupcourses_process_status_message_testcase extends \advanced_test
 
     public function setUp() {
         $this->resetAfterTest(false);
-        $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
+        $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
         $settings = new stdClass();
         $settings->icon = self::MANUAL_TRIGGER1_ICON;
@@ -55,15 +55,15 @@ class tool_cleanupcourses_process_status_message_testcase extends \advanced_test
      */
     public function test_get_status_message() {
         $process = $this->generator->create_process(2, $this->workflow->id);
-        $message = \tool_cleanupcourses\manager\interaction_manager::get_process_status_message($process->id);
-        $this->assertEquals(get_string("workflow_started", "tool_cleanupcourses"), $message);
+        $message = \tool_lifecycle\manager\interaction_manager::get_process_status_message($process->id);
+        $this->assertEquals(get_string("workflow_started", "tool_lifecycle"), $message);
 
-        \tool_cleanupcourses\manager\process_manager::proceed_process($process);
-        $message = \tool_cleanupcourses\manager\interaction_manager::get_process_status_message($process->id);
-        $this->assertEquals(get_string("workflow_is_running", "tool_cleanupcourses"), $message);
+        \tool_lifecycle\manager\process_manager::proceed_process($process);
+        $message = \tool_lifecycle\manager\interaction_manager::get_process_status_message($process->id);
+        $this->assertEquals(get_string("workflow_is_running", "tool_lifecycle"), $message);
 
-        \tool_cleanupcourses\manager\process_manager::proceed_process($process);
-        $message = \tool_cleanupcourses\manager\interaction_manager::get_process_status_message($process->id);
-        $this->assertEquals(get_string('status_message_requiresattention', 'cleanupcoursesstep_email'), $message);
+        \tool_lifecycle\manager\process_manager::proceed_process($process);
+        $message = \tool_lifecycle\manager\interaction_manager::get_process_status_message($process->id);
+        $this->assertEquals(get_string('status_message_requiresattention', 'lifecyclestep_email'), $message);
     }
 }

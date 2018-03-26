@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="admin/tool/cleanupcourses/step/email/db" VERSION="2017052300" COMMENT="XMLDB file for Moodle cleanupcourses_step/email"
+<XMLDB PATH="admin/tool/lifecycle/step/email/db" VERSION="2017052300" COMMENT="XMLDB file for Moodle lifecycle_step/email"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
   <TABLES>
-    <TABLE NAME="cleanupcoursesstep_email" COMMENT="table containing all mails which still have to be sent">
+    <TABLE NAME="lifecyclestep_email" COMMENT="table containing all mails which still have to be sent">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true" COMMENT="id of the mail"/>
         <FIELD NAME="touser" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="user id to which the email should go to"/>

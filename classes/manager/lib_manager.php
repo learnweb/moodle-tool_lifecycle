@@ -17,14 +17,14 @@
 /**
  * Manager to retrive the lib of each subplugin.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
-use tool_cleanupcourses\trigger\base_automatic;
-use tool_cleanupcourses\trigger\base_manual;
+use tool_lifecycle\trigger\base_automatic;
+use tool_lifecycle\trigger\base_manual;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -33,7 +33,7 @@ class lib_manager {
     /**
      * Gets the trigger class of a subplugin lib.
      * @param string $subpluginname name of the subplugin
-     * @return \tool_cleanupcourses\trigger\base
+     * @return \tool_lifecycle\trigger\base
      */
     public static function get_trigger_lib($subpluginname) {
         return self::get_lib($subpluginname, 'trigger');
@@ -42,7 +42,7 @@ class lib_manager {
     /**
      * Gets the lib class for an manual trigger subplugin.
      * @param string $subpluginname name of the subplugin
-     * @return \tool_cleanupcourses\trigger\base_manual
+     * @return \tool_lifecycle\trigger\base_manual
      * @throws \coding_exception
      */
     public static function get_manual_trigger_lib($subpluginname) {
@@ -56,7 +56,7 @@ class lib_manager {
     /**
      * Gets the lib class for an automatic trigger subplugin.
      * @param string $subpluginname name of the subplugin
-     * @return \tool_cleanupcourses\trigger\base_automatic
+     * @return \tool_lifecycle\trigger\base_automatic
      * @throws \coding_exception
      */
     public static function get_automatic_trigger_lib($subpluginname) {
@@ -72,7 +72,7 @@ class lib_manager {
     /**
      * Gets the step class of a subplugin lib.
      * @param string $subpluginname name of the subplugin
-     * @return \tool_cleanupcourses\step\libbase
+     * @return \tool_lifecycle\step\libbase
      */
     public static function get_step_lib($subpluginname) {
         return self::get_lib($subpluginname, 'step');
@@ -81,7 +81,7 @@ class lib_manager {
     /**
      * Gets the step class of a subplugin lib.
      * @param string $subpluginname name of the subplugin
-     * @return \tool_cleanupcourses\step\interactionlibbase
+     * @return \tool_lifecycle\step\interactionlibbase
      */
     public static function get_step_interactionlib($subpluginname) {
         return self::get_lib($subpluginname, 'step', 'interaction');
@@ -95,14 +95,14 @@ class lib_manager {
      * @return
      */
     private static function get_lib($subpluginname, $subplugintype, $libsubtype = '') {
-        $triggerlist = \core_component::get_plugin_list('cleanupcourses' . $subplugintype);
+        $triggerlist = \core_component::get_plugin_list('lifecycle' . $subplugintype);
         if (!array_key_exists($subpluginname, $triggerlist)) {
             return null;
         }
         $filename = $triggerlist[$subpluginname].'/'.$libsubtype.'lib.php';
         if (file_exists($filename)) {
             require_once($filename);
-            $extendedclass = "tool_cleanupcourses\\$subplugintype\\$libsubtype$subpluginname";
+            $extendedclass = "tool_lifecycle\\$subplugintype\\$libsubtype$subpluginname";
             if (class_exists($extendedclass)) {
                 return new $extendedclass();
             }

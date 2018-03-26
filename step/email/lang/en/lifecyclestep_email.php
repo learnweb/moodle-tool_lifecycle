@@ -15,15 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for manual trigger
+ * Lang strings for email step
  *
- * @package tool_cleanupcourses_trigger
- * @subpackage manual
- * @copyright  2018 WWU
+ * @package tool_lifecycle_step
+ * @subpackage email
+ * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Manual trigger';
-$string['setting_capability'] = 'Capability';
-$string['setting_icon'] = 'Icon';
-$string['setting_displayname'] = 'Action name';
+$string['pluginname'] = 'Email Step';
+
+$string['email_responsetimeout'] = 'Time the user has for the response';
+$string['email_subject'] = 'Subject Template';
+$string['email_content'] = 'Content Template';
+$string['email_content_html'] = 'Content HTML Template';
+$string['email:preventdeletion'] = 'Prevent Deletion';
+
+$string['keep_course'] = 'Keep Course';
+$string['status_message_decision_keep'] = 'Course is still needed';
+$string['status_message_requiresattention'] = 'Course is marked for deletion';

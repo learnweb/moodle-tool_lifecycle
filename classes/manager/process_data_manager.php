@@ -15,19 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Manager for data of Cleanup Course Processes
+ * Manager for data of Life Cycle Processes
  * Data means every additional data, which is produced, stored and queried by steps during the process.
  * This class stores and queries the process data using a key/value-store.
  * Only strings can be stored. Every other data has to be parsed manually!
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
-use tool_cleanupcourses\entity\process;
-use tool_cleanupcourses\entity\trigger_subplugin;
+use tool_lifecycle\entity\process;
+use tool_lifecycle\entity\trigger_subplugin;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -51,7 +51,7 @@ class process_data_manager {
         } else {
             $params['subpluginname'] = step_manager::get_step_instance($stepid)->subpluginname;
         }
-        if ($value = $DB->get_record('tool_cleanupcourses_procdata', $params)) {
+        if ($value = $DB->get_record('tool_lifecycle_procdata', $params)) {
             return $value->value;
         }
         return null;
@@ -75,12 +75,12 @@ class process_data_manager {
         } else {
             $entry['subpluginname'] = step_manager::get_step_instance($stepid)->subpluginname;
         }
-        if ($oldentry = $DB->get_record('tool_cleanupcourses_procdata', $entry)) {
+        if ($oldentry = $DB->get_record('tool_lifecycle_procdata', $entry)) {
             $oldentry->value = $value;
-            $DB->update_record('tool_cleanupcourses_procdata', $oldentry);
+            $DB->update_record('tool_lifecycle_procdata', $oldentry);
         } else {
             $entry['value'] = $value;
-            $DB->insert_record('tool_cleanupcourses_procdata', (object) $entry);
+            $DB->insert_record('tool_lifecycle_procdata', (object) $entry);
         }
     }
 

@@ -1,5 +1,5 @@
 fixes:
-	- "moodle/admin/tool/cleanupcourses/::"
+	- "moodle/admin/tool/lifecycle/::"
 ignore:
     # artificial/Moodle API files
     - "classes/plugininfo/*"

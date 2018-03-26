@@ -18,19 +18,19 @@
  * Interface for the interactions of the subplugintype step
  * It has to be implemented by all subplugins that want to use the interaction view.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @subpackage step
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\step;
+namespace tool_lifecycle\step;
 
-use cleanupcoursesstep_duplicate\form_duplicate;
-use tool_cleanupcourses\entity\process;
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\manager\process_data_manager;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\response\step_interactive_response;
+use lifecyclestep_duplicate\form_duplicate;
+use tool_lifecycle\entity\process;
+use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\manager\process_data_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\response\step_interactive_response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -47,7 +47,7 @@ class interactionduplicate extends interactionlibbase {
      * @return string capability string.
      */
     public function get_relevant_capability() {
-        return 'cleanupcoursesstep/email:preventdeletion';
+        return 'lifecyclestep/email:preventdeletion';
     }
 
     /**
@@ -67,7 +67,7 @@ class interactionduplicate extends interactionlibbase {
         }
         return array(
             array('action' => self::ACTION_DUPLICATE_FORM,
-                'alt' => get_string('duplicate_form', 'cleanupcoursesstep_duplicate'),
+                'alt' => get_string('duplicate_form', 'lifecyclestep_duplicate'),
             ),
         );
     }
@@ -82,9 +82,9 @@ class interactionduplicate extends interactionlibbase {
         $shortname = process_data_manager::get_process_data($process->id, $step->id, duplicate::PROC_DATA_COURSESHORTNAME);
         $fullname = process_data_manager::get_process_data($process->id, $step->id, duplicate::PROC_DATA_COURSEFULLNAME);
         if (!empty($fullname) && !empty($shortname)) {
-            return get_string('status_message_duplication', 'cleanupcoursesstep_duplicate');
+            return get_string('status_message_duplication', 'lifecyclestep_duplicate');
         }
-        return get_string('status_message_form', 'cleanupcoursesstep_duplicate');
+        return get_string('status_message_form', 'lifecyclestep_duplicate');
     }
 
     /**
@@ -132,7 +132,7 @@ class interactionduplicate extends interactionlibbase {
      */
     private function render_form($mform) {
         global $PAGE;
-        $renderer = $PAGE->get_renderer('tool_cleanupcourses');
+        $renderer = $PAGE->get_renderer('tool_lifecycle');
 
         echo $renderer->header();
         $mform->display();

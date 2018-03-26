@@ -16,17 +16,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use tool_cleanupcourses\manager\backup_manager;
+use tool_lifecycle\manager\backup_manager;
 
 /**
  * Tests the beckup manager.
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
- * @group      tool_cleanupcourses_backup
+ * @group      tool_lifecycle_backup
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_backup_manager_testcase extends \advanced_testcase {
+class tool_lifecycle_backup_manager_testcase extends \advanced_testcase {
 
     /** course */
     private $course;
@@ -43,7 +43,7 @@ class tool_cleanupcourses_backup_manager_testcase extends \advanced_testcase {
         global $DB;
         $result = backup_manager::create_course_backup($this->course->id);
         $this->assertTrue($result);
-        $backups = $DB->get_records('tool_cleanupcourses_backups');
+        $backups = $DB->get_records('tool_lifecycle_backups');
         $this->assertEquals(1, count($backups));
     }
 
@@ -52,7 +52,7 @@ class tool_cleanupcourses_backup_manager_testcase extends \advanced_testcase {
      */
     public function test_backup_restore() {
         global $DB;
-        $backups = $DB->get_records('tool_cleanupcourses_backups');
+        $backups = $DB->get_records('tool_lifecycle_backups');
         $this->assertEquals(1, count($backups));
         $backupid = array_pop($backups)->id;
         try {

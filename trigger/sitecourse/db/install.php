@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Install script for course cleanup subplugin
+ * Install script for lifecycle subplugin
  *
- * @package tool_cleanupcourses_trigger
+ * @package tool_lifecycle_trigger
  * @subpackage sitecourse
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-use tool_cleanupcourses\manager\trigger_manager;
+use tool_lifecycle\manager\trigger_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
-function xmldb_cleanupcoursestrigger_sitecourse_install() {
+function xmldb_lifecycletrigger_sitecourse_install() {
     trigger_manager::register_workflow('sitecourse');
 }

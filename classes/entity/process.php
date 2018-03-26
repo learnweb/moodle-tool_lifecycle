@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tool_cleanupcourses\entity;
+namespace tool_lifecycle\entity;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Cleanup Course Process class
+ * Life Cycle Process class
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -60,7 +60,7 @@ class process {
     }
 
     /**
-     * Creates a Cleanup Course Process from a db record.
+     * Creates a Life Cycle Process from a db record.
      * @param $record
      * @return process
      */
