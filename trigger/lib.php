@@ -18,21 +18,21 @@
  * Interface for the subplugintype trigger
  * It has to be implemented by all subplugins.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @subpackage trigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\trigger;
+namespace tool_lifecycle\trigger;
 
-use tool_cleanupcourses\response\trigger_response;
+use tool_lifecycle\response\trigger_response;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * This class bundles different functions necessary for every trigger of a workflow.
  * This class should not be extended directly. Please use base_manual or base_automatic.
- * @package tool_cleanupcourses\trigger
+ * @package tool_lifecycle\trigger
  */
 abstract class base {
 
@@ -89,7 +89,7 @@ abstract class base {
      * @return string status message
      */
     public function get_status_message() {
-        return get_string("workflow_started", "tool_cleanupcourses");
+        return get_string("workflow_started", "tool_lifecycle");
     }
 
 }
@@ -97,7 +97,7 @@ abstract class base {
 /**
  * This class represents an automatic trigger.
  * It is used when workflow should be started based on a specific logic.
- * @package tool_cleanupcourses\trigger
+ * @package tool_lifecycle\trigger
  */
 abstract class base_automatic extends base {
 
@@ -117,7 +117,7 @@ abstract class base_automatic extends base {
 /**
  * This class represents a manual trigger.
  * It is used to enable user to manually start processes for workflows.
- * @package tool_cleanupcourses\trigger
+ * @package tool_lifecycle\trigger
  */
 abstract class base_manual extends base {
 
@@ -127,7 +127,7 @@ abstract class base_manual extends base {
 }
 /**
  * Class representing a local settings object for a subplugin instance.
- * @package tool_cleanupcourses\trigger
+ * @package tool_lifecycle\trigger
  */
 class instance_setting {
 

@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Cleanup Courses Startdate Trigger
+ * Life Cycle Startdate Trigger
  *
- * @package tool_cleanupcourses_trigger
+ * @package tool_lifecycle_trigger
  * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,4 +26,4 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->version  = 2017050901;
-$plugin->component = 'cleanupcoursestrigger_startdatedelay';
+$plugin->component = 'lifecycletrigger_startdatedelay';

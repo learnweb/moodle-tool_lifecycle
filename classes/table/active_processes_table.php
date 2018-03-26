@@ -17,11 +17,11 @@
 /**
  * Table listing active processes
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\table;
+namespace tool_lifecycle\table;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -37,9 +37,9 @@ class active_processes_table extends \table_sql {
             'c.fullname as coursefullname, ' .
             'c.shortname as courseshortname, ' .
             'instancename as instancename ',
-            '{tool_cleanupcourses_process} p join ' .
+            '{tool_lifecycle_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
-            '{tool_cleanupcourses_step} s '.
+            '{tool_lifecycle_step} s '.
             'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex',
             "TRUE");
         $this->define_baseurl($PAGE->url);
@@ -52,7 +52,7 @@ class active_processes_table extends \table_sql {
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
-            get_string('step', 'tool_cleanupcourses')]);
+            get_string('step', 'tool_lifecycle')]);
         $this->setup();
     }
 

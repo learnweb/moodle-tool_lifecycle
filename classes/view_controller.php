@@ -16,28 +16,28 @@
 
 /**
  * Controller for view.php
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @copyright  2018 Tamara Gunkel, Jan Dageförde (WWU)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace tool_cleanupcourses;
+namespace tool_lifecycle;
 
 use core\notification;
-use tool_cleanupcourses\manager\interaction_manager;
-use tool_cleanupcourses\manager\lib_manager;
-use tool_cleanupcourses\manager\process_manager;
-use tool_cleanupcourses\manager\settings_manager;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\table\interaction_remaining_table;
-use tool_cleanupcourses\table\interaction_attention_table;
+use tool_lifecycle\manager\interaction_manager;
+use tool_lifecycle\manager\lib_manager;
+use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\manager\settings_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\table\interaction_remaining_table;
+use tool_lifecycle\table\interaction_attention_table;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * Controller for view.php
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @copyright  2018 Tamara Gunkel, Jan Dageförde (WWU)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -52,7 +52,7 @@ class view_controller {
     public function handle_view($renderer) {
         global $DB;
 
-        $courses = get_user_capability_course('tool/cleanupcourses:managecourses', null, false);
+        $courses = get_user_capability_course('tool/lifecycle:managecourses', null, false);
         if (!$courses) {
             echo 'no courses';
             // TODO show error.
@@ -67,9 +67,9 @@ class view_controller {
 
         $processes = $DB->get_recordset_sql("SELECT p.id as processid, c.id as courseid, c.fullname as coursefullname, " .
         "c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname " .
-            "FROM {tool_cleanupcourses_process} p join " .
+            "FROM {tool_lifecycle_process} p join " .
             "{course} c on p.courseid = c.id join " .
-            "{tool_cleanupcourses_step} s ".
+            "{tool_lifecycle_step} s ".
             "on p.workflowid = s.workflowid AND p.stepindex = s.sortindex " .
             "WHERE p.courseid IN (". $listofcourseids . ")");
 
@@ -86,18 +86,18 @@ class view_controller {
             }
         }
 
-        echo $renderer->heading(get_string('tablecoursesrequiringattention', 'tool_cleanupcourses'), 3);
-        $table1 = new interaction_attention_table('tool_cleanupcourses_interaction', $requiresinteraction);
+        echo $renderer->heading(get_string('tablecoursesrequiringattention', 'tool_lifecycle'), 3);
+        $table1 = new interaction_attention_table('tool_lifecycle_interaction', $requiresinteraction);
 
         echo $renderer->box_start("managing_courses_tables");
         $table1->out(50, false);
         echo $renderer->box_end();
 
         echo $renderer->box("");
-        echo $renderer->heading(get_string('tablecoursesremaining', 'tool_cleanupcourses'), 3);
-        $table2 = new interaction_remaining_table('tool_cleanupcourses_remaining', $arrayofcourseids);
+        echo $renderer->heading(get_string('tablecoursesremaining', 'tool_lifecycle'), 3);
+        $table2 = new interaction_remaining_table('tool_lifecycle_remaining', $arrayofcourseids);
 
-        echo $renderer->box_start("cleanupcourses-enable-overflow cleanupcourses-table");
+        echo $renderer->box_start("lifecycle-enable-overflow lifecycle-table");
         $table2->out(50, false);
         echo $renderer->box_end();
     }
@@ -118,7 +118,7 @@ class view_controller {
         require_capability($capability, \context_course::instance($process->courseid), null, false);
 
         if (interaction_manager::handle_interaction($stepid, $processid, $action)) {
-            redirect($PAGE->url, get_string('interaction_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
+            redirect($PAGE->url, get_string('interaction_success', 'tool_lifecycle'), null, notification::SUCCESS);
         }
     }
 
@@ -135,7 +135,7 @@ class view_controller {
         $trigger = trigger_manager::get_instance($triggerid);
         $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
         if (!$lib->is_manual_trigger()) {
-            throw new \moodle_exception('error_wrong_trigger_selected', 'tool_cleanupcourses');
+            throw new \moodle_exception('error_wrong_trigger_selected', 'tool_lifecycle');
         }
 
         // Check if user has capability.
@@ -145,15 +145,15 @@ class view_controller {
         // Check if course does not have a running process.
         $runningprocess = process_manager::get_process_by_course_id($courseid);
         if ($runningprocess !== null) {
-            redirect($PAGE->url, get_string('manual_trigger_process_existed', 'tool_cleanupcourses'), null, notification::ERROR);
+            redirect($PAGE->url, get_string('manual_trigger_process_existed', 'tool_lifecycle'), null, notification::ERROR);
         }
 
         // Actually trigger process.
         $process = process_manager::manually_trigger_process($courseid, $triggerid);
 
-        $processor = new cleanup_processor();
+        $processor = new processor();
         if ($processor->process_course_interactive($process->id)) {
-            redirect($PAGE->url, get_string('manual_trigger_success', 'tool_cleanupcourses'), null, notification::SUCCESS);
+            redirect($PAGE->url, get_string('manual_trigger_success', 'tool_lifecycle'), null, notification::SUCCESS);
         }
     }
 }

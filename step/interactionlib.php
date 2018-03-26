@@ -18,16 +18,16 @@
  * Interface for the interactions of the subplugintype step
  * It has to be implemented by all subplugins that want to use the interaction view.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @subpackage step
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\step;
+namespace tool_lifecycle\step;
 
-use tool_cleanupcourses\entity\process;
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\response\step_interactive_response;
+use tool_lifecycle\entity\process;
+use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\response\step_interactive_response;
 
 defined('MOODLE_INTERNAL') || die();
 

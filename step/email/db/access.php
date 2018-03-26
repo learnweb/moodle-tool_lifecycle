@@ -16,7 +16,7 @@
 
 /**
  * Capability definitions for the email step subplugin
- * @package    cleanupcourses_step
+ * @package    lifecycle_step
  * @subpackage email
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
 
-    'cleanupcoursesstep/email:preventdeletion' => array(
+    'lifecyclestep/email:preventdeletion' => array(
         'contextlevel' => CONTEXT_COURSE,
         'captype' => 'write',
         'archetypes' => array(
@@ -34,7 +34,7 @@ $capabilities = array(
             'teacher' => CAP_PREVENT,
             'students' => CAP_PREVENT,
         ),
-        'clonepermissionsfrom' => 'tool/cleanupcourses:managecourses'
+        'clonepermissionsfrom' => 'tool/lifecycle:managecourses'
     ),
 );
 

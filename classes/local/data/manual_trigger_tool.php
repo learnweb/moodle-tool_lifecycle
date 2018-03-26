@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tool_cleanupcourses\local\data;
+namespace tool_lifecycle\local\data;
 
 use renderable;
 
@@ -23,7 +23,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Class representing a manual trigger tool
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

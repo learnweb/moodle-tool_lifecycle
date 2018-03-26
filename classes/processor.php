@@ -15,28 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Offers functionality to trigger, process and finish cleanup processes.
+ * Offers functionality to trigger, process and finish lifecycle processes.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses;
+namespace tool_lifecycle;
 
-use tool_cleanupcourses\entity\trigger_subplugin;
-use tool_cleanupcourses\manager\process_manager;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\manager\lib_manager;
-use tool_cleanupcourses\manager\workflow_manager;
-use tool_cleanupcourses\response\step_interactive_response;
-use tool_cleanupcourses\response\step_response;
-use tool_cleanupcourses\response\trigger_response;
+use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\manager\lib_manager;
+use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\response\step_interactive_response;
+use tool_lifecycle\response\step_response;
+use tool_lifecycle\response\trigger_response;
 
 
 defined('MOODLE_INTERNAL') || die;
 
-class cleanup_processor {
+class processor {
 
     public function __construct() {
 
@@ -151,15 +151,15 @@ class cleanup_processor {
 
     /**
      * Returns a record set with all relevant courses.
-     * Relevant means that there is currently no cleanup process running for this course.
+     * Relevant means that there is currently no lifecycle process running for this course.
      * @return \moodle_recordset with relevant courses.
      */
     private function get_course_recordset() {
         global $DB;
         $sql = 'SELECT {course}.* from {course} '.
-            'left join {tool_cleanupcourses_process} '.
-            'ON {course}.id = {tool_cleanupcourses_process}.courseid '.
-            'WHERE {tool_cleanupcourses_process}.courseid is null';
+            'left join {tool_lifecycle_process} '.
+            'ON {course}.id = {tool_lifecycle_process}.courseid '.
+            'WHERE {tool_lifecycle_process}.courseid is null';
         return $DB->get_recordset_sql($sql);
     }
 

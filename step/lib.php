@@ -18,15 +18,15 @@
  * Interface for the subplugintype step
  * It has to be implemented by all subplugins.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @subpackage step
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\step;
+namespace tool_lifecycle\step;
 
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\response\step_response;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\response\step_response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -109,7 +109,7 @@ abstract class libbase {
 
 /**
  * Class representing a local settings object for a subplugin instance.
- * @package tool_cleanupcourses\step
+ * @package tool_lifecycle\step
  */
 class instance_setting {
 

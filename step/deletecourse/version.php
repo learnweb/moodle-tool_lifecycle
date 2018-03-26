@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Cleanup Courses Delete Course Step
+ * Life Cycle Delete Course Step
  *
- * @package tool_cleanupcourses_step
+ * @package tool_lifecycle_step
  * @subpackage deletecourse
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,4 +26,4 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->version  = 2017050901;
-$plugin->component = 'cleanupcoursesstep_deletecourse';
+$plugin->component = 'lifecyclestep_deletecourse';

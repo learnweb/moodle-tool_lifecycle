@@ -15,32 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Scheduled task for processing the cleanup
+ * Scheduled task for working on lifecycle processes
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\task;
+namespace tool_lifecycle\task;
 
-use tool_cleanupcourses\manager\lib_manager;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\cleanup_processor;
+use tool_lifecycle\manager\lib_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\processor;
 
 defined('MOODLE_INTERNAL') || die;
 
-class process_cleanup extends \core\task\scheduled_task {
+class lifecycle_task extends \core\task\scheduled_task {
 
     public function get_name() {
-        return get_string('process_cleanup', 'tool_cleanupcourses');
+        return get_string('lifecycle_task', 'tool_lifecycle');
     }
 
     public function execute() {
-        $processor = new cleanup_processor();
+        $processor = new processor();
         $processor->call_trigger();
 
         $steps = step_manager::get_step_types();
-        /* @var \tool_cleanupcourses\step\libbase[] $steplibs stores the lib classes of all step subplugins.*/
+        /* @var \tool_lifecycle\step\libbase[] $steplibs stores the lib classes of all step subplugins.*/
         $steplibs = array();
         foreach ($steps as $id => $step) {
             $steplibs[$id] = lib_manager::get_step_lib($id);

@@ -16,19 +16,19 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\settings_manager;
+use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\settings_manager;
 
 /**
  * Tests the settings manager.
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
- * @group      tool_cleanupcourses
+ * @group      tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_settings_manager_testcase extends \advanced_testcase {
+class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
 
     /** step_subplugin */
     private $step;
@@ -39,12 +39,12 @@ class tool_cleanupcourses_settings_manager_testcase extends \advanced_testcase {
 
     public function setUp() {
         $this->resetAfterTest(false);
-        $generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
+        $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
         $workflow = $generator->create_workflow();
         $this->step = new step_subplugin('instancename', 'email', $workflow->id);
         step_manager::insert_or_update($this->step);
-        $this->trigger = \tool_cleanupcourses\manager\trigger_manager::get_trigger_for_workflow($workflow->id);
+        $this->trigger = \tool_lifecycle\manager\trigger_manager::get_trigger_for_workflow($workflow->id);
     }
 
     /**

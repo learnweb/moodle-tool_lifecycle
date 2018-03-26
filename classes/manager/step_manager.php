@@ -17,13 +17,13 @@
 /**
  * Manager for Subplugins
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
-use tool_cleanupcourses\entity\step_subplugin;
+use tool_lifecycle\entity\step_subplugin;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -36,7 +36,7 @@ class step_manager extends subplugin_manager {
      */
     public static function get_step_instance($stepinstanceid) {
         global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_step', array('id' => $stepinstanceid));
+        $record = $DB->get_record('tool_lifecycle_step', array('id' => $stepinstanceid));
         if ($record) {
             $subplugin = step_subplugin::from_record($record);
             return $subplugin;
@@ -53,7 +53,7 @@ class step_manager extends subplugin_manager {
      */
     public static function get_step_instance_by_workflow_index($workflowid, $sortindex) {
         global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_step',
+        $record = $DB->get_record('tool_lifecycle_step',
             array(
                 'workflowid' => $workflowid,
                 'sortindex' => $sortindex)
@@ -74,10 +74,10 @@ class step_manager extends subplugin_manager {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         if ($subplugin->id) {
-            $DB->update_record('tool_cleanupcourses_step', $subplugin);
+            $DB->update_record('tool_lifecycle_step', $subplugin);
         } else {
             $subplugin->sortindex = self::count_steps_of_workflow($subplugin->workflowid) + 1;
-            $subplugin->id = $DB->insert_record('tool_cleanupcourses_step', $subplugin);
+            $subplugin->id = $DB->insert_record('tool_lifecycle_step', $subplugin);
         }
         $transaction->allow_commit();
     }
@@ -101,11 +101,11 @@ class step_manager extends subplugin_manager {
     private static function remove($stepinstanceid) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
-        if ($record = $DB->get_record('tool_cleanupcourses_step', array('id' => $stepinstanceid))) {
+        if ($record = $DB->get_record('tool_lifecycle_step', array('id' => $stepinstanceid))) {
             $step = step_subplugin::from_record($record);
             self::remove_from_sortindex($step);
             settings_manager::remove_settings($step->id, SETTINGS_TYPE_STEP);
-            $DB->delete_records('tool_cleanupcourses_step', (array) $step);
+            $DB->delete_records('tool_lifecycle_step', (array) $step);
         }
         $transaction->allow_commit();
     }
@@ -117,7 +117,7 @@ class step_manager extends subplugin_manager {
     private static function remove_from_sortindex(&$toberemoved) {
         global $DB;
         if (isset($toberemoved->sortindex)) {
-            $subplugins = $DB->get_records_select('tool_cleanupcourses_step',
+            $subplugins = $DB->get_records_select('tool_lifecycle_step',
                 "sortindex > $toberemoved->sortindex",
                 array('workflowid' => $toberemoved->workflowid));
             foreach ($subplugins as $record) {
@@ -152,7 +152,7 @@ class step_manager extends subplugin_manager {
         }
         $transaction = $DB->start_delegated_transaction();
 
-        $otherrecord = $DB->get_record('tool_cleanupcourses_step',
+        $otherrecord = $DB->get_record('tool_lifecycle_step',
             array(
                 'sortindex' => $otherindex,
                 'workflowid' => $step->workflowid)
@@ -175,7 +175,7 @@ class step_manager extends subplugin_manager {
     public static function get_step_instances($workflowid) {
         // TODO: Alter calls to include workflow id.
         global $DB;
-        $records = $DB->get_records('tool_cleanupcourses_step', array(
+        $records = $DB->get_records('tool_lifecycle_step', array(
             'workflowid' => $workflowid
         ));
         $steps = array();
@@ -191,7 +191,7 @@ class step_manager extends subplugin_manager {
      */
     public static function get_step_instances_by_subpluginname($subpluginname) {
         global $DB;
-        $records = $DB->get_records('tool_cleanupcourses_step', array('subpluginname' => $subpluginname));
+        $records = $DB->get_records('tool_lifecycle_step', array('subpluginname' => $subpluginname));
         $steps = array();
         foreach ($records as $id => $record) {
             $steps[$id] = step_subplugin::from_record($record);
@@ -204,10 +204,10 @@ class step_manager extends subplugin_manager {
      * @return array of step subplugins.
      */
     public static function get_step_types() {
-        $subplugins = \core_component::get_plugin_list('cleanupcoursesstep');
+        $subplugins = \core_component::get_plugin_list('lifecyclestep');
         $result = array();
         foreach (array_keys($subplugins) as $plugin) {
-            $result[$plugin] = get_string('pluginname', 'cleanupcoursesstep_' . $plugin);
+            $result[$plugin] = get_string('pluginname', 'lifecyclestep_' . $plugin);
         }
         return $result;
     }
@@ -231,7 +231,7 @@ class step_manager extends subplugin_manager {
                     self::remove($subpluginid);
                 }
             } else {
-                echo $OUTPUT->notification(get_string('active_workflow_not_changeable', 'tool_cleanupcourses'), 'warning');
+                echo $OUTPUT->notification(get_string('active_workflow_not_changeable', 'tool_lifecycle'), 'warning');
             }
         }
     }
@@ -259,7 +259,7 @@ class step_manager extends subplugin_manager {
      */
     public static function count_steps_of_workflow($workflowid) {
         global $DB;
-        return $DB->count_records('tool_cleanupcourses_step',
+        return $DB->count_records('tool_lifecycle_step',
             array('workflowid' => $workflowid)
         );
     }
@@ -270,7 +270,7 @@ class step_manager extends subplugin_manager {
      */
     public static function remove_instances_of_workflow($workflowid) {
         global $DB;
-        $DB->delete_records('tool_cleanupcourses_step', array('workflowid' => $workflowid));
+        $DB->delete_records('tool_lifecycle_step', array('workflowid' => $workflowid));
     }
 
     /**

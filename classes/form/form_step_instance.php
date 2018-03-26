@@ -17,16 +17,16 @@
 /**
  * Offers the possibility to add or modify a step instance.
  *
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\form;
+namespace tool_lifecycle\form;
 
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\manager\lib_manager;
-use tool_cleanupcourses\manager\workflow_manager;
-use tool_cleanupcourses\step\libbase;
+use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\manager\lib_manager;
+use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\step\libbase;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -104,14 +104,14 @@ class form_step_instance extends \moodleform {
         $mform->setType('action', PARAM_TEXT);
         $mform->setDefault('action', ACTION_STEP_INSTANCE_FORM);
 
-        $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_cleanupcourses'));
+        $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_lifecycle'));
 
         $elementname = 'instancename';
-        $mform->addElement('text', $elementname, get_string('step_instancename', 'tool_cleanupcourses'));
+        $mform->addElement('text', $elementname, get_string('step_instancename', 'tool_lifecycle'));
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'subpluginnamestatic';
-        $mform->addElement('static', $elementname, get_string('step_subpluginname', 'tool_cleanupcourses'));
+        $mform->addElement('static', $elementname, get_string('step_subpluginname', 'tool_lifecycle'));
         $mform->setType($elementname, PARAM_TEXT);
         $elementname = 'subpluginname';
         $mform->addElement('hidden', $elementname);
@@ -119,7 +119,7 @@ class form_step_instance extends \moodleform {
 
         // Insert the subplugin specific settings.
         if (!empty($this->lib->instance_settings())) {
-            $mform->addElement('header', 'step_settings_header', get_string('step_settings_header', 'tool_cleanupcourses'));
+            $mform->addElement('header', 'step_settings_header', get_string('step_settings_header', 'tool_lifecycle'));
             $this->lib->extend_add_instance_form_definition($mform);
         }
 
@@ -161,7 +161,7 @@ class form_step_instance extends \moodleform {
             $subpluginname = $this->subpluginname;
         }
         $mform->setDefault('subpluginnamestatic',
-            get_string('pluginname', 'cleanupcoursesstep_' . $subpluginname));
+            get_string('pluginname', 'lifecyclestep_' . $subpluginname));
         $mform->setDefault('subpluginname', $subpluginname);
 
         // Setting the default values for the local step settings.

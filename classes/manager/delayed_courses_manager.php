@@ -18,11 +18,11 @@
  * Manager for Delayed Courses
  * Each entry tells that the trigger-check for a certain course is delayed until a certain timestamp.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -36,16 +36,16 @@ class delayed_courses_manager {
     public static function set_course_delayed($courseid, $duration) {
         global $DB;
         $delayeduntil = time() + $duration;
-        $record = $DB->get_record('tool_cleanupcourses_delayed', array('courseid' => $courseid));
+        $record = $DB->get_record('tool_lifecycle_delayed', array('courseid' => $courseid));
         if (!$record) {
             $record = new \stdClass();
             $record->courseid = $courseid;
             $record->delayeduntil = $delayeduntil;
-            $DB->insert_record('tool_cleanupcourses_delayed', $record);
+            $DB->insert_record('tool_lifecycle_delayed', $record);
         } else {
             if ($record->delayeduntil < $delayeduntil) {
                 $record->delayeduntil = $delayeduntil;
-                $DB->update_record('tool_cleanupcourses_delayed', $record);
+                $DB->update_record('tool_lifecycle_delayed', $record);
             }
         }
     }
@@ -57,7 +57,7 @@ class delayed_courses_manager {
      */
     public static function get_course_delayed($courseid) {
         global $DB;
-        $record = $DB->get_record('tool_cleanupcourses_delayed', array('courseid' => $courseid));
+        $record = $DB->get_record('tool_lifecycle_delayed', array('courseid' => $courseid));
         if ($record) {
             return $record->delayeduntil;
         } else {
@@ -71,6 +71,6 @@ class delayed_courses_manager {
      */
     public static function remove_delay_entry($courseid) {
         global $DB;
-        $DB->delete_records('tool_cleanupcourses_delayed', array('courseid' => $courseid));
+        $DB->delete_records('tool_lifecycle_delayed', array('courseid' => $courseid));
     }
 }

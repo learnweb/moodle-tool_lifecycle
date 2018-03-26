@@ -17,13 +17,13 @@
 /**
  * Table listing all courses for a specific user and a specific subplugin
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\table;
+namespace tool_lifecycle\table;
 
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -42,7 +42,7 @@ class interaction_remaining_table extends interaction_table {
 
         $fields = 'c.id as courseid, p.id as processid, c.fullname as coursefullname, c.shortname as courseshortname ';
         $from = '{course} c left join ' .
-            '{tool_cleanupcourses_process} p on p.courseid = c.id ';
+            '{tool_lifecycle_process} p on p.courseid = c.id ';
 
         $ids = implode(',', $courseids);
 
@@ -65,8 +65,8 @@ class interaction_remaining_table extends interaction_table {
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
-            get_string('status', 'tool_cleanupcourses'),
-            get_string('tools', 'tool_cleanupcourses'),
+            get_string('status', 'tool_lifecycle'),
+            get_string('tools', 'tool_lifecycle'),
         ]);
         $this->setup();
     }
@@ -85,7 +85,7 @@ class interaction_remaining_table extends interaction_table {
 
         $actions = [];
         foreach ($this->availabletools as $tool) {
-            if (has_capability($tool->capability, \context_course::instance($row->courseid))) {
+            if (has_capability($tool->capability, \context_course::instance($row->courseid), null, false)) {
                 $actions[$tool->triggerid] = new \action_menu_link_secondary(
                     new \moodle_url($PAGE->url, array('triggerid' => $tool->triggerid,
                         'courseid' => $row->courseid, 'sesskey' => sesskey())),

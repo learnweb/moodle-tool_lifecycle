@@ -18,18 +18,18 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
 
-use \tool_cleanupcourses\entity\workflow;
-use \tool_cleanupcourses\manager\step_manager;
+use \tool_lifecycle\entity\workflow;
+use \tool_lifecycle\manager\step_manager;
 
 /**
  * Tests creating storing and retrieving a step object.
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @category   test
- * @group      tool_cleanupcourses
+ * @group      tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
+class tool_lifecycle_persist_step_testcase extends \advanced_testcase {
 
     /** workflow */
     private $workflow;
@@ -41,7 +41,7 @@ class tool_cleanupcourses_persist_step_testcase extends \advanced_testcase {
 
     public function setUp() {
         $this->resetAfterTest(true);
-        $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_cleanupcourses');
+        $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
         $this->workflow = $this->generator->create_workflow();
     }

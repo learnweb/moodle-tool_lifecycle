@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="admin/tool/cleanupcourses/db" VERSION="2018022102" COMMENT="XMLDB file for Moodle tool/cleanupcourses"
+<XMLDB PATH="admin/tool/lifecycle/db" VERSION="2018022102" COMMENT="XMLDB file for Moodle tool/lifecycle"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="tool_cleanupcourses_process" COMMENT="table containing the state of all courses currently within the cleanup process">
+    <TABLE NAME="tool_lifecycle_process" COMMENT="table containing the state of all courses currently within a lifecycle process">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true" COMMENT="id of the process"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="course id"/>
@@ -16,10 +16,10 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="courseid_fk" TYPE="foreign-unique" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" COMMENT="Foreign key on course table"/>
-        <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_cleanupcourses_workflow" REFFIELDS="id"/>
+        <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_lifecycle_workflow" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="tool_cleanupcourses_delayed" COMMENT="List of courses, for which the next check is delayed until a certain timestamp.">
+    <TABLE NAME="tool_lifecycle_delayed" COMMENT="List of courses, for which the next check is delayed until a certain timestamp.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="id of the course"/>
@@ -30,7 +30,7 @@
         <KEY NAME="courseid_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" COMMENT="Foreign key on course table"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="tool_cleanupcourses_trigger" COMMENT="Trigger subplugins for the cleanup courses">
+    <TABLE NAME="tool_lifecycle_trigger" COMMENT="Trigger subplugins for the life cycle">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="instancename" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="instancename of the trigger"/>
@@ -39,10 +39,10 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_cleanupcourses_workflow" REFFIELDS="id"/>
+        <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_lifecycle_workflow" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="tool_cleanupcourses_step" COMMENT="Step subplugins for the cleanup courses">
+    <TABLE NAME="tool_lifecycle_step" COMMENT="Step subplugins for the life cycle">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="instancename" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="instancename of the step"/>
@@ -52,10 +52,10 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_cleanupcourses_workflow" REFFIELDS="id"/>
+        <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_lifecycle_workflow" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="tool_cleanupcourses_settings" COMMENT="Settings for step instances">
+    <TABLE NAME="tool_lifecycle_settings" COMMENT="Settings for step instances">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the step instance"/>
@@ -65,10 +65,10 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="instanceid_fk" TYPE="foreign" FIELDS="instanceid" REFTABLE="tool_cleanupcourses_step" REFFIELDS="id" COMMENT="Foreignkey for step instance"/>
+        <KEY NAME="instanceid_fk" TYPE="foreign" FIELDS="instanceid" REFTABLE="tool_lifecycle_step" REFFIELDS="id" COMMENT="Foreignkey for step instance"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="tool_cleanupcourses_procdata" COMMENT="Stores the process data in a key/value-store">
+    <TABLE NAME="tool_lifecycle_procdata" COMMENT="Stores the process data in a key/value-store">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="processid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="id of the process"/>
@@ -79,11 +79,11 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="processid_fk" TYPE="foreign" FIELDS="processid" REFTABLE="tool_cleanupcourses_process" REFFIELDS="id" COMMENT="Foreign key on process table"/>
-        <KEY NAME="stepid_fk" TYPE="foreign" FIELDS="stepid" REFTABLE="tool_cleanupcourses_step" REFFIELDS="id" COMMENT="Foreign key on step table"/>
+        <KEY NAME="processid_fk" TYPE="foreign" FIELDS="processid" REFTABLE="tool_lifecycle_process" REFFIELDS="id" COMMENT="Foreign key on process table"/>
+        <KEY NAME="stepid_fk" TYPE="foreign" FIELDS="stepid" REFTABLE="tool_lifecycle_step" REFFIELDS="id" COMMENT="Foreign key on step table"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="tool_cleanupcourses_backups" COMMENT="Saves the location of course backups and the relevant information of the course.">
+    <TABLE NAME="tool_lifecycle_backups" COMMENT="Saves the location of course backups and the relevant information of the course.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="id of the course the backup belongs to"/>
@@ -96,7 +96,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="tool_cleanupcourses_workflow" COMMENT="Workflow definitions for processes">
+    <TABLE NAME="tool_lifecycle_workflow" COMMENT="Workflow definitions for processes">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Title of a workflow"/>

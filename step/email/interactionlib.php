@@ -18,20 +18,20 @@
  * Interface for the interactions of the subplugintype step
  * It has to be implemented by all subplugins that want to use the interaction view.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @subpackage step
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\step;
+namespace tool_lifecycle\step;
 
-use tool_cleanupcourses\entity\process;
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\manager\process_data_manager;
-use tool_cleanupcourses\manager\process_manager;
-use tool_cleanupcourses\manager\settings_manager;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\response\step_interactive_response;
+use tool_lifecycle\entity\process;
+use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\manager\process_data_manager;
+use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\manager\settings_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\response\step_interactive_response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -48,7 +48,7 @@ class interactionemail extends interactionlibbase {
      * @return string capability string.
      */
     public function get_relevant_capability() {
-        return 'cleanupcoursesstep/email:preventdeletion';
+        return 'lifecyclestep/email:preventdeletion';
     }
 
     /**
@@ -62,7 +62,7 @@ class interactionemail extends interactionlibbase {
     public function get_action_tools($process) {
         return array(
             array('action' => self::ACTION_KEEP,
-                'alt' => get_string('keep_course', 'cleanupcoursesstep_email'),
+                'alt' => get_string('keep_course', 'lifecyclestep_email'),
             ),
         );
     }
@@ -73,7 +73,7 @@ class interactionemail extends interactionlibbase {
      * @return string status message
      */
     public function get_status_message($process) {
-        return get_string('status_message_requiresattention', 'cleanupcoursesstep_email');
+        return get_string('status_message_requiresattention', 'lifecyclestep_email');
     }
 
     /**

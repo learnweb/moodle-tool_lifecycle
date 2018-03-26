@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of cleanup courses scheduled tasks.
+ * Definition of life cycle scheduled tasks.
  *
- * @package   tool_cleanupcourses
+ * @package   tool_lifecycle
  * @category  task
  * @copyright  2017 Tobias Reischmann WWU
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $tasks = array(
     array(
-        'classname' => 'tool_cleanupcourses\task\process_cleanup',
+        'classname' => 'tool_lifecycle\task\lifecycle_task',
         'blocking' => 0,
         'minute' => '*',
         'hour' => '*',

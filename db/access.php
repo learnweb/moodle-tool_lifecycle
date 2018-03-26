@@ -15,8 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Capability definitions for the tool_cleanupcourses plugin
- * @package    tool_cleanupcourses
+ * Capability definitions for the tool_lifecycle plugin
+ * @package    tool_lifecycle
  * @copyright  2018 Tamara Gunkel, Jan Dageförde (WWU)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -24,7 +24,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
 
-    'tool/cleanupcourses:managecourses' => array(
+    'tool/lifecycle:managecourses' => array(
         'contextlevel' => CONTEXT_COURSE,
         'captype' => 'write',
         'archetypes' => array(

@@ -15,23 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course Cleanup langauge strings.
+ * Life cycle langauge strings.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
 
-$string['pluginname'] = 'Cleanup Courses';
-$string['plugintitle'] = 'Cleanup Courses';
+$string['pluginname'] = 'Life Cycle';
+$string['plugintitle'] = 'Course Life Cycle';
 
-$string['cleanupcourses:managecourses'] = 'May manage courses in tool_cleanupcourses';
+$string['lifecycle:managecourses'] = 'May manage courses in tool_lifecycle';
 
 $string['general_config_header'] = "General & Subplugins";
 $string['config_delay_duration'] = 'Duration of a course delay';
-$string['config_delay_duration_desc'] = 'Defines the time frame, which a course is excluded from the cleanup course, when rolled back via user interaction.';
+$string['config_delay_duration_desc'] = 'Defines the time frame, which a course is excluded from the life cycle processes, when rolled back via user interaction.';
 $string['active_processes_list_header'] = 'Active Processes';
 $string['adminsettings_heading'] = 'Workflow Settings';
 $string['active_manual_workflows_heading'] = 'Active Manual Workflows';
@@ -55,7 +55,7 @@ $string['trigger_does_not_exist'] = 'The requested trigger could not be found.';
 $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not be triggered manually.';
 $string['error_wrong_trigger_selected'] = 'You tried to request a non-manual trigger.';
 
-$string['process_cleanup'] = 'Run the cleanup courses processes';
+$string['lifecycle_task'] = 'Run the life cycle processes';
 
 $string['trigger_subpluginname'] = 'Subplugin Name';
 $string['trigger_instancename'] = 'Instance Name';
@@ -92,13 +92,13 @@ $string['step'] = 'Process step';
 
 $string['workflow_trigger'] = 'Trigger for the workflow';
 
-$string['cleanupcoursestrigger'] = 'Trigger';
-$string['cleanupcoursesstep'] = 'Process step';
+$string['lifecycletrigger'] = 'Trigger';
+$string['lifecyclestep'] = 'Process step';
 
-$string['subplugintype_cleanupcoursestrigger'] = 'Trigger for starting the course cleanup';
-$string['subplugintype_cleanupcoursestrigger_plural'] = 'Triggers for starting the course cleanup';
-$string['subplugintype_cleanupcoursesstep'] = 'Step within a course cleanup process';
-$string['subplugintype_cleanupcoursesstep_plural'] = 'Steps within a course cleanup process';
+$string['subplugintype_lifecycletrigger'] = 'Trigger for starting a lifecycle process';
+$string['subplugintype_lifecycletrigger_plural'] = 'Triggers for starting a lifecycle process';
+$string['subplugintype_lifecyclestep'] = 'Step within a lifecycle process';
+$string['subplugintype_lifecyclestep_plural'] = 'Steps within a lifecycle process';
 
 $string['nointeractioninterface'] = 'No Interaction Interface available!';
 $string['tools'] = 'Tools';

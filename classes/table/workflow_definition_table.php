@@ -17,16 +17,16 @@
 /**
  * Table listing all workflow definitions.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\table;
+namespace tool_lifecycle\table;
 
-use tool_cleanupcourses\manager\lib_manager;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_lifecycle\manager\lib_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -38,7 +38,7 @@ class workflow_definition_table extends workflow_table {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, title, timeactive, displaytitle", '{tool_cleanupcourses_workflow}', "TRUE");
+        $this->set_sql("id, title, timeactive, displaytitle", '{tool_lifecycle_workflow}', "TRUE");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
@@ -47,9 +47,9 @@ class workflow_definition_table extends workflow_table {
     public function init() {
         $this->define_columns(['title', 'timeactive', 'tools']);
         $this->define_headers([
-            get_string('workflow_title', 'tool_cleanupcourses'),
-            get_string('workflow_timeactive', 'tool_cleanupcourses'),
-            get_string('workflow_tools', 'tool_cleanupcourses'),
+            get_string('workflow_title', 'tool_lifecycle'),
+            get_string('workflow_timeactive', 'tool_lifecycle'),
+            get_string('workflow_tools', 'tool_lifecycle'),
             ]);
         $this->sortable(false, 'title');
         $this->setup();
@@ -70,10 +70,10 @@ class workflow_definition_table extends workflow_table {
                 array('action' => ACTION_WORKFLOW_ACTIVATE,
                     'sesskey' => sesskey(),
                     'workflowid' => $row->id)),
-                get_string('activateworkflow', 'tool_cleanupcourses'));
+                get_string('activateworkflow', 'tool_lifecycle'));
         } else {
-            return $OUTPUT->pix_icon('i/warning', get_string('invalid_workflow_details', 'tool_cleanupcourses')) .
-                get_string('invalid_workflow', 'tool_cleanupcourses');
+            return $OUTPUT->pix_icon('i/warning', get_string('invalid_workflow_details', 'tool_lifecycle')) .
+                get_string('invalid_workflow', 'tool_lifecycle');
         }
     }
 
@@ -86,9 +86,9 @@ class workflow_definition_table extends workflow_table {
         global $OUTPUT;
         $output = '';
 
-        $alt = get_string('viewsteps', 'tool_cleanupcourses');
+        $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
-        $url = new \moodle_url('/admin/tool/cleanupcourses/workflowsettings.php',
+        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
             array('workflowid' => $row->id, 'sesskey' => sesskey()));
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null, array('title' => $alt));
@@ -101,18 +101,18 @@ class workflow_definition_table extends workflow_table {
         if (!isset($lib) || $lib->has_multiple_instances()) {
 
             $action = ACTION_WORKFLOW_DUPLICATE;
-            $alt = get_string('duplicateworkflow', 'tool_cleanupcourses');
+            $alt = get_string('duplicateworkflow', 'tool_lifecycle');
             $icon = 't/copy';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
             $action = ACTION_WORKFLOW_INSTANCE_FROM;
-            $alt = get_string('editworkflow', 'tool_cleanupcourses');
+            $alt = get_string('editworkflow', 'tool_lifecycle');
             $icon = 't/edit';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
             if (!workflow_manager::is_active($row->id)) {
                 $action = ACTION_WORKFLOW_DELETE;
-                $alt = get_string('deleteworkflow', 'tool_cleanupcourses');
+                $alt = get_string('deleteworkflow', 'tool_lifecycle');
                 $icon = 't/delete';
                 $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
             }

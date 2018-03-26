@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tool_cleanupcourses\trigger;
+namespace tool_lifecycle\trigger;
 
-use tool_cleanupcourses\response\trigger_response;
-use tool_cleanupcourses\manager\delayed_courses_manager;
+use tool_lifecycle\response\trigger_response;
+use tool_lifecycle\manager\delayed_courses_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -27,13 +27,13 @@ require_once(__DIR__ . '/generator/lib.php');
 /**
  * Trigger test for delayed courses trigger.
  *
- * @package    tool_cleanupcourses_trigger
+ * @package    tool_lifecycle_trigger
  * @category   delayedcourses
- * @group tool_cleanupcourses_trigger
+ * @group tool_lifecycle_trigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_cleanupcourses_trigger_delayedcourses_testcase extends \advanced_testcase {
+class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase {
 
     private $triggerinstance;
 
@@ -41,7 +41,7 @@ class tool_cleanupcourses_trigger_delayedcourses_testcase extends \advanced_test
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
-        $this->triggerinstance = \tool_cleanupcourses_trigger_delayedcourses_generator::create_trigger_with_workflow();
+        $this->triggerinstance = \tool_lifecycle_trigger_delayedcourses_generator::create_trigger_with_workflow();
     }
 
     /**

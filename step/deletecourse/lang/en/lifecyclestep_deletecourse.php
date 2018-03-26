@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for dummy step
+ * Lang strings for delete course step
  *
- * @package tool_cleanupcourses_step
- * @subpackage dummy
+ * @package tool_lifecycle_step
+ * @subpackage deletecourse
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Dummy Step';
+$string['pluginname'] = 'Delete Course Step';

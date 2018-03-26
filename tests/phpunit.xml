@@ -29,7 +29,7 @@
 
 
         <testsuites>
-            <testsuite name="admin_tool_cleanupcourses_tests_testsuite">
+            <testsuite name="admin_tool_lifecycle_tests_testsuite">
                 <directory suffix="_test.php">.</directory>
             </testsuite>
         </testsuites>

@@ -17,13 +17,13 @@
 /**
  * Display the list of courses relevant for a specific user in a specific step instance.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(__DIR__ . '/../../../config.php');
 
-use tool_cleanupcourses\manager\backup_manager;
+use tool_lifecycle\manager\backup_manager;
 
 $PAGE->set_context(context_system::instance());
 require_login(null, false);

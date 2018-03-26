@@ -17,11 +17,11 @@
 /**
  * Manager to retrive the local settings for each step subplugin.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__.'/../../lib.php');
@@ -67,7 +67,7 @@ class settings_manager {
                     $value = $value['text'];
                 }
                 $cleanedvalue = clean_param($value, $setting->paramtype);
-                $record = $DB->get_record('tool_cleanupcourses_settings',
+                $record = $DB->get_record('tool_lifecycle_settings',
                     array(
                         'instanceid' => $instanceid,
                         'type' => $type,
@@ -75,14 +75,14 @@ class settings_manager {
                 );
                 if ($record) {
                     $record->value = $cleanedvalue;
-                    $DB->update_record('tool_cleanupcourses_settings', $record);
+                    $DB->update_record('tool_lifecycle_settings', $record);
                 } else {
                     $newrecord = new \stdClass();
                     $newrecord->instanceid = $instanceid;
                     $newrecord->name = $setting->name;
                     $newrecord->value = $cleanedvalue;
                     $newrecord->type = $type;
-                    $DB->insert_record('tool_cleanupcourses_settings', $newrecord);
+                    $DB->insert_record('tool_lifecycle_settings', $newrecord);
                 }
             }
         }
@@ -117,7 +117,7 @@ class settings_manager {
 
         $settingsvalues = array();
         foreach ($lib->instance_settings() as $setting) {
-            $record = $DB->get_record('tool_cleanupcourses_settings', array('instanceid' => $instanceid,
+            $record = $DB->get_record('tool_lifecycle_settings', array('instanceid' => $instanceid,
                     'type' => $type,
                     'name' => $setting->name));
             if ($record) {
@@ -137,7 +137,7 @@ class settings_manager {
         global $DB;
         self::validate_type($type);
 
-        $DB->delete_records('tool_cleanupcourses_settings',
+        $DB->delete_records('tool_lifecycle_settings',
                 array('instanceid' => $instanceid,
                     'type' => $type));
     }

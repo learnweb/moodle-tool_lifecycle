@@ -17,13 +17,13 @@
 /**
  * Offers the possibility to add or modify a workflow instance.
  *
- * @package    tool_cleanupcourses
+ * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\form;
+namespace tool_lifecycle\form;
 
-use tool_cleanupcourses\entity\workflow;
+use tool_lifecycle\entity\workflow;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -65,18 +65,18 @@ class form_workflow_instance extends \moodleform {
             $mform->setDefault($elementname, $this->workflow->id);
         }
 
-        $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_cleanupcourses'));
+        $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_lifecycle'));
 
         $elementname = 'title';
-        $mform->addElement('text', $elementname, get_string('workflow_title', 'tool_cleanupcourses'));
+        $mform->addElement('text', $elementname, get_string('workflow_title', 'tool_lifecycle'));
         $mform->setType($elementname, PARAM_TEXT);
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->title);
         }
 
         $elementname = 'displaytitle';
-        $mform->addElement('text', $elementname, get_string('workflow_displaytitle', 'tool_cleanupcourses'));
-        $mform->addHelpButton($elementname, 'workflow_displaytitle', 'tool_cleanupcourses');
+        $mform->addElement('text', $elementname, get_string('workflow_displaytitle', 'tool_lifecycle'));
+        $mform->addHelpButton($elementname, 'workflow_displaytitle', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_TEXT);
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->displaytitle);

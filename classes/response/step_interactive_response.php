@@ -17,11 +17,11 @@
 /**
  * Possible Responses of a Subplugin for interaction handling
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\response;
+namespace tool_lifecycle\response;
 
 defined('MOODLE_INTERNAL') || die();
 

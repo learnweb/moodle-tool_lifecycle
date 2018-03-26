@@ -14,22 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tool_cleanupcourses;
+namespace tool_lifecycle;
 
-use tool_cleanupcourses\entity\trigger_subplugin;
-use tool_cleanupcourses\form\form_workflow_instance;
-use tool_cleanupcourses\form\form_step_instance;
-use tool_cleanupcourses\form\form_trigger_instance;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\settings_manager;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\entity\workflow;
-use tool_cleanupcourses\entity\step_subplugin;
-use tool_cleanupcourses\manager\workflow_manager;
-use tool_cleanupcourses\table\active_manual_workflows_table;
-use tool_cleanupcourses\table\workflow_definition_table;
-use tool_cleanupcourses\table\active_automatic_workflows_table;
-use tool_cleanupcourses\table\step_table;
+use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\form\form_workflow_instance;
+use tool_lifecycle\form\form_step_instance;
+use tool_lifecycle\form\form_trigger_instance;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\settings_manager;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\entity\workflow;
+use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\table\active_manual_workflows_table;
+use tool_lifecycle\table\workflow_definition_table;
+use tool_lifecycle\table\active_automatic_workflows_table;
+use tool_lifecycle\table\step_table;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -37,9 +37,9 @@ require_once($CFG->libdir . '/adminlib.php');
 require_once(__DIR__ . '/lib.php');
 
 /**
- * External Page for showing active cleanup processes
+ * External Page for showing active lifecycle processes
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -51,9 +51,9 @@ class admin_page_active_processes extends \admin_externalpage {
      *
      */
     public function __construct() {
-        $url = new \moodle_url('/admin/tool/cleanupcourses/activeprocesses.php');
-        parent::__construct('tool_cleanupcourses_activeprocesses',
-            get_string('active_processes_list_header', 'tool_cleanupcourses'),
+        $url = new \moodle_url('/admin/tool/lifecycle/activeprocesses.php');
+        parent::__construct('tool_lifecycle_activeprocesses',
+            get_string('active_processes_list_header', 'tool_lifecycle'),
             $url);
     }
 }
@@ -61,7 +61,7 @@ class admin_page_active_processes extends \admin_externalpage {
 /**
  * External Page for showing course backups
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -73,9 +73,9 @@ class admin_page_course_backups extends \admin_externalpage {
      *
      */
     public function __construct() {
-        $url = new \moodle_url('/admin/tool/cleanupcourses/coursebackups.php');
-        parent::__construct('tool_cleanupcourses_coursebackups',
-            get_string('course_backups_list_header', 'tool_cleanupcourses'),
+        $url = new \moodle_url('/admin/tool/lifecycle/coursebackups.php');
+        parent::__construct('tool_lifecycle_coursebackups',
+            get_string('course_backups_list_header', 'tool_lifecycle'),
             $url);
     }
 }
@@ -83,7 +83,7 @@ class admin_page_course_backups extends \admin_externalpage {
 /**
  * External Page for defining settings for subplugins
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -95,9 +95,9 @@ class admin_page_sublugins extends \admin_externalpage {
      *
      */
     public function __construct() {
-        $url = new \moodle_url('/admin/tool/cleanupcourses/adminsettings.php');
-        parent::__construct('tool_cleanupcourses_adminsettings',
-            get_string('adminsettings_heading', 'tool_cleanupcourses'),
+        $url = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
+        parent::__construct('tool_lifecycle_adminsettings',
+            get_string('adminsettings_heading', 'tool_lifecycle'),
             $url);
     }
 }
@@ -105,7 +105,7 @@ class admin_page_sublugins extends \admin_externalpage {
 /**
  * Class that handles the display and configuration the settings.
  *
- * @package   tool_cleanupcourses
+ * @package   tool_lifecycle
  * @copyright 2015 Tobias Reischmann
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -119,7 +119,7 @@ class admin_settings {
      */
     public function __construct() {
         global $PAGE;
-        $this->pageurl = new \moodle_url('/admin/tool/cleanupcourses/adminsettings.php');
+        $this->pageurl = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
         $PAGE->set_url($this->pageurl);
     }
 
@@ -132,28 +132,28 @@ class admin_settings {
         // Set up the table.
         $this->view_header();
 
-        echo $OUTPUT->heading(get_string('active_automatic_workflows_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('active_automatic_workflows_heading', 'tool_lifecycle'));
 
-        $table = new active_automatic_workflows_table('tool_cleanupcourses_active_automatic_workflows');
-        echo $OUTPUT->box_start("cleanupcourses-enable-overflow cleanupcourses-table");
+        $table = new active_automatic_workflows_table('tool_lifecycle_active_automatic_workflows');
+        echo $OUTPUT->box_start("lifecycle-enable-overflow lifecycle-table");
         $table->out(10, false);
         echo $OUTPUT->box_end();
 
-        echo $OUTPUT->heading(get_string('active_manual_workflows_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('active_manual_workflows_heading', 'tool_lifecycle'));
 
-        $table = new active_manual_workflows_table('tool_cleanupcourses_manual_workflows');
-        echo $OUTPUT->box_start("cleanupcourses-enable-overflow cleanupcourses-table");
+        $table = new active_manual_workflows_table('tool_lifecycle_manual_workflows');
+        echo $OUTPUT->box_start("lifecycle-enable-overflow lifecycle-table");
         $table->out(10, false);
         echo $OUTPUT->box_end();
 
-        echo $OUTPUT->heading(get_string('workflow_definition_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('workflow_definition_heading', 'tool_lifecycle'));
 
         echo $OUTPUT->single_button(new \moodle_url($PAGE->url,
             array('action' => ACTION_WORKFLOW_INSTANCE_FROM, 'sesskey' => sesskey())),
-            get_string('add_workflow', 'tool_cleanupcourses'));
+            get_string('add_workflow', 'tool_lifecycle'));
 
-        $table = new workflow_definition_table('tool_cleanupcourses_workflow_definitions');
-        echo $OUTPUT->box_start("cleanupcourses-enable-overflow cleanupcourses-table");
+        $table = new workflow_definition_table('tool_lifecycle_workflow_definitions');
+        echo $OUTPUT->box_start("lifecycle-enable-overflow lifecycle-table");
         $table->out(10, false);
         echo $OUTPUT->box_end();
 
@@ -170,7 +170,7 @@ class admin_settings {
         // Set up the table.
         $this->view_header();
 
-        echo $OUTPUT->heading(get_string('adminsettings_edit_workflow_definition_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));
 
         echo $form->render();
 
@@ -183,7 +183,7 @@ class admin_settings {
      * @throws \moodle_exception
      */
     private function view_workflow_details($workflowid) {
-        $url = new \moodle_url('/admin/tool/cleanupcourses/workflowsettings.php',
+        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
             array('workflowid' => $workflowid, 'sesskey' => sesskey()));
         redirect($url);
     }
@@ -223,7 +223,7 @@ class admin_settings {
         $this->check_permissions();
 
         // Has to be called before moodleform is created!
-        admin_externalpage_setup('tool_cleanupcourses_adminsettings');
+        admin_externalpage_setup('tool_lifecycle_adminsettings');
 
         workflow_manager::handle_action($action, $workflowid);
 
@@ -258,7 +258,7 @@ class admin_settings {
 /**
  * Class that handles the display and configuration of a workflow.
  *
- * @package   tool_cleanupcourses
+ * @package   tool_lifecycle
  * @copyright 2015 Tobias Reischmann
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -277,8 +277,8 @@ class workflow_settings {
     public function __construct($workflowid) {
         global $PAGE;
         // Has to be called before moodleform is created!
-        admin_externalpage_setup('tool_cleanupcourses_adminsettings');
-        $this->pageurl = new \moodle_url('/admin/tool/cleanupcourses/workflowsettings.php');
+        admin_externalpage_setup('tool_lifecycle_adminsettings');
+        $this->pageurl = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php');
         $PAGE->set_url($this->pageurl);
         $this->workflowid = $workflowid;
     }
@@ -292,18 +292,18 @@ class workflow_settings {
         // Set up the table.
         $this->view_header();
 
-        echo $OUTPUT->heading(get_string('adminsettings_workflow_definition_steps_heading', 'tool_cleanupcourses'));
+        echo $OUTPUT->heading(get_string('adminsettings_workflow_definition_steps_heading', 'tool_lifecycle'));
 
         if (!workflow_manager::is_active($this->workflowid)) {
             $steps = step_manager::get_step_types();
             echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
                 array('action' => ACTION_STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
-                'subpluginname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_cleanupcourses')));
+                'subpluginname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
         }
-        echo $OUTPUT->single_button( new \moodle_url('/admin/tool/cleanupcourses/adminsettings.php'),
+        echo $OUTPUT->single_button( new \moodle_url('/admin/tool/lifecycle/adminsettings.php'),
             get_string('back'));
 
-        $table = new step_table('tool_cleanupcourses_workflows', $this->workflowid);
+        $table = new step_table('tool_lifecycle_workflows', $this->workflowid);
         $table->out(50, false);
 
         $this->view_footer();
@@ -316,7 +316,7 @@ class workflow_settings {
     private function view_step_instance_form($form) {
         $workflow = workflow_manager::get_workflow($this->workflowid);
         $this->view_instance_form($form,
-            get_string('adminsettings_edit_step_instance_heading', 'tool_cleanupcourses',
+            get_string('adminsettings_edit_step_instance_heading', 'tool_lifecycle',
                 $workflow->title));
     }
 
@@ -327,7 +327,7 @@ class workflow_settings {
     private function view_trigger_instance_form($form) {
         $workflow = workflow_manager::get_workflow($this->workflowid);
         $this->view_instance_form($form,
-            get_string('adminsettings_edit_trigger_instance_heading', 'tool_cleanupcourses',
+            get_string('adminsettings_edit_trigger_instance_heading', 'tool_lifecycle',
                 $workflow->title));
     }
 
@@ -436,7 +436,7 @@ class workflow_settings {
                 // In case the workflow is active, we do not allow changes to the steps or trigger.
                 if (workflow_manager::is_active($this->workflowid)) {
                     echo $OUTPUT->notification(
-                        get_string('active_workflow_not_changeable', 'tool_cleanupcourses'),
+                        get_string('active_workflow_not_changeable', 'tool_lifecycle'),
                         'warning');
                 } else {
                     if (!empty($data->id)) {
@@ -489,7 +489,7 @@ class workflow_settings {
             // In case the workflow is active, we do not allow changes to the steps or trigger.
             if (workflow_manager::is_active($this->workflowid)) {
                 echo $OUTPUT->notification(
-                    get_string('active_workflow_not_changeable', 'tool_cleanupcourses'),
+                    get_string('active_workflow_not_changeable', 'tool_lifecycle'),
                     'warning');
             } else {
                 if (!empty($data->id)) {

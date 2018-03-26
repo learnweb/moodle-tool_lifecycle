@@ -17,7 +17,7 @@
 /**
  * Lang strings for site course trigger
  *
- * @package tool_cleanupcourses_trigger
+ * @package tool_lifecycle_trigger
  * @subpackage delayedcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

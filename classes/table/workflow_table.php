@@ -17,16 +17,16 @@
 /**
  * Table listing all active automatically triggered workflows.
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2018 Jan Dageförde WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\table;
+namespace tool_lifecycle\table;
 
-use tool_cleanupcourses\manager\process_manager;
-use tool_cleanupcourses\manager\step_manager;
-use tool_cleanupcourses\manager\trigger_manager;
-use tool_cleanupcourses\manager\workflow_manager;
+use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -62,7 +62,7 @@ abstract class workflow_table extends \table_sql {
             array('action' => ACTION_WORKFLOW_ACTIVATE,
                 'sesskey' => sesskey(),
                 'workflowid' => $row->id)),
-            get_string('activateworkflow', 'tool_cleanupcourses'));
+            get_string('activateworkflow', 'tool_lifecycle'));
     }
 
     /**
@@ -95,9 +95,9 @@ abstract class workflow_table extends \table_sql {
         global $OUTPUT;
         $output = '';
 
-        $alt = get_string('viewsteps', 'tool_cleanupcourses');
+        $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
-        $url = new \moodle_url('/admin/tool/cleanupcourses/workflowsettings.php',
+        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
             array('workflowid' => $row->id, 'sesskey' => sesskey()));
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null , array('title' => $alt));

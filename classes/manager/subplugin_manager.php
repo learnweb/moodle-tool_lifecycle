@@ -17,11 +17,11 @@
 /**
  * Manager for Subplugins
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_cleanupcourses\manager;
+namespace tool_lifecycle\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -34,7 +34,7 @@ abstract class subplugin_manager {
      * @return bool
      */
     protected static function is_subplugin($subpluginname, $subplugintype) {
-        $subplugintypes = \core_component::get_subplugins('tool_cleanupcourses');
+        $subplugintypes = \core_component::get_subplugins('tool_lifecycle');
         if (array_key_exists($subplugintype, $subplugintypes)) {
             $subplugins = $subplugintypes[$subplugintype];
             if (in_array($subpluginname, $subplugins)) {

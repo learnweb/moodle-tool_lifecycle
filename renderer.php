@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Renderer for cleanup courses
+ * Renderer for life cycle
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
-class tool_cleanupcourses_renderer extends plugin_renderer_base {
+class tool_lifecycle_renderer extends plugin_renderer_base {
 
     /**
      * Write the page footer

@@ -17,13 +17,13 @@
 /**
  * Definition of subplugins
  *
- * @package tool_cleanupcourses
+ * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
 $subplugins = array(
-    'cleanupcoursestrigger' => 'admin/tool/cleanupcourses/trigger',
-    'cleanupcoursesstep' => 'admin/tool/cleanupcourses/step',
+    'lifecycletrigger' => 'admin/tool/lifecycle/trigger',
+    'lifecyclestep' => 'admin/tool/lifecycle/step',
 );
