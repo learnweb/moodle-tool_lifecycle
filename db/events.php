@@ -21,10 +21,10 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-// For values for default settings look at https://docs.moodle.org/dev/Cache_API#Ad-hoc_Caches.
-$definitions = array(
-    'coursesmanaged' => array(
-        'mode' => cache_store::MODE_SESSION,
-        'simplekeys' => true)
+$observers = array(
+    // TODO: add other events.
+    array(
+        'eventname'   => '\core\event\role_assigned',
+        'callback'    => 'tool_lifecycle\observer::role_changed'
+    )
 );

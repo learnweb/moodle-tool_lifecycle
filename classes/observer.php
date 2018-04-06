@@ -19,12 +19,23 @@
  * @copyright  2018 Tobias Reischmann, Nina Herrmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_lifecycle;
 
 defined('MOODLE_INTERNAL') || die();
 
-// For values for default settings look at https://docs.moodle.org/dev/Cache_API#Ad-hoc_Caches.
-$definitions = array(
-    'coursesmanaged' => array(
-        'mode' => cache_store::MODE_SESSION,
-        'simplekeys' => true)
-);
+/**
+ * Class observer - implements the function which react on changes which affect the cached value tool_lifecycle course managed.
+ */
+class observer {
+    /**
+     * Function which invalidates the tool_lifecycle course managed cache when role_changed.
+     * @param $event \core\event\role_assigned or \core\event\role_deleted
+     */
+    public static function role_changed(\core\event\role_assigned $event) {
+        // TODO: implement observer functionality: delete the cache, check for success
+        $component = 'tool_lifecycle';
+        $area = 'coursesmanaged';
+        $success = cache_helper::invalidate_by_definition($component, $area, array(), 0);
+    }
+    // TODO: discuss relevancy of other events.
+}
