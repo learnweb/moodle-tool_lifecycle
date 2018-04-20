@@ -27,15 +27,19 @@ defined('MOODLE_INTERNAL') || die();
  * Class observer - implements the function which react on changes which affect the cached value tool_lifecycle course managed.
  */
 class observer {
+
     /**
-     * Function which invalidates the tool_lifecycle course managed cache when role_changed.
-     * @param $event \core\event\role_assigned or \core\event\role_deleted
+     * Function which invalidates the tool_lifecycle course managed cache at the key for the corresponding user
+     * when his/her role is changed.
+     * @param \core\event\role_assigned || \core\event\role_deleted $event
+     * @throws \coding_exception
      */
-    public static function role_changed(\core\event\role_assigned $event) {
-        // TODO: implement observer functionality: delete the cache, check for success
+    public static function role_changed($event) {
         $component = 'tool_lifecycle';
         $area = 'coursesmanaged';
-        $success = cache_helper::invalidate_by_definition($component, $area, array(), 0);
+        $userid = $event->relateduserid;
+
+        // FYI: Although this method is called invalidate it actually deletes the cache at the given key.
+        \cache_helper::invalidate_by_definition($component, $area, array(), $userid);
     }
-    // TODO: discuss relevancy of other events.
 }

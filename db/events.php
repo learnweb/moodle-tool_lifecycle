@@ -22,9 +22,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 $observers = array(
-    // TODO: add other events.
+    // Create or delete course is not considered since in this case the role_assigned or role_unassigned event is thrown.
     array(
         'eventname'   => '\core\event\role_assigned',
+        'callback'    => 'tool_lifecycle\observer::role_changed'
+    ),
+    array(
+        'eventname'   => '\core\event\role_unassigned',
         'callback'    => 'tool_lifecycle\observer::role_changed'
     )
 );

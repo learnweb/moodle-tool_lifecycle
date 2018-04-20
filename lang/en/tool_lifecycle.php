@@ -126,3 +126,5 @@ $string['manual_trigger_process_existed'] = 'A workflow for this course already 
 
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_is_running'] = 'Workflow is running.';
+
+$string['cachedef_coursesmanaged'] = 'Caches for which courses a user has the capability tool/lifecycle:managecourses';

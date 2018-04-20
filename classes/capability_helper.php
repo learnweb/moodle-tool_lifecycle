@@ -31,17 +31,18 @@ class capability_helper {
      */
     public static function has_coursesmanaged() {
         global $USER;
+        $userid = $USER->id;
         $cache = \cache::make('tool_lifecycle', 'coursesmanaged');
-        $cachedcourses = $cache->get(0);
+        $cachedcourses = $cache->get($userid);
         if ($cachedcourses === false) {
-            $courses = get_user_capability_course('tool/lifecycle:managecourses', $USER->id, false);
+            $courses = get_user_capability_course('tool/lifecycle:managecourses', $userid, false);
             // No course with capabilities.
             if ($courses === false) {
-                $cache->set(0, 0);
+                $cache->set($userid, 0);
             } else {
-                $cache->set(0, 1);
+                $cache->set($userid, 1);
             }
-            $cachedcourses = $cache->get(0);
+            $cachedcourses = $cache->get($userid);
 
         }
         return $cachedcourses;
