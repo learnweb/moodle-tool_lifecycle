@@ -15,15 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
- *
  * @package    tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2018 Tobias Reischmann, Nina Herrmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->version  = 2018042001;
-$plugin->component = 'tool_lifecycle';
-$plugin->requires = 2017051500; // Require Moodle 3.3 (or above).
+defined('MOODLE_INTERNAL') || die();
+$observers = array(
+    // Create or delete course is not considered since in this case the role_assigned or role_unassigned event is thrown.
+    array(
+        'eventname'   => '\core\event\role_assigned',
+        'callback'    => 'tool_lifecycle\observer::role_changed'
+    ),
+    array(
+        'eventname'   => '\core\event\role_unassigned',
+        'callback'    => 'tool_lifecycle\observer::role_changed'
+    )
+);
