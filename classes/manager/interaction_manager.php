@@ -134,7 +134,8 @@ class interaction_manager {
         }
 
         if ($process->stepindex == 0) {
-            $trigger = trigger_manager::get_trigger_for_workflow($process->workflowid);
+            //TODO: Rethink behaviour for multiple triggers.
+            $trigger = trigger_manager::get_triggers_for_workflow($process->workflowid)[0];
             $triggerlib = lib_manager::get_trigger_lib($trigger->subpluginname);
             return $triggerlib->get_status_message();
         } else {

@@ -93,9 +93,9 @@ class workflow_definition_table extends workflow_table {
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null, array('title' => $alt));
 
-        $trigger = trigger_manager::get_trigger_for_workflow($row->id);
-        if ($trigger) {
-            $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+        $trigger = trigger_manager::get_triggers_for_workflow($row->id);
+        if (!empty($trigger)) {
+            $lib = lib_manager::get_trigger_lib($trigger[0]->subpluginname);
         }
 
         if (!isset($lib) || $lib->has_multiple_instances()) {

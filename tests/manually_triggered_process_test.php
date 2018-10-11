@@ -54,7 +54,7 @@ class tool_lifecycle_manually_triggered_process_testcase extends \advanced_testc
         workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $manualworkflow->id);
 
         $this->course = $this->getDataGenerator()->create_course();
-        $this->trigger = trigger_manager::get_trigger_for_workflow($manualworkflow->id);
+        $this->trigger = trigger_manager::get_triggers_for_workflow($manualworkflow->id)[0];
     }
 
     /**
