@@ -198,6 +198,9 @@ class form_trigger_instance extends \moodleform {
                 $error[$setting->name] = get_string('required');
             }
         }
+
+        $this->lib->extend_add_instance_form_validation($error, $data);
+
         return $error;
     }
 
