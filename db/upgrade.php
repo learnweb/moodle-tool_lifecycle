@@ -298,6 +298,5 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018101000, 'tool', 'lifecycle');
     }
 
-
     return true;
 }
