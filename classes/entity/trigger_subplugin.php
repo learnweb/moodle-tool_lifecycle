@@ -48,6 +48,10 @@ class trigger_subplugin extends subplugin{
             $id = $record->id;
         }
         $instance = new self($record->instancename, $record->subpluginname, $record->workflowid, $id);
+        if (object_property_exists($record, 'sortindex') ) {
+            $instance->sortindex = $record->sortindex;
+        }
+
         return $instance;
     }
 

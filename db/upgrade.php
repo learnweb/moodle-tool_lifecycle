@@ -283,5 +283,21 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018022102, 'tool', 'lifecycle');
     }
 
+    if ($oldversion < 2018101000) {
+
+        // Define field sortindex to be added to tool_lifecycle_trigger.
+        $table = new xmldb_table('tool_lifecycle_trigger');
+        $field = new xmldb_field('sortindex', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, 1, 'workflowid');
+
+        // Conditionally launch add field sortindex.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2018101000, 'tool', 'lifecycle');
+    }
+
+
     return true;
 }

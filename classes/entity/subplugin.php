@@ -40,6 +40,10 @@ abstract class subplugin{
     /** string name of subplugin */
     public $subpluginname;
 
+    /** int sort index, which defines the order,
+     * in which the steps wihtin a workflow are executed*/
+    public $sortindex;
+
     /**
      * Creates a subplugin with subpluginname and optional id.
      * @oaram string $instancename name of the subplugin instance
