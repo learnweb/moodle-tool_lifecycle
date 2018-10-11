@@ -44,7 +44,7 @@ class step_table extends \table_sql {
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
         $this->workflowid = $workflowid;
         list($sqlwhere, $params) = $DB->get_in_or_equal($workflowid);
-        $this->set_sql("id, subpluginname, instancename, sortindex",
+        $this->set_sql("id, subpluginname, instancename, sortindex, 'step' as type",
             '{tool_lifecycle_step}',
             "workflowid " . $sqlwhere, $params);
         $this->define_baseurl($PAGE->url);
@@ -53,16 +53,18 @@ class step_table extends \table_sql {
     }
 
     public function build_table() {
-        $trigger = trigger_manager::get_trigger_for_workflow($this->workflowid);
-        $this->format_and_add_array_of_rows(array(
-            array(
-                'id' => $trigger->id,
-                'type' => 'trigger',
-                'subpluginname' => $trigger->subpluginname,
-                'sortindex' => null,
-                'instancename' => 'Test',
-            )
-        ), false);
+        $triggers = trigger_manager::get_triggers_for_workflow($this->workflowid);
+        foreach ($triggers as $trigger) {
+            $this->format_and_add_array_of_rows(array(
+                array(
+                    'id' => $trigger->id,
+                    'type' => 'trigger',
+                    'subpluginname' => $trigger->subpluginname,
+                    'sortindex' => $trigger->sortindex,
+                    'instancename' => $trigger->instancename,
+                )
+            ), false);
+        }
         return parent::build_table();
     }
 
@@ -96,7 +98,7 @@ class step_table extends \table_sql {
      * @return string type of the subplugin
      */
     public function col_type($row) {
-        if (empty($row->type)) {
+        if ($row->type == 'step') {
             return get_string('step', 'tool_lifecycle');
         }
         return get_string('trigger', 'tool_lifecycle');
@@ -110,7 +112,7 @@ class step_table extends \table_sql {
     public function col_subpluginname($row) {
 
         $subpluginname = $row->subpluginname;
-        if (empty($row->type)) {
+        if ($row->type == 'step') {
             return get_string('pluginname', 'lifecyclestep_' . $subpluginname);
         } else {
             return get_string('pluginname', 'lifecycletrigger_' . $subpluginname);
@@ -125,22 +127,44 @@ class step_table extends \table_sql {
     public function col_sortindex($row) {
         global $OUTPUT;
         $output = '';
-        if ($row->sortindex !== null) {
-            if ($row->sortindex > 1) {
-                $alt = 'up';
-                $icon = 't/up';
-                $action = ACTION_UP_STEP;
-                $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
-            } else {
-                $output .= $OUTPUT->spacer();
+        if ($row->type == 'step') {
+            if ($row->sortindex !== null) {
+                if ($row->sortindex > 1) {
+                    $alt = 'up';
+                    $icon = 't/up';
+                    $action = ACTION_UP_STEP;
+                    $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+                } else {
+                    $output .= $OUTPUT->spacer();
+                }
+                if ($row->sortindex < step_manager::count_steps_of_workflow($this->workflowid)) {
+                    $alt = 'down';
+                    $icon = 't/down';
+                    $action = ACTION_DOWN_STEP;
+                    $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+                } else {
+                    $output .= $OUTPUT->spacer();
+                }
             }
-            if ($row->sortindex < step_manager::count_steps_of_workflow($this->workflowid)) {
-                $alt = 'down';
-                $icon = 't/down';
-                $action = ACTION_DOWN_STEP;
-                $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
-            } else {
-                $output .= $OUTPUT->spacer();
+        }
+        if ($row->type == 'trigger') {
+            if ($row->sortindex !== null) {
+                if ($row->sortindex > 1) {
+                    $alt = 'up';
+                    $icon = 't/up';
+                    $action = ACTION_UP_TRIGGER;
+                    $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+                } else {
+                    $output .= $OUTPUT->spacer();
+                }
+                if ($row->sortindex < trigger_manager::count_triggers_of_workflow($this->workflowid)) {
+                    $alt = 'down';
+                    $icon = 't/down';
+                    $action = ACTION_DOWN_TRIGGER;
+                    $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+                } else {
+                    $output .= $OUTPUT->spacer();
+                }
             }
         }
 
@@ -156,7 +180,7 @@ class step_table extends \table_sql {
 
         $alt = 'edit';
         $icon = 't/edit';
-        if (empty($row->type)) {
+        if ($row->type == 'step') {
             $action = ACTION_STEP_INSTANCE_FORM;
         } else {
             $action = ACTION_TRIGGER_INSTANCE_FORM;
@@ -174,7 +198,7 @@ class step_table extends \table_sql {
 
         $alt = 'view';
         $icon = 't/viewdetails';
-        if (empty($row->type)) {
+        if ($row->type == 'step') {
             $action = ACTION_STEP_INSTANCE_FORM;
         } else {
             $action = ACTION_TRIGGER_INSTANCE_FORM;
@@ -189,14 +213,15 @@ class step_table extends \table_sql {
      * @return string action button for deleting the subplugin
      */
     public function col_delete($row) {
-        if (empty($row->type)) {
-            $alt = 'delete';
-            $icon = 't/delete';
-            $action = ACTION_STEP_INSTANCE_DELETE;
 
-            return $this->format_icon_link($action, $row->id, $icon, get_string($alt));
+        $alt = 'delete';
+        $icon = 't/delete';
+        if ($row->type == 'step') {
+            $action = ACTION_STEP_INSTANCE_DELETE;
+        } else {
+            $action = ACTION_TRIGGER_INSTANCE_DELETE;
         }
-        return '';
+        return $this->format_icon_link($action, $row->id, $icon, get_string($alt));
     }
 
     /**
