@@ -295,11 +295,19 @@ class workflow_settings {
         echo $OUTPUT->heading(get_string('adminsettings_workflow_definition_steps_heading', 'tool_lifecycle'));
 
         if (!workflow_manager::is_active($this->workflowid)) {
+            $triggers = trigger_manager::get_chooseable_trigger_types();
+            echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
+                array('action' => ACTION_TRIGGER_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
+                'subpluginname', $triggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
+        }
+
+        if (!workflow_manager::is_active($this->workflowid)) {
             $steps = step_manager::get_step_types();
             echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
                 array('action' => ACTION_STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
                 'subpluginname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
         }
+
         echo $OUTPUT->single_button( new \moodle_url('/admin/tool/lifecycle/adminsettings.php'),
             get_string('back'));
 
@@ -380,30 +388,18 @@ class workflow_settings {
      * This is the entry point for this controller class.
      */
     public function execute($action, $subplugin) {
-        global $PAGE;
         $this->check_permissions();
+
+        // Handle other actions.
+        step_manager::handle_action($action, $subplugin);
+        trigger_manager::handle_action($action, $subplugin);
+        workflow_manager::handle_action($action, $subplugin);
 
         if ($action === ACTION_TRIGGER_INSTANCE_FORM) {
             if ($this->handle_trigger_instance_form()) {
                 return;
             }
         }
-
-        // If trigger is not yet set, redirect to trigger form!
-        $trigger = trigger_manager::get_trigger_for_workflow($this->workflowid);
-        if ($trigger === null) {
-            $subpluginname = null;
-            if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
-                $subpluginname = $name;
-            }
-            $triggerform = new form_trigger_instance($PAGE->url, $this->workflowid, null, $subpluginname);
-            $this->view_trigger_instance_form($triggerform);
-            return;
-        }
-
-        // Handle other actions.
-        step_manager::handle_action($action, $subplugin);
-        workflow_manager::handle_action($action, $subplugin);
 
         if ($action === ACTION_STEP_INSTANCE_FORM) {
             if ($this->handle_step_instance_form()) {
@@ -421,14 +417,23 @@ class workflow_settings {
     private function handle_trigger_instance_form() {
         global $OUTPUT, $PAGE;
         $subpluginname = null;
+        $triggertomodify = null;
         $settings = null;
-        if ($trigger = trigger_manager::get_trigger_for_workflow($this->workflowid)) {
-            $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
-        }
-        if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+
+        if ($triggerid = optional_param('subplugin', null, PARAM_INT)) {
+            $triggertomodify = trigger_manager::get_instance($triggerid);
+            // If step was removed!
+            if (!$triggertomodify) {
+                return false;
+            }
+            $settings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
+        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
             $subpluginname = $name;
+        } else {
+            return false;
         }
-        $form = new form_trigger_instance($PAGE->url, $this->workflowid, $trigger, $subpluginname, $settings);
+
+        $form = new form_trigger_instance($PAGE->url, $this->workflowid, $triggertomodify, $subpluginname, $settings);
 
         // Skip this part and continue with requiring a trigger if still null.
         if (!$form->is_cancelled()) {
@@ -440,15 +445,15 @@ class workflow_settings {
                         'warning');
                 } else {
                     if (!empty($data->id)) {
-                        $trigger = trigger_manager::get_instance($data->id);
-                        $trigger->subpluginname = $data->subpluginname;
-                        $trigger->instancename = $data->instancename;
+                        $triggertomodify = trigger_manager::get_instance($data->id);
+                        $triggertomodify->subpluginname = $data->subpluginname;
+                        $triggertomodify->instancename = $data->instancename;
                     } else {
-                        $trigger = trigger_subplugin::from_record($data);
+                        $triggertomodify = trigger_subplugin::from_record($data);
                     }
-                    trigger_manager::insert_or_update($trigger);
+                    trigger_manager::insert_or_update($triggertomodify);
                     // Save local subplugin settings.
-                    settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $data->subpluginname, $data);
+                    settings_manager::save_settings($triggertomodify->id, SETTINGS_TYPE_TRIGGER, $data->subpluginname, $data);
                 }
                 return false;
             } else {
