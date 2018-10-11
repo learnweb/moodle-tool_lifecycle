@@ -139,11 +139,11 @@ class trigger_manager extends subplugin_manager {
      */
     public static function get_triggers_for_workflow($workflowid) {
         global $DB;
-        $records = $DB->get_records('tool_lifecycle_trigger', array('workflowid' => $workflowid),'sortindex');
+        $records = $DB->get_records('tool_lifecycle_trigger', array('workflowid' => $workflowid), 'sortindex');
         $output = array();
         foreach ($records as $record) {
             $subplugin = trigger_subplugin::from_record($record);
-            $output []= $subplugin;
+            $output [] = $subplugin;
         }
         return $output;
     }
