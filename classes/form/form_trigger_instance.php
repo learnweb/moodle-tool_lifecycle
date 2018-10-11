@@ -115,17 +115,13 @@ class form_trigger_instance extends \moodleform {
         $mform->addElement('text', $elementname, get_string('trigger_instancename', 'tool_lifecycle'));
         $mform->setType($elementname, PARAM_TEXT);
 
-        // If workflow is active, then all trigger types have to be used to also show the preset triggers.
-        if ($this->workflowid && workflow_manager::is_active($this->workflowid)) {
-            $triggers = trigger_manager::get_trigger_types();
-        } else {
-            $triggers = trigger_manager::get_chooseable_trigger_types();
-        }
+        $elementname = 'subpluginnamestatic';
+        $mform->addElement('static', $elementname,
+            get_string('trigger_subpluginname', 'tool_lifecycle'));
+        $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'subpluginname';
-        $mform->addElement('select', $elementname,
-            get_string('trigger_subpluginname', 'tool_lifecycle'),
-            $triggers);
+        $mform->addElement('hidden', $elementname);
         $mform->setType($elementname, PARAM_TEXT);
 
         // Insert the subplugin specific settings.
@@ -133,9 +129,6 @@ class form_trigger_instance extends \moodleform {
             $mform->addElement('header', 'trigger_settings_header', get_string('trigger_settings_header', 'tool_lifecycle'));
             $this->lib->extend_add_instance_form_definition($mform);
         }
-
-        $mform->addElement('submit', 'reload', 'reload');
-        $mform->registerNoSubmitButton('reload');
 
         // For active workflows, we do not want the form to be editable.
         if ($this->workflowid && workflow_manager::is_active($this->workflowid)) {
@@ -169,7 +162,10 @@ class form_trigger_instance extends \moodleform {
             $mform->setDefault('id', $this->trigger->id);
             $mform->setDefault('instancename', $this->trigger->instancename);
         }
+        $mform->setDefault('subpluginnamestatic',
+            get_string('pluginname', 'lifecycletrigger_' . $this->subpluginname));
         $mform->setDefault('subpluginname', $this->subpluginname);
+
 
         // Setting the default values for the local trigger settings.
         if ($this->settings) {

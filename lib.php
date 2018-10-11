@@ -35,6 +35,7 @@ define('ACTION_STEP_INSTANCE_FORM', 'step_instance_form');
 define('SETTINGS_TYPE_TRIGGER', 'trigger');
 define('SETTINGS_TYPE_STEP', 'step');
 define('ACTION_TRIGGER_INSTANCE_FORM', 'trigger_instance_form');
+define('ACTION_TRIGGER_INSTANCE_DELETE', 'trigger_instance_delete');
 define('ACTION_STEP_INSTANCE_DELETE', 'step_instance_delete');
 define('ACTION_WORKFLOW_INSTANCE_FROM', 'workflow_instance_form');
 define('ACTION_WORKFLOW_DELETE', 'workflow_instance_delete');

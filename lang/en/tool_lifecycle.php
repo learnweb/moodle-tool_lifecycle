@@ -42,6 +42,7 @@ $string['adminsettings_workflow_definition_steps_heading'] = 'Workflow Steps';
 $string['adminsettings_edit_trigger_instance_heading'] = 'Trigger for workflow \'{$a}\'';
 $string['adminsettings_edit_step_instance_heading'] = 'Step Instance for workflow \'{$a}\'';
 $string['add_new_step_instance'] = 'Add New Step Instance...';
+$string['add_new_trigger_instance'] = 'Add New Trigger...';
 $string['step_settings_header'] = 'Specific settings of the step type';
 $string['trigger_settings_header'] = 'Specific settings of the trigger type';
 $string['general_settings_header'] = 'General Settings';
