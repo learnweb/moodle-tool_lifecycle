@@ -298,14 +298,14 @@ class workflow_settings {
             $triggers = trigger_manager::get_chooseable_trigger_types();
             echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
                 array('action' => ACTION_TRIGGER_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
-                'subpluginname', $triggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
+                'triggername', $triggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
         }
 
         if (!workflow_manager::is_active($this->workflowid)) {
             $steps = step_manager::get_step_types();
             echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
                 array('action' => ACTION_STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
-                'subpluginname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
+                'stepname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
         }
 
         echo $OUTPUT->single_button( new \moodle_url('/admin/tool/lifecycle/adminsettings.php'),
@@ -427,7 +427,7 @@ class workflow_settings {
                 return false;
             }
             $settings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
-        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+        } else if ($name = optional_param('triggername', null, PARAM_ALPHA)) {
             $subpluginname = $name;
         } else {
             return false;
@@ -480,7 +480,7 @@ class workflow_settings {
                 return false;
             }
             $stepsettings = settings_manager::get_settings($stepid, SETTINGS_TYPE_STEP);
-        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+        } else if ($name = optional_param('stepname', null, PARAM_ALPHA)) {
             $subpluginname = $name;
         } else {
             return false;
