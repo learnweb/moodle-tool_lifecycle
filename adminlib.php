@@ -427,6 +427,8 @@ class workflow_settings {
                 return false;
             }
             $settings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
+        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+            $subpluginname = $name;
         } else if ($name = optional_param('triggername', null, PARAM_ALPHA)) {
             $subpluginname = $name;
         } else {
@@ -480,6 +482,8 @@ class workflow_settings {
                 return false;
             }
             $stepsettings = settings_manager::get_settings($stepid, SETTINGS_TYPE_STEP);
+        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+            $subpluginname = $name;
         } else if ($name = optional_param('stepname', null, PARAM_ALPHA)) {
             $subpluginname = $name;
         } else {
