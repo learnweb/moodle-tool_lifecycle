@@ -113,15 +113,18 @@ class form_trigger_instance extends \moodleform {
 
         $elementname = 'instancename';
         $mform->addElement('text', $elementname, get_string('trigger_instancename', 'tool_lifecycle'));
+        $mform->addHelpButton($elementname, 'trigger_instancename', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'subpluginnamestatic';
         $mform->addElement('static', $elementname,
             get_string('trigger_subpluginname', 'tool_lifecycle'));
+        $mform->addHelpButton($elementname, 'trigger_subpluginnamestatic', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'subpluginname';
         $mform->addElement('hidden', $elementname);
+        $mform->addHelpButton($elementname, 'trigger_subpluginname', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_TEXT);
 
         // Insert the subplugin specific settings.

@@ -215,14 +215,17 @@ class email extends libbase {
         $mform->setType($elementname, PARAM_INT);
         $elementname = 'subject';
         $mform->addElement('text', $elementname, get_string('email_subject', 'lifecyclestep_email'));
+        $mform->addHelpButton($elementname, 'email_subject', 'lifecyclestep_email');
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'content';
         $mform->addElement('textarea', $elementname, get_string('email_content', 'lifecyclestep_email'));
+        $mform->addHelpButton($elementname, 'email_content', 'lifecyclestep_email');
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'contenthtml';
         $mform->addElement('editor', $elementname, get_string('email_content_html', 'lifecyclestep_email'));
+        $mform->addHelpButton($elementname, 'email_content_html', 'lifecyclestep_email');
         $mform->setType($elementname, PARAM_RAW);
     }
 

@@ -74,10 +74,12 @@ class form_duplicate extends \moodleform {
 
         $elementname = 'shortname';
         $mform->addElement('text', $elementname, get_string('shortnamecourse'));
+        $mform->addHelpButton($elementname, 'shortnamecourse');
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'fullname';
         $mform->addElement('text', $elementname, get_string('fullnamecourse'));
+        $mform->addHelpButton($elementname, 'fullnamecourse');
         $mform->setType($elementname, PARAM_TEXT);
 
         $this->add_action_buttons();

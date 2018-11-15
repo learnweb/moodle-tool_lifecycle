@@ -69,6 +69,7 @@ class form_workflow_instance extends \moodleform {
 
         $elementname = 'title';
         $mform->addElement('text', $elementname, get_string('workflow_title', 'tool_lifecycle'));
+        $mform->addHelpButton($elementname, 'workflow_title', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_TEXT);
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->title);

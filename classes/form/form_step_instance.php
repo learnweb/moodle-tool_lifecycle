@@ -108,10 +108,12 @@ class form_step_instance extends \moodleform {
 
         $elementname = 'instancename';
         $mform->addElement('text', $elementname, get_string('step_instancename', 'tool_lifecycle'));
+        $mform->addHelpButton($elementname, 'step_instancename', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'subpluginnamestatic';
         $mform->addElement('static', $elementname, get_string('step_subpluginname', 'tool_lifecycle'));
+        $mform->addHelpButton($elementname, 'step_subpluginname', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_TEXT);
         $elementname = 'subpluginname';
         $mform->addElement('hidden', $elementname);

@@ -66,6 +66,7 @@ class startdatedelay extends base_automatic {
 
     public function extend_add_instance_form_definition($mform) {
         $mform->addElement('duration', 'delay', get_string('delay', 'lifecycletrigger_startdatedelay'));
+        $mform->addHelpButton('delay', 'delay', 'lifecycletrigger_startdatedelay');
     }
 
     public function extend_add_instance_form_definition_after_data($mform, $settings) {

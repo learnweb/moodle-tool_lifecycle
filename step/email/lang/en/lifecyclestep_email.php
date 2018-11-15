@@ -27,8 +27,11 @@ $string['pluginname'] = 'Email Step';
 
 $string['email_responsetimeout'] = 'Time the user has for the response';
 $string['email_subject'] = 'Subject Template';
+$string['email_subject_help'] = 'Subject Template';
 $string['email_content'] = 'Content Template';
+$string['email_content_help'] = 'Content Template';
 $string['email_content_html'] = 'Content HTML Template';
+$string['email_content_html_help'] = 'Content HTML Template';
 $string['email:preventdeletion'] = 'Prevent Deletion';
 
 $string['keep_course'] = 'Keep Course';
