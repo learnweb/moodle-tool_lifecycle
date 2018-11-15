@@ -40,9 +40,11 @@ class interaction_remaining_table extends interaction_table {
 
         $this->availabletools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
 
-        $fields = 'c.id as courseid, p.id as processid, c.fullname as coursefullname, c.shortname as courseshortname ';
+        $fields = "c.id as courseid, p.id as processid, c.fullname as coursefullname, c.shortname as courseshortname, " .
+                  "cc.name as category ";
         $from = '{course} c left join ' .
-            '{tool_lifecycle_process} p on p.courseid = c.id ';
+            '{tool_lifecycle_process} p on p.courseid = c.id ' .
+            'left join {course_categories} cc on c.category = cc.id';
 
         $ids = implode(',', $courseids);
 
@@ -51,6 +53,7 @@ class interaction_remaining_table extends interaction_table {
             $where = 'c.id IN ('. $ids . ')';
         }
 
+        $this->column_nosort = array('category', 'status', 'tools');
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
         $this->init();
@@ -60,11 +63,12 @@ class interaction_remaining_table extends interaction_table {
      * Initialises the columns of the table.
      */
     public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'status', 'tools']);
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'category', 'status', 'tools']);
         $this->define_headers([
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
+            get_string('category'),
             get_string('status', 'tool_lifecycle'),
             get_string('tools', 'tool_lifecycle'),
         ]);
