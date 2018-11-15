@@ -58,18 +58,21 @@ class manual extends base_manual {
         $mform->addElement(
             'text', $elementname, get_string('setting_icon', 'lifecycletrigger_manual')
         );
+        $mform->addHelpButton($elementname, 'setting_icon', 'lifecycletrigger_manual');
         $mform->setType($elementname, PARAM_SAFEPATH);
 
         $elementname = 'displayname';
         $mform->addElement(
             'text', $elementname, get_string('setting_displayname', 'lifecycletrigger_manual')
         );
+        $mform->addHelpButton($elementname, 'setting_displayname', 'lifecycletrigger_manual');
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'capability';
         $mform->addElement(
             'text', $elementname, get_string('setting_capability', 'lifecycletrigger_manual')
         );
+        $mform->addHelpButton($elementname, 'setting_capability', 'lifecycletrigger_manual');
         $mform->setType($elementname, PARAM_CAPABILITY);
     }
 

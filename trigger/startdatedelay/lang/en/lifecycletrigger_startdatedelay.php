@@ -26,3 +26,4 @@
 $string['pluginname'] = 'Start date delay trigger';
 
 $string['delay'] = 'Delay from start of course til starting a process';
+$string['delay_help'] = 'Delay from start of course til starting a process';
