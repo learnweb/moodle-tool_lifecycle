@@ -58,6 +58,33 @@ class workflow_manager {
     }
 
     /**
+     * Disables a workflow
+     * @param int $workflowid id of the workflow
+     */
+    public static function disable($workflowid)
+    {
+        $workflow = self::get_workflow($workflowid);
+        if ($workflow) {
+            $workflow->active = false;
+            $workflow->timeactive = null;
+            $workflow->sortindex = null;
+            self::insert_or_update($workflow);
+        }
+    }
+
+    /**
+     * Deletes all running processes of given workflow
+     * @param int $workflowid id of the workflow
+     */
+    public static function abortprocesses($workflowid)
+    {
+        $processes = process_manager::get_processes_by_workflow($workflowid);
+        foreach ($processes as $process) {
+            process_manager::remove_process($process);
+        }
+    }
+
+    /**
      * Returns a workflow instance if one with the is is available.
      * @param int $workflowid id of the workflow
      * @return workflow|null

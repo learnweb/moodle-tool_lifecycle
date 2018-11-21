@@ -110,6 +110,21 @@ class process_manager {
     }
 
     /**
+     * Returns all processes for given workflow id
+     * @param int $workflowid id of the workflow
+     * @return array of proccesses initiated by specifed workflow id
+     */
+    public static function get_processes_by_workflow($workflowid) {
+        global $DB;
+        $records = $DB->get_records('tool_lifecycle_process', array('workflowid' => $workflowid));
+        $processes = array();
+        foreach ($records as $record) {
+            $processes [] = process::from_record($record);
+        }
+        return $processes;
+    }
+
+    /**
      * Proceeds the process to the next step.
      * @param process $process
      * @return true, if followedby another step; otherwise false.
