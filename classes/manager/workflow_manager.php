@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 class workflow_manager {
 
     /**
-     * Remove a workflow from the database.
+     * Persists a workflow to the database.
      * @param workflow $workflow
      */
     public static function insert_or_update(workflow &$workflow) {
@@ -47,7 +47,7 @@ class workflow_manager {
     }
 
     /**
-     * Persists a workflow to the database.
+     * Remove a workflow from the database.
      * @param int $workflowid id of the workflow
      */
     public static function remove($workflowid) {
