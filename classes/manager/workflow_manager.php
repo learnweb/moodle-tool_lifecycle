@@ -196,6 +196,7 @@ class workflow_manager {
      */
     public static function handle_action($action, $workflowid) {
         global $OUTPUT;
+        $confirm = optional_param('confirm', 0, PARAM_BOOL);
         if ($action === ACTION_WORKFLOW_ACTIVATE) {
             self::activate_workflow($workflowid);
         }
@@ -208,6 +209,21 @@ class workflow_manager {
         if ($action === ACTION_WORKFLOW_DUPLICATE) {
             self::duplicate_workflow($workflowid);
         }
+        if ($action === ACTION_WORKFLOW_DISABLE) {
+            if ($confirm and confirm_sesskey()) {
+                self::disable($workflowid);
+            } else {
+                self::render_demand_confirm($action, $workflowid, get_string('disableworkflow_confirm', 'tool_lifecycle'));
+            }
+        }
+        if ($action === ACTION_WORKFLOW_ABORTDISABLE) {
+            if ($confirm and confirm_sesskey()) {
+                self::abortprocesses($workflowid);
+                self::disable($workflowid);
+            } else {
+                self::render_demand_confirm($action, $workflowid, get_string('abortdisableworkflow_confirm', 'tool_lifecycle'));
+            }
+        }
         if ($action === ACTION_WORKFLOW_DELETE) {
             if (self::is_active($workflowid)) {
                 echo $OUTPUT->notification(get_string('active_workflow_not_removeable', 'tool_lifecycle')
@@ -217,6 +233,17 @@ class workflow_manager {
                 self::remove($workflowid);
             }
         }
+    }
+
+    private static function render_demand_confirm($action, $workflowid, $message)
+    {
+        global $OUTPUT, $PAGE;
+        $yesurl = new \moodle_url($PAGE->url, array('workflowid' => $workflowid, 'action' => $action, 'sesskey' => sesskey(), 'confirm' => 1));
+        $nourl = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
+        $output = $OUTPUT->header();
+        $output .= $OUTPUT->confirm($message, $yesurl, $nourl);
+        $output .= $OUTPUT->footer();
+        echo $output;
     }
 
     /**
