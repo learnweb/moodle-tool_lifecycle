@@ -58,13 +58,16 @@ $string['error_wrong_trigger_selected'] = 'You tried to request a non-manual tri
 $string['lifecycle_task'] = 'Run the life cycle processes';
 
 $string['trigger_subpluginname'] = 'Subplugin Name';
+$string['trigger_subpluginname_help'] = 'Subplugin Name';
 $string['trigger_instancename'] = 'Instance Name';
+$string['trigger_instancename_help'] = 'Instance Name';
 $string['trigger_enabled'] = 'Enabled';
 $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_workflow'] = 'Workflow';
 
 $string['add_workflow'] = 'Add Workflow';
 $string['workflow_title'] = 'Title';
+$string['workflow_title_help'] = 'Title';
 $string['workflow_displaytitle'] = 'Displayed workflow title';
 $string['workflow_displaytitle_help'] = 'This title is displayed to users when managing their courses.';
 $string['workflow_active'] = 'Active';
@@ -77,11 +80,17 @@ $string['editworkflow'] = 'Edit Title';
 $string['duplicateworkflow'] = 'Duplicate Workflow';
 $string['deleteworkflow'] = 'Delete Workflow';
 $string['activateworkflow'] = 'Activate';
+$string['disableworkflow'] = 'Disable Workflow';
+$string['disableworkflow_confirm'] = 'The workflow is going to be disabled. Are you sure?';
+$string['abortdisableworkflow'] = 'Abort processes & disable Workflow';
+$string['abortdisableworkflow_confirm'] = 'The workflow is going to be disabled and all running processes of this workflow will be aborted. Are you sure?';
 $string['workflow_duplicate_title'] = '{$a} (Copy)';
 
 $string['step_type'] = 'Type';
 $string['step_subpluginname'] = 'Subplugin Name';
+$string['step_subpluginname_help'] = 'Subplugin Name';
 $string['step_instancename'] = 'Instance Name';
+$string['step_instancename_help'] = 'Instance Name';
 $string['step_sortindex'] = 'Up/Down';
 $string['step_edit'] = 'Edit';
 $string['step_show'] = 'Show';
@@ -108,7 +117,7 @@ $string['date'] = 'Due date';
 $string['nostepfound'] = 'A step with the given stepid could not be found!';
 $string['noprocessfound'] = 'A process with the given processid could not be found!';
 
-$string['nocoursestodisplay'] = 'There are currently no courses, which require your attention!';
+$string['nocoursestodisplay'] = 'There are currently no courses which require your attention!';
 
 $string['course_backups_list_header'] = 'Course Backups';
 $string['backupcreated'] = 'Created at';

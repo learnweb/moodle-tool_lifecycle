@@ -50,7 +50,7 @@ class active_automatic_workflows_table extends workflow_table {
     }
 
     public function init() {
-        $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'sortindex', 'tools']);
+        $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'sortindex', 'tools', 'disable']);
         $this->define_headers([
             get_string('workflow_title', 'tool_lifecycle'),
             get_string('workflow_timeactive', 'tool_lifecycle'),
@@ -58,6 +58,7 @@ class active_automatic_workflows_table extends workflow_table {
             get_string('workflow_processes', 'tool_lifecycle'),
             get_string('workflow_sortindex', 'tool_lifecycle'),
             get_string('workflow_tools', 'tool_lifecycle'),
+            get_string('disableworkflow', 'tool_lifecycle'),
             ]);
         $this->sortable(false, 'sortindex');
         $this->setup();
@@ -91,6 +92,35 @@ class active_automatic_workflows_table extends workflow_table {
         }
 
         return  $output;
+    }
+
+    /**
+     * Render disable column.
+     * @param $row
+     * @return string action buttons for workflows
+     */
+    public function col_disable($row)
+    {
+        global $OUTPUT;
+        $output = '';
+
+        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
+            array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DISABLE, 'sesskey' => sesskey()));
+        $output .=
+            '<div>' . $OUTPUT->single_button(
+                $url,
+                get_string('disableworkflow', 'tool_lifecycle'))
+            . '</div>';
+
+        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
+            array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()));
+        $output .=
+            '<div>' . $OUTPUT->single_button(
+                $url,
+                get_string('abortdisableworkflow', 'tool_lifecycle'))
+            . '</div>';
+
+        return $output;
     }
 
 }

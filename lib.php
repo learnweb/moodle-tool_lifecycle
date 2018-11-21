@@ -40,3 +40,5 @@ define('ACTION_WORKFLOW_INSTANCE_FROM', 'workflow_instance_form');
 define('ACTION_WORKFLOW_DELETE', 'workflow_instance_delete');
 define('ACTION_WORKFLOW_DUPLICATE', 'workflow_instance_duplicate');
 define('ACTION_WORKFLOW_ACTIVATE', 'workflow_instance_activate');
+define('ACTION_WORKFLOW_DISABLE', 'workflow_instance_disable');
+define('ACTION_WORKFLOW_ABORTDISABLE', 'workflow_instance_abortdisable');
