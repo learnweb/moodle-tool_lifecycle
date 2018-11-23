@@ -191,13 +191,6 @@ class form_trigger_instance extends \moodleform {
             $error['instancename'] = get_string('required');
         }
 
-        $requiredsettings = $this->lib->instance_settings();
-        foreach ($requiredsettings as $setting) {
-            if (!array_key_exists($setting->name, $data) || empty($data[$setting->name])) {
-                $error[$setting->name] = get_string('required');
-            }
-        }
-
         $this->lib->extend_add_instance_form_validation($error, $data);
 
         return $error;
