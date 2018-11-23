@@ -56,7 +56,7 @@ class categories extends base_automatic {
 
         $courseincategory = $this->course_is_within_categories($course, explode(',', $categories));
 
-        /**
+        /*
          * I want to trigger the course if ...
          * - the course is within the categories and I don't want to exclude those courses.
          *      $exclude = false

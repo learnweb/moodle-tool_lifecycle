@@ -113,7 +113,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // lifecycle savepoint reached.
+        // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2017081101, 'tool', 'lifecycle');
     }
 
@@ -128,7 +128,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // lifecycle savepoint reached.
+        // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2018021300, 'tool', 'lifecycle');
     }
 
@@ -145,7 +145,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         $DB->execute('update {tool_lifecycle_settings} set type = \'step\'');
 
-        // lifecycle savepoint reached.
+        // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2018021301, 'tool', 'lifecycle');
     }
 
@@ -203,7 +203,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Launch add key workflowid_fk.
         $dbman->add_key($table, $key);
 
-        // lifecycle savepoint reached.
+        // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2018021302, 'tool', 'lifecycle');
     }
 
@@ -218,7 +218,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // lifecycle savepoint reached.
+        // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2018022001, 'tool', 'lifecycle');
     }
 
@@ -231,7 +231,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Launch rename field key.
         $dbman->rename_field($table, $field, 'keyname');
 
-        // lifecycle savepoint reached.
+        // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2018022002, 'tool', 'lifecycle');
     }
 
@@ -245,7 +245,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
                 \tool_lifecycle\manager\workflow_manager::insert_or_update($workflow);
             }
         }
-        // lifecycle savepoint reached.
+        // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2018022005, 'tool', 'lifecycle');
     }
 
@@ -264,7 +264,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Launch add key courseid_fk.
         $dbman->add_key($table, $key);
 
-        // lifecycle savepoint reached.
+        // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2018022101, 'tool', 'lifecycle');
     }
 
@@ -279,7 +279,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // lifecycle savepoint reached.
+        // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2018022102, 'tool', 'lifecycle');
     }
 
