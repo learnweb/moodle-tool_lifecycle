@@ -73,4 +73,19 @@ class manual extends base_manual {
         $mform->setType($elementname, PARAM_CAPABILITY);
     }
 
+    /**
+     * Make all fields required.
+     * @param $error
+     * @param $data
+     */
+    public function extend_add_instance_form_validation(&$error, $data) {
+        parent::extend_add_instance_form_validation($error, $data);
+        $requiredsettings = $this->instance_settings();
+        foreach ($requiredsettings as $setting) {
+            if (!array_key_exists($setting->name, $data) || empty($data[$setting->name])) {
+                $error[$setting->name] = get_string('required');
+            }
+        }
+    }
+
 }
