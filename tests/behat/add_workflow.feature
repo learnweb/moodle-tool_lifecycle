@@ -10,10 +10,11 @@ Feature: Add a workflow definition
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     When I press "Save changes"
+    Then I should see "Workflow Steps"
+    When I select "Manual trigger" from the "triggername" singleselect
     Then I should see "Trigger for workflow 'My Workflow'"
     When I set the following fields to these values:
       | Instance Name              | My Trigger                                |
-      | Subplugin Name             | Manual trigger                            |
     And I press "Save changes"
     # The manual trigger requires additional settings. For that reason the form reloads with some more fields.
     Then I should see "Required"
@@ -37,19 +38,16 @@ Feature: Add a workflow definition
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     When I press "Save changes"
-    Then I should see "Trigger for workflow 'My Workflow'"
-    When I set the following fields to these values:
+    Then I should see "Workflow Steps"
+    When I select "Start date delay trigger" from the "triggername" singleselect
+    And I set the following fields to these values:
       | Instance Name              | My Trigger                                |
-      | Subplugin Name             | Start date delay trigger                  |
-    And I press "reload"
-    Then I should see "Specific settings of the trigger type"
-    When I set the following fields to these values:
       | delay[number]    | 2                          |
       | delay[timeunit]  | days                       |
     And I press "Save changes"
     Then I should see "Workflow Steps"
     And I should see "Start date delay trigger"
-    When I select "Delete Course Step" from the "subpluginname" singleselect
+    When I select "Delete Course Step" from the "stepname" singleselect
     And I set the field "Instance Name" to "Delete Course"
     And I press "Save changes"
     Then I should see "Workflow Steps"
@@ -63,13 +61,10 @@ Feature: Add a workflow definition
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     When I press "Save changes"
-    Then I should see "Trigger for workflow 'My Workflow'"
-    When I set the following fields to these values:
-      | Instance Name              | My Trigger                                |
-      | Subplugin Name             | Start date delay trigger                  |
-    And I press "reload"
-    Then I should see "Specific settings of the trigger type"
-    When I set the following fields to these values:
+    Then I should see "Workflow Steps"
+    When I select "Start date delay trigger" from the "triggername" singleselect
+    And I set the following fields to these values:
+      | Instance Name    | My Trigger                 |
       | delay[number]    | 2                          |
       | delay[timeunit]  | days                       |
     And I press "Save changes"
@@ -78,26 +73,18 @@ Feature: Add a workflow definition
     When I click on the tool "Edit" in the "Trigger" row of the "tool_lifecycle_workflows" table
     Then the following fields match these values:
       | Instance Name              | My Trigger                                |
-      | Subplugin Name             | Start date delay trigger                  |
       | delay[number]              | 2                                         |
       | delay[timeunit]            | days                                      |
-    When I set the following fields to these values:
-      | Subplugin Name             | Manual trigger                            |
-    And I press "reload"
     And I set the following fields to these values:
-      | Instance Name              | My updated Trigger                        |
-      | Icon                       | t/delete                                  |
-      | Action name                | Delete course                             |
-      | Capability                 | moodle/course:manageactivities            |
+      | Instance Name              | Other Trigger                             |
+      | delay[number]              | 4                                         |
+      | delay[timeunit]            | weeks                                     |
     And I press "Save changes"
-    Then I should see "Manual trigger"
     When I click on the tool "Edit" in the "Trigger" row of the "tool_lifecycle_workflows" table
     Then the following fields match these values:
-      | Instance Name              | My updated Trigger                        |
-      | Subplugin Name             | Manual trigger                            |
-      | Icon                       | t/delete                                  |
-      | Action name                | Delete course                             |
-      | Capability                 | moodle/course:manageactivities            |
+      | Instance Name              | Other Trigger                             |
+      | delay[number]              | 4                                         |
+      | delay[timeunit]            | weeks                                     |
 
   Scenario: Add a new workflow definition with steps and rearange
     Given I log in as "admin"
@@ -107,25 +94,22 @@ Feature: Add a workflow definition
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     When I press "Save changes"
-    Then I should see "Trigger for workflow 'My Workflow'"
-    When I set the following fields to these values:
-      | Instance Name              | My Trigger                                |
-      | Subplugin Name             | Start date delay trigger                  |
-    And I press "reload"
-    Then I should see "Specific settings of the trigger type"
-    When I set the following fields to these values:
+    Then I should see "Workflow Steps"
+    When I select "Start date delay trigger" from the "triggername" singleselect
+    And I set the following fields to these values:
+      | Instance Name    | My Trigger                 |
       | delay[number]    | 2                          |
       | delay[timeunit]  | days                       |
     And I press "Save changes"
     Then I should see "Workflow Steps"
     And I should see "Start date delay trigger"
-    When I select "Delete Course Step" from the "subpluginname" singleselect
+    When I select "Delete Course Step" from the "stepname" singleselect
     And I set the field "Instance Name" to "Delete Course 1"
     And I press "Save changes"
-    And I select "Delete Course Step" from the "subpluginname" singleselect
+    And I select "Delete Course Step" from the "stepname" singleselect
     And I set the field "Instance Name" to "Delete Course 2"
     And I press "Save changes"
-    And I select "Create Backup Step" from the "subpluginname" singleselect
+    And I select "Create Backup Step" from the "stepname" singleselect
     And I set the field "Instance Name" to "Create Backup Step"
     And I press "Save changes"
     Then the step "Delete Course 1" should be at the 1 position

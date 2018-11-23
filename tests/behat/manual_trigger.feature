@@ -29,14 +29,11 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
+    And I select "Manual trigger" from the "triggername" singleselect
     And I set the following fields to these values:
       | Instance Name              | My Trigger                                |
-      | Subplugin Name             | Manual trigger                            |
-    And I press "reload"
-    And I should see "Specific settings of the trigger type"
-    And I set the following fields to these values:
       | Icon                       | t/delete                                  |
-      | Action name                | Delete course                            |
+      | Action name                | Delete course                             |
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
     And I press "Back"
@@ -59,20 +56,17 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
+    And I select "Manual trigger" from the "triggername" singleselect
     And I set the following fields to these values:
       | Instance Name              | My Trigger                                |
-      | Subplugin Name             | Manual trigger                            |
-    And I press "reload"
-    And I should see "Specific settings of the trigger type"
-    And I set the following fields to these values:
       | Icon                       | t/delete                                  |
       | Action name                | Delete course                             |
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
-    And I select "Create Backup Step" from the "subpluginname" singleselect
+    And I select "Create Backup Step" from the "stepname" singleselect
     And I set the field "Instance Name" to "Create Backup Step"
     And I press "Save changes"
-    And I select "Delete Course Step" from the "subpluginname" singleselect
+    And I select "Delete Course Step" from the "stepname" singleselect
     And I set the field "Instance Name" to "Delete Course 2"
     And I press "Save changes"
     And I press "Back"

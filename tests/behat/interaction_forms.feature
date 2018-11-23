@@ -18,17 +18,14 @@ Feature: Add a workflow with a manual trigger and a duplicate step and test the 
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
+    And I select "Manual trigger" from the "triggername" singleselect
     And I set the following fields to these values:
       | Instance Name              | My Trigger                                |
-      | Subplugin Name             | Manual trigger                            |
-    And I press "reload"
-    And I should see "Specific settings of the trigger type"
-    And I set the following fields to these values:
       | Icon                       | t/delete                                  |
       | Action name                | Duplicate course                          |
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
-    And I select "Duplicate Step" from the "subpluginname" singleselect
+    And I select "Duplicate Step" from the "stepname" singleselect
     And I set the following fields to these values:
       | Instance Name              | Duplicate Step                  |
     And I press "Save changes"

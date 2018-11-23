@@ -22,15 +22,13 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
+    And I select "Start date delay trigger" from the "triggername" singleselect
     And I set the following fields to these values:
-      | Instance Name              | My Trigger                                |
-      | Subplugin Name             | Start date delay trigger                  |
-    And I press "reload"
-    And I set the following fields to these values:
+      | Instance Name    | My Trigger                 |
       | delay[number]    | 3                          |
       | delay[timeunit]  | days                       |
     And I press "Save changes"
-    And I select "Email Step" from the "subpluginname" singleselect
+    And I select "Email Step" from the "stepname" singleselect
     And I set the following fields to these values:
       | Instance Name              | Email Step                  |
       | responsetimeout[number]    | 8                           |
@@ -39,7 +37,7 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
       | Content Template           | Content                     |
       | Content HTML Template      | Content HTML                |
     And I press "Save changes"
-    And I select "Delete Course Step" from the "subpluginname" singleselect
+    And I select "Delete Course Step" from the "stepname" singleselect
     And I set the field "Instance Name" to "Delete Course 2"
     And I press "Save changes"
     And I press "Back"
