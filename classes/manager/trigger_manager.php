@@ -277,6 +277,8 @@ class trigger_manager extends subplugin_manager {
      */
     public static function remove_instances_of_workflow($workflowid) {
         global $DB;
+        $trigger = self::get_trigger_for_workflow($workflowid);
+        settings_manager::remove_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
         $DB->delete_records('tool_lifecycle_trigger', array('workflowid' => $workflowid));
     }
 

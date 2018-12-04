@@ -270,6 +270,10 @@ class step_manager extends subplugin_manager {
      */
     public static function remove_instances_of_workflow($workflowid) {
         global $DB;
+        $instances = self::get_step_instances($workflowid);
+        foreach ($instances as $instance) {
+            settings_manager::remove_settings($instance->id, SETTINGS_TYPE_STEP);
+        }
         $DB->delete_records('tool_lifecycle_step', array('workflowid' => $workflowid));
     }
 
