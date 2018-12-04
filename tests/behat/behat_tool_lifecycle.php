@@ -97,7 +97,7 @@ class behat_tool_lifecycle extends behat_base {
         }
 
         $xpathelement = $xpathelement . "//a[@title = '$tool']" .
-            " | " . $xpathelement. "//span[text() = '$tool']/parent::a".
+            " | " . $xpathelement. "//span[contains(text(), '$tool')]/parent::a".
             " | " . $xpathelement. "//button[text() = '$tool']";
 
         try {
@@ -157,7 +157,7 @@ class behat_tool_lifecycle extends behat_base {
         }
 
         $xpathelement = $xpathelement . "//a[@title = '$tool']" .
-            " | " . $xpathelement. "//span[text() = '$tool']/parent::a".
+            " | " . $xpathelement. "//span[contains(text(), '$tool')]/parent::a".
             " | " . $xpathelement. "//button[text() = '$tool']";
 
         return $xpathelement;
@@ -182,7 +182,7 @@ class behat_tool_lifecycle extends behat_base {
         }
 
         $xpathelement = $xpathelement . "//a[@title = '$tool']" .
-            " | " . $xpathelement. "//span[text() = '$tool']/parent::a".
+            " | " . $xpathelement. "//span[contains(text(), '$tool')]/parent::a".
             " | " . $xpathelement. "//button[text() = '$tool']";
 
         try {

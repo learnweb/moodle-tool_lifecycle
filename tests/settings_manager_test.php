@@ -47,7 +47,7 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
         $this->workflow = $generator->create_workflow();
         $this->step = new step_subplugin('instancename', 'email', $this->workflow->id);
         step_manager::insert_or_update($this->step);
-        $this->trigger = \tool_lifecycle\manager\trigger_manager::get_trigger_for_workflow($this->workflow->id);
+        $this->trigger = \tool_lifecycle\manager\trigger_manager::get_triggers_for_workflow($this->workflow->id)[0];
     }
 
     /**

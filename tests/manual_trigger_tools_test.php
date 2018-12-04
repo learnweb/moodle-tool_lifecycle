@@ -63,7 +63,7 @@ class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
         $tools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
         $this->assertCount(1, $tools);
         $this->assertContainsOnly(manual_trigger_tool::class, $tools);
-        $trigger = trigger_manager::get_trigger_for_workflow($this->workflow2->id);
+        $trigger = trigger_manager::get_triggers_for_workflow($this->workflow2->id)[0];
         $tool = new manual_trigger_tool($trigger->id, self::MANUAL_TRIGGER2_ICON,
             self::MANUAL_TRIGGER2_DISPLAYNAME, self::MANUAL_TRIGGER2_CAPABILITY);
         $this->assertEquals($tool, $tools[0]);
@@ -78,12 +78,12 @@ class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
         $tools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
         $this->assertCount(2, $tools);
         $this->assertContainsOnly(\tool_lifecycle\local\data\manual_trigger_tool::class, $tools);
-        $trigger = trigger_manager::get_trigger_for_workflow($this->workflow1->id);
+        $trigger = trigger_manager::get_triggers_for_workflow($this->workflow1->id)[0];
         $expectedtool = new manual_trigger_tool($trigger->id, self::MANUAL_TRIGGER1_ICON,
             self::MANUAL_TRIGGER1_DISPLAYNAME, self::MANUAL_TRIGGER1_CAPABILITY);
         $this->assert_tool_exist($expectedtool, $tools);
 
-        $trigger = trigger_manager::get_trigger_for_workflow($this->workflow2->id);
+        $trigger = trigger_manager::get_triggers_for_workflow($this->workflow2->id)[0];
         $expectedtool = new manual_trigger_tool($trigger->id, self::MANUAL_TRIGGER2_ICON,
             self::MANUAL_TRIGGER2_DISPLAYNAME, self::MANUAL_TRIGGER2_CAPABILITY);
         $this->assert_tool_exist($expectedtool, $tools);
