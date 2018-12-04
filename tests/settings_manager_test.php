@@ -19,6 +19,8 @@ defined('MOODLE_INTERNAL') || die();
 use tool_lifecycle\entity\step_subplugin;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\settings_manager;
+use tool_lifecycle\manager\subplugin_manager;
+use tool_lifecycle\manager\workflow_manager;
 
 /**
  * Tests the settings manager.
@@ -33,6 +35,7 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
     /** step_subplugin */
     private $step;
     private $trigger;
+    private $workflow;
 
     const EMAIL_VALUE = 'value';
     const STARTDELAY_VALUE = 100;
@@ -41,10 +44,10 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
         $this->resetAfterTest(false);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
-        $workflow = $generator->create_workflow();
-        $this->step = new step_subplugin('instancename', 'email', $workflow->id);
+        $this->workflow = $generator->create_workflow();
+        $this->step = new step_subplugin('instancename', 'email', $this->workflow->id);
         step_manager::insert_or_update($this->step);
-        $this->trigger = \tool_lifecycle\manager\trigger_manager::get_trigger_for_workflow($workflow->id);
+        $this->trigger = \tool_lifecycle\manager\trigger_manager::get_trigger_for_workflow($this->workflow->id);
     }
 
     /**
@@ -60,7 +63,7 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
     }
 
     /**
-     * Test setting and getting settings data for steps.
+     * Test setting and getting settings data for triggers.
      */
     public function test_set_get_trigger_settings() {
         $data = new stdClass();
@@ -69,6 +72,32 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
         $settings = settings_manager::get_settings($this->trigger->id, SETTINGS_TYPE_TRIGGER);
         $this->assertArrayHasKey('delay', $settings, 'No key \'delay\' in returned settings array');
         $this->assertEquals(self::STARTDELAY_VALUE, $settings['delay']);
+    }
+
+    /**
+     * Test correct removal of setting, if steps, triggers or workflows are deleted.
+     */
+    public function test_remove_workflow() {
+        global $DB;
+        $data = new stdClass();
+        $data->subject = self::EMAIL_VALUE;
+        settings_manager::save_settings($this->step->id, SETTINGS_TYPE_STEP, $this->step->subpluginname, $data);
+        $data = new stdClass();
+        $data->delay = 100;
+        settings_manager::save_settings($this->trigger->id, SETTINGS_TYPE_TRIGGER, $this->trigger->subpluginname, $data);
+        $settingsstep = $DB->get_records('tool_lifecycle_settings', array('instanceid' => $this->step->id,
+            'type' => SETTINGS_TYPE_STEP));
+        $this->assertNotEmpty($settingsstep);
+        $settingstrigger = $DB->get_records('tool_lifecycle_settings', array('instanceid' => $this->trigger->id,
+            'type' => SETTINGS_TYPE_TRIGGER));
+        $this->assertNotEmpty($settingstrigger);
+        workflow_manager::remove($this->workflow->id);
+        $settingsstep = $DB->get_records('tool_lifecycle_settings', array('instanceid' => $this->step->id,
+            'type' => SETTINGS_TYPE_STEP));
+        $this->assertEmpty($settingsstep);
+        $settingstrigger = $DB->get_records('tool_lifecycle_settings', array('instanceid' => $this->trigger->id,
+            'type' => SETTINGS_TYPE_TRIGGER));
+        $this->assertEmpty($settingstrigger);
     }
 
 }
