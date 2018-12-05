@@ -43,7 +43,7 @@ $workflowsettings = new tool_lifecycle\workflow_settings($workflowid);
 // Execute the controller.
 // @TODO what's the purpose of subplugin? why not workflowid?
 $subplugin = optional_param('subplugin', null, PARAM_INT);
-if($subplugin == null && $workflowid) {
+if ($subplugin == null && $workflowid) {
     $subplugin = $workflowid;
 }
 $workflowsettings->execute(optional_param('action', null, PARAM_TEXT), $subplugin);

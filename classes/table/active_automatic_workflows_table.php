@@ -99,8 +99,7 @@ class active_automatic_workflows_table extends workflow_table {
      * @param $row
      * @return string action buttons for workflows
      */
-    public function col_disable($row)
-    {
+    public function col_disable($row) {
         global $OUTPUT;
         $output = '';
 

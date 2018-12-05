@@ -61,8 +61,7 @@ class workflow_manager {
      * Disables a workflow
      * @param int $workflowid id of the workflow
      */
-    public static function disable($workflowid)
-    {
+    public static function disable($workflowid) {
         $workflow = self::get_workflow($workflowid);
         if ($workflow) {
             $workflow->active = false;
@@ -76,8 +75,7 @@ class workflow_manager {
      * Deletes all running processes of given workflow
      * @param int $workflowid id of the workflow
      */
-    public static function abortprocesses($workflowid)
-    {
+    public static function abortprocesses($workflowid) {
         $processes = process_manager::get_processes_by_workflow($workflowid);
         foreach ($processes as $process) {
             process_manager::remove_process($process);
@@ -235,8 +233,7 @@ class workflow_manager {
         }
     }
 
-    private static function render_demand_confirm($action, $workflowid, $message)
-    {
+    private static function render_demand_confirm($action, $workflowid, $message) {
         global $OUTPUT, $PAGE;
         $yesurl = new \moodle_url($PAGE->url, array('workflowid' => $workflowid, 'action' => $action, 'sesskey' => sesskey(), 'confirm' => 1));
         $nourl = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
