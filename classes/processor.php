@@ -50,11 +50,15 @@ class processor {
         $exclude = array();
 
         foreach ($activeworkflows as $workflow) {
+            $countcourses = 0;
+            $counttriggered = 0;
+            $countexcluded = 0;
             mtrace('Calling triggers for workflow "' . $workflow->title . '"');
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
             $recordset = $this->get_course_recordset($triggers, $exclude);
             while ($recordset->valid()) {
                 $course = $recordset->current();
+                $countcourses++;
                 foreach ($triggers as $trigger) {
                     $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                     $response = $lib->check_course($course, $trigger->id);
@@ -64,6 +68,7 @@ class processor {
                     }
                     if ($response == trigger_response::exclude()) {
                         array_push($exclude, $course->id);
+                        $countexcluded++;
                         $recordset->next();
                         continue 2;
                     }
@@ -73,7 +78,11 @@ class processor {
                 }
                 // If all trigger instances agree, that they want to trigger a process, we do so.
                 process_manager::create_process($course->id, $workflow->id);
+                $counttriggered++;
             }
+            mtrace("   $countcourses courses processed.");
+            mtrace("   $counttriggered courses triggered.");
+            mtrace("   $countexcluded courses excluded.");
         }
     }
 
