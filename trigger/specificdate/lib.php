@@ -90,7 +90,7 @@ class specificdate extends base_automatic {
         return array('false', array());
     }
 
-        /**
+    /**
      * Parses the dates settings to actual date objects.
      * @param $datesraw string
      */
