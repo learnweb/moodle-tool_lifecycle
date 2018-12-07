@@ -79,6 +79,7 @@ class processor {
                 // If all trigger instances agree, that they want to trigger a process, we do so.
                 process_manager::create_process($course->id, $workflow->id);
                 $counttriggered++;
+                $recordset->next();
             }
             mtrace("   $countcourses courses processed.");
             mtrace("   $counttriggered courses triggered.");
