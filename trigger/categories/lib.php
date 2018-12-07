@@ -106,7 +106,7 @@ class categories extends base_automatic {
     public function extend_add_instance_form_definition($mform) {
         $mform->addElement('text', 'categories', get_string('categories', 'lifecycletrigger_categories'));
         $mform->setType('categories', PARAM_SEQUENCE);
-        $mform->addElement('checkbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));
+        $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));
         $mform->setType('exclude', PARAM_BOOL);
     }
 
