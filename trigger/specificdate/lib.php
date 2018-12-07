@@ -25,7 +25,6 @@
  */
 namespace tool_lifecycle\trigger;
 
-use coursecat;
 use DateTime;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\trigger_manager;
