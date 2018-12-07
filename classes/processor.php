@@ -186,7 +186,7 @@ class processor {
         $sql = 'SELECT {course}.* from {course} '.
             'left join {tool_lifecycle_process} '.
             'ON {course}.id = {tool_lifecycle_process}.courseid '.
-            'WHERE {tool_lifecycle_process}.courseid is null ' . $where;
+            'WHERE {tool_lifecycle_process}.courseid is null AND ' . $where;
         return $DB->get_recordset_sql($sql, $whereparams);
     }
 
