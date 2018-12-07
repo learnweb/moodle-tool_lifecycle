@@ -55,6 +55,7 @@ class categories extends base_automatic {
         $categories = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['categories'];
         $exclude = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['exclude'] && true;
 
+        $categories = explode(',', $categories);
         require_once($CFG->libdir . '/coursecatlib.php');
         $categoryobjects = coursecat::get_many($categories);
         $allcategories = array();
