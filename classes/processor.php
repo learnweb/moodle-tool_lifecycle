@@ -188,7 +188,7 @@ class processor {
 
         if (!empty($exclude)) {
             list($insql, $inparams) = $DB->get_in_or_equal($exclude, SQL_PARAMS_NAMED);
-            $where .= "AND {$insql}";
+            $where .= " AND {course}.id {$insql}";
             $whereparams = array_merge($whereparams, $inparams);
         }
 
