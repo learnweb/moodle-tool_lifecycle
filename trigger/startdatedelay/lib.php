@@ -46,12 +46,17 @@ class startdatedelay extends base_automatic {
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
+        // Everything is already in the sql statement.
+        return trigger_response::trigger();
+    }
+
+    public function get_course_recordset_where($triggerid) {
         $delay = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['delay'];
-        $now = time();
-        if ($course->startdate + $delay < $now) {
-            return trigger_response::trigger();
-        }
-        return trigger_response::next();
+        $where = "{course}.startdate < :startdatedelay";
+        $params = array(
+            "startdatedelay" => time() - $delay,
+        );
+        return array($where, $params);
     }
 
     public function get_subpluginname() {

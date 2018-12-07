@@ -40,8 +40,6 @@ require_once(__DIR__ . '/../../lib.php');
  */
 class specificdate extends base_automatic {
 
-    private $alreadychecked = array();
-
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
      * @param $course object to be processed.
@@ -49,50 +47,50 @@ class specificdate extends base_automatic {
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
-        if (!array_key_exists($triggerid, $this->alreadychecked)) {
-            $settings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
-            $lastrun = getdate($settings['timelastrun']);
-            $datesraw = $settings['dates'];
-            $dates = $this->parse_dates($datesraw);
-
-            $triggerat = array();
-
-            foreach ($dates as $date) {
-                if ($date['mon'] > $lastrun['mon']) {
-                    $date = new DateTime($lastrun['year'].'-'.$date['mon'].'-'.$date['day']);
-                }
-                if ($date['mon'] === $lastrun['mon']) {
-                    if ($date['day'] > $lastrun['day']) {
-                        $date = new DateTime($lastrun['year'].'-'.$date['mon'].'-'.$date['day']);
-                    } else {
-                        $date = new DateTime(($lastrun['year'] + 1) .'-'.$date['mon'].'-'.$date['day']);
-                    }
-                } else {
-                    $date = new DateTime(($lastrun['year'] + 1) .'-'.$date['mon'].'-'.$date['day']);
-                }
-
-                $triggerat [] = $date->getTimestamp();
-            }
-
-            sort($triggerat);
-
-            $current = time();
-
-            foreach ($triggerat as $timestamp) {
-                if ($timestamp < $current) {
-                    $this->alreadychecked[$triggerid] = trigger_response::trigger();
-                    $settings['timelastrun'] = $current;
-                    $trigger = trigger_manager::get_instance($triggerid);
-                    settings_manager::save_settings($triggerid, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
-                    return $this->alreadychecked[$triggerid];
-                }
-            }
-            $this->alreadychecked[$triggerid] = trigger_response::next();
-        }
-        return $this->alreadychecked[$triggerid];
+        // Everything is already in the sql statement.
+        return trigger_response::trigger();
     }
 
-    /**
+    public function get_course_recordset_where($triggerid) {
+        $settings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
+        $lastrun = getdate($settings['timelastrun']);
+        $datesraw = $settings['dates'];
+        $dates = $this->parse_dates($datesraw);
+
+        $triggerat = array();
+
+        foreach ($dates as $dateparts) {
+            if ($dateparts['mon'] > $lastrun['mon']) {
+                $date = new DateTime($lastrun['year'].'-'.$dateparts['mon'].'-'.$dateparts['day']);
+            } else if ($dateparts['mon'] === $lastrun['mon']) {
+                if ($dateparts['day'] > $lastrun['day']) {
+                    $date = new DateTime($lastrun['year'].'-'.$dateparts['mon'].'-'.$dateparts['day']);
+                } else {
+                    $date = new DateTime(($lastrun['year'] + 1) .'-'.$dateparts['mon'].'-'.$dateparts['day']);
+                }
+            } else {
+                $date = new DateTime(($lastrun['year'] + 1) .'-'.$dateparts['mon'].'-'.$dateparts['day']);
+            }
+
+            $triggerat [] = $date->getTimestamp();
+        }
+
+        sort($triggerat);
+
+        $current = time();
+
+        foreach ($triggerat as $timestamp) {
+            if ($timestamp < $current) {
+                $settings['timelastrun'] = $current;
+                $trigger = trigger_manager::get_instance($triggerid);
+                settings_manager::save_settings($triggerid, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
+                return array('true', array());
+            }
+        }
+        return array('false', array());
+    }
+
+        /**
      * Parses the dates settings to actual date objects.
      * @param $datesraw string
      */

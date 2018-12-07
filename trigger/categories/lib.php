@@ -40,56 +40,38 @@ require_once(__DIR__ . '/../../lib.php');
 class categories extends base_automatic {
 
     /**
-     *  Cache for all categories to calculate it only once.
-     */
-    private $allcategoriescache;
-
-    /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
      * @param $course object to be processed.
      * @param $triggerid int id of the trigger instance.
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
+        // Every decision is already in the where statement.
+        return trigger_response::trigger();
+    }
+
+    public function get_course_recordset_where($triggerid) {
+        global $DB, $CFG;
         $categories = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['categories'];
         $exclude = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['exclude'] && true;
 
-        $courseincategory = $this->course_is_within_categories($course, explode(',', $categories));
-
-        /*
-         * I want to trigger the course if ...
-         * - the course is within the categories and I don't want to exclude those courses.
-         *      $exclude = false
-         *      $courseincategory = true
-         * - the course is not within the categories and I want to exclude all courses that do.
-         *      $exclude = true
-         *      $courseincategory = false
-         * that is why the unequal is valid here.
-         */
-        if ($courseincategory !== $exclude) {
-            return trigger_response::trigger();
-        }
-        return trigger_response::next();
-    }
-
-    /**
-     * Tells if the course is within the listed categories.
-     * @param $course object course to be checked.
-     * @param $categories int[] of category ids.
-     * @return bool
-     */
-    private function course_is_within_categories($course, $categories) {
-        if (!$this->allcategoriescache) {
-            $categoryobjects = coursecat::get_many($categories);
-            $this->allcategoriescache = array();
-            foreach ($categories as $category) {
-                array_push($this->allcategoriescache, $category);
-                $children = $categoryobjects[$category]->get_all_children_ids();
-                $this->allcategoriescache = array_merge($this->allcategoriescache, $children);
-            }
+        require_once($CFG->libdir . '/coursecatlib.php');
+        $categoryobjects = coursecat::get_many($categories);
+        $allcategories = array();
+        foreach ($categories as $category) {
+            array_push($allcategories , $category);
+            $children = $categoryobjects[$category]->get_all_children_ids();
+            $allcategories  = array_merge($allcategories , $children);
         }
 
-        return array_search($course->category, $this->allcategoriescache) !== false;
+        list($insql, $inparams) = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED);
+
+        $where = "{course}.category {$insql}";
+        if ($exclude) {
+            $where = "NOT " . $where;
+        }
+
+        return array($where, $inparams);
     }
 
     public function get_subpluginname() {
