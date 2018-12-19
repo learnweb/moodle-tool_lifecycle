@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Lang strings for categories delay trigger
  *
- * @package    tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
+ * @package tool_lifecycle_trigger
+ * @subpackage startdatedelay
+ * @copyright  2018 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+$string['pluginname'] = 'Categories trigger';
 
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->version  = 2018101000;
-$plugin->component = 'tool_lifecycle';
-$plugin->requires = 2017051500; // Require Moodle 3.3 (or above).
+$string['categories'] = 'IDs of categories for which the workflow should be triggered';
+$string['exclude'] = 'If ticked, the named categories are excluded from triggering instead.';

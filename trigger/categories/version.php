@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Life Cycle Categories Trigger
  *
- * @package    tool_lifecycle
+ * @package tool_lifecycle_trigger
+ * @subpackage categories
  * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->version  = 2018101000;
-$plugin->component = 'tool_lifecycle';
-$plugin->requires = 2017051500; // Require Moodle 3.3 (or above).
+$plugin->version  = 2017050901;
+$plugin->component = 'lifecycletrigger_categories';

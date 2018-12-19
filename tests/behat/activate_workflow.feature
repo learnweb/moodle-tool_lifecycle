@@ -4,26 +4,25 @@ Feature: Add a workflow definition activate it
 
   Scenario: Add a new workflow definition with steps and rearange
     Given I log in as "admin"
-    And I navigate to "Workflow Settings" node in "Site administration > Life Cycle"
+    And I navigate to "Life Cycle > Workflow Settings" in site administration
     And I press "Add Workflow"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     When I press "Save changes"
+    Then I should see "Workflow Steps"
+    When I select "Start date delay trigger" from the "triggername" singleselect
     Then I should see "Trigger for workflow 'My Workflow'"
+    And I should see "Specific settings of the trigger type"
     When I set the following fields to these values:
-      | Instance Name              | My Trigger                                |
-      | Subplugin Name             | Start date delay trigger                  |
-    And I press "reload"
-    Then I should see "Specific settings of the trigger type"
-    When I set the following fields to these values:
+      | instancename     | delay trigger              |
       | delay[number]    | 2                          |
       | delay[timeunit]  | days                       |
     And I press "Save changes"
     Then I should see "Workflow Steps"
     And I should see "Add New Step Instance"
     And I should see "Start date delay trigger"
-    When I select "Email Step" from the "subpluginname" singleselect
+    When I select "Email Step" from the "stepname" singleselect
     And I set the following fields to these values:
       | Instance Name              | Email Step                  |
       | responsetimeout[number]    | 14                          |
@@ -32,10 +31,10 @@ Feature: Add a workflow definition activate it
       | Content Template           | Content                     |
       | Content HTML Template      | Content HTML                |
     And I press "Save changes"
-    And I select "Create Backup Step" from the "subpluginname" singleselect
+    And I select "Create Backup Step" from the "stepname" singleselect
     And I set the field "Instance Name" to "Create Backup Step"
     And I press "Save changes"
-    And I select "Delete Course Step" from the "subpluginname" singleselect
+    And I select "Delete Course Step" from the "stepname" singleselect
     And I set the field "Instance Name" to "Delete Course 2"
     And I press "Save changes"
     And I press "Back"

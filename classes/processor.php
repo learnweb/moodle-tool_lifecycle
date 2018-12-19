@@ -52,18 +52,20 @@ class processor {
         while ($recordset->valid()) {
             $course = $recordset->current();
             foreach ($activeworkflows as $workflow) {
-                $trigger = trigger_manager::get_trigger_for_workflow($workflow->id);
-                $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-                $response = $lib->check_course($course, $trigger->id);
-                if ($response == trigger_response::next()) {
-                    continue;
-                }
-                if ($response == trigger_response::exclude()) {
-                    break;
-                }
-                if ($response == trigger_response::trigger()) {
-                    process_manager::create_process($course->id, $trigger->workflowid);
-                    break;
+                $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+                foreach ($triggers as $trigger) {
+                    $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+                    $response = $lib->check_course($course, $trigger->id);
+                    if ($response == trigger_response::next()) {
+                        continue 2;
+                    }
+                    if ($response == trigger_response::exclude()) {
+                        break 2;
+                    }
+                    if ($response == trigger_response::trigger()) {
+                        process_manager::create_process($course->id, $trigger->workflowid);
+                        continue;
+                    }
                 }
             }
             $recordset->next();

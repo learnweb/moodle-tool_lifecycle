@@ -28,10 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 
 class step_subplugin extends subplugin {
 
-    /** int sort index, which defines the order,
-     * in which the steps wihtin a workflow are executed*/
-    public $sortindex;
-
     /**
      * Creates a subplugin from a db record.
      * @param $record

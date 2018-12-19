@@ -97,6 +97,7 @@ class trigger_manager extends subplugin_manager {
         if ($subplugin->id) {
             $DB->update_record('tool_lifecycle_trigger', $subplugin);
         } else {
+            $subplugin->sortindex = self::count_triggers_of_workflow($subplugin->workflowid) + 1;
             $subplugin->id = $DB->insert_record('tool_lifecycle_trigger', $subplugin);
         }
         $transaction->allow_commit();
@@ -108,29 +109,100 @@ class trigger_manager extends subplugin_manager {
      * @param string $subpluginname trigger instance id
      */
     public static function remove_all_instances($subpluginname) {
-        global $DB;
-        $records = $DB->get_records('tool_lifecycle_trigger', array('subpluginname' => $subpluginname));
-        foreach ($records as $record) {
-            settings_manager::remove_settings($record->id, SETTINGS_TYPE_TRIGGER);
+        $triggers = self::get_instances($subpluginname);
+        foreach ($triggers as $trigger) {
+            self::remove($trigger->id);
         }
-        $DB->delete_records('tool_lifecycle_trigger', array('subpluginname' => $subpluginname));
     }
 
     /**
-     * Returns the trigger instance for the workflow id.
-     * @param $workflowid int id of the workflow definition.
-     * @return null|trigger_subplugin returns null, if there is no trigger instance for the workflow.
-     * Otherwise, the trigger instance is returned.
+     * Removes a trigger instance from the database.
+     * @param int $triggerinstanceid trigger instance id
      */
-    public static function get_trigger_for_workflow($workflowid) {
+    private static function remove($triggerinstanceid) {
         global $DB;
-        $record = $DB->get_record('tool_lifecycle_trigger', array('workflowid' => $workflowid));
-        if ($record) {
-            $subplugin = trigger_subplugin::from_record($record);
-            return $subplugin;
-        } else {
-            return null;
+        $transaction = $DB->start_delegated_transaction();
+        if ($record = $DB->get_record('tool_lifecycle_trigger', array('id' => $triggerinstanceid))) {
+            $trigger = trigger_subplugin::from_record($record);
+            self::remove_from_sortindex($trigger);
+            settings_manager::remove_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
+            $DB->delete_records('tool_lifecycle_trigger', (array) $trigger);
         }
+        $transaction->allow_commit();
+    }
+
+
+    /**
+     * Returns the triggers instances for the workflow id.
+     * @param $workflowid int id of the workflow definition.
+     * @return trigger_subplugin[] returns the trigger instances for the workflow.
+     */
+    public static function get_triggers_for_workflow($workflowid) {
+        global $DB;
+        $records = $DB->get_records('tool_lifecycle_trigger', array('workflowid' => $workflowid), 'sortindex');
+        $output = array();
+        foreach ($records as $record) {
+            $subplugin = trigger_subplugin::from_record($record);
+            $output [] = $subplugin;
+        }
+        return $output;
+    }
+
+    /**
+     * Removes a subplugin from the sortindex of a workflow and adjusts all other indizes.
+     * @param trigger_subplugin $toberemoved
+     */
+    private static function remove_from_sortindex(&$toberemoved) {
+        global $DB;
+        if (isset($toberemoved->sortindex)) {
+            $subplugins = $DB->get_records_select('tool_lifecycle_trigger',
+                "sortindex > $toberemoved->sortindex",
+                array('workflowid' => $toberemoved->workflowid));
+            foreach ($subplugins as $record) {
+                $subplugin = trigger_subplugin::from_record($record);
+                $subplugin->sortindex--;
+                self::insert_or_update($subplugin);
+            }
+        }
+    }
+
+    /**
+     * Changes the sortindex of a trigger by swapping it with another.
+     * @param int $triggerid id of the trigger
+     * @param bool $up tells if the trigger should be set up or down
+     */
+    public static function change_sortindex($triggerid, $up) {
+        global $DB;
+        $trigger = self::get_instance($triggerid);
+        // Prevent first entry to be put up even more.
+        if ($trigger->sortindex == 1 && $up) {
+            return;
+        }
+        // Prevent last entry to be put down even more.
+        if ($trigger->sortindex == self::count_triggers_of_workflow($trigger->workflowid) && !$up) {
+            return;
+        }
+        $index = $trigger->sortindex;
+        if ($up) {
+            $otherindex = $index - 1;
+        } else {
+            $otherindex = $index + 1;
+        }
+        $transaction = $DB->start_delegated_transaction();
+
+        $otherrecord = $DB->get_record('tool_lifecycle_trigger',
+            array(
+                'sortindex' => $otherindex,
+                'workflowid' => $trigger->workflowid)
+        );
+        $othertrigger = trigger_subplugin::from_record($otherrecord);
+
+        $trigger->sortindex = $otherindex;
+        $othertrigger->sortindex = $index;
+        self::insert_or_update($trigger);
+        self::insert_or_update($othertrigger);
+
+        $transaction->allow_commit();
     }
 
     /**
@@ -162,29 +234,73 @@ class trigger_manager extends subplugin_manager {
         return $result;
     }
 
+
+    /**
+     * Handles an action for a workflow step.
+     * @param string $action action to be executed
+     * @param int $subpluginid id of the step instance
+     */
+    public static function handle_action($action, $subpluginid) {
+        global $OUTPUT;
+        if ($trigger = self::get_instance($subpluginid)) {
+            if (!workflow_manager::is_active($trigger->workflowid)) {
+                if ($action === ACTION_UP_TRIGGER) {
+                    self::change_sortindex($subpluginid, true);
+                }
+                if ($action === ACTION_DOWN_TRIGGER) {
+                    self::change_sortindex($subpluginid, false);
+                }
+                if ($action === ACTION_TRIGGER_INSTANCE_DELETE) {
+                    self::remove($subpluginid);
+                }
+            } else {
+                echo $OUTPUT->notification(get_string('active_workflow_not_changeable', 'tool_lifecycle'), 'warning');
+            }
+        }
+    }
+
+    /**
+     * Gets the count of triggers belonging to a workflow.
+     * @param int $workflowid id of the workflow.
+     * @return int count of the steps.
+     */
+    public static function count_triggers_of_workflow($workflowid) {
+        global $DB;
+        return $DB->count_records('tool_lifecycle_trigger',
+            array('workflowid' => $workflowid)
+        );
+    }
+
     /**
      * Removes all instances, which belong to the workflow instance.
      * @param $workflowid int id of the workflow.
      */
     public static function remove_instances_of_workflow($workflowid) {
         global $DB;
+        $instances = self::get_triggers_for_workflow($workflowid);
+        foreach ($instances as $instance) {
+            settings_manager::remove_settings($instance->id, SETTINGS_TYPE_TRIGGER);
+        }
         $DB->delete_records('tool_lifecycle_trigger', array('workflowid' => $workflowid));
     }
 
     /**
-     * Copies the trigger of a workflow to a new one.
+     * Copies the triggers of a workflow to a new one.
      * @param $oldworkflowid int id of the old workflow
      * @param $newworkflowid int id of the new workflow
      */
-    public static function duplicate_trigger($oldworkflowid, $newworkflowid) {
-        $trigger = self::get_trigger_for_workflow($oldworkflowid);
-        $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
+    public static function duplicate_triggers($oldworkflowid, $newworkflowid) {
+        $triggers = self::get_triggers_for_workflow($oldworkflowid);
+        foreach ($triggers as $trigger) {
+            $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
 
-        $trigger->id = null;
-        $trigger->workflowid = $newworkflowid;
-        self::insert_or_update($trigger);
+            $trigger->id = null;
+            $trigger->workflowid = $newworkflowid;
+            self::insert_or_update($trigger);
 
-        settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
+            settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
+        }
+
     }
 
 }

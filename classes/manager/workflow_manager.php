@@ -174,7 +174,8 @@ class workflow_manager {
         $transaction = $DB->start_delegated_transaction();
         $workflow = self::get_workflow($workflowid);
         if (!$workflow->active) {
-            $trigger = trigger_manager::get_trigger_for_workflow($workflowid);
+            // TODO: Rethink behaviour for multiple triggers.
+            $trigger = trigger_manager::get_triggers_for_workflow($workflowid)[0];
             $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
             $workflow->manual = $lib->is_manual_trigger();
             $workflow->active = true;
@@ -292,8 +293,8 @@ class workflow_manager {
      * @return bool true, if the definition is valid.
      */
     public static function is_valid($workflowid) {
-        $trigger = trigger_manager::get_trigger_for_workflow($workflowid);
-        if ($trigger === null) {
+        $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
+        if (empty($triggers)) {
             return false;
         }
         return true;
@@ -337,7 +338,7 @@ class workflow_manager {
         $newworkflow = self::create_workflow($newtitle);
         self::insert_or_update($newworkflow);
         // Copy trigger and steps using the new workflow id.
-        trigger_manager::duplicate_trigger($workflowid, $newworkflow->id);
+        trigger_manager::duplicate_triggers($workflowid, $newworkflow->id);
         step_manager::duplicate_steps($workflowid, $newworkflow->id);
         return $newworkflow;
     }

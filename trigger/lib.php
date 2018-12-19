@@ -66,6 +66,14 @@ abstract class base {
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
     }
 
+    /**
+     * This method can be overriden, to add additional data validation to the instance form.
+     * @param $error
+     * @param $data
+     */
+    public function extend_add_instance_form_validation(&$error, $data) {
+    }
+
 
     /**
      * If true, the trigger can be used to manually define workflows, based on an instance of this trigger.
