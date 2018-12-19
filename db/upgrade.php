@@ -298,5 +298,20 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018101000, 'tool', 'lifecycle');
     }
 
+    // @todo set right version
+    if ($oldversion < 2018121903) {
+        // Define field timedeactive to be added to tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
+        $field = new xmldb_field('timedeactive', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'timeactive');
+
+        // Conditionally launch add field id.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2018121903, 'tool', 'lifecycle');
+    }
+
     return true;
 }
