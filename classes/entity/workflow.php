@@ -40,6 +40,9 @@ class workflow {
     /** timestamp the workflow was set active */
     public $timeactive;
 
+    /** timestamp the workflow was deactivated */
+    public $timedeactive;
+
     /** int sort index of all active workflows */
     public $sortindex;
 
@@ -49,11 +52,12 @@ class workflow {
     /** title that is displayed to users */
     public $displaytitle;
 
-    private function __construct($id, $title, $active, $timeactive, $sortindex, $manual, $displaytitle) {
+    private function __construct($id, $title, $active, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle) {
         $this->id = $id;
         $this->title = $title;
         $this->active = $active;
         $this->timeactive = $timeactive;
+        $this->timedeactive = $timedeactive;
         $this->sortindex = $sortindex;
         $this->manual = $manual;
         $this->displaytitle = $displaytitle;
@@ -84,6 +88,11 @@ class workflow {
             $timeactive = $record->timeactive;
         }
 
+        $timedeactive = null;
+        if (object_property_exists($record, 'timedeactive') && $record->timedeactive) {
+            $timedeactive  = $record->timedeactive;
+        }
+
         $sortindex = null;
         if (object_property_exists($record, 'sortindex')) {
             $sortindex = $record->sortindex;
@@ -104,7 +113,7 @@ class workflow {
             $displaytitle = $record->displaytitle;
         }
 
-        $instance = new self($id, $record->title, $active, $timeactive, $sortindex, $manual, $displaytitle);
+        $instance = new self($id, $record->title, $active, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle);
 
         return $instance;
     }
