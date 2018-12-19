@@ -23,8 +23,7 @@
  */
 namespace tool_lifecycle\table;
 
-use tool_lifecycle\manager\process_manager;
-use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\lib_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\workflow_manager;
 
@@ -103,21 +102,23 @@ class active_automatic_workflows_table extends workflow_table {
         global $OUTPUT;
         $output = '';
 
-        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
-            array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DISABLE, 'sesskey' => sesskey()));
-        $output .=
-            '<div>' . $OUTPUT->single_button(
-                $url,
-                get_string('disableworkflow', 'tool_lifecycle'))
-            . '</div>';
+        if( workflow_manager::is_disableable($row->id) ) {
+            $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
+                array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DISABLE, 'sesskey' => sesskey()));
+            $output .=
+                '<div>' . $OUTPUT->single_button(
+                    $url,
+                    get_string('disableworkflow', 'tool_lifecycle'))
+                . '</div>';
 
-        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
-            array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()));
-        $output .=
-            '<div>' . $OUTPUT->single_button(
-                $url,
-                get_string('abortdisableworkflow', 'tool_lifecycle'))
-            . '</div>';
+            $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
+                array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()));
+            $output .=
+                '<div>' . $OUTPUT->single_button(
+                    $url,
+                    get_string('abortdisableworkflow', 'tool_lifecycle'))
+                . '</div>';
+        }
 
         return $output;
     }

@@ -52,9 +52,11 @@ class workflow_manager {
      */
     public static function remove($workflowid) {
         global $DB;
-        trigger_manager::remove_instances_of_workflow($workflowid);
-        step_manager::remove_instances_of_workflow($workflowid);
-        $DB->delete_records('tool_lifecycle_workflow', array('id' => $workflowid));
+        if( self::is_disableable($workflowid )) { //@todo notify user if not
+            trigger_manager::remove_instances_of_workflow($workflowid);
+            step_manager::remove_instances_of_workflow($workflowid);
+            $DB->delete_records('tool_lifecycle_workflow', array('id' => $workflowid));
+        }
     }
 
     /**
@@ -63,7 +65,7 @@ class workflow_manager {
      */
     public static function disable($workflowid) {
         $workflow = self::get_workflow($workflowid);
-        if ($workflow) {
+        if ( $workflow && self::is_disableable($workflowid) ) { //@todo notify user if not
             $workflow->active = false;
             $workflow->timeactive = null;
             $workflow->sortindex = null;
@@ -224,12 +226,14 @@ class workflow_manager {
             }
         }
         if ($action === ACTION_WORKFLOW_DELETE) {
-            if (self::is_active($workflowid)) {
-                echo $OUTPUT->notification(get_string('active_workflow_not_removeable', 'tool_lifecycle')
-                    , 'warning');
+            if (self::get_workflow($workflowid)) { // check workflow wasnt already deleted, in case someone refreshes the page
+                if (self::is_active($workflowid)) {
+                    echo $OUTPUT->notification(get_string('active_workflow_not_removeable', 'tool_lifecycle')
+                        , 'warning');
 
-            } else {
-                self::remove($workflowid);
+                } else {
+                    self::remove($workflowid);
+                }
             }
         }
     }
@@ -311,6 +315,19 @@ class workflow_manager {
     }
 
     /**
+     * Checks if the workflow is deactive.
+     * @param $workflowid int id of the workflow.
+     * @return bool true, if the workflow was deactivated.
+     */
+    public static function is_deactivated($workflowid) {
+        $workflow = self::get_workflow($workflowid);
+        if( $workflow->timedeactive ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Creates a workflow with a specific title. Is used to create preset workflows for trigger plugins.
      * @param $title string title of the workflow. Usually the pluginname of the trigger.
      * @return workflow the created workflow.
@@ -343,4 +360,35 @@ class workflow_manager {
         return $newworkflow;
     }
 
+    /**
+     * Checks if it should be possible to disable a workflow
+     *
+     * @param $workflowid
+     * @return bool
+     */
+    public static function is_disableable($workflowid) {
+        $trigger = trigger_manager::get_triggers_for_workflow( $workflowid );
+        if (!empty($trigger)) {
+            $lib = lib_manager::get_trigger_lib($trigger[0]->subpluginname);
+        }
+        if (!isset($lib) || $lib->has_multiple_instances()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Workflows should only be editable, if never been activated before
+     * @param $workflowid
+     * @return bool
+     */
+    public static function is_editable($workflowid) {
+        if( self::is_active($workflowid) ||
+            self::is_deactivated($workflowid) ) {
+            return false;
+        }
+        return true;
+    }
+
+    // @todo if_deletable: is_disableable && no running processes!
 }
