@@ -159,9 +159,7 @@ class process_manager {
      * @param process $process process the rollback should be triggered for.
      */
     public static function rollback_process($process) {
-        global $CFG;
         // TODO: Add logic to revert changes made by steps.
-        delayed_courses_manager::set_course_delayed($process->courseid, $CFG->lifecycle_duration);
         self::remove_process($process);
     }
 

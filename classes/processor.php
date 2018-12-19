@@ -29,6 +29,7 @@ use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\lib_manager;
 use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\manager\delayed_courses_manager;
 use tool_lifecycle\response\step_interactive_response;
 use tool_lifecycle\response\step_response;
 use tool_lifecycle\response\trigger_response;
@@ -76,6 +77,7 @@ class processor {
      * Calls the process_course() method of each step submodule currently responsible for a given course.
      */
     public function process_courses() {
+        global $CFG;
         foreach (process_manager::get_processes() as $process) {
             while (true) {
 
@@ -104,6 +106,7 @@ class processor {
                         break;
                     }
                 } else if ($result == step_response::rollback()) {
+                    delayed_courses_manager::set_course_delayed($process->courseid, $CFG->lifecycle_duration);
                     process_manager::rollback_process($process);
                     break;
                 } else {
@@ -121,6 +124,7 @@ class processor {
      *      If false, the current step is still processing and cares for displaying the view.
      */
     public function process_course_interactive($processid) {
+        global $CFG;
         $process = process_manager::get_process_by_id($processid);
         $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
         // If there is no next step, then proceed, which will delete/finish the process.
@@ -143,6 +147,7 @@ class processor {
                     return $this->process_course_interactive($processid);
                     break;
                 case step_interactive_response::rollback():
+                    delayed_courses_manager::set_course_delayed($process->courseid, $CFG->lifecycle_duration);
                     process_manager::rollback_process($process);
                     break;
             }

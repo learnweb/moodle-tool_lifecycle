@@ -78,7 +78,7 @@ class workflow_manager {
     public static function abortprocesses($workflowid) {
         $processes = process_manager::get_processes_by_workflow($workflowid);
         foreach ($processes as $process) {
-            process_manager::remove_process($process);
+            process_manager::rollback_process($process);
         }
     }
 
