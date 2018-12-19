@@ -38,7 +38,7 @@ class workflow_definition_table extends workflow_table {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, title, timeactive, displaytitle", '{tool_lifecycle_workflow}', "TRUE");
+        $this->set_sql("id, title, timeactive, displaytitle", '{tool_lifecycle_workflow}', "active = 0 AND timedeactive IS NULL");
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();

@@ -15,35 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Displays the settings associated with one single workflow and handles action for it.
+ * Displays all deactivated workflows
  *
  * @package tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2018 Yorick Reum, JMU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/adminlib.php');
 
+use tool_lifecycle\table\deactivated_workflows_table;
+
 $PAGE->set_context(context_system::instance());
 require_login(null, false);
 require_capability('moodle/site:config', context_system::instance());
 
-$workflowid = required_param('workflowid', PARAM_INT);
+// admin_externalpage_setup('tool_lifecycle_deactivatedworkflows');
 
-$workflow = tool_lifecycle\manager\workflow_manager::get_workflow($workflowid);
+$PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php'));
 
-if (!$workflow) {
-    throw new moodle_exception('workflownotfound', 'tool_lifecycle',
-        new \moodle_url('/admin/tool/lifecycle/adminsettings.php'), $workflowid);
-}
+$table = new deactivated_workflows_table('tool_lifecycle_deactivated_workflows');
 
-// Create the class for this controller.
-$workflowsettings = new tool_lifecycle\workflow_settings($workflowid);
+$PAGE->set_title(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));
+$PAGE->set_heading(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));
 
-// Execute the controller.
-// @TODO what's the purpose of subplugin? why not workflowid?
-$subplugin = optional_param('subplugin', null, PARAM_INT);
-if ($subplugin == null && $workflowid) {
-    $subplugin = $workflowid;
-}
-$workflowsettings->execute(optional_param('action', null, PARAM_TEXT), $subplugin);
+$renderer = $PAGE->get_renderer('tool_lifecycle');
+
+echo $renderer->header();
+
+$table->out(50, false);
+
+echo $renderer->footer();

@@ -157,6 +157,10 @@ class admin_settings {
         $table->out(10, false);
         echo $OUTPUT->box_end();
 
+        $deactivatedworkflowsurl = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
+            array('sesskey' => sesskey()));
+        echo \html_writer::link($deactivatedworkflowsurl, get_string('deactivated_workflows_list','tool_lifecycle'));
+
         $this->view_footer();
     }
 

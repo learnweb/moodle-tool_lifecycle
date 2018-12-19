@@ -66,6 +66,19 @@ abstract class workflow_table extends \table_sql {
     }
 
     /**
+     * Render deactivated column.
+     * @param $row
+     * @return string deactivate time for workflows
+     */
+    public function col_timedeactive($row) {
+        global $OUTPUT, $PAGE;
+        if ($row->timedeactive) {
+            return userdate($row->timedeactive, get_string('strftimedatetime'), 0);
+        }
+        return get_string('workflow_active', 'tool_lifecycle');
+    }
+
+    /**
      * Render the trigger column.
      * @param $row
      * @return string instancename of the trigger
@@ -121,7 +134,7 @@ abstract class workflow_table extends \table_sql {
     protected function format_icon_link($action, $workflowid, $icon, $alt) {
         global $PAGE, $OUTPUT;
 
-        return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
+        return $OUTPUT->action_icon(new \moodle_url( '/admin/tool/lifecycle/adminsettings.php',
                 array('action' => $action,
                     'sesskey' => sesskey(),
                     'workflowid' => $workflowid)),
