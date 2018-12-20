@@ -314,14 +314,14 @@ class workflow_settings {
 
         echo $OUTPUT->heading(get_string('adminsettings_workflow_definition_steps_heading', 'tool_lifecycle'));
 
-        if (!workflow_manager::is_active($this->workflowid)) {
+        if (workflow_manager::is_editable($this->workflowid)) {
             $triggers = trigger_manager::get_chooseable_trigger_types();
             echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
                 array('action' => ACTION_TRIGGER_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
                 'triggername', $triggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
         }
 
-        if (!workflow_manager::is_active($this->workflowid)) {
+        if (workflow_manager::is_editable($this->workflowid)) {
             $steps = step_manager::get_step_types();
             echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
                 array('action' => ACTION_STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
@@ -408,6 +408,8 @@ class workflow_settings {
      * This is the entry point for this controller class.
      */
     public function execute($action, $subplugin) {
+        global $OUTPUT;
+
         $this->check_permissions();
 
         // Handle other actions.
@@ -460,8 +462,8 @@ class workflow_settings {
         // Skip this part and continue with requiring a trigger if still null.
         if (!$form->is_cancelled()) {
             if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
-                // In case the workflow is active, we do not allow changes to the steps or trigger.
-                if (workflow_manager::is_active($this->workflowid)) {
+                // In case the workflow was active, we do not allow changes to the steps or trigger.
+                if (! workflow_manager::is_editable($this->workflowid)) {
                     echo $OUTPUT->notification(
                         get_string('active_workflow_not_changeable', 'tool_lifecycle'),
                         'warning');
@@ -515,8 +517,8 @@ class workflow_settings {
         if ($form->is_cancelled()) {
             return false;
         } else if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
-            // In case the workflow is active, we do not allow changes to the steps or trigger.
-            if (workflow_manager::is_active($this->workflowid)) {
+            // In case the workflow was active, we do not allow changes to the steps or trigger.
+            if (! workflow_manager::is_editable($this->workflowid)) {
                 echo $OUTPUT->notification(
                     get_string('active_workflow_not_changeable', 'tool_lifecycle'),
                     'warning');

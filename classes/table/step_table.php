@@ -38,6 +38,11 @@ class step_table extends \table_sql {
     /** int workflowid */
     private $workflowid;
 
+    /**
+     * step_table constructor.
+     * @param string $uniqueid
+     * @param int $workflowid
+     */
     public function __construct($uniqueid, $workflowid) {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
@@ -75,7 +80,7 @@ class step_table extends \table_sql {
             get_string('step_instancename', 'tool_lifecycle'),
             get_string('step_subpluginname', 'tool_lifecycle'),
             ];
-        if (workflow_manager::is_active($this->workflowid)) {
+        if (! workflow_manager::is_editable($this->workflowid)) {
             $columns [] = 'show';
             $headers [] = get_string('step_show', 'tool_lifecycle');
         } else {

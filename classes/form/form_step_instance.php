@@ -84,8 +84,9 @@ class form_step_instance extends \moodleform {
         }
         $this->lib = lib_manager::get_step_lib($this->subpluginname);
         $this->stepsettings = $stepsettings;
-
-        parent::__construct($url);
+        
+        $editable = workflow_manager::is_editable($workflowid);
+        parent::__construct($url,null, 'post', '', null, $editable);
     }
 
     /**

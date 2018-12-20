@@ -86,10 +86,10 @@ class deactivated_workflows_table extends workflow_table {
             $icon = 't/copy';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
-//            $action = ACTION_WORKFLOW_INSTANCE_FROM;
-//            $alt = get_string('editworkflow', 'tool_lifecycle');
-//            $icon = 't/edit';
-//            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+            $action = ACTION_WORKFLOW_INSTANCE_FROM;
+            $alt = get_string('editworkflow', 'tool_lifecycle');
+            $icon = 't/edit';
+            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
             if (!workflow_manager::is_active($row->id)) {
                 $action = ACTION_WORKFLOW_DELETE; // @todo make sure the action checks if no more processes are running

@@ -90,7 +90,8 @@ class form_trigger_instance extends \moodleform {
             $this->lib = lib_manager::get_trigger_lib($this->subpluginname);
         }
 
-        parent::__construct($url);
+        $editable = workflow_manager::is_editable($workflowid);
+        parent::__construct($url,null, 'post', '', null, $editable);
     }
 
     /**
