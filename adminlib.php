@@ -59,6 +59,22 @@ class admin_page_active_processes extends \admin_externalpage {
 }
 
 /**
+ * External Page for showing deactivated lifecycle workflows
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class admin_page_deactivated_workflows extends \admin_externalpage {
+    public function __construct() {
+        $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php');
+        parent::__construct('tool_lifecycle_deactivatedworkflows',
+            get_string('deactivated_workflows_list_header', 'tool_lifecycle'),
+            $url);
+    }
+}
+
+/**
  * External Page for showing course backups
  *
  * @package tool_lifecycle
