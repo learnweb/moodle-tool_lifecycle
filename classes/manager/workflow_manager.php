@@ -52,7 +52,7 @@ class workflow_manager {
      */
     public static function remove($workflowid) {
         global $DB;
-        if( self::is_disableable($workflowid )) { //@todo notify user if not
+        if( self::is_removable($workflowid )) {
             trigger_manager::remove_instances_of_workflow($workflowid);
             step_manager::remove_instances_of_workflow($workflowid);
             $DB->delete_records('tool_lifecycle_workflow', array('id' => $workflowid));
@@ -228,8 +228,8 @@ class workflow_manager {
         }
         if ($action === ACTION_WORKFLOW_DELETE) {
             if (self::get_workflow($workflowid)) { // check workflow wasnt already deleted, in case someone refreshes the page
-                if (self::is_active($workflowid)) {
-                    echo $OUTPUT->notification(get_string('active_workflow_not_removeable', 'tool_lifecycle')
+                if (! self::is_removable($workflowid)) {
+                    echo $OUTPUT->notification(get_string('workflow_not_removeable', 'tool_lifecycle')
                         , 'warning');
 
                 } else {
@@ -391,5 +391,11 @@ class workflow_manager {
         return true;
     }
 
-    // @todo if_deletable: is_disableable && no running processes!
+    private static function is_removable($workflowid) {
+        $countprocesses = process_manager::count_processes_by_workflow($workflowid);
+        if( self::is_disableable($workflowid) && $countprocesses == 0) {
+            return true;
+        }
+        return false;
+    }
 }
