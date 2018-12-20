@@ -103,7 +103,7 @@ class active_automatic_workflows_table extends workflow_table {
         $output = '';
 
         if( workflow_manager::is_disableable($row->id) ) {
-            $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
+            $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
                 array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DISABLE, 'sesskey' => sesskey()));
             $output .=
                 '<div>' . $OUTPUT->single_button(
@@ -111,7 +111,7 @@ class active_automatic_workflows_table extends workflow_table {
                     get_string('disableworkflow', 'tool_lifecycle'))
                 . '</div>';
 
-            $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
+            $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
                 array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()));
             $output .=
                 '<div>' . $OUTPUT->single_button(

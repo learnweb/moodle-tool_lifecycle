@@ -34,12 +34,18 @@ require_capability('moodle/site:config', context_system::instance());
 
 $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php'));
 
-$table = new deactivated_workflows_table('tool_lifecycle_deactivated_workflows');
-
 $PAGE->set_title(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));
 
+$workflowid = optional_param('workflowid', null, PARAM_INT);
+$action = optional_param('action', null, PARAM_TEXT);
+if ($workflowid && $action) {
+    \tool_lifecycle\manager\workflow_manager::handle_action($action, $workflowid);
+}
+
 $renderer = $PAGE->get_renderer('tool_lifecycle');
+
+$table = new deactivated_workflows_table('tool_lifecycle_deactivated_workflows');
 
 echo $renderer->header();
 
