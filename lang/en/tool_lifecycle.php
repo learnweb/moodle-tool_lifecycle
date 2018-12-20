@@ -49,8 +49,9 @@ $string['general_settings_header'] = 'General Settings';
 $string['followedby_none'] = 'None';
 $string['invalid_workflow'] = 'Invalid workflow configuration';
 $string['invalid_workflow_details'] = 'Go to details view, to create a trigger for this workflow';
-$string['active_workflow_not_changeable'] = 'The workflow instance is active. It is not possible to change any of its steps.';
+$string['active_workflow_not_changeable'] = 'The workflow instance was already activated. It is not possible to change any of its steps anymore.';
 $string['active_workflow_not_removeable'] = 'The workflow instance is active. It is not possible to remove it.';
+$string['workflow_not_removeable'] = 'It is not possible to remove this workflow instance. Maybe it still has running processes?';
 $string['invalid_workflow_cannot_be_activated'] = 'The workflow definition is invalid, thus it cannot be activated.';
 $string['trigger_does_not_exist'] = 'The requested trigger could not be found.';
 $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not be triggered manually.';
@@ -86,6 +87,12 @@ $string['disableworkflow_confirm'] = 'The workflow is going to be disabled. Are 
 $string['abortdisableworkflow'] = 'Abort processes & disable Workflow';
 $string['abortdisableworkflow_confirm'] = 'The workflow is going to be disabled and all running processes of this workflow will be aborted. Are you sure?';
 $string['workflow_duplicate_title'] = '{$a} (Copy)';
+
+//deactivated workflows
+$string['deactivated_workflows_list'] = 'List deactivated workflows';
+$string['deactivated_workflows_list_header'] = 'Deactivated workflows';
+$string['workflow_timedeactive'] = 'Deactivated since';
+// $string['workflow_createbycopy'] = 'Create new workflow by copy';
 
 $string['step_type'] = 'Type';
 $string['step_subpluginname'] = 'Subplugin Name';
