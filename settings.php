@@ -39,9 +39,9 @@ if ($hassiteconfig) {
         183 * 24 * 60 * 60)); // Dafault value is 180 days.
 
     $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_active_processes());
-    $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_deactivated_workflows());
     $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_course_backups());
     $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_sublugins());
+    $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_deactivated_workflows());
 
     if ($ADMIN->fulltree) {
         $triggers = core_component::get_plugin_list('lifecycletrigger');
