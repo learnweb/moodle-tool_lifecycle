@@ -63,6 +63,18 @@ class workflow_manager {
     }
 
     /**
+     * Remove a workflow from the database without checking if it's removable! Mainly for testing.
+     *
+     * @param int $workflowid id of the workflow
+     */
+    public static function remove_hard($workflowid) {
+        global $DB;
+        trigger_manager::remove_instances_of_workflow($workflowid);
+        step_manager::remove_instances_of_workflow($workflowid);
+        $DB->delete_records('tool_lifecycle_workflow', array('id' => $workflowid));
+    }
+
+    /**
      * Disables a workflow
      *
      * @param int $workflowid id of the workflow
@@ -410,7 +422,7 @@ class workflow_manager {
         return true;
     }
 
-    private static function is_removable($workflowid) {
+    public static function is_removable($workflowid) {
         $countprocesses = process_manager::count_processes_by_workflow($workflowid);
         if (self::is_disableable($workflowid) && $countprocesses == 0) {
             return true;

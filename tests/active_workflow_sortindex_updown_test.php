@@ -24,6 +24,7 @@ use tool_lifecycle\entity\workflow;
 
 /**
  * Tests the different state changes of the workflow sortindex for up and down action.
+ *
  * @package    tool_lifecycle
  * @category   test
  * @group      tool_lifecycle
@@ -43,7 +44,7 @@ class tool_lifecycle_workflow_sortindex_updown_testcase extends \advanced_testca
         // Remove preset workflows.
         $workflows = workflow_manager::get_active_automatic_workflows();
         foreach ($workflows as $workflow) {
-            workflow_manager::remove($workflow->id);
+            workflow_manager::remove_hard($workflow->id); // remove() doesn't remove unremovable (like presets) workflows anymore…
         }
 
         $this->workflow1 = $generator->create_workflow();
