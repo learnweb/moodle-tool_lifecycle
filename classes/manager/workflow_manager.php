@@ -52,26 +52,15 @@ class workflow_manager {
      * Remove a workflow from the database.
      *
      * @param int $workflowid id of the workflow
+     * @param boolean $hard if set, will remove the workflow without checking if it's removable! Mainly for testing.
      */
-    public static function remove($workflowid) {
+    public static function remove($workflowid, $hard = false) {
         global $DB;
-        if (self::is_removable($workflowid)) {
+        if ($hard || self::is_removable($workflowid)) {
             trigger_manager::remove_instances_of_workflow($workflowid);
             step_manager::remove_instances_of_workflow($workflowid);
             $DB->delete_records('tool_lifecycle_workflow', array('id' => $workflowid));
         }
-    }
-
-    /**
-     * Remove a workflow from the database without checking if it's removable! Mainly for testing.
-     *
-     * @param int $workflowid id of the workflow
-     */
-    public static function remove_hard($workflowid) {
-        global $DB;
-        trigger_manager::remove_instances_of_workflow($workflowid);
-        step_manager::remove_instances_of_workflow($workflowid);
-        $DB->delete_records('tool_lifecycle_workflow', array('id' => $workflowid));
     }
 
     /**
