@@ -52,7 +52,7 @@ jobs:
       - moodle-plugin-ci install --no-init
       script:
       - moodle-plugin-ci phplint
-      - moodle-plugin-ci phpcpd
+#      - moodle-plugin-ci phpcpd # temporarily disabled
       - moodle-plugin-ci phpmd
       - moodle-plugin-ci codechecker
       - moodle-plugin-ci savepoints
