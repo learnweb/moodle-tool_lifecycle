@@ -21,6 +21,7 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle\manager;
 
 use tool_lifecycle\entity\trigger_subplugin;
@@ -33,6 +34,7 @@ class workflow_manager {
 
     /**
      * Persists a workflow to the database.
+     *
      * @param workflow $workflow
      */
     public static function insert_or_update(workflow &$workflow) {
@@ -48,11 +50,12 @@ class workflow_manager {
 
     /**
      * Remove a workflow from the database.
+     *
      * @param int $workflowid id of the workflow
      */
     public static function remove($workflowid) {
         global $DB;
-        if( self::is_removable($workflowid )) {
+        if (self::is_removable($workflowid)) {
             trigger_manager::remove_instances_of_workflow($workflowid);
             step_manager::remove_instances_of_workflow($workflowid);
             $DB->delete_records('tool_lifecycle_workflow', array('id' => $workflowid));
@@ -61,11 +64,12 @@ class workflow_manager {
 
     /**
      * Disables a workflow
+     *
      * @param int $workflowid id of the workflow
      */
     public static function disable($workflowid) {
         $workflow = self::get_workflow($workflowid);
-        if ( $workflow && self::is_disableable($workflowid) ) { //@todo notify user if not
+        if ($workflow && self::is_disableable($workflowid)) { // @todo notify user if not
             $workflow->active = false;
             // $workflow->timeactive = null; @todo necessary? Why do we have active and timeactive?
             $workflow->sortindex = null;
@@ -76,6 +80,7 @@ class workflow_manager {
 
     /**
      * Deletes all running processes of given workflow
+     *
      * @param int $workflowid id of the workflow
      */
     public static function abortprocesses($workflowid) {
@@ -87,6 +92,7 @@ class workflow_manager {
 
     /**
      * Returns a workflow instance if one with the is is available.
+     *
      * @param int $workflowid id of the workflow
      * @return workflow|null
      */
@@ -103,6 +109,7 @@ class workflow_manager {
 
     /**
      * Returns all active workflows.
+     *
      * @return workflow[]
      */
     public static function get_active_workflows() {
@@ -118,6 +125,7 @@ class workflow_manager {
 
     /**
      * Returns all active automatic workflows.
+     *
      * @return workflow[]
      */
     public static function get_active_automatic_workflows() {
@@ -133,12 +141,13 @@ class workflow_manager {
 
     /**
      * Returns triggers of active manual workflows.
+     *
      * @return trigger_subplugin[]
      */
     public static function get_active_manual_workflow_triggers() {
         global $DB;
-        $sql = 'SELECT t.* FROM {tool_lifecycle_workflow} w JOIN {tool_lifecycle_trigger} t ON t.workflowid = w.id'.
-        ' WHERE w.active = ? AND w.manual = ?';
+        $sql = 'SELECT t.* FROM {tool_lifecycle_workflow} w JOIN {tool_lifecycle_trigger} t ON t.workflowid = w.id' .
+            ' WHERE w.active = ? AND w.manual = ?';
         $records = $DB->get_records_sql($sql, array(true, true));
         $result = array();
         foreach ($records as $record) {
@@ -150,6 +159,7 @@ class workflow_manager {
     /**
      * Returns tools for all active manual workflows.
      * You need to check the capability based on course and user before diplaying it.
+     *
      * @return manual_trigger_tool[] list of tools, available in the whole system.
      */
     public static function get_manual_trigger_tools_for_active_workflows() {
@@ -164,6 +174,7 @@ class workflow_manager {
 
     /**
      * Activate a workflow
+     *
      * @param int $workflowid id of the workflow
      */
     public static function activate_workflow($workflowid) {
@@ -193,6 +204,7 @@ class workflow_manager {
 
     /**
      * Handles an action of the subplugin_settings.
+     *
      * @param string $action action to be executed
      * @param int $workflowid id of the workflow
      */
@@ -228,7 +240,7 @@ class workflow_manager {
         }
         if ($action === ACTION_WORKFLOW_DELETE) {
             if (self::get_workflow($workflowid)) { // check workflow wasnt already deleted, in case someone refreshes the page
-                if (! self::is_removable($workflowid)) {
+                if (!self::is_removable($workflowid)) {
                     echo $OUTPUT->notification(get_string('workflow_not_removeable', 'tool_lifecycle')
                         , 'warning');
 
@@ -251,6 +263,7 @@ class workflow_manager {
 
     /**
      * Changes the sortindex of a workflow by swapping it with another.
+     *
      * @param int $workflowid id of the workflow
      * @param bool $up tells if the workflow should be set up or down
      */
@@ -294,6 +307,7 @@ class workflow_manager {
     /**
      * Checks if the workflow definition is valid.
      * The main purpose of this function is, to check if a trigger definition exists and if this definition is complete.
+     *
      * @param $workflowid int id of the workflow.
      * @return bool true, if the definition is valid.
      */
@@ -307,6 +321,7 @@ class workflow_manager {
 
     /**
      * Checks if the workflow is active.
+     *
      * @param $workflowid int id of the workflow.
      * @return bool true, if the workflow is active.
      */
@@ -317,12 +332,13 @@ class workflow_manager {
 
     /**
      * Checks if the workflow is deactive.
+     *
      * @param $workflowid int id of the workflow.
      * @return bool true, if the workflow was deactivated.
      */
     public static function is_deactivated($workflowid) {
         $workflow = self::get_workflow($workflowid);
-        if( $workflow->timedeactive ) {
+        if ($workflow->timedeactive) {
             return true;
         }
         return false;
@@ -330,6 +346,7 @@ class workflow_manager {
 
     /**
      * Creates a workflow with a specific title. Is used to create preset workflows for trigger plugins.
+     *
      * @param $title string title of the workflow. Usually the pluginname of the trigger.
      * @return workflow the created workflow.
      */
@@ -343,6 +360,7 @@ class workflow_manager {
 
     /**
      * Duplicates a workflow including its trigger, all its steps and their settings.
+     *
      * @param $workflowid int id of the workflow to copy.
      * @return workflow the created workflow.
      */
@@ -368,7 +386,7 @@ class workflow_manager {
      * @return bool
      */
     public static function is_disableable($workflowid) {
-        $trigger = trigger_manager::get_triggers_for_workflow( $workflowid );
+        $trigger = trigger_manager::get_triggers_for_workflow($workflowid);
         if (!empty($trigger)) {
             $lib = lib_manager::get_trigger_lib($trigger[0]->subpluginname);
         }
@@ -380,12 +398,13 @@ class workflow_manager {
 
     /**
      * Workflows should only be editable, if never been activated before
+     *
      * @param $workflowid
      * @return bool
      */
     public static function is_editable($workflowid) {
-        if( self::is_active($workflowid) ||
-            self::is_deactivated($workflowid) ) {
+        if (self::is_active($workflowid) ||
+            self::is_deactivated($workflowid)) {
             return false;
         }
         return true;
@@ -393,7 +412,7 @@ class workflow_manager {
 
     private static function is_removable($workflowid) {
         $countprocesses = process_manager::count_processes_by_workflow($workflowid);
-        if( self::is_disableable($workflowid) && $countprocesses == 0) {
+        if (self::is_disableable($workflowid) && $countprocesses == 0) {
             return true;
         }
         return false;

@@ -23,7 +23,6 @@
  */
 
 
-
 $string['pluginname'] = 'Life Cycle';
 $string['plugintitle'] = 'Course Life Cycle';
 
@@ -88,7 +87,7 @@ $string['abortdisableworkflow'] = 'Abort processes & disable Workflow';
 $string['abortdisableworkflow_confirm'] = 'The workflow is going to be disabled and all running processes of this workflow will be aborted. Are you sure?';
 $string['workflow_duplicate_title'] = '{$a} (Copy)';
 
-//deactivated workflows
+// deactivated workflows
 $string['deactivated_workflows_list'] = 'List deactivated workflows';
 $string['deactivated_workflows_list_header'] = 'Deactivated workflows';
 $string['workflow_timedeactive'] = 'Deactivated since';

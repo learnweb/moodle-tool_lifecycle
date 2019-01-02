@@ -43,7 +43,6 @@ require_once(__DIR__ . '/lib.php');
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class admin_page_active_processes extends \admin_externalpage {
 
     /**
@@ -81,7 +80,6 @@ class admin_page_deactivated_workflows extends \admin_externalpage {
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class admin_page_course_backups extends \admin_externalpage {
 
     /**
@@ -103,7 +101,6 @@ class admin_page_course_backups extends \admin_externalpage {
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class admin_page_sublugins extends \admin_externalpage {
 
     /**
@@ -175,13 +172,14 @@ class admin_settings {
 
         $deactivatedworkflowsurl = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
             array('sesskey' => sesskey()));
-        echo \html_writer::link($deactivatedworkflowsurl, get_string('deactivated_workflows_list','tool_lifecycle'));
+        echo \html_writer::link($deactivatedworkflowsurl, get_string('deactivated_workflows_list', 'tool_lifecycle'));
 
         $this->view_footer();
     }
 
     /**
      * Write the HTML for the add workflow form.
+     *
      * @param form_workflow_instance $form
      */
     private function view_workflow_instance_form($form) {
@@ -199,6 +197,7 @@ class admin_settings {
 
     /**
      * Redirect to workflow details page.
+     *
      * @param $workflowid int id of the workflow.
      * @throws \moodle_exception
      */
@@ -328,7 +327,7 @@ class workflow_settings {
                 'stepname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
         }
 
-        echo $OUTPUT->single_button( new \moodle_url('/admin/tool/lifecycle/adminsettings.php'),
+        echo $OUTPUT->single_button(new \moodle_url('/admin/tool/lifecycle/adminsettings.php'),
             get_string('back'));
 
         $table = new step_table('tool_lifecycle_workflows', $this->workflowid);
@@ -339,6 +338,7 @@ class workflow_settings {
 
     /**
      * Write the HTML for the step instance form.
+     *
      * @param $form \moodleform form to be displayed.
      */
     private function view_step_instance_form($form) {
@@ -350,6 +350,7 @@ class workflow_settings {
 
     /**
      * Write the HTML for the trigger instance form.
+     *
      * @param $form \moodleform form to be displayed.
      */
     private function view_trigger_instance_form($form) {
@@ -361,6 +362,7 @@ class workflow_settings {
 
     /**
      * Write the HTML for subplugin instance form with specific header.
+     *
      * @param $form \moodleform form to be displayed.
      * @param $header string header of the form.
      */
@@ -434,6 +436,7 @@ class workflow_settings {
 
     /**
      * Handles actions for the trigger instance form and causes related forms to be rendered.
+     *
      * @return bool True, if no further action handling or output should be conducted.
      */
     private function handle_trigger_instance_form() {
@@ -463,7 +466,7 @@ class workflow_settings {
         if (!$form->is_cancelled()) {
             if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
                 // In case the workflow was active, we do not allow changes to the steps or trigger.
-                if (! workflow_manager::is_editable($this->workflowid)) {
+                if (!workflow_manager::is_editable($this->workflowid)) {
                     echo $OUTPUT->notification(
                         get_string('active_workflow_not_changeable', 'tool_lifecycle'),
                         'warning');
@@ -490,6 +493,7 @@ class workflow_settings {
 
     /**
      * Handles actions for the trigger instance form and causes related forms to be rendered.
+     *
      * @return bool True, if no further action handling or output should be conducted.
      */
     private function handle_step_instance_form() {
@@ -518,7 +522,7 @@ class workflow_settings {
             return false;
         } else if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
             // In case the workflow was active, we do not allow changes to the steps or trigger.
-            if (! workflow_manager::is_editable($this->workflowid)) {
+            if (!workflow_manager::is_editable($this->workflowid)) {
                 echo $OUTPUT->notification(
                     get_string('active_workflow_not_changeable', 'tool_lifecycle'),
                     'warning');

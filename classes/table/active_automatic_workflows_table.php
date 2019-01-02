@@ -21,6 +21,7 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle\table;
 
 use tool_lifecycle\manager\lib_manager;
@@ -58,13 +59,14 @@ class active_automatic_workflows_table extends workflow_table {
             get_string('workflow_sortindex', 'tool_lifecycle'),
             get_string('workflow_tools', 'tool_lifecycle'),
             get_string('disableworkflow', 'tool_lifecycle'),
-            ]);
+        ]);
         $this->sortable(false, 'sortindex');
         $this->setup();
     }
 
     /**
      * Render sortindex column.
+     *
      * @param $row
      * @return string action buttons for changing sortorder of active workflows
      */
@@ -90,11 +92,12 @@ class active_automatic_workflows_table extends workflow_table {
             }
         }
 
-        return  $output;
+        return $output;
     }
 
     /**
      * Render disable column.
+     *
      * @param $row
      * @return string action buttons for workflows
      */
@@ -102,7 +105,7 @@ class active_automatic_workflows_table extends workflow_table {
         global $OUTPUT;
         $output = '';
 
-        if( workflow_manager::is_disableable($row->id) ) {
+        if (workflow_manager::is_disableable($row->id)) {
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
                 array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DISABLE, 'sesskey' => sesskey()));
             $output .=
