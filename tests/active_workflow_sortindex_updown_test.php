@@ -44,7 +44,7 @@ class tool_lifecycle_workflow_sortindex_updown_testcase extends \advanced_testca
         // Remove preset workflows.
         $workflows = workflow_manager::get_active_automatic_workflows();
         foreach ($workflows as $workflow) {
-            workflow_manager::remove($workflow->id, true); // remove() hasn't removed unremovable (like presets) workflows anymore…
+            workflow_manager::remove($workflow->id, true); // remove() hasn't removed unremovable workflows (like presets) anymore…
         }
 
         $this->workflow1 = $generator->create_workflow();

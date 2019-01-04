@@ -18,6 +18,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
 
+use tool_lifecycle\manager\delayed_courses_manager;
 use \tool_lifecycle\manager\process_manager;
 
 /**
@@ -72,7 +73,9 @@ class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
      * Tests deletion of a process when rolledback.
      */
     public function test_process_rollback() {
+        global $CFG;
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
+        delayed_courses_manager::set_course_delayed($process->courseid, $CFG->lifecycle_duration);
         process_manager::rollback_process($process);
         $loadedprocess = process_manager::get_process_by_id($process->id);
         $this->assertNull($loadedprocess);

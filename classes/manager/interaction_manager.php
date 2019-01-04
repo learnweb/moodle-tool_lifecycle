@@ -74,6 +74,7 @@ class interaction_manager {
                 return $processor->process_course_interactive($processid);
                 break;
             case step_interactive_response::rollback():
+                // @todo maybe check for delayed courses?
                 process_manager::rollback_process($process);
                 break;
         }
