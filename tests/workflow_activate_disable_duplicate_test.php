@@ -31,7 +31,7 @@ use tool_lifecycle\entity\workflow;
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_workflow_activate_disable_duplicate_testcase extends workflow_actions_test_setup {
+class tool_lifecycle_workflow_activate_disable_duplicate_testcase extends workflow_actions_testcase {
 
     /**
      * Test to activate the first workflow.
