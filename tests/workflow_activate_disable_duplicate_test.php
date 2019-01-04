@@ -18,6 +18,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
+require_once(__DIR__ . '/workflow_actions_testcase.php');
 
 use tool_lifecycle\manager\workflow_manager;
 use tool_lifecycle\entity\workflow;
@@ -66,6 +67,16 @@ class tool_lifecycle_workflow_activate_disable_duplicate_testcase extends workfl
         $reloadworkflow = workflow_manager::get_workflow($this->workflow3->id);
         $this->assertTrue(workflow_manager::is_active($this->workflow3->id));
         $this->assertEquals(3, $reloadworkflow->sortindex);
+    }
+
+    /**
+     * Test to deactivate the first workflow.
+     */
+    public function test_deactivate_first() {
+        workflow_manager::handle_action(ACTION_WORKFLOW_DISABLE, $this->workflow1->id);
+        $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
+        $this->assertFalse(workflow_manager::is_active($this->workflow1->id));
+//        $this->assertTrue($reloadworkflow->timedeactive);
     }
 
     // @todo
