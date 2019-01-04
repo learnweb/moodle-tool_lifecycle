@@ -42,7 +42,7 @@ Feature: Add a workflow definition activate it
     And I should see the tool "Duplicate Workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I should see the tool "Edit Title" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I should see the tool "Delete Workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
-    And I should not see the tool "View Workflow Steps" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
+    And I should not see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
     When I press "Activate"
     Then I should see the tool "View Workflow Steps" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
     And I should not see the table "tool_lifecycle_workflow_definitions"
