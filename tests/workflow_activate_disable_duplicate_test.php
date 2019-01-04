@@ -31,36 +31,7 @@ use tool_lifecycle\entity\workflow;
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-class tool_lifecycle_workflow_activate_disable_duplicate_testcase extends \advanced_testcase {
-
-    // @TODO
-
-    private $workflow1;
-    private $workflow2;
-    private $workflow3;
-
-    public function setUp() {
-        $this->resetAfterTest(true);
-        $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
-
-        // Remove preset workflows.
-        $workflows = workflow_manager::get_active_automatic_workflows();
-        foreach ($workflows as $workflow) {
-            workflow_manager::remove($workflow->id, true); // remove() hasn't removed unremovable workflows (like presets) anymore…
-        }
-
-        $this->workflow1 = $generator->create_workflow();
-        $this->workflow2 = $generator->create_workflow();
-        $this->workflow3 = $generator->create_workflow();
-
-        $this->assertFalse($this->workflow1->active);
-        $this->assertFalse($this->workflow2->active);
-        $this->assertFalse($this->workflow3->active);
-        $this->assertNull($this->workflow1->sortindex);
-        $this->assertNull($this->workflow2->sortindex);
-        $this->assertNull($this->workflow3->sortindex);
-    }
+class tool_lifecycle_workflow_activate_disable_duplicate_testcase extends workflow_actions_test_setup {
 
     /**
      * Test to activate the first workflow.

@@ -21,6 +21,7 @@
  * @copyright  2018 Yorick Reum, JMU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle\table;
 
 use tool_lifecycle\manager\lib_manager;
@@ -35,6 +36,7 @@ class deactivated_workflows_table extends workflow_table {
 
     /**
      * deactivated_workflows_table constructor.
+     *
      * @param string $uniqueid
      */
     public function __construct($uniqueid) {
@@ -60,6 +62,7 @@ class deactivated_workflows_table extends workflow_table {
 
     /**
      * Render tools column.
+     *
      * @param $row
      * @return string action buttons for workflows
      */
@@ -79,35 +82,32 @@ class deactivated_workflows_table extends workflow_table {
             $lib = lib_manager::get_trigger_lib($trigger[0]->subpluginname);
         }
 
-        if (!isset($lib) || $lib->has_multiple_instances()) {
+        $action = ACTION_WORKFLOW_DUPLICATE;
+        $alt = get_string('duplicateworkflow', 'tool_lifecycle');
+        $icon = 't/copy';
+        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
-            $action = ACTION_WORKFLOW_DUPLICATE;
-            $alt = get_string('duplicateworkflow', 'tool_lifecycle');
-            $icon = 't/copy';
-            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+        $action = ACTION_WORKFLOW_INSTANCE_FROM;
+        $alt = get_string('editworkflow', 'tool_lifecycle');
+        $icon = 't/edit';
+        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
-            $action = ACTION_WORKFLOW_INSTANCE_FROM;
-            $alt = get_string('editworkflow', 'tool_lifecycle');
-            $icon = 't/edit';
-            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+        if (workflow_manager::is_abortable($row->id)) {
+            $alt = get_string('abortprocesses', 'tool_lifecycle');
+            $icon = 't/stop';
+            $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
+                array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORT, 'sesskey' => sesskey()));
+            $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                null, array('title' => $alt));
+        }
 
-            if (workflow_manager::is_abortable($row->id)) {
-                $alt = get_string('abortprocesses', 'tool_lifecycle');
-                $icon = 't/stop';
-                $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
-                    array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORT, 'sesskey' => sesskey()));
-                $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                    null, array('title' => $alt));
-            }
-
-            if (workflow_manager::is_removable($row->id)) {
-                $alt = get_string('deleteworkflow', 'tool_lifecycle');
-                $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
-                    array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DELETE, 'sesskey' => sesskey()));
-                $icon = 't/delete';
-                $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                    null, array('title' => $alt));
-            }
+        if (workflow_manager::is_removable($row->id)) {
+            $alt = get_string('deleteworkflow', 'tool_lifecycle');
+            $icon = 't/delete';
+            $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
+                array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DELETE, 'sesskey' => sesskey()));
+            $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                null, array('title' => $alt));
         }
 
         return $output;
