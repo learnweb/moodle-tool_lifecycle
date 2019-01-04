@@ -134,10 +134,10 @@ class behat_tool_lifecycle extends behat_base {
      * @param $tablename string identifier of the table
      * @throws Exception
      */
-    public function i_should_not_see_the_row($row, $tablename) {
+    public function i_should_not_see_the_row($rowname, $tablename) {
         // @todo solve without relaying on exceptions
         try {
-            $this->get_xpath_of_row($tablename);
+            $this->get_xpath_of_row($rowname, $tablename);
         } catch (ExpectationException $e) { // gets also threw on not existing table!
             return;
         }
