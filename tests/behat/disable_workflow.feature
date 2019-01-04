@@ -71,5 +71,5 @@ Feature: Disable a workflow
     Then I should not see the row "My Workflow" in the "tool_lifecycle_workflow_definitions" table
     And I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
 
-
-  # TODO: disable and abort button
+  # TODO:
+  #  disable and abort button
