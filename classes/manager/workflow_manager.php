@@ -233,21 +233,29 @@ class workflow_manager {
         }
         if ($action === ACTION_WORKFLOW_ABORTDISABLE) {
             if ($confirm and confirm_sesskey()) {
-                self::abortprocesses($workflowid);
                 self::disable($workflowid);
+                self::abortprocesses($workflowid);
             } else {
                 self::render_demand_confirm($action, $workflowid, get_string('abortdisableworkflow_confirm', 'tool_lifecycle'));
             }
         }
+        if ($action === ACTION_WORKFLOW_ABORT) {
+            if ($confirm and confirm_sesskey()) {
+                self::abortprocesses($workflowid);
+            } else {
+                self::render_demand_confirm($action, $workflowid, get_string('abortprocesses_confirm', 'tool_lifecycle'));
+            }
+        }
         if ($action === ACTION_WORKFLOW_DELETE) {
-            if (self::get_workflow($workflowid)) { // check workflow wasnt already deleted, in case someone refreshes the page
-                if (!self::is_removable($workflowid)) {
-                    echo $OUTPUT->notification(get_string('workflow_not_removeable', 'tool_lifecycle')
-                        , 'warning');
-
-                } else {
+            if (self::get_workflow($workflowid) && self::is_removable($workflowid)) { // check workflow wasn't already deleted, in case someone refreshes the page
+                if ($confirm and confirm_sesskey()) {
                     self::remove($workflowid);
+                } else {
+                    self::render_demand_confirm($action, $workflowid, get_string('deleteworkflow_confirm', 'tool_lifecycle'));
                 }
+            } else {
+                echo $OUTPUT->notification(get_string('workflow_not_removeable', 'tool_lifecycle')
+                    , 'warning'); // @todo these notifications aren't shown properly currently
             }
         }
     }
@@ -398,7 +406,7 @@ class workflow_manager {
     }
 
     /**
-     * Workflows should only be editable, if never been activated before
+     * Workflows should only be editable if never been activated before
      *
      * @param $workflowid
      * @return bool
@@ -411,6 +419,26 @@ class workflow_manager {
         return true;
     }
 
+    /**
+     * Workflows should only be abortable if disabled but some processes are still running
+     *
+     * @param $workflowid
+     * @return bool
+     */
+    public static function is_abortable($workflowid) {
+        $countprocesses = process_manager::count_processes_by_workflow($workflowid);
+        if ($countprocesses > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Workflows should only be removable if disableable and no more processes are running
+     *
+     * @param $workflowid
+     * @return bool
+     */
     public static function is_removable($workflowid) {
         $countprocesses = process_manager::count_processes_by_workflow($workflowid);
         if (self::is_disableable($workflowid) && $countprocesses == 0) {

@@ -91,11 +91,22 @@ class deactivated_workflows_table extends workflow_table {
             $icon = 't/edit';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
-            if (!workflow_manager::is_active($row->id)) {
-                $action = ACTION_WORKFLOW_DELETE; // @todo make sure the action checks if no more processes are running
+            if (workflow_manager::is_abortable($row->id)) {
+                $alt = get_string('abortprocesses', 'tool_lifecycle');
+                $icon = 't/stop';
+                $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
+                    array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORT, 'sesskey' => sesskey()));
+                $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                    null, array('title' => $alt));
+            }
+
+            if (workflow_manager::is_removable($row->id)) {
                 $alt = get_string('deleteworkflow', 'tool_lifecycle');
+                $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
+                    array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DELETE, 'sesskey' => sesskey()));
                 $icon = 't/delete';
-                $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+                $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                    null, array('title' => $alt));
             }
         }
 

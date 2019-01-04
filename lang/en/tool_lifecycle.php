@@ -75,16 +75,19 @@ $string['workflow_active'] = 'Active';
 $string['workflow_processes'] = 'Active processes';
 $string['workflow_timeactive'] = 'Active since';
 $string['workflow_sortindex'] = 'Up/Down';
-$string['workflow_tools'] = 'Tools';
+$string['workflow_tools'] = 'Actions';
 $string['viewsteps'] = 'View Workflow Steps';
 $string['editworkflow'] = 'Edit Title';
 $string['duplicateworkflow'] = 'Duplicate Workflow';
 $string['deleteworkflow'] = 'Delete Workflow';
+$string['deleteworkflow_confirm'] = 'The workflow is going to be deleted. This can\'t be undone. Are you sure?';
 $string['activateworkflow'] = 'Activate';
-$string['disableworkflow'] = 'Disable Workflow';
+$string['disableworkflow'] = 'Disable Workflow (processes keep running)';
 $string['disableworkflow_confirm'] = 'The workflow is going to be disabled. Are you sure?';
-$string['abortdisableworkflow'] = 'Abort processes & disable Workflow';
+$string['abortdisableworkflow'] = 'Disable Workflow (abort processes, maybe unsafe!)';
 $string['abortdisableworkflow_confirm'] = 'The workflow is going to be disabled and all running processes of this workflow will be aborted. Are you sure?';
+$string['abortprocesses'] = 'Abort running processes (maybe unsafe!)';
+$string['abortprocesses_confirm'] = 'All running processes of this workflow will be aborted. Are you sure?';
 $string['workflow_duplicate_title'] = '{$a} (Copy)';
 
 // deactivated workflows

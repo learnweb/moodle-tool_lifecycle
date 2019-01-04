@@ -50,7 +50,7 @@ class active_automatic_workflows_table extends workflow_table {
     }
 
     public function init() {
-        $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'sortindex', 'tools', 'disable']);
+        $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'sortindex', 'tools']);
         $this->define_headers([
             get_string('workflow_title', 'tool_lifecycle'),
             get_string('workflow_timeactive', 'tool_lifecycle'),
@@ -58,7 +58,6 @@ class active_automatic_workflows_table extends workflow_table {
             get_string('workflow_processes', 'tool_lifecycle'),
             get_string('workflow_sortindex', 'tool_lifecycle'),
             get_string('workflow_tools', 'tool_lifecycle'),
-            get_string('disableworkflow', 'tool_lifecycle'),
         ]);
         $this->sortable(false, 'sortindex');
         $this->setup();
@@ -96,31 +95,36 @@ class active_automatic_workflows_table extends workflow_table {
     }
 
     /**
-     * Render disable column.
+     * Render tools column.
      *
      * @param $row
      * @return string action buttons for workflows
      */
-    public function col_disable($row) {
+    public function col_tools($row) {
         global $OUTPUT;
         $output = '';
 
+        $alt = get_string('viewsteps', 'tool_lifecycle');
+        $icon = 't/viewdetails';
+        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
+            array('workflowid' => $row->id, 'sesskey' => sesskey()));
+        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+            null, array('title' => $alt));
+
         if (workflow_manager::is_disableable($row->id)) {
+            $alt = get_string('disableworkflow', 'tool_lifecycle');
+            $icon = 't/disable';
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
                 array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DISABLE, 'sesskey' => sesskey()));
-            $output .=
-                '<div>' . $OUTPUT->single_button(
-                    $url,
-                    get_string('disableworkflow', 'tool_lifecycle'))
-                . '</div>';
+            $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'tool_lifecycle', array('title' => $alt)),
+                null, array('title' => $alt));
 
+            $alt = get_string('abortdisableworkflow', 'tool_lifecycle');
+            $icon = 't/stop';
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
                 array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()));
-            $output .=
-                '<div>' . $OUTPUT->single_button(
-                    $url,
-                    get_string('abortdisableworkflow', 'tool_lifecycle'))
-                . '</div>';
+            $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                null, array('title' => $alt));
         }
 
         return $output;

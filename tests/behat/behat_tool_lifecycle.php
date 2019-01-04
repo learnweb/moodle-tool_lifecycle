@@ -126,6 +126,26 @@ class behat_tool_lifecycle extends behat_base {
         throw new ExpectationException('"The table "' . $tablename . '"  was found."', $this->getSession());
     }
 
+
+    /**
+     * I should see an entire row.
+     *
+     * @When /^I should see the row "([^"]*)" in the "([^"]*)" table$/
+     *
+     * @param $tablename string identifier of the table
+     * @throws Exception
+     */
+    public function i_should_see_the_row($rowname, $tablename) {
+        // @todo solve without relaying on exceptions
+        try {
+            $this->get_xpath_of_row($rowname, $tablename);
+        } catch (ExpectationException $e) { // gets also threw on not existing table!
+            throw new ExpectationException('"The row "' . $tablename . '"  was found."', $this->getSession());
+        }
+
+        return;
+    }
+
     /**
      * I should not see an entire row.
      *
