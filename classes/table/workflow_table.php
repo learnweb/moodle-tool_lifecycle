@@ -71,7 +71,6 @@ abstract class workflow_table extends \table_sql {
      * @return string deactivate time for workflows
      */
     public function col_timedeactive($row) {
-        global $OUTPUT, $PAGE;
         if ($row->timedeactive) {
             return userdate($row->timedeactive, get_string('strftimedatetime'), 0);
         }
@@ -132,7 +131,7 @@ abstract class workflow_table extends \table_sql {
      * @return string The icon/link
      */
     protected function format_icon_link($action, $workflowid, $icon, $alt) {
-        global $PAGE, $OUTPUT;
+        global $OUTPUT;
 
         return $OUTPUT->action_icon(new \moodle_url( '/admin/tool/lifecycle/adminsettings.php',
                 array('action' => $action,

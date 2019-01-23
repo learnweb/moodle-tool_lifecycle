@@ -42,7 +42,11 @@ class deactivated_workflows_table extends workflow_table {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, title, timedeactive, displaytitle", '{tool_lifecycle_workflow}', "active = 0 AND timedeactive IS NOT NULL");
+        $this->set_sql(
+            "id, title, timedeactive, displaytitle",
+            '{tool_lifecycle_workflow}',
+            "active = 0 AND timedeactive IS NOT NULL"
+        );
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();
@@ -73,14 +77,9 @@ class deactivated_workflows_table extends workflow_table {
         $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
         $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
-            array('workflowid' => $row->id, 'sesskey' => sesskey())); // @todo make sure it's only viewable
+            array('workflowid' => $row->id, 'sesskey' => sesskey()));
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null, array('title' => $alt));
-
-        $trigger = trigger_manager::get_triggers_for_workflow($row->id);
-        if (!empty($trigger)) {
-            $lib = lib_manager::get_trigger_lib($trigger[0]->subpluginname);
-        }
 
         $action = ACTION_WORKFLOW_DUPLICATE;
         $alt = get_string('duplicateworkflow', 'tool_lifecycle');

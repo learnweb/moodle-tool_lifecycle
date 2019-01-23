@@ -30,8 +30,6 @@ $PAGE->set_context(context_system::instance());
 require_login(null, false);
 require_capability('moodle/site:config', context_system::instance());
 
-// admin_externalpage_setup('tool_lifecycle_deactivatedworkflows');
-
 $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php'));
 
 $PAGE->set_title(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));

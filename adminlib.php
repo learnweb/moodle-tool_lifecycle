@@ -410,8 +410,6 @@ class workflow_settings {
      * This is the entry point for this controller class.
      */
     public function execute($action, $subplugin) {
-        global $OUTPUT;
-
         $this->check_permissions();
 
         // Handle other actions.

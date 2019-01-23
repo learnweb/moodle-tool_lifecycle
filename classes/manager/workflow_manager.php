@@ -70,9 +70,9 @@ class workflow_manager {
      */
     public static function disable($workflowid) {
         $workflow = self::get_workflow($workflowid);
-        if ($workflow && self::is_disableable($workflowid)) { // @todo notify user if not
+        if ($workflow && self::is_disableable($workflowid)) { // @TODO Notify user if not.
             $workflow->active = false;
-            // $workflow->timeactive = null; @todo necessary? Why do we have active and timeactive?
+            // $workflow->timeactive = null; @TODO Necessary? Why do we have active and timeactive?
             $workflow->sortindex = null;
             $workflow->timedeactive = time();
             self::insert_or_update($workflow);

@@ -90,11 +90,10 @@ $string['abortprocesses'] = 'Abort running processes (maybe unsafe!)';
 $string['abortprocesses_confirm'] = 'All running processes of this workflow will be aborted. Are you sure?';
 $string['workflow_duplicate_title'] = '{$a} (Copy)';
 
-// deactivated workflows
+// Deactivated workflows.
 $string['deactivated_workflows_list'] = 'List deactivated workflows';
 $string['deactivated_workflows_list_header'] = 'Deactivated workflows';
 $string['workflow_timedeactive'] = 'Deactivated since';
-// $string['workflow_createbycopy'] = 'Create new workflow by copy';
 
 $string['step_type'] = 'Type';
 $string['step_subpluginname'] = 'Subplugin Name';
