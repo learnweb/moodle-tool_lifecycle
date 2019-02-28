@@ -59,16 +59,16 @@ $string['error_wrong_trigger_selected'] = 'You tried to request a non-manual tri
 $string['lifecycle_task'] = 'Run the life cycle processes';
 
 $string['trigger_subpluginname'] = 'Subplugin Name';
-$string['trigger_subpluginname_help'] = 'Subplugin Name';
+$string['trigger_subpluginname_help'] = 'Choose the subplugin that you want to use for triggering. After selection, press "reload" to show the options for the subplugin.';
 $string['trigger_instancename'] = 'Instance Name';
-$string['trigger_instancename_help'] = 'Instance Name';
+$string['trigger_instancename_help'] = 'Trigger instance title (visible for admins only).';
 $string['trigger_enabled'] = 'Enabled';
 $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_workflow'] = 'Workflow';
 
 $string['add_workflow'] = 'Add Workflow';
 $string['workflow_title'] = 'Title';
-$string['workflow_title_help'] = 'Title';
+$string['workflow_title_help'] = 'Workflow title (visible for admins only).';
 $string['workflow_displaytitle'] = 'Displayed workflow title';
 $string['workflow_displaytitle_help'] = 'This title is displayed to users when managing their courses.';
 $string['workflow_active'] = 'Active';
@@ -85,9 +85,9 @@ $string['workflow_duplicate_title'] = '{$a} (Copy)';
 
 $string['step_type'] = 'Type';
 $string['step_subpluginname'] = 'Subplugin Name';
-$string['step_subpluginname_help'] = 'Subplugin Name';
+$string['step_subpluginname_help'] = 'Step subplugin/trigger title (visible for admins only).';
 $string['step_instancename'] = 'Instance Name';
-$string['step_instancename_help'] = 'Instance Name';
+$string['step_instancename_help'] = 'Step instance title (visible for admins only).';
 $string['step_sortindex'] = 'Up/Down';
 $string['step_edit'] = 'Edit';
 $string['step_show'] = 'Show';
