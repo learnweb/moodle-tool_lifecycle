@@ -44,7 +44,7 @@ $emailplaceholdershtml =
     . '<br>' . 'Link to response page: ##link-html##'
     . '<br>' . 'Impacted courses: ##courses-html##'
     . '</p>';
-$string['email_content_html'] = 'Content HTML template';
+$string['email_content_html'] = 'Content HTML Template';
 $string['email_content_html_help'] = 'Set the html template for the content of the email (HTML email, will be used instead of plaintext field if not empty!)' . $emailplaceholdershtml;
 
 $string['email:preventdeletion'] = 'Prevent Deletion';
