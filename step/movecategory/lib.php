@@ -23,6 +23,7 @@
  * @copyright  2019 Yorick Reum JMU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle\step;
 
 use tool_lifecycle\manager\settings_manager;
@@ -40,6 +41,7 @@ class movecategory extends libbase {
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
+     *
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
@@ -55,7 +57,7 @@ class movecategory extends libbase {
             array($course->id), $categoryid
         );
 
-        if($success) {
+        if ($success) {
             return step_response::proceed();
         } else {
             return step_response::rollback();
@@ -74,13 +76,13 @@ class movecategory extends libbase {
 
         $elementname = 'categorytomoveto';
         $categories = $DB->get_records('course_categories');
-        $categoriesToShow = array();
-        foreach($categories as $category) {
-            $categoriesToShow[$category->id] = $category->name;
+        $categoriestoshow = array();
+        foreach ($categories as $category) {
+            $categoriestoshow[$category->id] = $category->name;
         }
-        $mform->addElement('select', $elementname, get_string('categorytomoveto', 'lifecyclestep_movecategory'), $categoriesToShow);
-//        $mform->addElement('text', $elementname, get_string('categorytomoveto', 'lifecyclestep_movecategory'));
-        $mform->addHelpButton($elementname , 'categorytomoveto', 'lifecyclestep_movecategory');
+
+        $mform->addElement('select', $elementname, get_string('categorytomoveto', 'lifecyclestep_movecategory'), $categoriestoshow);
+        $mform->addHelpButton($elementname, 'categorytomoveto', 'lifecyclestep_movecategory');
         $mform->setType($elementname, PARAM_INT);
     }
 
