@@ -17,8 +17,8 @@
 namespace tool_lifecycle\trigger;
 defined('MOODLE_INTERNAL') || die();
 
-use core_course_category;
 use tool_lifecycle\response\trigger_response;
+use core_course_category;
 
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/generator/lib.php');
@@ -40,6 +40,7 @@ class tool_lifecycle_trigger_category_testcase extends \advanced_testcase {
     private $category2;
 
     public function setUp() {
+        global $CFG;
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
@@ -48,12 +49,21 @@ class tool_lifecycle_trigger_category_testcase extends \advanced_testcase {
         $data->name = 'my category 1';
         $data->description = 'my category 1 description';
         $data->idnumber = '';
-        $this->category1 = core_course_category::create($data);
+        if ($CFG->version >= 2018120300) { // Since Moodle 3.6
+            $this->category1 = core_course_category::create($data);
+        } else { // Before Moodle 3.6
+            require_once($CFG->libdir . '/coursecatlib.php');
+            $this->category1 = coursecat::create($data);
+        }
 
         $data->name = 'my category 2';
         $data->description = 'my category 2 description';
         $data->idnumber = '';
-        $this->category2 = core_course_category::create($data);
+        if ($CFG->version >= 2018120300) { // Since Moodle 3.6
+            $this->category2 = core_course_category::create($data);
+        } else { // Before Moodle 3.6
+            $this->category2 = core_course_category::create($data);
+        }
 
         $this->triggerinstance = \tool_lifecycle_trigger_category_generator::create_trigger_with_workflow($this->category1->id);
     }
