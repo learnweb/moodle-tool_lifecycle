@@ -63,27 +63,21 @@ class tool_lifecycle_trigger_category_testcase extends \advanced_testcase {
      * Tests if courses, which are not in the test category are not triggered by this plugin.
      */
     public function test_wrong_category_course() {
-
         $course = $this->getDataGenerator()->create_course(array('category' => $this->category2->id));
 
         $trigger = new category();
         $response = $trigger->check_course($course, $this->triggerinstance->id);
         $this->assertEquals($response, trigger_response::next());
-
-//        $this->assertTrue(false);
-
     }
 
     /**
      * Tests if courses, which are in the test category are triggered by this plugin.
      */
     public function test_right_category_course() {
-
         $course = $this->getDataGenerator()->create_course(array('category' => $this->category1->id));
 
         $trigger = new category();
         $response = $trigger->check_course($course, $this->triggerinstance->id);
         $this->assertEquals($response, trigger_response::trigger());
-
     }
 }

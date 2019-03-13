@@ -68,11 +68,12 @@ class category extends base_automatic {
         global $DB;
         $elementname = 'category_select';
         $categories = $DB->get_records('course_categories');
-        $categoriesToShow = array();
+        $categoriestoshow = array();
         foreach ($categories as $category) {
-            $categoriesToShow[$category->id] = $category->name;
+            $categoriestoshow[$category->id] = $category->name;
         }
-        $mform->addElement('select', $elementname, get_string($elementname, 'lifecycletrigger_category'), $categoriesToShow);
+
+        $mform->addElement('select', $elementname, get_string($elementname, 'lifecycletrigger_category'), $categoriestoshow);
         $mform->addHelpButton($elementname, $elementname, 'lifecycletrigger_category');
     }
 
