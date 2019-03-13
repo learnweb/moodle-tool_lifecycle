@@ -15,11 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace tool_lifecycle\trigger;
-
-use tool_lifecycle\response\trigger_response;
-use core_course_category;
-
 defined('MOODLE_INTERNAL') || die();
+
+use core_course_category;
+use tool_lifecycle\response\trigger_response;
 
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/generator/lib.php');
