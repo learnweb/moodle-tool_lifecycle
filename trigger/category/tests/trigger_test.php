@@ -53,7 +53,7 @@ class tool_lifecycle_trigger_category_testcase extends \advanced_testcase {
             $this->category1 = core_course_category::create($data);
         } else { // Before Moodle 3.6
             require_once($CFG->libdir . '/coursecatlib.php');
-            $this->category1 = coursecat::create($data);
+            $this->category1 = \coursecat::create($data);
         }
 
         $data->name = 'my category 2';
@@ -62,7 +62,7 @@ class tool_lifecycle_trigger_category_testcase extends \advanced_testcase {
         if ($CFG->version >= 2018120300) { // Since Moodle 3.6
             $this->category2 = core_course_category::create($data);
         } else { // Before Moodle 3.6
-            $this->category2 = core_course_category::create($data);
+            $this->category2 = \coursecat::create($data);
         }
 
         $this->triggerinstance = \tool_lifecycle_trigger_category_generator::create_trigger_with_workflow($this->category1->id);
