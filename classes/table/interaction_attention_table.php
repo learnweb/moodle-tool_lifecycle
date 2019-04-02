@@ -42,7 +42,7 @@ class interaction_attention_table extends interaction_table {
         $from = '{tool_lifecycle_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
             '{tool_lifecycle_step} s ' .
-            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex' .
+            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex ' .
             'left join {course_categories} cc on c.category = cc.id';
         $ids = implode(',', $courseids);
 
