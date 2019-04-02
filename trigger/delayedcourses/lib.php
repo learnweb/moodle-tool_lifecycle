@@ -44,11 +44,11 @@ class delayedcourses extends base_automatic {
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
-        $delayeduntil = delayed_courses_manager::get_course_delayed($course->id);
-        if ($delayeduntil !== null && time() < $delayeduntil) {
-            return trigger_response::exclude();
-        }
-        return trigger_response::next();
+        return trigger_response::exclude();
+    }
+
+    public function get_course_recordset_where($triggerid) {
+        return delayed_courses_manager::get_course_delayed_wheresql();
     }
 
     public function get_subpluginname() {

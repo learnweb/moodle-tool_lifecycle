@@ -120,6 +120,17 @@ abstract class base_automatic extends base {
     public function is_manual_trigger() {
         return false;
     }
+
+    /**
+     * Allows to return a where clause, which reduces the recordset of relevant courses.
+     * The return value has to consist of an array with two values. The first one includes the where sql statement,
+     * which will be concatenated using an 'AND' to the recordset query (e.g. 'course.id = $courseid').
+     * The second one is the set of parameters for the sql query, which will be merged with other param sets.
+     * @params $triggerid int id of the trigger.
+     */
+    public function get_course_recordset_where($triggerid) {
+        return array('', array());
+    }
 }
 
 /**

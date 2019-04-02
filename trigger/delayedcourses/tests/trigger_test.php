@@ -16,6 +16,7 @@
 
 namespace tool_lifecycle\trigger;
 
+use tool_lifecycle\processor;
 use tool_lifecycle\response\trigger_response;
 use tool_lifecycle\manager\delayed_courses_manager;
 
@@ -37,10 +38,14 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
 
     private $triggerinstance;
 
+    /**@var processor Instance of the lifecycle processor */
+    private $processor;
+
     public function setUp() {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
+        $this->processor = new processor();
         $this->triggerinstance = \tool_lifecycle_trigger_delayedcourses_generator::create_trigger_with_workflow();
     }
 
@@ -51,9 +56,15 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
 
         $course = $this->getDataGenerator()->create_course();
 
-        $trigger = new delayedcourses();
-        $response = $trigger->check_course($course, $this->triggerinstance->id);
-        $this->assertEquals($response, trigger_response::next());
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $found = false;
+        foreach ($recordset as $element) {
+            if ($course->id == $element->id) {
+                $found = true;
+            }
+        }
+        $recordset->close();
+        $this->assertFalse($found, 'The course should not have passed through since it should not be delay');
     }
 
     /**
@@ -65,9 +76,15 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
 
         delayed_courses_manager::set_course_delayed($course->id, 2000);
 
-        $trigger = new delayedcourses();
-        $response = $trigger->check_course($course, $this->triggerinstance->id);
-        $this->assertEquals($response, trigger_response::exclude());
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $found = false;
+        foreach ($recordset as $element) {
+            if ($course->id == $element->id) {
+                $found = true;
+            }
+        }
+        $recordset->close();
+        $this->assertTrue($found, 'The course should not have passed through in order to delay it');
     }
 
     /**
@@ -79,8 +96,14 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
 
         delayed_courses_manager::set_course_delayed($course->id, -2000);
 
-        $trigger = new delayedcourses();
-        $response = $trigger->check_course($course, $this->triggerinstance->id);
-        $this->assertEquals($response, trigger_response::next());
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $found = false;
+        foreach ($recordset as $element) {
+            if ($course->id == $element->id) {
+                $found = true;
+            }
+        }
+        $recordset->close();
+        $this->assertFalse($found, 'The course should not have passed through since it should not be delay');
     }
 }

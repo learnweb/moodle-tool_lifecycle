@@ -35,7 +35,6 @@ require_once(__DIR__ . '/../lib.php');
  */
 class sitecourse extends base_automatic {
 
-
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
      * @param $course object to be processed.
@@ -47,6 +46,12 @@ class sitecourse extends base_automatic {
             return trigger_response::exclude();
         }
         return trigger_response::next();
+    }
+
+    public function get_course_recordset_where($triggerid) {
+        global $DB;
+        list($insql, $inparam) = $DB->get_in_or_equal(SITEID, SQL_PARAMS_NAMED);
+        return array("{course}.id {$insql}", $inparam);
     }
 
     public function get_subpluginname() {

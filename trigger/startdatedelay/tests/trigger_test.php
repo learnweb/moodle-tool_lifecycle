@@ -16,7 +16,7 @@
 
 namespace tool_lifecycle\trigger;
 
-use tool_lifecycle\response\trigger_response;
+use tool_lifecycle\processor;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -36,10 +36,14 @@ class tool_lifecycle_trigger_startdatedelay_testcase extends \advanced_testcase 
 
     private $triggerinstance;
 
+    /**@var processor Instance of the lifecycle processor */
+    private $processor;
+
     public function setUp() {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
+        $this->processor = new processor();
         $this->triggerinstance = \tool_lifecycle_trigger_startdatedelay_generator::create_trigger_with_workflow();
     }
 
@@ -50,10 +54,15 @@ class tool_lifecycle_trigger_startdatedelay_testcase extends \advanced_testcase 
 
         $course = $this->getDataGenerator()->create_course(array('startdate' => time() - 50 * 24 * 60 * 60));
 
-        $trigger = new startdatedelay();
-        $response = $trigger->check_course($course, $this->triggerinstance->id);
-        $this->assertEquals($response, trigger_response::next());
-
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $found = false;
+        foreach ($recordset as $element) {
+            if ($course->id === $element->id) {
+                $found = true;
+                break;
+            }
+        }
+        $this->assertFalse($found, 'The course should not have been triggered');
     }
 
     /**
@@ -63,9 +72,14 @@ class tool_lifecycle_trigger_startdatedelay_testcase extends \advanced_testcase 
 
         $course = $this->getDataGenerator()->create_course(array('startdate' => time() - 200 * 24 * 60 * 60));
 
-        $trigger = new startdatedelay();
-        $response = $trigger->check_course($course, $this->triggerinstance->id);
-        $this->assertEquals($response, trigger_response::trigger());
-
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $found = false;
+        foreach ($recordset as $element) {
+            if ($course->id === $element->id) {
+                $found = true;
+                break;
+            }
+        }
+        $this->assertTrue($found, 'The course should have been triggered');
     }
 }

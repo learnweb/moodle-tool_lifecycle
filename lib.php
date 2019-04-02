@@ -46,11 +46,53 @@ define('ACTION_WORKFLOW_ABORTDISABLE', 'workflow_instance_abortdisable');
 define('ACTION_WORKFLOW_ABORT', 'workflow_instance_abort');
 
 /**
- * Get icon mapping for font-awesome.
+ * Adds a tool_lifecycle link to the course admin menu.
  *
+ * @param navigation_node $navigation The navigation node to extend
+ * @param stdClass $course The course to object for the tool
+ * @param context $context The context of the course
+ * @return void|null return null if we don't want to display the node.
+ */
+function tool_lifecycle_extend_navigation_course($navigation, $course, $context) {
+    global $PAGE;
+
+    // Only add this settings item on non-site course pages.
+    if (!$PAGE->course || $PAGE->course->id == SITEID) {
+        return null;
+    }
+
+    $url = null;
+    $settingnode = null;
+
+    $url = new moodle_url('/admin/tool/lifecycle/view.php', array(
+        'contextid' => $context->id
+    ));
+
+    // Add the course life cycle link.
+    $pluginname = get_string('plugintitle', 'tool_lifecycle');
+
+    $node = navigation_node::create(
+        $pluginname,
+        $url,
+        navigation_node::NODETYPE_LEAF,
+        'tool_lifecycle',
+        'tool_lifecycle',
+        new pix_icon('recycle', $pluginname, 'tool_lifecycle')
+    );
+
+    if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
+        $node->make_active();
+    }
+
+    $navigation->add_node($node);
+}
+
+/**
+ * Map icons for font-awesome themes.
  */
 function tool_lifecycle_get_fontawesome_icon_map() {
     return [
+        'tool_lifecycle:recycle' => 'fa-recycle',
         'tool_lifecycle:t/disable' => 'fa-hand-paper-o',
     ];
 }
