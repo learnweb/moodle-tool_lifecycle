@@ -112,6 +112,11 @@ class active_automatic_workflows_table extends workflow_table {
             null, array('title' => $alt));
 
         if (workflow_manager::is_disableable($row->id)) {
+            $action = ACTION_WORKFLOW_DUPLICATE;
+            $alt = get_string('duplicateworkflow', 'tool_lifecycle');
+            $icon = 't/copy';
+            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+
             $alt = get_string('disableworkflow', 'tool_lifecycle');
             $icon = 't/disable';
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
