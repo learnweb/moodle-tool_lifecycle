@@ -62,4 +62,45 @@ class active_manual_workflows_table extends workflow_table {
         $this->setup();
     }
 
+    /**
+     * Render tools column.
+     *
+     * @param $row
+     * @return string action buttons for workflows
+     */
+    public function col_tools($row) {
+        global $OUTPUT;
+        $output = '';
+
+        $alt = get_string('viewsteps', 'tool_lifecycle');
+        $icon = 't/viewdetails';
+        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
+            array('workflowid' => $row->id, 'sesskey' => sesskey()));
+        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+            null, array('title' => $alt));
+
+        if (workflow_manager::is_disableable($row->id)) {
+            $action = ACTION_WORKFLOW_DUPLICATE;
+            $alt = get_string('duplicateworkflow', 'tool_lifecycle');
+            $icon = 't/copy';
+            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+
+            $alt = get_string('disableworkflow', 'tool_lifecycle');
+            $icon = 't/disable';
+            $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
+                array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DISABLE, 'sesskey' => sesskey()));
+            $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'tool_lifecycle', array('title' => $alt)),
+                null, array('title' => $alt));
+
+            $alt = get_string('abortdisableworkflow', 'tool_lifecycle');
+            $icon = 't/stop';
+            $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
+                array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()));
+            $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                null, array('title' => $alt));
+        }
+
+        return $output;
+    }
+
 }
