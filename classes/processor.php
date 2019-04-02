@@ -173,7 +173,7 @@ class processor {
      * @params $exclude int[] list of course id, which should be excluded from execution.
      * @return \moodle_recordset with relevant courses.
      */
-    private function get_course_recordset($triggers, $exclude) {
+    public function get_course_recordset($triggers, $exclude) {
         global $DB;
 
         $where = 'true';
