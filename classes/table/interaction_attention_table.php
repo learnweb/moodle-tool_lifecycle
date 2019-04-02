@@ -37,13 +37,13 @@ class interaction_attention_table extends interaction_table {
         parent::__construct($uniqueid);
         global $PAGE;
 
-        $fields = 'p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, '.
-        's.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname as subpluginname';
+        $fields = "p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, " .
+            "cc.name as category , s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname as subpluginname";
         $from = '{tool_lifecycle_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
-            '{tool_lifecycle_step} s '.
-            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex';
-
+            '{tool_lifecycle_step} s ' .
+            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex ' .
+            'left join {course_categories} cc on c.category = cc.id';
         $ids = implode(',', $courseids);
 
         $where = 'FALSE';
@@ -51,6 +51,7 @@ class interaction_attention_table extends interaction_table {
             $where = 'p.courseid IN (' . $ids . ')';
         }
 
+        $this->column_nosort = array('category', 'status', 'tools');
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
         $this->init();
@@ -60,11 +61,12 @@ class interaction_attention_table extends interaction_table {
      * Initialises the columns of the table.
      */
     public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'status', 'tools', 'date']);
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'category', 'status', 'tools', 'date']);
         $this->define_headers([
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
+            get_string('category'),
             get_string('status', 'tool_lifecycle'),
             get_string('tools', 'tool_lifecycle'),
             get_string('date', 'tool_lifecycle'),
