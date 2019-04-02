@@ -66,6 +66,16 @@ class delayed_courses_manager {
     }
 
     /**
+     * Build where sql for the processor to select only delayed courses.
+     * @return array
+     */
+    public static function get_course_delayed_wheresql() {
+        $where = "{course}.id IN (SELECT courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :now)";
+        $params = array("now" => time());
+        return array($where, $params);
+    }
+
+    /**
      * Deletes the delay entry for a course.
      * @param int $courseid id of the course
      */

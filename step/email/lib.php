@@ -89,10 +89,12 @@ class email extends libbase {
     }
 
     public function post_processing_bulk_operation() {
-        global $DB;
+        global $DB, $PAGE;
         $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
         foreach ($stepinstances as $step) {
             $settings = settings_manager::get_settings($step->id, SETTINGS_TYPE_STEP);
+            // Set system context, since format_text needs a context.
+            $PAGE->set_context(\context_system::instance());
             // Format the raw string in the DB to FORMAT_HTML.
             $settings['contenthtml'] = format_text($settings['contenthtml'], FORMAT_HTML);
 

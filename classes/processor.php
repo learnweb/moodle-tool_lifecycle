@@ -47,28 +47,43 @@ class processor {
      */
     public function call_trigger() {
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
+        $exclude = array();
 
-        $recordset = $this->get_course_recordset();
-        while ($recordset->valid()) {
-            $course = $recordset->current();
-            foreach ($activeworkflows as $workflow) {
-                $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+        foreach ($activeworkflows as $workflow) {
+            $countcourses = 0;
+            $counttriggered = 0;
+            $countexcluded = 0;
+            mtrace('Calling triggers for workflow "' . $workflow->title . '"');
+            $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+            $recordset = $this->get_course_recordset($triggers, $exclude);
+            while ($recordset->valid()) {
+                $course = $recordset->current();
+                $countcourses++;
                 foreach ($triggers as $trigger) {
                     $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                     $response = $lib->check_course($course, $trigger->id);
                     if ($response == trigger_response::next()) {
+                        $recordset->next();
                         continue 2;
                     }
                     if ($response == trigger_response::exclude()) {
-                        break 2;
+                        array_push($exclude, $course->id);
+                        $countexcluded++;
+                        $recordset->next();
+                        continue 2;
                     }
                     if ($response == trigger_response::trigger()) {
-                        process_manager::create_process($course->id, $trigger->workflowid);
                         continue;
                     }
                 }
+                // If all trigger instances agree, that they want to trigger a process, we do so.
+                process_manager::create_process($course->id, $workflow->id);
+                $counttriggered++;
+                $recordset->next();
             }
-            $recordset->next();
+            mtrace("   $countcourses courses processed.");
+            mtrace("   $counttriggered courses triggered.");
+            mtrace("   $countexcluded courses excluded.");
         }
     }
 
@@ -154,15 +169,35 @@ class processor {
     /**
      * Returns a record set with all relevant courses.
      * Relevant means that there is currently no lifecycle process running for this course.
+     * @params $triggers trigger[] list of triggers, which will be asked for additional where requirements.
+     * @params $exclude int[] list of course id, which should be excluded from execution.
      * @return \moodle_recordset with relevant courses.
      */
-    private function get_course_recordset() {
+    public function get_course_recordset($triggers, $exclude) {
         global $DB;
+
+        $where = 'true';
+        $whereparams = array();
+        foreach ($triggers as $trigger) {
+            $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+            list($sql, $params) = $lib->get_course_recordset_where($trigger->id);
+            if (!empty($sql)) {
+                $where .= ' AND ' . $sql;
+                $whereparams = array_merge($whereparams, $params);
+            }
+        }
+
+        if (!empty($exclude)) {
+            list($insql, $inparams) = $DB->get_in_or_equal($exclude, SQL_PARAMS_NAMED);
+            $where .= " AND NOT {course}.id {$insql}";
+            $whereparams = array_merge($whereparams, $inparams);
+        }
+
         $sql = 'SELECT {course}.* from {course} '.
             'left join {tool_lifecycle_process} '.
             'ON {course}.id = {tool_lifecycle_process}.courseid '.
-            'WHERE {tool_lifecycle_process}.courseid is null';
-        return $DB->get_recordset_sql($sql);
+            'WHERE {tool_lifecycle_process}.courseid is null AND ' . $where;
+        return $DB->get_recordset_sql($sql, $whereparams);
     }
 
 }
