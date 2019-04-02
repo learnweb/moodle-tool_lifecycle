@@ -38,7 +38,7 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
 
     private $triggerinstance;
 
-    /** @var processor */
+    /**@var processor Instance of the lifecycle processor */
     private $processor;
 
     public function setUp() {
@@ -63,6 +63,7 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
                 $found = true;
             }
         }
+        $recordset->close();
         $this->assertFalse($found, 'The course should not have passed through since it should not be delay');
     }
 
@@ -82,6 +83,7 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
                 $found = true;
             }
         }
+        $recordset->close();
         $this->assertTrue($found, 'The course should not have passed through in order to delay it');
     }
 
@@ -101,6 +103,7 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
                 $found = true;
             }
         }
+        $recordset->close();
         $this->assertFalse($found, 'The course should not have passed through since it should not be delay');
     }
 }
