@@ -34,7 +34,7 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
       | responsetimeout[number]    | 8                           |
       | responsetimeout[timeunit]  | seconds                     |
       | Subject Template           | Subject                     |
-      | Content Template           | Content                     |
+      | Content plain text template           | Content                     |
       | Content HTML Template      | Content HTML                |
     And I press "Save changes"
     And I select "Delete Course Step" from the "stepname" singleselect

@@ -25,4 +25,5 @@
 
 $string['pluginname'] = 'Start date delay trigger';
 
-$string['delay'] = 'Delay from start of course til starting a process';
+$string['delay'] = 'Delay from start of course until starting a process';
+$string['delay_help'] = 'The trigger will be invoked if the time passed since the course has started is longer than this delay.';
