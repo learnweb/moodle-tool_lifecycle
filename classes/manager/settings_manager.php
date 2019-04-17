@@ -67,7 +67,11 @@ class settings_manager {
                     $value = $value['text'];
                 }
                 if (is_array($value)) {
-                    $cleanedvalue = clean_param_array($value, $setting->paramtype);
+                    // Not sure if this is best practice...
+                    $cleanedvalue = implode(
+                        ',',
+                        clean_param_array($value, $setting->paramtype)
+                    );
                 } else {
                     $cleanedvalue = clean_param($value, $setting->paramtype);
                 }

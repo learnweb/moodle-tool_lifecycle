@@ -81,7 +81,7 @@ class categories extends base_automatic {
 
     public function instance_settings() {
         return array(
-            new instance_setting('categories', PARAM_INT),
+            new instance_setting('categories', PARAM_SEQUENCE),
             new instance_setting('exclude', PARAM_BOOL),
         );
     }
@@ -95,10 +95,10 @@ class categories extends base_automatic {
         }
         $options = array(
             'multiple' => true,
-            'noselectionstring' => 'lol lol lol',
+            'noselectionstring' => get_string('categories_noselection', 'lifecycletrigger_categories'),
         );
         $mform->addElement('autocomplete', 'categories', get_string('categories', 'lifecycletrigger_categories'), $categorynames, $options);
-//        $mform->setType('categories', PARAM_INT);
+        $mform->setType('categories', PARAM_SEQUENCE);
 
         $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));
         $mform->setType('exclude', PARAM_BOOL);
