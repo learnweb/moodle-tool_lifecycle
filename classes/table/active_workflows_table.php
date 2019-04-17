@@ -62,15 +62,22 @@ abstract class active_workflows_table extends workflow_table {
             $icon = 't/disable';
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
                 array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DISABLE, 'sesskey' => sesskey()));
-            $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'tool_lifecycle', array('title' => $alt)),
-                null, array('title' => $alt));
+            $confirmaction = new \confirm_action(get_string('disableworkflow_confirm', 'tool_lifecycle'));
+            $output .= $OUTPUT->action_icon($url,
+                new \pix_icon($icon, $alt, 'tool_lifecycle', array('title' => $alt)),
+                $confirmaction,
+                array('title' => $alt));
 
             $alt = get_string('abortdisableworkflow', 'tool_lifecycle');
             $icon = 't/stop';
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
                 array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()));
-            $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                null, array('title' => $alt));
+            $confirmaction = new \confirm_action(get_string('abortdisableworkflow_confirm', 'tool_lifecycle'));
+            $output .= $OUTPUT->action_icon($url,
+                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                $confirmaction,
+                array('title' => $alt)
+            );
         }
 
         return $output;

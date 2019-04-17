@@ -96,8 +96,13 @@ class deactivated_workflows_table extends workflow_table {
             $icon = 't/stop';
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
                 array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORT, 'sesskey' => sesskey()));
-            $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                null, array('title' => $alt));
+            $confirmaction = new \confirm_action(get_string('abortprocesses_confirm', 'tool_lifecycle'));
+            $output .= $OUTPUT->action_icon($url,
+                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                $confirmaction,
+                array('title' => $alt)
+            );
+
         }
 
         if (workflow_manager::is_removable($row->id)) {
@@ -105,8 +110,12 @@ class deactivated_workflows_table extends workflow_table {
             $icon = 't/delete';
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
                 array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DELETE, 'sesskey' => sesskey()));
-            $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                null, array('title' => $alt));
+            $confirmaction = new \confirm_action(get_string('deleteworkflow_confirm', 'tool_lifecycle'));
+            $output .= $OUTPUT->action_icon($url,
+                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                $confirmaction,
+                array('title' => $alt)
+            );
         }
 
         return $output;

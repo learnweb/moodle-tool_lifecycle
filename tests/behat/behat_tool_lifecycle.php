@@ -327,4 +327,21 @@ class behat_tool_lifecycle extends behat_base {
     public function i_am_on_lifecycle_view() {
         $this->getSession()->visit($this->locate_path('/admin/tool/lifecycle/view.php'));
     }
+
+    /**
+     * This works for Selenium and other real browsers that support screenshots.
+     *
+     * @Then /^Save me a screenshot$/
+     */
+    public function save_me_a_screenshot() {
+
+        $image_data = $this->getSession()->getDriver()->getScreenshot();
+        $file_and_path = '/tmp/yr/behat_screenshot.jpg';
+        file_put_contents($file_and_path, $image_data);
+
+//        if (PHP_OS === "Darwin" && PHP_SAPI === "cli") {
+//            exec('open -a "Preview.app" ' . $file_and_path);
+//        }
+
+    }
 }

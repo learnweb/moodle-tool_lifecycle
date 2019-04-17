@@ -225,34 +225,24 @@ class workflow_manager {
             self::duplicate_workflow($workflowid);
         }
         if ($action === ACTION_WORKFLOW_DISABLE) {
-            if ($confirm and confirm_sesskey()) {
+            if (confirm_sesskey()) {
                 self::disable($workflowid);
-            } else {
-                self::render_demand_confirm($action, $workflowid, get_string('disableworkflow_confirm', 'tool_lifecycle'));
             }
         }
         if ($action === ACTION_WORKFLOW_ABORTDISABLE) {
-            if ($confirm and confirm_sesskey()) {
+            if (confirm_sesskey()) {
                 self::disable($workflowid);
                 self::abortprocesses($workflowid);
-            } else {
-                self::render_demand_confirm($action, $workflowid, get_string('abortdisableworkflow_confirm', 'tool_lifecycle'));
             }
         }
         if ($action === ACTION_WORKFLOW_ABORT) {
-            if ($confirm and confirm_sesskey()) {
+            if (confirm_sesskey()) {
                 self::abortprocesses($workflowid);
-            } else {
-                self::render_demand_confirm($action, $workflowid, get_string('abortprocesses_confirm', 'tool_lifecycle'));
             }
         }
         if ($action === ACTION_WORKFLOW_DELETE) {
-            if (self::get_workflow($workflowid) && self::is_removable($workflowid)) { // check workflow wasn't already deleted, in case someone refreshes the page
-                if ($confirm and confirm_sesskey()) {
-                    self::remove($workflowid);
-                } else {
-                    self::render_demand_confirm($action, $workflowid, get_string('deleteworkflow_confirm', 'tool_lifecycle'));
-                }
+            if (self::get_workflow($workflowid) && self::is_removable($workflowid) && confirm_sesskey()) { // check workflow wasn't already deleted, in case someone refreshes the page
+                self::remove($workflowid);
             } else {
                 echo $OUTPUT->notification(get_string('workflow_not_removeable', 'tool_lifecycle')
                     , 'warning'); // @todo these notifications aren't shown properly currently
