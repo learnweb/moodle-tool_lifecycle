@@ -241,7 +241,10 @@ class workflow_manager {
             }
         }
         if ($action === ACTION_WORKFLOW_DELETE) {
-            if (self::get_workflow($workflowid) && self::is_removable($workflowid) && confirm_sesskey()) { // check workflow wasn't already deleted, in case someone refreshes the page
+            // Check workflow wasn't already deleted, in case someone refreshes the page.
+            if (self::get_workflow($workflowid) &&
+                self::is_removable($workflowid) &&
+                confirm_sesskey()) {
                 self::remove($workflowid);
             } else {
                 echo $OUTPUT->notification(get_string('workflow_not_removeable', 'tool_lifecycle')
