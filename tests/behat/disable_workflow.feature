@@ -1,4 +1,4 @@
-@tool @tool_lifecycle @tool_lifecycle_disable
+@tool @tool_lifecycle
 Feature: Disable a workflow
   Further, check that all edit possibilities are disabled.
 
@@ -7,8 +7,6 @@ Feature: Disable a workflow
       | fullname | shortname | category | startdate      |
       | Course 1 | C1        | 0        | ##4 days ago## |
     And I log in as "admin"
-    When I wait "1" seconds
-#    Then Save me a screenshot
     And I navigate to "Life Cycle > Workflow Settings" in site administration
     And I press "Add Workflow"
     And I set the following fields to these values:
@@ -39,59 +37,43 @@ Feature: Disable a workflow
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I log out
 
-  @javascript
   Scenario: Disable an workflow, keep processes running, then abort all processes and delete workflow
     Given I log in as "admin"
-    When I wait "1" seconds
-#    Then Save me a screenshot
     And I navigate to "Life Cycle > Workflow Settings" in site administration
-    When I wait "1" seconds
-    Then Save me a screenshot
     Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
     And I should see the tool "Disable Workflow (processes keep running)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
     When I click on the tool "Disable Workflow (processes keep running)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
-    When I wait "1" seconds
-#    Then Save me a screenshot
-    Then I should see "All running processes of this workflow will be aborted. Are you sure?"
-    Then I click on "input[value=Yes]" "css_element"
-    # When I accept the currently displayed dialog | Doesn't work
+    # Here a confirming dialog would appear, but we can't test it without javascript (it just doesn't show).
     Then I should see the tool "Abort running processes (maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
     And I should not see the tool "Delete Workflow" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
     When I click on the tool "Abort running processes (maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
-    Then I should see "All running processes of this workflow will be aborted. Are you sure?"
-    When I press "Continue"
+    # Here a confirming dialog would appear, but we can't test it without javascript (it just doesn't show).
     Then I should see the tool "Delete Workflow" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
     And I should not see the tool "Abort running processes (maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
     When I click on the tool "Delete Workflow" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
-    Then I should see "The workflow is going to be deleted. This can't be undone. Are you sure?"
-    When I press "Continue"
+    # Here a confirming dialog would appear, but we can't test it without javascript (it just doesn't show).
     Then I should see "Nothing to display"
 
-#  Scenario: Disable an workflow and kill processes (abort), then delete workflow
-#    Given I log in as "admin"
-#    And I navigate to "Life Cycle > Workflow Settings" in site administration
-#    Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-#    And I should see the tool "Disable Workflow (abort processes, maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
-#    When I click on the tool "Disable Workflow (abort processes, maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
-#    Then I should see "The workflow is going to be disabled and all running processes of this workflow will be aborted. Are you sure?"
-#    When I press "Continue"
-#    Then I should see the tool "Delete Workflow" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
-#    And I should not see the tool "Abort running processes (maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
-#    When I click on the tool "Delete Workflow" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
-#    Then I should see "The workflow is going to be deleted. This can't be undone. Are you sure?"
-#    When I press "Continue"
-#    Then I should see "Nothing to display"
-#
-#  Scenario: Disable an workflow then create (duplicate) a new one with the same configuration
-#    Given I log in as "admin"
-#    And I navigate to "Life Cycle > Workflow Settings" in site administration
-#    Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-#    When I click on the tool "Disable Workflow (processes keep running)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
-#    Then I should see "The workflow is going to be disabled. Are you sure?"
-#    Then I press "Continue"
-#    When I click on the tool "Duplicate Workflow" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
-#    Then I should see the row "My Workflow" in the "tool_lifecycle_workflow_definitions" table
-#    And I should not see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-#    When I press "Activate"
-#    Then I should not see the row "My Workflow" in the "tool_lifecycle_workflow_definitions" table
-#    And I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
+  Scenario: Disable an workflow and kill processes (abort), then delete workflow
+    Given I log in as "admin"
+    And I navigate to "Life Cycle > Workflow Settings" in site administration
+    Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
+    And I should see the tool "Disable Workflow (abort processes, maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
+    When I click on the tool "Disable Workflow (abort processes, maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
+    # Here a confirming dialog would appear, but we can't test it without javascript (it just doesn't show).
+    Then I should see the tool "Delete Workflow" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
+    And I should not see the tool "Abort running processes (maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
+    When I click on the tool "Delete Workflow" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
+    Then I should see "Nothing to display"
+
+  Scenario: Disable an workflow then create (duplicate) a new one with the same configuration
+    Given I log in as "admin"
+    And I navigate to "Life Cycle > Workflow Settings" in site administration
+    Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
+    When I click on the tool "Disable Workflow (processes keep running)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
+    When I click on the tool "Duplicate Workflow" in the "My Workflow" row of the "tool_lifecycle_deactivated_workflows" table
+    Then I should see the row "My Workflow" in the "tool_lifecycle_workflow_definitions" table
+    And I should not see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
+    When I press "Activate"
+    Then I should not see the row "My Workflow" in the "tool_lifecycle_workflow_definitions" table
+    And I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
