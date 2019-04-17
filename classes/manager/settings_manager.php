@@ -66,7 +66,11 @@ class settings_manager {
                 if (is_array($value) && array_key_exists('text', $value)) {
                     $value = $value['text'];
                 }
-                $cleanedvalue = clean_param($value, $setting->paramtype);
+                if (is_array($value)) {
+                    $cleanedvalue = clean_param_array($value, $setting->paramtype);
+                } else {
+                    $cleanedvalue = clean_param($value, $setting->paramtype);
+                }
                 $record = $DB->get_record('tool_lifecycle_settings',
                     array(
                         'instanceid' => $instanceid,
