@@ -120,6 +120,7 @@ class admin_settings {
     public function __construct() {
         global $PAGE;
         $this->pageurl = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
+        $PAGE->set_title(get_string('adminsettings_heading', 'tool_lifecycle'));
         $PAGE->set_url($this->pageurl);
     }
 
@@ -228,6 +229,7 @@ class admin_settings {
         workflow_manager::handle_action($action, $workflowid);
 
         $form = new form_workflow_instance($PAGE->url, workflow_manager::get_workflow($workflowid));
+        $PAGE->set_title(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));
 
         if ($action === ACTION_WORKFLOW_INSTANCE_FROM) {
             $this->view_workflow_instance_form($form);
@@ -279,6 +281,7 @@ class workflow_settings {
         // Has to be called before moodleform is created!
         admin_externalpage_setup('tool_lifecycle_adminsettings');
         $this->pageurl = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php');
+        $PAGE->set_title(get_string('adminsettings_workflow_definition_steps_heading', 'tool_lifecycle'));
         $PAGE->set_url($this->pageurl);
         $this->workflowid = $workflowid;
     }
