@@ -327,8 +327,13 @@ class workflow_settings {
                 'stepname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
         }
 
-        echo $OUTPUT->single_button(new \moodle_url('/admin/tool/lifecycle/adminsettings.php'),
-            get_string('back'));
+        $url = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
+        echo \html_writer::start_tag('div', array('class' => 'd-inline-block'));
+        echo \html_writer::start_tag('form', array('action' => $url, 'method' => 'post', 'class' => 'form-inline'));
+        echo \html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'sesskey', 'value' =>  sesskey()));
+        echo \html_writer::tag('button', get_string('back'), array('class' => 'btn btn-secondary'));
+        echo \html_writer::end_tag('form');
+        echo \html_writer::end_tag('div');
 
         $table = new step_table('tool_lifecycle_workflows', $this->workflowid);
         $table->out(50, false);
