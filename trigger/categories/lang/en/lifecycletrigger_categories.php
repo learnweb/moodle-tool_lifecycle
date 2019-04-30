@@ -25,5 +25,6 @@
 
 $string['pluginname'] = 'Categories trigger';
 
-$string['categories'] = 'IDs of categories for which the workflow should be triggered';
+$string['categories'] = 'Categories, for which the workflow should be triggered';
+$string['categories_noselection'] = 'Please choose at least one category.';
 $string['exclude'] = 'If ticked, the named categories are excluded from triggering instead.';
