@@ -28,7 +28,7 @@ Feature: Add a workflow definition activate it
       | responsetimeout[number]    | 14                          |
       | responsetimeout[timeunit]  | days                        |
       | Subject Template           | Subject                     |
-      | Content Template           | Content                     |
+      | Content plain text template           | Content                     |
       | Content HTML Template      | Content HTML                |
     And I press "Save changes"
     And I select "Create Backup Step" from the "stepname" singleselect
