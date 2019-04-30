@@ -330,7 +330,7 @@ class workflow_settings {
         $url = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
         echo \html_writer::start_tag('div', array('class' => 'd-inline-block'));
         echo \html_writer::start_tag('form', array('action' => $url, 'method' => 'post', 'class' => 'form-inline'));
-        echo \html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'sesskey', 'value' =>  sesskey()));
+        echo \html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()));
         echo \html_writer::tag('button', get_string('back'), array('class' => 'btn btn-secondary'));
         echo \html_writer::end_tag('form');
         echo \html_writer::end_tag('div');
