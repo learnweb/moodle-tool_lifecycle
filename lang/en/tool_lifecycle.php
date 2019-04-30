@@ -23,7 +23,6 @@
  */
 
 
-
 $string['pluginname'] = 'Life Cycle';
 $string['plugintitle'] = 'Course Life Cycle';
 
@@ -49,8 +48,9 @@ $string['general_settings_header'] = 'General Settings';
 $string['followedby_none'] = 'None';
 $string['invalid_workflow'] = 'Invalid workflow configuration';
 $string['invalid_workflow_details'] = 'Go to details view, to create a trigger for this workflow';
-$string['active_workflow_not_changeable'] = 'The workflow instance is active. It is not possible to change any of its steps.';
+$string['active_workflow_not_changeable'] = 'The workflow instance was already activated. It is not possible to change any of its steps anymore.';
 $string['active_workflow_not_removeable'] = 'The workflow instance is active. It is not possible to remove it.';
+$string['workflow_not_removeable'] = 'It is not possible to remove this workflow instance. Maybe it still has running processes?';
 $string['invalid_workflow_cannot_be_activated'] = 'The workflow definition is invalid, thus it cannot be activated.';
 $string['trigger_does_not_exist'] = 'The requested trigger could not be found.';
 $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not be triggered manually.';
@@ -75,13 +75,25 @@ $string['workflow_active'] = 'Active';
 $string['workflow_processes'] = 'Active processes';
 $string['workflow_timeactive'] = 'Active since';
 $string['workflow_sortindex'] = 'Up/Down';
-$string['workflow_tools'] = 'Tools';
+$string['workflow_tools'] = 'Actions';
 $string['viewsteps'] = 'View Workflow Steps';
 $string['editworkflow'] = 'Edit Title';
 $string['duplicateworkflow'] = 'Duplicate Workflow';
 $string['deleteworkflow'] = 'Delete Workflow';
+$string['deleteworkflow_confirm'] = 'The workflow is going to be deleted. This can\'t be undone. Are you sure?';
 $string['activateworkflow'] = 'Activate';
+$string['disableworkflow'] = 'Disable Workflow (processes keep running)';
+$string['disableworkflow_confirm'] = 'The workflow is going to be disabled. Are you sure?';
+$string['abortdisableworkflow'] = 'Disable Workflow (abort processes, maybe unsafe!)';
+$string['abortdisableworkflow_confirm'] = 'The workflow is going to be disabled and all running processes of this workflow will be aborted. Are you sure?';
+$string['abortprocesses'] = 'Abort running processes (maybe unsafe!)';
+$string['abortprocesses_confirm'] = 'All running processes of this workflow will be aborted. Are you sure?';
 $string['workflow_duplicate_title'] = '{$a} (Copy)';
+
+// Deactivated workflows.
+$string['deactivated_workflows_list'] = 'List deactivated workflows';
+$string['deactivated_workflows_list_header'] = 'Deactivated workflows';
+$string['workflow_timedeactive'] = 'Deactivated since';
 
 $string['step_type'] = 'Type';
 $string['step_subpluginname'] = 'Subplugin Name';
@@ -114,7 +126,7 @@ $string['date'] = 'Due date';
 $string['nostepfound'] = 'A step with the given stepid could not be found!';
 $string['noprocessfound'] = 'A process with the given processid could not be found!';
 
-$string['nocoursestodisplay'] = 'There are currently no courses, which require your attention!';
+$string['nocoursestodisplay'] = 'There are currently no courses which require your attention!';
 
 $string['course_backups_list_header'] = 'Course Backups';
 $string['backupcreated'] = 'Created at';

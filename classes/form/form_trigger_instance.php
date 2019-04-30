@@ -21,6 +21,7 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle\form;
 
 use tool_lifecycle\entity\trigger_subplugin;
@@ -66,7 +67,8 @@ class form_trigger_instance extends \moodleform {
 
     /**
      * Constructor
-     * @param \moodle_url $url.
+     *
+     * @param \moodle_url $url .
      * @param int $workflowid if of the workflow.
      * @param trigger_subplugin $trigger step entity.
      * @param string $subpluginname name of the trigger subplugin.
@@ -90,7 +92,8 @@ class form_trigger_instance extends \moodleform {
             $this->lib = lib_manager::get_trigger_lib($this->subpluginname);
         }
 
-        parent::__construct($url);
+        $editable = workflow_manager::is_editable($workflowid);
+        parent::__construct($url, null, 'post', '', null, $editable);
     }
 
     /**

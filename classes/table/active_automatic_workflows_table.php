@@ -21,10 +21,10 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle\table;
 
-use tool_lifecycle\manager\process_manager;
-use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\lib_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\workflow_manager;
 
@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
-class active_automatic_workflows_table extends workflow_table {
+class active_automatic_workflows_table extends active_workflows_table {
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
@@ -58,13 +58,14 @@ class active_automatic_workflows_table extends workflow_table {
             get_string('workflow_processes', 'tool_lifecycle'),
             get_string('workflow_sortindex', 'tool_lifecycle'),
             get_string('workflow_tools', 'tool_lifecycle'),
-            ]);
+        ]);
         $this->sortable(false, 'sortindex');
         $this->setup();
     }
 
     /**
      * Render sortindex column.
+     *
      * @param $row
      * @return string action buttons for changing sortorder of active workflows
      */
@@ -90,7 +91,7 @@ class active_automatic_workflows_table extends workflow_table {
             }
         }
 
-        return  $output;
+        return $output;
     }
 
 }

@@ -41,6 +41,7 @@ if ($hassiteconfig) {
     $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_active_processes());
     $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_course_backups());
     $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_sublugins());
+    $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_deactivated_workflows());
 
     if ($ADMIN->fulltree) {
         $triggers = core_component::get_plugin_list('lifecycletrigger');

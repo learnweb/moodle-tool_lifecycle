@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
-class active_manual_workflows_table extends workflow_table {
+class active_manual_workflows_table extends active_workflows_table {
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);

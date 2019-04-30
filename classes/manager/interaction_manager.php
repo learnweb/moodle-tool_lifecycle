@@ -74,6 +74,8 @@ class interaction_manager {
                 return $processor->process_course_interactive($processid);
                 break;
             case step_interactive_response::rollback():
+                global $CFG;
+                delayed_courses_manager::set_course_delayed($process->courseid, $CFG->lifecycle_duration);
                 process_manager::rollback_process($process);
                 break;
         }

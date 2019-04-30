@@ -109,6 +109,62 @@ class behat_tool_lifecycle extends behat_base {
     }
 
     /**
+     * I should not see an entire table.
+     *
+     * @When /^I should not see the table "([^"]*)"$/
+     *
+     * @param $tablename string identifier of the table
+     * @throws Exception
+     */
+    public function i_should_not_see_the_table($tablename) {
+        // @todo solve without relaying on exceptions
+        try {
+            $this->get_xpath_of_table($tablename);
+        } catch (ExpectationException $e) {
+            return;
+        }
+        throw new ExpectationException('"The table "' . $tablename . '"  was found."', $this->getSession());
+    }
+
+
+    /**
+     * I should see an entire row.
+     *
+     * @When /^I should see the row "([^"]*)" in the "([^"]*)" table$/
+     *
+     * @param $tablename string identifier of the table
+     * @throws Exception
+     */
+    public function i_should_see_the_row($rowname, $tablename) {
+        // @todo solve without relaying on exceptions
+        try {
+            $this->get_xpath_of_row($rowname, $tablename);
+        } catch (ExpectationException $e) { // gets also threw on not existing table!
+            throw new ExpectationException('"The row "' . $tablename . '"  was found."', $this->getSession());
+        }
+
+        return;
+    }
+
+    /**
+     * I should not see an entire row.
+     *
+     * @When /^I should not see the row "([^"]*)" in the "([^"]*)" table$/
+     *
+     * @param $tablename string identifier of the table
+     * @throws Exception
+     */
+    public function i_should_not_see_the_row($rowname, $tablename) {
+        // @todo solve without relaying on exceptions
+        try {
+            $this->get_xpath_of_row($rowname, $tablename);
+        } catch (ExpectationException $e) { // gets also threw on not existing table!
+            return;
+        }
+        throw new ExpectationException('"The row "' . $tablename . '"  was found."', $this->getSession());
+    }
+
+    /**
      * I should not see a tool for a entry of a table.
      *
      * @When /^I should not see the tool "([^"]*)" in the "([^"]*)" row of the "([^"]*)" table$/
@@ -129,6 +185,54 @@ class behat_tool_lifecycle extends behat_base {
         throw new ExpectationException('"The tool "' . $tool . '"  was found for the row "'. $rowname.
             '" of the table ' . $tablename, $this->getSession());
     }
+
+
+    /**
+     * Build the xpath to the table element with class tablename, throws exceptions if not present.
+     * @param $tablename string identifier of the table
+     * @return string xpath of the table
+     * @throws ExpectationException
+     */
+    private function get_xpath_of_table($tablename) {
+        $xpathelement = "//table/tbody/tr[contains(@id, '$tablename')]";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        return $xpathelement;
+    }
+
+    /**
+     * Build the xpath to the row element with class $rowname within class tablename, throws exceptions if not present.
+     * @param $rowname string identifier of the row
+     * @param $tablename string identifier of the table
+     * @return string xpath of the table
+     * @throws ExpectationException
+     */
+    private function get_xpath_of_row($rowname, $tablename) {
+        $xpathelement = "//table/tbody/tr[contains(@id, '$tablename')]";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        $xpathelement = $xpathelement . "//*[contains(text(),'$rowname')]/ancestor::tr";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The row "'. $rowname.
+                '" of the table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        return $xpathelement;
+    }
+
 
     /**
      * Build the xpath to the tool element and throws exceptions if either the table or the row are not present.
@@ -223,4 +327,5 @@ class behat_tool_lifecycle extends behat_base {
     public function i_am_on_lifecycle_view() {
         $this->getSession()->visit($this->locate_path('/admin/tool/lifecycle/view.php'));
     }
+
 }

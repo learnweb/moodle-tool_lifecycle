@@ -21,6 +21,7 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle\form;
 
 use tool_lifecycle\entity\step_subplugin;
@@ -65,7 +66,8 @@ class form_step_instance extends \moodleform {
 
     /**
      * Constructor
-     * @param \moodle_url $url.
+     *
+     * @param \moodle_url $url .
      * @param step_subplugin $step step entity.
      * @param int $workflowid if of the step's workflow
      * @param string $subpluginname name of the subplugin.
@@ -85,7 +87,8 @@ class form_step_instance extends \moodleform {
         $this->lib = lib_manager::get_step_lib($this->subpluginname);
         $this->stepsettings = $stepsettings;
 
-        parent::__construct($url);
+        $editable = workflow_manager::is_editable($workflowid);
+        parent::__construct($url, null, 'post', '', null, $editable);
     }
 
     /**
