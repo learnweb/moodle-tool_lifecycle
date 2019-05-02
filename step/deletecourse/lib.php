@@ -25,6 +25,7 @@
  */
 namespace tool_lifecycle\step;
 
+use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\response\step_response;
 
 defined('MOODLE_INTERNAL') || die();
@@ -33,6 +34,7 @@ require_once(__DIR__ . '/../lib.php');
 
 class deletecourse extends libbase {
 
+    private static $numberofdeletions = 0;
 
     /**
      * Processes the course and returns a repsonse.
@@ -46,11 +48,29 @@ class deletecourse extends libbase {
      * @return step_response
      */
     public function process_course($processid, $instanceid, $course) {
+        if (self::$numberofdeletions >= settings_manager::get_settings(
+            $instanceid, SETTINGS_TYPE_STEP)['maximumdeletionspercron']) {
+            return step_response::waiting(); // Wait with further deletions til the next cron run.
+        }
         delete_course($course->id, true);
+        self::$numberofdeletions++;
         return step_response::proceed();
     }
 
     public function get_subpluginname() {
         return 'deletecourse';
+    }
+
+    public function instance_settings() {
+        return array(
+            new instance_setting('maximumdeletionspercron', PARAM_INT),
+        );
+    }
+
+    public function extend_add_instance_form_definition($mform) {
+        $elementname = 'maximumdeletionspercron';
+        $mform->addElement('text', $elementname, get_string('deletecourse_maximumdeletionspercron', 'lifecyclestep_deletecourse'));
+        $mform->setType($elementname, PARAM_INT);
+        $mform->setDefault($elementname, 10);
     }
 }
