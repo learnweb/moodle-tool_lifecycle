@@ -31,11 +31,11 @@ class restore_lifecycle_workflow {
     /** @var $workflow workflow */
     private $workflow;
     /** @var $steps step_subplugin[] */
-    private $steps;
+    private $steps = [];
     /** @var $trigger trigger_subplugin[] */
-    private $trigger;
+    private $trigger = [];
     /** @var $settings array */
-    private $settings;
+    private $settings = [];
     /** @var $errors string[] errors that occurred during restore.*/
     private $errors = [];
     /** @var $writer XMLWriter */
