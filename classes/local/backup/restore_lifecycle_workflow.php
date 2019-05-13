@@ -87,6 +87,7 @@ class restore_lifecycle_workflow {
         $this->workflow->active = false;
         $this->workflow->timeactive = null;
         $this->workflow->timedeactive = null;
+        $this->workflow->sortindex = null;
     }
 
     /**
