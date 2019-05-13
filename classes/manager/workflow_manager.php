@@ -111,6 +111,21 @@ class workflow_manager {
     }
 
     /**
+     * Returns all existing workflows.
+     *
+     * @return workflow[]
+     */
+    public static function get_workflows() {
+        global $DB;
+        $result = array();
+        $records = $DB->get_records('tool_lifecycle_workflow');
+        foreach ($records as $record) {
+            $result[] = workflow::from_record($record);
+        }
+        return $result;
+    }
+
+    /**
      * Returns all active workflows.
      *
      * @return workflow[]
