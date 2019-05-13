@@ -410,6 +410,7 @@ class workflow_manager {
     public static function backup_workflow($workflowid) {
         $task = new backup_lifecycle_workflow($workflowid);
         $task->execute();
+        $task->send_temp_file();
     }
 
     /**
