@@ -58,6 +58,11 @@ abstract class active_workflows_table extends workflow_table {
             $icon = 't/copy';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
+            $action = ACTION_WORKFLOW_BACKUP;
+            $alt = get_string('backupworkflow', 'tool_lifecycle');
+            $icon = 't/backup';
+            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+
             $alt = get_string('disableworkflow', 'tool_lifecycle');
             $icon = 't/disable';
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
