@@ -36,6 +36,8 @@ class backup_lifecycle_workflow {
     private $trigger;
     /** @var $writer XMLWriter */
     private $writer;
+    /** @var $tempfilename string */
+    private $tempfilename;
 
     public function __construct($workflowid) {
         $this->workflow = workflow_manager::get_workflow($workflowid);
@@ -45,14 +47,14 @@ class backup_lifecycle_workflow {
 
     /**
      * Executes the backup process. It write the workflow with all steps and triggers to a xml file.
-     * Afterwards it sends the file to the client.
+     * Afterwards send_temp_file should be called, which sends the file to the client.
      * @throws \moodle_exception
      */
     public function execute() {
         global $CFG;
         make_temp_directory('lifecycle');
-        $tempfilename = $CFG->tempdir .'/lifecycle/'. md5(sesskey().microtime());
-        if (!$handle = fopen($tempfilename, 'w+b')) {
+        $this->tempfilename = $CFG->tempdir .'/lifecycle/'. md5(sesskey().microtime());
+        if (!$handle = fopen($this->tempfilename, 'w+b')) {
             print_error('cannotcreatetempdir');
         }
         header('Content-type: text/xml');
@@ -68,8 +70,18 @@ class backup_lifecycle_workflow {
         $this->writer->endDocument();
         fwrite($handle,  $this->writer->flush());
         fclose($handle);
+    }
+
+    /**
+     * This sends the created tempfile to the client.
+     */
+    public function send_temp_file() {
+        if (!$this->tempfilename) {
+            throw new \moodle_exception('There is no tempfile yet. Call execute first!');
+        }
+        header('Content-type: text/xml');
         @header("Content-type: text/xml; charset=UTF-8");
-        send_temp_file($tempfilename, 'myfile.xml', false);
+        send_temp_file($this->tempfilename, 'myfile.xml', false);
         die();
     }
 
@@ -121,5 +133,9 @@ class backup_lifecycle_workflow {
             }
             $this->writer->endElement();
         }
+    }
+
+    public function get_temp_filename() {
+        return $this->tempfilename;
     }
 }
