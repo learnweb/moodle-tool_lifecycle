@@ -63,7 +63,7 @@ class restore_lifecycle_workflow {
         if ($this->workflow) {
             $this->load_subplugins();
             // Validate the subplugin data.
-            if ($this->all_subplugins_installed()) {
+            if (empty($this->errors) && $this->all_subplugins_installed()) {
                 // If all loaded data is valid, the new workflow and the steps can be stored in the database.
                 $this->persist();
             }
