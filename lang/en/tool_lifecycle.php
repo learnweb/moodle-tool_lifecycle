@@ -147,7 +147,7 @@ $string['manual_trigger_process_existed'] = 'A workflow for this course already 
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_is_running'] = 'Workflow is running.';
 
-// Backup & Restore
+// Backup & Restore.
 $string['restore_workflow_not_found'] = 'Wrong format of the backup file. The workflow could not be found.';
 $string['restore_subplugins_invalid'] = 'Wrong format of the backup file. The structure of the subplugin elements is not as expected.';
 $string['restore_step_does_not_exist'] = 'The step {$a} is not installed, but is included in the backup file. Please installed it first and try again.';

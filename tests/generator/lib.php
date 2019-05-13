@@ -36,21 +36,25 @@ use tool_lifecycle\manager\workflow_manager;
 class tool_lifecycle_generator extends testing_module_generator {
 
     private static $defaultsteps = [
-        "deletecourse" =>
-            ["maximumdeletionspercron" => 10],
-        "email" =>
-            ["responsetimeout" => 10,
-                "subject" => "Test Email",
-                "content" => "Content",
-                "contenthtml"=> "Content HTML"],
+        "deletecourse" => [
+            "maximumdeletionspercron" => 10
+        ],
+        "email" => [
+            "responsetimeout" => 10,
+            "subject" => "Test Email",
+            "content" => "Content",
+            "contenthtml" => "Content HTML"
+        ],
         "createbackup" => [],
     ];
     private static $defaulttrigger = [
-        "startdatedelay" =>
-            ["delay" => 10000],
-        "categories" =>
-            ["categories" => "1,10",
-                "exclude" => true],
+        "startdatedelay" => [
+            "delay" => 10000
+        ],
+        "categories" => [
+            "categories" => "1,10",
+                "exclude" => true
+        ],
     ];
 
 

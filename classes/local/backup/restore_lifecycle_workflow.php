@@ -150,7 +150,8 @@ class restore_lifecycle_workflow {
         $installedtrigger = \core_component::get_plugin_list('lifecycletrigger');
         foreach ($this->trigger as $trigger) {
             if (!array_key_exists($trigger->subpluginname, $installedtrigger)) {
-                $this->errors[] = get_string('restore_trigger_does_not_exist', 'tool_lifecycle', $trigger->subpluginname);                return false;
+                $this->errors[] = get_string('restore_trigger_does_not_exist',
+                    'tool_lifecycle', $trigger->subpluginname);
             }
         }
         if (count($this->errors) > 0) {
@@ -165,7 +166,9 @@ class restore_lifecycle_workflow {
      */
     private function persist() {
         workflow_manager::insert_or_update($this->workflow);
-        usort($this->steps, function($a, $b) {return $a->sortindex > $b->sortindex;});
+        usort($this->steps, function($a, $b) {
+            return $a->sortindex > $b->sortindex;
+        });
         foreach ($this->steps as $step) {
             $step->workflowid = $this->workflow->id;
             $stepid = $step->id;
@@ -179,7 +182,9 @@ class restore_lifecycle_workflow {
                 }
             }
         }
-        usort($this->trigger, function($a, $b) {return $a->sortindex > $b->sortindex;});
+        usort($this->trigger, function($a, $b) {
+            return $a->sortindex > $b->sortindex;
+        });
         foreach ($this->trigger as $trigger) {
             $trigger->workflowid = $this->workflow->id;
             $triggerid = $trigger->id;

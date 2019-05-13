@@ -34,17 +34,6 @@ require_once($CFG->libdir . '/formslib.php');
  */
 class form_upload_workflow extends \moodleform {
 
-
-    /**
-     * Constructor
-     * @param \moodle_url $url.
-     * @param workflow $workflow workflow entity.
-     * @throws \moodle_exception if neither step nor subpluginname are set.
-     */
-    public function __construct($url) {
-        parent::__construct($url);
-    }
-
     /**
      * Defines forms elements
      */
