@@ -67,6 +67,7 @@ $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_workflow'] = 'Workflow';
 
 $string['add_workflow'] = 'Add Workflow';
+$string['upload_workflow'] = 'Upload Workflow';
 $string['workflow_title'] = 'Title';
 $string['workflow_title_help'] = 'Workflow title (visible for admins only).';
 $string['workflow_displaytitle'] = 'Displayed workflow title';
@@ -78,6 +79,7 @@ $string['workflow_sortindex'] = 'Up/Down';
 $string['workflow_tools'] = 'Actions';
 $string['viewsteps'] = 'View Workflow Steps';
 $string['editworkflow'] = 'Edit Title';
+$string['backupworkflow'] = 'Backup Workflow';
 $string['duplicateworkflow'] = 'Duplicate Workflow';
 $string['deleteworkflow'] = 'Delete Workflow';
 $string['deleteworkflow_confirm'] = 'The workflow is going to be deleted. This can\'t be undone. Are you sure?';
@@ -144,3 +146,9 @@ $string['manual_trigger_process_existed'] = 'A workflow for this course already 
 
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_is_running'] = 'Workflow is running.';
+
+// Backup & Restore
+$string['restore_workflow_not_found'] = 'Wrong format of the backup file. The workflow could not be found.';
+$string['restore_subplugins_invalid'] = 'Wrong format of the backup file. The structure of the subplugin elements is not as expected.';
+$string['restore_step_does_not_exist'] = 'The step {$a} is not installed, but is included in the backup file. Please installed it first and try again.';
+$string['restore_trigger_does_not_exist'] = 'The trigger {$a} is not installed, but is included in the backup file. Please installed it first and try again.';

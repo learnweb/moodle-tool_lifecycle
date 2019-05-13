@@ -40,10 +40,29 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
      *
      * @return string
      */
-    public function header() {
+    public function header($title) {
         global $OUTPUT, $PAGE;
         echo $OUTPUT->header();
-        echo $OUTPUT->heading($PAGE->heading);
+        if ($title) {
+            echo $OUTPUT->heading($title);
+        } else {
+            echo $OUTPUT->heading($PAGE->heading);
+        }
+    }
+
+    /**
+     * Renders the workflow upload form including errors, which occured during upload.
+     * @param \tool_lifecycle\form\form_upload_workflow $form
+     * @param array $errors
+     */
+    public function render_workflow_upload_form($form, $errors = array()) {
+        global $OUTPUT;
+        $this->header(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));
+        foreach ($errors as $error) {
+            echo $OUTPUT->notification($error);
+        }
+        echo $form->render();
+        $this->footer();
     }
 
 }
