@@ -57,8 +57,7 @@ class backup_lifecycle_workflow {
         if (!$handle = fopen($this->tempfilename, 'w+b')) {
             print_error('cannotcreatetempdir');
         }
-        header('Content-type: text/xml');
-        $this->writer = new XMLWriter();
+        $this->writer = new \XMLWriter();
         $this->writer->openMemory();
         $this->writer->setIndent(true);
         $this->writer->startDocument();

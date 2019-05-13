@@ -42,7 +42,7 @@ class restore_lifecycle_workflow {
     private $reader;
 
     public function __construct($xmldata) {
-        $this->reader = new XMLReader();
+        $this->reader = new \XMLReader();
         $this->reader->XML($xmldata);
 
     }
@@ -78,7 +78,7 @@ class restore_lifecycle_workflow {
         if (!$this->reader->name == 'workflow' || !$this->reader->hasAttributes) {
             $this->errors[] = get_string('restore_workflow_not_found', 'tool_lifecycle');
         }
-        $tempworkflow = new stdClass();
+        $tempworkflow = new \stdClass();
         foreach (get_class_vars(workflow::class) as $prop => $value) {
             $tempworkflow->$prop = $this->reader->getAttribute($prop);
         }
@@ -97,7 +97,7 @@ class restore_lifecycle_workflow {
         $currenttype = null;
         while ($this->reader->read()) {
             $tag = $this->reader->name;
-            if ($tag == '#text' || $this->reader->nodeType == XMLReader::END_ELEMENT) {
+            if ($tag == '#text' || $this->reader->nodeType == \XMLReader::END_ELEMENT) {
                 continue;
             }
             if ((!$tag == 'step' && !$tag == 'trigger' && !$tag == 'setting')
@@ -106,7 +106,7 @@ class restore_lifecycle_workflow {
             }
             switch ($tag) {
                 case 'trigger':
-                    $currentsubplugin = new stdClass();
+                    $currentsubplugin = new \stdClass();
                     $currenttype = SETTINGS_TYPE_TRIGGER;
                     foreach (get_class_vars(trigger_subplugin::class) as $prop => $value) {
                         $currentsubplugin->$prop = $this->reader->getAttribute($prop);
@@ -114,7 +114,7 @@ class restore_lifecycle_workflow {
                     $this->trigger[] = trigger_subplugin::from_record($currentsubplugin);
                     break;
                 case 'step':
-                    $currentsubplugin = new stdClass();
+                    $currentsubplugin = new \stdClass();
                     $currenttype = SETTINGS_TYPE_STEP;
                     foreach (get_class_vars(step_subplugin::class) as $prop => $value) {
                         $currentsubplugin->$prop = $this->reader->getAttribute($prop);
@@ -122,7 +122,7 @@ class restore_lifecycle_workflow {
                     $this->steps[] = step_subplugin::from_record($currentsubplugin);
                     break;
                 case 'setting':
-                    $setting = new stdClass();
+                    $setting = new \stdClass();
                     $setting->name = $this->reader->getAttribute('name');
                     $setting->pluginid = $currentsubplugin->id;
                     $setting->type = $currenttype;
@@ -140,13 +140,13 @@ class restore_lifecycle_workflow {
      * @throws coding_exception
      */
     private function all_subplugins_installed() {
-        $installedsteps = core_component::get_plugin_list('lifecyclestep');
+        $installedsteps = \core_component::get_plugin_list('lifecyclestep');
         foreach ($this->steps as $step) {
             if (!array_key_exists($step->subpluginname, $installedsteps)) {
                 $this->errors[] = get_string('restore_step_does_not_exist', 'tool_lifecycle', $step->subpluginname);
             }
         }
-        $installedtrigger = core_component::get_plugin_list('lifecycletrigger');
+        $installedtrigger = \core_component::get_plugin_list('lifecycletrigger');
         foreach ($this->trigger as $trigger) {
             if (!array_key_exists($trigger->subpluginname, $installedtrigger)) {
                 $this->errors[] = get_string('restore_trigger_does_not_exist', 'tool_lifecycle', $trigger->subpluginname);                return false;
