@@ -63,9 +63,9 @@ class backup_lifecycle_workflow {
         $this->writer->setIndent(true);
         $this->writer->startDocument();
         $this->writer->startElement("workflow");
-        $this->writeWorkflow();
-        $this->writeSteps();
-        $this->writeTriggers();
+        $this->write_workflow();
+        $this->write_steps();
+        $this->write_triggers();
         $this->writer->endElement();
         $this->writer->endDocument();
         fwrite($handle,  $this->writer->flush());
@@ -85,10 +85,11 @@ class backup_lifecycle_workflow {
         die();
     }
 
+
     /**
      * Write the workflow with all its attributes to the xmlwriter.
      */
-    private function writeWorkflow() {
+    private function write_workflow() {
         foreach (get_object_vars($this->workflow) as $prop => $value) {
             $this->writer->writeAttribute($prop, $value);
         }
@@ -97,7 +98,7 @@ class backup_lifecycle_workflow {
     /**
      * Write all trigger of the workflow with all their attributes to the xmlwriter.
      */
-    private function writeTriggers() {
+    private function write_triggers() {
         foreach ($this->trigger as $trigger) {
             $this->writer->startElement("trigger");
             foreach (get_object_vars($trigger) as $prop => $value) {
@@ -118,7 +119,7 @@ class backup_lifecycle_workflow {
     /**
      * Write all steps of the workflow with all their attributes to the xmlwriter.
      */
-    private function writeSteps() {
+    private function write_steps() {
         foreach ($this->steps as $step) {
             $this->writer->startElement("step");
             foreach (get_object_vars($step) as $prop => $value) {
