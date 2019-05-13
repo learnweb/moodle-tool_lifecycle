@@ -177,7 +177,7 @@ class step_manager extends subplugin_manager {
         global $DB;
         $records = $DB->get_records('tool_lifecycle_step', array(
             'workflowid' => $workflowid
-        ));
+        ), 'sortindex');
         $steps = array();
         foreach ($records as $id => $record) {
             $steps[$id] = step_subplugin::from_record($record);
