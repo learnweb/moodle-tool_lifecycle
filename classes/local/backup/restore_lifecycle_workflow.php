@@ -165,7 +165,7 @@ class restore_lifecycle_workflow {
      */
     private function persist() {
         workflow_manager::insert_or_update($this->workflow);
-
+        usort($this->steps, function($a, $b) {return $a->sortindex > $b->sortindex;});
         foreach ($this->steps as $step) {
             $step->workflowid = $this->workflow->id;
             $stepid = $step->id;
@@ -179,6 +179,7 @@ class restore_lifecycle_workflow {
                 }
             }
         }
+        usort($this->trigger, function($a, $b) {return $a->sortindex > $b->sortindex;});
         foreach ($this->trigger as $trigger) {
             $trigger->workflowid = $this->workflow->id;
             $triggerid = $trigger->id;
