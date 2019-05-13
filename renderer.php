@@ -38,7 +38,7 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
     /**
      * Write the page header
      *
-     * @oaram string optional page title.
+     * @param string optional page title.
      * @return string
      */
     public function header($title = null) {
