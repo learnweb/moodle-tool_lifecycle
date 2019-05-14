@@ -49,7 +49,7 @@ class tool_lifecycle_manually_triggered_process_testcase extends \advanced_testc
         $triggersettings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
         $manualworkflow = $generator->create_manual_workflow($triggersettings);
-        $generator->create_step("instance1", "dummy", $manualworkflow->id);
+        $generator->create_step("instance1", "createbackup", $manualworkflow->id);
 
         workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $manualworkflow->id);
 

@@ -46,7 +46,7 @@ class tool_lifecycle_process_status_message_testcase extends \advanced_testcase 
         $this->workflow = $this->generator->create_manual_workflow($settings);
         workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow->id);
 
-        $this->generator->create_step("instance1", "dummy", $this->workflow->id);
+        $this->generator->create_step("instance1", "createbackup", $this->workflow->id);
         $this->generator->create_step("instance2", "email", $this->workflow->id);
     }
 
