@@ -1,6 +1,6 @@
 # Course Life Cycle (moodle-tool_lifecycle)
 
-[WIP] This module is currently in development.
+This module is currently in development.
 The goal is to create a modular plugin, which allows the to execute recurring tasks within moodle associated with courses. 
 Possible use cases are (not limited to):
    - Deleting courses at end of life (including asking teachers for permission).
