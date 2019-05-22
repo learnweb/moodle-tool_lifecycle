@@ -34,7 +34,7 @@ class backup_lifecycle_workflow {
     private $steps;
     /** @var $trigger trigger_subplugin[] */
     private $trigger;
-    /** @var $writer XMLWriter */
+    /** @var $writer \XMLWriter */
     private $writer;
     /** @var $tempfilename string */
     private $tempfilename;
@@ -67,12 +67,13 @@ class backup_lifecycle_workflow {
         $this->write_triggers();
         $this->writer->endElement();
         $this->writer->endDocument();
-        fwrite($handle,  $this->writer->flush());
+        fwrite($handle, $this->writer->flush());
         fclose($handle);
     }
 
     /**
      * This sends the created tempfile to the client.
+     * @throws \moodle_exception
      */
     public function send_temp_file() {
         if (!$this->tempfilename) {

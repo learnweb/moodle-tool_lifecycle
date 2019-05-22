@@ -245,7 +245,7 @@ class admin_settings {
      * This is the entry point for this controller class.
      */
     public function execute($action, $workflowid) {
-        global $PAGE, $CFG, $OUTPUT;
+        global $PAGE;
         $this->check_permissions();
         /** @var \tool_lifecycle_renderer $renderer */
         $renderer = $PAGE->get_renderer('tool_lifecycle');

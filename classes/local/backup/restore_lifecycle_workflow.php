@@ -38,7 +38,7 @@ class restore_lifecycle_workflow {
     private $settings = [];
     /** @var $errors string[] errors that occurred during restore.*/
     private $errors = [];
-    /** @var $writer XMLWriter */
+    /** @var $writer \XMLWriter */
     private $reader;
 
     public function __construct($xmldata) {
@@ -52,8 +52,8 @@ class restore_lifecycle_workflow {
      * If all data is valid, it restores the workflow with all subplugins and settings.
      * Otherwise an array with error strings is returned.
      * @return string[] Errors, which occurred during the restore process.
-     * @throws coding_exception
-     * @throws moodle_exception
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function execute() {
         $this->reader->read();
@@ -138,7 +138,7 @@ class restore_lifecycle_workflow {
      * If subplugins are missing, an error string is appended to the $error array,
      * which can be used for displaying to the user later.
      * @return bool true, if all subplugins are installed; false otherwise.
-     * @throws coding_exception
+     * @throws \coding_exception
      */
     private function all_subplugins_installed() {
         $installedsteps = \core_component::get_plugin_list('lifecyclestep');
@@ -162,7 +162,7 @@ class restore_lifecycle_workflow {
 
     /**
      * Stores all loaded data in the database.
-     * @throws moodle_exception
+     * @throws \moodle_exception
      */
     private function persist() {
         workflow_manager::insert_or_update($this->workflow);
