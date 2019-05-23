@@ -81,8 +81,8 @@ class backup_lifecycle_workflow {
         }
         header('Content-type: text/xml');
         @header("Content-type: text/xml; charset=UTF-8");
-        send_temp_file($this->tempfilename, 'myfile.xml', false);
-        die();
+        $filename = clean_filename($this->workflow->title . '.xml');
+        send_temp_file($this->tempfilename, $filename, false);
     }
 
 
