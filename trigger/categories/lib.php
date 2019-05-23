@@ -56,11 +56,13 @@ class categories extends base_automatic {
         $exclude = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['exclude'] && true;
 
         $categories = explode(',', $categories);
-        // Only require coursecatlib.php for Moodleversions before 3.6 .
-        if ($CFG->version < 2018120300) {
+        // Use core_course_category for moodle 3.6 and higher.
+        if ($CFG->version >= 2018120300) {
+            $categoryobjects = \core_course_category::get_many($categories);
+        } else {
             require_once($CFG->libdir . '/coursecatlib.php');
+            $categoryobjects = \coursecat::get_many($categories);
         }
-        $categoryobjects = coursecat::get_many($categories);
         $allcategories = array();
         foreach ($categories as $category) {
             array_push($allcategories , $category);
