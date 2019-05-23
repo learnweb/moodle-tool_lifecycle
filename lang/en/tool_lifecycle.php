@@ -30,7 +30,7 @@ $string['lifecycle:managecourses'] = 'May manage courses in tool_lifecycle';
 
 $string['general_config_header'] = "General & Subplugins";
 $string['config_delay_duration'] = 'Duration of a course delay';
-$string['config_delay_duration_desc'] = 'Defines the time frame, which a course is excluded from the life cycle processes, when rolled back via user interaction.';
+$string['config_delay_duration_desc'] = 'After roll back via user interaction, this setting specifies the time span for which a course will be exempted from all processes.';
 $string['active_processes_list_header'] = 'Active Processes';
 $string['adminsettings_heading'] = 'Workflow Settings';
 $string['active_manual_workflows_heading'] = 'Active Manual Workflows';
