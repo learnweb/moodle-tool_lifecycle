@@ -1,6 +1,7 @@
 language: php
 
 sudo: false
+dist: trusty
 
 cache:
   directories:
@@ -9,11 +10,6 @@ cache:
 
 addons:
   postgresql: "9.4"
-  apt:
-    packages:
-      - oracle-java9-installer
-      - oracle-java9-set-default
-
 
 php:
   - 7.0
@@ -24,24 +20,35 @@ env:
    - DB=pgsql MOODLE_BRANCH=MOODLE_34_STABLE
    - DB=pgsql MOODLE_BRANCH=MOODLE_35_STABLE
    - DB=pgsql MOODLE_BRANCH=MOODLE_36_STABLE
+   - DB=pgsql MOODLE_BRANCH=MOODLE_37_STABLE
    - DB=pgsql MOODLE_BRANCH=master
    - DB=mysqli MOODLE_BRANCH=MOODLE_34_STABLE
    - DB=mysqli MOODLE_BRANCH=MOODLE_35_STABLE
    - DB=mysqli MOODLE_BRANCH=MOODLE_36_STABLE
+   - DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE
    - DB=mysqli MOODLE_BRANCH=master
 
 matrix:
  allow_failures:
   - env: DB=pgsql MOODLE_BRANCH=master
   - env: DB=mysqli MOODLE_BRANCH=master
+ exclude:
+  - php: 7.0
+    env: DB=pgsql MOODLE_BRANCH=MOODLE_37_STABLE
+  - php: 7.0
+    env: DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE
+  - php: 7.0
+    env: DB=pgsql MOODLE_BRANCH=master
+  - php: 7.0
+    env: DB=mysqli MOODLE_BRANCH=master
  fast_finish: true
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install v8.9.4
+  - nvm install 8.9.4
   - cd ../..
   - composer selfupdate
-  - composer create-project -n --no-dev --prefer-dist moodlerooms/moodle-plugin-ci ci ^2
+  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
 
 jobs:
@@ -49,7 +56,7 @@ jobs:
     # Prechecks against latest Moodle stable only.
     - stage: static
       php: 7.1
-      env: DB=mysqli MOODLE_BRANCH=MOODLE_36_STABLE
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE
       install:
       - moodle-plugin-ci install --no-init
       script:
@@ -61,11 +68,20 @@ jobs:
       - moodle-plugin-ci mustache
       - moodle-plugin-ci grunt
       - moodle-plugin-ci validate
-
-install:
-  - moodle-plugin-ci install
+    # Smaller build matrix for development builds
+    - stage: develop
+      php: 7.1
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE
+      install:
+      - moodle-plugin-ci install
+      script:
+      - moodle-plugin-ci phpunit --coverage-clover
+      - moodle-plugin-ci behat
 
 # Unit tests and behat tests against full matrix.
+install:
+  - moodle-plugin-ci install
+  -
 script:
   - moodle-plugin-ci phpunit --coverage-clover
   - moodle-plugin-ci behat
@@ -74,4 +90,7 @@ after_success:
 
 stages:
   - static
-  - test
+  - name: develop
+    if: branch != master AND (type != pull_request OR head_branch != master) AND (tag IS blank)
+  - name: test
+    if: branch = master OR (type = pull_request AND head_branch = master) OR (tag IS present)
