@@ -72,9 +72,9 @@ class workflow_manager {
      */
     public static function disable($workflowid) {
         $workflow = self::get_workflow($workflowid);
-        if ($workflow && self::is_disableable($workflowid)) { // @TODO Notify user if not.
+        if ($workflow && self::is_disableable($workflowid)) {
             $workflow->active = false;
-            // $workflow->timeactive = null; @TODO Necessary? Why do we have active and timeactive?
+            $workflow->timeactive = null;
             $workflow->sortindex = null;
             $workflow->timedeactive = time();
             self::insert_or_update($workflow);
@@ -268,14 +268,15 @@ class workflow_manager {
                 self::remove($workflowid);
             } else {
                 echo $OUTPUT->notification(get_string('workflow_not_removeable', 'tool_lifecycle')
-                    , 'warning'); // @todo these notifications aren't shown properly currently
+                    , 'warning'); // TODO these notifications aren't shown properly currently.
             }
         }
     }
 
     private static function render_demand_confirm($action, $workflowid, $message) {
         global $OUTPUT, $PAGE;
-        $yesurl = new \moodle_url($PAGE->url, array('workflowid' => $workflowid, 'action' => $action, 'sesskey' => sesskey(), 'confirm' => 1));
+        $yesurl = new \moodle_url($PAGE->url, array('workflowid' => $workflowid, 'action' => $action,
+            'sesskey' => sesskey(), 'confirm' => 1));
         $nourl = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
         $output = $OUTPUT->header();
         $output .= $OUTPUT->confirm($message, $yesurl, $nourl);

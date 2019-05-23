@@ -298,7 +298,6 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018101000, 'tool', 'lifecycle');
     }
 
-    // @todo set right version
     if ($oldversion < 2019010102) {
         // Define field timedeactive to be added to tool_lifecycle_workflow.
         $table = new xmldb_table('tool_lifecycle_workflow');
@@ -310,7 +309,6 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         }
 
         // Lifecycle savepoint reached.
-        // @TODO Set right version.
         upgrade_plugin_savepoint(true, 2019010102, 'tool', 'lifecycle');
     }
 

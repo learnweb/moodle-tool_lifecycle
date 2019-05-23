@@ -73,7 +73,7 @@ class tool_lifecycle_workflow_activate_disable_duplicate_testcase extends workfl
      * Test to deactivate the first workflow.
      */
     public function test_deactivate_first() {
-        // @TODO
+        // TODO to be implemented.
     }
 
 }

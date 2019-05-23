@@ -42,7 +42,8 @@ abstract class workflow_actions_testcase extends \advanced_testcase {
         // Remove preset workflows.
         $workflows = workflow_manager::get_active_automatic_workflows();
         foreach ($workflows as $workflow) {
-            workflow_manager::remove($workflow->id, true); // remove() hasn't removed unremovable workflows (like presets) anymore…
+            workflow_manager::remove($workflow->id, true);
+            // Function remove() hasn't removed unremovable workflows (like presets) anymore.
         }
 
         $this->workflow1 = $generator->create_workflow();

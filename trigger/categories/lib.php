@@ -100,7 +100,9 @@ class categories extends base_automatic {
             'multiple' => true,
             'noselectionstring' => get_string('categories_noselection', 'lifecycletrigger_categories'),
         );
-        $mform->addElement('autocomplete', 'categories', get_string('categories', 'lifecycletrigger_categories'), $categorynames, $options);
+        $mform->addElement('autocomplete', 'categories',
+            get_string('categories', 'lifecycletrigger_categories'),
+            $categorynames, $options);
         $mform->setType('categories', PARAM_SEQUENCE);
 
         $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));

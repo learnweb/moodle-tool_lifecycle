@@ -75,5 +75,6 @@ Feature: Disable a workflow
     Then I should see the row "My Workflow" in the "tool_lifecycle_workflow_definitions" table
     And I should not see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
     When I press "Activate"
-    Then I should not see the row "My Workflow" in the "tool_lifecycle_workflow_definitions" table
+    # Since no element is left, the table is not displayed anymore.
+    Then I should not see the table "tool_lifecycle_workflow_definitions"
     And I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table

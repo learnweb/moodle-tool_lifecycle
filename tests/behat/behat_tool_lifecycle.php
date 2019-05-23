@@ -117,9 +117,8 @@ class behat_tool_lifecycle extends behat_base {
      * @throws Exception
      */
     public function i_should_not_see_the_table($tablename) {
-        // @todo solve without relaying on exceptions
         try {
-            $this->get_xpath_of_table($tablename);
+            $this->find_table($tablename);
         } catch (ExpectationException $e) {
             return;
         }
@@ -136,10 +135,10 @@ class behat_tool_lifecycle extends behat_base {
      * @throws Exception
      */
     public function i_should_see_the_row($rowname, $tablename) {
-        // @todo solve without relaying on exceptions
+        $this->find_table($tablename);
         try {
-            $this->get_xpath_of_row($rowname, $tablename);
-        } catch (ExpectationException $e) { // gets also threw on not existing table!
+            $this->find_row($rowname, $tablename);
+        } catch (ExpectationException $e) {
             throw new ExpectationException('"The row "' . $tablename . '"  was found."', $this->getSession());
         }
 
@@ -155,10 +154,11 @@ class behat_tool_lifecycle extends behat_base {
      * @throws Exception
      */
     public function i_should_not_see_the_row($rowname, $tablename) {
-        // @todo solve without relaying on exceptions
+        $this->find_table($tablename);
+
         try {
-            $this->get_xpath_of_row($rowname, $tablename);
-        } catch (ExpectationException $e) { // gets also threw on not existing table!
+            $this->find_row($rowname, $tablename);
+        } catch (ExpectationException $e) {
             return;
         }
         throw new ExpectationException('"The row "' . $tablename . '"  was found."', $this->getSession());
@@ -193,7 +193,7 @@ class behat_tool_lifecycle extends behat_base {
      * @return string xpath of the table
      * @throws ExpectationException
      */
-    private function get_xpath_of_table($tablename) {
+    private function find_table($tablename) {
         $xpathelement = "//table/tbody/tr[contains(@id, '$tablename')]";
 
         try {
@@ -212,14 +212,8 @@ class behat_tool_lifecycle extends behat_base {
      * @return string xpath of the table
      * @throws ExpectationException
      */
-    private function get_xpath_of_row($rowname, $tablename) {
+    private function find_row($rowname, $tablename) {
         $xpathelement = "//table/tbody/tr[contains(@id, '$tablename')]";
-
-        try {
-            $this->find('xpath', $xpathelement);
-        } catch (ElementNotFoundException $e) {
-            throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
-        }
 
         $xpathelement = $xpathelement . "//*[contains(text(),'$rowname')]/ancestor::tr";
 
