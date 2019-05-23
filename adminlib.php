@@ -177,9 +177,9 @@ class admin_settings {
         $table->out(10, false);
         echo $OUTPUT->box_end();
 
-        $deactivatedworkflowsurl = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
+        $surl = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
             array('sesskey' => sesskey()));
-        echo \html_writer::link($deactivatedworkflowsurl, get_string('deactivated_workflows_list', 'tool_lifecycle'));
+        echo \html_writer::link($surl, get_string('deactivated_workflows_list', 'tool_lifecycle'));
 
         $this->view_footer();
     }
@@ -243,6 +243,7 @@ class admin_settings {
 
     /**
      * This is the entry point for this controller class.
+     * @throws \moodle_exception
      */
     public function execute($action, $workflowid) {
         global $PAGE;
@@ -255,45 +256,67 @@ class admin_settings {
 
         workflow_manager::handle_action($action, $workflowid);
 
-        $form = new form_workflow_instance($PAGE->url, workflow_manager::get_workflow($workflowid));
+        $instanceform = new form_workflow_instance($PAGE->url, workflow_manager::get_workflow($workflowid));
         $uploadform = new form_upload_workflow($PAGE->url);
         $PAGE->set_title(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));
 
         if ($action === ACTION_WORKFLOW_INSTANCE_FROM) {
-            $this->view_workflow_instance_form($form);
+            $this->view_workflow_instance_form($instanceform);
         } else if ($action === ACTION_WORKFLOW_UPLOAD_FROM) {
             $renderer->render_workflow_upload_form($uploadform);
         } else {
-            if ($form->is_submitted() && !$form->is_cancelled() && $data = $form->get_submitted_data()) {
-                if ($data->id) {
-                    $workflow = workflow_manager::get_workflow($data->id);
-                    $workflow->title = $data->title;
-                    $workflow->displaytitle = $data->displaytitle;
-                    $newworkflow = false;
-                } else {
-                    $workflow = workflow::from_record($data);
-                    $newworkflow = true;
-                }
-                workflow_manager::insert_or_update($workflow);
-                // If a new workflow was created, redirect to details page to directly create a trigger.
-                if ($newworkflow) {
-                    $this->view_workflow_details($workflow->id);
-                    return;
-                }
-            }
-            if ($uploadform->is_submitted() && !$uploadform->is_cancelled() && $data = $uploadform->get_submitted_data()) {
-                $xmldata = $uploadform->get_file_content('backupfile');
-                $restore = new restore_lifecycle_workflow($xmldata);
-                $errors = $restore->execute();
-                if (count($errors) != 0) {
-                    $renderer->render_workflow_upload_form($uploadform, $errors);
-                    return;
-                }
-            }
+            $this->process_instance_form($instanceform);
+            $this->process_upload_form($uploadform);
             $this->view_plugins_table();
         }
     }
 
+    /**
+     * Processes the instance form.
+     * First it checks, if it was submitted. If so, it store the respective data.
+     * @param form_workflow_instance $instanceform
+     * @throws \moodle_exception
+     */
+    private function process_instance_form($instanceform) {
+        if ($instanceform->is_submitted() && !$instanceform->is_cancelled() && $data = $instanceform->get_submitted_data()) {
+            if ($data->id) {
+                $workflow = workflow_manager::get_workflow($data->id);
+                $workflow->title = $data->title;
+                $workflow->displaytitle = $data->displaytitle;
+                $newworkflow = false;
+            } else {
+                $workflow = workflow::from_record($data);
+                $newworkflow = true;
+            }
+            workflow_manager::insert_or_update($workflow);
+            // If a new workflow was created, redirect to details page to directly create a trigger.
+            if ($newworkflow) {
+                $this->view_workflow_details($workflow->id);
+            }
+        }
+    }
+
+    /**
+     * Processes the upload form.
+     * First it checks, if it was submitted. If so, it starts the restore process with the uploaded file.
+     * @param form_upload_workflow $uploadform
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    private function process_upload_form($uploadform) {
+        global $PAGE;
+        if ($uploadform->is_submitted() && !$uploadform->is_cancelled() && $data = $uploadform->get_submitted_data()) {
+            $xmldata = $uploadform->get_file_content('backupfile');
+            $restore = new restore_lifecycle_workflow($xmldata);
+            $errors = $restore->execute();
+            if (count($errors) != 0) {
+                /** @var \tool_lifecycle_renderer $renderer */
+                $renderer = $PAGE->get_renderer('tool_lifecycle');
+                $renderer->render_workflow_upload_form($uploadform, $errors);
+                return;
+            }
+        }
+    }
 }
 
 /**
@@ -464,29 +487,19 @@ class workflow_settings {
      * Handles actions for the trigger instance form and causes related forms to be rendered.
      *
      * @return bool True, if no further action handling or output should be conducted.
+     * @throws \coding_exception
      */
     private function handle_trigger_instance_form() {
         global $OUTPUT, $PAGE;
         $subpluginname = null;
         $triggertomodify = null;
-        $settings = null;
+        $triggersettings = null;
 
-        if ($triggerid = optional_param('subplugin', null, PARAM_INT)) {
-            $triggertomodify = trigger_manager::get_instance($triggerid);
-            // If step was removed!
-            if (!$triggertomodify) {
-                return false;
-            }
-            $settings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
-        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
-            $subpluginname = $name;
-        } else if ($name = optional_param('triggername', null, PARAM_ALPHA)) {
-            $subpluginname = $name;
-        } else {
+        if (!$this->retrieve_trigger_parameters($triggertomodify, $subpluginname, $triggersettings)) {
             return false;
         }
 
-        $form = new form_trigger_instance($PAGE->url, $this->workflowid, $triggertomodify, $subpluginname, $settings);
+        $form = new form_trigger_instance($PAGE->url, $this->workflowid, $triggertomodify, $subpluginname, $triggersettings);
 
         // Skip this part and continue with requiring a trigger if still null.
         if (!$form->is_cancelled()) {
@@ -518,6 +531,33 @@ class workflow_settings {
     }
 
     /**
+     * Retrieves the relevant parameters for the trigger instance form from the sent params.
+     * Thereby it store the data in the given parameters.
+     * @param $triggertomodify int id of the trigger instance to be modified.
+     * @param $subpluginname string name of the subplugin, the trigger instance belongs to.
+     * @param $triggersettings array settings of the trigger instance.
+     * @return bool
+     * @throws \coding_exception
+     */
+    private function retrieve_trigger_parameters(&$triggertomodify, &$subpluginname, &$triggersettings) {
+        if ($triggerid = optional_param('subplugin', null, PARAM_INT)) {
+            $triggertomodify = trigger_manager::get_instance($triggerid);
+            // If step was removed!
+            if (!$triggertomodify) {
+                return false;
+            }
+            $triggersettings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
+        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+            $subpluginname = $name;
+        } else if ($name = optional_param('triggername', null, PARAM_ALPHA)) {
+            $subpluginname = $name;
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Handles actions for the trigger instance form and causes related forms to be rendered.
      *
      * @return bool True, if no further action handling or output should be conducted.
@@ -527,18 +567,8 @@ class workflow_settings {
         $steptomodify = null;
         $subpluginname = null;
         $stepsettings = null;
-        if ($stepid = optional_param('subplugin', null, PARAM_INT)) {
-            $steptomodify = step_manager::get_step_instance($stepid);
-            // If step was removed!
-            if (!$steptomodify) {
-                return false;
-            }
-            $stepsettings = settings_manager::get_settings($stepid, SETTINGS_TYPE_STEP);
-        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
-            $subpluginname = $name;
-        } else if ($name = optional_param('stepname', null, PARAM_ALPHA)) {
-            $subpluginname = $name;
-        } else {
+
+        if (!$this->retrieve_step_parameters($steptomodify, $subpluginname, $stepsettings)) {
             return false;
         }
 
@@ -568,6 +598,33 @@ class workflow_settings {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Retrieves the relevant parameters for the step instance form from the sent params.
+     * Thereby it store the data in the given parameters.
+     * @param $steptomodify int id of the step instance to be modified.
+     * @param $subpluginname string name of the subplugin, the step instance belongs to.
+     * @param $stepsettings array settings of the step instance.
+     * @return bool
+     * @throws \coding_exception
+     */
+    private function retrieve_step_parameters(&$steptomodify, &$subpluginname, &$stepsettings) {
+        if ($stepid = optional_param('subplugin', null, PARAM_INT)) {
+            $steptomodify = step_manager::get_step_instance($stepid);
+            // If step was removed!
+            if (!$steptomodify) {
+                return false;
+            }
+            $stepsettings = settings_manager::get_settings($stepid, SETTINGS_TYPE_STEP);
+        } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
+            $subpluginname = $name;
+        } else if ($name = optional_param('stepname', null, PARAM_ALPHA)) {
+            $subpluginname = $name;
+        } else {
+            return false;
+        }
+        return true;
     }
 
 
