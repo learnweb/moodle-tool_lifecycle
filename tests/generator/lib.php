@@ -35,23 +35,62 @@ use tool_lifecycle\manager\workflow_manager;
  */
 class tool_lifecycle_generator extends testing_module_generator {
 
+    private static $defaultsteps = [
+        "deletecourse" => [
+            "maximumdeletionspercron" => 10
+        ],
+        "email" => [
+            "responsetimeout" => 10,
+            "subject" => "Test Email",
+            "content" => "Content",
+            "contenthtml" => "Content HTML"
+        ],
+        "createbackup" => [],
+    ];
+    private static $defaulttrigger = [
+        "startdatedelay" => [
+            "delay" => 10000
+        ],
+        "categories" => [
+            "categories" => "1,10",
+                "exclude" => true
+        ],
+    ];
+
+
     /**
      * Creates an artificial workflow without steps.
+     * @param string[] $triggernames list of subpluginsname of trigger, which should be created for the workflow.
+     * @param string[] $stepnames list of subpluginsname of steps, which should be created for the workflow.
+     * @return workflow
+     * @throws coding_exception
+     * @throws moodle_exception
      */
-    public static function create_workflow() {
+    public static function create_workflow($triggernames = ['startdatedelay'], $stepnames = []) {
         // Create Workflow.
         $record = new stdClass();
         $record->id = null;
         $record->title = 'myworkflow';
         $workflow = workflow::from_record($record);
         workflow_manager::insert_or_update($workflow);
-        // Create trigger.
-        $record = new stdClass();
-        $record->subpluginname = 'startdatedelay';
-        $record->instancename = 'startdatedelay';
-        $record->workflowid = $workflow->id;
-        $trigger = trigger_subplugin::from_record($record);
-        trigger_manager::insert_or_update($trigger);
+        foreach ($stepnames as $subpluginname) {
+            if (!array_key_exists($subpluginname, self::$defaultsteps)) {
+                throw new coding_exception("You can use only those stepnames,".
+                    "which are defined as defaults in this generator.");
+            }
+            $step = self::create_step($subpluginname, $subpluginname, $workflow->id);
+            settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, $subpluginname,
+                self::$defaultsteps[$subpluginname]);
+        }
+        foreach ($triggernames as $subpluginname) {
+            if (!array_key_exists($subpluginname, self::$defaulttrigger)) {
+                throw new coding_exception("You can use only those triggernames,".
+                    "which are defined as defaults in this generator.");
+            }
+            $step = self::create_trigger($subpluginname, $subpluginname, $workflow->id);
+            settings_manager::save_settings($step->id, SETTINGS_TYPE_TRIGGER, $subpluginname,
+                self::$defaulttrigger[$subpluginname]);
+        }
         return $workflow;
     }
 
@@ -89,6 +128,19 @@ class tool_lifecycle_generator extends testing_module_generator {
         $step = new step_subplugin($instancename, $subpluginname, $workflowid);
         step_manager::insert_or_update($step);
         return $step;
+    }
+
+    /**
+     * Creates a trigger for a given workflow and stores it in the DB
+     * @param $instancename
+     * @param $subpluginname
+     * @param $workflowid
+     * @return step_subplugin created step
+     */
+    public static function create_trigger($instancename, $subpluginname, $workflowid) {
+        $trigger = new trigger_subplugin($instancename, $subpluginname, $workflowid);
+        trigger_manager::insert_or_update($trigger);
+        return $trigger;
     }
 
     /**

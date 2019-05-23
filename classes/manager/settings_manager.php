@@ -33,6 +33,20 @@ class settings_manager {
      * @param int $instanceid id of the subplugininstance.
      * @param 'step'|'trigger' $type type of the subplugin.
      * @param string $subpluginname name of the subplugin.
+     * @param string $name name of the setting.
+     * @param mixed $value value of the setting.
+     * @throws \moodle_exception
+     */
+    public static function save_setting($instanceid, $type, $subpluginname, $name, $value) {
+        $data = [$name => $value];
+        self::save_settings($instanceid, $type, $subpluginname, $data);
+    }
+
+    /**
+     * Saves the local settings for a subplugin step instance.
+     * @param int $instanceid id of the subplugininstance.
+     * @param 'step'|'trigger' $type type of the subplugin.
+     * @param string $subpluginname name of the subplugin.
      * @param mixed $data submitted data of the form.
      * @throws \moodle_exception
      */

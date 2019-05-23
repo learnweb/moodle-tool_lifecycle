@@ -26,6 +26,8 @@ namespace tool_lifecycle\manager;
 
 use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\entity\workflow;
+use tool_lifecycle\local\backup\backup_lifecycle_workflow;
+use tool_lifecycle\local\exporter\workflow_exporter;
 use tool_lifecycle\local\data\manual_trigger_tool;
 
 defined('MOODLE_INTERNAL') || die();
@@ -106,6 +108,21 @@ class workflow_manager {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Returns all existing workflows.
+     *
+     * @return workflow[]
+     */
+    public static function get_workflows() {
+        global $DB;
+        $result = array();
+        $records = $DB->get_records('tool_lifecycle_workflow');
+        foreach ($records as $record) {
+            $result[] = workflow::from_record($record);
+        }
+        return $result;
     }
 
     /**
@@ -223,6 +240,9 @@ class workflow_manager {
         }
         if ($action === ACTION_WORKFLOW_DUPLICATE) {
             self::duplicate_workflow($workflowid);
+        }
+        if ($action === ACTION_WORKFLOW_BACKUP) {
+            self::backup_workflow($workflowid);
         }
         if ($action === ACTION_WORKFLOW_DISABLE) {
             if (confirm_sesskey()) {
@@ -379,6 +399,18 @@ class workflow_manager {
         trigger_manager::duplicate_triggers($workflowid, $newworkflow->id);
         step_manager::duplicate_steps($workflowid, $newworkflow->id);
         return $newworkflow;
+    }
+
+    /**
+     * Calls the backup process for the workflow, which will send the workflow structure with all
+     * subplugins as a xml file to the client.
+     * @param int $workflowid id of the workflow to be backed up.
+     * @throws \moodle_exception
+     */
+    public static function backup_workflow($workflowid) {
+        $task = new backup_lifecycle_workflow($workflowid);
+        $task->execute();
+        $task->send_temp_file();
     }
 
     /**

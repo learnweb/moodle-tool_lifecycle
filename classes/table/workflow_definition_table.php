@@ -105,6 +105,11 @@ class workflow_definition_table extends workflow_table {
             $icon = 't/copy';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
+            $action = ACTION_WORKFLOW_BACKUP;
+            $alt = get_string('backupworkflow', 'tool_lifecycle');
+            $icon = 't/backup';
+            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+
             $action = ACTION_WORKFLOW_INSTANCE_FROM;
             $alt = get_string('editworkflow', 'tool_lifecycle');
             $icon = 't/edit';

@@ -18,8 +18,10 @@ namespace tool_lifecycle;
 
 use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\form\form_workflow_instance;
+use tool_lifecycle\form\form_upload_workflow;
 use tool_lifecycle\form\form_step_instance;
 use tool_lifecycle\form\form_trigger_instance;
+use tool_lifecycle\local\backup\restore_lifecycle_workflow;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\trigger_manager;
@@ -166,6 +168,10 @@ class admin_settings {
             array('action' => ACTION_WORKFLOW_INSTANCE_FROM, 'sesskey' => sesskey())),
             get_string('add_workflow', 'tool_lifecycle'));
 
+        echo $OUTPUT->single_button(new \moodle_url($PAGE->url,
+            array('action' => ACTION_WORKFLOW_UPLOAD_FROM, 'sesskey' => sesskey())),
+            get_string('upload_workflow', 'tool_lifecycle'));
+
         $table = new workflow_definition_table('tool_lifecycle_workflow_definitions');
         echo $OUTPUT->box_start("lifecycle-enable-overflow lifecycle-table");
         $table->out(10, false);
@@ -241,6 +247,8 @@ class admin_settings {
     public function execute($action, $workflowid) {
         global $PAGE;
         $this->check_permissions();
+        /** @var \tool_lifecycle_renderer $renderer */
+        $renderer = $PAGE->get_renderer('tool_lifecycle');
 
         // Has to be called before moodleform is created!
         admin_externalpage_setup('tool_lifecycle_adminsettings');
@@ -248,10 +256,13 @@ class admin_settings {
         workflow_manager::handle_action($action, $workflowid);
 
         $form = new form_workflow_instance($PAGE->url, workflow_manager::get_workflow($workflowid));
+        $uploadform = new form_upload_workflow($PAGE->url);
         $PAGE->set_title(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));
 
         if ($action === ACTION_WORKFLOW_INSTANCE_FROM) {
             $this->view_workflow_instance_form($form);
+        } else if ($action === ACTION_WORKFLOW_UPLOAD_FROM) {
+            $renderer->render_workflow_upload_form($uploadform);
         } else {
             if ($form->is_submitted() && !$form->is_cancelled() && $data = $form->get_submitted_data()) {
                 if ($data->id) {
@@ -267,6 +278,15 @@ class admin_settings {
                 // If a new workflow was created, redirect to details page to directly create a trigger.
                 if ($newworkflow) {
                     $this->view_workflow_details($workflow->id);
+                    return;
+                }
+            }
+            if ($uploadform->is_submitted() && !$uploadform->is_cancelled() && $data = $uploadform->get_submitted_data()) {
+                $xmldata = $uploadform->get_file_content('backupfile');
+                $restore = new restore_lifecycle_workflow($xmldata);
+                $errors = $restore->execute();
+                if (count($errors) != 0) {
+                    $renderer->render_workflow_upload_form($uploadform, $errors);
                     return;
                 }
             }
