@@ -76,6 +76,17 @@ abstract class libbase {
     }
 
     /**
+     * Rolls back all changes made to the course
+     *
+     * @param int $processid of the respective process.
+     * @param int $instanceid of the step instance.
+     * @param mixed $course to be rolled back.
+     */
+    public function rollback_course($processid, $instanceid, $course) {
+
+    }
+
+    /**
      * The return value should be equivalent with the name of the subplugin folder.
      * @return string technical name of the subplugin
      */
