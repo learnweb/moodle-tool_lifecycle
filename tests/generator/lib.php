@@ -45,7 +45,9 @@ class tool_lifecycle_generator extends testing_module_generator {
             "content" => "Content",
             "contenthtml" => "Content HTML"
         ],
-        "createbackup" => [],
+        "createbackup" => [
+            "maximumbackupspercron" => 10
+        ],
     ];
     private static $defaulttrigger = [
         "startdatedelay" => [
