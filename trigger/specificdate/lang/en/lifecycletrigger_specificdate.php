@@ -28,4 +28,4 @@ $string['pluginname'] = 'Specific date trigger';
 $string['dates'] = 'Dates at which the workflow should run.';
 $string['dates_desc'] = 'Write one date per line with the format Day.Month';
 $string['timelastrun'] = 'Date when the trigger last run.';
-$string['dates_not_parseable'] = 'Dates must be of the format Day.Month.';
+$string['dates_not_parseable'] = 'Dates must be of the format Day.Month';
