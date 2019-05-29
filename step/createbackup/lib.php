@@ -56,7 +56,7 @@ class createbackup extends libbase {
     public function process_course($processid, $instanceid, $course) {
         if (self::$numberofbackups >= settings_manager::get_settings(
                 $instanceid, SETTINGS_TYPE_STEP)['maximumbackupspercron']) {
-            return step_response::waiting(); // Wait with further deletions til the next cron run.
+            return step_response::waiting(); // Wait with further backups til the next cron run.
         }
         if (backup_manager::create_course_backup($course->id)) {
             self::$numberofbackups++;
@@ -82,7 +82,7 @@ class createbackup extends libbase {
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'maximumbackupspercron';
         $mform->addElement('text', $elementname,
-            get_string('createbackup_maximumbackupspercron', 'lifecyclestep_createbackup'));
+            get_string('maximumbackupspercron', 'lifecyclestep_createbackup'));
         $mform->setType($elementname, PARAM_INT);
         $mform->setDefault($elementname, 10);
     }

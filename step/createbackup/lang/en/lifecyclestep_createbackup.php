@@ -25,4 +25,4 @@
 
 $string['pluginname'] = 'Create Backup Step';
 
-$string['createbackup_maximumbackupspercron'] = 'Maximum number of Backups per cron';
+$string['maximumbackupspercron'] = 'Maximum number of Backups per cron';
