@@ -50,9 +50,9 @@ abstract class workflow_actions_testcase extends \advanced_testcase {
         $this->workflow2 = $generator->create_workflow();
         $this->workflow3 = $generator->create_workflow();
 
-        $this->assertFalse($this->workflow1->active);
-        $this->assertFalse($this->workflow2->active);
-        $this->assertFalse($this->workflow3->active);
+        $this->assertFalse(workflow_manager::is_active($this->workflow1->id));
+        $this->assertFalse(workflow_manager::is_active($this->workflow2->id));
+        $this->assertFalse(workflow_manager::is_active($this->workflow3->id));
         $this->assertNull($this->workflow1->sortindex);
         $this->assertNull($this->workflow2->sortindex);
         $this->assertNull($this->workflow3->sortindex);

@@ -84,7 +84,6 @@ class restore_lifecycle_workflow {
         }
         unset($tempworkflow->id);
         $this->workflow = workflow::from_record($tempworkflow);
-        $this->workflow->active = false;
         $this->workflow->timeactive = null;
         $this->workflow->timedeactive = null;
         $this->workflow->sortindex = null;
