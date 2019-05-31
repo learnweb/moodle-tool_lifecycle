@@ -132,7 +132,7 @@ class workflow_manager {
     public static function get_active_workflows() {
         global $DB;
         $records = $DB->get_records_sql(
-            'SELECT * FROM {tool_lifecycle_workflow} 
+            'SELECT * FROM {tool_lifecycle_workflow}
                   WHERE timeactive IS NOT NULL ORDER BY sortindex');
         $result = array();
         foreach ($records as $record) {
@@ -149,7 +149,7 @@ class workflow_manager {
     public static function get_active_automatic_workflows() {
         global $DB;
         $records = $DB->get_records_sql(
-            'SELECT * FROM {tool_lifecycle_workflow} 
+            'SELECT * FROM {tool_lifecycle_workflow}
                   WHERE timeactive IS NOT NULL AND
                   manual = false ORDER BY sortindex');
         $result = array();
