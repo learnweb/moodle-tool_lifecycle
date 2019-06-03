@@ -151,7 +151,7 @@ class workflow_manager {
         $records = $DB->get_records_sql(
             'SELECT * FROM {tool_lifecycle_workflow}
                   WHERE timeactive IS NOT NULL AND
-                  manual = false ORDER BY sortindex');
+                  manual = ? ORDER BY sortindex', array(false));
         $result = array();
         foreach ($records as $record) {
             $result [] = workflow::from_record($record);
