@@ -34,9 +34,6 @@ class workflow {
     /** title of the workflow */
     public $title;
 
-    /** bool true if workflow is active*/
-    public $active;
-
     /** timestamp the workflow was set active */
     public $timeactive;
 
@@ -52,10 +49,9 @@ class workflow {
     /** title that is displayed to users */
     public $displaytitle;
 
-    private function __construct($id, $title, $active, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle) {
+    private function __construct($id, $title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle) {
         $this->id = $id;
         $this->title = $title;
-        $this->active = $active;
         $this->timeactive = $timeactive;
         $this->timedeactive = $timedeactive;
         $this->sortindex = $sortindex;
@@ -75,12 +71,6 @@ class workflow {
         }
         if (!object_property_exists($record, 'title')) {
             return null;
-        }
-
-        if (object_property_exists($record, 'active') && $record->active) {
-            $active = true;
-        } else {
-            $active = false;
         }
 
         $timeactive = null;
@@ -113,7 +103,7 @@ class workflow {
             $displaytitle = $record->displaytitle;
         }
 
-        $instance = new self($id, $record->title, $active, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle);
+        $instance = new self($id, $record->title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle);
 
         return $instance;
     }

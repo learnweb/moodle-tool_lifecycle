@@ -73,7 +73,6 @@ class workflow_manager {
     public static function disable($workflowid) {
         $workflow = self::get_workflow($workflowid);
         if ($workflow && self::is_disableable($workflowid)) {
-            $workflow->active = false;
             $workflow->timeactive = null;
             $workflow->sortindex = null;
             $workflow->timedeactive = time();
@@ -132,8 +131,9 @@ class workflow_manager {
      */
     public static function get_active_workflows() {
         global $DB;
-        $records = $DB->get_records('tool_lifecycle_workflow', array('active' => true),
-            'sortindex ASC');
+        $records = $DB->get_records_sql(
+            'SELECT * FROM {tool_lifecycle_workflow}
+                  WHERE timeactive IS NOT NULL ORDER BY sortindex');
         $result = array();
         foreach ($records as $record) {
             $result [] = workflow::from_record($record);
@@ -148,8 +148,10 @@ class workflow_manager {
      */
     public static function get_active_automatic_workflows() {
         global $DB;
-        $records = $DB->get_records('tool_lifecycle_workflow', array('active' => true, 'manual' => false),
-            'sortindex ASC');
+        $records = $DB->get_records_sql(
+            'SELECT * FROM {tool_lifecycle_workflow}
+                  WHERE timeactive IS NOT NULL AND
+                  manual = ? ORDER BY sortindex', array(false));
         $result = array();
         foreach ($records as $record) {
             $result [] = workflow::from_record($record);
@@ -165,8 +167,8 @@ class workflow_manager {
     public static function get_active_manual_workflow_triggers() {
         global $DB;
         $sql = 'SELECT t.* FROM {tool_lifecycle_workflow} w JOIN {tool_lifecycle_trigger} t ON t.workflowid = w.id' .
-            ' WHERE w.active = ? AND w.manual = ?';
-        $records = $DB->get_records_sql($sql, array(true, true));
+            ' WHERE w.timeactive IS NOT NULL AND w.manual = ?';
+        $records = $DB->get_records_sql($sql, array(true));
         $result = array();
         foreach ($records as $record) {
             $result [] = trigger_subplugin::from_record($record);
@@ -205,12 +207,11 @@ class workflow_manager {
         }
         $transaction = $DB->start_delegated_transaction();
         $workflow = self::get_workflow($workflowid);
-        if (!$workflow->active) {
+        if (!self::is_active($workflow->id)) {
             // TODO: Rethink behaviour for multiple triggers.
             $trigger = trigger_manager::get_triggers_for_workflow($workflowid)[0];
             $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
             $workflow->manual = $lib->is_manual_trigger();
-            $workflow->active = true;
             $workflow->timeactive = time();
             if (!$workflow->manual) {
                 $workflow->sortindex = count(self::get_active_automatic_workflows()) + 1;
@@ -298,7 +299,7 @@ class workflow_manager {
             return;
         }
         // Prevent inactive workflows to change sortindex.
-        if (!$workflow->active) {
+        if (!self::is_active($workflow->id)) {
             return;
         }
         // Prevent last entry to be put down even more.
@@ -350,7 +351,7 @@ class workflow_manager {
      */
     public static function is_active($workflowid) {
         $workflow = self::get_workflow($workflowid);
-        return $workflow->active;
+        return $workflow->timeactive != null;
     }
 
     /**

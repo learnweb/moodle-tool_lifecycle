@@ -312,5 +312,20 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019010102, 'tool', 'lifecycle');
     }
 
+    if ($oldversion < 2019053100) {
+
+        // Define field active to be dropped from tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
+        $field = new xmldb_field('active');
+
+        // Conditionally launch drop field active.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2019053100, 'tool', 'lifecycle');
+    }
+
     return true;
 }
