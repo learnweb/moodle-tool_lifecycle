@@ -45,7 +45,7 @@ class deactivated_workflows_table extends workflow_table {
         $this->set_sql(
             "id, title, timedeactive, displaytitle",
             '{tool_lifecycle_workflow}',
-            "active = 0 AND timedeactive IS NOT NULL"
+            "timeactive IS NULL AND timedeactive IS NOT NULL"
         );
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
