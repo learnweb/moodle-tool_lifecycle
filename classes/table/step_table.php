@@ -52,7 +52,7 @@ class step_table extends \table_sql {
         $this->set_sql("id, subpluginname, instancename, sortindex, 'step' as type",
             '{tool_lifecycle_step}',
             "workflowid " . $sqlwhere, $params);
-        $this->define_baseurl($PAGE->url);
+        $this->define_baseurl(new \moodle_url($PAGE->url, array('workflowid' => $workflowid)));
         $this->pageable(false);
         $this->init();
     }
