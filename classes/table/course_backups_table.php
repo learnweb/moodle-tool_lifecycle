@@ -36,6 +36,7 @@ class course_backups_table extends \table_sql {
         $this->set_sql('b.*',
             '{tool_lifecycle_backups} b',
             "TRUE");
+        $this->sortable(false);
         $this->define_baseurl($PAGE->url);
         $this->init();
     }
