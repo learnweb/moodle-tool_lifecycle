@@ -47,7 +47,7 @@ class active_processes_table extends \table_sql {
     }
 
     public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'subplugin']);
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'instancename']);
         $this->define_headers([
             get_string('course'),
             get_string('shortnamecourse'),
@@ -84,11 +84,11 @@ class active_processes_table extends \table_sql {
     }
 
     /**
-     * Render subplugin column.
+     * Render instancename column.
      * @param $row
-     * @return string pluginname of the subplugin
+     * @return string pluginname of the instance
      */
-    public function col_subplugin($row) {
+    public function col_instancename($row) {
 
         return $row->instancename;
     }
