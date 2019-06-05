@@ -33,10 +33,11 @@ class course_backups_table extends \table_sql {
         parent::__construct($uniqueid);
         global $PAGE;
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
-        $this->set_sql('b.*',
+        $this->set_sql('b.id, b.courseid, b.shortname as courseshortname, b.fullname as coursefullname, b.backupcreated',
             '{tool_lifecycle_backups} b',
             "TRUE");
-        $this->sortable(false);
+        $this->no_sorting('download');
+        $this->no_sorting('restore');
         $this->define_baseurl($PAGE->url);
         $this->init();
     }
@@ -73,9 +74,9 @@ class course_backups_table extends \table_sql {
      */
     public function col_courseshortname($row) {
         try {
-            return \html_writer::link(course_get_url($row->courseid), $row->shortname);
+            return \html_writer::link(course_get_url($row->courseid), $row->courseshortname);
         } catch (\dml_missing_record_exception $e) {
-            return $row->shortname;
+            return $row->courseshortname;
         }
     }
 
@@ -86,9 +87,9 @@ class course_backups_table extends \table_sql {
      */
     public function col_coursefullname($row) {
         try {
-            return \html_writer::link(course_get_url($row->courseid), $row->fullname);
+            return \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
         } catch (\dml_missing_record_exception $e) {
-            return $row->fullname;
+            return $row->coursefullname;
         }
     }
 
