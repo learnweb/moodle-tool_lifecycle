@@ -41,13 +41,14 @@ class course_backups_table extends \table_sql {
     }
 
     public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'backupcreated', 'tools']);
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'backupcreated', 'download', 'restore']);
         $this->define_headers([
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
             get_string('backupcreated', 'tool_lifecycle'),
-            get_string('tools', 'tool_lifecycle')]);
+            get_string('download', 'tool_lifecycle'),
+            get_string('restore', 'tool_lifecycle')]);
         $this->setup();
     }
 
@@ -100,11 +101,23 @@ class course_backups_table extends \table_sql {
     }
 
     /**
-     * Render tools column.
+     * Render download column.
+     * @param $row
+     * @return string action buttons for downloading a backup.
+     */
+    public function col_download($row) {
+        return \html_writer::link(
+                new \moodle_url('/admin/tool/lifecycle/downloadbackup.php', array('backupid' => $row->id)),
+                get_string('download', 'tool_lifecycle')
+        );
+    }
+
+    /**
+     * Render restore column.
      * @param $row
      * @return string action buttons for restoring a course.
      */
-    public function col_tools($row) {
+    public function col_restore($row) {
         return \html_writer::link(
             new \moodle_url('/admin/tool/lifecycle/restore.php', array('backupid' => $row->id)),
                 get_string('restore', 'tool_lifecycle')

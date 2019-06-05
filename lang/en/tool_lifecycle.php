@@ -132,7 +132,8 @@ $string['nocoursestodisplay'] = 'There are currently no courses which require yo
 
 $string['course_backups_list_header'] = 'Course Backups';
 $string['backupcreated'] = 'Created at';
-$string['restore'] = 'restore';
+$string['restore'] = 'Restore';
+$string['download'] = 'Download';
 
 $string['workflownotfound'] = 'Workflow with id {$a} could not be found';
 
