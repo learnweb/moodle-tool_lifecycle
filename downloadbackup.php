@@ -23,12 +23,12 @@
  */
 require_once(__DIR__ . '/../../../config.php');
 
-require_login(null, false);
+require_login();
 require_capability('moodle/site:config', context_system::instance());
 
 $backupid = required_param('backupid', PARAM_INT);
 
-$backuprecord = $DB->get_record('tool_lifecycle_backups', array('id' => $backupid), '*', MUST_EXIST);
+$backuprecord = $DB->get_record('tool_lifecycle_backups', array('id' => $backupid), 'backupfile', MUST_EXIST);
 $source = $CFG->dataroot . '/lifecycle_backups/' . $backuprecord->backupfile;
 
 if (!file_exists($source)) {
