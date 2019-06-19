@@ -19,6 +19,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 
+use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\workflow_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\process_manager;
@@ -26,6 +27,7 @@ use tool_lifecycle\processor;
 
 /**
  * Manually triggers a process and tests if process courses proceeds the process as expected.
+ *
  * @package    tool_lifecycle
  * @category   test
  * @group      tool_lifecycle
@@ -49,7 +51,10 @@ class tool_lifecycle_manually_triggered_process_testcase extends \advanced_testc
         $triggersettings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
         $manualworkflow = $generator->create_manual_workflow($triggersettings);
-        $generator->create_step("instance1", "createbackup", $manualworkflow->id);
+        $step = $generator->create_step("instance1", "createbackup", $manualworkflow->id);
+        settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, "createbackup",
+                array("maximumbackupspercron" => 10)
+        );
 
         workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $manualworkflow->id);
 
