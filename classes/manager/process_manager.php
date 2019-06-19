@@ -159,7 +159,17 @@ class process_manager {
      * @param process $process process the rollback should be triggered for.
      */
     public static function rollback_process($process) {
-        // TODO: Add logic to revert changes made by steps.
+        for ($i = $process->stepindex - 1; $i >= 1; $i--) {
+            $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $i);
+            $lib = lib_manager::get_step_lib($step->subpluginname);
+            try {
+                $course = get_course($process->courseid);
+            } catch (\dml_missing_record_exception $e) {
+                // Course no longer exists!
+                break;
+            }
+            $lib->rollback_course($process->id, $step->id, $course);
+        }
         self::remove_process($process);
     }
 
