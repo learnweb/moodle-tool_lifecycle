@@ -33,21 +33,24 @@ class course_backups_table extends \table_sql {
         parent::__construct($uniqueid);
         global $PAGE;
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
-        $this->set_sql('b.*',
+        $this->set_sql('b.id, b.courseid, b.shortname as courseshortname, b.fullname as coursefullname, b.backupcreated',
             '{tool_lifecycle_backups} b',
             "TRUE");
+        $this->no_sorting('download');
+        $this->no_sorting('restore');
         $this->define_baseurl($PAGE->url);
         $this->init();
     }
 
     public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'backupcreated', 'tools']);
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'backupcreated', 'download', 'restore']);
         $this->define_headers([
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
             get_string('backupcreated', 'tool_lifecycle'),
-            get_string('tools', 'tool_lifecycle')]);
+            get_string('download', 'tool_lifecycle'),
+            get_string('restore', 'tool_lifecycle')]);
         $this->setup();
     }
 
@@ -71,9 +74,9 @@ class course_backups_table extends \table_sql {
      */
     public function col_courseshortname($row) {
         try {
-            return \html_writer::link(course_get_url($row->courseid), $row->shortname);
+            return \html_writer::link(course_get_url($row->courseid), $row->courseshortname);
         } catch (\dml_missing_record_exception $e) {
-            return $row->shortname;
+            return $row->courseshortname;
         }
     }
 
@@ -84,9 +87,9 @@ class course_backups_table extends \table_sql {
      */
     public function col_coursefullname($row) {
         try {
-            return \html_writer::link(course_get_url($row->courseid), $row->fullname);
+            return \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
         } catch (\dml_missing_record_exception $e) {
-            return $row->fullname;
+            return $row->coursefullname;
         }
     }
 
@@ -100,11 +103,23 @@ class course_backups_table extends \table_sql {
     }
 
     /**
-     * Render tools column.
+     * Render download column.
+     * @param $row
+     * @return string action buttons for downloading a backup.
+     */
+    public function col_download($row) {
+        return \html_writer::link(
+                new \moodle_url('/admin/tool/lifecycle/downloadbackup.php', array('backupid' => $row->id)),
+                get_string('download', 'tool_lifecycle')
+        );
+    }
+
+    /**
+     * Render restore column.
      * @param $row
      * @return string action buttons for restoring a course.
      */
-    public function col_tools($row) {
+    public function col_restore($row) {
         return \html_writer::link(
             new \moodle_url('/admin/tool/lifecycle/restore.php', array('backupid' => $row->id)),
                 get_string('restore', 'tool_lifecycle')
