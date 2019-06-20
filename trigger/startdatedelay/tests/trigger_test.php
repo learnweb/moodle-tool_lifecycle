@@ -44,7 +44,12 @@ class tool_lifecycle_trigger_startdatedelay_testcase extends \advanced_testcase 
         $this->setAdminUser();
 
         $this->processor = new processor();
-        $this->triggerinstance = \tool_lifecycle_trigger_startdatedelay_generator::create_trigger_with_workflow();
+
+        $data = array(
+            'startdate' => 'startdate',
+            'delay' => 16416000 // 190 Days
+        );
+        $this->triggerinstance = \tool_lifecycle_trigger_startdatedelay_generator::create_trigger_with_workflow($data);
     }
 
     /**

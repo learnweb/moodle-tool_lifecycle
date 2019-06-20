@@ -36,7 +36,7 @@ class tool_lifecycle_trigger_startdatedelay_generator extends testing_module_gen
      * Creates a trigger startdatedelay for an artificial workflow without steps.
      * @return trigger_subplugin the created startdatedelay trigger.
      */
-    public static function create_trigger_with_workflow() {
+    public static function create_trigger_with_workflow($data) {
         // Create Workflow.
         $record = new stdClass();
         $record->id = null;
@@ -50,9 +50,10 @@ class tool_lifecycle_trigger_startdatedelay_generator extends testing_module_gen
         $record->workflowid = $workflow->id;
         $trigger = trigger_subplugin::from_record($record);
         trigger_manager::insert_or_update($trigger);
-        // Set delay setting.
+        // Set settings.
         $settings = new stdClass();
-        $settings->delay = 16416000;
+        $settings->delay = $data['delay'];
+        $settings->startdate = $data['startdate'];
         settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
 
         return $trigger;
