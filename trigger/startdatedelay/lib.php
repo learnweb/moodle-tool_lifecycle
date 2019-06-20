@@ -73,29 +73,29 @@ class startdatedelay extends base_automatic {
 
     public function extend_add_instance_form_definition($mform) {
         $startoptions = array(
-            'startdate' => get_string('start_option', 'lifecycletrigger_startdatedelay'), 
-            'enddate'=>get_string('end_option', 'lifecycletrigger_startdatedelay'),
+            'startdate' => get_string('start_option', 'lifecycletrigger_startdatedelay'),
+            'enddate' => get_string('end_option', 'lifecycletrigger_startdatedelay'),
             'timecreated' => get_string('created_option', 'lifecycletrigger_startdatedelay'),
             'timemodified' => get_string('modified_option', 'lifecycletrigger_startdatedelay'),
         );
-        $mform->addElement('select', 'startdate',get_string('startdate', 'lifecycletrigger_startdatedelay'), $startoptions);
+        $mform->addElement('select', 'startdate', get_string('startdate', 'lifecycletrigger_startdatedelay'), $startoptions);
         $mform->addElement('duration', 'delay', get_string('delay', 'lifecycletrigger_startdatedelay'));
         $mform->addHelpButton('delay', 'delay', 'lifecycletrigger_startdatedelay');
     }
 
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
         if (is_array($settings) && array_key_exists('delay', $settings)) {
-            $defaultDelay = $settings['delay'];
+            $defaultdelay = $settings['delay'];
         } else {
-            $defaultDelay = 16416000;
+            $defaultdelay = 16416000;
         }
-        $mform->setDefault('delay', $defaultDelay);
+        $mform->setDefault('delay', $defaultdelay);
 
         if (is_array($settings) && array_key_exists('startdate', $settings)) {
-            $defaultStartdate = $settings['startdate'];
+            $defaultstartdate = $settings['startdate'];
         } else {
-            $defaultStartdate = 'startdate';
+            $defaultstartdate = 'startdate';
         }
-        $mform->setDefault('startdate', $defaultStartdate);
+        $mform->setDefault('startdate', $defaultstartdate);
     }
 }
