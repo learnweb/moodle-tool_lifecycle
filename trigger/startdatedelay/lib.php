@@ -52,7 +52,8 @@ class startdatedelay extends base_automatic {
 
     public function get_course_recordset_where($triggerid) {
         $delay = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['delay'];
-        $where = "{course}.startdate < :startdatedelay";
+        $startdate = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['startdate'];
+        $where = "{course}.".$startdate." < :startdatedelay";
         $params = array(
             "startdatedelay" => time() - $delay,
         );
@@ -65,21 +66,36 @@ class startdatedelay extends base_automatic {
 
     public function instance_settings() {
         return array(
-            new instance_setting('delay', PARAM_INT)
+            new instance_setting('delay', PARAM_INT),
+            new instance_setting('startdate', PARAM_TEXT)
         );
     }
 
     public function extend_add_instance_form_definition($mform) {
+        $startoptions = array(
+            'startdate' => get_string('start_option', 'lifecycletrigger_startdatedelay'), 
+            'enddate'=>get_string('end_option', 'lifecycletrigger_startdatedelay'),
+            'timecreated' => get_string('created_option', 'lifecycletrigger_startdatedelay'),
+            'timemodified' => get_string('modified_option', 'lifecycletrigger_startdatedelay'),
+        );
+        $mform->addElement('select', 'startdate',get_string('startdate', 'lifecycletrigger_startdatedelay'), $startoptions);
         $mform->addElement('duration', 'delay', get_string('delay', 'lifecycletrigger_startdatedelay'));
         $mform->addHelpButton('delay', 'delay', 'lifecycletrigger_startdatedelay');
     }
 
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
         if (is_array($settings) && array_key_exists('delay', $settings)) {
-            $default = $settings['delay'];
+            $defaultDelay = $settings['delay'];
         } else {
-            $default = 16416000;
+            $defaultDelay = 16416000;
         }
-        $mform->setDefault('delay', $default);
+        $mform->setDefault('delay', $defaultDelay);
+
+        if (is_array($settings) && array_key_exists('startdate', $settings)) {
+            $defaultStartdate = $settings['startdate'];
+        } else {
+            $defaultStartdate = 'startdate';
+        }
+        $mform->setDefault('startdate', $defaultStartdate);
     }
 }
