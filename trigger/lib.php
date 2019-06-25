@@ -108,13 +108,6 @@ abstract class base {
         return get_string("workflow_started", "tool_lifecycle");
     }
 
-    /**
-     * Function is called when all trigger decide on triggering a course.
-     * For cleanup purposes.
-     */
-    public function course_triggered($course, $triggerid) {
-    }
-
 }
 
 /**

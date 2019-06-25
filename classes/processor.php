@@ -77,10 +77,6 @@ class processor {
                         continue;
                     }
                 }
-                foreach ($triggers as $trigger) {
-                    $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-                    $lib->course_triggered($course, $trigger->id);
-                }
                 // If all trigger instances agree, that they want to trigger a process, we do so.
                 process_manager::create_process($course->id, $workflow->id);
                 $counttriggered++;
