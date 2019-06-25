@@ -49,7 +49,16 @@ class workflow {
     /** title that is displayed to users */
     public $displaytitle;
 
-    private function __construct($id, $title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle) {
+    /** @var int the delay in case of rollback */
+    public $rollbackdelay;
+
+    /** @var int the delay in case of finished course */
+    public $finishdelay;
+
+    public $delayforallworkflows;
+
+    private function __construct($id, $title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
+            $rollbackdelay, $finishdelay, $delayforallworkflows) {
         $this->id = $id;
         $this->title = $title;
         $this->timeactive = $timeactive;
@@ -57,6 +66,9 @@ class workflow {
         $this->sortindex = $sortindex;
         $this->manual = $manual;
         $this->displaytitle = $displaytitle;
+        $this->rollbackdelay = $rollbackdelay;
+        $this->finishdelay = $finishdelay;
+        $this->delayforallworkflows = $delayforallworkflows;
     }
 
     /**
@@ -103,7 +115,23 @@ class workflow {
             $displaytitle = $record->displaytitle;
         }
 
-        $instance = new self($id, $record->title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle);
+        $rollbackdelay = null;
+        if (object_property_exists($record, 'rollbackdelay')) {
+            $rollbackdelay = $record->rollbackdelay;
+        }
+
+        $finishdelay = null;
+        if (object_property_exists($record, 'finishdelay')) {
+            $finishdelay = $record->finishdelay;
+        }
+
+        $delayforallworkflows = null;
+        if (object_property_exists($record, 'delayforallworkflows')) {
+            $delayforallworkflows = $record->delayforallworkflows;
+        }
+
+        $instance = new self($id, $record->title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
+                $rollbackdelay, $finishdelay, $delayforallworkflows);
 
         return $instance;
     }
