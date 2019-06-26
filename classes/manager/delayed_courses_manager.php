@@ -29,40 +29,38 @@ defined('MOODLE_INTERNAL') || die();
 
 class delayed_courses_manager {
 
-    public static function set_course_delayed_for_workflow($courseid, $becauserollback, $workfloworid = null) {
-        global $DB, $CFG;
-        if ($workfloworid) {
-            if (is_object($workfloworid)) {
-                $workflow = $workfloworid;
+    public static function set_course_delayed_for_workflow($courseid, $becauserollback, $workfloworid) {
+        global $DB;
+        if (is_object($workfloworid)) {
+            $workflow = $workfloworid;
+        } else {
+            $workflow = workflow_manager::get_workflow($workfloworid);
+        }
+        if ($becauserollback) {
+            $duration = $workflow->rollbackdelay;
+        } else {
+            $duration = $workflow->finishdelay;
+        }
+        if ($workflow->delayforallworkflows) {
+            self::set_course_delayed($courseid, $duration);
+        } else {
+            $delayeduntil = time() + $duration;
+            $record = $DB->get_record('tool_lifecycle_delayed_workf',
+                        array('courseid' => $courseid, 'workflowid' => $workflow->id));
+            if (!$record) {
+                $record = new \stdClass();
+                $record->courseid = $courseid;
+                $record->workflowid = $workflow->id;
+                $record->delayeduntil = $delayeduntil;
+                $DB->insert_record('tool_lifecycle_delayed_workf', $record);
             } else {
-                $workflow = workflow_manager::get_workflow($workfloworid);
-            }
-            if ($becauserollback) {
-                $duration = $workflow->rollbackdelay;
-            } else {
-                $duration = $workflow->finishdelay;
-            }
-            if ($workflow->delayforallworkflows) {
-               self::set_course_delayed($courseid, $duration);
-            } else {
-                $delayeduntil = time() + $duration;
-                $record = $DB->get_record('tool_lifecycle_delayed_workf', array('courseid' => $courseid, 'workflowid' => $workflow->id));
-                if (!$record) {
-                    $record = new \stdClass();
-                    $record->courseid = $courseid;
-                    $record->workflowid = $workflow->id;
+                if ($record->delayeduntil < $delayeduntil) {
                     $record->delayeduntil = $delayeduntil;
-                    $DB->insert_record('tool_lifecycle_delayed_workf', $record);
-                } else {
-                    if ($record->delayeduntil < $delayeduntil) {
-                        $record->delayeduntil = $delayeduntil;
-                        $DB->update_record('tool_lifecycle_delayed_workf', $record);
-                    }
+                    $DB->update_record('tool_lifecycle_delayed_workf', $record);
                 }
             }
-        } else {
-            self::set_course_delayed($courseid, $CFG->lifecycle_duration);
         }
+
     }
 
     public static function get_delayed_courses_for_workflow($workflowid) {
