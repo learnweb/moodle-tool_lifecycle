@@ -74,7 +74,7 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
 
         $course = $this->getDataGenerator()->create_course();
 
-        delayed_courses_manager::set_course_delayed($course->id);
+        delayed_courses_manager::set_course_delayed($course->id, 2000);
 
         $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
         $found = false;
