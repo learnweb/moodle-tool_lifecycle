@@ -331,8 +331,16 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         $duration = get_config(null, 'lifecycle_duration');
 
-        // Define field finishdelay to be added to tool_lifecycle_workflow.
+        // Define field rollbackdelay to be added to tool_lifecycle_workflow.
         $table = new xmldb_table('tool_lifecycle_workflow');
+        $field = new xmldb_field('rollbackdelay', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'displaytitle');
+
+        // Conditionally launch add field rollbackdelay.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field finishdelay to be added to tool_lifecycle_workflow.
         $field = new xmldb_field('finishdelay', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'rollbackdelay');
 
         // Conditionally launch add field finishdelay.
@@ -340,10 +348,10 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Define field rollbackdelay to be added to tool_lifecycle_workflow.
-        $field = new xmldb_field('rollbackdelay', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'displaytitle');
+        // Define field delayforallworkflows to be added to tool_lifecycle_workflow.
+        $field = new xmldb_field('delayforallworkflows', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, 'finishdelay');
 
-        // Conditionally launch add field rollbackdelay.
+        // Conditionally launch add field delayforallworkflows.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
