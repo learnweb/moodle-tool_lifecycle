@@ -115,17 +115,17 @@ class workflow {
             $displaytitle = $record->displaytitle;
         }
 
-        $rollbackdelay = null;
+        $rollbackdelay = 0;
         if (object_property_exists($record, 'rollbackdelay')) {
             $rollbackdelay = $record->rollbackdelay;
         }
 
-        $finishdelay = null;
+        $finishdelay = 0;
         if (object_property_exists($record, 'finishdelay')) {
             $finishdelay = $record->finishdelay;
         }
 
-        $delayforallworkflows = null;
+        $delayforallworkflows = false;
         if (object_property_exists($record, 'delayforallworkflows')) {
             $delayforallworkflows = $record->delayforallworkflows;
         }

@@ -327,7 +327,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019053100, 'tool', 'lifecycle');
     }
 
-    if ($oldversion < 2019062500) {
+    if ($oldversion < 2019062600) {
 
         $duration = get_config(null, 'lifecycle_duration');
 
@@ -380,7 +380,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         }
 
         // Lifecycle savepoint reached.
-        upgrade_plugin_savepoint(true, 2019062500, 'tool', 'lifecycle');
+        upgrade_plugin_savepoint(true, 2019062600, 'tool', 'lifecycle');
     }
     return true;
 }
