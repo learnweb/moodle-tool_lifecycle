@@ -74,7 +74,7 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
 
         $course = $this->getDataGenerator()->create_course();
 
-        delayed_courses_manager::set_course_delayed($course->id, 2000);
+        delayed_courses_manager::set_course_delayed($course->id);
 
         $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
         $found = false;
@@ -85,25 +85,5 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
         }
         $recordset->close();
         $this->assertTrue($found, 'The course should not have passed through in order to delay it');
-    }
-
-    /**
-     * Tests that a course is not excluded by this plugin, when there exists a dalayed entry, but it is expired.
-     */
-    public function test_course_delay_expired() {
-
-        $course = $this->getDataGenerator()->create_course();
-
-        delayed_courses_manager::set_course_delayed($course->id, -2000);
-
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
-        $found = false;
-        foreach ($recordset as $element) {
-            if ($course->id == $element->id) {
-                $found = true;
-            }
-        }
-        $recordset->close();
-        $this->assertFalse($found, 'The course should not have passed through since it should not be delay');
     }
 }

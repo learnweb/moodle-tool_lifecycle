@@ -56,7 +56,8 @@ class processor {
             $countexcluded = 0;
             mtrace('Calling triggers for workflow "' . $workflow->title . '"');
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
-            $recordset = $this->get_course_recordset($triggers, $exclude);
+            $delayedcourses = delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id);
+            $recordset = $this->get_course_recordset($triggers, array_merge($exclude, $delayedcourses));
             while ($recordset->valid()) {
                 $course = $recordset->current();
                 $countcourses++;
@@ -94,6 +95,7 @@ class processor {
     public function process_courses() {
         global $CFG;
         foreach (process_manager::get_processes() as $process) {
+            $workflow = workflow_manager::get_workflow($process->workflowid);
             while (true) {
 
                 if ($process->stepindex == 0) {
@@ -118,10 +120,11 @@ class processor {
                     break;
                 } else if ($result == step_response::proceed()) {
                     if (!process_manager::proceed_process($process)) {
+                        delayed_courses_manager::set_course_delayed_for_workflow($course->id, false, $workflow);
                         break;
                     }
                 } else if ($result == step_response::rollback()) {
-                    delayed_courses_manager::set_course_delayed($process->courseid, $CFG->lifecycle_duration);
+                    delayed_courses_manager::set_course_delayed_for_workflow($course->id, true, $workflow);
                     process_manager::rollback_process($process);
                     break;
                 } else {
@@ -144,6 +147,7 @@ class processor {
         $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
         // If there is no next step, then proceed, which will delete/finish the process.
         if (!$step) {
+            delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, false, $process->workflowid);
             process_manager::proceed_process($process);
             return true;
         }
@@ -162,7 +166,7 @@ class processor {
                     return $this->process_course_interactive($processid);
                     break;
                 case step_interactive_response::rollback():
-                    delayed_courses_manager::set_course_delayed($process->courseid, $CFG->lifecycle_duration);
+                    delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);
                     process_manager::rollback_process($process);
                     break;
             }
