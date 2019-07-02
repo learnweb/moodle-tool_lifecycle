@@ -138,4 +138,15 @@ class interactionduplicate extends interactionlibbase {
         $mform->display();
         echo $renderer->footer();
     }
+
+    /**
+     * Returns the display name for the given action.
+     * Used for the past actions table in view.php.
+     *
+     * @param $action
+     * @return string action display name
+     */
+    public function get_action_string($action) {
+        get_string('new_course_data', 'lifecyclestep_duplicate');
+    }
 }
