@@ -39,8 +39,8 @@ class interaction_log_table extends \table_sql {
         parent::__construct($uniqueid);
         global $PAGE;
 
-        $fields = "l.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, " .
-                "w.title as workflow, s.subpluginname as subpluginname, s.instancename as stepname, u.id as userid, "
+        $fields = "l.id as id, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, " .
+                "w.title as workflow, s.subpluginname as subpluginname, s.instancename as stepname, u.id as user, "
                 . get_all_user_name_fields(true, 'u') . ", l.time, l.action";
         $from = '{tool_lifecycle_action_log} l join ' .
                 '{course} c on l.courseid = c.id join ' .
@@ -101,7 +101,7 @@ class interaction_log_table extends \table_sql {
      */
     public function col_user($row) {
         global $CFG;
-        return \html_writer::link($CFG->wwwroot . '/user/profile.php?id=' . $row->userid, fullname($row));
+        return \html_writer::link($CFG->wwwroot . '/user/profile.php?id=' . $row->user, fullname($row));
     }
 
     /**
