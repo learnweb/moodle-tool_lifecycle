@@ -75,18 +75,27 @@ class interaction_log_table extends \table_sql {
         $this->setup();
     }
 
+    /**
+     * Render course column.
+     * @param $row
+     * @return string
+     */
     public function col_coursefullname($row) {
         $courselink = \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
         return $courselink . '<br><span class="secondary-info">' . $row->courseshortname . '</span>';
     }
 
+    /**
+     * Render process step column.
+     * @param $row
+     * @return string
+     */
     public function col_step($row) {
         return $row->stepname . '<br><span class="secondary-info">Workflow: ' . $row->workflow . '</span>';
     }
 
     /**
      * Render user column.
-     *
      * @param $row
      * @return string
      */
@@ -97,7 +106,6 @@ class interaction_log_table extends \table_sql {
 
     /**
      * Render time column.
-     *
      * @param $row
      * @return string
      * @throws \coding_exception
@@ -107,6 +115,11 @@ class interaction_log_table extends \table_sql {
         return userdate($row->time, $dateformat);
     }
 
+    /**
+     * Render action column.
+     * @param $row
+     * @return string
+     */
     public function col_action($row) {
         $interactionlib = lib_manager::get_step_interactionlib($row->subpluginname);
         return $interactionlib->get_action_string($row->action);
