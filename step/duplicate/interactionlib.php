@@ -147,6 +147,6 @@ class interactionduplicate extends interactionlibbase {
      * @return string action display name
      */
     public function get_action_string($action) {
-        get_string('new_course_data', 'lifecyclestep_duplicate');
+        return get_string('action_new_course_data', 'lifecyclestep_duplicate');
     }
 }

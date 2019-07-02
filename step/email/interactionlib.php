@@ -114,6 +114,6 @@ class interactionemail extends interactionlibbase {
      * @return string action display name
      */
     public function get_action_string($action) {
-        return get_string('email:preventdeletion', 'lifecyclestep_email');
+        return get_string('action_prevented_deletion', 'lifecyclestep_email');
     }
 }
