@@ -372,7 +372,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Adding keys to table tool_lifecycle_delayed_workf.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         $table->add_key('courseid_fk', XMLDB_KEY_FOREIGN, ['courseid'], 'course', ['id']);
-        $table->add_key('workflowid_fk', XMLDB_KEY_FOREIGN, ['workflowid'], 'workflow', ['id']);
+        $table->add_key('workflowid_fk', XMLDB_KEY_FOREIGN, ['workflowid'], 'tool_lifecycle_workflow', ['id']);
 
         // Conditionally launch create table for tool_lifecycle_delayed_workf.
         if (!$dbman->table_exists($table)) {
