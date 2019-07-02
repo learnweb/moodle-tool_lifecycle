@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\manager;
 
+use tool_lifecycle\entity\process;
 use tool_lifecycle\processor;
 use tool_lifecycle\response\step_interactive_response;
 
@@ -63,6 +64,8 @@ class interaction_manager {
         $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
         $response = $interactionlib->handle_interaction($process, $step, $action);
 
+        self::save_interaction($process, $action);
+
         switch ($response) {
             case step_interactive_response::still_processing():
                 return false;
@@ -80,6 +83,23 @@ class interaction_manager {
                 break;
         }
         return true;
+    }
+
+    /**
+     * @param process $process
+     * @throws \dml_exception
+     */
+    public static function save_interaction($process, $action) {
+        global $DB, $USER;
+        $record = new \stdClass();
+        $record->userid = $USER->id;
+        $record->time = time();
+        $record->courseid = $process->courseid;
+        $record->processid = $process->id;
+        $record->workflowid = $process->workflowid;
+        $record->stepindex = $process->stepindex;
+        // TODO Save Action!
+        $DB->insert_record('tool_lifecycle_action_log', $record);
     }
 
     /**

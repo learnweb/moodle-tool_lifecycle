@@ -66,6 +66,7 @@ $string['trigger_enabled'] = 'Enabled';
 $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_workflow'] = 'Workflow';
 
+$string['workflow'] = 'Workflow';
 $string['add_workflow'] = 'Add Workflow';
 $string['upload_workflow'] = 'Upload Workflow';
 $string['workflow_title'] = 'Title';
@@ -140,10 +141,13 @@ $string['workflownotfound'] = 'Workflow with id {$a} could not be found';
 // View.php.
 $string['tablecoursesrequiringattention'] = 'Courses that require your attention';
 $string['tablecoursesremaining'] = 'Remaining courses';
+$string['tablecourseslog'] = 'Past Actions';
 $string['viewheading'] = 'Manage courses';
 $string['interaction_success'] = 'Action successfully saved.';
 $string['manual_trigger_success'] = 'Workflow started successfully.';
 $string['manual_trigger_process_existed'] = 'A workflow for this course already exists.';
+
+$string['nopastactions'] = 'There are no past actions';
 
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_is_running'] = 'Workflow is running.';
