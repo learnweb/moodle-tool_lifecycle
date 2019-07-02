@@ -66,6 +66,14 @@ abstract class interactionlibbase {
     public abstract function get_status_message($process);
 
     /**
+     * Returns the display name for the given action.
+     * Used for the past actions table in view.php.
+     * @param $action
+     * @return string action display name
+     */
+    public abstract function get_action_string($action);
+
+    /**
      * Called when a user triggered an action for a process instance.
      * @param process $process instance of the process the action was triggered upon.
      * @param step_subplugin $step instance of the step the process is currently in.

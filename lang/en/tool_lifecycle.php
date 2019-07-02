@@ -148,6 +148,7 @@ $string['manual_trigger_success'] = 'Workflow started successfully.';
 $string['manual_trigger_process_existed'] = 'A workflow for this course already exists.';
 
 $string['nopastactions'] = 'There are no past actions';
+$string['action'] = 'Action';
 
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_is_running'] = 'Workflow is running.';

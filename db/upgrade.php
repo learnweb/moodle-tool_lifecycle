@@ -340,6 +340,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         $table->add_field('stepindex', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('time', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('action', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
 
         // Adding keys to table tool_lifecycle_action_log.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);

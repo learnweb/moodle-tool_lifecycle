@@ -40,7 +40,7 @@ class interaction_log_table extends \table_sql {
 
         $fields = "l.id as processid, c.id as courseid, c.fullname as coursefullname, w.title as workflow, " .
                 "s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname as subpluginname, " .
-                "u.id as userid, " . get_all_user_name_fields(true, 'u') . ", l.time as time";
+                "u.id as userid, " . get_all_user_name_fields(true, 'u') . ", l.time, l.action";
         $from = '{tool_lifecycle_action_log} l join ' .
                 '{course} c on l.courseid = c.id join ' .
                 '{tool_lifecycle_workflow} w on l.workflowid = w.id join ' .
@@ -53,7 +53,6 @@ class interaction_log_table extends \table_sql {
             $where = 'l.courseid IN (' . $ids . ')';
         }
 
-        $this->column_nosort = array('category', 'status', 'tools');
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
         $this->init();
@@ -63,13 +62,14 @@ class interaction_log_table extends \table_sql {
      * Initialises the columns of the table.
      */
     public function init() {
-        $this->define_columns(['courseid', 'coursefullname', 'workflow', 'time', 'user']);
+        $this->define_columns(['courseid', 'coursefullname', 'workflow', 'time', 'user', 'action']);
         $this->define_headers([
                 get_string('course'),
                 get_string('fullnamecourse'),
                 get_string('workflow', 'tool_lifecycle'),
                 get_string('date'),
                 get_string('user'),
+                get_string('action', 'tool_lifecycle')
         ]);
         $this->setup();
     }
@@ -112,6 +112,8 @@ class interaction_log_table extends \table_sql {
     public function col_coursefullname($row) {
         return \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
     }
+
+
 
     public function print_nothing_to_display() {
         global $OUTPUT;

@@ -98,7 +98,7 @@ class interaction_manager {
         $record->processid = $process->id;
         $record->workflowid = $process->workflowid;
         $record->stepindex = $process->stepindex;
-        // TODO Save Action!
+        $record->action = $action;
         $DB->insert_record('tool_lifecycle_action_log', $record);
     }
 

@@ -105,4 +105,15 @@ class interactionemail extends interactionlibbase {
         // TODO default format -- seconds -> not in this class !
         return date('d.m.Y', $date);
     }
+
+    /**
+     * Returns the display name for the given action.
+     * Used for the past actions table in view.php.
+     *
+     * @param $action
+     * @return string action display name
+     */
+    public function get_action_string($action) {
+        return get_string('email:preventdeletion', 'lifecyclestep_email');
+    }
 }
