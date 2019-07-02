@@ -21,6 +21,7 @@
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle\table;
 
 use core\plugininfo\format;
@@ -38,9 +39,9 @@ class interaction_log_table extends \table_sql {
         parent::__construct($uniqueid);
         global $PAGE;
 
-        $fields = "l.id as processid, c.id as courseid, c.fullname as coursefullname, w.title as workflow, " .
-                "s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname as subpluginname, " .
-                "u.id as userid, " . get_all_user_name_fields(true, 'u') . ", l.time, l.action";
+        $fields = "l.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, " .
+                "w.title as workflow, s.subpluginname as subpluginname, s.instancename as stepname, u.id as userid, "
+                . get_all_user_name_fields(true, 'u') . ", l.time, l.action";
         $from = '{tool_lifecycle_action_log} l join ' .
                 '{course} c on l.courseid = c.id join ' .
                 '{tool_lifecycle_workflow} w on l.workflowid = w.id join ' .
@@ -53,6 +54,7 @@ class interaction_log_table extends \table_sql {
             $where = 'l.courseid IN (' . $ids . ')';
         }
 
+        $this->column_nosort = array('action');
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
         $this->init();
@@ -62,20 +64,29 @@ class interaction_log_table extends \table_sql {
      * Initialises the columns of the table.
      */
     public function init() {
-        $this->define_columns(['courseid', 'coursefullname', 'workflow', 'time', 'user', 'action']);
+        $this->define_columns(['course', 'step', 'action', 'user', 'time']);
         $this->define_headers([
                 get_string('course'),
-                get_string('fullnamecourse'),
-                get_string('workflow', 'tool_lifecycle'),
-                get_string('date'),
+                get_string('step', 'tool_lifecycle'),
+                get_string('action', 'tool_lifecycle'),
                 get_string('user'),
-                get_string('action', 'tool_lifecycle')
+                get_string('date'),
         ]);
         $this->setup();
     }
 
+    public function col_course($row) {
+        $courselink = \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
+        return $courselink . '<br><span class="secondary-info">' . $row->courseshortname . '</span>';
+    }
+
+    public function col_step($row) {
+        return $row->stepname . '<br><span class="secondary-info">Workflow: ' . $row->workflow . '</span>';
+    }
+
     /**
      * Render user column.
+     *
      * @param $row
      * @return string
      */
@@ -86,6 +97,7 @@ class interaction_log_table extends \table_sql {
 
     /**
      * Render time column.
+     *
      * @param $row
      * @return string
      * @throws \coding_exception
@@ -95,25 +107,10 @@ class interaction_log_table extends \table_sql {
         return userdate($row->time, $dateformat);
     }
 
-    /**
-     * Render courseid column.
-     * @param $row
-     * @return string course link
-     */
-    public function col_courseid($row) {
-        return \html_writer::link(course_get_url($row->courseid), $row->courseid);
+    public function col_action($row) {
+        $interactionlib = lib_manager::get_step_interactionlib($row->subpluginname);
+        return $interactionlib->get_action_string($row->action);
     }
-
-    /**
-     * Render coursefullname column.
-     * @param $row
-     * @return string course link
-     */
-    public function col_coursefullname($row) {
-        return \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
-    }
-
-
 
     public function print_nothing_to_display() {
         global $OUTPUT;
