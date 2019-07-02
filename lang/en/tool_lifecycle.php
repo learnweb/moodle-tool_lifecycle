@@ -149,6 +149,7 @@ $string['manual_trigger_process_existed'] = 'A workflow for this course already 
 
 $string['nopastactions'] = 'There are no past actions';
 $string['action'] = 'Action';
+$string['byuser'] = 'By user';
 
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_is_running'] = 'Workflow is running.';

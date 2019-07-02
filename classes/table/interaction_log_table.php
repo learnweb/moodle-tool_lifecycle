@@ -54,7 +54,7 @@ class interaction_log_table extends \table_sql {
             $where = 'l.courseid IN (' . $ids . ')';
         }
 
-        $this->column_nosort = array('action');
+        $this->column_nosort = array('step', 'action');
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
         $this->init();
@@ -64,18 +64,18 @@ class interaction_log_table extends \table_sql {
      * Initialises the columns of the table.
      */
     public function init() {
-        $this->define_columns(['course', 'step', 'action', 'user', 'time']);
+        $this->define_columns(['coursefullname', 'step', 'action', 'user', 'time']);
         $this->define_headers([
                 get_string('course'),
                 get_string('step', 'tool_lifecycle'),
                 get_string('action', 'tool_lifecycle'),
-                get_string('user'),
+                get_string('byuser', 'tool_lifecycle'),
                 get_string('date'),
         ]);
         $this->setup();
     }
 
-    public function col_course($row) {
+    public function col_coursefullname($row) {
         $courselink = \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
         return $courselink . '<br><span class="secondary-info">' . $row->courseshortname . '</span>';
     }
