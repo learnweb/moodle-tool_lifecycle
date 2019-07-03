@@ -139,8 +139,9 @@ class interaction_remaining_table extends interaction_table {
     }
 
     public function col_lastmodified($row) {
-        if (!$row->lastmodified)
+        if (!$row->lastmodified) {
             return '';
+        }
 
         $dateformat = get_string('strftimedatetime', 'core_langconfig');
         return userdate($row->lastmodified, $dateformat);
