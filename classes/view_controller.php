@@ -102,14 +102,6 @@ class view_controller {
         echo $renderer->box_start("lifecycle-enable-overflow lifecycle-table");
         $table2->out(50, false);
         echo $renderer->box_end();
-
-        echo $renderer->box("");
-        echo $renderer->heading(get_string('tablecourseslog', 'tool_lifecycle'), 3);
-        $table3 = new interaction_log_table('tool_lifecycle_log', $arrayofcourseids);
-
-        echo $renderer->box_start("lifecycle-enable-overflow lifecycle-table");
-        $table3->out(50, false);
-        echo $renderer->box_end();
     }
 
     /**

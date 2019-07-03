@@ -25,6 +25,7 @@
  */
 namespace tool_lifecycle\step;
 
+use core_user;
 use tool_lifecycle\entity\process;
 use tool_lifecycle\entity\step_subplugin;
 use tool_lifecycle\response\step_interactive_response;
@@ -68,10 +69,11 @@ abstract class interactionlibbase {
     /**
      * Returns the display name for the given action.
      * Used for the past actions table in view.php.
-     * @param $action
+     * @param string $action Identifier of action
+     * @param string $userlink html-link with username as text that refers to the user profile.
      * @return string action display name
      */
-    public abstract function get_action_string($action);
+    public abstract function get_action_string($action, $user);
 
     /**
      * Called when a user triggered an action for a process instance.

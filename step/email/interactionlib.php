@@ -109,11 +109,11 @@ class interactionemail extends interactionlibbase {
     /**
      * Returns the display name for the given action.
      * Used for the past actions table in view.php.
-     *
-     * @param $action
+     * @param string $action Identifier of action
+     * @param string $userlink html-link with username as text that refers to the user profile.
      * @return string action display name
      */
-    public function get_action_string($action) {
-        return get_string('action_prevented_deletion', 'lifecyclestep_email');
+    public function get_action_string($action, $user) {
+        return get_string('action_prevented_deletion', 'lifecyclestep_email', $user);
     }
 }

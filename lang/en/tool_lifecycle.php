@@ -147,9 +147,8 @@ $string['interaction_success'] = 'Action successfully saved.';
 $string['manual_trigger_success'] = 'Workflow started successfully.';
 $string['manual_trigger_process_existed'] = 'A workflow for this course already exists.';
 
-$string['nopastactions'] = 'There are no past actions';
-$string['action'] = 'Action';
-$string['byuser'] = 'By user';
+$string['coursename'] = 'Course name';
+$string['lastaction'] = 'Last action on';
 
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_is_running'] = 'Workflow is running.';
