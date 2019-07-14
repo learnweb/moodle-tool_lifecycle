@@ -44,7 +44,7 @@ class interaction_remaining_table extends interaction_table {
         // COALESCE returns l.time if l.time != null and 0 otherwise.
         // We need to do this, so that courses without any action have a smaller timestamp than courses with an recorded action.
         // Otherwise, it would mess up the sorting.
-        $fields = "c.id as courseid, p.id AS processid, c.fullname AS coursefullname, c.shortname AS courseshortname, " .
+        $fields = "id, c.id as courseid, p.id AS processid, c.fullname AS coursefullname, c.shortname AS courseshortname, " .
                   "cc.name AS category, COALESCE(l.time, 0) AS lastmodified, l.userid, l.action, s.subpluginname, " .
                    get_all_user_name_fields(true, 'u');
         $from = '{course} c ' .
