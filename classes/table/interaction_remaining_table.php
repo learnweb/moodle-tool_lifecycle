@@ -44,17 +44,17 @@ class interaction_remaining_table extends interaction_table {
         // COALESCE returns l.time if l.time != null and 0 otherwise.
         // We need to do this, so that courses without any action have a smaller timestamp than courses with an recorded action.
         // Otherwise, it would mess up the sorting.
-        $fields = "l.id, c.id as courseid, p.id AS processid, c.fullname AS coursefullname, c.shortname AS courseshortname, " .
+        $fields = "c.id as courseid, p.id AS processid, c.fullname AS coursefullname, c.shortname AS courseshortname, " .
                   "cc.name AS category, COALESCE(l.time, 0) AS lastmodified, l.userid, l.action, s.subpluginname, " .
                    get_all_user_name_fields(true, 'u');
         $from = '{course} c ' .
             'LEFT JOIN {tool_lifecycle_action_log} l ON c.id = l.courseid ' .
             'LEFT JOIN ( ' .
-                'SELECT a.courseid, MAX(a.time) AS maxtime ' .
+                'SELECT a.courseid, MAX(a.id) AS maxid ' .
                 'FROM {tool_lifecycle_action_log} a ' .
-                'GROUP BY a.courseid, a.time ' .
+                'GROUP BY a.courseid, a.id ' .
                 ') m ' .
-            'ON l.courseid = m.courseid AND l.time = m.maxtime ' .
+            'ON l.courseid = m.courseid AND l.id = m.maxid ' .
             'LEFT JOIN {tool_lifecycle_process} p ON p.courseid = c.id ' .
             'LEFT JOIN {course_categories} cc ON c.category = cc.id ' .
             'LEFT JOIN {tool_lifecycle_step} s ON l.workflowid = s.workflowid AND l.stepindex = s.sortindex ' .
