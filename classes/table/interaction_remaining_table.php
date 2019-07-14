@@ -128,10 +128,16 @@ class interaction_remaining_table extends interaction_table {
     }
 
     public function col_status($row) {
+        $processstatus = parent::col_status($row);
+        // If current process has status, show status.
+        if ($processstatus != '') {
+            return $processstatus;
+        }
+        // Otherwise, if there is no action saved for this process, show nothing.
         if (!$row->subpluginname) {
             return '';
         }
-
+        // Otherwise, show latest action commited by user.
         global $CFG;
         $userlink = \html_writer::link($CFG->wwwroot . '/user/profile.php?id=' . $row->userid, fullname($row));
         $interactionlib = lib_manager::get_step_interactionlib($row->subpluginname);
