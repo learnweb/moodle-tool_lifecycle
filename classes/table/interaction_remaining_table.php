@@ -48,13 +48,16 @@ class interaction_remaining_table extends interaction_table {
                   "cc.name AS category, COALESCE(l.time, 0) AS lastmodified, l.userid, l.action, s.subpluginname, " .
                    get_all_user_name_fields(true, 'u');
         $from = '{course} c ' .
-            'LEFT JOIN {tool_lifecycle_action_log} l ON c.id = l.courseid ' .
-            'LEFT JOIN ( ' .
-                'SELECT a.courseid, MAX(a.id) AS maxid ' .
-                'FROM {tool_lifecycle_action_log} a ' .
-                'GROUP BY a.courseid, a.id ' .
-                ') m ' .
-            'ON l.courseid = m.courseid AND l.id = m.maxid ' .
+            'LEFT JOIN (' .
+                /* This Subquery creates a table with the one record per course from {tool_lifecycle_action_log}
+                   with the highest id (the newest record per course) */
+                'SELECT * FROM {tool_lifecycle_action_log} a ' .
+                'INNER JOIN ( ' .
+                    'SELECT b.courseid as cid, MAX(b.id) as maxlogid ' .
+                    'FROM {tool_lifecycle_action_log} b ' .
+                    'GROUP BY b.courseid ' .
+                ') m ON a.courseid = m.cid AND a.id = m.maxlogid ' .
+            ') l ON c.id = l.courseid ' .
             'LEFT JOIN {tool_lifecycle_process} p ON p.courseid = c.id ' .
             'LEFT JOIN {course_categories} cc ON c.category = cc.id ' .
             'LEFT JOIN {tool_lifecycle_step} s ON l.workflowid = s.workflowid AND l.stepindex = s.sortindex ' .
