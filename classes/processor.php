@@ -24,6 +24,7 @@
 namespace tool_lifecycle;
 
 use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\event\process_triggered;
 use tool_lifecycle\manager\process_manager;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\trigger_manager;
@@ -78,7 +79,8 @@ class processor {
                     }
                 }
                 // If all trigger instances agree, that they want to trigger a process, we do so.
-                process_manager::create_process($course->id, $workflow->id);
+                $process = process_manager::create_process($course->id, $workflow->id);
+                process_triggered::event_from_process($process)->trigger();
                 $counttriggered++;
                 $recordset->next();
             }

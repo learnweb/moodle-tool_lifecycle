@@ -153,3 +153,7 @@ $string['restore_workflow_not_found'] = 'Wrong format of the backup file. The wo
 $string['restore_subplugins_invalid'] = 'Wrong format of the backup file. The structure of the subplugin elements is not as expected.';
 $string['restore_step_does_not_exist'] = 'The step {$a} is not installed, but is included in the backup file. Please installed it first and try again.';
 $string['restore_trigger_does_not_exist'] = 'The trigger {$a} is not installed, but is included in the backup file. Please installed it first and try again.';
+
+$string['process_triggered_event'] = 'A process has been triggered';
+$string['process_proceeded_event'] = 'A process has been proceeded';
+$string['process_rollback_event'] = 'A process has been rolled back';
