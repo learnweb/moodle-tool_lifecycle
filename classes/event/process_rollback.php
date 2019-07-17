@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * The process_rollback event class.
  *
- *  @property-read array $other {
+ * @property-read array $other {
  *      Extra information about event.
  *
  *      - int processid: the id of the process.
@@ -85,7 +85,8 @@ class process_rollback extends \core\event\base {
         $workflowid = $this->other['workflowid'];
         $stepindex = $this->other['stepindex'];
 
-        return "The workflow with id '$workflowid' was rolled back on step '$stepindex' for course '$this->courseid' in the process with id '$processid'";
+        return "The workflow with id '$workflowid' was rolled back on step '$stepindex' for course '$this->courseid' " .
+                "in the process with id '$processid'";
     }
 
     /**

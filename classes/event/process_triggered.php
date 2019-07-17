@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * The process_triggered event class.
  *
- *  @property-read array $other {
+ * @property-read array $other {
  *      Extra information about event.
  *
  *      - int processid: the id of the process.
