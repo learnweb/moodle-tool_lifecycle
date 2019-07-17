@@ -56,9 +56,9 @@ class process_rollback extends \core\event\base {
         $data = array(
                 'context' => \context_course::instance($process->courseid),
                 'other' => array(
+                        'stepindex' => $process->stepindex,
                         'processid' => $process->id,
-                        'workflowid' => $process->workflowid,
-                        'stepindex' => $process->stepindex
+                        'workflowid' => $process->workflowid
                 ),
                 'courseid' => $process->courseid,
         );
@@ -71,8 +71,8 @@ class process_rollback extends \core\event\base {
      * @return void
      */
     protected function init() {
-        $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_OTHER;
+        $this->data['crud'] = 'u';
     }
 
     /**
