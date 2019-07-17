@@ -47,7 +47,7 @@ defined('MOODLE_INTERNAL') || die();
 class process_rollback extends \core\event\base {
 
     /**
-     * Creates an event with a process.
+     * Creates an process_rollabck event from a process.
      *
      * @param process $process
      * @return process_rollback
@@ -66,7 +66,7 @@ class process_rollback extends \core\event\base {
     }
 
     /**
-     * Init method.
+     * Init method for process_rollback event.
      *
      * @return void
      */
