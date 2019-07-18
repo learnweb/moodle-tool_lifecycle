@@ -34,12 +34,9 @@ class tool_lifecycle_process_status_message_testcase extends \advanced_testcase 
 
     private $generator;
 
-    private $courseid;
-
     public function setUp() {
         $this->resetAfterTest(false);
         $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
-        $this->courseid = $this->getDataGenerator()->create_course()->id;
         $settings = new stdClass();
         $settings->icon = self::MANUAL_TRIGGER1_ICON;
         $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
@@ -55,7 +52,7 @@ class tool_lifecycle_process_status_message_testcase extends \advanced_testcase 
      * Test getting status message for a process.
      */
     public function test_get_status_message() {
-        $process = $this->generator->create_process($this->courseid, $this->workflow->id);
+        $process = $this->generator->create_process(2, $this->workflow->id);
         $message = \tool_lifecycle\manager\interaction_manager::get_process_status_message($process->id);
         $this->assertEquals(get_string("workflow_started", "tool_lifecycle"), $message);
 

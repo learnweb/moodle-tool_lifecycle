@@ -38,6 +38,7 @@ defined('MOODLE_INTERNAL') || die();
  *      - int processid: the id of the process.
  *      - int workflowid: the id of the workflow.
  *      - int stepindex: the index of the step.
+ *      - int courseid: the id of the course.
  * }
  *
  * @package    tool_lifecycle
@@ -54,13 +55,13 @@ class process_proceeded extends \core\event\base {
      */
     public static function event_from_process($process) {
         $data = array(
-                'context' => \context_course::instance($process->courseid),
+                'context' => \context_system::instance(),
                 'other' => array(
                         'processid' => $process->id,
                         'workflowid' => $process->workflowid,
-                        'stepindex' => $process->stepindex
-                ),
-                'courseid' => $process->courseid,
+                        'stepindex' => $process->stepindex,
+                        'courseid' => $process->courseid
+                )
         );
         return self::create($data);
     }
@@ -84,8 +85,9 @@ class process_proceeded extends \core\event\base {
         $processid = $this->other['processid'];
         $workflowid = $this->other['workflowid'];
         $stepindex = $this->other['stepindex'];
+        $courseid = $this->other['courseid'];
 
-        return "The workflow with id '$workflowid' finished step '$stepindex' successfully for course '$this->courseid' " .
+        return "The workflow with id '$workflowid' finished step '$stepindex' successfully for course '$courseid' " .
                 "in the process with id '$processid'";
     }
 
@@ -104,7 +106,7 @@ class process_proceeded extends \core\event\base {
      * @return moodle_url
      */
     public function get_url() {
-        return new moodle_url('/admin/tool/lifecycle/view.php', array('contextid' => $this->contextid));
+        return new moodle_url('/admin/tool/lifecycle/view.php');
     }
 
     /**
@@ -125,6 +127,10 @@ class process_proceeded extends \core\event\base {
 
         if (!isset($this->other['stepindex'])) {
             throw new \coding_exception('The \'stepindex\' value must be set');
+        }
+
+        if (!isset($this->other['courseid'])) {
+            throw new \coding_exception('The \'courseid\' value must be set');
         }
     }
 

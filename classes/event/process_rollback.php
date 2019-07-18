@@ -54,13 +54,13 @@ class process_rollback extends \core\event\base {
      */
     public static function event_from_process($process) {
         $data = array(
-                'context' => \context_course::instance($process->courseid),
+                'context' => \context_system::instance(),
                 'other' => array(
-                        'stepindex' => $process->stepindex,
-                        'processid' => $process->id,
-                        'workflowid' => $process->workflowid
-                ),
-                'courseid' => $process->courseid,
+                    'processid' => $process->id,
+                    'workflowid' => $process->workflowid,
+                    'stepindex' => $process->stepindex,
+                    'courseid' => $process->courseid
+                )
         );
         return self::create($data);
     }
@@ -84,8 +84,9 @@ class process_rollback extends \core\event\base {
         $processid = $this->other['processid'];
         $workflowid = $this->other['workflowid'];
         $stepindex = $this->other['stepindex'];
+        $coursid = $this->other['courseid'];
 
-        return "The workflow with id '$workflowid' was rolled back on step '$stepindex' for course '$this->courseid' " .
+        return "The workflow with id '$workflowid' was rolled back on step '$stepindex' for course '$courseid' " .
                 "in the process with id '$processid'";
     }
 
@@ -104,7 +105,7 @@ class process_rollback extends \core\event\base {
      * @return moodle_url
      */
     public function get_url() {
-        return new moodle_url('/admin/tool/lifecycle/view.php', array('contextid' => $this->contextid));
+        return new moodle_url('/admin/tool/lifecycle/view.php');
     }
 
     /**
@@ -125,6 +126,10 @@ class process_rollback extends \core\event\base {
 
         if (!isset($this->other['stepindex'])) {
             throw new \coding_exception('The \'stepindex\' value must be set');
+        }
+
+        if (!isset($this->other['courseid'])) {
+            throw new \coding_exception('The \'courseid\' value must be set');
         }
     }
 

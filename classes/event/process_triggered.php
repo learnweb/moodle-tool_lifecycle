@@ -53,12 +53,12 @@ class process_triggered extends \core\event\base {
      */
     public static function event_from_process($process) {
         $data = array(
-                'context' => \context_course::instance($process->courseid),
+                'context' => \context_system::instance(),
                 'other' => array(
                         'processid' => $process->id,
-                        'workflowid' => $process->workflowid
-                ),
-                'courseid' => $process->courseid,
+                        'workflowid' => $process->workflowid,
+                        'courseid' => $process->courseid
+                )
         );
         return self::create($data);
     }
@@ -81,8 +81,9 @@ class process_triggered extends \core\event\base {
     public function get_description() {
         $processid = $this->other['processid'];
         $workflowid = $this->other['workflowid'];
+        $courseid = $this->other['courseid'];
 
-        return "The workflow with id '$workflowid' triggered for course '$this->courseid' and created process with id '$processid'";
+        return "The workflow with id '$workflowid' triggered for course '$courseid' and created process with id '$processid'";
     }
 
     /**
@@ -100,7 +101,7 @@ class process_triggered extends \core\event\base {
      * @return moodle_url
      */
     public function get_url() {
-        return new moodle_url('/admin/tool/lifecycle/view.php', array('contextid' => $this->contextid));
+        return new moodle_url('/admin/tool/lifecycle/view.php');
     }
 
     /**
@@ -117,6 +118,10 @@ class process_triggered extends \core\event\base {
 
         if (!isset($this->other['workflowid'])) {
             throw new \coding_exception('The \'workflowid\' value must be set');
+        }
+
+        if (!isset($this->other['courseid'])) {
+            throw new \coding_exception('The \'courseid\' value must be set');
         }
     }
 
