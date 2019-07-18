@@ -134,8 +134,8 @@ class process_manager {
     public static function proceed_process(&$process) {
         global $DB;
         $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
+        process_proceeded::event_from_process($process)->trigger();
         if ($step) {
-            process_proceeded::event_from_process($process)->trigger();
             $process->stepindex++;
             $process->waiting = false;
             $process->timestepchanged = time();
