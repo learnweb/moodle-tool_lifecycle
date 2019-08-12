@@ -1,6 +1,0 @@
-{
-  "plugintypes": {
-    "lifecycletrigger": "admin\/tool\/lifecycle\/trigger",
-    "lifecyclestep": "admin\/tool\/lifecycle\/step"
-  }
-}
