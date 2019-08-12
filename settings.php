@@ -54,4 +54,11 @@ if ($hassiteconfig) {
             }
         }
     }
+
+    $steps = core_component::get_plugin_list('lifecyclestep');
+    foreach ($steps as $step => $path) {
+        if (file_exists($settingsfile = $path . '/settings.php')) {
+            include($settingsfile);
+        }
+    }
 }
