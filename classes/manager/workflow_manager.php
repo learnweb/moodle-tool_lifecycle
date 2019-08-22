@@ -229,49 +229,41 @@ class workflow_manager {
      */
     public static function handle_action($action, $workflowid) {
         global $OUTPUT;
-        $confirm = optional_param('confirm', 0, PARAM_BOOL);
+        if (!empty($action)) {
+            require_sesskey();
+        }
         if ($action === ACTION_WORKFLOW_ACTIVATE) {
             self::activate_workflow($workflowid);
-        }
-        if ($action === ACTION_UP_WORKFLOW) {
+        } else if ($action === ACTION_UP_WORKFLOW) {
             self::change_sortindex($workflowid, true);
-        }
-        if ($action === ACTION_DOWN_WORKFLOW) {
+        } else if ($action === ACTION_DOWN_WORKFLOW) {
             self::change_sortindex($workflowid, false);
-        }
-        if ($action === ACTION_WORKFLOW_DUPLICATE) {
+        } else if ($action === ACTION_WORKFLOW_DUPLICATE) {
             self::duplicate_workflow($workflowid);
-        }
-        if ($action === ACTION_WORKFLOW_BACKUP) {
+        } else if ($action === ACTION_WORKFLOW_BACKUP) {
             self::backup_workflow($workflowid);
-        }
-        if ($action === ACTION_WORKFLOW_DISABLE) {
-            if (confirm_sesskey()) {
-                self::disable($workflowid);
-            }
-        }
-        if ($action === ACTION_WORKFLOW_ABORTDISABLE) {
-            if (confirm_sesskey()) {
-                self::disable($workflowid);
-                self::abortprocesses($workflowid);
-            }
-        }
-        if ($action === ACTION_WORKFLOW_ABORT) {
-            if (confirm_sesskey()) {
-                self::abortprocesses($workflowid);
-            }
-        }
-        if ($action === ACTION_WORKFLOW_DELETE) {
+        } else if ($action === ACTION_WORKFLOW_DISABLE) {
+            self::disable($workflowid);
+        } else if ($action === ACTION_WORKFLOW_ABORTDISABLE) {
+            self::disable($workflowid);
+            self::abortprocesses($workflowid);
+        } else if ($action === ACTION_WORKFLOW_ABORT) {
+            self::abortprocesses($workflowid);
+        } else if ($action === ACTION_WORKFLOW_DELETE) {
             // Check workflow wasn't already deleted, in case someone refreshes the page.
             if (self::get_workflow($workflowid) &&
-                self::is_removable($workflowid) &&
-                confirm_sesskey()) {
+                self::is_removable($workflowid)) {
                 self::remove($workflowid);
             } else {
                 echo $OUTPUT->notification(get_string('workflow_not_removeable', 'tool_lifecycle')
                     , 'warning'); // TODO these notifications aren't shown properly currently.
             }
+        } else {
+            // If no action has been called. Continue.
+            return;
         }
+        // In case of a called action, redirect to mainview.
+        redirect(new \moodle_url('/admin/tool/lifecycle/adminsettings.php'));
     }
 
     private static function render_demand_confirm($action, $workflowid, $message) {
