@@ -40,7 +40,7 @@ Feature: Add a workflow definition activate it
     And I press "Back"
     Then I should see the tool "View Workflow Steps" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I should see the tool "Duplicate Workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
-    And I should see the tool "Edit Title" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
+    And I should see the tool "Edit General Settings" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I should see the tool "Delete Workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I should not see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
     When I press "Activate"
@@ -48,7 +48,7 @@ Feature: Add a workflow definition activate it
     And I should not see the table "tool_lifecycle_workflow_definitions"
     # And I should not see the tool "View Workflow Steps" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table # won't work because table doesnt exist when only workflow
     # And I should see the tool "Duplicate Workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
-    # And I should see the tool "Edit Title" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
+    # And I should see the tool "Edit General Settings" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     # And I should not see the tool "Delete Workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     When I click on the tool "View Workflow Steps" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
     Then I should not see the tool "Edit" in any row of the "tool_lifecycle_workflows" table
