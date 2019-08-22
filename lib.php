@@ -63,6 +63,10 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
         return null;
     }
 
+    if (!has_capability('tool/lifecycle:managecourses', $context)) {
+        return null;
+    }
+
     $url = null;
     $settingnode = null;
 
