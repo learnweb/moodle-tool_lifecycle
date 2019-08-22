@@ -85,6 +85,7 @@ class form_workflow_instance extends \moodleform {
 
         $elementname = 'rollbackdelay';
         $mform->addElement('duration', $elementname, get_string('workflow_rollbackdelay', 'tool_lifecycle'));
+        $mform->addHelpButton($elementname, 'workflow_rollbackdelay', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->rollbackdelay);
@@ -94,6 +95,7 @@ class form_workflow_instance extends \moodleform {
 
         $elementname = 'finishdelay';
         $mform->addElement('duration', $elementname, get_string('workflow_finishdelay', 'tool_lifecycle'));
+        $mform->addHelpButton($elementname, 'workflow_finishdelay', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->finishdelay);
@@ -103,6 +105,7 @@ class form_workflow_instance extends \moodleform {
 
         $elementname = 'delayforallworkflows';
         $mform->addElement('checkbox', $elementname, get_string('workflow_delayforallworkflows', 'tool_lifecycle'));
+        $mform->addHelpButton($elementname, 'workflow_delayforallworkflows', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_BOOL);
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->delayforallworkflows);

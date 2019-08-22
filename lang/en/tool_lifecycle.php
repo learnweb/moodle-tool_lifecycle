@@ -73,8 +73,15 @@ $string['workflow_title_help'] = 'Workflow title (visible for admins only).';
 $string['workflow_displaytitle'] = 'Displayed workflow title';
 $string['workflow_displaytitle_help'] = 'This title is displayed to users when managing their courses.';
 $string['workflow_rollbackdelay'] = 'Delay in case of rollback';
+$string['workflow_rollbackdelay_help'] = 'If a course was rolled back within a process instance of this workflow, 
+this value describes the time until a process for this combination of course and workflow can be started again.';
 $string['workflow_finishdelay'] = 'Delay in case of finished course';
+$string['workflow_finishdelay_help'] = 'If a course has finished a process instance of this workflow, 
+this value describes the time until a process for this combination of course and workflow can be started again.';
 $string['workflow_delayforallworkflows'] = 'Delay for all Workflows?';
+$string['workflow_delayforallworkflows_help'] = 'If ticked, the durations on top do not only delay the execution 
+of this workflow for a course, but for all other workflows as well. Thus, until the time passes no process can be started
+for the respective course.';
 $string['workflow_active'] = 'Active';
 $string['workflow_processes'] = 'Active processes';
 $string['workflow_timeactive'] = 'Active since';
