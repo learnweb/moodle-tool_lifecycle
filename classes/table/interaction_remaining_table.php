@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\table;
 
+use tool_lifecycle\manager\lib_manager;
 use tool_lifecycle\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die;
@@ -40,11 +41,27 @@ class interaction_remaining_table extends interaction_table {
 
         $this->availabletools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
 
-        $fields = "c.id as courseid, p.id as processid, c.fullname as coursefullname, c.shortname as courseshortname, " .
-                  "cc.name as category ";
-        $from = '{course} c left join ' .
-            '{tool_lifecycle_process} p on p.courseid = c.id ' .
-            'left join {course_categories} cc on c.category = cc.id';
+        // COALESCE returns l.time if l.time != null and 0 otherwise.
+        // We need to do this, so that courses without any action have a smaller timestamp than courses with an recorded action.
+        // Otherwise, it would mess up the sorting.
+        $fields = "c.id as courseid, p.id AS processid, c.fullname AS coursefullname, c.shortname AS courseshortname, " .
+                  "cc.name AS category, COALESCE(l.time, 0) AS lastmodified, l.userid, l.action, s.subpluginname, " .
+                   get_all_user_name_fields(true, 'u');
+        $from = '{course} c ' .
+            'LEFT JOIN (' .
+                /* This Subquery creates a table with the one record per course from {tool_lifecycle_action_log}
+                   with the highest id (the newest record per course) */
+                'SELECT * FROM {tool_lifecycle_action_log} a ' .
+                'INNER JOIN ( ' .
+                    'SELECT b.courseid as cid, MAX(b.id) as maxlogid ' .
+                    'FROM {tool_lifecycle_action_log} b ' .
+                    'GROUP BY b.courseid ' .
+                ') m ON a.courseid = m.cid AND a.id = m.maxlogid ' .
+            ') l ON c.id = l.courseid ' .
+            'LEFT JOIN {tool_lifecycle_process} p ON p.courseid = c.id ' .
+            'LEFT JOIN {course_categories} cc ON c.category = cc.id ' .
+            'LEFT JOIN {tool_lifecycle_step} s ON l.workflowid = s.workflowid AND l.stepindex = s.sortindex ' .
+            'LEFT JOIN {user} u ON l.userid = u.id';
 
         $ids = implode(',', $courseids);
 
@@ -53,8 +70,11 @@ class interaction_remaining_table extends interaction_table {
             $where = 'c.id IN ('. $ids . ')';
         }
 
-        $this->column_nosort = array('category', 'status', 'tools');
-        $this->set_sql($fields, $from, $where, []);
+        $order = ' ORDER BY lastmodified DESC';
+
+        $this->sortable(false);
+        $this->set_sql($fields, $from, $where . $order, []);
+        $this->set_count_sql("SELECT COUNT(1) FROM {course} c WHERE $where");
         $this->define_baseurl($PAGE->url);
         $this->init();
     }
@@ -63,13 +83,13 @@ class interaction_remaining_table extends interaction_table {
      * Initialises the columns of the table.
      */
     public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'category', 'status', 'tools']);
+        $this->define_columns(['courseid', 'coursefullname', 'category', 'status', 'lastmodified', 'tools']);
         $this->define_headers([
             get_string('course'),
-            get_string('shortnamecourse'),
-            get_string('fullnamecourse'),
+            get_string('coursename', 'tool_lifecycle'),
             get_string('category'),
             get_string('status', 'tool_lifecycle'),
+            get_string('lastaction', 'tool_lifecycle'),
             get_string('tools', 'tool_lifecycle'),
         ]);
         $this->setup();
@@ -108,6 +128,32 @@ class interaction_remaining_table extends interaction_table {
         }
 
         return $OUTPUT->render($menu);
+    }
+
+    public function col_status($row) {
+        $processstatus = parent::col_status($row);
+        // If current process has status, show status.
+        if ($processstatus != '') {
+            return $processstatus;
+        }
+        // Otherwise, if there is no action saved for this process, show nothing.
+        if (!$row->subpluginname) {
+            return '';
+        }
+        // Otherwise, show latest action commited by user.
+        global $CFG;
+        $userlink = \html_writer::link($CFG->wwwroot . '/user/profile.php?id=' . $row->userid, fullname($row));
+        $interactionlib = lib_manager::get_step_interactionlib($row->subpluginname);
+        return $interactionlib->get_action_string($row->action, $userlink);
+    }
+
+    public function col_lastmodified($row) {
+        if (!$row->lastmodified) {
+            return '';
+        }
+
+        $dateformat = get_string('strftimedatetime', 'core_langconfig');
+        return userdate($row->lastmodified, $dateformat);
     }
 
 }

@@ -55,21 +55,13 @@ abstract class interaction_table extends \table_sql {
     }
 
     /**
-     * Render courseshortname column.
-     * @param $row
-     * @return string course link
-     */
-    public function col_courseshortname($row) {
-        return \html_writer::link(course_get_url($row->courseid), $row->courseshortname);
-    }
-
-    /**
      * Render coursefullname column.
      * @param $row
      * @return string course link
      */
     public function col_coursefullname($row) {
-        return \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
+        $courselink = \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
+        return $courselink . '<br><span class="secondary-info">' . $row->courseshortname . '</span>';
     }
 
     /**

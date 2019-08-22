@@ -25,5 +25,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2018080300;
+$plugin->version  = 2019070200;
 $plugin->component = 'lifecyclestep_duplicate';
