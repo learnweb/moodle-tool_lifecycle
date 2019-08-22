@@ -36,6 +36,10 @@ abstract class workflow_actions_testcase extends \advanced_testcase {
     protected $workflow3;
 
     public function setUp() {
+        global $USER;
+        // We do not need a sesskey check in theses tests.
+        $USER->ignoresesskey = true;
+
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 

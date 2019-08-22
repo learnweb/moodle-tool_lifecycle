@@ -45,6 +45,11 @@ class tool_lifecycle_manually_triggered_process_testcase extends \advanced_testc
     private $course;
 
     public function setUp() {
+        global $USER;
+
+        // We do not need a sesskey check in theses tests.
+        $USER->ignoresesskey = true;
+
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 

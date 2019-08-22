@@ -40,6 +40,7 @@ class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
     private $workflow2;
 
     public function setUp() {
+        global $USER;
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
@@ -54,6 +55,9 @@ class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
         $triggersettings->displayname = self::MANUAL_TRIGGER2_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER2_CAPABILITY;
         $this->workflow2 = $generator->create_manual_workflow($triggersettings);
+
+        // We do not need a sesskey check in theses tests.
+        $USER->ignoresesskey = true;
     }
 
     /**
