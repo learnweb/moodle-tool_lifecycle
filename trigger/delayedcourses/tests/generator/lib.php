@@ -51,4 +51,38 @@ class tool_lifecycle_trigger_delayedcourses_generator extends testing_module_gen
         trigger_manager::insert_or_update($trigger);
         return $trigger;
     }
+
+    /**
+     * Creates a workflow, which delays only for upcomming processes of itself.
+     * @return workflow.
+     */
+    public static function create_workflow() {
+        // Create Workflow.
+        $record = new stdClass();
+        $record->id = null;
+        $record->title = 'myworkflow';
+        $record->rollbackdelay = 10000;
+        $record->finishdelay = 10000;
+        $record->delayforallworkflows = 0;
+        $workflow = workflow::from_record($record);
+        workflow_manager::insert_or_update($workflow);
+        return $workflow;
+    }
+
+    /**
+     * Creates a workflow, which delays upcomming processes for all workflows.
+     * @return workflow.
+     */
+    public static function create_workflow_delaying_for_all_workflows() {
+        // Create Workflow.
+        $record = new stdClass();
+        $record->id = null;
+        $record->title = 'myworkflow';
+        $record->rollbackdelay = 10000;
+        $record->finishdelay = 10000;
+        $record->delayforallworkflows = 1;
+        $workflow = workflow::from_record($record);
+        workflow_manager::insert_or_update($workflow);
+        return $workflow;
+    }
 }

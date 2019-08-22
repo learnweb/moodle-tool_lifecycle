@@ -22,11 +22,52 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
 class delayed_courses_manager {
+
+    public static function set_course_delayed_for_workflow($courseid, $becauserollback, $workfloworid) {
+        global $DB;
+        if (is_object($workfloworid)) {
+            $workflow = $workfloworid;
+        } else {
+            $workflow = workflow_manager::get_workflow($workfloworid);
+        }
+        if ($becauserollback) {
+            $duration = $workflow->rollbackdelay;
+        } else {
+            $duration = $workflow->finishdelay;
+        }
+        if ($workflow->delayforallworkflows) {
+            self::set_course_delayed($courseid, $duration);
+        } else {
+            $delayeduntil = time() + $duration;
+            $record = $DB->get_record('tool_lifecycle_delayed_workf',
+                        array('courseid' => $courseid, 'workflowid' => $workflow->id));
+            if (!$record) {
+                $record = new \stdClass();
+                $record->courseid = $courseid;
+                $record->workflowid = $workflow->id;
+                $record->delayeduntil = $delayeduntil;
+                $DB->insert_record('tool_lifecycle_delayed_workf', $record);
+            } else {
+                if ($record->delayeduntil < $delayeduntil) {
+                    $record->delayeduntil = $delayeduntil;
+                    $DB->update_record('tool_lifecycle_delayed_workf', $record);
+                }
+            }
+        }
+
+    }
+
+    public static function get_delayed_courses_for_workflow($workflowid) {
+        global $DB;
+        $sql = 'SELECT courseid FROM {tool_lifecycle_delayed_workf} WHERE delayeduntil > :now AND workflowid = :workflowid';
+        return $DB->get_fieldset_sql($sql, array('now' => time(), 'workflowid' => $workflowid));
+    }
 
     /**
      * Creates an instance of a delayed course.

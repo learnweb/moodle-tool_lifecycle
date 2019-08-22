@@ -16,6 +16,7 @@
 
 namespace tool_lifecycle\trigger;
 
+use tool_lifecycle\entity\workflow;
 use tool_lifecycle\processor;
 use tool_lifecycle\response\trigger_response;
 use tool_lifecycle\manager\delayed_courses_manager;
@@ -41,12 +42,22 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
     /**@var processor Instance of the lifecycle processor */
     private $processor;
 
+    /**@var workflow Workflow delaying only processes for itself */
+    private $workflow;
+
+    /**@var workflow Workflow delaying processes for all workflows */
+    private $workflowdealayingallworkflows;
+
     public function setUp() {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->processor = new processor();
         $this->triggerinstance = \tool_lifecycle_trigger_delayedcourses_generator::create_trigger_with_workflow();
+        $this->workflow =
+            \tool_lifecycle_trigger_delayedcourses_generator::create_workflow();
+        $this->workflowdealayingallworkflows =
+            \tool_lifecycle_trigger_delayedcourses_generator::create_workflow_delaying_for_all_workflows();
     }
 
     /**
@@ -91,11 +102,8 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
      * Tests that a course is not excluded by this plugin, when there exists a dalayed entry, but it is expired.
      */
     public function test_course_delay_expired() {
-
         $course = $this->getDataGenerator()->create_course();
-
         delayed_courses_manager::set_course_delayed($course->id, -2000);
-
         $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
         $found = false;
         foreach ($recordset as $element) {
@@ -105,5 +113,40 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
         }
         $recordset->close();
         $this->assertFalse($found, 'The course should not have passed through since it should not be delay');
+    }
+
+    /**
+     * Tests that a course is not excluded by this plugin, when it was delayed for a single workflow.
+     */
+    public function test_course_delay_for_single_workflow() {
+        $course = $this->getDataGenerator()->create_course();
+        delayed_courses_manager::set_course_delayed_for_workflow($course->id, true, $this->workflow->id);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $found = false;
+        foreach ($recordset as $element) {
+            if ($course->id == $element->id) {
+                $found = true;
+            }
+        }
+        $recordset->close();
+        $this->assertFalse($found, 'The course should not have passed through since it should not be delay');
+    }
+
+    /**
+     * Tests that a course is excluded by this plugin, when it was delayed for all workflows.
+     */
+    public function test_course_delay_for_all_workflows() {
+        $course = $this->getDataGenerator()->create_course();
+        delayed_courses_manager::set_course_delayed_for_workflow($course->id, true,
+            $this->workflowdealayingallworkflows->id);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $found = false;
+        foreach ($recordset as $element) {
+            if ($course->id == $element->id) {
+                $found = true;
+            }
+        }
+        $recordset->close();
+        $this->assertTrue($found, 'The course should have passed through since it should be delay');
     }
 }

@@ -327,5 +327,60 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019053100, 'tool', 'lifecycle');
     }
 
+    if ($oldversion < 2019062600) {
+
+        $duration = get_config(null, 'lifecycle_duration');
+
+        // Define field rollbackdelay to be added to tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
+        $field = new xmldb_field('rollbackdelay', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'displaytitle');
+
+        // Conditionally launch add field rollbackdelay.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field finishdelay to be added to tool_lifecycle_workflow.
+        $field = new xmldb_field('finishdelay', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'rollbackdelay');
+
+        // Conditionally launch add field finishdelay.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field delayforallworkflows to be added to tool_lifecycle_workflow.
+        $field = new xmldb_field('delayforallworkflows', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, 'finishdelay');
+
+        // Conditionally launch add field delayforallworkflows.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $params = array($duration, $duration);
+
+        $DB->execute('UPDATE {tool_lifecycle_workflow} SET finishdelay = ?, rollbackdelay = ?', $params);
+
+        // Define table tool_lifecycle_delayed_workf to be created.
+        $table = new xmldb_table('tool_lifecycle_delayed_workf');
+
+        // Adding fields to table tool_lifecycle_delayed_workf.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('delayeduntil', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table tool_lifecycle_delayed_workf.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('courseid_fk', XMLDB_KEY_FOREIGN, ['courseid'], 'course', ['id']);
+        $table->add_key('workflowid_fk', XMLDB_KEY_FOREIGN, ['workflowid'], 'tool_lifecycle_workflow', ['id']);
+
+        // Conditionally launch create table for tool_lifecycle_delayed_workf.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2019062600, 'tool', 'lifecycle');
+    }
     return true;
 }
