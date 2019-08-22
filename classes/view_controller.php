@@ -30,6 +30,7 @@ use tool_lifecycle\manager\process_manager;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\table\interaction_log_table;
 use tool_lifecycle\table\interaction_remaining_table;
 use tool_lifecycle\table\interaction_attention_table;
 
@@ -74,6 +75,7 @@ class view_controller {
             "WHERE p.courseid IN (". $listofcourseids . ")");
 
         $requiresinteraction = array();
+        $remainingcourses = $arrayofcourseids;
 
         foreach ($processes as $process) {
             $step = step_manager::get_step_instance($process->stepinstanceid);
@@ -82,7 +84,7 @@ class view_controller {
             if (has_capability($capability, \context_course::instance($process->courseid), null, false) &&
                 !empty(interaction_manager::get_action_tools($step->subpluginname, $process->processid))) {
                 $requiresinteraction[] = $process->courseid;
-                unset($arrayofcourseids[$process->courseid]);
+                unset($remainingcourses[$process->courseid]);
             }
         }
 
@@ -95,7 +97,7 @@ class view_controller {
 
         echo $renderer->box("");
         echo $renderer->heading(get_string('tablecoursesremaining', 'tool_lifecycle'), 3);
-        $table2 = new interaction_remaining_table('tool_lifecycle_remaining', $arrayofcourseids);
+        $table2 = new interaction_remaining_table('tool_lifecycle_remaining', $remainingcourses);
 
         echo $renderer->box_start("lifecycle-enable-overflow lifecycle-table");
         $table2->out(50, false);

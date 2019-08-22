@@ -61,11 +61,10 @@ class interaction_attention_table extends interaction_table {
      * Initialises the columns of the table.
      */
     public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'category', 'status', 'tools', 'date']);
+        $this->define_columns(['courseid', 'coursefullname', 'category', 'status', 'tools', 'date']);
         $this->define_headers([
             get_string('course'),
-            get_string('shortnamecourse'),
-            get_string('fullnamecourse'),
+            get_string('coursename', 'tool_lifecycle'),
             get_string('category'),
             get_string('status', 'tool_lifecycle'),
             get_string('tools', 'tool_lifecycle'),

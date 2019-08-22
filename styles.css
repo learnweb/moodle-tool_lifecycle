@@ -2,7 +2,8 @@
     overflow: initial;
 }
 
-.lifecycle-table span.workflow_displaytitle {
+.lifecycle-table span.workflow_displaytitle,
+.lifecycle-table span.secondary-info {
     color: #888;
     font-size: .9em;
     padding: 0.5em;

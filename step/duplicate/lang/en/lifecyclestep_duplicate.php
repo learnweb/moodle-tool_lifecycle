@@ -30,3 +30,4 @@ $string['duplicate_form'] = 'Enter data';
 $string['duplicate_course_header'] = 'Duplicate Course';
 $string['status_message_duplication'] = 'Duplicated course will be available shortly.';
 $string['status_message_form'] = 'Additional information required';
+$string['action_new_course_data'] = '{$a} supplied new course name';
