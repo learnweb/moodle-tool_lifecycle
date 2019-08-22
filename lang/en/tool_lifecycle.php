@@ -107,6 +107,7 @@ $string['workflow_duplicate_title'] = '{$a} (Copy)';
 $string['deactivated_workflows_list'] = 'List deactivated workflows';
 $string['deactivated_workflows_list_header'] = 'Deactivated workflows';
 $string['workflow_timedeactive'] = 'Deactivated since';
+$string['active_workflows_list'] = 'List active workflows and workflow definitions';
 
 $string['step_type'] = 'Type';
 $string['step_subpluginname'] = 'Subplugin Name';

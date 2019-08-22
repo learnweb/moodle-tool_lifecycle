@@ -53,4 +53,8 @@ echo $renderer->header();
 
 $table->out(50, false);
 
+$surl = new \moodle_url('/admin/tool/lifecycle/adminsettings.php',
+    array('sesskey' => sesskey()));
+echo \html_writer::link($surl, get_string('active_workflows_list', 'tool_lifecycle'));
+
 echo $renderer->footer();
