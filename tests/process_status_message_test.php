@@ -32,13 +32,11 @@ class tool_lifecycle_process_status_message_testcase extends \advanced_testcase 
     const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
     private $workflow;
 
-
     private $generator;
 
     public function setUp() {
         $this->resetAfterTest(false);
         $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
-
         $settings = new stdClass();
         $settings->icon = self::MANUAL_TRIGGER1_ICON;
         $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;

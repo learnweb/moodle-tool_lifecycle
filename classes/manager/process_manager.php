@@ -24,6 +24,8 @@
 namespace tool_lifecycle\manager;
 
 use tool_lifecycle\entity\process;
+use tool_lifecycle\event\process_proceeded;
+use tool_lifecycle\event\process_rollback;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -132,6 +134,7 @@ class process_manager {
     public static function proceed_process(&$process) {
         global $DB;
         $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
+        process_proceeded::event_from_process($process)->trigger();
         if ($step) {
             $process->stepindex++;
             $process->waiting = false;
@@ -159,6 +162,7 @@ class process_manager {
      * @param process $process process the rollback should be triggered for.
      */
     public static function rollback_process($process) {
+        process_rollback::event_from_process($process)->trigger();
         for ($i = $process->stepindex - 1; $i >= 1; $i--) {
             $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $i);
             $lib = lib_manager::get_step_lib($step->subpluginname);
