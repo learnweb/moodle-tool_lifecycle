@@ -163,7 +163,7 @@ class process_manager {
      */
     public static function rollback_process($process) {
         process_rollback::event_from_process($process)->trigger();
-        for ($i = $process->stepindex - 1; $i >= 1; $i--) {
+        for ($i = $process->stepindex; $i >= 1; $i--) {
             $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $i);
             $lib = lib_manager::get_step_lib($step->subpluginname);
             try {
