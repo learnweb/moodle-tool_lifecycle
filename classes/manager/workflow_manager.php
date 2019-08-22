@@ -266,17 +266,6 @@ class workflow_manager {
         redirect(new \moodle_url('/admin/tool/lifecycle/adminsettings.php'));
     }
 
-    private static function render_demand_confirm($action, $workflowid, $message) {
-        global $OUTPUT, $PAGE;
-        $yesurl = new \moodle_url($PAGE->url, array('workflowid' => $workflowid, 'action' => $action,
-            'sesskey' => sesskey(), 'confirm' => 1));
-        $nourl = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
-        $output = $OUTPUT->header();
-        $output .= $OUTPUT->confirm($message, $yesurl, $nourl);
-        $output .= $OUTPUT->footer();
-        echo $output;
-    }
-
     /**
      * Changes the sortindex of a workflow by swapping it with another.
      *
