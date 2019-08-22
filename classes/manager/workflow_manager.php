@@ -396,6 +396,9 @@ class workflow_manager {
             $newtitle = $oldworkflow->title;
         }
         $newworkflow = self::create_workflow($newtitle);
+        $newworkflow->rollbackdelay = $oldworkflow->rollbackdelay;
+        $newworkflow->finishdelay = $oldworkflow->finishdelay;
+        $newworkflow->delayforallworkflows = $oldworkflow->delayforallworkflows;
         self::insert_or_update($newworkflow);
         // Copy trigger and steps using the new workflow id.
         trigger_manager::duplicate_triggers($workflowid, $newworkflow->id);

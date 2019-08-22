@@ -283,6 +283,9 @@ class admin_settings {
                 $workflow = workflow_manager::get_workflow($data->id);
                 $workflow->title = $data->title;
                 $workflow->displaytitle = $data->displaytitle;
+                $workflow->rollbackdelay = $data->rollbackdelay;
+                $workflow->finishdelay = $data->finishdelay;
+                $workflow->delayforallworkflows = property_exists($data, 'delayforallworkflows') ? $data->delayforallworkflows : 0;
                 $newworkflow = false;
             } else {
                 $workflow = workflow::from_record($data);
