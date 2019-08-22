@@ -48,6 +48,5 @@ $string['email_content_html_help'] = 'Set the html template for the content of t
 $string['email:preventdeletion'] = 'Prevent Deletion';
 
 $string['keep_course'] = 'Keep Course';
-$string['status_message_decision_keep'] = 'Course is still needed';
 $string['status_message_requiresattention'] = 'Course is marked for deletion';
 $string['action_prevented_deletion'] = '{$a} prevented deletion';
