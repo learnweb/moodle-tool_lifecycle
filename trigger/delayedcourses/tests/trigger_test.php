@@ -18,8 +18,8 @@ namespace tool_lifecycle\trigger;
 
 use tool_lifecycle\entity\workflow;
 use tool_lifecycle\processor;
-use tool_lifecycle\response\trigger_response;
 use tool_lifecycle\manager\delayed_courses_manager;
+use tool_lifecycle_trigger_delayedcourses_generator as trigger_generator;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -53,11 +53,9 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
         $this->setAdminUser();
 
         $this->processor = new processor();
-        $this->triggerinstance = \tool_lifecycle_trigger_delayedcourses_generator::create_trigger_with_workflow();
-        $this->workflow =
-            \tool_lifecycle_trigger_delayedcourses_generator::create_workflow();
-        $this->workflowdealayingallworkflows =
-            \tool_lifecycle_trigger_delayedcourses_generator::create_workflow_delaying_for_all_workflows();
+        $this->triggerinstance = trigger_generator::create_trigger_with_workflow();
+        $this->workflow = trigger_generator::create_workflow();
+        $this->workflowdealayingallworkflows = trigger_generator::create_workflow_delaying_for_all_workflows();
     }
 
     /**
