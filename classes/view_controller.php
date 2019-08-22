@@ -141,7 +141,7 @@ class view_controller {
         }
 
         // Check if user has capability.
-        $triggersettings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
+        $triggersettings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
         require_capability($triggersettings['capability'], \context_course::instance($courseid), null, false);
 
         // Check if course does not have a running process.

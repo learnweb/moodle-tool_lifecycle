@@ -26,6 +26,7 @@ use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\entity\workflow;
+use tool_lifecycle\settings_type;
 
 /**
  * Tests the field is manual after activating workflows.
@@ -93,8 +94,8 @@ class tool_lifecycle_backup_and_restore_workflow_testcase extends \advanced_test
                 $this->assertEquals($oldstep->$property, $newstep->$property);
             }
             $this->assertEquals($newworkflow->id, $newstep->workflowid);
-            $oldsettings = settings_manager::get_settings($oldstep->id, SETTINGS_TYPE_STEP);
-            $newsettings = settings_manager::get_settings($newstep->id, SETTINGS_TYPE_STEP);
+            $oldsettings = settings_manager::get_settings($oldstep->id, settings_type::STEP);
+            $newsettings = settings_manager::get_settings($newstep->id, settings_type::STEP);
             $lib = \tool_lifecycle\manager\lib_manager::get_step_lib($newstep->subpluginname);
             $settingsdef = $lib->instance_settings();
             foreach ($settingsdef as $def) {
@@ -115,8 +116,8 @@ class tool_lifecycle_backup_and_restore_workflow_testcase extends \advanced_test
                 $this->assertEquals($oldtrig->$property, $newtrig->$property);
             }
             $this->assertEquals($newworkflow->id, $newtrig->workflowid);
-            $oldsettings = settings_manager::get_settings($oldtrig->id, SETTINGS_TYPE_TRIGGER);
-            $newsettings = settings_manager::get_settings($newtrig->id, SETTINGS_TYPE_TRIGGER);
+            $oldsettings = settings_manager::get_settings($oldtrig->id, settings_type::TRIGGER);
+            $newsettings = settings_manager::get_settings($newtrig->id, settings_type::TRIGGER);
             $lib = \tool_lifecycle\manager\lib_manager::get_trigger_lib($newtrig->subpluginname);
             $settingsdef = $lib->instance_settings();
             foreach ($settingsdef as $def) {

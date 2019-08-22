@@ -21,6 +21,7 @@ use tool_lifecycle\entity\workflow;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\settings_type;
 
 /**
  * lifecycletrigger_startdatedelay generator tests
@@ -53,7 +54,7 @@ class tool_lifecycle_trigger_startdatedelay_generator extends testing_module_gen
         // Set delay setting.
         $settings = new stdClass();
         $settings->delay = 16416000;
-        settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
+        settings_manager::save_settings($trigger->id, settings_type::TRIGGER, $trigger->subpluginname, $settings);
 
         return $trigger;
     }

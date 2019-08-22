@@ -23,6 +23,7 @@ use tool_lifecycle\manager\workflow_manager;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\settings_manager;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -104,7 +105,7 @@ class backup_lifecycle_workflow {
             foreach (get_object_vars($trigger) as $prop => $value) {
                 $this->writer->writeAttribute($prop, $value);
             }
-            $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
+            $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
             foreach ($settings as $name => $value) {
                 $this->writer->startElement("setting");
                 $this->writer->writeAttribute('name', $name);
@@ -125,7 +126,7 @@ class backup_lifecycle_workflow {
             foreach (get_object_vars($step) as $prop => $value) {
                 $this->writer->writeAttribute($prop, $value);
             }
-            $settings = settings_manager::get_settings($step->id, SETTINGS_TYPE_STEP);
+            $settings = settings_manager::get_settings($step->id, settings_type::STEP);
             foreach ($settings as $name => $value) {
                 $this->writer->startElement("setting");
                 $this->writer->writeAttribute('name', $name);

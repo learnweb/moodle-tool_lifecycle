@@ -24,6 +24,7 @@ use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\settings_type;
 
 /**
  * tool_lifecycle generator tests
@@ -81,7 +82,7 @@ class tool_lifecycle_generator extends testing_module_generator {
                     "which are defined as defaults in this generator.");
             }
             $step = self::create_step($subpluginname, $subpluginname, $workflow->id);
-            settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, $subpluginname,
+            settings_manager::save_settings($step->id, settings_type::STEP, $subpluginname,
                 self::$defaultsteps[$subpluginname]);
         }
         foreach ($triggernames as $subpluginname) {
@@ -90,7 +91,7 @@ class tool_lifecycle_generator extends testing_module_generator {
                     "which are defined as defaults in this generator.");
             }
             $step = self::create_trigger($subpluginname, $subpluginname, $workflow->id);
-            settings_manager::save_settings($step->id, SETTINGS_TYPE_TRIGGER, $subpluginname,
+            settings_manager::save_settings($step->id, settings_type::TRIGGER, $subpluginname,
                 self::$defaulttrigger[$subpluginname]);
         }
         return $workflow;
@@ -115,7 +116,7 @@ class tool_lifecycle_generator extends testing_module_generator {
         $record->workflowid = $workflow->id;
         $trigger = trigger_subplugin::from_record($record);
         trigger_manager::insert_or_update($trigger);
-        settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $triggersettings);
+        settings_manager::save_settings($trigger->id, settings_type::TRIGGER, $trigger->subpluginname, $triggersettings);
         return $workflow;
     }
 

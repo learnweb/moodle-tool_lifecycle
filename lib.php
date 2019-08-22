@@ -22,31 +22,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-define('ACTION_ENABLE_TRIGGER', 'enable');
-define('ACTION_DISABLE_TRIGGER', 'disable');
-define('ACTION_UP_TRIGGER', 'up_trigger');
-define('ACTION_DOWN_TRIGGER', 'down_trigger');
-define('ACTION_WORKFLOW_TRIGGER', 'workflow_trigger');
-define('ACTION_UP_STEP', 'up_step');
-define('ACTION_DOWN_STEP', 'down_step');
-define('ACTION_UP_WORKFLOW', 'up_workflow');
-define('ACTION_DOWN_WORKFLOW', 'down_workflow');
-define('ACTION_STEP_INSTANCE_FORM', 'step_instance_form');
-define('SETTINGS_TYPE_TRIGGER', 'trigger');
-define('SETTINGS_TYPE_STEP', 'step');
-define('ACTION_TRIGGER_INSTANCE_FORM', 'trigger_instance_form');
-define('ACTION_TRIGGER_INSTANCE_DELETE', 'trigger_instance_delete');
-define('ACTION_STEP_INSTANCE_DELETE', 'step_instance_delete');
-define('ACTION_WORKFLOW_INSTANCE_FROM', 'workflow_instance_form');
-define('ACTION_WORKFLOW_UPLOAD_FROM', 'workflow_upload_form');
-define('ACTION_WORKFLOW_BACKUP', 'workflow_instance_backup');
-define('ACTION_WORKFLOW_DELETE', 'workflow_instance_delete');
-define('ACTION_WORKFLOW_DUPLICATE', 'workflow_instance_duplicate');
-define('ACTION_WORKFLOW_ACTIVATE', 'workflow_instance_activate');
-define('ACTION_WORKFLOW_DISABLE', 'workflow_instance_disable');
-define('ACTION_WORKFLOW_ABORTDISABLE', 'workflow_instance_abortdisable');
-define('ACTION_WORKFLOW_ABORT', 'workflow_instance_abort');
-
 /**
  * Adds a tool_lifecycle link to the course admin menu.
  *

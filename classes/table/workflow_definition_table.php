@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\table;
 
+use tool_lifecycle\action;
 use tool_lifecycle\manager\lib_manager;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\trigger_manager;
@@ -69,7 +70,7 @@ class workflow_definition_table extends workflow_table {
         }
         if (workflow_manager::is_valid($row->id)) {
             return $OUTPUT->single_button(new \moodle_url($PAGE->url,
-                array('action' => ACTION_WORKFLOW_ACTIVATE,
+                array('action' => action::WORKFLOW_ACTIVATE,
                     'sesskey' => sesskey(),
                     'workflowid' => $row->id)),
                 get_string('activateworkflow', 'tool_lifecycle'));
@@ -102,23 +103,23 @@ class workflow_definition_table extends workflow_table {
 
         if (!isset($lib) || $lib->has_multiple_instances()) {
 
-            $action = ACTION_WORKFLOW_INSTANCE_FROM;
+            $action = action::WORKFLOW_INSTANCE_FROM;
             $alt = get_string('editworkflow', 'tool_lifecycle');
             $icon = 't/edit';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
-            $action = ACTION_WORKFLOW_DUPLICATE;
+            $action = action::WORKFLOW_DUPLICATE;
             $alt = get_string('duplicateworkflow', 'tool_lifecycle');
             $icon = 't/copy';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
-            $action = ACTION_WORKFLOW_BACKUP;
+            $action = action::WORKFLOW_BACKUP;
             $alt = get_string('backupworkflow', 'tool_lifecycle');
             $icon = 't/backup';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
             if (!workflow_manager::is_active($row->id)) {
-                $action = ACTION_WORKFLOW_DELETE;
+                $action = action::WORKFLOW_DELETE;
                 $alt = get_string('deleteworkflow', 'tool_lifecycle');
                 $icon = 't/delete';
                 $output .= $this->format_icon_link($action, $row->id, $icon, $alt);

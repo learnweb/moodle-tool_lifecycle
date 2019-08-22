@@ -28,6 +28,7 @@ namespace tool_lifecycle\trigger;
 use coursecat;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\response\trigger_response;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
@@ -52,8 +53,8 @@ class categories extends base_automatic {
 
     public function get_course_recordset_where($triggerid) {
         global $DB, $CFG;
-        $categories = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['categories'];
-        $exclude = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['exclude'] && true;
+        $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
+        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'] && true;
 
         $categories = explode(',', $categories);
         // Use core_course_category for moodle 3.6 and higher.

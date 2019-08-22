@@ -30,6 +30,7 @@ use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\response\step_response;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\process_data_manager;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -81,7 +82,7 @@ class email extends libbase {
         $process = process_manager::get_process_by_id($processid);
         if ($process->timestepchanged < time() - settings_manager::get_settings(
                 $instanceid,
-                SETTINGS_TYPE_STEP
+                settings_type::STEP
                 )['responsetimeout']) {
             return step_response::proceed();
         }
@@ -92,7 +93,7 @@ class email extends libbase {
         global $DB, $PAGE;
         $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
         foreach ($stepinstances as $step) {
-            $settings = settings_manager::get_settings($step->id, SETTINGS_TYPE_STEP);
+            $settings = settings_manager::get_settings($step->id, settings_type::STEP);
             // Set system context, since format_text needs a context.
             $PAGE->set_context(\context_system::instance());
             // Format the raw string in the DB to FORMAT_HTML.

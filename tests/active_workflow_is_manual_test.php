@@ -19,6 +19,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 
+use tool_lifecycle\action;
 use tool_lifecycle\manager\workflow_manager;
 use tool_lifecycle\entity\workflow;
 
@@ -39,6 +40,7 @@ class tool_lifecycle_workflow_is_manual_testcase extends \advanced_testcase {
     private $automaticworkflow;
 
     public function setUp() {
+        global $USER;
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
@@ -51,13 +53,16 @@ class tool_lifecycle_workflow_is_manual_testcase extends \advanced_testcase {
 
         $this->assertNull($this->manualworkflow->manual);
         $this->assertNull($this->automaticworkflow->manual);
+
+        // We do not need a sesskey check in theses tests.
+        $USER->ignoresesskey = true;
     }
 
     /**
      * Test to activate the manual workflow.
      */
     public function test_activate_manual() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->manualworkflow->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->manualworkflow->id);
         $reloadworkflow = workflow_manager::get_workflow($this->manualworkflow->id);
         $this->assertTrue(workflow_manager::is_active($this->manualworkflow->id));
         $this->assertTrue($reloadworkflow->manual);
@@ -67,7 +72,7 @@ class tool_lifecycle_workflow_is_manual_testcase extends \advanced_testcase {
      * Test to activate the automatic workflow.
      */
     public function test_activate_automatic() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->automaticworkflow->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->automaticworkflow->id);
         $reloadworkflow = workflow_manager::get_workflow($this->automaticworkflow->id);
         $this->assertTrue(workflow_manager::is_active($this->automaticworkflow->id));
         $this->assertEquals(false, $reloadworkflow->manual);

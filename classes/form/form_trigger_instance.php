@@ -24,6 +24,7 @@
 
 namespace tool_lifecycle\form;
 
+use tool_lifecycle\action;
 use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\manager\lib_manager;
 use tool_lifecycle\manager\trigger_manager;
@@ -110,7 +111,7 @@ class form_trigger_instance extends \moodleform {
 
         $mform->addElement('hidden', 'action'); // Save the current action.
         $mform->setType('action', PARAM_TEXT);
-        $mform->setDefault('action', ACTION_TRIGGER_INSTANCE_FORM);
+        $mform->setDefault('action', action::TRIGGER_INSTANCE_FORM);
 
         $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_lifecycle'));
 

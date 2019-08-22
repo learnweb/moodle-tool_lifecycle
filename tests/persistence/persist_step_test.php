@@ -18,6 +18,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
 
+use tool_lifecycle\action;
 use \tool_lifecycle\entity\workflow;
 use \tool_lifecycle\manager\step_manager;
 
@@ -97,7 +98,7 @@ class tool_lifecycle_persist_step_testcase extends \advanced_testcase {
             'subpluginname',
             $this->workflow->id);
         // Delete first step.
-        step_manager::handle_action(ACTION_STEP_INSTANCE_DELETE, $step1->id);
+        step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step1->id);
         $step1 = step_manager::get_step_instance($step1->id);
         $step2 = step_manager::get_step_instance($step2->id);
         $step3 = step_manager::get_step_instance($step3->id);
@@ -105,7 +106,7 @@ class tool_lifecycle_persist_step_testcase extends \advanced_testcase {
         $this->assertEquals(1, $step2->sortindex);
         $this->assertEquals(2, $step3->sortindex);
         // Delete third step.
-        step_manager::handle_action(ACTION_STEP_INSTANCE_DELETE, $step3->id);
+        step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step3->id);
         $step3 = step_manager::get_step_instance($step3->id);
         $step2 = step_manager::get_step_instance($step2->id);
         $this->assertNull($step3);
@@ -126,7 +127,7 @@ class tool_lifecycle_persist_step_testcase extends \advanced_testcase {
             $this->workflow->id);
 
         // Delete first step.
-        step_manager::handle_action(ACTION_STEP_INSTANCE_DELETE, $step1->id);
+        step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step1->id);
 
         $step3 = $this->generator->create_step(
             'instance3',

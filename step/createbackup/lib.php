@@ -28,6 +28,7 @@ namespace tool_lifecycle\step;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\response\step_response;
 use tool_lifecycle\manager\backup_manager;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -55,7 +56,7 @@ class createbackup extends libbase {
      */
     public function process_course($processid, $instanceid, $course) {
         if (self::$numberofbackups >= settings_manager::get_settings(
-                $instanceid, SETTINGS_TYPE_STEP)['maximumbackupspercron']) {
+                $instanceid, settings_type::STEP)['maximumbackupspercron']) {
             return step_response::waiting(); // Wait with further backups til the next cron run.
         }
         if (backup_manager::create_course_backup($course->id)) {

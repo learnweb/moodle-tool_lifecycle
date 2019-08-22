@@ -23,8 +23,10 @@
  */
 namespace tool_lifecycle\manager;
 
+use tool_lifecycle\action;
 use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\entity\workflow;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -125,7 +127,7 @@ class trigger_manager extends subplugin_manager {
         if ($record = $DB->get_record('tool_lifecycle_trigger', array('id' => $triggerinstanceid))) {
             $trigger = trigger_subplugin::from_record($record);
             self::remove_from_sortindex($trigger);
-            settings_manager::remove_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
+            settings_manager::remove_settings($trigger->id, settings_type::TRIGGER);
             $DB->delete_records('tool_lifecycle_trigger', (array) $trigger);
         }
         $transaction->allow_commit();
@@ -244,13 +246,13 @@ class trigger_manager extends subplugin_manager {
         global $OUTPUT;
         if ($trigger = self::get_instance($subpluginid)) {
             if (!workflow_manager::is_active($trigger->workflowid)) {
-                if ($action === ACTION_UP_TRIGGER) {
+                if ($action === action::UP_TRIGGER) {
                     self::change_sortindex($subpluginid, true);
                 }
-                if ($action === ACTION_DOWN_TRIGGER) {
+                if ($action === action::DOWN_TRIGGER) {
                     self::change_sortindex($subpluginid, false);
                 }
-                if ($action === ACTION_TRIGGER_INSTANCE_DELETE) {
+                if ($action === action::TRIGGER_INSTANCE_DELETE) {
                     self::remove($subpluginid);
                 }
             } else {
@@ -279,7 +281,7 @@ class trigger_manager extends subplugin_manager {
         global $DB;
         $instances = self::get_triggers_for_workflow($workflowid);
         foreach ($instances as $instance) {
-            settings_manager::remove_settings($instance->id, SETTINGS_TYPE_TRIGGER);
+            settings_manager::remove_settings($instance->id, settings_type::TRIGGER);
         }
         $DB->delete_records('tool_lifecycle_trigger', array('workflowid' => $workflowid));
     }
@@ -292,13 +294,13 @@ class trigger_manager extends subplugin_manager {
     public static function duplicate_triggers($oldworkflowid, $newworkflowid) {
         $triggers = self::get_triggers_for_workflow($oldworkflowid);
         foreach ($triggers as $trigger) {
-            $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
+            $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
 
             $trigger->id = null;
             $trigger->workflowid = $newworkflowid;
             self::insert_or_update($trigger);
 
-            settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
+            settings_manager::save_settings($trigger->id, settings_type::TRIGGER, $trigger->subpluginname, $settings);
         }
 
     }

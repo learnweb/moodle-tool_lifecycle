@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\table;
 
+use tool_lifecycle\action;
 use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\trigger_manager;
@@ -137,7 +138,7 @@ class step_table extends \table_sql {
                 if ($row->sortindex > 1) {
                     $alt = 'up';
                     $icon = 't/up';
-                    $action = ACTION_UP_STEP;
+                    $action = action::UP_STEP;
                     $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
                 } else {
                     $output .= $OUTPUT->spacer();
@@ -145,7 +146,7 @@ class step_table extends \table_sql {
                 if ($row->sortindex < step_manager::count_steps_of_workflow($this->workflowid)) {
                     $alt = 'down';
                     $icon = 't/down';
-                    $action = ACTION_DOWN_STEP;
+                    $action = action::DOWN_STEP;
                     $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
                 } else {
                     $output .= $OUTPUT->spacer();
@@ -157,7 +158,7 @@ class step_table extends \table_sql {
                 if ($row->sortindex > 1) {
                     $alt = 'up';
                     $icon = 't/up';
-                    $action = ACTION_UP_TRIGGER;
+                    $action = action::UP_TRIGGER;
                     $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
                 } else {
                     $output .= $OUTPUT->spacer();
@@ -165,7 +166,7 @@ class step_table extends \table_sql {
                 if ($row->sortindex < trigger_manager::count_triggers_of_workflow($this->workflowid)) {
                     $alt = 'down';
                     $icon = 't/down';
-                    $action = ACTION_DOWN_TRIGGER;
+                    $action = action::DOWN_TRIGGER;
                     $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
                 } else {
                     $output .= $OUTPUT->spacer();
@@ -186,9 +187,9 @@ class step_table extends \table_sql {
         $alt = 'edit';
         $icon = 't/edit';
         if ($row->type == 'step') {
-            $action = ACTION_STEP_INSTANCE_FORM;
+            $action = action::STEP_INSTANCE_FORM;
         } else {
-            $action = ACTION_TRIGGER_INSTANCE_FORM;
+            $action = action::TRIGGER_INSTANCE_FORM;
         }
 
         return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
@@ -204,9 +205,9 @@ class step_table extends \table_sql {
         $alt = 'view';
         $icon = 't/viewdetails';
         if ($row->type == 'step') {
-            $action = ACTION_STEP_INSTANCE_FORM;
+            $action = action::STEP_INSTANCE_FORM;
         } else {
-            $action = ACTION_TRIGGER_INSTANCE_FORM;
+            $action = action::TRIGGER_INSTANCE_FORM;
         }
 
         return  $this->format_icon_link($action, $row->id, $icon, get_string($alt));
@@ -222,9 +223,9 @@ class step_table extends \table_sql {
         $alt = 'delete';
         $icon = 't/delete';
         if ($row->type == 'step') {
-            $action = ACTION_STEP_INSTANCE_DELETE;
+            $action = action::STEP_INSTANCE_DELETE;
         } else {
-            $action = ACTION_TRIGGER_INSTANCE_DELETE;
+            $action = action::TRIGGER_INSTANCE_DELETE;
         }
         return $this->format_icon_link($action, $row->id, $icon, get_string($alt));
     }

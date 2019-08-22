@@ -24,11 +24,13 @@
 
 namespace tool_lifecycle\manager;
 
+use tool_lifecycle\action;
 use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\entity\workflow;
 use tool_lifecycle\local\backup\backup_lifecycle_workflow;
 use tool_lifecycle\local\exporter\workflow_exporter;
 use tool_lifecycle\local\data\manual_trigger_tool;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -186,7 +188,7 @@ class workflow_manager {
         $triggers = self::get_active_manual_workflow_triggers();
         $tools = array();
         foreach ($triggers as $trigger) {
-            $settings = settings_manager::get_settings($trigger->id, SETTINGS_TYPE_TRIGGER);
+            $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
             $tools[] = new manual_trigger_tool($trigger->id, $settings['icon'], $settings['displayname'], $settings['capability']);
         }
         return $tools;
@@ -232,24 +234,24 @@ class workflow_manager {
         if (!empty($action)) {
             require_sesskey();
         }
-        if ($action === ACTION_WORKFLOW_ACTIVATE) {
+        if ($action === action::WORKFLOW_ACTIVATE) {
             self::activate_workflow($workflowid);
-        } else if ($action === ACTION_UP_WORKFLOW) {
+        } else if ($action === action::UP_WORKFLOW) {
             self::change_sortindex($workflowid, true);
-        } else if ($action === ACTION_DOWN_WORKFLOW) {
+        } else if ($action === action::DOWN_WORKFLOW) {
             self::change_sortindex($workflowid, false);
-        } else if ($action === ACTION_WORKFLOW_DUPLICATE) {
+        } else if ($action === action::WORKFLOW_DUPLICATE) {
             self::duplicate_workflow($workflowid);
-        } else if ($action === ACTION_WORKFLOW_BACKUP) {
+        } else if ($action === action::WORKFLOW_BACKUP) {
             self::backup_workflow($workflowid);
-        } else if ($action === ACTION_WORKFLOW_DISABLE) {
+        } else if ($action === action::WORKFLOW_DISABLE) {
             self::disable($workflowid);
-        } else if ($action === ACTION_WORKFLOW_ABORTDISABLE) {
+        } else if ($action === action::WORKFLOW_ABORTDISABLE) {
             self::disable($workflowid);
             self::abortprocesses($workflowid);
-        } else if ($action === ACTION_WORKFLOW_ABORT) {
+        } else if ($action === action::WORKFLOW_ABORT) {
             self::abortprocesses($workflowid);
-        } else if ($action === ACTION_WORKFLOW_DELETE) {
+        } else if ($action === action::WORKFLOW_DELETE) {
             // Check workflow wasn't already deleted, in case someone refreshes the page.
             if (self::get_workflow($workflowid) &&
                 self::is_removable($workflowid)) {
@@ -262,8 +264,10 @@ class workflow_manager {
             // If no action has been called. Continue.
             return;
         }
-        // In case of a called action, redirect to mainview.
-        redirect(new \moodle_url('/admin/tool/lifecycle/adminsettings.php'));
+        if (!defined('PHPUNIT_TEST')) {
+            // In case of a called action, redirect to mainview.
+            redirect(new \moodle_url('/admin/tool/lifecycle/adminsettings.php'));
+        }
     }
 
     /**

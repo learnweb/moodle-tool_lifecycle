@@ -27,6 +27,7 @@ namespace tool_lifecycle\step;
 
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\response\step_response;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -49,7 +50,7 @@ class deletecourse extends libbase {
      */
     public function process_course($processid, $instanceid, $course) {
         if (self::$numberofdeletions >= settings_manager::get_settings(
-            $instanceid, SETTINGS_TYPE_STEP)['maximumdeletionspercron']) {
+            $instanceid, settings_type::STEP)['maximumdeletionspercron']) {
             return step_response::waiting(); // Wait with further deletions til the next cron run.
         }
         delete_course($course->id, true);

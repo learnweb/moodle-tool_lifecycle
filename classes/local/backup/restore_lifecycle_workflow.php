@@ -23,6 +23,7 @@ use tool_lifecycle\manager\workflow_manager;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\settings_manager;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -107,7 +108,7 @@ class restore_lifecycle_workflow {
             switch ($tag) {
                 case 'trigger':
                     $currentsubplugin = new \stdClass();
-                    $currenttype = SETTINGS_TYPE_TRIGGER;
+                    $currenttype = settings_type::TRIGGER;
                     foreach (get_class_vars(trigger_subplugin::class) as $prop => $value) {
                         $currentsubplugin->$prop = $this->reader->getAttribute($prop);
                     }
@@ -115,7 +116,7 @@ class restore_lifecycle_workflow {
                     break;
                 case 'step':
                     $currentsubplugin = new \stdClass();
-                    $currenttype = SETTINGS_TYPE_STEP;
+                    $currenttype = settings_type::STEP;
                     foreach (get_class_vars(step_subplugin::class) as $prop => $value) {
                         $currentsubplugin->$prop = $this->reader->getAttribute($prop);
                     }
@@ -174,9 +175,9 @@ class restore_lifecycle_workflow {
             $step->id = null;
             step_manager::insert_or_update($step);
             foreach ($this->settings as $setting) {
-                if ($setting->type == SETTINGS_TYPE_STEP &&
+                if ($setting->type == settings_type::STEP &&
                     $setting->pluginid == $stepid) {
-                    settings_manager::save_setting($step->id, SETTINGS_TYPE_STEP, $step->subpluginname,
+                    settings_manager::save_setting($step->id, settings_type::STEP, $step->subpluginname,
                         $setting->name, $setting->value);
                 }
             }
@@ -190,9 +191,9 @@ class restore_lifecycle_workflow {
             $trigger->id = null;
             trigger_manager::insert_or_update($trigger);
             foreach ($this->settings as $setting) {
-                if ($setting->type == SETTINGS_TYPE_TRIGGER &&
+                if ($setting->type == settings_type::TRIGGER &&
                     $setting->pluginid == $triggerid) {
-                    settings_manager::save_setting($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname,
+                    settings_manager::save_setting($trigger->id, settings_type::TRIGGER, $trigger->subpluginname,
                         $setting->name, $setting->value);
                 }
             }

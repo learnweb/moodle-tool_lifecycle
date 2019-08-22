@@ -165,11 +165,11 @@ class admin_settings {
         echo $OUTPUT->heading(get_string('workflow_definition_heading', 'tool_lifecycle'));
 
         echo $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            array('action' => ACTION_WORKFLOW_INSTANCE_FROM, 'sesskey' => sesskey())),
+            array('action' => action::WORKFLOW_INSTANCE_FROM, 'sesskey' => sesskey())),
             get_string('add_workflow', 'tool_lifecycle'));
 
         echo $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            array('action' => ACTION_WORKFLOW_UPLOAD_FROM, 'sesskey' => sesskey())),
+            array('action' => action::WORKFLOW_UPLOAD_FROM, 'sesskey' => sesskey())),
             get_string('upload_workflow', 'tool_lifecycle'));
 
         $table = new workflow_definition_table('tool_lifecycle_workflow_definitions');
@@ -260,9 +260,9 @@ class admin_settings {
         $uploadform = new form_upload_workflow($PAGE->url);
         $PAGE->set_title(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));
 
-        if ($action === ACTION_WORKFLOW_INSTANCE_FROM) {
+        if ($action === action::WORKFLOW_INSTANCE_FROM) {
             $this->view_workflow_instance_form($instanceform);
-        } else if ($action === ACTION_WORKFLOW_UPLOAD_FROM) {
+        } else if ($action === action::WORKFLOW_UPLOAD_FROM) {
             $renderer->render_workflow_upload_form($uploadform);
         } else {
             $this->process_instance_form($instanceform);
@@ -365,14 +365,14 @@ class workflow_settings {
         if (workflow_manager::is_editable($this->workflowid)) {
             $triggers = trigger_manager::get_chooseable_trigger_types();
             echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
-                array('action' => ACTION_TRIGGER_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
+                array('action' => action::TRIGGER_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
                 'triggername', $triggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
         }
 
         if (workflow_manager::is_editable($this->workflowid)) {
             $steps = step_manager::get_step_types();
             echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
-                array('action' => ACTION_STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
+                array('action' => action::STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
                 'stepname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
         }
 
@@ -471,13 +471,13 @@ class workflow_settings {
         trigger_manager::handle_action($action, $subplugin);
         workflow_manager::handle_action($action, $subplugin);
 
-        if ($action === ACTION_TRIGGER_INSTANCE_FORM) {
+        if ($action === action::TRIGGER_INSTANCE_FORM) {
             if ($this->handle_trigger_instance_form()) {
                 return;
             }
         }
 
-        if ($action === ACTION_STEP_INSTANCE_FORM) {
+        if ($action === action::STEP_INSTANCE_FORM) {
             if ($this->handle_step_instance_form()) {
                 return;
             }
@@ -522,7 +522,7 @@ class workflow_settings {
                     }
                     trigger_manager::insert_or_update($triggertomodify);
                     // Save local subplugin settings.
-                    settings_manager::save_settings($triggertomodify->id, SETTINGS_TYPE_TRIGGER, $data->subpluginname, $data);
+                    settings_manager::save_settings($triggertomodify->id, settings_type::TRIGGER, $data->subpluginname, $data);
                 }
                 return false;
             } else {
@@ -549,7 +549,7 @@ class workflow_settings {
             if (!$triggertomodify) {
                 return false;
             }
-            $triggersettings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
+            $triggersettings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
         } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
             $subpluginname = $name;
         } else if ($name = optional_param('triggername', null, PARAM_ALPHA)) {
@@ -594,7 +594,7 @@ class workflow_settings {
                 }
                 step_manager::insert_or_update($step);
                 // Save local subplugin settings.
-                settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, $form->subpluginname, $data);
+                settings_manager::save_settings($step->id, settings_type::STEP, $form->subpluginname, $data);
             }
         } else {
             $this->view_step_instance_form($form);
@@ -619,7 +619,7 @@ class workflow_settings {
             if (!$steptomodify) {
                 return false;
             }
-            $stepsettings = settings_manager::get_settings($stepid, SETTINGS_TYPE_STEP);
+            $stepsettings = settings_manager::get_settings($stepid, settings_type::STEP);
         } else if ($name = optional_param('subpluginname', null, PARAM_ALPHA)) {
             $subpluginname = $name;
         } else if ($name = optional_param('stepname', null, PARAM_ALPHA)) {

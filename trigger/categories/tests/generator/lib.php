@@ -21,6 +21,7 @@ use tool_lifecycle\entity\workflow;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\settings_type;
 
 /**
  * lifecycletrigger_categories generator tests
@@ -54,7 +55,7 @@ class tool_lifecycle_trigger_categories_generator extends testing_module_generat
         $settings = new stdClass();
         $settings->categories = $data['categories'];
         $settings->exclude = $data['exclude'];
-        settings_manager::save_settings($trigger->id, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
+        settings_manager::save_settings($trigger->id, settings_type::TRIGGER, $trigger->subpluginname, $settings);
 
         return $trigger;
     }

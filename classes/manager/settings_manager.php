@@ -23,6 +23,8 @@
  */
 namespace tool_lifecycle\manager;
 
+use tool_lifecycle\settings_type;
+
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__.'/../../lib.php');
 
@@ -63,7 +65,7 @@ class settings_manager {
             $data = (array) $data;
         }
 
-        if ($type == SETTINGS_TYPE_TRIGGER) {
+        if ($type == settings_type::TRIGGER) {
             $lib = lib_manager::get_trigger_lib($subpluginname);
         } else {
             $lib = lib_manager::get_step_lib($subpluginname);
@@ -121,7 +123,7 @@ class settings_manager {
 
         self::validate_type($type);
 
-        if ($type == SETTINGS_TYPE_TRIGGER) {
+        if ($type == settings_type::TRIGGER) {
             $instance = trigger_manager::get_instance($instanceid);
         } else {
             $instance = step_manager::get_step_instance($instanceid);
@@ -131,7 +133,7 @@ class settings_manager {
             throw new \coding_exception('The subplugin instance does not exist.');
         }
 
-        if ($type == SETTINGS_TYPE_TRIGGER) {
+        if ($type == settings_type::TRIGGER) {
             $lib = lib_manager::get_trigger_lib($instance->subpluginname);
         } else {
             $lib = lib_manager::get_step_lib($instance->subpluginname);
@@ -170,7 +172,7 @@ class settings_manager {
      * @throws \coding_exception
      */
     private static function validate_type($type) {
-        if ($type !== SETTINGS_TYPE_TRIGGER && $type !== SETTINGS_TYPE_STEP) {
+        if ($type !== settings_type::TRIGGER && $type !== settings_type::STEP) {
             throw new \coding_exception('Invalid type value. "step" or "trigger" expected.');
         }
     }

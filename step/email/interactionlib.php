@@ -32,6 +32,7 @@ use tool_lifecycle\manager\process_manager;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\response\step_interactive_response;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -99,7 +100,7 @@ class interactionemail extends interactionlibbase {
      * @return null
      */
     public function get_due_date($processid, $stepid) {
-        $settings = settings_manager::get_settings($stepid, SETTINGS_TYPE_STEP);
+        $settings = settings_manager::get_settings($stepid, settings_type::STEP);
         $process = process_manager::get_process_by_id($processid);
         $date = $settings['responsetimeout'] + $process->timestepchanged;
         // TODO default format -- seconds -> not in this class !

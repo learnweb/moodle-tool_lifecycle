@@ -16,6 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use tool_lifecycle\action;
 use tool_lifecycle\manager\workflow_manager;
 
 /**
@@ -42,7 +43,7 @@ class tool_lifecycle_process_status_message_testcase extends \advanced_testcase 
         $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $settings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
         $this->workflow = $this->generator->create_manual_workflow($settings);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow->id);
 
         $this->generator->create_step("instance1", "createbackup", $this->workflow->id);
         $this->generator->create_step("instance2", "email", $this->workflow->id);

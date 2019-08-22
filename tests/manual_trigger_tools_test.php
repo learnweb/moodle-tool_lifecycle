@@ -16,6 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use tool_lifecycle\action;
 use tool_lifecycle\manager\workflow_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\local\data\manual_trigger_tool;
@@ -59,7 +60,7 @@ class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
      * Test getting manual trigger tools of active workflows.
      */
     public function test_get_manual_trigger_tools_for_one_active_workflow() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
         $tools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
         $this->assertCount(1, $tools);
         $this->assertContainsOnly(manual_trigger_tool::class, $tools);
@@ -73,8 +74,8 @@ class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
      * Test getting manual trigger tools of active workflows.
      */
     public function test_get_manual_trigger_tools_for_active_workflows() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
         $tools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
         $this->assertCount(2, $tools);
         $this->assertContainsOnly(\tool_lifecycle\local\data\manual_trigger_tool::class, $tools);

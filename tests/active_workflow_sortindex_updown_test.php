@@ -20,6 +20,7 @@ require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/workflow_actions_testcase.php');
 
+use tool_lifecycle\action;
 use tool_lifecycle\manager\workflow_manager;
 
 /**
@@ -37,10 +38,10 @@ class tool_lifecycle_workflow_sortindex_updown_testcase extends workflow_actions
      * Test to put down the first workflow.
      */
     public function test_down_first() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
-        workflow_manager::handle_action(ACTION_DOWN_WORKFLOW, $this->workflow1->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(action::DOWN_WORKFLOW, $this->workflow1->id);
 
         $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
         $this->assertEquals(2, $reloadworkflow->sortindex);
@@ -56,10 +57,10 @@ class tool_lifecycle_workflow_sortindex_updown_testcase extends workflow_actions
      * Test to put down the second workflow.
      */
     public function test_down_second() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
-        workflow_manager::handle_action(ACTION_DOWN_WORKFLOW, $this->workflow2->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(action::DOWN_WORKFLOW, $this->workflow2->id);
 
         $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
         $this->assertEquals(1, $reloadworkflow->sortindex);
@@ -75,10 +76,10 @@ class tool_lifecycle_workflow_sortindex_updown_testcase extends workflow_actions
      * Test to put down the third workflow.
      */
     public function test_down_third() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
-        workflow_manager::handle_action(ACTION_DOWN_WORKFLOW, $this->workflow3->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(action::DOWN_WORKFLOW, $this->workflow3->id);
 
         $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
         $this->assertEquals(1, $reloadworkflow->sortindex);
@@ -94,10 +95,10 @@ class tool_lifecycle_workflow_sortindex_updown_testcase extends workflow_actions
      * Test to put up the third workflow.
      */
     public function test_up_first() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
-        workflow_manager::handle_action(ACTION_UP_WORKFLOW, $this->workflow1->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(action::UP_WORKFLOW, $this->workflow1->id);
 
         $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
         $this->assertEquals(1, $reloadworkflow->sortindex);
@@ -113,10 +114,10 @@ class tool_lifecycle_workflow_sortindex_updown_testcase extends workflow_actions
      * Test to put up the third workflow.
      */
     public function test_up_second() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
-        workflow_manager::handle_action(ACTION_UP_WORKFLOW, $this->workflow2->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(action::UP_WORKFLOW, $this->workflow2->id);
 
         $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
         $this->assertEquals(2, $reloadworkflow->sortindex);
@@ -132,10 +133,10 @@ class tool_lifecycle_workflow_sortindex_updown_testcase extends workflow_actions
      * Test to put up the third workflow.
      */
     public function test_up_third() {
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow1->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow2->id);
-        workflow_manager::handle_action(ACTION_WORKFLOW_ACTIVATE, $this->workflow3->id);
-        workflow_manager::handle_action(ACTION_UP_WORKFLOW, $this->workflow3->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
+        workflow_manager::handle_action(action::UP_WORKFLOW, $this->workflow3->id);
 
         $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
         $this->assertEquals(1, $reloadworkflow->sortindex);

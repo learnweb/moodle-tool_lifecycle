@@ -24,6 +24,7 @@
 
 namespace tool_lifecycle\table;
 
+use tool_lifecycle\action;
 use tool_lifecycle\manager\lib_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\workflow_manager;
@@ -81,12 +82,12 @@ class deactivated_workflows_table extends workflow_table {
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null, array('title' => $alt));
 
-        $action = ACTION_WORKFLOW_DUPLICATE;
+        $action = action::WORKFLOW_DUPLICATE;
         $alt = get_string('duplicateworkflow', 'tool_lifecycle');
         $icon = 't/copy';
         $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
-        $action = ACTION_WORKFLOW_INSTANCE_FROM;
+        $action = action::WORKFLOW_INSTANCE_FROM;
         $alt = get_string('editworkflow', 'tool_lifecycle');
         $icon = 't/edit';
         $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
@@ -95,7 +96,7 @@ class deactivated_workflows_table extends workflow_table {
             $alt = get_string('abortprocesses', 'tool_lifecycle');
             $icon = 't/stop';
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
-                array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_ABORT, 'sesskey' => sesskey()));
+                array('workflowid' => $row->id, 'action' => action::WORKFLOW_ABORT, 'sesskey' => sesskey()));
             $confirmaction = new \confirm_action(get_string('abortprocesses_confirm', 'tool_lifecycle'));
             $output .= $OUTPUT->action_icon($url,
                 new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
@@ -109,7 +110,7 @@ class deactivated_workflows_table extends workflow_table {
             $alt = get_string('deleteworkflow', 'tool_lifecycle');
             $icon = 't/delete';
             $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
-                array('workflowid' => $row->id, 'action' => ACTION_WORKFLOW_DELETE, 'sesskey' => sesskey()));
+                array('workflowid' => $row->id, 'action' => action::WORKFLOW_DELETE, 'sesskey' => sesskey()));
             $confirmaction = new \confirm_action(get_string('deleteworkflow_confirm', 'tool_lifecycle'));
             $output .= $OUTPUT->action_icon($url,
                 new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),

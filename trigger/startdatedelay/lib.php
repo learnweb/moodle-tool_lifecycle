@@ -27,6 +27,7 @@ namespace tool_lifecycle\trigger;
 
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\response\trigger_response;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
@@ -51,7 +52,7 @@ class startdatedelay extends base_automatic {
     }
 
     public function get_course_recordset_where($triggerid) {
-        $delay = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER)['delay'];
+        $delay = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['delay'];
         $where = "{course}.startdate < :startdatedelay";
         $params = array(
             "startdatedelay" => time() - $delay,

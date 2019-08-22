@@ -29,6 +29,7 @@ use DateTime;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\response\trigger_response;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
@@ -52,7 +53,7 @@ class specificdate extends base_automatic {
     }
 
     public function get_course_recordset_where($triggerid) {
-        $settings = settings_manager::get_settings($triggerid, SETTINGS_TYPE_TRIGGER);
+        $settings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
         $lastrun = getdate($settings['timelastrun']);
         $datesraw = $settings['dates'];
         $dates = $this->parse_dates($datesraw);
@@ -83,7 +84,7 @@ class specificdate extends base_automatic {
             if ($timestamp < $current) {
                 $settings['timelastrun'] = $current;
                 $trigger = trigger_manager::get_instance($triggerid);
-                settings_manager::save_settings($triggerid, SETTINGS_TYPE_TRIGGER, $trigger->subpluginname, $settings);
+                settings_manager::save_settings($triggerid, settings_type::TRIGGER, $trigger->subpluginname, $settings);
                 return array('true', array());
             }
         }

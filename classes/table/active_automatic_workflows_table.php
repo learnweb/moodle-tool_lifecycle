@@ -24,6 +24,7 @@
 
 namespace tool_lifecycle\table;
 
+use tool_lifecycle\action;
 use tool_lifecycle\manager\lib_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\workflow_manager;
@@ -75,7 +76,7 @@ class active_automatic_workflows_table extends active_workflows_table {
             if ($row->sortindex > 1) {
                 $alt = 'up';
                 $icon = 't/up';
-                $action = ACTION_UP_WORKFLOW;
+                $action = action::UP_WORKFLOW;
                 $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
             } else {
                 $output .= $OUTPUT->spacer();
@@ -83,7 +84,7 @@ class active_automatic_workflows_table extends active_workflows_table {
             if ($row->sortindex < count(workflow_manager::get_active_automatic_workflows())) {
                 $alt = 'down';
                 $icon = 't/down';
-                $action = ACTION_DOWN_WORKFLOW;
+                $action = action::DOWN_WORKFLOW;
                 $output .= $this->format_icon_link($action, $row->id, $icon, get_string($alt));
             } else {
                 $output .= $OUTPUT->spacer();

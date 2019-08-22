@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\table;
 
+use tool_lifecycle\action;
 use tool_lifecycle\manager\process_manager;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\trigger_manager;
@@ -59,7 +60,7 @@ abstract class workflow_table extends \table_sql {
             return userdate($row->timeactive, get_string('strftimedatetime'), 0);
         }
         return $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            array('action' => ACTION_WORKFLOW_ACTIVATE,
+            array('action' => action::WORKFLOW_ACTIVATE,
                 'sesskey' => sesskey(),
                 'workflowid' => $row->id)),
             get_string('activateworkflow', 'tool_lifecycle'));

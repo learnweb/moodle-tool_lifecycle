@@ -23,7 +23,9 @@
  */
 namespace tool_lifecycle\manager;
 
+use tool_lifecycle\action;
 use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -104,7 +106,7 @@ class step_manager extends subplugin_manager {
         if ($record = $DB->get_record('tool_lifecycle_step', array('id' => $stepinstanceid))) {
             $step = step_subplugin::from_record($record);
             self::remove_from_sortindex($step);
-            settings_manager::remove_settings($step->id, SETTINGS_TYPE_STEP);
+            settings_manager::remove_settings($step->id, settings_type::STEP);
             $DB->delete_records('tool_lifecycle_step', (array) $step);
         }
         $transaction->allow_commit();
@@ -221,13 +223,13 @@ class step_manager extends subplugin_manager {
         global $OUTPUT;
         if ($step = self::get_step_instance($subpluginid)) {
             if (!workflow_manager::is_active($step->workflowid)) {
-                if ($action === ACTION_UP_STEP) {
+                if ($action === action::UP_STEP) {
                     self::change_sortindex($subpluginid, true);
                 }
-                if ($action === ACTION_DOWN_STEP) {
+                if ($action === action::DOWN_STEP) {
                     self::change_sortindex($subpluginid, false);
                 }
-                if ($action === ACTION_STEP_INSTANCE_DELETE) {
+                if ($action === action::STEP_INSTANCE_DELETE) {
                     self::remove($subpluginid);
                 }
             } else {
@@ -272,7 +274,7 @@ class step_manager extends subplugin_manager {
         global $DB;
         $instances = self::get_step_instances($workflowid);
         foreach ($instances as $instance) {
-            settings_manager::remove_settings($instance->id, SETTINGS_TYPE_STEP);
+            settings_manager::remove_settings($instance->id, settings_type::STEP);
         }
         $DB->delete_records('tool_lifecycle_step', array('workflowid' => $workflowid));
     }
@@ -285,13 +287,13 @@ class step_manager extends subplugin_manager {
     public static function duplicate_steps($oldworkflowid, $newworkflowid) {
         $steps = self::get_step_instances($oldworkflowid);
         foreach ($steps as $step) {
-            $settings = settings_manager::get_settings($step->id, SETTINGS_TYPE_STEP);
+            $settings = settings_manager::get_settings($step->id, settings_type::STEP);
 
             $step->id = null;
             $step->workflowid = $newworkflowid;
             self::insert_or_update($step);
             if ($settings) {
-                settings_manager::save_settings($step->id, SETTINGS_TYPE_STEP, $step->subpluginname, $settings);
+                settings_manager::save_settings($step->id, settings_type::STEP, $step->subpluginname, $settings);
             }
         }
     }
