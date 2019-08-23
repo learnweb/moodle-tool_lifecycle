@@ -33,7 +33,7 @@ if ($hassiteconfig) {
         get_string('general_config_header', 'tool_lifecycle'));
     $ADMIN->add('lifecycle_category', $settings);
 
-    $settings->add(new admin_setting_configduration('lifecycle_duration',
+    $settings->add(new admin_setting_configduration('tool_lifecycle/duration',
         get_string('config_delay_duration', 'tool_lifecycle'),
         get_string('config_delay_duration_desc', 'tool_lifecycle'),
         183 * 24 * 60 * 60)); // Dafault value is 180 days.
