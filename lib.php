@@ -58,7 +58,7 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
         navigation_node::NODETYPE_LEAF,
         'tool_lifecycle',
         'tool_lifecycle',
-        new pix_icon('recycle', $pluginname, 'tool_lifecycle')
+        new pix_icon('icon', $pluginname, 'tool_lifecycle')
     );
 
     if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
@@ -73,7 +73,7 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
  */
 function tool_lifecycle_get_fontawesome_icon_map() {
     return [
-        'tool_lifecycle:recycle' => 'fa-recycle',
+        'tool_lifecycle:icon' => 'fa-recycle',
         'tool_lifecycle:t/disable' => 'fa-hand-paper-o',
     ];
 }
