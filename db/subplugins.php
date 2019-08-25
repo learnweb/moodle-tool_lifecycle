@@ -23,7 +23,4 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$subplugins = array(
-    'lifecycletrigger' => 'admin/tool/lifecycle/trigger',
-    'lifecyclestep' => 'admin/tool/lifecycle/step',
-);
+$subplugins = json_decode(file_get_contents(__DIR__ . '/subplugins.json'), true)["plugintypes"];
