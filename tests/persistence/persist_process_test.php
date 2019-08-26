@@ -75,7 +75,7 @@ class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
     public function test_process_rollback() {
         global $CFG;
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
-        delayed_courses_manager::set_course_delayed($process->courseid, $CFG->lifecycle_duration);
+        delayed_courses_manager::set_course_delayed($process->courseid, get_config('tool_lifecycle', 'duration'));
         process_manager::rollback_process($process);
         $loadedprocess = process_manager::get_process_by_id($process->id);
         $this->assertNull($loadedprocess);
