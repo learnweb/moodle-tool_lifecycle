@@ -65,6 +65,21 @@ abstract class interaction_table extends \table_sql {
     }
 
     /**
+     * Render startdate column.
+     * @param $row
+     * @return string human readable date
+     * @throws \coding_exception
+     */
+    public function col_startdate($row) {
+        if ($row->startdate) {
+            $dateformat = get_string('strftimedate', 'langconfig');
+            return userdate($row->startdate, $dateformat);
+        } else {
+            return "-";
+        }
+    }
+
+    /**
      * Render tools column.
      * @param $row
      * @return string pluginname of the subplugin
