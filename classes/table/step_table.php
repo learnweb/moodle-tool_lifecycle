@@ -50,7 +50,7 @@ class step_table extends \table_sql {
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
         $this->workflowid = $workflowid;
         list($sqlwhere, $params) = $DB->get_in_or_equal($workflowid);
-        $this->set_sql("id, subpluginname, instancename, sortindex, sortindex as show, 'step' as type",
+        $this->set_sql("id, subpluginname, instancename, sortindex, sortindex as show_action, 'step' as type",
             '{tool_lifecycle_step}',
             "workflowid " . $sqlwhere, $params);
         $this->define_baseurl(new \moodle_url($PAGE->url, array('workflowid' => $workflowid)));
@@ -67,7 +67,7 @@ class step_table extends \table_sql {
                     'type' => 'trigger',
                     'subpluginname' => $trigger->subpluginname,
                     'sortindex' => $trigger->sortindex,
-                    'show' => $trigger->sortindex,
+                    'show_action' => $trigger->sortindex,
                     'instancename' => $trigger->instancename,
                 )
             ), false);
@@ -83,7 +83,7 @@ class step_table extends \table_sql {
             get_string('step_subpluginname', 'tool_lifecycle'),
             ];
         if (! workflow_manager::is_editable($this->workflowid)) {
-            $columns [] = 'show';
+            $columns [] = 'show_action';
             $headers [] = get_string('step_show', 'tool_lifecycle');
         } else {
             $columns [] = 'sortindex';
@@ -97,7 +97,7 @@ class step_table extends \table_sql {
         $this->define_headers($headers);
 
         if (!workflow_manager::is_editable($this->workflowid)) {
-            $this->sortable(false, 'show');
+            $this->sortable(false, 'show_action');
         } else {
             $this->sortable(false, 'sortindex');
         }
@@ -206,7 +206,7 @@ class step_table extends \table_sql {
      * @param $row
      * @return string action button for editing of the subplugin
      */
-    public function col_show($row) {
+    public function col_show_action($row) {
 
         $alt = 'view';
         $icon = 't/viewdetails';
