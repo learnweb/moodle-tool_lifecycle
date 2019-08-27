@@ -100,9 +100,21 @@ class interactionemail extends interactionlibbase {
      * @return null
      */
     public function get_due_date($processid, $stepid) {
-        $settings = settings_manager::get_settings($stepid, settings_type::STEP);
         $process = process_manager::get_process_by_id($processid);
-        $date = $settings['responsetimeout'] + $process->timestepchanged;
+        $steps = step_manager::get_step_instances($process->workflowid);
+        // Necessary to access steps through counting variable.
+        $steps = array_values($steps);
+        // Keep track of the delays for future email steps and sum them up.
+        $date = $process->timestepchanged;
+        for ($i = $process->stepindex; $i <= count($steps); $i++) {
+            // The variable $i represents the stepindex. The index of $steps starts at 0.
+            /* @var $step step_subplugin */
+            $step = $steps[$i -1];
+            if ($step->subpluginname == 'email') {
+                $settings = settings_manager::get_settings($step->id, settings_type::STEP);
+                $date += $settings['responsetimeout'];
+            }
+        }
         // TODO default format -- seconds -> not in this class !
         return date('d.m.Y', $date);
     }
