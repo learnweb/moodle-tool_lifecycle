@@ -74,6 +74,7 @@ class tool_lifecycle_generator extends testing_module_generator {
         $record = new stdClass();
         $record->id = null;
         $record->title = 'myworkflow';
+        $record->title = 'random displaystring:' . random_string(10);
         $workflow = workflow::from_record($record);
         workflow_manager::insert_or_update($workflow);
         foreach ($stepnames as $subpluginname) {

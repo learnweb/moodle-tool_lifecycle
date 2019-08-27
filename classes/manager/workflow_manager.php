@@ -354,14 +354,19 @@ class workflow_manager {
     }
 
     /**
-     * Creates a workflow with a specific title. Is used to create preset workflows for trigger plugins.
+     * Creates a workflow with a specific title. Is used to create preset workflows for trigger plugins or for
+     * duplication of workflows.
      *
-     * @param $title string title of the workflow. Usually the pluginname of the trigger.
+     * @param $title string title of the workflow.
+     * @param $displaytitle string display title of the workflow.
      * @return workflow the created workflow.
      */
-    public static function create_workflow($title) {
+    public static function create_workflow($title, $displaytitle = null) {
         $record = new \stdClass();
         $record->title = $title;
+        if ($displaytitle) {
+            $record->displaytitle = $displaytitle;
+        }
         $workflow = workflow::from_record($record);
         self::insert_or_update($workflow);
         return $workflow;
@@ -380,7 +385,7 @@ class workflow_manager {
         } catch (\coding_exception $e) {
             $newtitle = $oldworkflow->title;
         }
-        $newworkflow = self::create_workflow($newtitle);
+        $newworkflow = self::create_workflow($newtitle, $oldworkflow->displaytitle);
         $newworkflow->rollbackdelay = $oldworkflow->rollbackdelay;
         $newworkflow->finishdelay = $oldworkflow->finishdelay;
         $newworkflow->delayforallworkflows = $oldworkflow->delayforallworkflows;

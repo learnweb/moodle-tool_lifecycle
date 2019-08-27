@@ -74,7 +74,22 @@ class tool_lifecycle_workflow_activate_disable_duplicate_testcase extends workfl
      * Test to deactivate the first workflow.
      */
     public function test_deactivate_first() {
-        // TODO to be implemented.
+        workflow_manager::handle_action(action::WORKFLOW_ABORTDISABLE, $this->workflow1->id);
+        $this->assertFalse(workflow_manager::is_active($this->workflow1->id));
+    }
+
+    /**
+     * Test to duplicate the first workflow.
+     */
+    public function test_duplicate_first() {
+        workflow_manager::handle_action(action::WORKFLOW_DUPLICATE, $this->workflow1->id);
+        $workflows = workflow_manager::get_workflows();
+        $this->assertCount(4, $workflows);
+        $duplicate = array_pop($workflows);
+        $this->assertEquals($this->workflow1->displaytitle, $duplicate->displaytitle);
+        $workflow1stepcount = count(\tool_lifecycle\manager\step_manager::get_step_instances($this->workflow1->id));
+        $duplicatestepcount = count(\tool_lifecycle\manager\step_manager::get_step_instances($duplicate->id));
+        $this->assertEquals($workflow1stepcount, $duplicatestepcount);
     }
 
 }
