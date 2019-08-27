@@ -104,11 +104,14 @@ class interaction_manager {
     /**
      * Returns the capability a user has to have to make decisions for a specific course within the step.
      * @param string $subpluginname name of the step
-     * @return string capability.
+     * @return string|false name of the capability or false if the step has no interaction defined.
      */
     public static function get_relevant_capability($subpluginname) {
         $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
-        return $interactionlib->get_relevant_capability();
+        if ($interactionlib) {
+            return $interactionlib->get_relevant_capability();
+        }
+        return false;
     }
 
     /**
