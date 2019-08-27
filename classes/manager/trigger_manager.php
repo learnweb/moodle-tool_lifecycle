@@ -243,7 +243,6 @@ class trigger_manager extends subplugin_manager {
      * @param int $subpluginid id of the step instance
      */
     public static function handle_action($action, $subpluginid) {
-        global $OUTPUT;
         if ($trigger = self::get_instance($subpluginid)) {
             if (!workflow_manager::is_active($trigger->workflowid)) {
                 if ($action === action::UP_TRIGGER) {
@@ -256,7 +255,8 @@ class trigger_manager extends subplugin_manager {
                     self::remove($subpluginid);
                 }
             } else {
-                echo $OUTPUT->notification(get_string('active_workflow_not_changeable', 'tool_lifecycle'), 'warning');
+                \core\notification::add(get_string('active_workflow_not_changeable', 'tool_lifecycle'),
+                    \core\notification::WARNING);
             }
         }
     }

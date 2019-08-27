@@ -200,11 +200,11 @@ class workflow_manager {
      * @param int $workflowid id of the workflow
      */
     public static function activate_workflow($workflowid) {
-        global $DB, $OUTPUT;
+        global $DB;
         if (!self::is_valid($workflowid)) {
-            echo $OUTPUT->notification(
+            \core\notification::add(
                 get_string('invalid_workflow_cannot_be_activated', 'tool_lifecycle'),
-                'warning');
+                \core\notification::WARNING);
             return;
         }
         $transaction = $DB->start_delegated_transaction();
@@ -230,7 +230,6 @@ class workflow_manager {
      * @param int $workflowid id of the workflow
      */
     public static function handle_action($action, $workflowid) {
-        global $OUTPUT;
         if (!empty($action)) {
             require_sesskey();
         }
@@ -257,8 +256,8 @@ class workflow_manager {
                 self::is_removable($workflowid)) {
                 self::remove($workflowid);
             } else {
-                echo $OUTPUT->notification(get_string('workflow_not_removeable', 'tool_lifecycle')
-                    , 'warning'); // TODO these notifications aren't shown properly currently.
+                \core\notification::add(get_string('workflow_not_removeable', 'tool_lifecycle')
+                    , \core\notification::WARNING);
             }
         } else {
             // If no action has been called. Continue.

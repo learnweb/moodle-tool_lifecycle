@@ -493,7 +493,7 @@ class workflow_settings {
      * @throws \coding_exception
      */
     private function handle_trigger_instance_form() {
-        global $OUTPUT, $PAGE;
+        global $PAGE;
         $subpluginname = null;
         $triggertomodify = null;
         $triggersettings = null;
@@ -509,9 +509,9 @@ class workflow_settings {
             if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
                 // In case the workflow was active, we do not allow changes to the steps or trigger.
                 if (!workflow_manager::is_editable($this->workflowid)) {
-                    echo $OUTPUT->notification(
+                    \core\notification::add(
                         get_string('active_workflow_not_changeable', 'tool_lifecycle'),
-                        'warning');
+                        \core\notification::WARNING);
                 } else {
                     if (!empty($data->id)) {
                         $triggertomodify = trigger_manager::get_instance($data->id);
@@ -566,7 +566,7 @@ class workflow_settings {
      * @return bool True, if no further action handling or output should be conducted.
      */
     private function handle_step_instance_form() {
-        global $OUTPUT, $PAGE;
+        global $PAGE;
         $steptomodify = null;
         $subpluginname = null;
         $stepsettings = null;
@@ -582,9 +582,9 @@ class workflow_settings {
         } else if ($form->is_submitted() && $form->is_validated() && $data = $form->get_submitted_data()) {
             // In case the workflow was active, we do not allow changes to the steps or trigger.
             if (!workflow_manager::is_editable($this->workflowid)) {
-                echo $OUTPUT->notification(
+                \core\notification::add(
                     get_string('active_workflow_not_changeable', 'tool_lifecycle'),
-                    'warning');
+                    \core\notification::WARNING);
             } else {
                 if (!empty($data->id)) {
                     $step = step_manager::get_step_instance($data->id);
