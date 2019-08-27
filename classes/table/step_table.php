@@ -50,7 +50,7 @@ class step_table extends \table_sql {
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
         $this->workflowid = $workflowid;
         list($sqlwhere, $params) = $DB->get_in_or_equal($workflowid);
-        $this->set_sql("id, subpluginname, instancename, sortindex, 'step' as type",
+        $this->set_sql("id, subpluginname, instancename, sortindex, sortindex as show, 'step' as type",
             '{tool_lifecycle_step}',
             "workflowid " . $sqlwhere, $params);
         $this->define_baseurl(new \moodle_url($PAGE->url, array('workflowid' => $workflowid)));
@@ -67,6 +67,7 @@ class step_table extends \table_sql {
                     'type' => 'trigger',
                     'subpluginname' => $trigger->subpluginname,
                     'sortindex' => $trigger->sortindex,
+                    'show' => $trigger->sortindex,
                     'instancename' => $trigger->instancename,
                 )
             ), false);
@@ -94,7 +95,12 @@ class step_table extends \table_sql {
         }
         $this->define_columns($columns);
         $this->define_headers($headers);
-        $this->sortable(false, 'sortindex');
+
+        if (!workflow_manager::is_editable($this->workflowid)) {
+            $this->sortable(false, 'show');
+        } else {
+            $this->sortable(false, 'sortindex');
+        }
         $this->setup();
     }
 
