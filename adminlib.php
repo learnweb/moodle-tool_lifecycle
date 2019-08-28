@@ -462,14 +462,18 @@ class workflow_settings {
 
     /**
      * This is the entry point for this controller class.
+     * @param $action string action string to be executed.
+     * @param $subpluginid int id of the subplugin associated.
+     * @param $workflowid int id of the workflow associated.
+     * @throws \coding_exception
      */
-    public function execute($action, $subplugin) {
+    public function execute($action, $subpluginid, $workflowid) {
         $this->check_permissions();
 
         // Handle other actions.
-        step_manager::handle_action($action, $subplugin);
-        trigger_manager::handle_action($action, $subplugin);
-        workflow_manager::handle_action($action, $subplugin);
+        step_manager::handle_action($action, $subpluginid);
+        trigger_manager::handle_action($action, $subpluginid);
+        workflow_manager::handle_action($action, $workflowid);
 
         if ($action === action::TRIGGER_INSTANCE_FORM) {
             if ($this->handle_trigger_instance_form()) {
