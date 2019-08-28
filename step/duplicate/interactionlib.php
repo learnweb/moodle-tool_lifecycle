@@ -47,7 +47,7 @@ class interactionduplicate extends interactionlibbase {
      * @return string capability string.
      */
     public function get_relevant_capability() {
-        return 'lifecyclestep/email:preventdeletion';
+        return 'lifecyclestep/duplicate:enterdata';
     }
 
     /**

@@ -15,21 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for duplicate step
- *
- * @package tool_lifecycle_step
- * @subpackage duplicate
- * @copyright  2018 Tobias Reischmann WWU
+ * Capability definitions for the duplication step subplugin
+ * @package    lifecycle_step
+ * @subpackage duplication
+ * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Duplicate Step';
+$capabilities = array(
 
-$string['duplicate_form'] = 'Enter data';
+    'lifecyclestep/duplicate:enterdata' => array(
+        'contextlevel' => CONTEXT_COURSE,
+        'captype' => 'write',
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+        ),
+        'clonepermissionsfrom' => 'tool/lifecycle:managecourses'
+    ),
+);
 
-$string['duplicate_course_header'] = 'Duplicate Course';
-$string['status_message_duplication'] = 'Duplicated course will be available shortly.';
-$string['status_message_form'] = 'Additional information required';
-$string['action_new_course_data'] = '{$a} supplied new course name';
 
-$string['duplicate:enterdata'] = 'Enter data for course duplication';
+
