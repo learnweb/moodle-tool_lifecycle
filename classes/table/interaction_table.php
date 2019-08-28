@@ -83,8 +83,8 @@ abstract class interaction_table extends \table_sql {
             return '';
         }
 
-        $dateformat = get_string('strftimedatetime', 'core_langconfig');
-        return userdate($row->lastmodified, $dateformat);
+        $dateformat = get_string('strftimedate', 'core_langconfig');
+        return userdate($row->startdate, $dateformat);
     }
 
     /**
