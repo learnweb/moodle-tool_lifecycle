@@ -46,15 +46,6 @@ abstract class interaction_table extends \table_sql {
     public abstract function init();
 
     /**
-     * Render courseid column.
-     * @param $row
-     * @return string course link
-     */
-    public function col_courseid($row) {
-        return \html_writer::link(course_get_url($row->courseid), $row->courseid);
-    }
-
-    /**
      * Render coursefullname column.
      * @param $row
      * @return string course link
