@@ -217,10 +217,12 @@ class step_manager extends subplugin_manager {
      * Handles an action for a workflow step.
      * @param string $action action to be executed
      * @param int $subpluginid id of the step instance
+     * @param int $workflowid id of the workflow
      */
-    public static function handle_action($action, $subpluginid) {
-        if ($step = self::get_step_instance($subpluginid)) {
-            if (!workflow_manager::is_active($step->workflowid)) {
+    public static function handle_action($action, $subpluginid, $workflowid) {
+        $step = self::get_step_instance($subpluginid);
+        if ($step && $step->workflowid == $workflowid ) {
+            if (!workflow_manager::is_active($workflowid)) {
                 if ($action === action::UP_STEP) {
                     self::change_sortindex($subpluginid, true);
                 }

@@ -471,8 +471,8 @@ class workflow_settings {
         $this->check_permissions();
 
         // Handle other actions.
-        step_manager::handle_action($action, $subpluginid);
-        trigger_manager::handle_action($action, $subpluginid);
+        step_manager::handle_action($action, $subpluginid, $workflowid);
+        trigger_manager::handle_action($action, $subpluginid, $workflowid);
         workflow_manager::handle_action($action, $workflowid);
 
         if ($action === action::TRIGGER_INSTANCE_FORM) {

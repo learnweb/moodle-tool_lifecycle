@@ -240,11 +240,13 @@ class trigger_manager extends subplugin_manager {
     /**
      * Handles an action for a workflow step.
      * @param string $action action to be executed
-     * @param int $subpluginid id of the step instance
+     * @param int $subpluginid id of the trigger instance
+     * @param int $workflowid id of the workflow
      */
-    public static function handle_action($action, $subpluginid) {
-        if ($trigger = self::get_instance($subpluginid)) {
-            if (!workflow_manager::is_active($trigger->workflowid)) {
+    public static function handle_action($action, $subpluginid, $workflowid) {
+        $trigger = self::get_instance($subpluginid);
+        if ($trigger && $trigger->workflowid == $workflowid ) {
+            if (!workflow_manager::is_active($workflowid)) {
                 if ($action === action::UP_TRIGGER) {
                     self::change_sortindex($subpluginid, true);
                 }
