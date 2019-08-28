@@ -245,11 +245,14 @@ class workflow_manager {
             self::backup_workflow($workflowid);
         } else if ($action === action::WORKFLOW_DISABLE) {
             self::disable($workflowid);
+            return; // Return, since we do not want to redirect outside to deactivated workflows.
         } else if ($action === action::WORKFLOW_ABORTDISABLE) {
             self::disable($workflowid);
             self::abortprocesses($workflowid);
+            return; // Return, since we do not want to redirect outside to deactivated workflows.
         } else if ($action === action::WORKFLOW_ABORT) {
             self::abortprocesses($workflowid);
+            return; // Return, since we do not want to redirect outside to deactivated workflows.
         } else if ($action === action::WORKFLOW_DELETE) {
             // Check workflow wasn't already deleted, in case someone refreshes the page.
             if (self::get_workflow($workflowid) &&
