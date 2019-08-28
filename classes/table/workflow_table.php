@@ -88,10 +88,11 @@ abstract class workflow_table extends \table_sql {
         if ($triggers) {
             $triggerstring = $triggers[0]->instancename;
             for ($i = 1; $i < count($triggers); $i++) {
-                $triggerstring .= ' ';
+                $triggerstring .= ', ';
                 $triggerstring .= $triggers[$i]->instancename;
             }
         }
+        return $triggerstring;
     }
 
     /**
