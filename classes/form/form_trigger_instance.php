@@ -93,8 +93,7 @@ class form_trigger_instance extends \moodleform {
             $this->lib = lib_manager::get_trigger_lib($this->subpluginname);
         }
 
-        $editable = workflow_manager::is_editable($workflowid);
-        parent::__construct($url, null, 'post', '', null, $editable);
+        parent::__construct($url, null, 'post', '', null);
     }
 
     /**
@@ -136,7 +135,7 @@ class form_trigger_instance extends \moodleform {
         }
 
         // For active workflows, we do not want the form to be editable.
-        if ($this->workflowid && workflow_manager::is_active($this->workflowid)) {
+        if ($this->workflowid && !workflow_manager::is_editable($this->workflowid)) {
             $this->add_cancel_button();
         } else {
             $this->add_action_buttons();
@@ -184,7 +183,7 @@ class form_trigger_instance extends \moodleform {
         }
 
         // For active workflows, we do not want the form to be editable.
-        if ($this->workflowid && workflow_manager::is_active($this->workflowid)) {
+        if ($this->workflowid && !workflow_manager::is_editable($this->workflowid)) {
             // The group buttonar is the array of submit buttons. For inactive workflows this is only a cancel button.
             $mform->hardFreezeAllVisibleExcept(array('buttonar'));
         }
