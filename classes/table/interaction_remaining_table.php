@@ -45,7 +45,7 @@ class interaction_remaining_table extends interaction_table {
         // We need to do this, so that courses without any action have a smaller timestamp than courses with an recorded action.
         // Otherwise, it would mess up the sorting.
         $fields = "c.id as courseid, p.id AS processid, c.fullname AS coursefullname, c.shortname AS courseshortname, " .
-                  "cc.name AS category, COALESCE(l.time, 0) AS lastmodified, l.userid, l.action, s.subpluginname, " .
+                  "c.startdate, cc.name AS category, COALESCE(l.time, 0) AS lastmodified, l.userid, l.action, s.subpluginname, " .
                    get_all_user_name_fields(true, 'u');
         $from = '{course} c ' .
             'LEFT JOIN (' .
@@ -72,7 +72,7 @@ class interaction_remaining_table extends interaction_table {
 
         $order = ' ORDER BY lastmodified DESC';
 
-        $this->sortable(false);
+        $this->no_sorting(array('status', 'tools'));
         $this->set_sql($fields, $from, $where . $order, []);
         $this->set_count_sql("SELECT COUNT(1) FROM {course} c WHERE $where");
         $this->define_baseurl($PAGE->url);
@@ -83,11 +83,11 @@ class interaction_remaining_table extends interaction_table {
      * Initialises the columns of the table.
      */
     public function init() {
-        $this->define_columns(['courseid', 'coursefullname', 'category', 'status', 'lastmodified', 'tools']);
+        $this->define_columns(['coursefullname', 'category', 'startdate', 'status', 'lastmodified', 'tools']);
         $this->define_headers([
-            get_string('course'),
             get_string('coursename', 'tool_lifecycle'),
             get_string('category'),
+            get_string('startdate'),
             get_string('status', 'tool_lifecycle'),
             get_string('lastaction', 'tool_lifecycle'),
             get_string('tools', 'tool_lifecycle'),

@@ -38,7 +38,8 @@ class interaction_attention_table extends interaction_table {
         global $PAGE;
 
         $fields = "p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, " .
-            "cc.name as category , s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname as subpluginname";
+            "c.startdate, cc.name as category, s.id as stepinstanceid, s.instancename as stepinstancename, " .
+            "s.subpluginname as subpluginname";
         $from = '{tool_lifecycle_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
             '{tool_lifecycle_step} s ' .
@@ -51,7 +52,7 @@ class interaction_attention_table extends interaction_table {
             $where = 'p.courseid IN (' . $ids . ')';
         }
 
-        $this->column_nosort = array('category', 'status', 'tools');
+        $this->column_nosort = array('status', 'tools');
         $this->set_sql($fields, $from, $where, []);
         $this->define_baseurl($PAGE->url);
         $this->init();
@@ -61,11 +62,11 @@ class interaction_attention_table extends interaction_table {
      * Initialises the columns of the table.
      */
     public function init() {
-        $this->define_columns(['courseid', 'coursefullname', 'category', 'status', 'tools', 'date']);
+        $this->define_columns(['coursefullname', 'category', 'startdate', 'status', 'tools', 'date']);
         $this->define_headers([
-            get_string('course'),
             get_string('coursename', 'tool_lifecycle'),
             get_string('category'),
+            get_string('startdate'),
             get_string('status', 'tool_lifecycle'),
             get_string('tools', 'tool_lifecycle'),
             get_string('date', 'tool_lifecycle'),
