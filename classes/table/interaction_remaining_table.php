@@ -72,7 +72,7 @@ class interaction_remaining_table extends interaction_table {
 
         $order = ' ORDER BY lastmodified DESC';
 
-        $this->no_sorting(array('status', 'tools'));
+        $this->column_nosort = array('status', 'tools');
         $this->set_sql($fields, $from, $where . $order, []);
         $this->set_count_sql("SELECT COUNT(1) FROM {course} c WHERE $where");
         $this->define_baseurl($PAGE->url);
