@@ -364,7 +364,7 @@ class workflow_manager {
     public static function create_workflow($title, $displaytitle = null) {
         $record = new \stdClass();
         $record->title = $title;
-        if ($displaytitle) {
+        if (!is_null($displaytitle)) {
             $record->displaytitle = $displaytitle;
         }
         $workflow = workflow::from_record($record);
