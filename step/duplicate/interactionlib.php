@@ -99,7 +99,7 @@ class interactionduplicate extends interactionlibbase {
      *      - rollback: the step has finished and respective controller class should rollback the process.
      */
     public function handle_interaction($process, $step, $action = 'default') {
-        global $PAGE, $DB, $OUTPUT;
+        global $PAGE, $DB;
         $form = new form_duplicate($PAGE->url, $process->id, $step->id);
         if ($form->is_cancelled()) {
             return step_interactive_response::rollback();
@@ -111,7 +111,7 @@ class interactionduplicate extends interactionlibbase {
                 }
 
                 $foundcoursenamestring = implode(',', $foundcoursenames);
-                echo $OUTPUT->notification(get_string('shortnametaken', '', $foundcoursenamestring));
+                \core\notification::add(get_string('shortnametaken', '', $foundcoursenamestring));
                 $this->render_form($form);
                 return step_interactive_response::still_processing();
             }
