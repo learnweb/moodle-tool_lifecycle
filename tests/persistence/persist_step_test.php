@@ -98,7 +98,7 @@ class tool_lifecycle_persist_step_testcase extends \advanced_testcase {
             'subpluginname',
             $this->workflow->id);
         // Delete first step.
-        step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step1->id);
+        step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step1->id, $this->workflow->id);
         $step1 = step_manager::get_step_instance($step1->id);
         $step2 = step_manager::get_step_instance($step2->id);
         $step3 = step_manager::get_step_instance($step3->id);
@@ -106,7 +106,7 @@ class tool_lifecycle_persist_step_testcase extends \advanced_testcase {
         $this->assertEquals(1, $step2->sortindex);
         $this->assertEquals(2, $step3->sortindex);
         // Delete third step.
-        step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step3->id);
+        step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step3->id, $this->workflow->id);
         $step3 = step_manager::get_step_instance($step3->id);
         $step2 = step_manager::get_step_instance($step2->id);
         $this->assertNull($step3);
@@ -127,7 +127,7 @@ class tool_lifecycle_persist_step_testcase extends \advanced_testcase {
             $this->workflow->id);
 
         // Delete first step.
-        step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step1->id);
+        step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step1->id, $this->workflow->id);
 
         $step3 = $this->generator->create_step(
             'instance3',
