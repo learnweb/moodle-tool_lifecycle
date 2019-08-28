@@ -1,0 +1,12 @@
+[submodule "step/adminapprove"]
+	path = step/adminapprove
+	url = git@github.com:learnweb/moodle-lifecyclestep_adminapprove.git
+[submodule "trigger/semindependent"]
+	path = trigger/semindependent
+	url = git@github.com:learnweb/moodle-lifecycletrigger_semindependent.git
+[submodule "trigger/byrole"]
+	path = trigger/byrole
+	url = git@github.com:learnweb/moodle-lifecycletrigger_byrole.git
+[submodule "step/makeinvisible"]
+	path = step/makeinvisible
+	url = git@github.com:learnweb/moodle-lifecyclestep_makeinvisible.git
