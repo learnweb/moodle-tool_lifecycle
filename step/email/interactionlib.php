@@ -108,8 +108,8 @@ class interactionemail extends interactionlibbase {
         $date = $process->timestepchanged;
         for ($i = $process->stepindex; $i <= count($steps); $i++) {
             // The variable $i represents the stepindex. The index of $steps starts at 0.
-            /* @var $step step_subplugin */
-            $step = $steps[$i -1];
+            /* @var $step step_subplugin class entry of the subplugin step */
+            $step = $steps[$i - 1];
             if ($step->subpluginname == 'email') {
                 $settings = settings_manager::get_settings($step->id, settings_type::STEP);
                 $date += $settings['responsetimeout'];
