@@ -85,7 +85,16 @@ class tool_lifecycle_workflow_activate_disable_duplicate_testcase extends workfl
         workflow_manager::handle_action(action::WORKFLOW_DUPLICATE, $this->workflow1->id);
         $workflows = workflow_manager::get_workflows();
         $this->assertCount(4, $workflows);
-        $duplicate = array_pop($workflows);
+
+        // Retrieve the duplicated workflow.
+        $duplicate = null;
+        $existingworkflowids = [$this->workflow1->id, $this->workflow2->id, $this->workflow3->id];
+        foreach ($workflows as $workflow) {
+            if (!array_search($workflow->id, $existingworkflowids)) {
+                $duplicate = $workflow;
+                break;
+            }
+        }
         $this->assertEquals($this->workflow1->displaytitle, $duplicate->displaytitle);
         $workflow1stepcount = count(\tool_lifecycle\manager\step_manager::get_step_instances($this->workflow1->id));
         $duplicatestepcount = count(\tool_lifecycle\manager\step_manager::get_step_instances($duplicate->id));
