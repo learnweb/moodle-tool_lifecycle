@@ -30,9 +30,9 @@ $string['lifecycle:managecourses'] = 'Darf Kurse in tool_lifecycle verwalten.';
 
 $string['general_config_header'] = "Allgemein & Subplugins";
 $string['config_delay_duration'] = 'Standardlänge eines Kursausschlusses';
-$string['config_delay_duration_desc'] = 'Diese Einstellung definiert den Standardlänge einer Kursausschlusses in einem Workflow,
-falls ein Prozess des Workflows zurückgesetzt oder beendigt wird. Die Länge des Kursausschlusses besagt, wie lange es dauert, bis
-der Kurs wieder vom Workflow bearbeitet wird.';
+$string['config_delay_duration_desc'] = 'Diese Einstellung definiert den Standardlänge einer Kursausschlusses in einem Workflow
+ falls ein Prozess des Workflows zurückgesetzt oder beendigt wird. Die Länge des Kursausschlusses besagt, wie lange es dauert, bis
+ der Kurs wieder vom Workflow bearbeitet wird.';
 $string['active_processes_list_header'] = 'Aktive Prozesse';
 $string['adminsettings_heading'] = 'Workflow-Einstellungen';
 $string['active_manual_workflows_heading'] = 'Aktive manuelle Workflows';
@@ -77,13 +77,13 @@ $string['workflow_displaytitle'] = 'Angezeigter Titel des Workflows';
 $string['workflow_displaytitle_help'] = 'Dieser Titel wird Nutzern beim Verwalten ihrer Kurse angezeigt.';
 $string['workflow_rollbackdelay'] = 'Kursauschluss bei Zurücksetzten';
 $string['workflow_rollbackdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs 
-gestarted werden kann, nachdem der Kurs innerhalb eines Prozesses dieses Workflows zurückgesetzt wurde.';
+ gestarted werden kann, nachdem der Kurs innerhalb eines Prozesses dieses Workflows zurückgesetzt wurde.';
 $string['workflow_finishdelay'] = 'Kursauschluss bei Beendigung';
 $string['workflow_finishdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs 
-gestarted werden kann, nachdem der Kurs ein Prozesses dieses Workflows beendingt hat.';
+ gestarted werden kann, nachdem der Kurs ein Prozesses dieses Workflows beendingt hat.';
 $string['workflow_delayforallworkflows'] = 'Ausschluss für alle Workflows?';
 $string['workflow_delayforallworkflows_help'] = 'Falls ja, wird ein Kurs für die oben genannte Zeit nicht nur von diesem, sondern 
-von allen Workflows ausgeschlossen. Das heißt, bis die Zeit abgelaufen ist, kann kein Prozess für den Kurs gestartet werden.';
+ von allen Workflows ausgeschlossen. Das heißt, bis die Zeit abgelaufen ist, kann kein Prozess für den Kurs gestartet werden.';
 $string['workflow_active'] = 'Aktive';
 $string['workflow_processes'] = 'Aktive Prozesse';
 $string['workflow_timeactive'] = 'Aktiv seit';
