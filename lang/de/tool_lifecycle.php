@@ -76,13 +76,13 @@ $string['workflow_title_help'] = 'Titel des Workflows (nur sichtbar für Admins)
 $string['workflow_displaytitle'] = 'Angezeigter Titel des Workflows';
 $string['workflow_displaytitle_help'] = 'Dieser Titel wird Nutzern beim Verwalten ihrer Kurse angezeigt.';
 $string['workflow_rollbackdelay'] = 'Kursauschluss bei Zurücksetzten';
-$string['workflow_rollbackdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs 
+$string['workflow_rollbackdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs
  gestarted werden kann, nachdem der Kurs innerhalb eines Prozesses dieses Workflows zurückgesetzt wurde.';
 $string['workflow_finishdelay'] = 'Kursauschluss bei Beendigung';
-$string['workflow_finishdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs 
+$string['workflow_finishdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs
  gestarted werden kann, nachdem der Kurs ein Prozesses dieses Workflows beendingt hat.';
 $string['workflow_delayforallworkflows'] = 'Ausschluss für alle Workflows?';
-$string['workflow_delayforallworkflows_help'] = 'Falls ja, wird ein Kurs für die oben genannte Zeit nicht nur von diesem, sondern 
+$string['workflow_delayforallworkflows_help'] = 'Falls ja, wird ein Kurs für die oben genannte Zeit nicht nur von diesem, sondern
  von allen Workflows ausgeschlossen. Das heißt, bis die Zeit abgelaufen ist, kann kein Prozess für den Kurs gestartet werden.';
 $string['workflow_active'] = 'Aktive';
 $string['workflow_processes'] = 'Aktive Prozesse';
