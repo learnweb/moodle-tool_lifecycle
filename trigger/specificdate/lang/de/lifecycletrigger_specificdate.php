@@ -15,18 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for manual trigger
+ * Lang strings for categories delay trigger
  *
  * @package tool_lifecycle_trigger
- * @subpackage manual
- * @copyright  2018 WWU
+ * @subpackage startdatedelay
+ * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Manual trigger';
-$string['setting_capability'] = 'Capability';
-$string['setting_capability_help'] = 'The Moodle Capability needed to see and invoke a workflow using this trigger, e.g. "enrol/manual:enrol". Please see Moodle Access API documentation for details.';
-$string['setting_icon'] = 'Icon';
-$string['setting_icon_help'] = 'The Moodle icon to be showed to the user for this trigger, e.g. "core/tick". A full list of possible icons can be found at Moodle documentation.';
-$string['setting_displayname'] = 'Action name';
-$string['setting_displayname_help'] = 'A name for the trigger action displayed to the user.';
+$string['pluginname'] = 'Bestimmtes Datum - Trigger';
+
+$string['dates'] = 'Daten, an denen der Workflow ausgeführt werden soll.';
+$string['dates_desc'] = 'Ein Datum pro Zeile in dem Format Tag.Monat';
+$string['timelastrun'] = 'Datum, an dem der Trigger zuletzt ausgeführt wurde.';
+$string['dates_not_parseable'] = 'Daten müssen in dem Format Tag.Monat sein!';

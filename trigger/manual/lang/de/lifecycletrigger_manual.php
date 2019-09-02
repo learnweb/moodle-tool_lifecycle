@@ -23,10 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Manual trigger';
-$string['setting_capability'] = 'Capability';
-$string['setting_capability_help'] = 'The Moodle Capability needed to see and invoke a workflow using this trigger, e.g. "enrol/manual:enrol". Please see Moodle Access API documentation for details.';
+$string['pluginname'] = 'Manueller Trigger';
+$string['setting_capability'] = 'Berechtigung';
+$string['setting_capability_help'] = 'Die Moodle-Berechtigung, die ein Nutzer benötigt, um einen Workflow mit diesem Trigger zu sehen und auszulösen, z.B. "enrol/manual:enrol". Bitte schauen Sie sich die Moodle Access API für Details an.';
 $string['setting_icon'] = 'Icon';
-$string['setting_icon_help'] = 'The Moodle icon to be showed to the user for this trigger, e.g. "core/tick". A full list of possible icons can be found at Moodle documentation.';
-$string['setting_displayname'] = 'Action name';
-$string['setting_displayname_help'] = 'A name for the trigger action displayed to the user.';
+$string['setting_icon_help'] = 'Das Moodle-Icon das dem Nutzer für diesen Trigger angezeigt wird, z.B. "core/tick". Die ganze Liste möglicher Icons kann in der Moodle-Dokumentation gefunden werden.';
+$string['setting_displayname'] = 'Aktionsname';
+$string['setting_displayname_help'] = 'Der Name für die Triggeraktion, der dem Nutzer angezeigt wird.';

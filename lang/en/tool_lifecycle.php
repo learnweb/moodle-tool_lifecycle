@@ -31,7 +31,7 @@ $string['lifecycle:managecourses'] = 'May manage courses in tool_lifecycle';
 $string['general_config_header'] = "General & Subplugins";
 $string['config_delay_duration'] = 'Default duration of a course delay';
 $string['config_delay_duration_desc'] = 'This setting defines the default delay duration of a workflow
-in case on of its processes is rolled back or finishes.
+in case one of its processes is rolled back or finishes.
 The delay duration determines how long a course will be excepted from being processed again in either of the cases.';
 $string['active_processes_list_header'] = 'Active Processes';
 $string['adminsettings_heading'] = 'Workflow Settings';
@@ -61,7 +61,7 @@ $string['error_wrong_trigger_selected'] = 'You tried to request a non-manual tri
 $string['lifecycle_task'] = 'Run the life cycle processes';
 
 $string['trigger_subpluginname'] = 'Subplugin Name';
-$string['trigger_subpluginname_help'] = 'Choose the subplugin that you want to use for triggering. After selection, press "reload" to show the options for the subplugin.';
+$string['trigger_subpluginname_help'] = 'Step subplugin/trigger title (visible for admins only).';
 $string['trigger_instancename'] = 'Instance Name';
 $string['trigger_instancename_help'] = 'Trigger instance title (visible for admins only).';
 $string['trigger_enabled'] = 'Enabled';
