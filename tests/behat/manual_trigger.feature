@@ -16,6 +16,7 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | teacher1 | C2 | editingteacher |
       | teacher1 | C3 | teacher |
 
+  @javascript
   Scenario: Test displayed action tools for different capabilities
     Given I log in as "admin"
     # Allow teacher role to view courses in life cycle view
@@ -48,6 +49,7 @@ Feature: Add a manual trigger and test view and actions as a teacher
     And I should see the tool "Delete course" in the "Course 2" row of the "tool_lifecycle_remaining" table
     And I should not see the tool "Delete course" in the "Course 3" row of the "tool_lifecycle_remaining" table
 
+  @javascript
   Scenario: Manually trigger backup and course deletion
     Given I log in as "admin"
     And I navigate to "Life Cycle > Workflow Settings" in site administration

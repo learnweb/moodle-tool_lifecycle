@@ -1,4 +1,4 @@
-@tool @tool_lifecycle
+@tool @tool_lifecycle @javascript
 Feature: Add a workflow with a manual trigger and a duplicate step and test the interaction as a teacher
 
   Background:

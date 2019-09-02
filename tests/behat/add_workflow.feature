@@ -1,6 +1,7 @@
 @tool @tool_lifecycle
 Feature: Add a workflow definition
 
+  @javascript
   Scenario: Add a new workflow definition without steps
   For displaying the additional trigger settings the "Save changes" button is used.
     Given I log in as "admin"
