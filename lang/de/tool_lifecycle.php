@@ -23,8 +23,8 @@
  */
 
 
-$string['pluginname'] = 'Life Cycle';
-$string['plugintitle'] = 'Life Cycle';
+$string['pluginname'] = 'Kurs-Lebenszyklus';
+$string['plugintitle'] = 'Kurs-Lebenszyklus';
 
 $string['lifecycle:managecourses'] = 'Darf Kurse in tool_lifecycle verwalten.';
 
