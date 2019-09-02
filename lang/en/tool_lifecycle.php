@@ -27,6 +27,7 @@ $string['pluginname'] = 'Life Cycle';
 $string['plugintitle'] = 'Course Life Cycle';
 
 $string['lifecycle:managecourses'] = 'May manage courses in tool_lifecycle';
+$string['managecourses_link'] = 'Manage courses';
 
 $string['general_config_header'] = "General & Subplugins";
 $string['config_delay_duration'] = 'Default duration of a course delay';

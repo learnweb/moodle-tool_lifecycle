@@ -50,15 +50,15 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
     ));
 
     // Add the course life cycle link.
-    $pluginname = get_string('plugintitle', 'tool_lifecycle');
+    $linktext = get_string('managecourses_link', 'tool_lifecycle');
 
     $node = navigation_node::create(
-        $pluginname,
+        $linktext,
         $url,
         navigation_node::NODETYPE_LEAF,
         'tool_lifecycle',
         'tool_lifecycle',
-        new pix_icon('icon', $pluginname, 'tool_lifecycle')
+        new pix_icon('icon', $linktext, 'tool_lifecycle')
     );
 
     if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
