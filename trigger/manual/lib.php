@@ -69,8 +69,14 @@ class manual extends base_manual {
         $mform->setType($elementname, PARAM_TEXT);
 
         $elementname = 'capability';
+        $capabilities = get_all_capabilities();
+        $capabilitynames = array();
+        foreach ($capabilities as $cap) {
+            $capabilitynames []= $cap['name'];
+        }
         $mform->addElement(
-            'text', $elementname, get_string('setting_capability', 'lifecycletrigger_manual')
+            'autocomplete', $elementname, get_string('setting_capability', 'lifecycletrigger_manual'),
+            $capabilitynames
         );
         $mform->addHelpButton($elementname, 'setting_capability', 'lifecycletrigger_manual');
         $mform->setType($elementname, PARAM_CAPABILITY);
