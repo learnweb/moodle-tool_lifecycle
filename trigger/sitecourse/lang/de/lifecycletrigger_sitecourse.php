@@ -23,6 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Site-Kurs ausschließen - Trigger';
+$string['pluginname'] = 'Startseitenkurs ausschließen - Trigger';
 
 $string['delay'] = 'Dieser Trigger wird den Startseitenkurs ausschließen.';

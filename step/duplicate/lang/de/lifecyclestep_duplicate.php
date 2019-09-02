@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Duplizieren-Schritt';
+$string['pluginname'] = 'Kurs-Duplizieren-Schritt';
 
 $string['duplicate_form'] = 'Daten eingeben';
 

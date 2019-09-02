@@ -25,8 +25,8 @@
 
 $string['pluginname'] = 'Manual trigger';
 $string['setting_capability'] = 'Capability';
-$string['setting_capability_help'] = 'The Moodle Capability needed to see and invoke the trigger, e.g. "enrol/manual:enrol". Please see Moodle Access API documentation for details.';
+$string['setting_capability_help'] = 'The Moodle Capability needed to see and invoke a workflow using this trigger, e.g. "enrol/manual:enrol". Please see Moodle Access API documentation for details.';
 $string['setting_icon'] = 'Icon';
 $string['setting_icon_help'] = 'The Moodle icon to be showed to the user for this trigger, e.g. "core/tick". A full list of possible icons can be found at Moodle documentation.';
 $string['setting_displayname'] = 'Action name';
-$string['setting_displayname_help'] = 'A name for the trigger action.';
+$string['setting_displayname_help'] = 'A name for the trigger action displayed to the user.';

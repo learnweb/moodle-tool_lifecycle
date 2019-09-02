@@ -50,7 +50,7 @@ $string['general_settings_header'] = 'Allgemeine Einstellungen';
 $string['followedby_none'] = 'Keine';
 $string['invalid_workflow'] = 'Ungültige Workflowkonfiguration';
 $string['invalid_workflow_details'] = 'Gehe zur Detailanzeige, um einen Trigger für diesen Workflow zu erstellen.';
-$string['active_workflow_not_changeable'] = 'Die Workflow-Instanz wurde bereits aktiviert. Es ist nicht mehr möglich, Es ist nicht mehr möglich, Schritte zu ändern.';
+$string['active_workflow_not_changeable'] = 'Die Workflow-Instanz wurde bereits aktiviert. Es ist nicht mehr möglich, Schritte zu ändern.';
 $string['active_workflow_not_removeable'] = 'Die Workflow-Instanz ist aktiv. Es ist nicht möglich, sie zu entfernen.';
 $string['workflow_not_removeable'] = 'Es ist nicht möglich, diese Workflow-Instanz zu entfernen. Vielleicht hat sie noch laufende Prozesse?';
 $string['invalid_workflow_cannot_be_activated'] = 'Der Workflow kann nicht aktiviert werden, da die Workflowdefinition ungültig ist';
@@ -58,10 +58,10 @@ $string['trigger_does_not_exist'] = 'Der Trigger existiert nicht.';
 $string['cannot_trigger_workflow_manually'] = 'Der Workflow konnte nicht manuell ausgelöst werden.';
 $string['error_wrong_trigger_selected'] = 'Sie haben einen nichtmanuellen Trigger ausgewählt.';
 
-$string['lifecycle_task'] = 'Führt den Lifecycleprozess aus.';
+$string['lifecycle_task'] = 'Führt den Lifecycle-Prozess aus.';
 
 $string['trigger_subpluginname'] = 'Subplugin Name';
-$string['trigger_subpluginname_help'] = 'Wäheln Sie das Subplugin, dass Sie als Trigger benutzen möchten. Drücken Sie nach der Auswahl "Aktualisieren" um die Optionen für das Subplugin anzuzeigen.';
+$string['trigger_subpluginname_help'] = 'Name des Schritt/Trigger-Subplugins (nur für Admins sichtbar).';
 $string['trigger_instancename'] = 'Instanzname';
 $string['trigger_instancename_help'] = 'Titel der Trigger-Instanz (nur sichtbar für Admins).';
 $string['trigger_enabled'] = 'Aktiviert';
@@ -69,22 +69,22 @@ $string['trigger_sortindex'] = 'Hoch/Runter';
 $string['trigger_workflow'] = 'Workflow';
 
 $string['workflow'] = 'Workflow';
-$string['add_workflow'] = 'Workflow Hinzufügen';
-$string['upload_workflow'] = 'Workflow Hochladen';
+$string['add_workflow'] = 'Workflow hinzufügen';
+$string['upload_workflow'] = 'Workflow hochladen';
 $string['workflow_title'] = 'Titel';
 $string['workflow_title_help'] = 'Titel des Workflows (nur sichtbar für Admins).';
 $string['workflow_displaytitle'] = 'Angezeigter Titel des Workflows';
 $string['workflow_displaytitle_help'] = 'Dieser Titel wird Nutzern beim Verwalten ihrer Kurse angezeigt.';
-$string['workflow_rollbackdelay'] = 'Kursauschluss bei Zurücksetzten';
+$string['workflow_rollbackdelay'] = 'Kursauschluss beim Zurücksetzen';
 $string['workflow_rollbackdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs
  gestarted werden kann, nachdem der Kurs innerhalb eines Prozesses dieses Workflows zurückgesetzt wurde.';
 $string['workflow_finishdelay'] = 'Kursauschluss bei Beendigung';
 $string['workflow_finishdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs
- gestarted werden kann, nachdem der Kurs ein Prozesses dieses Workflows beendingt hat.';
+ gestarted werden kann, nachdem der Kurs einen Prozess dieses Workflows beendingt hat.';
 $string['workflow_delayforallworkflows'] = 'Ausschluss für alle Workflows?';
 $string['workflow_delayforallworkflows_help'] = 'Falls ja, wird ein Kurs für die oben genannte Zeit nicht nur von diesem, sondern
  von allen Workflows ausgeschlossen. Das heißt, bis die Zeit abgelaufen ist, kann kein Prozess für den Kurs gestartet werden.';
-$string['workflow_active'] = 'Aktive';
+$string['workflow_active'] = 'Aktiv';
 $string['workflow_processes'] = 'Aktive Prozesse';
 $string['workflow_timeactive'] = 'Aktiv seit';
 $string['workflow_sortindex'] = 'Hoch/RUnter';
@@ -99,14 +99,14 @@ $string['activateworkflow'] = 'Aktivieren';
 $string['disableworkflow'] = 'Workflow deaktivieren (Prozesse laufen weiter)';
 $string['disableworkflow_confirm'] = 'Sie sind dabei, den Workflow zu deaktivieren. Sind Sie sicher?';
 $string['abortdisableworkflow'] = 'Workfow deaktivieren (Prozesse werden abgebrochen, eventuell unsicher!)';
-$string['abortdisableworkflow_confirm'] = 'Sie sind dabie, den Workflow zu deaktivieren. Alle laufenden Prozesse werden abgebrochen. Sind Sie sicher?';
+$string['abortdisableworkflow_confirm'] = 'Sie sind dabei, den Workflow zu deaktivieren. Alle laufenden Prozesse werden abgebrochen. Sind Sie sicher?';
 $string['abortprocesses'] = 'Laufende Prozesse abbrechen (eventuell unsicher!)';
 $string['abortprocesses_confirm'] = 'Alle laufenden Prozesse dieses Workflows werden abgebrochen. Sind Sie sicher?';
 $string['workflow_duplicate_title'] = '{$a} (Kopie)';
 
 // Deactivated workflows.
 $string['deactivated_workflows_list'] = 'Zeige deaktivierte Workflows';
-$string['deactivated_workflows_list_header'] = 'deaktivierte Workflows';
+$string['deactivated_workflows_list_header'] = 'Deaktivierte Workflows';
 $string['workflow_timedeactive'] = 'Deaktiviert seit';
 $string['active_workflows_list'] = 'Zeige aktive Workflows und Workflowdefinitionen';
 
@@ -114,7 +114,7 @@ $string['step_type'] = 'Typ';
 $string['step_subpluginname'] = 'Subpluginname';
 $string['step_subpluginname_help'] = 'Name des Schritt/Trigger-Subplugins (nur für Admins sichtbar).';
 $string['step_instancename'] = 'Instanzname';
-$string['step_instancename_help'] = 'Titel der Schritt/Trigger-Instanze (nur für Admins sichtbar).';
+$string['step_instancename_help'] = 'Titel der Schritt/Trigger-Instanz (nur für Admins sichtbar).';
 $string['step_sortindex'] = 'Hoch/Runter';
 $string['step_edit'] = 'Bearbeiten';
 $string['step_show'] = 'Anzeigen';
@@ -128,17 +128,17 @@ $string['workflow_trigger'] = 'Trigger für den Workflow';
 $string['lifecycletrigger'] = 'Trigger';
 $string['lifecyclestep'] = 'Schritt';
 
-$string['subplugintype_lifecycletrigger'] = 'Trigger zum Starten eines Lifecycleprozesses';
-$string['subplugintype_lifecycletrigger_plural'] = 'Trigger zum Starten eines Lifecycleprozesses';
-$string['subplugintype_lifecyclestep'] = 'Schritt eines Lifecycleprozesses';
-$string['subplugintype_lifecyclestep_plural'] = 'Schritte eines Lifecycleprozesses';
+$string['subplugintype_lifecycletrigger'] = 'Trigger zum Starten eines Lifecycle-Prozesses';
+$string['subplugintype_lifecycletrigger_plural'] = 'Trigger zum Starten eines Lifecycle-Prozesses';
+$string['subplugintype_lifecyclestep'] = 'Schritt eines Lifecycle-Prozesses';
+$string['subplugintype_lifecyclestep_plural'] = 'Schritte eines Lifecycle-Prozesses';
 
 $string['nointeractioninterface'] = 'Keine Interaktionsschnittstelle verfügbar!';
 $string['tools'] = 'Dienstprogramme';
 $string['status'] = 'Status';
 $string['date'] = 'Fällligkeitsdatum';
 
-$string['nostepfound'] = 'Es konnte kein Schritt mit den gegeben Schrittid gefunden werden!';
+$string['nostepfound'] = 'Es konnte kein Schritt mit der gegeben Schrittid gefunden werden!';
 $string['noprocessfound'] = 'Es konnte kein Prozess mit der gegebenen Prozessid gefunden werden!';
 
 $string['nocoursestodisplay'] = 'Es gibt derzeit keine Kurse, die Ihre Aufmerksamkeit erfordern!';

@@ -61,7 +61,7 @@ $string['error_wrong_trigger_selected'] = 'You tried to request a non-manual tri
 $string['lifecycle_task'] = 'Run the life cycle processes';
 
 $string['trigger_subpluginname'] = 'Subplugin Name';
-$string['trigger_subpluginname_help'] = 'Choose the subplugin that you want to use for triggering. After selection, press "reload" to show the options for the subplugin.';
+$string['trigger_subpluginname_help'] = 'Step subplugin/trigger title (visible for admins only).';
 $string['trigger_instancename'] = 'Instance Name';
 $string['trigger_instancename_help'] = 'Trigger instance title (visible for admins only).';
 $string['trigger_enabled'] = 'Enabled';

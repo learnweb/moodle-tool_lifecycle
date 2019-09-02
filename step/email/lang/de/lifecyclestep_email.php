@@ -34,19 +34,19 @@ $emailplaceholdersnohtml = '<p>' . 'Sie können die folgenden Platzhalter benutz
     . '<br>' . 'Betroffene Kurse: ##courses##'
     . '</p>';
 $string['email_subject_help'] = 'Stellen Sie die Vorlage für den Emailbetreff ein.' . $emailplaceholdersnohtml;
-$string['email_content'] = 'Vorlage für einfachen Emailinhalt';
-$string['email_content_help'] = 'Stellen Sie die Vorlage für den Emailinhalt ein. (Einfacher Text, altternativ können Sie auch die HTML-Vorlage unten einstellen.)' . $emailplaceholdersnohtml;
+$string['email_content'] = 'Vorlage für Emails in Klartext';
+$string['email_content_help'] = 'Stellen Sie die Vorlage für Emails ein. (in Klartext, alternativ können Sie auch die HTML-Vorlage unten einstellen.)' . $emailplaceholdersnohtml;
 $emailplaceholdershtml = '<p>' . 'Sie können die folgenden Platzhalter benutzen:'
         . '<br>' . 'Vorname des Empfängers: ##firstname##'
         . '<br>' . 'Nachname des Empfängers: ##lastname##'
         . '<br>' . 'Link zur Antwortseite: ##link-html##'
         . '<br>' . 'Betroffene Kurse: ##courses-html##'
         . '</p>';
-$string['email_content_html'] = 'Vorlage für HTML-Emailinhalt';
-$string['email_content_html_help'] = 'Stellen sie die HTML-Vorlage für den Emailinhalt ein. (HTML-Email, wird, falls nicht leer, anstatt des einfachen Texts benutzt!)' . $emailplaceholdershtml;
+$string['email_content_html'] = 'HTML-Vorlage für Emails';
+$string['email_content_html_help'] = 'Stellen sie die HTML-Vorlage für Emails ein. (in HTML-Format; falls gesetzt, wird es an Stelle der Klartext-Vorlage benutzt!)' . $emailplaceholdershtml;
 
 $string['email:preventdeletion'] = 'Löschen verhindern';
 
 $string['keep_course'] = 'Kurs behalten';
-$string['status_message_requiresattention'] = 'Kurs ist zum Löschen markiert';
-$string['action_prevented_deletion'] = '{$a} verhinderte Löschen';
+$string['status_message_requiresattention'] = 'Kurs ist zum Löschen vorgemerkt';
+$string['action_prevented_deletion'] = '{$a} verhinderte Löschung';

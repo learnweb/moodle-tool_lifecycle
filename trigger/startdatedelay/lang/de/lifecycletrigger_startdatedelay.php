@@ -25,5 +25,5 @@
 
 $string['pluginname'] = 'Startdatumsabstand - Trigger';
 
-$string['delay'] = 'Abstand vom Start eines Kurses, bis ein Prozess gestartet wird';
+$string['delay'] = 'Zeit seit Kursstartdatum, bis ein Prozess gestartet wird';
 $string['delay_help'] = 'Der Trigger wird ausgeführt, falls die Zeit, die seit dem Start des Kurses vergangen ist, größer ist, als der angegebene Zeitraum.';

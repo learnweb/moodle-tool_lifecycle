@@ -23,8 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Kategorien-Trigger';
+$string['pluginname'] = 'Kategorie-Trigger';
 
 $string['categories'] = 'Kategorien, für die der Workflow ausgelöst werden soll.';
 $string['categories_noselection'] = 'Bitte wählen sie mindestens eine Kategorie aus.';
-$string['exclude'] = 'Falls ausgewählt, werden die Kurse dieser Kategorien gerade nicht ausgelöst.';
+$string['exclude'] = 'Falls ausgewählt, werden gerade die Kurse der angegebenen Kategorien nicht ausgelöst.';

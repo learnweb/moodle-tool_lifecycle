@@ -23,6 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Lösche Kurs-Schritt';
+$string['pluginname'] = 'Kurslöschen-Schritt';
 
 $string['deletecourse_maximumdeletionspercron'] = 'Maximale Anzahl an Kurslöschungen per cron';
