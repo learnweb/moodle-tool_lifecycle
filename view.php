@@ -32,6 +32,8 @@ require_login(null, false);
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
 $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/view.php'));
+$PAGE->navbar->add(get_string('mycourses'))->add(get_string('managecourses_link', 'tool_lifecycle'),
+        $PAGE->url);
 
 // Interaction params.
 $action = optional_param('action', null, PARAM_ALPHA);
