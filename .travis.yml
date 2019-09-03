@@ -1,15 +1,18 @@
 language: php
 
-sudo: false
-dist: trusty
+sudo: true
+
+addons:
+  firefox: "47.0.1"
+  postgresql: "9.4"
+  apt:
+    packages:
+      - openjdk-8-jre-headless
 
 cache:
   directories:
     - $HOME/.composer/cache
     - $HOME/.npm
-
-addons:
-  postgresql: "9.4"
 
 php:
   - 7.0
@@ -45,9 +48,9 @@ matrix:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install 8.9.4
+  - nvm install 8.9
+  - nvm use 8.9
   - cd ../..
-  - composer selfupdate
   - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
 
@@ -64,10 +67,11 @@ jobs:
       - moodle-plugin-ci phpcpd
       - moodle-plugin-ci phpmd
       - moodle-plugin-ci codechecker
+      - moodle-plugin-ci validate
       - moodle-plugin-ci savepoints
       - moodle-plugin-ci mustache
       - moodle-plugin-ci grunt
-      - moodle-plugin-ci validate
+      - moodle-plugin-ci phpdoc
     # Smaller build matrix for development builds
     - stage: develop
       php: 7.1
