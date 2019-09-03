@@ -72,7 +72,7 @@ class manual extends base_manual {
         $capabilities = get_all_capabilities();
         $capabilitynames = array();
         foreach ($capabilities as $cap) {
-            $capabilitynames[] = $cap['name'];
+            $capabilitynames[$cap['name']] = $cap['name'];
         }
         $mform->addElement(
             'autocomplete', $elementname, get_string('setting_capability', 'lifecycletrigger_manual'),
