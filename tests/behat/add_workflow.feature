@@ -5,7 +5,7 @@ Feature: Add a workflow definition
   Scenario: Add a new workflow definition without steps
   For displaying the additional trigger settings the "Save changes" button is used.
     Given I log in as "admin"
-    And I navigate to "Life Cycle > Workflow Settings" in site administration
+    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow Settings" in site administration
     And I press "Add Workflow"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
@@ -33,7 +33,7 @@ Feature: Add a workflow definition
   Scenario: Add a new workflow definition with steps
   For displaying the additional trigger settings the "reload" button is used.
     Given I log in as "admin"
-    And I navigate to "Life Cycle > Workflow Settings" in site administration
+    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow Settings" in site administration
     And I press "Add Workflow"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
@@ -56,7 +56,7 @@ Feature: Add a workflow definition
 
   Scenario: Add a new workflow definition and alter trigger
     Given I log in as "admin"
-    And I navigate to "Life Cycle > Workflow Settings" in site administration
+    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow Settings" in site administration
     And I press "Add Workflow"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
@@ -89,7 +89,7 @@ Feature: Add a workflow definition
 
   Scenario: Add a new workflow definition with steps and rearange
     Given I log in as "admin"
-    And I navigate to "Life Cycle > Workflow Settings" in site administration
+    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow Settings" in site administration
     And I press "Add Workflow"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
