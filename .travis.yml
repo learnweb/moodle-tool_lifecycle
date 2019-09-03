@@ -8,6 +8,8 @@ addons:
   apt:
     packages:
       - openjdk-8-jre-headless
+      - chromium-chromedriver
+
 
 cache:
   directories:
@@ -80,17 +82,20 @@ jobs:
       env: DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE
       install:
       - moodle-plugin-ci install
+      - /usr/lib/chromium-browser/chromedriver --version
+      - chromium-browser --version
       script:
       - moodle-plugin-ci phpunit --coverage-clover
-      - moodle-plugin-ci behat
+      - moodle-plugin-ci behat --profile chrome
 
 # Unit tests and behat tests against full matrix.
 install:
   - moodle-plugin-ci install
-  -
+  - /usr/lib/chromium-browser/chromedriver --version
+  - chromium-browser --version
 script:
   - moodle-plugin-ci phpunit --coverage-clover
-  - moodle-plugin-ci behat
+  - moodle-plugin-ci behat --profile chrome
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
