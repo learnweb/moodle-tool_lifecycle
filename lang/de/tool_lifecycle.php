@@ -135,7 +135,7 @@ $string['subplugintype_lifecyclestep'] = 'Schritt eines Lifecycle-Prozesses';
 $string['subplugintype_lifecyclestep_plural'] = 'Schritte eines Lifecycle-Prozesses';
 
 $string['nointeractioninterface'] = 'Keine Interaktionsschnittstelle verfügbar!';
-$string['tools'] = 'Dienstprogramme';
+$string['tools'] = 'Aktionen';
 $string['status'] = 'Status';
 $string['date'] = 'Fällligkeitsdatum';
 
