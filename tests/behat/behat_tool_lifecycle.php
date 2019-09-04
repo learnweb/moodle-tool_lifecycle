@@ -205,8 +205,8 @@ class behat_tool_lifecycle extends behat_base {
         if ($this->running_javascript()) {
             $actionelement = $this->get_xpath_of_action_menu_in_table($tool, $rowname, $tablename);
             try {
-            $element = $this->find('xpath', $actionelement);
-            $element->click();
+                $element = $this->find('xpath', $actionelement);
+                $element->click();
             } catch (ElementNotFoundException $e) {
                 return;
             }
