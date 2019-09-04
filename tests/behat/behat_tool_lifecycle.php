@@ -49,6 +49,7 @@ class behat_tool_lifecycle extends behat_base {
      * @throws Exception
      */
     public function click_on_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
+        $this->open_or_close_action_menu($tool, $rowname, $tablename);
         $xpathelement = $this->i_should_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename);
 
         $this->execute('behat_general::i_click_on', [$xpathelement, 'xpath_element']);
@@ -66,10 +67,14 @@ class behat_tool_lifecycle extends behat_base {
      * @throws Exception
      */
     public function i_should_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
+
         $xpathelement = $this->get_xpath_of_tool_in_table($tool, $rowname, $tablename);
+
+        $this->open_or_close_action_menu($tool, $rowname, $tablename);
 
         try {
             $this->find('xpath', $xpathelement);
+            $this->open_or_close_action_menu($tool, $rowname, $tablename);
         } catch (ElementNotFoundException $e) {
             throw new ExpectationException('"The tool "' . $tool . '"  was not found for the row "'. $rowname.
                 '" of the table ' . $tablename, $this->getSession());
@@ -175,15 +180,37 @@ class behat_tool_lifecycle extends behat_base {
      * @throws Exception
      */
     public function i_should_not_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
+        $this->open_or_close_action_menu($tool, $rowname, $tablename);
+
         $xpathelement = $this->get_xpath_of_tool_in_table($tool, $rowname, $tablename);
 
         try {
             $this->find('xpath', $xpathelement);
+            $this->open_or_close_action_menu($tool, $rowname, $tablename);
         } catch (ElementNotFoundException $e) {
             return;
         }
         throw new ExpectationException('"The tool "' . $tool . '"  was found for the row "'. $rowname.
             '" of the table ' . $tablename, $this->getSession());
+    }
+
+    /**
+     * If Javascript is active, this function tries to click on an action dropdown, to reveal the underlying actions.
+     * @param $tool string identifier of the tool
+     * @param $rowname string identifier of the row
+     * @param $tablename string identifier of the table
+     * @throws Exception
+     */
+    protected function open_or_close_action_menu($tool, $rowname, $tablename) {
+        if ($this->running_javascript()) {
+            $actionelement = $this->get_xpath_of_action_menu_in_table($tool, $rowname, $tablename);
+            try {
+            $element = $this->find('xpath', $actionelement);
+            $element->click();
+            } catch (ElementNotFoundException $e) {
+                return;
+            }
+        }
     }
 
 
@@ -245,7 +272,7 @@ class behat_tool_lifecycle extends behat_base {
             throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
         }
 
-        $xpathelement = $xpathelement . "//*[contains(text(),'$rowname')]/ancestor::tr";
+        $xpathelement = $xpathelement . "//*[text()[contains(.,'$rowname')]]/ancestor::tr";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -255,8 +282,39 @@ class behat_tool_lifecycle extends behat_base {
         }
 
         $xpathelement = $xpathelement . "//a[@title = '$tool']" .
-            " | " . $xpathelement. "//span[contains(text(), '$tool')]/parent::a".
+            " | " . $xpathelement. "//span[text()[contains(., '$tool')]]/parent::a".
             " | " . $xpathelement. "//button[text() = '$tool']";
+
+        return $xpathelement;
+    }
+
+    /**
+     * Build the xpath to the action menu and throws exceptions if either the table or the row are not present.
+     * @param $tool string identifier of the tool
+     * @param $rowname string identifier of the row
+     * @param $tablename string identifier of the table
+     * @return string xpath of the tool
+     * @throws ExpectationException
+     */
+    private function get_xpath_of_action_menu_in_table($tool, $rowname, $tablename) {
+        $xpathelement = "//table/tbody/tr[contains(@id, '$tablename')]";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        $xpathelement = $xpathelement . "//*[text()[contains(.,'$rowname')]]/ancestor::tr";
+
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The row "'. $rowname.
+                '" of the table ' . $tablename . ' was not found.', $this->getSession());
+        }
+
+        $xpathelement = $xpathelement . "//a[text()[contains(.,'Action')]]";
 
         return $xpathelement;
     }
