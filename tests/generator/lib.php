@@ -36,6 +36,7 @@ use tool_lifecycle\settings_type;
  */
 class tool_lifecycle_generator extends testing_module_generator {
 
+    /** Default steps configuration. */
     private static $defaultsteps = [
         "deletecourse" => [
             "maximumdeletionspercron" => 10
@@ -50,6 +51,8 @@ class tool_lifecycle_generator extends testing_module_generator {
             "maximumbackupspercron" => 10
         ],
     ];
+
+    /** Default trigger configuration. */
     private static $defaulttrigger = [
         "startdatedelay" => [
             "delay" => 10000
@@ -102,6 +105,7 @@ class tool_lifecycle_generator extends testing_module_generator {
      * Creates an artificial workflow without steps, which is triggered manually.
      * @param \stdClass $triggersettings settings of the manual trigger
      * @return workflow
+     * @throws moodle_exception
      */
     public static function create_manual_workflow($triggersettings) {
         // Create Workflow.
@@ -139,7 +143,7 @@ class tool_lifecycle_generator extends testing_module_generator {
      * @param $instancename
      * @param $subpluginname
      * @param $workflowid
-     * @return step_subplugin created step
+     * @return trigger_subplugin created step
      */
     public static function create_trigger($instancename, $subpluginname, $workflowid) {
         $trigger = new trigger_subplugin($instancename, $subpluginname, $workflowid);
@@ -149,6 +153,9 @@ class tool_lifecycle_generator extends testing_module_generator {
 
     /**
      * Creates an artificial workflow with three steps.
+     * @return workflow
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public static function create_workflow_with_steps() {
         $workflow = self::create_workflow();
@@ -158,6 +165,13 @@ class tool_lifecycle_generator extends testing_module_generator {
         return $workflow;
     }
 
+    /**
+     * Create a process for a combination of course and workflow.
+     * @param $courseid int id of the course.
+     * @param $workflowid int id of the workflow.
+     * @return process
+     * @throws dml_exception
+     */
     public static function create_process($courseid, $workflowid) {
         global $DB;
 

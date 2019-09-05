@@ -41,8 +41,13 @@ class tool_lifecycle_backup_and_restore_workflow_testcase extends \advanced_test
     /** @var $workflow workflow */
     private $workflow;
 
+    /** Array of workflows created in this test. */
     private $existingworkflows = [];
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');

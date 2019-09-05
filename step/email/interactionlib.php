@@ -59,6 +59,7 @@ class interactionemail extends interactionlibbase {
      *  'alt' => a string text of the button
      * @param process $process process the action tools are requested for
      * @return array of action tools
+     * @throws \coding_exception
      */
     public function get_action_tools($process) {
         return array(
@@ -72,6 +73,7 @@ class interactionemail extends interactionlibbase {
      * Returns the status message for the given process.
      * @param process $process process the status message is requested for
      * @return string status message
+     * @throws \coding_exception
      */
     public function get_status_message($process) {
         return get_string('status_message_requiresattention', 'lifecyclestep_email');
@@ -97,7 +99,11 @@ class interactionemail extends interactionlibbase {
 
     /**
      * Returns the due date.
-     * @return null
+     * @param $processid int id of the process.
+     * @param $stepid int id of the step instance.
+     * @return string formatted date.
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function get_due_date($processid, $stepid) {
         $process = process_manager::get_process_by_id($processid);
@@ -125,6 +131,7 @@ class interactionemail extends interactionlibbase {
      * @param string $action Identifier of action
      * @param string $userlink html-link with username as text that refers to the user profile.
      * @return string action display name
+     * @throws \coding_exception
      */
     public function get_action_string($action, $user) {
         return get_string('action_prevented_deletion', 'lifecyclestep_email', $user);

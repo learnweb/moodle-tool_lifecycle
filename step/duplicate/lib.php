@@ -51,6 +51,7 @@ class duplicate extends libbase {
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
+     * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
         $fullname = process_data_manager::get_process_data($processid, $instanceid, self::PROC_DATA_COURSEFULLNAME);
@@ -85,15 +86,37 @@ class duplicate extends libbase {
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
+     * @throws \dml_exception
      */
     public function process_waiting_course($processid, $instanceid, $course) {
         return $this->process_course($processid, $instanceid, $course);
     }
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'duplicate';
     }
 
+
+    /**
+     * Duplicates a course.
+     * @param $courseid int id of the course.
+     * @param $fullname string full name of the new course.
+     * @param $shortname string short name of the new course.
+     * @param $categoryid int new category id.
+     * @param $visible bool new visibility state of the course.
+     * @param $options array additional options for the new course.
+     * @throws \base_plan_exception
+     * @throws \base_setting_exception
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     * @throws \required_capability_exception
+     * @throws \restore_controller_exception
+     */
     public function duplicate_course($courseid, $fullname, $shortname, $categoryid, $visible, $options) {
         global $USER, $DB, $CFG;
         require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');

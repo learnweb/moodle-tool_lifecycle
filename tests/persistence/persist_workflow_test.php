@@ -34,6 +34,9 @@ class tool_lifecycle_persist_workflow_testcase extends \advanced_testcase {
     /** workflow */
     private $workflow;
 
+    /**
+     * Setup the testcase.
+     */
     public function setUp() {
         $this->resetAfterTest(true);
         $record = new stdClass();

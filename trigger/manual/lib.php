@@ -25,6 +25,8 @@
  */
 namespace tool_lifecycle\trigger;
 
+use core\output\icon_system_fontawesome;
+
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 
@@ -54,9 +56,14 @@ class manual extends base_manual {
      * @param \MoodleQuickForm $mform
      */
     public function extend_add_instance_form_definition($mform) {
+        $system = \core\output\icon_system::instance();
+        $iconmap = $system->get_icon_name_map();
         $elementname = 'icon';
         $mform->addElement(
-            'text', $elementname, get_string('setting_icon', 'lifecycletrigger_manual')
+            'autocomplete', $elementname, get_string('setting_icon', 'lifecycletrigger_manual'),
+            array_keys($iconmap), array(
+                'noselectionstring' => get_string('noselection', 'form'),
+                'multiple' => false)
         );
         $mform->addHelpButton($elementname, 'setting_icon', 'lifecycletrigger_manual');
         $mform->setType($elementname, PARAM_SAFEPATH);

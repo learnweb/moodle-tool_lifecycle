@@ -29,6 +29,8 @@ defined('MOODLE_INTERNAL') || die();
  * @param stdClass $course The course to object for the tool
  * @param context $context The context of the course
  * @return void|null return null if we don't want to display the node.
+ * @throws coding_exception
+ * @throws moodle_exception
  */
 function tool_lifecycle_extend_navigation_course($navigation, $course, $context) {
     global $PAGE;

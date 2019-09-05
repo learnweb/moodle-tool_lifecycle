@@ -35,11 +35,13 @@ class tool_lifecycle_persist_step_testcase extends \advanced_testcase {
     /** workflow */
     private $workflow;
 
-    const INSTANCENAME = 'myinstance';
-    const STEPNAME = 'stepname';
+    /** Instance of the test generator */
     private $generator;
 
-
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         $this->resetAfterTest(true);
         $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');

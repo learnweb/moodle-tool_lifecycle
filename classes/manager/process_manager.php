@@ -36,6 +36,7 @@ class process_manager {
      * @param int $courseid id of the course
      * @param int $workflowid id of the workflow
      * @return process|null
+     * @throws \dml_exception
      */
     public static function create_process($courseid, $workflowid) {
         global $DB;
@@ -75,6 +76,7 @@ class process_manager {
     /**
      * Returns all current active processes.
      * @return process[]
+     * @throws \dml_exception
      */
     public static function get_processes() {
         global $DB;
@@ -90,6 +92,7 @@ class process_manager {
      * Creates a process for the course which is at the respective step the trigger is followed by.
      * @param int $processid id of the process
      * @return process
+     * @throws \dml_exception
      */
     public static function get_process_by_id($processid) {
         global $DB;
@@ -105,6 +108,7 @@ class process_manager {
      * Counts all processes for the given workflow id.
      * @param int $workflowid id of the workflow
      * @return int number of processes.
+     * @throws \dml_exception
      */
     public static function count_processes_by_workflow($workflowid) {
         global $DB;
@@ -115,6 +119,7 @@ class process_manager {
      * Returns all processes for given workflow id
      * @param int $workflowid id of the workflow
      * @return array of proccesses initiated by specifed workflow id
+     * @throws \dml_exception
      */
     public static function get_processes_by_workflow($workflowid) {
         global $DB;
@@ -129,7 +134,9 @@ class process_manager {
     /**
      * Proceeds the process to the next step.
      * @param process $process
-     * @return true, if followedby another step; otherwise false.
+     * @return true, if followed by another step; otherwise false.
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function proceed_process(&$process) {
         global $DB;
@@ -150,6 +157,7 @@ class process_manager {
     /**
      * Sets the process status on waiting.
      * @param process $process
+     * @throws \dml_exception
      */
     public static function set_process_waiting(&$process) {
         global $DB;
@@ -160,6 +168,8 @@ class process_manager {
     /**
      * Currently only removes the current process.
      * @param process $process process the rollback should be triggered for.
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function rollback_process($process) {
         process_rollback::event_from_process($process)->trigger();
@@ -180,6 +190,7 @@ class process_manager {
     /**
      * Removes the process and all data connected to it.
      * @param process $process process to be deleted.
+     * @throws \dml_exception
      */
     private static function remove_process($process) {
         global $DB;

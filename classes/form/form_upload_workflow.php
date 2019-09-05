@@ -23,8 +23,6 @@
  */
 namespace tool_lifecycle\form;
 
-use tool_lifecycle\entity\workflow;
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');

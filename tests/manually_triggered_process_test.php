@@ -44,6 +44,11 @@ class tool_lifecycle_manually_triggered_process_testcase extends \advanced_testc
     private $trigger;
     private $course;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
     public function setUp() {
         global $USER;
 

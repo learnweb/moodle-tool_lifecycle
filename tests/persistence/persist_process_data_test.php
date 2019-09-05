@@ -32,12 +32,19 @@ use \tool_lifecycle\manager\step_manager;
  */
 class tool_lifecycle_persist_process_data_testcase extends \advanced_testcase {
 
-    /** process*/
+    /** Process */
     private $process;
 
+    /** Key of the process data to be stored and retrieved. */
     const KEY = 'key123';
+    /** Value of the process data to be stored and retrieved. */
     const VALUE = 'value123';
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     public function setUp() {
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');

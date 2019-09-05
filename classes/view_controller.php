@@ -48,7 +48,9 @@ class view_controller {
      * Handles actions triggered in the view.php and displays the view.
      *
      * @param \renderer_base $renderer
-     *
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
      */
     public function handle_view($renderer) {
         global $DB;
@@ -110,6 +112,11 @@ class view_controller {
      * @param string $action triggered action code.
      * @param int $processid id of the process the action was triggered for.
      * @param int $stepid id of the step the action was triggered for.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
+     * @throws \moodle_exception
+     * @throws \required_capability_exception
      */
     public function handle_interaction($action, $processid, $stepid) {
         global $PAGE;
@@ -129,6 +136,10 @@ class view_controller {
      *
      * @param int $triggerid id of the trigger whose workflow was requested.
      * @param int $courseid id of the course the workflow was requested for.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     * @throws \required_capability_exception
      */
     public function handle_trigger($triggerid, $courseid) {
         global $PAGE;

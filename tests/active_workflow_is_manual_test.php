@@ -32,13 +32,23 @@ use tool_lifecycle\entity\workflow;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_lifecycle_workflow_is_manual_testcase extends \advanced_testcase {
+
+    /** Icon of the trigger. */
     const MANUAL_TRIGGER1_ICON = 't/up';
+    /** Action name of the trigger. */
     const MANUAL_TRIGGER1_DISPLAYNAME = 'Up';
+    /** Capability of the trigger. */
     const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
 
+    /** Instance of the manual workflow */
     private $manualworkflow;
+    /** Instance of the automatic workflow */
     private $automaticworkflow;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         global $USER;
         $this->resetAfterTest(true);

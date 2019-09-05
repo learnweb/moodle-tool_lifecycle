@@ -41,6 +41,10 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
     const EMAIL_VALUE = 'value';
     const STARTDELAY_VALUE = 100;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         $this->resetAfterTest(false);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');

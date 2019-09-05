@@ -39,6 +39,10 @@ class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
     private $workflow1;
     private $workflow2;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         global $USER;
         $this->resetAfterTest(true);

@@ -31,6 +31,9 @@ class tool_lifecycle_backup_manager_testcase extends \advanced_testcase {
     /** course */
     private $course;
 
+    /**
+     * Setup the testcase.
+     */
     public function setUp() {
         $this->resetAfterTest(false);
         $this->course = $this->getDataGenerator()->create_course();

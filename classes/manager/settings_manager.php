@@ -115,8 +115,10 @@ class settings_manager {
     /**
      * Returns an array of local subplugin settings for a given instance id
      * @param int $instanceid id of the step instance
-     * @param 'step'|'trigger' $type type of the subplugin.
+     * @param $type string type of the setting (see {@see settings_type}).
      * @return array|null settings key-value pairs
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function get_settings($instanceid, $type) {
         global $DB;
@@ -155,7 +157,9 @@ class settings_manager {
     /**
      * Removes all local settings for a given instance id
      * @param int $instanceid id of the step instance
-     * @param 'step'|'trigger' $type type of the subplugin.
+     * @param $type string type of the setting (see {@see settings_type}).
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function remove_settings($instanceid, $type) {
         global $DB;
@@ -168,7 +172,7 @@ class settings_manager {
 
     /**
      * Validates the type param for the two possibilities 'step' and 'trigger'.
-     * @param $type string type subplugin the settings should be saved, queried or removed.
+     * @param $type string type of the setting (see {@see settings_type}).
      * @throws \coding_exception
      */
     private static function validate_type($type) {

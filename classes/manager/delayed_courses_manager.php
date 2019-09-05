@@ -73,6 +73,7 @@ class delayed_courses_manager {
      * Creates an instance of a delayed course.
      * @param int $courseid id of the course
      * @param int $duration number of seconds
+     * @throws \dml_exception
      */
     public static function set_course_delayed($courseid, $duration) {
         global $DB;
@@ -95,6 +96,7 @@ class delayed_courses_manager {
      * Queries if a course was delayed.
      * @param int $courseid id of the course
      * @return null|int timestamp until when the course is delayed (null if no entry exists).
+     * @throws \dml_exception
      */
     public static function get_course_delayed($courseid) {
         global $DB;
@@ -119,6 +121,7 @@ class delayed_courses_manager {
     /**
      * Deletes the delay entry for a course.
      * @param int $courseid id of the course
+     * @throws \dml_exception
      */
     public static function remove_delay_entry($courseid) {
         global $DB;

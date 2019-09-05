@@ -57,6 +57,8 @@ class interactionduplicate extends interactionlibbase {
      *  'alt' => a string text of the button
      * @param process $process process the action tools are requested for
      * @return array of action tools
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function get_action_tools($process) {
         $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
@@ -76,6 +78,8 @@ class interactionduplicate extends interactionlibbase {
      * Returns the status message for the given process.
      * @param process $process process the status message is requested for
      * @return string status message
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function get_status_message($process) {
         $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
@@ -97,6 +101,8 @@ class interactionduplicate extends interactionlibbase {
      *      - stillprocessing: the step still wants to process the course and is responsible for rendering the site.
      *      - noaction: the action is not defined for the step.
      *      - rollback: the step has finished and respective controller class should rollback the process.
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function handle_interaction($process, $step, $action = 'default') {
         global $PAGE, $DB;
@@ -145,6 +151,7 @@ class interactionduplicate extends interactionlibbase {
      * @param string $action Identifier of action
      * @param string $userlink html-link with username as text that refers to the user profile.
      * @return string action display name
+     * @throws \coding_exception
      */
     public function get_action_string($action, $user) {
         return get_string('action_new_course_data', 'lifecyclestep_duplicate', $user);

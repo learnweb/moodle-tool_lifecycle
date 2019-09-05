@@ -74,7 +74,6 @@ class form_trigger_instance extends \moodleform {
      * @param trigger_subplugin $trigger step entity.
      * @param string $subpluginname name of the trigger subplugin.
      * @param array $settings settings of the step.
-     * @throws \moodle_exception if neither step nor subpluginname are set.
      */
     public function __construct($url, $workflowid, $trigger = null, $subpluginname = null, $settings = null) {
         $this->trigger = $trigger;

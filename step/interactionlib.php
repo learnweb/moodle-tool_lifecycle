@@ -26,6 +26,7 @@
 namespace tool_lifecycle\step;
 
 use core_user;
+use MongoDB\BSON\Timestamp;
 use tool_lifecycle\entity\process;
 use tool_lifecycle\entity\step_subplugin;
 use tool_lifecycle\response\step_interactive_response;
@@ -90,7 +91,9 @@ abstract class interactionlibbase {
 
     /**
      * Returns the due date.
-     * @return null | timestamp
+     * @param $processid int id of the process.
+     * @param $stepid int id of the step instance.
+     * @return null | string formatted due date.
      */
     public function get_due_date($processid, $stepid) {
         return null;

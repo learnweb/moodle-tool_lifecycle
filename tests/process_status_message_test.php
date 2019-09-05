@@ -35,6 +35,10 @@ class tool_lifecycle_process_status_message_testcase extends \advanced_testcase 
 
     private $generator;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         global $USER;
 

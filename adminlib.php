@@ -50,6 +50,7 @@ class admin_page_active_processes extends \admin_externalpage {
     /**
      * The constructor - calls parent constructor
      *
+     * @throws \moodle_exception
      */
     public function __construct() {
         $url = new \moodle_url('/admin/tool/lifecycle/activeprocesses.php');
@@ -67,6 +68,11 @@ class admin_page_active_processes extends \admin_externalpage {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class admin_page_deactivated_workflows extends \admin_externalpage {
+    /**
+     * admin_page_deactivated_workflows constructor.
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
     public function __construct() {
         $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php');
         parent::__construct('tool_lifecycle_deactivatedworkflows',
@@ -87,6 +93,7 @@ class admin_page_course_backups extends \admin_externalpage {
     /**
      * The constructor - calls parent constructor
      *
+     * @throws \moodle_exception
      */
     public function __construct() {
         $url = new \moodle_url('/admin/tool/lifecycle/coursebackups.php');
@@ -108,6 +115,7 @@ class admin_page_sublugins extends \admin_externalpage {
     /**
      * The constructor - calls parent constructor
      *
+     * @throws \moodle_exception
      */
     public function __construct() {
         $url = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
@@ -131,6 +139,7 @@ class admin_settings {
 
     /**
      * Constructor for this subplugin settings
+     * @throws \moodle_exception
      */
     public function __construct() {
         global $PAGE;
@@ -141,6 +150,7 @@ class admin_settings {
 
     /**
      * Write the HTML for the submission plugins table.
+     * @throws \moodle_exception
      */
     private function view_plugins_table() {
         global $OUTPUT, $PAGE;
@@ -188,6 +198,7 @@ class admin_settings {
      * Write the HTML for the add workflow form.
      *
      * @param form_workflow_instance $form
+     * @throws \coding_exception
      */
     private function view_workflow_instance_form($form) {
         global $OUTPUT;
@@ -233,6 +244,11 @@ class admin_settings {
 
     /**
      * Check this user has permission to edit the subplugin settings
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     * @throws \require_login_exception
+     * @throws \required_capability_exception
      */
     private function check_permissions() {
         // Check permissions.
@@ -243,7 +259,13 @@ class admin_settings {
 
     /**
      * This is the entry point for this controller class.
+     * @param $action string action string (see {@see action}).
+     * @param $workflowid int id of the workflow.
+     * @throws \coding_exception
+     * @throws \dml_exception
      * @throws \moodle_exception
+     * @throws \require_login_exception
+     * @throws \required_capability_exception
      */
     public function execute($action, $workflowid) {
         global $PAGE;
@@ -340,6 +362,9 @@ class workflow_settings {
 
     /**
      * Constructor for this subplugin settings
+     * @param $workflowid int id of the workflow.
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function __construct($workflowid) {
         global $PAGE;
@@ -353,6 +378,7 @@ class workflow_settings {
 
     /**
      * Write the HTML for the submission plugins table.
+     * @throws \moodle_exception
      */
     private function view_plugins_table() {
         global $OUTPUT, $PAGE;
@@ -394,6 +420,7 @@ class workflow_settings {
      * Write the HTML for the step instance form.
      *
      * @param $form \moodleform form to be displayed.
+     * @throws \coding_exception
      */
     private function view_step_instance_form($form) {
         $workflow = workflow_manager::get_workflow($this->workflowid);
@@ -406,6 +433,7 @@ class workflow_settings {
      * Write the HTML for the trigger instance form.
      *
      * @param $form \moodleform form to be displayed.
+     * @throws \coding_exception
      */
     private function view_trigger_instance_form($form) {
         $workflow = workflow_manager::get_workflow($this->workflowid);
@@ -452,6 +480,11 @@ class workflow_settings {
 
     /**
      * Check this user has permission to edit the subplugin settings
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     * @throws \require_login_exception
+     * @throws \required_capability_exception
      */
     private function check_permissions() {
         // Check permissions.
@@ -466,6 +499,7 @@ class workflow_settings {
      * @param $subpluginid int id of the subplugin associated.
      * @param $workflowid int id of the workflow associated.
      * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function execute($action, $subpluginid, $workflowid) {
         $this->check_permissions();
@@ -495,6 +529,7 @@ class workflow_settings {
      *
      * @return bool True, if no further action handling or output should be conducted.
      * @throws \coding_exception
+     * @throws \moodle_exception
      */
     private function handle_trigger_instance_form() {
         global $PAGE;
@@ -545,6 +580,7 @@ class workflow_settings {
      * @param $triggersettings array settings of the trigger instance.
      * @return bool
      * @throws \coding_exception
+     * @throws \dml_exception
      */
     private function retrieve_trigger_parameters(&$triggertomodify, &$subpluginname, &$triggersettings) {
         if ($triggerid = optional_param('subplugin', null, PARAM_INT)) {
@@ -568,6 +604,8 @@ class workflow_settings {
      * Handles actions for the trigger instance form and causes related forms to be rendered.
      *
      * @return bool True, if no further action handling or output should be conducted.
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     private function handle_step_instance_form() {
         global $PAGE;
@@ -615,6 +653,7 @@ class workflow_settings {
      * @param $stepsettings array settings of the step instance.
      * @return bool
      * @throws \coding_exception
+     * @throws \dml_exception
      */
     private function retrieve_step_parameters(&$steptomodify, &$subpluginname, &$stepsettings) {
         if ($stepid = optional_param('subplugin', null, PARAM_INT)) {

@@ -53,6 +53,8 @@ class createbackup extends libbase {
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
         if (self::$numberofbackups >= settings_manager::get_settings(
@@ -66,20 +68,43 @@ class createbackup extends libbase {
         return step_response::waiting();
     }
 
+    /**
+     * Simply call the process_course since it handles everything necessary for this plugin.
+     * @param int $processid
+     * @param int $instanceid
+     * @param mixed $course
+     * @return step_response
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function process_waiting_course($processid, $instanceid, $course) {
         return $this->process_course($processid, $instanceid, $course);
     }
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'createbackup';
     }
 
-
+    /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
     public function instance_settings() {
         return array(
             new instance_setting('maximumbackupspercron', PARAM_INT),
         );
     }
+
+    /**
+     * This method can be overriden, to add form elements to the form_step_instance.
+     * It is called in definition().
+     * @param \MoodleQuickForm $mform
+     * @throws \coding_exception
+     */
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'maximumbackupspercron';
         $mform->addElement('text', $elementname,

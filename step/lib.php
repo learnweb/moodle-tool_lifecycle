@@ -93,6 +93,7 @@ abstract class libbase {
     public abstract function get_subpluginname();
 
     /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {

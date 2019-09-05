@@ -44,7 +44,6 @@ class form_workflow_instance extends \moodleform {
      * Constructor
      * @param \moodle_url $url.
      * @param workflow $workflow workflow entity.
-     * @throws \moodle_exception if neither step nor subpluginname are set.
      */
     public function __construct($url, $workflow) {
         $this->workflow = $workflow;

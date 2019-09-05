@@ -50,6 +50,8 @@ class interaction_manager {
      * @param string $action action string
      * @return boolean if true, interaction finished.
      *      If false, the current step is still processing and cares for displaying the view.
+     * @throws \coding_exception
+     * @throws \dml_exception
      * @throws \invalid_parameter_exception
      */
     public static function handle_interaction($stepid, $processid, $action) {
@@ -134,6 +136,7 @@ class interaction_manager {
      * @param int $processid if of the process the action tools are requested for
      * @return array of action tools
      * @throws \invalid_parameter_exception
+     * @throws \coding_exception
      */
     public static function get_action_tools($subpluginname, $processid) {
         $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
@@ -150,6 +153,7 @@ class interaction_manager {
      * @param int $processid id of the process the status message is requested for
      * @return string status message
      * @throws \invalid_parameter_exception
+     * @throws \coding_exception
      */
     public static function get_process_status_message($processid) {
         $process = process_manager::get_process_by_id($processid);

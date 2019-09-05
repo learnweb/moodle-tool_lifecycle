@@ -39,6 +39,7 @@ class process_data_manager {
      * @param int $stepid id of the step.
      * @param string $key key the value is stored at.
      * @return string | null value for the given parameters.
+     * @throws \dml_exception
      */
     public static function get_process_data($processid, $stepid, $key) {
         global $DB;
@@ -63,6 +64,7 @@ class process_data_manager {
      * @param int $stepid id of the step.
      * @param string $key key the value is stored at.
      * @param string $value value for the given parameters.
+     * @throws \dml_exception
      */
     public static function set_process_data($processid, $stepid, $key, $value) {
         global $DB;
