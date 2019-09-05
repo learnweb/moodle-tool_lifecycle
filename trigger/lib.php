@@ -43,6 +43,7 @@ abstract class base {
     public abstract function get_subpluginname();
 
     /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
@@ -68,8 +69,8 @@ abstract class base {
 
     /**
      * This method can be overriden, to add additional data validation to the instance form.
-     * @param $error
-     * @param $data
+     * @param $error array containing all errors.
+     * @param $data array data passed from the moodle form to be validated
      */
     public function extend_add_instance_form_validation(&$error, $data) {
     }
@@ -95,6 +96,7 @@ abstract class base {
     /**
      * Returns the status message for the trigger.
      * @return string status message
+     * @throws \coding_exception
      */
     public function get_status_message() {
         return get_string("workflow_started", "tool_lifecycle");
@@ -127,6 +129,7 @@ abstract class base_automatic extends base {
      * which will be concatenated using an 'AND' to the recordset query (e.g. '{course}.id = $courseid').
      * The second one is the set of parameters for the sql query, which will be merged with other param sets.
      * @params $triggerid int id of the trigger.
+     * @return array A list containing the constructed sql fragment and an array of parameters.
      */
     public function get_course_recordset_where($triggerid) {
         return array('', array());

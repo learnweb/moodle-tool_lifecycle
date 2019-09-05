@@ -26,6 +26,9 @@ use tool_lifecycle\manager\trigger_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Register site course trigger exclusion as initial workflow.
+ */
 function xmldb_lifecycletrigger_sitecourse_install() {
     trigger_manager::register_workflow('sitecourse');
 }

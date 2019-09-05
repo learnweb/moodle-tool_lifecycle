@@ -28,11 +28,17 @@ use tool_lifecycle\manager\workflow_manager;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_lifecycle_process_status_message_testcase extends \advanced_testcase {
+    /** Icon of the manual trigger. */
     const MANUAL_TRIGGER1_ICON = 't/up';
+    /** Display name of the manual trigger. */
     const MANUAL_TRIGGER1_DISPLAYNAME = 'Up';
+    /** Capability of the manual trigger. */
     const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
+
+    /** Workflow of this test. */
     private $workflow;
 
+    /** Instance of the test generator. */
     private $generator;
 
     /**

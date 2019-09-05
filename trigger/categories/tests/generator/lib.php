@@ -36,6 +36,7 @@ class tool_lifecycle_trigger_categories_generator extends testing_module_generat
     /**
      * Creates a trigger startdatedelay for an artificial workflow without steps.
      * @return trigger_subplugin the created startdatedelay trigger.
+     * @throws moodle_exception
      */
     public static function create_trigger_with_workflow($data) {
         // Create Workflow.

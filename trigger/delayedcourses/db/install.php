@@ -26,6 +26,9 @@ use tool_lifecycle\manager\trigger_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Register delayed courses as initial workflow.
+ */
 function xmldb_lifecycletrigger_delayedcourses_install() {
     trigger_manager::register_workflow('delayedcourses');
 }

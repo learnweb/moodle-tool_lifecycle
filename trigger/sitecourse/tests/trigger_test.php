@@ -34,8 +34,13 @@ require_once(__DIR__ . '/generator/lib.php');
  */
 class tool_lifecycle_trigger_sitecourse_testcase extends \advanced_testcase {
 
+    /** instance of the trigger. */
     private $triggerinstance;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         $this->resetAfterTest(true);
         $this->setAdminUser();

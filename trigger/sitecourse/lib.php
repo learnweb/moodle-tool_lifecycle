@@ -54,6 +54,10 @@ class sitecourse extends base_automatic {
         return array("{course}.id {$insql}", $inparam);
     }
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'sitecourse';
     }

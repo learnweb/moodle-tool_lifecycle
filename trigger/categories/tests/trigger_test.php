@@ -44,6 +44,11 @@ class tool_lifecycle_trigger_categories_testcase extends \advanced_testcase {
     /**@var processor Instance of the lifecycle processor */
     private $processor;
 
+
+    /**
+     * Setup the testcase.
+     * @throws \moodle_exception
+     */
     public function setUp() {
         $this->resetAfterTest(true);
         $this->setAdminUser();

@@ -34,11 +34,16 @@ require_once(__DIR__ . '/../lib.php');
  */
 class manual extends base_manual {
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'manual';
     }
 
     /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
@@ -52,6 +57,7 @@ class manual extends base_manual {
      * This method can be overriden, to add form elements to the form_step_instance.
      * It is called in definition().
      * @param \MoodleQuickForm $mform
+     * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'icon';
@@ -84,8 +90,10 @@ class manual extends base_manual {
 
     /**
      * Make all fields required.
-     * @param $error
-     * @param $data
+     * @param $error array containing all errors.
+     * @param $data array data passed from the moodle form to be validated
+     * @return void the extended error array.
+     * @throws \coding_exception
      */
     public function extend_add_instance_form_validation(&$error, $data) {
         parent::extend_add_instance_form_validation($error, $data);

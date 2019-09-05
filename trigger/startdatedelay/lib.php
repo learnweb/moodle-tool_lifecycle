@@ -51,6 +51,14 @@ class startdatedelay extends base_automatic {
         return trigger_response::trigger();
     }
 
+    /**
+     * Add sql comparing the current date to the start date of a course in combination with the specified delay.
+     * @params $triggerid int id of the trigger.
+     * @param $triggerid
+     * @return array A list containing the constructed sql fragment and an array of parameters.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function get_course_recordset_where($triggerid) {
         $delay = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['delay'];
         $where = "{course}.startdate < :startdatedelay";
@@ -60,21 +68,39 @@ class startdatedelay extends base_automatic {
         return array($where, $params);
     }
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'startdatedelay';
     }
 
+    /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
     public function instance_settings() {
         return array(
             new instance_setting('delay', PARAM_INT)
         );
     }
 
+    /**
+     * At the delay since the start date of a course.
+     * @param \MoodleQuickForm $mform
+     * @throws \coding_exception
+     */
     public function extend_add_instance_form_definition($mform) {
         $mform->addElement('duration', 'delay', get_string('delay', 'lifecycletrigger_startdatedelay'));
         $mform->addHelpButton('delay', 'delay', 'lifecycletrigger_startdatedelay');
     }
 
+    /**
+     * Reset the delay at the add instance form initializiation.
+     * @param \MoodleQuickForm $mform
+     * @param array $settings array containing the settings from the db.
+     */
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
         if (is_array($settings) && array_key_exists('delay', $settings)) {
             $default = $settings['delay'];

@@ -47,10 +47,20 @@ class delayedcourses extends base_automatic {
         return trigger_response::exclude();
     }
 
+    /**
+     * Return sql which excludes delayed courses.
+     * @params $triggerid int id of the trigger.
+     * @return array A list containing the constructed sql fragment and an array of parameters.
+     */
     public function get_course_recordset_where($triggerid) {
         return delayed_courses_manager::get_course_delayed_wheresql();
     }
 
+
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'delayedcourses';
     }
