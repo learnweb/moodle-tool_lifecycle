@@ -21,8 +21,6 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Defines available settings_types.
  * @package    tool_lifecycle
- * @category
- * @group      tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

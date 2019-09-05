@@ -18,7 +18,7 @@
  * Interface for the subplugintype step
  * It has to be implemented by all subplugins.
  *
- * @package tool_lifecycle_step
+ * @package lifecyclestep
  * @subpackage deletecourse
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

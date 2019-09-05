@@ -18,7 +18,7 @@
  * Interface for the subplugintype trigger
  * It has to be implemented by all subplugins.
  *
- * @package tool_lifecycle_trigger
+ * @package lifecycletrigger
  * @subpackage manual
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -30,7 +30,7 @@ require_once(__DIR__ . '/../lib.php');
 
 /**
  * Class which implements the basic methods necessary for a life cycle trigger subplugin
- * @package tool_lifecycle_trigger
+ * @package lifecycletrigger
  */
 class manual extends base_manual {
 

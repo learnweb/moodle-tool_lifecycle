@@ -17,7 +17,7 @@
 /**
  * Life Cycle Create Backup Step
  *
- * @package tool_lifecycle_step
+ * @package lifecyclestep
  * @subpackage createbackup
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

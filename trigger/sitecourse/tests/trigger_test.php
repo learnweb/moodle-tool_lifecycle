@@ -26,9 +26,8 @@ require_once(__DIR__ . '/generator/lib.php');
 /**
  * Trigger test for course site trigger.
  *
- * @package    tool_lifecycle_trigger
- * @category   startdatedelay
- * @group tool_lifecycle_trigger
+ * @package    lifecycletrigger
+ * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -17,7 +17,7 @@
 /**
  * Lang strings for duplicate step
  *
- * @package tool_lifecycle_step
+ * @package lifecyclestep
  * @subpackage duplicate
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

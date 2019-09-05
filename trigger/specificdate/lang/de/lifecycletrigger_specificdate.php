@@ -17,7 +17,7 @@
 /**
  * Lang strings for categories delay trigger
  *
- * @package tool_lifecycle_trigger
+ * @package lifecycletrigger
  * @subpackage startdatedelay
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

@@ -17,7 +17,7 @@
 /**
  * Life Cycle Email Step
  *
- * @package tool_lifecycle_step
+ * @package lifecyclestep
  * @subpackage email
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

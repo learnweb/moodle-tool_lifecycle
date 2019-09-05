@@ -17,7 +17,7 @@
 /**
  * Update script for lifecycles subplugin deletecourse
  *
- * @package tool_lifecycle_step
+ * @package lifecyclestep
  * @subpackage createbackup
  * @copyright  2019 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

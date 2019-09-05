@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype trigger
- * It has to be implemented by all subplugins.
+ * Subplugin for the start date delay.
  *
- * @package tool_lifecycle_trigger
+ * @package lifecycletrigger
  * @subpackage startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -35,10 +34,11 @@ require_once(__DIR__ . '/../../lib.php');
 
 /**
  * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin
- * @package tool_lifecycle_trigger
+ * @package lifecycletrigger
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class startdatedelay extends base_automatic {
-
 
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
@@ -53,8 +53,7 @@ class startdatedelay extends base_automatic {
 
     /**
      * Add sql comparing the current date to the start date of a course in combination with the specified delay.
-     * @params $triggerid int id of the trigger.
-     * @param $triggerid
+     * @param $triggerid int id of the trigger.
      * @return array A list containing the constructed sql fragment and an array of parameters.
      * @throws \coding_exception
      * @throws \dml_exception

@@ -29,9 +29,8 @@ require_once(__DIR__ . '/generator/lib.php');
 /**
  * Trigger test for delayed courses trigger.
  *
- * @package    tool_lifecycle_trigger
- * @category   delayedcourses
- * @group tool_lifecycle_trigger
+ * @package    lifecycletrigger
+ * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

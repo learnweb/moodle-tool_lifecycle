@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype trigger
- * It has to be implemented by all subplugins.
+ * Interface for the subplugintype trigger.
  *
+ * It has to be implemented by all subplugins.
  * @package tool_lifecycle
  * @subpackage trigger
  * @copyright  2017 Tobias Reischmann WWU
@@ -31,6 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * This class bundles different functions necessary for every trigger of a workflow.
+ *
  * This class should not be extended directly. Please use base_manual or base_automatic.
  * @package tool_lifecycle\trigger
  */
@@ -106,6 +107,7 @@ abstract class base {
 
 /**
  * This class represents an automatic trigger.
+ *
  * It is used when workflow should be started based on a specific logic.
  * @package tool_lifecycle\trigger
  */
@@ -119,6 +121,10 @@ abstract class base_automatic extends base {
      */
     public abstract function check_course($course, $triggerid);
 
+    /**
+     * Defines if the trigger subplugin is started manually or automatically.
+     * @return bool
+     */
     public function is_manual_trigger() {
         return false;
     }
@@ -138,15 +144,21 @@ abstract class base_automatic extends base {
 
 /**
  * This class represents a manual trigger.
+ *
  * It is used to enable user to manually start processes for workflows.
  * @package tool_lifecycle\trigger
  */
 abstract class base_manual extends base {
 
+    /**
+     * Defines if the trigger subplugin is started manually or automatically.
+     * @return bool
+     */
     public function is_manual_trigger() {
         return true;
     }
 }
+
 /**
  * Class representing a local settings object for a subplugin instance.
  * @package tool_lifecycle\trigger

@@ -22,7 +22,7 @@ use tool_lifecycle\manager\backup_manager;
  * Tests the beckup manager.
  * @package    tool_lifecycle
  * @category   test
- * @group      tool_lifecycle_backup
+ * @group      tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

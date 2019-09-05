@@ -27,9 +27,8 @@ require_once(__DIR__ . '/generator/lib.php');
 /**
  * Trigger test for categories trigger.
  *
- * @package    tool_lifecycle_trigger
- * @category   categories
- * @group tool_lifecycle_trigger
+ * @package    lifecycletrigger
+ * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
