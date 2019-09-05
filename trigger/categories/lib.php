@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype trigger
- * It has to be implemented by all subplugins.
+ * Trigger subplugin to include or exclude courses of certain categories.
  *
- * @package lifecycletrigger
- * @subpackage categories
+ * @package lifecycletrigger_categories
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -36,14 +34,16 @@ require_once(__DIR__ . '/../../lib.php');
 
 /**
  * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin
- * @package lifecycletrigger
+ * @package lifecycletrigger_categories
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class categories extends base_automatic {
 
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
-     * @param $course object to be processed.
-     * @param $triggerid int id of the trigger instance.
+     * @param object $course Course to be processed.
+     * @param int $triggerid Id of the trigger instance.
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
@@ -54,8 +54,7 @@ class categories extends base_automatic {
     /**
      * Return sql sniplet for including (or excluding) the courses belonging to specific categories
      * and all their children.
-     * @params $triggerid int id of the trigger.
-     * @param $triggerid
+     * @param int $triggerid Id of the trigger.
      * @return array A list containing the constructed sql fragment and an array of parameters.
      * @throws \coding_exception
      * @throws \dml_exception

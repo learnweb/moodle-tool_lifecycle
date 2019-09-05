@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Update script for lifecycles subplugin deletecourse
+ * Update script for lifecycles subplugin createbackup
  *
- * @package lifecyclestep
- * @subpackage createbackup
+ * @package lifecyclestep_createbackup
  * @copyright  2019 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,6 +27,15 @@ use tool_lifecycle\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Update script for lifecycles subplugin createbackup.
+ * @param int $oldversion Version id of the previously installed version.
+ * @throws coding_exception
+ * @throws dml_exception
+ * @throws downgrade_exception
+ * @throws moodle_exception
+ * @throws upgrade_exception
+ */
 function xmldb_lifecyclestep_createbackup_upgrade($oldversion) {
 
     if ($oldversion < 2019052900) {

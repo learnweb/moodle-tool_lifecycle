@@ -23,6 +23,13 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Renderer for life cycle
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class tool_lifecycle_renderer extends plugin_renderer_base {
 
     /**
@@ -36,7 +43,7 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
     /**
      * Write the page header
      *
-     * @param string optional page title.
+     * @param string $title optional page title.
      */
     public function header($title = null) {
         global $OUTPUT, $PAGE;

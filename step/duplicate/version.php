@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life Cycle Email Step
+ * Life Cycle Duplicate Step
  *
- * @package lifecyclestep
- * @subpackage email
+ * @package    lifecyclestep_duplicate
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

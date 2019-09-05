@@ -29,6 +29,13 @@ use tool_lifecycle\response\step_interactive_response;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Manager to handle interactions by users
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class interaction_manager {
 
     /**
@@ -87,7 +94,9 @@ class interaction_manager {
     }
 
     /**
+     * Save the interaction that happened in the database.
      * @param process $process
+     * @param string $action Action name.
      * @throws \dml_exception
      */
     public static function save_interaction($process, $action) {
@@ -137,6 +146,7 @@ class interaction_manager {
      * @return array of action tools
      * @throws \invalid_parameter_exception
      * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function get_action_tools($subpluginname, $processid) {
         $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
@@ -149,11 +159,11 @@ class interaction_manager {
 
     /**
      * Returns the status message for the given process.
-     * @param string $subpluginname name of the step subplugin
      * @param int $processid id of the process the status message is requested for
      * @return string status message
      * @throws \invalid_parameter_exception
      * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function get_process_status_message($processid) {
         $process = process_manager::get_process_by_id($processid);

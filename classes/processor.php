@@ -38,11 +38,14 @@ use tool_lifecycle\response\trigger_response;
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * Offers functionality to trigger, process and finish lifecycle processes.
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class processor {
-
-    public function __construct() {
-
-    }
 
     /**
      * Processes the trigger plugins for all relevant courses.
@@ -95,7 +98,6 @@ class processor {
      * Calls the process_course() method of each step submodule currently responsible for a given course.
      */
     public function process_courses() {
-        global $CFG;
         foreach (process_manager::get_processes() as $process) {
             $workflow = workflow_manager::get_workflow($process->workflowid);
             while (true) {
@@ -138,13 +140,17 @@ class processor {
     }
 
     /**
+     * In case we are in an interactive environment because the user is lead through the interactive interfaces
+     * of multiple steps, this function cares for a redirection and processing through these steps until we reach a
+     * no longer interactive state of the workflow.
      *
-     * @param $processid int id of the process
+     * @param int $processid Id of the process
      * @return boolean if true, interaction finished.
      *      If false, the current step is still processing and cares for displaying the view.
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function process_course_interactive($processid) {
-        global $CFG;
         $process = process_manager::get_process_by_id($processid);
         $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
         // If there is no next step, then proceed, which will delete/finish the process.
@@ -180,9 +186,11 @@ class processor {
     /**
      * Returns a record set with all relevant courses.
      * Relevant means that there is currently no lifecycle process running for this course.
-     * @params $triggers trigger[] list of triggers, which will be asked for additional where requirements.
-     * @params $exclude int[] list of course id, which should be excluded from execution.
+     * @param trigger[] $triggers List of triggers, which will be asked for additional where requirements.
+     * @param int[] $exclude List of course id, which should be excluded from execution.
      * @return \moodle_recordset with relevant courses.
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function get_course_recordset($triggers, $exclude) {
         global $DB;

@@ -16,8 +16,7 @@
 
 /**
  * Capability definitions for the duplication step subplugin
- * @package    lifecycle_step
- * @subpackage duplication
+ * @package    lifecyclestep_duplicate
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

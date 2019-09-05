@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * lifecycletrigger_delayedcourses generator tests
+ *
+ * @package    lifecycletrigger_delayedcourses
+ * @category   test
+ * @copyright  2018 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 use tool_lifecycle\entity\trigger_subplugin;

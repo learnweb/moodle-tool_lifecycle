@@ -17,8 +17,7 @@
 /**
  * Lang strings for email step
  *
- * @package lifecyclestep
- * @subpackage email
+ * @package lifecyclestep_email
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

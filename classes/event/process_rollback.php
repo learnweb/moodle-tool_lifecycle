@@ -137,6 +137,9 @@ class process_rollback extends \core\event\base {
         }
     }
 
+    /**
+     * Implementation of get_other_mapping.
+     */
     public static function get_other_mapping() {
         // No backup and restore.
         return false;

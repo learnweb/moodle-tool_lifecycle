@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Tests the field is manual after activating workflows.
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2018 WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/generator/lib.php');
@@ -41,7 +49,7 @@ class tool_lifecycle_backup_and_restore_workflow_testcase extends \advanced_test
     /** @var $workflow workflow */
     private $workflow;
 
-    /** Array of workflows created in this test. */
+    /** @var workflow[] $existingworkflows Array of workflows created in this test. */
     private $existingworkflows = [];
 
     /**

@@ -29,12 +29,20 @@ use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Manager for Subplugins
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class step_manager extends subplugin_manager {
 
     /**
      * Returns a step instance if one with the is is available.
      * @param int $stepinstanceid id of the step instance
      * @return step_subplugin|null
+     * @throws \dml_exception
      */
     public static function get_step_instance($stepinstanceid) {
         global $DB;
@@ -52,6 +60,7 @@ class step_manager extends subplugin_manager {
      * @param int $workflowid id of the workflow
      * @param int $sortindex sortindex of the step within the workflow
      * @return step_subplugin|null
+     * @throws \dml_exception
      */
     public static function get_step_instance_by_workflow_index($workflowid, $sortindex) {
         global $DB;
@@ -71,6 +80,8 @@ class step_manager extends subplugin_manager {
     /**
      * Persists a subplugin to the database.
      * @param step_subplugin $subplugin
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function insert_or_update(step_subplugin &$subplugin) {
         global $DB;
@@ -88,6 +99,9 @@ class step_manager extends subplugin_manager {
      * Removes all step instances from the database.
      * Should only be used, when uninstalling the subplugin.
      * @param string $subpluginname step instance id
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function remove_all_instances($subpluginname) {
         $steps = self::get_step_instances_by_subpluginname($subpluginname);
@@ -99,6 +113,9 @@ class step_manager extends subplugin_manager {
     /**
      * Removes a step instance from the database.
      * @param int $stepinstanceid step instance id
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     private static function remove($stepinstanceid) {
         global $DB;
@@ -115,6 +132,8 @@ class step_manager extends subplugin_manager {
     /**
      * Removes a subplugin from the sortindex of a workflow and adjusts all other indizes.
      * @param step_subplugin $toberemoved
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     private static function remove_from_sortindex(&$toberemoved) {
         global $DB;
@@ -134,6 +153,8 @@ class step_manager extends subplugin_manager {
      * Changes the sortindex of a step by swapping it with another.
      * @param int $stepid id of the step
      * @param bool $up tells if the step should be set up or down
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function change_sortindex($stepid, $up) {
         global $DB;
@@ -173,6 +194,7 @@ class step_manager extends subplugin_manager {
      * Gets the list of step instances of a workflow.
      * @param int $workflowid id of the workflow
      * @return array of step instances.
+     * @throws \dml_exception
      */
     public static function get_step_instances($workflowid) {
         global $DB;
@@ -188,7 +210,9 @@ class step_manager extends subplugin_manager {
 
     /**
      * Gets the list of step instances for a specific subpluginname.
+     * @param string $subpluginname Name of the subplugin.
      * @return step_subplugin[] array of step instances.
+     * @throws \dml_exception
      */
     public static function get_step_instances_by_subpluginname($subpluginname) {
         global $DB;
@@ -203,6 +227,7 @@ class step_manager extends subplugin_manager {
     /**
      * Gets the list of step subplugins.
      * @return array of step subplugins.
+     * @throws \coding_exception
      */
     public static function get_step_types() {
         $subplugins = \core_component::get_plugin_list('lifecyclestep');
@@ -218,6 +243,9 @@ class step_manager extends subplugin_manager {
      * @param string $action action to be executed
      * @param int $subpluginid id of the step instance
      * @param int $workflowid id of the workflow
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function handle_action($action, $subpluginid, $workflowid) {
         $step = self::get_step_instance($subpluginid);
@@ -245,6 +273,7 @@ class step_manager extends subplugin_manager {
      * @param int $stepid id of the step process data should be saved for.
      * @return bool if true data is saved instance dependent.
      * Otherwise it does not matter which instance of a subplugin created the data.
+     * @throws \dml_exception
      */
     public static function is_process_data_instance_dependent($stepid) {
         $step = self::get_step_instance($stepid);
@@ -259,6 +288,7 @@ class step_manager extends subplugin_manager {
      * Gets the count of steps belonging to a workflow.
      * @param int $workflowid id of the workflow.
      * @return int count of the steps.
+     * @throws \dml_exception
      */
     public static function count_steps_of_workflow($workflowid) {
         global $DB;
@@ -269,7 +299,9 @@ class step_manager extends subplugin_manager {
 
     /**
      * Removes all instances, which belong to the workflow instance.
-     * @param $workflowid int id of the workflow.
+     * @param int $workflowid Id of the workflow.
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function remove_instances_of_workflow($workflowid) {
         global $DB;
@@ -282,8 +314,12 @@ class step_manager extends subplugin_manager {
 
     /**
      * Copies all steps of a workflow to a new one.
-     * @param $oldworkflowid int id of the old workflow
-     * @param $newworkflowid int id of the new workflow
+     * @param int $oldworkflowid Id of the old workflow
+     * @param int $newworkflowid Id of the new workflow
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
+     * @throws \moodle_exception
      */
     public static function duplicate_steps($oldworkflowid, $newworkflowid) {
         $steps = self::get_step_instances($oldworkflowid);

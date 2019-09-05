@@ -33,7 +33,9 @@ defined('MOODLE_INTERNAL') || die();
  * This class bundles different functions necessary for every trigger of a workflow.
  *
  * This class should not be extended directly. Please use base_manual or base_automatic.
- * @package tool_lifecycle\trigger
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class base {
 
@@ -70,8 +72,8 @@ abstract class base {
 
     /**
      * This method can be overriden, to add additional data validation to the instance form.
-     * @param $error array containing all errors.
-     * @param $data array data passed from the moodle form to be validated
+     * @param array $error Array containing all errors.
+     * @param array $data Data passed from the moodle form to be validated
      */
     public function extend_add_instance_form_validation(&$error, $data) {
     }
@@ -109,14 +111,16 @@ abstract class base {
  * This class represents an automatic trigger.
  *
  * It is used when workflow should be started based on a specific logic.
- * @package tool_lifecycle\trigger
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class base_automatic extends base {
 
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
-     * @param $course object to be processed.
-     * @param $triggerid int id of the trigger instance.
+     * @param object $course Course to be processed.
+     * @param int $triggerid Id of the trigger instance.
      * @return trigger_response
      */
     public abstract function check_course($course, $triggerid);
@@ -134,7 +138,7 @@ abstract class base_automatic extends base {
      * The return value has to consist of an array with two values. The first one includes the where sql statement,
      * which will be concatenated using an 'AND' to the recordset query (e.g. '{course}.id = $courseid').
      * The second one is the set of parameters for the sql query, which will be merged with other param sets.
-     * @params $triggerid int id of the trigger.
+     * @param int $triggerid Id of the trigger.
      * @return array A list containing the constructed sql fragment and an array of parameters.
      */
     public function get_course_recordset_where($triggerid) {
@@ -146,7 +150,9 @@ abstract class base_automatic extends base {
  * This class represents a manual trigger.
  *
  * It is used to enable user to manually start processes for workflows.
- * @package tool_lifecycle\trigger
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class base_manual extends base {
 
@@ -161,7 +167,9 @@ abstract class base_manual extends base {
 
 /**
  * Class representing a local settings object for a subplugin instance.
- * @package tool_lifecycle\trigger
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class instance_setting {
 

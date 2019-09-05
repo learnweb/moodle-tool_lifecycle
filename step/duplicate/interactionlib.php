@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the interactions of the subplugintype step
- * It has to be implemented by all subplugins that want to use the interaction view.
+ * Interaction lib for querying course details from the user.
  *
- * @package tool_lifecycle
- * @subpackage step
+ * @package    lifecyclestep_duplicate
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -37,9 +35,16 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../interactionlib.php');
 require_once(__DIR__ . '/lib.php');
 
-
+/**
+ * Interaction lib for querying course details from the user.
+ *
+ * @package    lifecyclestep_duplicate
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class interactionduplicate extends interactionlibbase {
 
+    /** @var string Action string for triggering the duplication interaction form. */
     const ACTION_DUPLICATE_FORM = 'duplicateform';
 
     /**
@@ -134,7 +139,7 @@ class interactionduplicate extends interactionlibbase {
 
     /**
      * Renders the duplication form including respective headers and footers.
-     * @param $mform \moodleform to be rendered.
+     * @param \moodleform $mform Form to be rendered.
      */
     private function render_form($mform) {
         global $PAGE;
@@ -149,7 +154,7 @@ class interactionduplicate extends interactionlibbase {
      * Returns the display name for the given action.
      * Used for the past actions table in view.php.
      * @param string $action Identifier of action
-     * @param string $userlink html-link with username as text that refers to the user profile.
+     * @param string $user Html-link with username as text that refers to the user profile.
      * @return string action display name
      * @throws \coding_exception
      */

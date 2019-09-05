@@ -15,16 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype step
- * It has to be implemented by all subplugins.
- *
- * @package lifecyclestep
- * @subpackage email
+ * Step subplugin for sending out emails to the teacher.
+ * @package lifecyclestep_email
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace tool_lifecycle\step;
 
+use core_user;
 use tool_lifecycle\manager\process_manager;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\response\step_response;
@@ -38,8 +36,13 @@ require_once(__DIR__ . '/../lib.php');
 
 define('EMAIL_PROCDATA_KEY_KEEP', 'keep');
 
+/**
+ * Step subplugin for sending out emails to the teacher.
+ * @package lifecyclestep_email
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class email extends libbase {
-
 
     /**
      * Processes the course and returns a repsonse.
@@ -134,9 +137,9 @@ class email extends libbase {
     /**
      * Replaces certain placeholders within the mail template.
      * @param string[] $strings array of mail templates.
-     * @param mixed $user user object
-     * @param $stepid
-     * @param $mailentries
+     * @param core_user $user User object.
+     * @param int $stepid Id of the step instance.
+     * @param array[] $mailentries Array consisting of course entries from the database.
      * @return string[] array of mail text.
      * @throws \dml_exception
      * @throws \moodle_exception

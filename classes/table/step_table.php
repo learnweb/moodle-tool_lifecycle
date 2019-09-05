@@ -34,15 +34,25 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
+/**
+ * Table listing step instances
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class step_table extends \table_sql {
 
-    /** int workflowid */
+    /** @var int $workflowid If of the workflow. */
     private $workflowid;
 
     /**
      * step_table constructor.
-     * @param string $uniqueid
-     * @param int $workflowid
+     * @param string $uniqueid Unique id of the table.
+     * @param int $workflowid Id of the workflow instance.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
      */
     public function __construct($uniqueid, $workflowid) {
         parent::__construct($uniqueid);
@@ -58,6 +68,14 @@ class step_table extends \table_sql {
         $this->init();
     }
 
+    /**
+     * Take the data returned from the db_query and go through all the rows
+     * processing each col using either col_{columnname} method or other_cols
+     * method or if other_cols returns NULL then put the data straight into the
+     * table.
+     *
+     * After calling this function, don't forget to call close_recordset.
+     */
     public function build_table() {
         $triggers = trigger_manager::get_triggers_for_workflow($this->workflowid);
         foreach ($triggers as $trigger) {
@@ -75,6 +93,9 @@ class step_table extends \table_sql {
         return parent::build_table();
     }
 
+    /**
+     * Initialize the table.
+     */
     public function init() {
         $columns = ['type', 'instancename', 'subpluginname'];
         $headers = [
@@ -106,8 +127,9 @@ class step_table extends \table_sql {
 
     /**
      * Render the type column. This column displays Trigger or Step, depending of the type of the subplugin.
-     * @param $row
+     * @param object $row Row data.
      * @return string type of the subplugin
+     * @throws \coding_exception
      */
     public function col_type($row) {
         if ($row->type == 'step') {
@@ -118,8 +140,9 @@ class step_table extends \table_sql {
 
     /**
      * Render subpluginname column.
-     * @param $row
+     * @param object $row Row data.
      * @return string pluginname of the subplugin
+     * @throws \coding_exception
      */
     public function col_subpluginname($row) {
 
@@ -133,8 +156,10 @@ class step_table extends \table_sql {
 
     /**
      * Render sortindex column.
-     * @param $row
+     * @param object $row Row data.
      * @return string action buttons for changing sortorder of the subplugin
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_sortindex($row) {
         global $OUTPUT;
@@ -185,8 +210,10 @@ class step_table extends \table_sql {
 
     /**
      * Render edit column.
-     * @param $row
+     * @param object $row Row data.
      * @return string action button for editing of the subplugin
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_edit($row) {
 
@@ -203,8 +230,10 @@ class step_table extends \table_sql {
 
     /**
      * Render show column.
-     * @param $row
+     * @param object $row Row data.
      * @return string action button for editing of the subplugin
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_show_action($row) {
 
@@ -221,8 +250,10 @@ class step_table extends \table_sql {
 
     /**
      * Render delete column.
-     * @param $row
+     * @param object $row Row data.
      * @return string action button for deleting the subplugin
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_delete($row) {
 
@@ -244,6 +275,7 @@ class step_table extends \table_sql {
      * @param string $icon The key to the icon to use (e.g. 't/up')
      * @param string $alt The string description of the link used as the title and alt text
      * @return string The icon/link
+     * @throws \moodle_exception
      */
     private function format_icon_link($action, $subpluginid, $icon, $alt) {
         global $PAGE, $OUTPUT;

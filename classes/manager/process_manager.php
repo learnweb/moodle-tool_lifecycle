@@ -29,6 +29,13 @@ use tool_lifecycle\event\process_rollback;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Manager for Life Cycle Processes
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class process_manager {
 
     /**
@@ -55,8 +62,8 @@ class process_manager {
 
     /**
      * Creates a process based on a manual trigger.
-     * @param $courseid int id of the course to be triggerd.
-     * @param $triggerid int id of the triggering trigger.
+     * @param int $courseid Id of the course to be triggerd.
+     * @param int $triggerid Id of the triggering trigger.
      * @return process the triggered process instance.
      * @throws \moodle_exception for invalid workflow definition or missing trigger.
      */
@@ -198,6 +205,12 @@ class process_manager {
         $DB->delete_records('tool_lifecycle_process', (array) $process);
     }
 
+    /**
+     * Return the process of a course.
+     * @param int $courseid Id of the course.
+     * @return process|null Process instance or null if none exists.
+     * @throws \dml_exception
+     */
     public static function get_process_by_course_id($courseid) {
         global $DB;
         $record = $DB->get_record('tool_lifecycle_process', array('courseid' => $courseid));

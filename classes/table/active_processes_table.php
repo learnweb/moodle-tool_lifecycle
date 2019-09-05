@@ -27,8 +27,19 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
 
+/**
+ * Table listing active processes
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class active_processes_table extends \table_sql {
 
+    /**
+     * Constructor for active_processes_table.
+     * @param int $uniqueid Unique id of this table.
+     */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
@@ -46,6 +57,9 @@ class active_processes_table extends \table_sql {
         $this->init();
     }
 
+    /**
+     * Initialize the table.
+     */
     public function init() {
         $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'instancename']);
         $this->define_headers([
@@ -58,7 +72,7 @@ class active_processes_table extends \table_sql {
 
     /**
      * Render courseid column.
-     * @param $row
+     * @param object $row Row data.
      * @return string course link
      */
     public function col_courseid($row) {
@@ -67,7 +81,7 @@ class active_processes_table extends \table_sql {
 
     /**
      * Render courseshortname column.
-     * @param $row
+     * @param object $row Row data.
      * @return string course link
      */
     public function col_courseshortname($row) {
@@ -76,7 +90,7 @@ class active_processes_table extends \table_sql {
 
     /**
      * Render coursefullname column.
-     * @param $row
+     * @param object $row Row data.
      * @return string course link
      */
     public function col_coursefullname($row) {
@@ -85,7 +99,7 @@ class active_processes_table extends \table_sql {
 
     /**
      * Render instancename column.
-     * @param $row
+     * @param object $row Row data.
      * @return string pluginname of the instance
      */
     public function col_instancename($row) {

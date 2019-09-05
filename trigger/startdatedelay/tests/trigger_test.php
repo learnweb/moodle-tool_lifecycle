@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Trigger test for start date delay trigger.
+ *
+ * @package    lifecycletrigger_startdatedelay
+ * @group      lifecycletrigger
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle\trigger;
 
 use tool_lifecycle\entity\trigger_subplugin;
@@ -27,7 +35,7 @@ require_once(__DIR__ . '/generator/lib.php');
 /**
  * Trigger test for start date delay trigger.
  *
- * @package    lifecycletrigger
+ * @package    lifecycletrigger_startdatedelay
  * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

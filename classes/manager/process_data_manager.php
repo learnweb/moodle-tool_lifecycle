@@ -15,7 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Manager for data of Life Cycle Processes
+ * Manager for data of Life Cycle Processes.
+ *
  * Data means every additional data, which is produced, stored and queried by steps during the process.
  * This class stores and queries the process data using a key/value-store.
  * Only strings can be stored. Every other data has to be parsed manually!
@@ -31,6 +32,17 @@ use tool_lifecycle\entity\trigger_subplugin;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Manager for data of Life Cycle Processes.
+ *
+ * Data means every additional data, which is produced, stored and queried by steps during the process.
+ * This class stores and queries the process data using a key/value-store.
+ * Only strings can be stored. Every other data has to be parsed manually!
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class process_data_manager {
 
     /**

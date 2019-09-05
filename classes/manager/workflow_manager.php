@@ -21,25 +21,32 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace tool_lifecycle\manager;
 
 use tool_lifecycle\action;
 use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\entity\workflow;
 use tool_lifecycle\local\backup\backup_lifecycle_workflow;
-use tool_lifecycle\local\exporter\workflow_exporter;
 use tool_lifecycle\local\data\manual_trigger_tool;
 use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Manager for Life Cycle Workflows
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class workflow_manager {
 
     /**
      * Persists a workflow to the database.
      *
      * @param workflow $workflow
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function insert_or_update(workflow &$workflow) {
         global $DB;
@@ -57,6 +64,7 @@ class workflow_manager {
      *
      * @param int $workflowid id of the workflow
      * @param boolean $hard if set, will remove the workflow without checking if it's removable! Mainly for testing.
+     * @throws \dml_exception
      */
     public static function remove($workflowid, $hard = false) {
         global $DB;
@@ -71,6 +79,8 @@ class workflow_manager {
      * Disables a workflow
      *
      * @param int $workflowid id of the workflow
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function disable($workflowid) {
         $workflow = self::get_workflow($workflowid);
@@ -86,6 +96,8 @@ class workflow_manager {
      * Deletes all running processes of given workflow
      *
      * @param int $workflowid id of the workflow
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function abortprocesses($workflowid) {
         $processes = process_manager::get_processes_by_workflow($workflowid);
@@ -99,6 +111,7 @@ class workflow_manager {
      *
      * @param int $workflowid id of the workflow
      * @return workflow|null
+     * @throws \dml_exception
      */
     public static function get_workflow($workflowid) {
         global $DB;
@@ -115,6 +128,7 @@ class workflow_manager {
      * Returns all existing workflows.
      *
      * @return workflow[]
+     * @throws \dml_exception
      */
     public static function get_workflows() {
         global $DB;
@@ -130,6 +144,7 @@ class workflow_manager {
      * Returns all active workflows.
      *
      * @return workflow[]
+     * @throws \dml_exception
      */
     public static function get_active_workflows() {
         global $DB;
@@ -147,6 +162,7 @@ class workflow_manager {
      * Returns all active automatic workflows.
      *
      * @return workflow[]
+     * @throws \dml_exception
      */
     public static function get_active_automatic_workflows() {
         global $DB;
@@ -165,6 +181,7 @@ class workflow_manager {
      * Returns triggers of active manual workflows.
      *
      * @return trigger_subplugin[]
+     * @throws \dml_exception
      */
     public static function get_active_manual_workflow_triggers() {
         global $DB;
@@ -183,6 +200,8 @@ class workflow_manager {
      * You need to check the capability based on course and user before diplaying it.
      *
      * @return manual_trigger_tool[] list of tools, available in the whole system.
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function get_manual_trigger_tools_for_active_workflows() {
         $triggers = self::get_active_manual_workflow_triggers();
@@ -198,6 +217,9 @@ class workflow_manager {
      * Activate a workflow
      *
      * @param int $workflowid id of the workflow
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function activate_workflow($workflowid) {
         global $DB;
@@ -228,6 +250,10 @@ class workflow_manager {
      *
      * @param string $action action to be executed
      * @param int $workflowid id of the workflow
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
+     * @throws \moodle_exception
      */
     public static function handle_action($action, $workflowid) {
         if (!empty($action)) {
@@ -277,6 +303,8 @@ class workflow_manager {
      *
      * @param int $workflowid id of the workflow
      * @param bool $up tells if the workflow should be set up or down
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function change_sortindex($workflowid, $up) {
         global $DB;
@@ -319,7 +347,7 @@ class workflow_manager {
      * Checks if the workflow definition is valid.
      * The main purpose of this function is, to check if a trigger definition exists and if this definition is complete.
      *
-     * @param $workflowid int id of the workflow.
+     * @param int $workflowid Id of the workflow.
      * @return bool true, if the definition is valid.
      */
     public static function is_valid($workflowid) {
@@ -333,8 +361,9 @@ class workflow_manager {
     /**
      * Checks if the workflow is active.
      *
-     * @param $workflowid int id of the workflow.
+     * @param int $workflowid Id of the workflow.
      * @return bool true, if the workflow is active.
+     * @throws \dml_exception
      */
     public static function is_active($workflowid) {
         $workflow = self::get_workflow($workflowid);
@@ -344,8 +373,9 @@ class workflow_manager {
     /**
      * Checks if the workflow is deactive.
      *
-     * @param $workflowid int id of the workflow.
+     * @param int $workflowid Id of the workflow.
      * @return bool true, if the workflow was deactivated.
+     * @throws \dml_exception
      */
     public static function is_deactivated($workflowid) {
         $workflow = self::get_workflow($workflowid);
@@ -359,9 +389,11 @@ class workflow_manager {
      * Creates a workflow with a specific title. Is used to create preset workflows for trigger plugins or for
      * duplication of workflows.
      *
-     * @param $title string title of the workflow.
-     * @param $displaytitle string display title of the workflow.
+     * @param string $title Title of the workflow.
+     * @param string $displaytitle Display title of the workflow.
      * @return workflow the created workflow.
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function create_workflow($title, $displaytitle = null) {
         $record = new \stdClass();
@@ -377,8 +409,10 @@ class workflow_manager {
     /**
      * Duplicates a workflow including its trigger, all its steps and their settings.
      *
-     * @param $workflowid int id of the workflow to copy.
+     * @param int $workflowid Id of the workflow to copy.
      * @return workflow the created workflow.
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function duplicate_workflow($workflowid) {
         $oldworkflow = self::get_workflow($workflowid);
@@ -413,7 +447,7 @@ class workflow_manager {
     /**
      * Checks if it should be possible to disable a workflow
      *
-     * @param $workflowid
+     * @param int $workflowid Id of the workflow.
      * @return bool
      */
     public static function is_disableable($workflowid) {
@@ -430,8 +464,9 @@ class workflow_manager {
     /**
      * Workflows should only be editable if never been activated before
      *
-     * @param $workflowid
+     * @param int $workflowid Id of the workflow
      * @return bool
+     * @throws \dml_exception
      */
     public static function is_editable($workflowid) {
         if (self::is_active($workflowid) ||
@@ -444,8 +479,9 @@ class workflow_manager {
     /**
      * Workflows should only be abortable if disabled but some processes are still running
      *
-     * @param $workflowid
+     * @param int $workflowid Id of the workflow.
      * @return bool
+     * @throws \dml_exception
      */
     public static function is_abortable($workflowid) {
         $countprocesses = process_manager::count_processes_by_workflow($workflowid);
@@ -458,8 +494,9 @@ class workflow_manager {
     /**
      * Workflows should only be removable if disableable and no more processes are running
      *
-     * @param $workflowid
+     * @param int $workflowid Id of the workflow.
      * @return bool
+     * @throws \dml_exception
      */
     public static function is_removable($workflowid) {
         $countprocesses = process_manager::count_processes_by_workflow($workflowid);

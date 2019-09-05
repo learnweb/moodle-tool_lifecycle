@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype trigger
- * It has to be implemented by all subplugins.
+ * Trigger subplugin for manual triggers.
  *
- * @package lifecycletrigger
- * @subpackage manual
+ * @package lifecycletrigger_manual
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +28,9 @@ require_once(__DIR__ . '/../lib.php');
 
 /**
  * Class which implements the basic methods necessary for a life cycle trigger subplugin
- * @package lifecycletrigger
+ * @package lifecycletrigger_manual
+ * @copyright  2018 WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class manual extends base_manual {
 
@@ -90,8 +90,8 @@ class manual extends base_manual {
 
     /**
      * Make all fields required.
-     * @param $error array containing all errors.
-     * @param $data array data passed from the moodle form to be validated
+     * @param array $error Array containing all errors.
+     * @param array $data Data passed from the moodle form to be validated.
      * @return void the extended error array.
      * @throws \coding_exception
      */

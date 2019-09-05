@@ -31,6 +31,14 @@ use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\manager\workflow_manager;
 use tool_lifecycle\settings_type;
 
+/**
+ * lifecycletrigger_startdatedelay generator tests
+ *
+ * @package    lifecycletrigger_startdatedelay
+ * @category   test
+ * @copyright  2018 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class tool_lifecycle_trigger_startdatedelay_generator extends testing_module_generator {
 
     /**

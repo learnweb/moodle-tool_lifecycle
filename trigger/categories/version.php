@@ -17,8 +17,7 @@
 /**
  * Life Cycle Categories Trigger
  *
- * @package lifecycletrigger
- * @subpackage categories
+ * @package lifecycletrigger_categories
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

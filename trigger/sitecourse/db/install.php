@@ -17,8 +17,7 @@
 /**
  * Install script for lifecycle subplugin
  *
- * @package lifecycletrigger
- * @subpackage sitecourse
+ * @package    lifecycletrigger_sitecourse
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

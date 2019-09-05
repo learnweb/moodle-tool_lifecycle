@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Trigger subplugin class
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle\entity;
 
 defined('MOODLE_INTERNAL') || die();
@@ -25,12 +32,11 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class trigger_subplugin extends subplugin{
 
     /**
      * Creates a subplugin from a db record.
-     * @param $record
+     * @param object $record Data object.
      * @return trigger_subplugin
      */
     public static function from_record($record) {

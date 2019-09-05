@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for site course trigger
+ * Lang strings for delayed course trigger
  *
- * @package lifecycletrigger
- * @subpackage delayedcourses
+ * @package lifecycletrigger_delayedcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

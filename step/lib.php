@@ -15,11 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype step
- * It has to be implemented by all subplugins.
+ * Interface for the subplugintype step.
  *
+ * It has to be implemented by all subplugins.
  * @package tool_lifecycle
- * @subpackage step
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,8 +29,15 @@ use tool_lifecycle\response\step_response;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Interface for the subplugintype step.
+ *
+ * It has to be implemented by all subplugins.
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 abstract class libbase {
-
 
     /**
      * Processes the course and returns a repsonse.
@@ -121,7 +127,10 @@ abstract class libbase {
 
 /**
  * Class representing a local settings object for a subplugin instance.
- * @package tool_lifecycle\step
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class instance_setting {
 

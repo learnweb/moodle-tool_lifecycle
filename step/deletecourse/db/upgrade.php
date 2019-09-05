@@ -17,8 +17,7 @@
 /**
  * Update script for lifecycles subplugin deletecourse
  *
- * @package lifecyclestep
- * @subpackage deletecourse
+ * @package lifecyclestep_deletecourse
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,6 +27,19 @@ use tool_lifecycle\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Update script for lifecycles subplugin deletecourse
+ *
+ * @package lifecyclestep_deletecourse
+ * @copyright  2018 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @param int $oldversion Version id of the previously installed version.
+ * @throws coding_exception
+ * @throws dml_exception
+ * @throws downgrade_exception
+ * @throws moodle_exception
+ * @throws upgrade_exception
+ */
 function xmldb_lifecyclestep_deletecourse_upgrade($oldversion) {
 
     if ($oldversion < 2018122300) {

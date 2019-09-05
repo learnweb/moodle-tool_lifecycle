@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype step
- * It has to be implemented by all subplugins.
+ * Step subplugin for course duplication.
  *
- * @package lifecyclestep
- * @subpackage email
+ * @package    lifecyclestep_duplicate
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -36,9 +34,18 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
+/**
+ * Step subplugin for course duplication.
+ *
+ * @package    lifecyclestep_duplicate
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class duplicate extends libbase {
 
+    /** @var string Constant course fullname. */
     const PROC_DATA_COURSEFULLNAME = 'fullname';
+    /** @var string Constant course shortname. */
     const PROC_DATA_COURSESHORTNAME = 'shortname';
 
     /**
@@ -103,12 +110,12 @@ class duplicate extends libbase {
 
     /**
      * Duplicates a course.
-     * @param $courseid int id of the course.
-     * @param $fullname string full name of the new course.
-     * @param $shortname string short name of the new course.
-     * @param $categoryid int new category id.
-     * @param $visible bool new visibility state of the course.
-     * @param $options array additional options for the new course.
+     * @param int $courseid Id of the course.
+     * @param string $fullname Full name of the new course.
+     * @param string $shortname Short name of the new course.
+     * @param int $categoryid New category id.
+     * @param bool $visible New visibility state of the course.
+     * @param array $options Additional options for the new course.
      * @throws \base_plan_exception
      * @throws \base_setting_exception
      * @throws \coding_exception

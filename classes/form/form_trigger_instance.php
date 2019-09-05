@@ -21,7 +21,6 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace tool_lifecycle\form;
 
 use tool_lifecycle\action;
@@ -37,9 +36,11 @@ require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Provides a form to modify a step instance
+ * @package    tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class form_trigger_instance extends \moodleform {
-
 
     /**
      * @var trigger_subplugin
@@ -74,6 +75,7 @@ class form_trigger_instance extends \moodleform {
      * @param trigger_subplugin $trigger step entity.
      * @param string $subpluginname name of the trigger subplugin.
      * @param array $settings settings of the step.
+     * @throws \coding_exception
      */
     public function __construct($url, $workflowid, $trigger = null, $subpluginname = null, $settings = null) {
         $this->trigger = $trigger;
@@ -188,6 +190,13 @@ class form_trigger_instance extends \moodleform {
         }
     }
 
+    /** Validate the form.
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK (true allowed for backwards compatibility too).
+     * @throws \coding_exception
+     */
     public function validation($data, $files) {
         $error = parent::validation($data, $files);
         if (empty($data['instancename'])) {

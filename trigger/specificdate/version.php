@@ -17,8 +17,7 @@
 /**
  * Life Cycle Specific Date Trigger
  *
- * @package lifecycletrigger
- * @subpackage specificdate
+ * @package lifecycletrigger_specificdate
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

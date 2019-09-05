@@ -43,9 +43,9 @@ class behat_tool_lifecycle extends behat_base {
      *
      * @When /^I click on the tool "([^"]*)" in the "([^"]*)" row of the "([^"]*)" table$/
      *
-     * @param $tool string identifier of the tool
-     * @param $rowname string identifier of the row
-     * @param $tablename string identifier of the table
+     * @param string $tool Identifier of the tool
+     * @param string $rowname Identifier of the row
+     * @param string $tablename Identifier of the table
      * @throws Exception
      */
     public function click_on_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
@@ -60,9 +60,9 @@ class behat_tool_lifecycle extends behat_base {
      *
      * @When /^I should see the tool "([^"]*)" in the "([^"]*)" row of the "([^"]*)" table$/
      *
-     * @param $tool string identifier of the tool
-     * @param $rowname string identifier of the row
-     * @param $tablename string identifier of the table
+     * @param string $tool Identifier of the tool
+     * @param string $rowname Identifier of the row
+     * @param string $tablename Identifier of the table
      * @return string the selector of the searched tool
      * @throws Exception
      */
@@ -88,8 +88,8 @@ class behat_tool_lifecycle extends behat_base {
      *
      * @When /^I should see the tool "([^"]*)" in all rows of the "([^"]*)" table$/
      *
-     * @param $tool string identifier of the tool
-     * @param $tablename string identifier of the table
+     * @param string $tool Identifier of the tool
+     * @param string $tablename Identifier of the table
      * @throws Exception
      */
     public function i_should_see_the_tool_in_all_rows_of_the_table($tool, $tablename) {
@@ -118,7 +118,7 @@ class behat_tool_lifecycle extends behat_base {
      *
      * @When /^I should not see the table "([^"]*)"$/
      *
-     * @param $tablename string identifier of the table
+     * @param string $tablename Identifier of the table
      * @throws Exception
      */
     public function i_should_not_see_the_table($tablename) {
@@ -136,7 +136,8 @@ class behat_tool_lifecycle extends behat_base {
      *
      * @When /^I should see the row "([^"]*)" in the "([^"]*)" table$/
      *
-     * @param $tablename string identifier of the table
+     * @param string $rowname Identifier of the row
+     * @param string $tablename Identifier of the table
      * @throws Exception
      */
     public function i_should_see_the_row($rowname, $tablename) {
@@ -155,7 +156,8 @@ class behat_tool_lifecycle extends behat_base {
      *
      * @When /^I should not see the row "([^"]*)" in the "([^"]*)" table$/
      *
-     * @param $tablename string identifier of the table
+     * @param string $rowname Identifier of the row
+     * @param string $tablename Identifier of the table
      * @throws Exception
      */
     public function i_should_not_see_the_row($rowname, $tablename) {
@@ -174,9 +176,9 @@ class behat_tool_lifecycle extends behat_base {
      *
      * @When /^I should not see the tool "([^"]*)" in the "([^"]*)" row of the "([^"]*)" table$/
      *
-     * @param $tool string identifier of the tool
-     * @param $rowname string identifier of the row
-     * @param $tablename string identifier of the table
+     * @param string $tool Identifier of the tool
+     * @param string $rowname Identifier of the row
+     * @param string $tablename Identifier of the table
      * @throws Exception
      */
     public function i_should_not_see_the_tool_in_the_row_of_the_table($tool, $rowname, $tablename) {
@@ -196,9 +198,9 @@ class behat_tool_lifecycle extends behat_base {
 
     /**
      * If Javascript is active, this function tries to click on an action dropdown, to reveal the underlying actions.
-     * @param $tool string identifier of the tool
-     * @param $rowname string identifier of the row
-     * @param $tablename string identifier of the table
+     * @param string $tool Identifier of the tool
+     * @param string $rowname Identifier of the row
+     * @param string $tablename Identifier of the table
      * @throws Exception
      */
     protected function open_or_close_action_menu($tool, $rowname, $tablename) {
@@ -216,7 +218,7 @@ class behat_tool_lifecycle extends behat_base {
 
     /**
      * Build the xpath to the table element with class tablename, throws exceptions if not present.
-     * @param $tablename string identifier of the table
+     * @param string $tablename Identifier of the table
      * @return string xpath of the table
      * @throws ExpectationException
      */
@@ -234,8 +236,8 @@ class behat_tool_lifecycle extends behat_base {
 
     /**
      * Build the xpath to the row element with class $rowname within class tablename, throws exceptions if not present.
-     * @param $rowname string identifier of the row
-     * @param $tablename string identifier of the table
+     * @param string $rowname Identifier of the row
+     * @param string $tablename Identifier of the table
      * @return string xpath of the table
      * @throws ExpectationException
      */
@@ -257,9 +259,9 @@ class behat_tool_lifecycle extends behat_base {
 
     /**
      * Build the xpath to the tool element and throws exceptions if either the table or the row are not present.
-     * @param $tool string identifier of the tool
-     * @param $rowname string identifier of the row
-     * @param $tablename string identifier of the table
+     * @param string $tool Identifier of the tool
+     * @param string $rowname Identifier of the row
+     * @param string $tablename Identifier of the table
      * @return string xpath of the tool
      * @throws ExpectationException
      */
@@ -290,9 +292,9 @@ class behat_tool_lifecycle extends behat_base {
 
     /**
      * Build the xpath to the action menu and throws exceptions if either the table or the row are not present.
-     * @param $tool string identifier of the tool
-     * @param $rowname string identifier of the row
-     * @param $tablename string identifier of the table
+     * @param string $tool Identifier of the tool
+     * @param string $rowname Identifier of the row
+     * @param string $tablename Identifier of the table
      * @return string xpath of the tool
      * @throws ExpectationException
      */
@@ -324,8 +326,8 @@ class behat_tool_lifecycle extends behat_base {
      *
      * @When /^I should not see the tool "([^"]*)" in any row of the "([^"]*)" table$/
      *
-     * @param $tool string identifier of the tool
-     * @param $tablename string identifier of the table
+     * @param string $tool Identifier of the tool
+     * @param string $tablename Identifier of the table
      * @throws Exception
      */
     public function i_should_not_see_the_tool_in_any_row_of_the_table($tool, $tablename) {

@@ -15,20 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Manager for Delayed Courses
- * Each entry tells that the trigger-check for a certain course is delayed until a certain timestamp.
+ * Manager for Delayed Courses.
  *
+ * Each entry tells that the trigger-check for a certain course is delayed until a certain timestamp.
  * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace tool_lifecycle\manager;
 
 defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Manager for Delayed Courses.
+ *
+ * Each entry tells that the trigger-check for a certain course is delayed until a certain timestamp.
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class delayed_courses_manager {
 
+    /**
+     * Sets a delay for a course for specific workflow.
+     * @param int $courseid Id of the course.
+     * @param bool $becauserollback True, if the delay is caused by a rollback.
+     * @param int $workfloworid Id of the workflow.
+     * @throws \dml_exception
+     */
     public static function set_course_delayed_for_workflow($courseid, $becauserollback, $workfloworid) {
         global $DB;
         if (is_object($workfloworid)) {
@@ -63,6 +76,12 @@ class delayed_courses_manager {
 
     }
 
+    /**
+     * Get the delayes courses for specific workflow.
+     * @param int $workflowid Id of the workflow.
+     * @return array
+     * @throws \dml_exception
+     */
     public static function get_delayed_courses_for_workflow($workflowid) {
         global $DB;
         $sql = 'SELECT courseid FROM {tool_lifecycle_delayed_workf} WHERE delayeduntil > :now AND workflowid = :workflowid';

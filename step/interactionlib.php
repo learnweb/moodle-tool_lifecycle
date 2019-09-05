@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the interactions of the subplugintype step
- * It has to be implemented by all subplugins that want to use the interaction view.
+ * Interface for the interactions of the subplugintype step.
  *
+ * It has to be implemented by all subplugins that want to use the interaction view.
  * @package tool_lifecycle
  * @subpackage step
  * @copyright  2017 Tobias Reischmann WWU
@@ -33,6 +33,15 @@ use tool_lifecycle\response\step_interactive_response;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Interface for the interactions of the subplugintype step.
+ *
+ * It has to be implemented by all subplugins that want to use the interaction view.
+ * @package tool_lifecycle
+ * @subpackage step
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 abstract class interactionlibbase {
 
     /**
@@ -71,7 +80,7 @@ abstract class interactionlibbase {
      * Returns the display name for the given action.
      * Used for the past actions table in view.php.
      * @param string $action Identifier of action
-     * @param string $userlink html-link with username as text that refers to the user profile.
+     * @param string $user html-link with username as text that refers to the user profile.
      * @return string action display name
      */
     public abstract function get_action_string($action, $user);
@@ -91,8 +100,8 @@ abstract class interactionlibbase {
 
     /**
      * Returns the due date.
-     * @param $processid int id of the process.
-     * @param $stepid int id of the step instance.
+     * @param int $processid Id of the process.
+     * @param int $stepid Id of the step instance.
      * @return null | string formatted due date.
      */
     public function get_due_date($processid, $stepid) {

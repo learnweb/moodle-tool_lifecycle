@@ -17,8 +17,7 @@
 /**
  * Lang strings for create backup step
  *
- * @package lifecyclestep
- * @subpackage createbackup
+ * @package lifecyclestep_createbackup
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

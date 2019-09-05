@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype step
- * It has to be implemented by all subplugins.
+ * Step Subplugin for creating a course backup.
  *
- * @package lifecyclestep
- * @subpackage createbackup
+ * @package lifecyclestep_createbackup
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -39,8 +37,16 @@ global $CFG;
 require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
 require_once($CFG->dirroot . '/backup/controller/backup_controller.class.php');
 
+/**
+ * Step Subplugin for creating a course backup.
+ *
+ * @package lifecyclestep_createbackup
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class createbackup extends libbase {
 
+    /** @var int $numberofbackups Backups created so far in this php call. */
     private static $numberofbackups = 0;
 
     /**

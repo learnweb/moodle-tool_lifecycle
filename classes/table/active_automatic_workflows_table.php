@@ -21,7 +21,6 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace tool_lifecycle\table;
 
 use tool_lifecycle\action;
@@ -34,8 +33,21 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
+/**
+ * Table listing all active automatically triggered workflows.
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class active_automatic_workflows_table extends active_workflows_table {
 
+    /**
+     * Constructor for active_automatic_workflows_table.
+     * @param int $uniqueid Unique id of this table.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
@@ -49,6 +61,9 @@ class active_automatic_workflows_table extends active_workflows_table {
         $this->init();
     }
 
+    /**
+     * Initialize the table.
+     */
     public function init() {
         $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'sortindex', 'tools']);
         $this->define_headers([
@@ -66,8 +81,9 @@ class active_automatic_workflows_table extends active_workflows_table {
     /**
      * Render sortindex column.
      *
-     * @param $row
+     * @param object $row Row data.
      * @return string action buttons for changing sortorder of active workflows
+     * @throws \coding_exception
      */
     public function col_sortindex($row) {
         global $OUTPUT;

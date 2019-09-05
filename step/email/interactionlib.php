@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the interactions of the subplugintype step
- * It has to be implemented by all subplugins that want to use the interaction view.
+ * Implementation for the interactions of the email step.
  *
- * @package tool_lifecycle
- * @subpackage step
+ * @package lifecyclestep_email
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -39,9 +37,16 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../interactionlib.php');
 require_once(__DIR__ . '/lib.php');
 
-
+/**
+ * Implementation for the interactions of the email step.
+ *
+ * @package lifecyclestep_email
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class interactionemail extends interactionlibbase {
 
+    /** @var string Action string for triggering to keep a course. */
     const ACTION_KEEP = 'keep';
 
     /**
@@ -99,8 +104,8 @@ class interactionemail extends interactionlibbase {
 
     /**
      * Returns the due date.
-     * @param $processid int id of the process.
-     * @param $stepid int id of the step instance.
+     * @param int $processid Id of the process.
+     * @param int $stepid Id of the step instance.
      * @return string formatted date.
      * @throws \coding_exception
      * @throws \dml_exception
@@ -129,7 +134,7 @@ class interactionemail extends interactionlibbase {
      * Returns the display name for the given action.
      * Used for the past actions table in view.php.
      * @param string $action Identifier of action
-     * @param string $userlink html-link with username as text that refers to the user profile.
+     * @param string $user html-link with username as text that refers to the user profile.
      * @return string action display name
      * @throws \coding_exception
      */

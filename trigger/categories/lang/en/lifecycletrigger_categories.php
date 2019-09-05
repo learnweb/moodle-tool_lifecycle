@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for categories delay trigger
+ * Lang strings for categories trigger
  *
- * @package lifecycletrigger
- * @subpackage startdatedelay
+ * @package lifecycletrigger_categories
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

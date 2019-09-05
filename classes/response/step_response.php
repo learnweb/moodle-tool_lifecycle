@@ -25,12 +25,23 @@ namespace tool_lifecycle\response;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Possible Responses of a Subplugin
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class step_response {
 
+    /** @var string Proceed the workflow to the next step. */
     const PROCEED = 'proceed';
+    /** @var string The step is still processing the course and probably waiting for some interaction. */
     const WAITING = 'waiting';
+    /** @var string The process should be rolled back. */
     const ROLLBACK = 'rollback';
 
+    /** @var string Value of the response. */
     private $value;
 
     /**

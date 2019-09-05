@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype trigger
- * It has to be implemented by all subplugins.
+ * Trigger subplugin to exclude delayed courses.
  *
- * @package tool_lifecycle
+ * @package lifecycletrigger_delayedcourses
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,15 +31,17 @@ require_once(__DIR__ . '/../lib.php');
 
 /**
  * Class which implements the basic methods necessary for a life cycle trigger subplugin
- * @package tool_lifecycle\trigger
+ * @package lifecycletrigger_delayedcourses
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class delayedcourses extends base_automatic {
 
 
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
-     * @param $course object to be processed.
-     * @param $triggerid int id of the trigger instance.
+     * @param object $course Course to be processed.
+     * @param int $triggerid Id of the trigger instance.
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
@@ -49,7 +50,7 @@ class delayedcourses extends base_automatic {
 
     /**
      * Return sql which excludes delayed courses.
-     * @params $triggerid int id of the trigger.
+     * @param int $triggerid Id of the trigger.
      * @return array A list containing the constructed sql fragment and an array of parameters.
      */
     public function get_course_recordset_where($triggerid) {

@@ -31,8 +31,20 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
 
+/**
+ * Table listing all courses for a specific user and a specific subplugin
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class interaction_attention_table extends interaction_table {
 
+    /**
+     * Constructor for deactivated_workflows_table.
+     * @param int $uniqueid Unique id of this table.
+     * @param int[] $courseids List of ids for courses that require attention.
+     */
     public function __construct($uniqueid, $courseids) {
         parent::__construct($uniqueid);
         global $PAGE;
@@ -76,8 +88,10 @@ class interaction_attention_table extends interaction_table {
 
     /**
      * Render tools column.
-     * @param $row
+     * @param object $row Row data.
      * @return string pluginname of the subplugin
+     * @throws \coding_exception
+     * @throws \invalid_parameter_exception
      */
     public function col_tools($row) {
         $output = '';
@@ -92,7 +106,7 @@ class interaction_attention_table extends interaction_table {
 
     /**
      * Render date column.
-     * @param $row
+     * @param object $row Row data.
      * @return string pluginname of the subplugin
      */
     public function col_date($row) {
@@ -109,12 +123,13 @@ class interaction_attention_table extends interaction_table {
     /**
      * Util function for writing an action icon link
      *
-     * @param string $action    URL parameter to include in the link
+     * @param string $action URL parameter to include in the link
      * @param string $processid URL parameter to include in the link
-     * @param int    $stepinstanceid ID of the step instance
-     * @param string $alt       The string description of the link used as the title and alt text
+     * @param int $stepinstanceid ID of the step instance
+     * @param string $alt The string description of the link used as the title and alt text
      *
      * @return string The icon/link
+     * @throws \moodle_exception
      */
     private function format_icon_link($action, $processid, $stepinstanceid, $alt) {
         global $PAGE, $OUTPUT;

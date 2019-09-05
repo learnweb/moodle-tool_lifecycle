@@ -17,8 +17,7 @@
 /**
  * Subplugin for the start date delay.
  *
- * @package lifecycletrigger
- * @subpackage startdatedelay
+ * @package lifecycletrigger_startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,7 +33,7 @@ require_once(__DIR__ . '/../../lib.php');
 
 /**
  * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin
- * @package lifecycletrigger
+ * @package lifecycletrigger_startdatedelay
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -42,8 +41,8 @@ class startdatedelay extends base_automatic {
 
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
-     * @param $course object to be processed.
-     * @param $triggerid int id of the trigger instance.
+     * @param object $course Course to be processed.
+     * @param int $triggerid Id of the trigger instance.
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
@@ -53,7 +52,7 @@ class startdatedelay extends base_automatic {
 
     /**
      * Add sql comparing the current date to the start date of a course in combination with the specified delay.
-     * @param $triggerid int id of the trigger.
+     * @param int $triggerid Id of the trigger.
      * @return array A list containing the constructed sql fragment and an array of parameters.
      * @throws \coding_exception
      * @throws \dml_exception

@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Tests the field is manual after activating workflows.
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2018 WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/generator/lib.php');
@@ -40,9 +48,9 @@ class tool_lifecycle_workflow_is_manual_testcase extends \advanced_testcase {
     /** Capability of the trigger. */
     const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
 
-    /** Instance of the manual workflow */
+    /** @var workflow $manualworkflow Instance of the manual workflow */
     private $manualworkflow;
-    /** Instance of the automatic workflow */
+    /** @var workflow $automaticworkflow Instance of the automatic workflow */
     private $automaticworkflow;
 
     /**

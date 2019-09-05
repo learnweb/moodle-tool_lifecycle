@@ -17,8 +17,7 @@
 /**
  * Life Cycle Manual Trigger
  *
- * @package lifecycletrigger
- * @subpackage manual
+ * @package lifecycletrigger_manual
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

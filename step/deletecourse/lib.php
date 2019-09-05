@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype step
- * It has to be implemented by all subplugins.
+ * Step subplugin to delete a course.
  *
- * @package lifecyclestep
- * @subpackage deletecourse
+ * @package    lifecyclestep_deletecourse
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -33,8 +31,16 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
+/**
+ * Step subplugin to delete a course.
+ *
+ * @package    lifecyclestep_deletecourse
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class deletecourse extends libbase {
 
+    /** @var int $numberofdeletions Deletions done so far in this php call. */
     private static $numberofdeletions = 0;
 
     /**

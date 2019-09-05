@@ -14,8 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Trigger test for categories trigger.
+ *
+ * @package    lifecycletrigger_categories
+ * @group      lifecycletrigger
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle\trigger;
 
+use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 use tool_lifecycle\response\trigger_response;
 
@@ -27,22 +36,25 @@ require_once(__DIR__ . '/generator/lib.php');
 /**
  * Trigger test for categories trigger.
  *
- * @package    lifecycletrigger
+ * @package    lifecycletrigger_categories
  * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_lifecycle_trigger_categories_testcase extends \advanced_testcase {
 
+    /** @var trigger_subplugin $excludetrigger Trigger instance that excludes a category. */
     private $excludetrigger;
+    /** @var trigger_subplugin $includetrigger Trigger instance that includes a category. */
     private $includetrigger;
 
+    /** @var \core_course_category $category A category. */
     private $category;
+    /** @var \core_course_category $category A child category. */
     private $childcategory;
 
-    /**@var processor Instance of the lifecycle processor */
+    /** @var processor $processor Instance of the lifecycle processor */
     private $processor;
-
 
     /**
      * Setup the testcase.
