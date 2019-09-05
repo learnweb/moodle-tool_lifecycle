@@ -23,8 +23,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->version  = 2019082300;
+$plugin->maturity = MATURITY_BETA;
+$plugin->version  = 2019090500;
 $plugin->component = 'tool_lifecycle';
 $plugin->requires = 2017111300; // Require Moodle 3.4 (or above).
-$plugin->release = 'v3.6-r1';
+$plugin->release = 'v3.7-r1';
