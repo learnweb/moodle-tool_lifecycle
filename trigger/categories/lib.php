@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype trigger
- * It has to be implemented by all subplugins.
+ * Trigger subplugin to include or exclude courses of certain categories.
  *
- * @package tool_lifecycle_trigger
- * @subpackage categories
+ * @package lifecycletrigger_categories
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -36,14 +34,16 @@ require_once(__DIR__ . '/../../lib.php');
 
 /**
  * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin
- * @package tool_lifecycle_trigger
+ * @package lifecycletrigger_categories
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class categories extends base_automatic {
 
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
-     * @param $course object to be processed.
-     * @param $triggerid int id of the trigger instance.
+     * @param object $course Course to be processed.
+     * @param int $triggerid Id of the trigger instance.
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
@@ -51,6 +51,14 @@ class categories extends base_automatic {
         return trigger_response::trigger();
     }
 
+    /**
+     * Return sql sniplet for including (or excluding) the courses belonging to specific categories
+     * and all their children.
+     * @param int $triggerid Id of the trigger.
+     * @return array A list containing the constructed sql fragment and an array of parameters.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function get_course_recordset_where($triggerid) {
         global $DB, $CFG;
         $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
@@ -81,10 +89,18 @@ class categories extends base_automatic {
         return array($where, $inparams);
     }
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'categories';
     }
 
+    /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
     public function instance_settings() {
         return array(
             new instance_setting('categories', PARAM_SEQUENCE),
@@ -92,6 +108,13 @@ class categories extends base_automatic {
         );
     }
 
+    /**
+     * This method can be overriden, to add form elements to the form_step_instance.
+     * It is called in definition().
+     * @param \MoodleQuickForm $mform
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function extend_add_instance_form_definition($mform) {
         global $DB;
         $categories = $DB->get_records('course_categories');

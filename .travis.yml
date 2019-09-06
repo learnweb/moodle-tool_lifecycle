@@ -66,6 +66,7 @@ jobs:
       install:
       - moodle-plugin-ci install --no-init
       script:
+      - moodle-plugin-ci phpdoc
       - moodle-plugin-ci phplint
       - moodle-plugin-ci phpcpd
       - moodle-plugin-ci phpmd

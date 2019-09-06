@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Defines available settings_types.
+ * @package    tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle;
 
 defined('MOODLE_INTERNAL') || die();
@@ -21,13 +27,13 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Defines available settings_types.
  * @package    tool_lifecycle
- * @category
- * @group      tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class settings_type {
 
+    /** @var string Represents the type for a step subplugin. */
     const STEP = 'step';
+    /** @var string Represents the type for a trigger subplugin. */
     const TRIGGER = 'trigger';
 }

@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype trigger
- * It has to be implemented by all subplugins.
+ * Trigger subplugin which triggers on specific dates only.
  *
- * @package tool_lifecycle_trigger
- * @subpackage specificdate
+ * @package lifecycletrigger_specificdate
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -37,14 +35,16 @@ require_once(__DIR__ . '/../../lib.php');
 
 /**
  * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin
- * @package tool_lifecycle_trigger
+ * @package lifecycletrigger_specificdate
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class specificdate extends base_automatic {
 
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
-     * @param $course object to be processed.
-     * @param $triggerid int id of the trigger instance.
+     * @param object $course Course to be processed.
+     * @param int $triggerid Id of the trigger instance.
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
@@ -52,6 +52,16 @@ class specificdate extends base_automatic {
         return trigger_response::trigger();
     }
 
+    /**
+     * Returns true or false, depending on if the current date is one of the specified days,
+     * at which the trigger should run.
+     * @param int $triggerid Id of the trigger.
+     * @return array A list containing the constructed sql fragment and an array of parameters.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     * @throws \Exception
+     */
     public function get_course_recordset_where($triggerid) {
         $settings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
         $lastrun = getdate($settings['timelastrun']);
@@ -93,7 +103,9 @@ class specificdate extends base_automatic {
 
     /**
      * Parses the dates settings to actual date objects.
-     * @param $datesraw string
+     * @param string $datesraw Raw data from the form representing dates.
+     * @return array
+     * @throws \moodle_exception
      */
     private function parse_dates($datesraw) {
         $dates = preg_split('/\r\n|\r|\n/', $datesraw);
@@ -111,10 +123,18 @@ class specificdate extends base_automatic {
         return $result;
     }
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'specificdate';
     }
 
+    /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
     public function instance_settings() {
         return array(
             new instance_setting('dates', PARAM_TEXT),
@@ -122,15 +142,27 @@ class specificdate extends base_automatic {
         );
     }
 
+    /**
+     * This method can be overriden, to add form elements to the form_step_instance.
+     * It is called in definition().
+     * @param \MoodleQuickForm $mform
+     * @throws \coding_exception
+     */
     public function extend_add_instance_form_definition($mform) {
         $mform->addElement('textarea', 'dates', get_string('dates', 'lifecycletrigger_specificdate'),
             get_string('dates_desc', 'lifecycletrigger_specificdate'));
-        $mform->setType('categories', PARAM_TEXT);
+        $mform->setType('dates', PARAM_TEXT);
         $mform->addElement('hidden', 'timelastrun');
         $mform->setDefault('timelastrun', time());
         $mform->setType('timelastrun', PARAM_INT);
     }
 
+    /**
+     * Validate parsable dates.
+     * @param array $error Array containing all errors.
+     * @param array $data Data passed from the moodle form to be validated.
+     * @throws \coding_exception
+     */
     public function extend_add_instance_form_validation(&$error, $data) {
         $dates = preg_split('/\r\n|\r|\n/', $data['dates']);
         foreach ($dates as $date) {

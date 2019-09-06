@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Lib functions for tool_lifecycle.
  * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,6 +30,8 @@ defined('MOODLE_INTERNAL') || die();
  * @param stdClass $course The course to object for the tool
  * @param context $context The context of the course
  * @return void|null return null if we don't want to display the node.
+ * @throws coding_exception
+ * @throws moodle_exception
  */
 function tool_lifecycle_extend_navigation_course($navigation, $course, $context) {
     global $PAGE;

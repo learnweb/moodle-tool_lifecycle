@@ -21,7 +21,6 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace tool_lifecycle\plugininfo;
 
 use core\plugininfo\base;
@@ -33,8 +32,22 @@ use tool_usertours\step;
 
 defined('MOODLE_INTERNAL') || die();
 
-
+/**
+ * Pluginfo for life cycle trigger
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class lifecycletrigger extends base {
+
+    /**
+     * Should there be a way to uninstall the plugin via the administration UI.
+     *
+     * By default uninstallation is not allowed, plugin developers must enable it explicitly!
+     *
+     * @return bool
+     */
     public function is_uninstall_allowed() {
         if ($this->is_standard()) {
             return false;
@@ -49,6 +62,12 @@ class lifecycletrigger extends base {
         return true;
     }
 
+    /**
+     * Uninstall the plugin.
+     * @param \progress_trace $progress
+     * @return bool
+     * @throws \moodle_exception
+     */
     public function uninstall(\progress_trace $progress) {
         $lib = lib_manager::get_trigger_lib($this->name);
         if ($lib->has_multiple_instances()) {

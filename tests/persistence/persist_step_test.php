@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Tests creating storing and retrieving a step object.
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
@@ -32,14 +40,17 @@ use \tool_lifecycle\manager\step_manager;
  */
 class tool_lifecycle_persist_step_testcase extends \advanced_testcase {
 
-    /** workflow */
+    /** @var workflow $workflow Instance of the workflow. */
     private $workflow;
 
-    const INSTANCENAME = 'myinstance';
-    const STEPNAME = 'stepname';
+    /** @var tool_lifecycle_generator $generator Instance of the test generator. */
     private $generator;
 
-
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
     public function setUp() {
         $this->resetAfterTest(true);
         $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');

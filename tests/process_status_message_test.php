@@ -14,9 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Tests assembly of manual trigger tools.
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2018 Tamara Gunkel, Jan Dageforde WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 use tool_lifecycle\action;
+use tool_lifecycle\entity\workflow;
 use tool_lifecycle\manager\workflow_manager;
 
 /**
@@ -28,13 +37,23 @@ use tool_lifecycle\manager\workflow_manager;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_lifecycle_process_status_message_testcase extends \advanced_testcase {
+    /** Icon of the manual trigger. */
     const MANUAL_TRIGGER1_ICON = 't/up';
+    /** Display name of the manual trigger. */
     const MANUAL_TRIGGER1_DISPLAYNAME = 'Up';
+    /** Capability of the manual trigger. */
     const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
+
+    /** @var workflow $workflow Workflow of this test. */
     private $workflow;
 
+    /** @var tool_lifecycle_generator $generator Instance of the test generator. */
     private $generator;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         global $USER;
 

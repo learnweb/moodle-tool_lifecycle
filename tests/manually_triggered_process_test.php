@@ -14,12 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Manually triggers a process and tests if process courses proceeds the process as expected.
+ *
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2018 WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 
 use tool_lifecycle\action;
+use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\workflow_manager;
 use tool_lifecycle\manager\trigger_manager;
@@ -37,13 +47,24 @@ use tool_lifecycle\settings_type;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_lifecycle_manually_triggered_process_testcase extends \advanced_testcase {
+    /** Icon of the manual trigger. */
     const MANUAL_TRIGGER1_ICON = 't/up';
+    /** Display name of the manual trigger. */
     const MANUAL_TRIGGER1_DISPLAYNAME = 'Up';
+    /** Capability of the manual trigger. */
     const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
 
+
+    /** @var trigger_subplugin[] $trigger Instances of the triggers under test. */
     private $trigger;
+    /** @var array $course Instance of the course under test. */
     private $course;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
     public function setUp() {
         global $USER;
 

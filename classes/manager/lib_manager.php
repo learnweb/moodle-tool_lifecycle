@@ -23,11 +23,20 @@
  */
 namespace tool_lifecycle\manager;
 
+use tool_lifecycle\step\libbase;
+use tool_lifecycle\trigger\base;
 use tool_lifecycle\trigger\base_automatic;
 use tool_lifecycle\trigger\base_manual;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Manager to retrive the lib of each subplugin.
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class lib_manager {
 
     /**
@@ -92,7 +101,7 @@ class lib_manager {
      * @param string $subpluginname name of the subplugin
      * @param string $subplugintype type of the subplugin (e.g. trigger, step)
      * @param string $libsubtype allows to query different lib classes.
-     * @return
+     * @return null|base|libbase
      */
     private static function get_lib($subpluginname, $subplugintype, $libsubtype = '') {
         $triggerlist = \core_component::get_plugin_list('lifecycle' . $subplugintype);

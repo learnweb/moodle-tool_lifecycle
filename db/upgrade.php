@@ -24,6 +24,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Update script for tool_lifecycle.
+ * @param int $oldversion Version id of the previously installed version.
+ * @return bool
+ * @throws ddl_exception
+ * @throws ddl_field_missing_exception
+ * @throws ddl_table_missing_exception
+ * @throws dml_exception
+ * @throws downgrade_exception
+ * @throws upgrade_exception
+ */
 function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     global $DB;

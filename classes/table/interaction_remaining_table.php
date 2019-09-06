@@ -30,11 +30,23 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
 
+/**
+ * Table listing all courses for a specific user and a specific subplugin
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class interaction_remaining_table extends interaction_table {
 
-    /** manual_trigger_tool[] list of all available trigger tools. */
+    /** @var manual_trigger_tool[] $availabletools list of all available trigger tools. */
     private $availabletools;
 
+    /**
+     * Constructor for deactivated_workflows_table.
+     * @param int $uniqueid Unique id of this table.
+     * @param int[] $courseids List of ids for courses that require no attention.
+     */
     public function __construct($uniqueid, $courseids) {
         parent::__construct($uniqueid);
         global $PAGE;
@@ -97,8 +109,10 @@ class interaction_remaining_table extends interaction_table {
 
     /**
      * Render tools column.
-     * @param $row
-     * @return string pluginname of the subplugin
+     * @param object $row Row data.
+     * @return string Rendered tools html
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_tools($row) {
         global $PAGE, $OUTPUT;
@@ -130,6 +144,14 @@ class interaction_remaining_table extends interaction_table {
         return $OUTPUT->render($menu);
     }
 
+    /**
+     * Render status column.
+     * @param object $row Row data.
+     * @return string Rendered status html
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
+     */
     public function col_status($row) {
         $processstatus = parent::col_status($row);
         // If current process has status, show status.
@@ -147,6 +169,13 @@ class interaction_remaining_table extends interaction_table {
         return $interactionlib->get_action_string($row->action, $userlink);
     }
 
+
+    /**
+     * Render lastmodified column.
+     * @param object $row Row data.
+     * @return string Rendered lastmodified html
+     * @throws \coding_exception
+     */
     public function col_lastmodified($row) {
         if (!$row->lastmodified) {
             return '';

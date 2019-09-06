@@ -14,9 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Tests the settings manager.
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\entity\workflow;
 use tool_lifecycle\manager\step_manager;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\manager\subplugin_manager;
@@ -33,14 +43,22 @@ use tool_lifecycle\settings_type;
  */
 class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
 
-    /** step_subplugin */
+    /** @var step_subplugin $step Instance of the step plugin. */
     private $step;
+    /** @var trigger_subplugin $trigger Instance of the trigger plugin. */
     private $trigger;
+    /** @var workflow $workflow Instance of the workflow. */
     private $workflow;
 
+    /** @var string constant value for the email. */
     const EMAIL_VALUE = 'value';
+    /** @var int constant value for start delay. */
     const STARTDELAY_VALUE = 100;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         $this->resetAfterTest(false);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');

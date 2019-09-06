@@ -14,8 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Trigger test for delayed courses trigger.
+ *
+ * @package    lifecycletrigger_delayedcourses
+ * @group      lifecycletrigger
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle\trigger;
 
+use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\entity\workflow;
 use tool_lifecycle\processor;
 use tool_lifecycle\manager\delayed_courses_manager;
@@ -29,23 +38,23 @@ require_once(__DIR__ . '/generator/lib.php');
 /**
  * Trigger test for delayed courses trigger.
  *
- * @package    tool_lifecycle_trigger
- * @category   delayedcourses
- * @group tool_lifecycle_trigger
+ * @package    lifecycletrigger_delayedcourses
+ * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase {
 
+    /** @var trigger_subplugin $triggerinstance Instance of the delayedcourses trigger. */
     private $triggerinstance;
 
-    /**@var processor Instance of the lifecycle processor */
+    /** @var processor Instance of the lifecycle processor */
     private $processor;
 
-    /**@var workflow Workflow delaying only processes for itself */
+    /** @var workflow Workflow delaying only processes for itself */
     private $workflow;
 
-    /**@var workflow Workflow delaying processes for all workflows */
+    /** @var workflow Workflow delaying processes for all workflows */
     private $workflowdealayingallworkflows;
 
     public function setUp() {

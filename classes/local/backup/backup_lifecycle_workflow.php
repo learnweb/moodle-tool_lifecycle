@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Class to backup a workflow.
+ * @package    tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle\local\backup;
 
 use tool_lifecycle\entity\step_subplugin;
@@ -27,6 +33,12 @@ use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class to backup a workflow.
+ * @package    tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class backup_lifecycle_workflow {
 
     /** @var $workflow workflow */
@@ -40,6 +52,11 @@ class backup_lifecycle_workflow {
     /** @var $tempfilename string */
     private $tempfilename;
 
+    /**
+     * backup_lifecycle_workflow constructor.
+     * @param int $workflowid Id of the workflow a backup should be created for.
+     * @throws \dml_exception
+     */
     public function __construct($workflowid) {
         $this->workflow = workflow_manager::get_workflow($workflowid);
         $this->steps = step_manager::get_step_instances($workflowid);
@@ -137,6 +154,10 @@ class backup_lifecycle_workflow {
         }
     }
 
+    /**
+     * Get temporary filename
+     * @return string
+     */
     public function get_temp_filename() {
         return $this->tempfilename;
     }

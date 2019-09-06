@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype step
- * It has to be implemented by all subplugins.
+ * Step subplugin to delete a course.
  *
- * @package tool_lifecycle_step
- * @subpackage deletecourse
+ * @package    lifecyclestep_deletecourse
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -33,8 +31,16 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
+/**
+ * Step subplugin to delete a course.
+ *
+ * @package    lifecyclestep_deletecourse
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class deletecourse extends libbase {
 
+    /** @var int $numberofdeletions Deletions done so far in this php call. */
     private static $numberofdeletions = 0;
 
     /**
@@ -47,6 +53,8 @@ class deletecourse extends libbase {
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
         if (self::$numberofdeletions >= settings_manager::get_settings(
@@ -58,16 +66,30 @@ class deletecourse extends libbase {
         return step_response::proceed();
     }
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'deletecourse';
     }
 
+    /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
     public function instance_settings() {
         return array(
             new instance_setting('maximumdeletionspercron', PARAM_INT),
         );
     }
 
+    /**
+     * This method can be overriden, to add form elements to the form_step_instance.
+     * It is called in definition().
+     * @param \MoodleQuickForm $mform
+     * @throws \coding_exception
+     */
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'maximumdeletionspercron';
         $mform->addElement('text', $elementname, get_string('deletecourse_maximumdeletionspercron', 'lifecyclestep_deletecourse'));

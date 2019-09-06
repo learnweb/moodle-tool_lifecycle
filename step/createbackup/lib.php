@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype step
- * It has to be implemented by all subplugins.
+ * Step Subplugin for creating a course backup.
  *
- * @package tool_lifecycle_step
- * @subpackage createbackup
+ * @package lifecyclestep_createbackup
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -39,8 +37,16 @@ global $CFG;
 require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
 require_once($CFG->dirroot . '/backup/controller/backup_controller.class.php');
 
+/**
+ * Step Subplugin for creating a course backup.
+ *
+ * @package lifecyclestep_createbackup
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class createbackup extends libbase {
 
+    /** @var int $numberofbackups Backups created so far in this php call. */
     private static $numberofbackups = 0;
 
     /**
@@ -53,6 +59,8 @@ class createbackup extends libbase {
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
         if (self::$numberofbackups >= settings_manager::get_settings(
@@ -66,20 +74,43 @@ class createbackup extends libbase {
         return step_response::waiting();
     }
 
+    /**
+     * Simply call the process_course since it handles everything necessary for this plugin.
+     * @param int $processid
+     * @param int $instanceid
+     * @param mixed $course
+     * @return step_response
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function process_waiting_course($processid, $instanceid, $course) {
         return $this->process_course($processid, $instanceid, $course);
     }
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'createbackup';
     }
 
-
+    /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
     public function instance_settings() {
         return array(
             new instance_setting('maximumbackupspercron', PARAM_INT),
         );
     }
+
+    /**
+     * This method can be overriden, to add form elements to the form_step_instance.
+     * It is called in definition().
+     * @param \MoodleQuickForm $mform
+     * @throws \coding_exception
+     */
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'maximumbackupspercron';
         $mform->addElement('text', $elementname,

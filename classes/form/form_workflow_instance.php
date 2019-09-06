@@ -31,9 +31,11 @@ require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Provides a form to modify a workflow instance
+ * @package    tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class form_workflow_instance extends \moodleform {
-
 
     /**
      * @var workflow
@@ -42,9 +44,8 @@ class form_workflow_instance extends \moodleform {
 
     /**
      * Constructor
-     * @param \moodle_url $url.
+     * @param \moodle_url $url Url of the page.
      * @param workflow $workflow workflow entity.
-     * @throws \moodle_exception if neither step nor subpluginname are set.
      */
     public function __construct($url, $workflow) {
         $this->workflow = $workflow;

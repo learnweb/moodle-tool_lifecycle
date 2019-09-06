@@ -14,9 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Tests assembly of manual trigger tools.
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2018 Tobias Reischmann, Jan Dageforde WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 use tool_lifecycle\action;
+use tool_lifecycle\entity\workflow;
 use tool_lifecycle\manager\workflow_manager;
 use tool_lifecycle\manager\trigger_manager;
 use tool_lifecycle\local\data\manual_trigger_tool;
@@ -30,15 +39,29 @@ use tool_lifecycle\local\data\manual_trigger_tool;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
+    /** Icon of the manual trigger 1. */
     const MANUAL_TRIGGER1_ICON = 't/up';
+    /** Display name of the manual trigger 1. */
     const MANUAL_TRIGGER1_DISPLAYNAME = 'Up';
+    /** Capability of the manual trigger 1. */
     const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
+
+    /** Icon of the manual trigger 2. */
     const MANUAL_TRIGGER2_ICON = 't/down';
+    /** Display name of the manual trigger 2. */
     const MANUAL_TRIGGER2_DISPLAYNAME = 'Down';
+    /** Capability of the manual trigger 2. */
     const MANUAL_TRIGGER2_CAPABILITY = 'moodle/course:view';
+
+    /** @var workflow $workflow1 Instance of the first workflow. */
     private $workflow1;
+    /** @var workflow $workflow1 Instance of the second workflow. */
     private $workflow2;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         global $USER;
         $this->resetAfterTest(true);
@@ -97,8 +120,8 @@ class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
 
     /**
      * Test if a specific manual_trigger_tool exist within an array.
-     * @param $expectedtool manual_trigger_tool searched trigger_tool.
-     * @param $tools manual_trigger_tool[] haystack.
+     * @param manual_trigger_tool $expectedtool searched trigger_tool.
+     * @param manual_trigger_tool[] $tools haystack.
      */
     private function assert_tool_exist($expectedtool, $tools) {
         $found = false;

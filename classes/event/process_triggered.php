@@ -50,6 +50,8 @@ class process_triggered extends \core\event\base {
      *
      * @param process $process
      * @return process_triggered
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function event_from_process($process) {
         $data = array(
@@ -90,6 +92,7 @@ class process_triggered extends \core\event\base {
      * Return localised event name.
      *
      * @return string
+     * @throws \coding_exception
      */
     public static function get_name() {
         return get_string('process_triggered_event', 'tool_lifecycle');
@@ -99,6 +102,7 @@ class process_triggered extends \core\event\base {
      * Returns relevant URL.
      *
      * @return moodle_url
+     * @throws \moodle_exception
      */
     public function get_url() {
         return new moodle_url('/admin/tool/lifecycle/view.php');
@@ -125,6 +129,9 @@ class process_triggered extends \core\event\base {
         }
     }
 
+    /**
+     * Implementation of get_other_mapping.
+     */
     public static function get_other_mapping() {
         // No backup and restore.
         return false;

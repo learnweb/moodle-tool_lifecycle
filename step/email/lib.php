@@ -15,16 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype step
- * It has to be implemented by all subplugins.
- *
- * @package tool_lifecycle_step
- * @subpackage email
+ * Step subplugin for sending out emails to the teacher.
+ * @package lifecyclestep_email
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace tool_lifecycle\step;
 
+use core_user;
 use tool_lifecycle\manager\process_manager;
 use tool_lifecycle\manager\settings_manager;
 use tool_lifecycle\response\step_response;
@@ -38,8 +36,13 @@ require_once(__DIR__ . '/../lib.php');
 
 define('EMAIL_PROCDATA_KEY_KEEP', 'keep');
 
+/**
+ * Step subplugin for sending out emails to the teacher.
+ * @package lifecyclestep_email
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class email extends libbase {
-
 
     /**
      * Processes the course and returns a repsonse.
@@ -51,6 +54,8 @@ class email extends libbase {
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
         global $DB;
@@ -76,6 +81,8 @@ class email extends libbase {
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function process_waiting_course($processid, $instanceid, $course) {
         // When time runs up and no one wants to keep the course, then proceed.
@@ -89,6 +96,9 @@ class email extends libbase {
         return step_response::waiting();
     }
 
+    /**
+     * Send emails to all teachers, but only one mail per teacher.
+     */
     public function post_processing_bulk_operation() {
         global $DB, $PAGE;
         $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
@@ -127,8 +137,12 @@ class email extends libbase {
     /**
      * Replaces certain placeholders within the mail template.
      * @param string[] $strings array of mail templates.
-     * @param mixed $user user object
+     * @param core_user $user User object.
+     * @param int $stepid Id of the step instance.
+     * @param array[] $mailentries Array consisting of course entries from the database.
      * @return string[] array of mail text.
+     * @throws \dml_exception
+     * @throws \moodle_exception
      */
     private function replace_placeholders($strings, $user, $stepid, $mailentries) {
         global $CFG;
@@ -182,6 +196,7 @@ class email extends libbase {
      * Parses a course for the non html format.
      * @param int $courseid id of the course
      * @return string
+     * @throws \dml_exception
      */
     private function parse_course($courseid) {
         $course = get_course($courseid);
@@ -193,12 +208,17 @@ class email extends libbase {
      * Parses a course for the html format.
      * @param int $courseid id of the course
      * @return array column of a course
+     * @throws \dml_exception
      */
     private function parse_course_row_data($courseid) {
         $course = get_course($courseid);
         return array($course->fullname);
     }
 
+    /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
+     * @return instance_setting[] containing settings keys and PARAM_TYPES
+     */
     public function instance_settings() {
         return array(
             new instance_setting('responsetimeout', PARAM_INT),
@@ -208,10 +228,20 @@ class email extends libbase {
         );
     }
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'email';
     }
 
+    /**
+     * This method can be overriden, to add form elements to the form_step_instance.
+     * It is called in definition().
+     * @param \MoodleQuickForm $mform
+     * @throws \coding_exception
+     */
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'responsetimeout';
         $mform->addElement('duration', $elementname, get_string('email_responsetimeout', 'lifecyclestep_email'));
@@ -232,6 +262,12 @@ class email extends libbase {
         $mform->setType($elementname, PARAM_RAW);
     }
 
+    /**
+     * This method can be overriden, to set default values to the form_step_instance.
+     * It is called in definition_after_data().
+     * @param \MoodleQuickForm $mform
+     * @param array $settings array containing the settings from the db.
+     */
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
         $mform->setDefault('contenthtml', array('text' => $settings['contenthtml'], 'format' => FORMAT_HTML));
     }

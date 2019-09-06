@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Subplugin class
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle\entity;
 
 defined('MOODLE_INTERNAL') || die();
@@ -25,28 +32,27 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 abstract class subplugin{
 
-    /** int Id of subplugin */
+    /** @var int $id Id of subplugin */
     public $id;
 
-    /** string instancename of the step*/
+    /** @var string $instancename Instancename of the step*/
     public $instancename;
 
-    /** int id of the workflow this step belongs to*/
+    /** @var int $workflowid Id of the workflow this step belongs to*/
     public $workflowid;
 
-    /** string name of subplugin */
+    /** @var string $subpluginname Name of subplugin */
     public $subpluginname;
 
-    /** int sort index, which defines the order,
+    /** @var int $sortindex Sort index, which defines the order,
      * in which the steps wihtin a workflow are executed*/
     public $sortindex;
 
     /**
      * Creates a subplugin with subpluginname and optional id.
-     * @oaram string $instancename name of the subplugin instance
+     * @param string $instancename name of the subplugin instance
      * @param string $subpluginname name of the subplugin
      * @param int $workflowid id of the workflow the subplugin belongs to
      * @param int $id id of the subplugin

@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Tests the beckup manager.
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 use tool_lifecycle\manager\backup_manager;
@@ -22,15 +30,18 @@ use tool_lifecycle\manager\backup_manager;
  * Tests the beckup manager.
  * @package    tool_lifecycle
  * @category   test
- * @group      tool_lifecycle_backup
+ * @group      tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_lifecycle_backup_manager_testcase extends \advanced_testcase {
 
-    /** course */
+    /** @var array $course Instance of the course under test. */
     private $course;
 
+    /**
+     * Setup the testcase.
+     */
     public function setUp() {
         $this->resetAfterTest(false);
         $this->course = $this->getDataGenerator()->create_course();

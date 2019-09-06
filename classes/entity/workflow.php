@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Life Cycle Workflow class
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle\entity;
 
 defined('MOODLE_INTERNAL') || die();
@@ -25,40 +32,53 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class workflow {
 
-    /** int id of the workflow*/
+    /** @var int $id Id of the workflow. */
     public $id;
 
-    /** title of the workflow */
+    /** @var string @title Title of the workflow. */
     public $title;
 
-    /** timestamp the workflow was set active */
+    /** @var /timestamp $timeactive Time the workflow was set active. */
     public $timeactive;
 
-    /** timestamp the workflow was deactivated */
+    /** @var /timestamp $timedeactive Time the workflow was deactivated. */
     public $timedeactive;
 
-    /** int sort index of all active workflows */
+    /** @var int $sortindex Sort index of all active workflows. */
     public $sortindex;
 
-    /** bool|null true if workflow is manually triggered*/
+    /** @var bool|null $manual True if workflow is manually triggered. */
     public $manual;
 
-    /** title that is displayed to users */
+    /** @var string $displaytitle Title that is displayed to users. */
     public $displaytitle;
 
-    /** @var int the delay in case of rollback */
+    /** @var int $rollbackdelay The delay in case of rollback. */
     public $rollbackdelay;
 
-    /** @var int the delay in case of finished course */
+    /** @var int $finishdelay The delay in case of finished course. */
     public $finishdelay;
 
+    /** @var bool $delayforallworkflows True if a delay counts for all workflows. */
     public $delayforallworkflows;
 
+    /**
+     * Workflow constructor.
+     * @param int $id Id of the workflow.
+     * @param string $title Title of the workflow.
+     * @param /timestamp $timeactive Time the workflow was set active.
+     * @param /timestamp $timedeactive Time the workflow was deactivated.
+     * @param int $sortindex Sort index of all active workflows.
+     * @param bool $manual True if workflow is manually triggered.
+     * @param string $displaytitle Title that is displayed to users.
+     * @param int $rollbackdelay The delay in case of rollback.
+     * @param int $finishdelay The delay in case of finished course.
+     * @param bool $delayforallworkflows True if a delay counts for all workflows.
+     */
     private function __construct($id, $title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
-            $rollbackdelay, $finishdelay, $delayforallworkflows) {
+                                 $rollbackdelay, $finishdelay, $delayforallworkflows) {
         $this->id = $id;
         $this->title = $title;
         $this->timeactive = $timeactive;
@@ -73,7 +93,7 @@ class workflow {
 
     /**
      * Creates a Workflow from a DB record.
-     * @param $record
+     * @param object $record Data object.
      * @return workflow
      */
     public static function from_record($record) {

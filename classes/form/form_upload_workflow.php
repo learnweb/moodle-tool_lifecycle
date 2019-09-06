@@ -23,14 +23,15 @@
  */
 namespace tool_lifecycle\form;
 
-use tool_lifecycle\entity\workflow;
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Provides a form to modify a workflow instance
+ * @package    tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class form_upload_workflow extends \moodleform {
 

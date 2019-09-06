@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Class to restore a workflow.
+ * @package    tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle\local\backup;
 
 use tool_lifecycle\entity\step_subplugin;
@@ -27,6 +33,12 @@ use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class to restore a workflow.
+ * @package    tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class restore_lifecycle_workflow {
 
     /** @var $workflow workflow */
@@ -42,6 +54,10 @@ class restore_lifecycle_workflow {
     /** @var $writer \XMLWriter */
     private $reader;
 
+    /**
+     * Restore_lifecycle_workflow constructor.
+     * @param string $xmldata XML-Data the workflow should be restored from.
+     */
     public function __construct($xmldata) {
         $this->reader = new \XMLReader();
         $this->reader->XML($xmldata);

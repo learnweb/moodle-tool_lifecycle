@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype step
- * It has to be implemented by all subplugins.
+ * Step subplugin for course duplication.
  *
- * @package tool_lifecycle_step
- * @subpackage email
+ * @package    lifecyclestep_duplicate
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -36,9 +34,18 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
+/**
+ * Step subplugin for course duplication.
+ *
+ * @package    lifecyclestep_duplicate
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class duplicate extends libbase {
 
+    /** @var string Constant course fullname. */
     const PROC_DATA_COURSEFULLNAME = 'fullname';
+    /** @var string Constant course shortname. */
     const PROC_DATA_COURSESHORTNAME = 'shortname';
 
     /**
@@ -51,6 +58,7 @@ class duplicate extends libbase {
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
+     * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
         $fullname = process_data_manager::get_process_data($processid, $instanceid, self::PROC_DATA_COURSEFULLNAME);
@@ -85,15 +93,37 @@ class duplicate extends libbase {
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
+     * @throws \dml_exception
      */
     public function process_waiting_course($processid, $instanceid, $course) {
         return $this->process_course($processid, $instanceid, $course);
     }
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'duplicate';
     }
 
+
+    /**
+     * Duplicates a course.
+     * @param int $courseid Id of the course.
+     * @param string $fullname Full name of the new course.
+     * @param string $shortname Short name of the new course.
+     * @param int $categoryid New category id.
+     * @param bool $visible New visibility state of the course.
+     * @param array $options Additional options for the new course.
+     * @throws \base_plan_exception
+     * @throws \base_setting_exception
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     * @throws \required_capability_exception
+     * @throws \restore_controller_exception
+     */
     public function duplicate_course($courseid, $fullname, $shortname, $categoryid, $visible, $options) {
         global $USER, $DB, $CFG;
         require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');

@@ -21,7 +21,6 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace tool_lifecycle\form;
 
 use tool_lifecycle\action;
@@ -36,9 +35,11 @@ require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Provides a form to modify a step instance
+ * @package    tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class form_step_instance extends \moodleform {
-
 
     /**
      * @var step_subplugin

@@ -30,11 +30,21 @@ use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Manager for Trigger subplugins
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class trigger_manager extends subplugin_manager {
 
     /**
      * Creates a preset workflow for the trigger subplugin.
-     * @param $subpluginname string name of the trigger subplugin.
+     * @param string $subpluginname Name of the trigger subplugin.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function register_workflow($subpluginname) {
         $workflow = workflow_manager::create_workflow(
@@ -50,8 +60,9 @@ class trigger_manager extends subplugin_manager {
 
     /**
      * Returns a subplugin object.
-     * @param int $subpluginid id of the subplugin
+     * @param int $instanceid Id of the subplugin.
      * @return trigger_subplugin
+     * @throws \dml_exception
      */
     public static function get_instance($instanceid) {
         return self::get_subplugin_by_id($instanceid);
@@ -61,6 +72,7 @@ class trigger_manager extends subplugin_manager {
      * Returns all instances for a trigger subplugin.
      * @param string $subpluginname name of the subplugin
      * @return trigger_subplugin[]
+     * @throws \dml_exception
      */
     public static function get_instances($subpluginname) {
         global $DB;
@@ -77,6 +89,7 @@ class trigger_manager extends subplugin_manager {
      * Returns a subplugin object.
      * @param int $subpluginid id of the subplugin
      * @return trigger_subplugin
+     * @throws \dml_exception
      */
     private static function get_subplugin_by_id($subpluginid) {
         global $DB;
@@ -92,6 +105,8 @@ class trigger_manager extends subplugin_manager {
     /**
      * Persists a subplugin to the database.
      * @param trigger_subplugin $subplugin
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function insert_or_update(trigger_subplugin &$subplugin) {
         global $DB;
@@ -109,6 +124,8 @@ class trigger_manager extends subplugin_manager {
      * Removes all trigger instances from the database.
      * Should only be used, when uninstalling the subplugin.
      * @param string $subpluginname trigger instance id
+     * @throws \dml_exception
+     * @throws \coding_exception
      */
     public static function remove_all_instances($subpluginname) {
         $triggers = self::get_instances($subpluginname);
@@ -120,6 +137,9 @@ class trigger_manager extends subplugin_manager {
     /**
      * Removes a trigger instance from the database.
      * @param int $triggerinstanceid trigger instance id
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     private static function remove($triggerinstanceid) {
         global $DB;
@@ -136,8 +156,9 @@ class trigger_manager extends subplugin_manager {
 
     /**
      * Returns the triggers instances for the workflow id.
-     * @param $workflowid int id of the workflow definition.
+     * @param int $workflowid Id of the workflow definition.
      * @return trigger_subplugin[] returns the trigger instances for the workflow.
+     * @throws \dml_exception
      */
     public static function get_triggers_for_workflow($workflowid) {
         global $DB;
@@ -153,6 +174,8 @@ class trigger_manager extends subplugin_manager {
     /**
      * Removes a subplugin from the sortindex of a workflow and adjusts all other indizes.
      * @param trigger_subplugin $toberemoved
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     private static function remove_from_sortindex(&$toberemoved) {
         global $DB;
@@ -172,6 +195,8 @@ class trigger_manager extends subplugin_manager {
      * Changes the sortindex of a trigger by swapping it with another.
      * @param int $triggerid id of the trigger
      * @param bool $up tells if the trigger should be set up or down
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function change_sortindex($triggerid, $up) {
         global $DB;
@@ -210,6 +235,7 @@ class trigger_manager extends subplugin_manager {
     /**
      * Gets the list of step subplugins.
      * @return array of step subplugins.
+     * @throws \coding_exception
      */
     public static function get_trigger_types() {
         $subplugins = \core_component::get_plugin_list('lifecycletrigger');
@@ -223,6 +249,7 @@ class trigger_manager extends subplugin_manager {
     /**
      * Gets the list of step subplugins, which are not preset and can therefore be chosen from trigger form dropdown..
      * @return array of step subplugins.
+     * @throws \coding_exception
      */
     public static function get_chooseable_trigger_types() {
         $triggers = self::get_trigger_types();
@@ -242,6 +269,9 @@ class trigger_manager extends subplugin_manager {
      * @param string $action action to be executed
      * @param int $subpluginid id of the trigger instance
      * @param int $workflowid id of the workflow
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
      */
     public static function handle_action($action, $subpluginid, $workflowid) {
         $trigger = self::get_instance($subpluginid);
@@ -267,6 +297,7 @@ class trigger_manager extends subplugin_manager {
      * Gets the count of triggers belonging to a workflow.
      * @param int $workflowid id of the workflow.
      * @return int count of the steps.
+     * @throws \dml_exception
      */
     public static function count_triggers_of_workflow($workflowid) {
         global $DB;
@@ -277,7 +308,9 @@ class trigger_manager extends subplugin_manager {
 
     /**
      * Removes all instances, which belong to the workflow instance.
-     * @param $workflowid int id of the workflow.
+     * @param int $workflowid Id of the workflow.
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function remove_instances_of_workflow($workflowid) {
         global $DB;
@@ -290,8 +323,12 @@ class trigger_manager extends subplugin_manager {
 
     /**
      * Copies the triggers of a workflow to a new one.
-     * @param $oldworkflowid int id of the old workflow
-     * @param $newworkflowid int id of the new workflow
+     * @param int $oldworkflowid Id of the old workflow
+     * @param int $newworkflowid Id of the new workflow
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
+     * @throws \moodle_exception
      */
     public static function duplicate_triggers($oldworkflowid, $newworkflowid) {
         $triggers = self::get_triggers_for_workflow($oldworkflowid);

@@ -21,7 +21,6 @@
  * @copyright  2018 Yorick Reum, JMU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace tool_lifecycle\table;
 
 use tool_lifecycle\action;
@@ -33,12 +32,18 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
 
+/**
+ * Table listing deactivated workflows
+ *
+ * @package tool_lifecycle
+ * @copyright  2018 Yorick Reum, JMU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class deactivated_workflows_table extends workflow_table {
 
     /**
-     * deactivated_workflows_table constructor.
-     *
-     * @param string $uniqueid
+     * Constructor for deactivated_workflows_table.
+     * @param int $uniqueid Unique id of this table.
      */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
@@ -53,6 +58,9 @@ class deactivated_workflows_table extends workflow_table {
         $this->init();
     }
 
+    /**
+     * Initialize the table.
+     */
     public function init() {
         $this->define_columns(['title', 'timedeactive', 'processes', 'tools']);
         $this->define_headers([
@@ -68,8 +76,10 @@ class deactivated_workflows_table extends workflow_table {
     /**
      * Render tools column.
      *
-     * @param $row
+     * @param object $row Row data.
      * @return string action buttons for workflows
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_tools($row) {
         global $OUTPUT;

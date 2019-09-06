@@ -34,8 +34,19 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
+/**
+ * Table listing all workflow definitions.
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class workflow_definition_table extends workflow_table {
 
+    /**
+     * Constructor for workflow_definition_table.
+     * @param int $uniqueid Unique id of this table.
+     */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
@@ -47,6 +58,9 @@ class workflow_definition_table extends workflow_table {
         $this->init();
     }
 
+    /**
+     * Initialize the table.
+     */
     public function init() {
         $this->define_columns(['title', 'timeactive', 'tools']);
         $this->define_headers([
@@ -60,8 +74,10 @@ class workflow_definition_table extends workflow_table {
 
     /**
      * Render activate column.
-     * @param $row
+     * @param object $row Row data.
      * @return string activate time for workflows
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_timeactive($row) {
         global $OUTPUT, $PAGE;
@@ -82,8 +98,10 @@ class workflow_definition_table extends workflow_table {
 
     /**
      * Render tools column.
-     * @param $row
+     * @param object $row Row data.
      * @return string action buttons for workflows
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_tools($row) {
         global $OUTPUT;

@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Interface for the subplugintype trigger
- * It has to be implemented by all subplugins.
+ * Trigger subplugin for manual triggers.
  *
- * @package tool_lifecycle_trigger
- * @subpackage manual
+ * @package lifecycletrigger_manual
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,15 +28,22 @@ require_once(__DIR__ . '/../lib.php');
 
 /**
  * Class which implements the basic methods necessary for a life cycle trigger subplugin
- * @package tool_lifecycle_trigger
+ * @package lifecycletrigger_manual
+ * @copyright  2018 WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class manual extends base_manual {
 
+    /**
+     * The return value should be equivalent with the name of the subplugin folder.
+     * @return string technical name of the subplugin
+     */
     public function get_subpluginname() {
         return 'manual';
     }
 
     /**
+     * Defines which settings each instance of the subplugin offers for the user to define.
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
@@ -52,6 +57,7 @@ class manual extends base_manual {
      * This method can be overriden, to add form elements to the form_step_instance.
      * It is called in definition().
      * @param \MoodleQuickForm $mform
+     * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'icon';
@@ -84,8 +90,10 @@ class manual extends base_manual {
 
     /**
      * Make all fields required.
-     * @param $error
-     * @param $data
+     * @param array $error Array containing all errors.
+     * @param array $data Data passed from the moodle form to be validated.
+     * @return void the extended error array.
+     * @throws \coding_exception
      */
     public function extend_add_instance_form_validation(&$error, $data) {
         parent::extend_add_instance_form_validation($error, $data);

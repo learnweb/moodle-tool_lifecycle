@@ -17,11 +17,10 @@
 /**
  * Pluginfo for life cycle step
  *
- * @package tool_lifecycle
+ * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace tool_lifecycle\plugininfo;
 
 use core\plugininfo\base;
@@ -30,8 +29,22 @@ use tool_lifecycle\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
-
+/**
+ * Pluginfo for life cycle step
+ *
+ * @package    tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class lifecyclestep extends base {
+
+    /**
+     * Should there be a way to uninstall the plugin via the administration UI.
+     *
+     * By default uninstallation is not allowed, plugin developers must enable it explicitly!
+     *
+     * @return bool
+     */
     public function is_uninstall_allowed() {
         if ($this->is_standard()) {
             return false;
@@ -46,6 +59,11 @@ class lifecyclestep extends base {
         return true;
     }
 
+    /**
+     * Remove the plugin.
+     * @param \progress_trace $progress
+     * @return bool
+     */
     public function uninstall(\progress_trace $progress) {
         step_manager::remove_all_instances($this->name);
         return true;

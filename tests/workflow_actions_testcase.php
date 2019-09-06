@@ -14,11 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Setup for workflow actions tests.
+ *
+ * @package    tool_lifecycle
+ * @category   test
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 
+use tool_lifecycle\entity\workflow;
 use tool_lifecycle\manager\workflow_manager;
 
 /**
@@ -26,15 +35,21 @@ use tool_lifecycle\manager\workflow_manager;
  *
  * @package    tool_lifecycle
  * @category   test
- * @group      tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class workflow_actions_testcase extends \advanced_testcase {
+    /** @var workflow $workflow1 Instance of the first workflow. */
     protected $workflow1;
+    /** @var workflow $workflow2 Instance of the second workflow. */
     protected $workflow2;
+    /** @var workflow $workflow3 Instance of the third workflow. */
     protected $workflow3;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         global $USER;
         // We do not need a sesskey check in theses tests.

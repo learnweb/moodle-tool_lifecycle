@@ -25,12 +25,23 @@ namespace tool_lifecycle\response;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Possible Responses of a Trigger Subplugin
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class trigger_response {
 
+    /** @var string Ask the next workflow if it wants to trigger the course. */
     const NEXT = 'next';
+    /** @var string Exclude the course from being processed by this and any succeeding workflow. */
     const EXCLUDE = 'exclude';
+    /** @var string Trigger a process for this workflow if all other triggers of this workflow say the same. */
     const TRIGGER = 'trigger';
 
+    /** @var string Value of the response. */
     private $value;
 
     /**

@@ -34,13 +34,22 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
+/**
+ * Table listing all active workflow definitions.
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 abstract class active_workflows_table extends workflow_table {
 
     /**
      * Render tools column for active workflows.
      *
-     * @param $row
+     * @param object $row Row data.
      * @return string action buttons for workflows
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_tools($row) {
         global $OUTPUT;

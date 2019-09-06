@@ -14,8 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Trigger test for course site trigger.
+ *
+ * @package    lifecycletrigger_sitecourse
+ * @group      lifecycletrigger
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle\trigger;
 
+use tool_lifecycle\entity\trigger_subplugin;
 use tool_lifecycle\response\trigger_response;
 
 defined('MOODLE_INTERNAL') || die();
@@ -26,16 +35,20 @@ require_once(__DIR__ . '/generator/lib.php');
 /**
  * Trigger test for course site trigger.
  *
- * @package    tool_lifecycle_trigger
- * @category   startdatedelay
- * @group tool_lifecycle_trigger
+ * @package    lifecycletrigger_sitecourse
+ * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_lifecycle_trigger_sitecourse_testcase extends \advanced_testcase {
 
+    /** @var trigger_subplugin $triggerinstance Instance of the trigger. */
     private $triggerinstance;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         $this->resetAfterTest(true);
         $this->setAdminUser();

@@ -23,12 +23,17 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Renderer for life cycle
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class tool_lifecycle_renderer extends plugin_renderer_base {
 
     /**
      * Write the page footer
-     *
-     * @return string
      */
     public function footer() {
         global $OUTPUT;
@@ -38,8 +43,7 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
     /**
      * Write the page header
      *
-     * @param string optional page title.
-     * @return string
+     * @param string $title optional page title.
      */
     public function header($title = null) {
         global $OUTPUT, $PAGE;
@@ -55,6 +59,7 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
      * Renders the workflow upload form including errors, which occured during upload.
      * @param \tool_lifecycle\form\form_upload_workflow $form
      * @param array $errors
+     * @throws coding_exception
      */
     public function render_workflow_upload_form($form, $errors = array()) {
         $this->header(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));

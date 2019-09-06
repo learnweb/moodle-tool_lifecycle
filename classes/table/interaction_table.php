@@ -33,8 +33,19 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
 
+/**
+ * Table listing all courses for a specific user and a specific subplugin
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 abstract class interaction_table extends \table_sql {
 
+    /**
+     * Constructor for interaction_table.
+     * @param int $uniqueid Unique id of this table.
+     */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
@@ -47,7 +58,7 @@ abstract class interaction_table extends \table_sql {
 
     /**
      * Render coursefullname column.
-     * @param $row
+     * @param object $row Row data.
      * @return string course link
      */
     public function col_coursefullname($row) {
@@ -57,7 +68,7 @@ abstract class interaction_table extends \table_sql {
 
     /**
      * Render startdate column.
-     * @param $row
+     * @param object $row Row data.
      * @return string human readable date
      * @throws \coding_exception
      */
@@ -72,15 +83,18 @@ abstract class interaction_table extends \table_sql {
 
     /**
      * Render tools column.
-     * @param $row
-     * @return string pluginname of the subplugin
+     * @param object $row Row data.
+     * @return string Rendered tools html
      */
     public abstract function col_tools($row);
 
     /**
      * Render status column.
-     * @param $row
-     * @return string pluginname of the subplugin
+     * @param object $row Row data.
+     * @return string Rendered status html.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
      */
     public function col_status($row) {
         if ($row->processid !== null) {

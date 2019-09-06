@@ -27,8 +27,19 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
 
+/**
+ * Table listing course backups
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class course_backups_table extends \table_sql {
 
+    /**
+     * Constructor for course_backups_table.
+     * @param int $uniqueid Unique id of this table.
+     */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
@@ -42,6 +53,9 @@ class course_backups_table extends \table_sql {
         $this->init();
     }
 
+    /**
+     * Initialize the table.
+     */
     public function init() {
         $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'backupcreated', 'download', 'restore']);
         $this->define_headers([
@@ -56,7 +70,7 @@ class course_backups_table extends \table_sql {
 
     /**
      * Render courseid column.
-     * @param $row
+     * @param object $row Row data.
      * @return string course link
      */
     public function col_courseid($row) {
@@ -69,7 +83,7 @@ class course_backups_table extends \table_sql {
 
     /**
      * Render courseshortname column.
-     * @param $row
+     * @param object $row Row data.
      * @return string course link
      */
     public function col_courseshortname($row) {
@@ -82,7 +96,7 @@ class course_backups_table extends \table_sql {
 
     /**
      * Render coursefullname column.
-     * @param $row
+     * @param object $row Row data.
      * @return string course link
      */
     public function col_coursefullname($row) {
@@ -95,7 +109,7 @@ class course_backups_table extends \table_sql {
 
     /**
      * Render backupcreated column.
-     * @param $row
+     * @param object $row Row data.
      * @return string date of the backupcreated
      */
     public function col_backupcreated($row) {
@@ -104,8 +118,10 @@ class course_backups_table extends \table_sql {
 
     /**
      * Render download column.
-     * @param $row
+     * @param object $row Row data.
      * @return string action buttons for downloading a backup.
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_download($row) {
         return \html_writer::link(
@@ -116,8 +132,10 @@ class course_backups_table extends \table_sql {
 
     /**
      * Render restore column.
-     * @param $row
+     * @param object $row Row data.
      * @return string action buttons for restoring a course.
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_restore($row) {
         return \html_writer::link(

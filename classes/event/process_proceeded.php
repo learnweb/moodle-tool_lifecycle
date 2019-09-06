@@ -21,7 +21,6 @@
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace tool_lifecycle\event;
 
 use moodle_url;
@@ -52,6 +51,8 @@ class process_proceeded extends \core\event\base {
      *
      * @param process $process
      * @return process_proceeded
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function event_from_process($process) {
         $data = array(
@@ -95,6 +96,7 @@ class process_proceeded extends \core\event\base {
      * Return localised event name.
      *
      * @return string
+     * @throws \coding_exception
      */
     public static function get_name() {
         return get_string('process_proceeded_event', 'tool_lifecycle');
@@ -104,6 +106,7 @@ class process_proceeded extends \core\event\base {
      * Returns relevant URL.
      *
      * @return moodle_url
+     * @throws \moodle_exception
      */
     public function get_url() {
         return new moodle_url('/admin/tool/lifecycle/view.php');
@@ -134,6 +137,9 @@ class process_proceeded extends \core\event\base {
         }
     }
 
+    /**
+     * Implementation of get_other_mapping.
+     */
     public static function get_other_mapping() {
         // No backup and restore.
         return false;

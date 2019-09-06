@@ -33,8 +33,21 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
+/**
+ * Table listing all active manually triggered workflows.
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class active_manual_workflows_table extends active_workflows_table {
 
+    /**
+     * Constructor for active_manual_workflows_table.
+     * @param int $uniqueid Unique id of this table.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
@@ -48,6 +61,9 @@ class active_manual_workflows_table extends active_workflows_table {
         $this->init();
     }
 
+    /**
+     * Initialize the table.
+     */
     public function init() {
         $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'tools']);
         $this->define_headers([

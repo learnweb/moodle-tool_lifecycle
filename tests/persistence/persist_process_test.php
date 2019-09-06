@@ -14,10 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Tests creating storing and retrieving a process object.
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
 
+use tool_lifecycle\entity\workflow;
 use tool_lifecycle\manager\delayed_courses_manager;
 use \tool_lifecycle\manager\process_manager;
 
@@ -31,12 +40,16 @@ use \tool_lifecycle\manager\process_manager;
  */
 class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
 
-    /** workflow */
+    /** @var workflow $workflow Instance of the workflow. */
     private $workflow;
 
-    /** course */
+    /** @var array $course Instance of the course. */
     private $course;
 
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
     public function setUp() {
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
@@ -73,7 +86,6 @@ class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
      * Tests deletion of a process when rolledback.
      */
     public function test_process_rollback() {
-        global $CFG;
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
         delayed_courses_manager::set_course_delayed($process->courseid, get_config('tool_lifecycle', 'duration'));
         process_manager::rollback_process($process);

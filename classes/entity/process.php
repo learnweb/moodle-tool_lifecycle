@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Life Cycle Process class
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace tool_lifecycle\entity;
 
 defined('MOODLE_INTERNAL') || die();
@@ -25,27 +32,35 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class process {
 
-    /** int id of the process*/
+    /** @var int $id Id of the process*/
     public $id;
 
-    /** int id of the workflow */
+    /** @var int $workflowid Id of the workflow */
     public $workflowid;
 
-    /** int id of the course*/
+    /** @var int $courseid Id of the course*/
     public $courseid;
 
-    /** bool true if course is in status waiting*/
+    /** @var bool $waiting True if course is in status waiting*/
     public $waiting;
 
-    /** int sortindex of the step within the workflow */
+    /** @var int $stepindex Sortindex of the step within the workflow */
     public $stepindex;
 
-    /** timestamp date the process was moved to the current step instance */
+    /** @var /timestamp $timestepchanged Date the process was moved to the current step instance */
     public $timestepchanged;
 
+    /**
+     * Process constructor.
+     * @param int $id Id of the process.
+     * @param int $workflowid Id of the workflow.
+     * @param int $courseid Id of the course.
+     * @param int $stepindex Sortindex of the step within the workflow.
+     * @param bool $waiting True if course is in status waiting.
+     * @param null $timestepchanged Date the process was moved to the current step instance.
+     */
     private function __construct($id, $workflowid, $courseid, $stepindex, $waiting = false, $timestepchanged = null) {
         $this->id = $id;
         $this->workflowid = $workflowid;
@@ -61,7 +76,7 @@ class process {
 
     /**
      * Creates a Life Cycle Process from a db record.
-     * @param $record
+     * @param object $record Data object.
      * @return process
      */
     public static function from_record($record) {

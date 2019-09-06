@@ -29,12 +29,28 @@ use tool_lifecycle\processor;
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * Scheduled task for working on lifecycle processes
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class lifecycle_task extends \core\task\scheduled_task {
 
+    /**
+     * Get a descriptive name for this task (shown to admins).
+     *
+     * @return string
+     * @throws \coding_exception
+     */
     public function get_name() {
         return get_string('lifecycle_task', 'tool_lifecycle');
     }
 
+    /**
+     * Do the job.
+     */
     public function execute() {
         $processor = new processor();
         $processor->call_trigger();

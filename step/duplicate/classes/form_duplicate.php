@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Offers the possibility to enter a new coursename
+ * Offers the possibility to enter a new coursename.
  *
- * @package    tool_lifecycle
+ * @package    lifecyclestep_duplicate
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,17 +31,24 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Provides a form to modify a step instance
+ * Offers the possibility to enter a new coursename.
+ *
+ * @package    lifecyclestep_duplicate
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class form_duplicate extends \moodleform {
 
+    /** @var int $processid Id of the process. */
     private $processid;
+    /** @var int $stepid Id of the step instance. */
     private $stepid;
 
     /**
      * Constructor
-     * @param \moodle_url $url.
-     * @param int $processid if of the process
+     * @param \moodle_url $url Url of the current page.
+     * @param int $processid Id of the process.
+     * @param int $stepid Id of the step instance.
      */
     public function __construct($url, $processid, $stepid) {
         $this->processid = $processid;

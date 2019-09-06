@@ -25,13 +25,25 @@ namespace tool_lifecycle\response;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Possible Responses of a Subplugin for interaction handling
+ *
+ * @package tool_lifecycle
+ * @copyright  2018 WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class step_interactive_response {
 
+    /** @var string Proceed the workflow to the next step. */
     const PROCEED = 'proceed';
+    /** @var string The called action is not known to the processing plugin. */
     const NOACTION = 'noaction';
+    /** @var string The processing plugin is still processing. */
     const STILLPROCESSING = 'stillprocessing';
+    /** @var string The process should be rolled back. */
     const ROLLBACK = 'rollback';
 
+    /** @var string Value of the response. */
     private $value;
 
     /**

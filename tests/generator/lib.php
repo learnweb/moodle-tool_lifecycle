@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * tool_lifecycle test generator
+ *
+ * @package    tool_lifecycle
+ * @category   test
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 use tool_lifecycle\entity\process;
@@ -27,7 +35,7 @@ use tool_lifecycle\manager\workflow_manager;
 use tool_lifecycle\settings_type;
 
 /**
- * tool_lifecycle generator tests
+ * tool_lifecycle test generator
  *
  * @package    tool_lifecycle
  * @category   test
@@ -36,6 +44,7 @@ use tool_lifecycle\settings_type;
  */
 class tool_lifecycle_generator extends testing_module_generator {
 
+    /** @var array $defaultsteps Default steps configuration. */
     private static $defaultsteps = [
         "deletecourse" => [
             "maximumdeletionspercron" => 10
@@ -50,6 +59,8 @@ class tool_lifecycle_generator extends testing_module_generator {
             "maximumbackupspercron" => 10
         ],
     ];
+
+    /** @var array $defaulttrigger Default trigger configuration. */
     private static $defaulttrigger = [
         "startdatedelay" => [
             "delay" => 10000
@@ -102,6 +113,7 @@ class tool_lifecycle_generator extends testing_module_generator {
      * Creates an artificial workflow without steps, which is triggered manually.
      * @param \stdClass $triggersettings settings of the manual trigger
      * @return workflow
+     * @throws moodle_exception
      */
     public static function create_manual_workflow($triggersettings) {
         // Create Workflow.
@@ -123,9 +135,9 @@ class tool_lifecycle_generator extends testing_module_generator {
 
     /**
      * Creates a step for a given workflow and stores it in the DB
-     * @param $instancename
-     * @param $subpluginname
-     * @param $workflowid
+     * @param string $instancename Name of the subplugin instance.
+     * @param string $subpluginname Name of the subplugin type.
+     * @param int $workflowid Id of the workflow.
      * @return step_subplugin created step
      */
     public static function create_step($instancename, $subpluginname, $workflowid) {
@@ -136,10 +148,10 @@ class tool_lifecycle_generator extends testing_module_generator {
 
     /**
      * Creates a trigger for a given workflow and stores it in the DB
-     * @param $instancename
-     * @param $subpluginname
-     * @param $workflowid
-     * @return step_subplugin created step
+     * @param string $instancename Name of the subplugin instance.
+     * @param string $subpluginname Name of the subplugin type.
+     * @param int $workflowid Id of the workflow.
+     * @return trigger_subplugin created step
      */
     public static function create_trigger($instancename, $subpluginname, $workflowid) {
         $trigger = new trigger_subplugin($instancename, $subpluginname, $workflowid);
@@ -149,6 +161,9 @@ class tool_lifecycle_generator extends testing_module_generator {
 
     /**
      * Creates an artificial workflow with three steps.
+     * @return workflow
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public static function create_workflow_with_steps() {
         $workflow = self::create_workflow();
@@ -158,6 +173,13 @@ class tool_lifecycle_generator extends testing_module_generator {
         return $workflow;
     }
 
+    /**
+     * Create a process for a combination of course and workflow.
+     * @param int $courseid Id of the course.
+     * @param int $workflowid Id of the workflow.
+     * @return process
+     * @throws dml_exception
+     */
     public static function create_process($courseid, $workflowid) {
         global $DB;
 

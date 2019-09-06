@@ -34,8 +34,19 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../lib.php');
 
+/**
+ * Table listing all active automatically triggered workflows.
+ *
+ * @package tool_lifecycle
+ * @copyright  2018 Jan Dageförde WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 abstract class workflow_table extends \table_sql {
 
+    /**
+     * Constructor for workflow_table.
+     * @param int $uniqueid Unique id of this table.
+     */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
@@ -43,7 +54,8 @@ abstract class workflow_table extends \table_sql {
 
     /**
      * Render title column.
-     * @param $row
+     * @param object $row Row data.
+     * @return string Rendered title.
      */
     public function col_title($row) {
         return $row->title . '<br><span class="workflow_displaytitle">' . $row->displaytitle . '</span>';
@@ -51,8 +63,10 @@ abstract class workflow_table extends \table_sql {
 
     /**
      * Render activate column.
-     * @param $row
+     * @param object $row Row data.
      * @return string activate time for workflows
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_timeactive($row) {
         global $OUTPUT, $PAGE;
@@ -68,8 +82,9 @@ abstract class workflow_table extends \table_sql {
 
     /**
      * Render deactivated column.
-     * @param $row
+     * @param object $row Row data.
      * @return string deactivate time for workflows
+     * @throws \coding_exception
      */
     public function col_timedeactive($row) {
         if ($row->timedeactive) {
@@ -80,7 +95,7 @@ abstract class workflow_table extends \table_sql {
 
     /**
      * Render the trigger column.
-     * @param $row
+     * @param object $row Row data.
      * @return string instancename of the trigger
      */
     public function col_trigger($row) {
@@ -97,8 +112,9 @@ abstract class workflow_table extends \table_sql {
 
     /**
      * Render the processes column. It shows the number of active processes for the workflow instance.
-     * @param $row
-     * @return string instancename of the trigger
+     * @param object $row Row data.
+     * @return string Number of processes.
+     * @throws \dml_exception
      */
     public function col_processes($row) {
         return process_manager::count_processes_by_workflow($row->id);
@@ -106,8 +122,10 @@ abstract class workflow_table extends \table_sql {
 
     /**
      * Render tools column.
-     * @param $row
+     * @param object $row Row data.
      * @return string action buttons for workflows
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_tools($row) {
         global $OUTPUT;
@@ -131,6 +149,7 @@ abstract class workflow_table extends \table_sql {
      * @param string $icon The key to the icon to use (e.g. 't/up')
      * @param string $alt The string description of the link used as the title and alt text
      * @return string The icon/link
+     * @throws \moodle_exception
      */
     protected function format_icon_link($action, $workflowid, $icon, $alt) {
         global $OUTPUT;

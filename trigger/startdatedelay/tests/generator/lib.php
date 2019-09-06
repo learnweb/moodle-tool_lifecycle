@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * lifecycletrigger_startdatedelay generator tests
+ *
+ * @package    lifecycletrigger_startdatedelay
+ * @category   test
+ * @copyright  2018 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 use tool_lifecycle\entity\trigger_subplugin;
@@ -36,6 +44,7 @@ class tool_lifecycle_trigger_startdatedelay_generator extends testing_module_gen
     /**
      * Creates a trigger startdatedelay for an artificial workflow without steps.
      * @return trigger_subplugin the created startdatedelay trigger.
+     * @throws moodle_exception
      */
     public static function create_trigger_with_workflow() {
         // Create Workflow.

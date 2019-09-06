@@ -28,6 +28,13 @@ use tool_lifecycle\settings_type;
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__.'/../../lib.php');
 
+/**
+ * Manager to retrive the local settings for each step subplugin.
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class settings_manager {
 
     /**
@@ -115,8 +122,10 @@ class settings_manager {
     /**
      * Returns an array of local subplugin settings for a given instance id
      * @param int $instanceid id of the step instance
-     * @param 'step'|'trigger' $type type of the subplugin.
+     * @param string $type Type of the setting (see {@link settings_type}).
      * @return array|null settings key-value pairs
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function get_settings($instanceid, $type) {
         global $DB;
@@ -155,7 +164,9 @@ class settings_manager {
     /**
      * Removes all local settings for a given instance id
      * @param int $instanceid id of the step instance
-     * @param 'step'|'trigger' $type type of the subplugin.
+     * @param string $type Type of the setting (see {@link settings_type}).
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function remove_settings($instanceid, $type) {
         global $DB;
@@ -168,7 +179,7 @@ class settings_manager {
 
     /**
      * Validates the type param for the two possibilities 'step' and 'trigger'.
-     * @param $type string type subplugin the settings should be saved, queried or removed.
+     * @param string $type Type of the setting (see {@link settings_type}).
      * @throws \coding_exception
      */
     private static function validate_type($type) {
