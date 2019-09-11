@@ -22,6 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Create Backup Step';
+$string['pluginname'] = 'Create backup step';
 
-$string['maximumbackupspercron'] = 'Maximum number of Backups per cron';
+$string['maximumbackupspercron'] = 'Maximum number of backups per cron';

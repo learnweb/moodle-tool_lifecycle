@@ -22,10 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Email Step';
+$string['pluginname'] = 'Email step';
 
 $string['email_responsetimeout'] = 'Time the user has for the response';
-$string['email_subject'] = 'Subject Template';
+$string['email_subject'] = 'Subject template';
 $emailplaceholdersnohtml = '<p>' . 'You can use the following placeholders:'
     . '<br>' . 'First name of recipient: ##firstname##'
     . '<br>' . 'Last name of recipient: ##lastname##'
@@ -44,8 +44,8 @@ $emailplaceholdershtml = '<p>' . 'You can use the following placeholders:'
 $string['email_content_html'] = 'Content HTML Template';
 $string['email_content_html_help'] = 'Set the html template for the content of the email (HTML email, will be used instead of plaintext field if not empty!)' . $emailplaceholdershtml;
 
-$string['email:preventdeletion'] = 'Prevent Deletion';
+$string['email:preventdeletion'] = 'Prevent deletion';
 
-$string['keep_course'] = 'Keep Course';
+$string['keep_course'] = 'Keep course';
 $string['status_message_requiresattention'] = 'Course is marked for deletion';
 $string['action_prevented_deletion'] = '{$a} prevented deletion';
