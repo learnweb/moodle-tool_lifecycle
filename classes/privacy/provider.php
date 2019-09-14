@@ -26,9 +26,7 @@ namespace tool_lifecycle\privacy;
 
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
-use core_privacy\local\request\context;
 use core_privacy\local\request\contextlist;
-use core_privacy\local\request\core_user_data_provider;
 use core_privacy\local\request\writer;
 
 defined('MOODLE_INTERNAL') || die();
@@ -103,7 +101,12 @@ class provider implements \core_privacy\local\metadata\provider,
      * @param context $context The specific context to delete data for.
      */
     public static function delete_data_for_all_users_in_context(\context $context) {
-
+        global $DB;
+        if ($context instanceof \context_system) {
+            $sql = "UPDATE {tool_lifecycle_action_log}
+                    SET userid = -1";
+            $DB->execute($sql);
+        }
     }
 
     /**
@@ -112,6 +115,14 @@ class provider implements \core_privacy\local\metadata\provider,
      * @param approved_contextlist $contextlist The approved contexts and user information to delete information for.
      */
     public static function delete_data_for_user(approved_contextlist $contextlist) {
-        // TODO: Implement delete_data_for_user() method.
+        global $DB;
+        foreach ($contextlist->get_contexts() as $context) {
+            if ($context instanceof \context_system) {
+                $sql = "UPDATE {tool_lifecycle_action_log}
+                    SET userid = -1
+                    WHERE userid = :userid";
+                $DB->execute($sql, array('userid' => $contextlist->get_user()->id));
+            }
+        }
     }
 }
