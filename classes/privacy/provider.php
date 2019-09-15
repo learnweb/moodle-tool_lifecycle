@@ -26,7 +26,10 @@ namespace tool_lifecycle\privacy;
 
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\approved_userlist;
+use core_privacy\local\request\context;
 use core_privacy\local\request\contextlist;
+use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 
 defined('MOODLE_INTERNAL') || die();
@@ -37,8 +40,15 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements \core_privacy\local\metadata\provider,
-        \core_privacy\local\request\plugin\provider{
+class provider implements
+        // This plugin has data.
+        \core_privacy\local\metadata\provider,
+
+        // This plugin currently implements the original plugin_provider interface.
+        \core_privacy\local\request\plugin\provider,
+
+        // This plugin is capable of determining which users have data within it.
+        \core_privacy\local\request\core_userlist_provider {
 
     /**
      * Returns meta data about this system.
@@ -84,7 +94,7 @@ class provider implements \core_privacy\local\metadata\provider,
     public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
         foreach ($contextlist->get_contexts() as $context) {
-            if ($context->contextlevel === CONTEXT_SYSTEM) {
+            if ($context instanceof \context_system) {
                 $records = $DB->get_records('tool_lifecycle_action_log', array('userid' => $contextlist->get_user()->id));
                 $writer = writer::with_context($contextlist->current());
                 foreach ($records as $record) {
@@ -123,6 +133,38 @@ class provider implements \core_privacy\local\metadata\provider,
                     WHERE userid = :userid";
                 $DB->execute($sql, array('userid' => $contextlist->get_user()->id));
             }
+        }
+    }
+
+    /**
+     * Get the list of users who have data within a context.
+     *
+     * @param userlist $userlist The userlist containing the list of users who have data in this context/plugin combination.
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        $context = $userlist->get_context();
+        if ($context instanceof \context_system) {
+            $sql = "SELECT userid 
+                    FROM {tool_lifecycle_action_log}";
+            $userlist->add_from_sql('userid', $sql, array());
+        }
+    }
+
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param approved_userlist $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+        $context = $userlist->get_context();
+        if ($context instanceof \context_system) {
+            list($insql, $params) = $DB->get_in_or_equal($userlist->get_userids());
+            $sql = "UPDATE {tool_lifecycle_action_log}
+                    SET userid = -1
+                    WHERE $insql";
+
+            $DB->execute($sql, $params);
         }
     }
 }
