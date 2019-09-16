@@ -1,0 +1,168 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Tests Privacy Implementation
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2019 Justus Dieckmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+global $CFG;
+
+use core_privacy\local\request\content_writer;
+use core_privacy\local\request\writer;
+use core_privacy\tests\provider_testcase;
+use core_privacy\tests\request\approved_contextlist;
+use tool_lifecycle\action;
+use tool_lifecycle\entity\step_subplugin;
+use tool_lifecycle\entity\workflow;
+use tool_lifecycle\manager\interaction_manager;
+use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\privacy\provider;
+use tool_lifecycle\processor;
+use tool_lifecycle\task\lifecycle_task;
+
+/**
+ * Tests Privacy Implementation
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2019 Justus Dieckmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class tool_lifecycle_privacy_test extends provider_testcase {
+
+
+    /** Icon of the manual trigger. */
+    const MANUAL_TRIGGER1_ICON = 't/up';
+    /** Display name of the manual trigger. */
+    const MANUAL_TRIGGER1_DISPLAYNAME = 'Up';
+    /** Capability of the manual trigger. */
+    const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
+
+    /** @var string Action string for triggering to keep a course from Email step. */
+    const ACTION_KEEP = 'keep';
+
+    /** @var workflow $workflow Workflow of this test. */
+    private $workflow;
+
+    /** @var tool_lifecycle_generator $generator Instance of the test generator. */
+    private $generator;
+
+    /** @var step_subplugin $emailstep Instance of the Email step */
+    private $emailstep;
+
+    /**
+     * Setup the testcase.
+     * @throws coding_exception
+     */
+    public function setUp() {
+        global $USER;
+
+        // We do not need a sesskey check in theses tests.
+        $USER->ignoresesskey = true;
+        $this->resetAfterTest();
+        $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
+        $settings = new stdClass();
+        $settings->icon = self::MANUAL_TRIGGER1_ICON;
+        $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
+        $settings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
+        $this->workflow = $this->generator->create_manual_workflow($settings);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow->id);
+
+        $this->emailstep = $this->generator->create_step("instance2", "email", $this->workflow->id);
+    }
+
+    public function test_get_contexts_for_userid() {
+        $c1 = $this->getDataGenerator()->create_course();
+        $c2 = $this->getDataGenerator()->create_course();
+        $u1 = $this->getDataGenerator()->create_user();
+        $this->setUser($u1);
+        $contextlist = provider::get_contexts_for_userid($u1->id);
+        $this->assertEquals(0, $contextlist->count());
+
+        $p1 = $this->generator->create_process($c1->id, $this->workflow->id);
+        $p2 = $this->generator->create_process($c2->id, $this->workflow->id);
+
+        $processor = new processor();
+        $processor->process_courses();
+
+        interaction_manager::handle_interaction($this->emailstep->id, $p1->id, self::ACTION_KEEP);
+        interaction_manager::handle_interaction($this->emailstep->id, $p2->id, self::ACTION_KEEP);
+
+        $contextlist = provider::get_contexts_for_userid($u1->id);
+        $this->assertEquals(1, $contextlist->count());
+        $this->assertTrue($contextlist->current() instanceof context_system);
+    }
+
+    public function test_export_user_data() {
+        $c1 = $this->getDataGenerator()->create_course();
+        $c2 = $this->getDataGenerator()->create_course();
+        $u1 = $this->getDataGenerator()->create_user();
+        $this->setUser($u1);
+
+        $p1 = $this->generator->create_process($c1->id, $this->workflow->id);
+        $p2 = $this->generator->create_process($c2->id, $this->workflow->id);
+
+        $processor = new processor();
+        $processor->process_courses();
+
+        interaction_manager::handle_interaction($this->emailstep->id, $p1->id, self::ACTION_KEEP);
+        interaction_manager::handle_interaction($this->emailstep->id, $p2->id, self::ACTION_KEEP);
+
+        $contextlist = new approved_contextlist($u1, 'tool_lifecycle', [context_system::instance()->id]);
+        provider::export_user_data($contextlist);
+        $writer = writer::with_context(context_system::instance());
+        $step = step_manager::get_step_instance_by_workflow_index($this->workflow->id, 1);
+        $subcontext = ['tool_lifecycle', 'action_log', "process_$p1->id", $step->instancename,
+                "action_" . self::ACTION_KEEP];
+        $data1 = $writer->get_data($subcontext);
+        $this->assertIsObject($data1);
+        $this->assertEquals($u1->id, $data1->userid);
+        $this->assertEquals(self::ACTION_KEEP, $data1->action);
+        $subcontext = ['tool_lifecycle', 'action_log', "process_$p2->id", $step->instancename,
+                "action_" . self::ACTION_KEEP];
+        $data2 = $writer->get_data($subcontext);
+        $this->assertIsObject($data2);
+        $this->assertEquals($u1->id, $data2->userid);
+        $this->assertEquals(self::ACTION_KEEP, $data2->action);
+    }
+
+    public function test_delete_data_for_all_users_in_context() {
+        global $DB;
+        $c1 = $this->getDataGenerator()->create_course();
+        $u1 = $this->getDataGenerator()->create_user();
+        $this->setUser($u1);
+
+        $p1 = $this->generator->create_process($c1->id, $this->workflow->id);
+
+        $processor = new processor();
+        $processor->process_courses();
+
+        interaction_manager::handle_interaction($this->emailstep->id, $p1->id, self::ACTION_KEEP);
+
+        provider::delete_data_for_all_users_in_context(context_system::instance());
+
+        $this->assertFalse($DB->record_exists_select('tool_lifecycle_action_log', 'userid != -1'));
+    }
+
+}

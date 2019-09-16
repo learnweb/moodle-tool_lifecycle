@@ -31,6 +31,7 @@ use core_privacy\local\request\context;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
+use tool_lifecycle\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -98,7 +99,10 @@ class provider implements
                 $records = $DB->get_records('tool_lifecycle_action_log', array('userid' => $contextlist->get_user()->id));
                 $writer = writer::with_context($contextlist->current());
                 foreach ($records as $record) {
-                    $writer->export_data(['tool_lifecycle', 'action_log'], $record);
+                    $step = step_manager::get_step_instance_by_workflow_index($record->workflowid, $record->stepindex);
+                    $subcontext = ['tool_lifecycle', 'action_log', "process_$record->processid", $step->instancename,
+                            "action_$record->action"];
+                    $writer->export_data($subcontext, $record);
                 }
             }
         }
