@@ -402,10 +402,13 @@ class workflow_settings {
                 'triggername', $triggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
         }
 
+
+
         if (workflow_manager::is_editable($this->workflowid)) {
             $steps = step_manager::get_step_types();
+            echo '<span class="ml-1"></span>';
             echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
-                array('action' => action::STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid)),
+                array('action' => action::STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid, 'class' => 'ml-1')),
                 'stepname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
         }
 
@@ -413,7 +416,7 @@ class workflow_settings {
         echo \html_writer::start_tag('div', array('class' => 'd-inline-block'));
         echo \html_writer::start_tag('form', array('action' => $url, 'method' => 'post', 'class' => 'form-inline'));
         echo \html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()));
-        echo \html_writer::tag('button', get_string('back'), array('class' => 'btn btn-secondary'));
+        echo \html_writer::tag('button', get_string('back'), array('class' => 'btn btn-secondary ml-1'));
         echo \html_writer::end_tag('form');
         echo \html_writer::end_tag('div');
 
