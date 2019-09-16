@@ -166,7 +166,7 @@ class provider implements
             list($insql, $params) = $DB->get_in_or_equal($userlist->get_userids());
             $sql = "UPDATE {tool_lifecycle_action_log}
                     SET userid = -1
-                    WHERE $insql";
+                    WHERE userid " . $insql;
 
             $DB->execute($sql, $params);
         }

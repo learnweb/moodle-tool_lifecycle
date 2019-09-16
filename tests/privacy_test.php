@@ -26,7 +26,9 @@
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
+use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\content_writer;
+use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 use core_privacy\tests\provider_testcase;
 use core_privacy\tests\request\approved_contextlist;
@@ -163,6 +165,81 @@ class tool_lifecycle_privacy_test extends provider_testcase {
         provider::delete_data_for_all_users_in_context(context_system::instance());
 
         $this->assertFalse($DB->record_exists_select('tool_lifecycle_action_log', 'userid != -1'));
+    }
+
+    public function test_delete_data_for_user() {
+        global $DB;
+        $c1 = $this->getDataGenerator()->create_course();
+        $c2 = $this->getDataGenerator()->create_course();
+        $u1 = $this->getDataGenerator()->create_user();
+        $u2 = $this->getDataGenerator()->create_user();
+
+
+        $p1 = $this->generator->create_process($c1->id, $this->workflow->id);
+        $p2 = $this->generator->create_process($c2->id, $this->workflow->id);
+
+        $processor = new processor();
+        $processor->process_courses();
+
+        $this->setUser($u1);
+        interaction_manager::handle_interaction($this->emailstep->id, $p1->id, self::ACTION_KEEP);
+
+        $this->setUser($u2);
+        interaction_manager::handle_interaction($this->emailstep->id, $p2->id, self::ACTION_KEEP);
+
+
+        $contextlist = new approved_contextlist($u1, 'tool_lifecycle', [1]);
+        provider::delete_data_for_user($contextlist);
+        $this->assertEquals(0, $DB->count_records_select('tool_lifecycle_action_log', "userid = $u1->id"));
+        $this->assertEquals(1, $DB->count_records_select('tool_lifecycle_action_log', "userid = $u2->id"));
+        $this->assertEquals(1, $DB->count_records_select('tool_lifecycle_action_log', "userid = -1"));
+    }
+
+    public function test_get_users_in_context() {
+        $c1 = $this->getDataGenerator()->create_course();
+        $c2 = $this->getDataGenerator()->create_course();
+        $u1 = $this->getDataGenerator()->create_user();
+
+        $p1 = $this->generator->create_process($c1->id, $this->workflow->id);
+        $p2 = $this->generator->create_process($c2->id, $this->workflow->id);
+
+        $processor = new processor();
+        $processor->process_courses();
+
+        $this->setUser($u1);
+        interaction_manager::handle_interaction($this->emailstep->id, $p1->id, self::ACTION_KEEP);
+        interaction_manager::handle_interaction($this->emailstep->id, $p2->id, self::ACTION_KEEP);
+
+        $userlist = new userlist(context_system::instance(), 'tool_lifecycle');
+        provider::get_users_in_context($userlist);
+        $this->assertEquals(1, $userlist->count());
+        $this->assertEquals($u1->id, $userlist->current()->id);
+    }
+
+    public function test_delete_data_for_users() {
+        global $DB;
+        $c1 = $this->getDataGenerator()->create_course();
+        $c2 = $this->getDataGenerator()->create_course();
+        $u1 = $this->getDataGenerator()->create_user();
+        $u2 = $this->getDataGenerator()->create_user();
+
+        $proc1 = $this->generator->create_process($c1->id, $this->workflow->id);
+        $proc2 = $this->generator->create_process($c2->id, $this->workflow->id);
+        $this->setUser($u1);
+
+        $processor = new processor();
+        $processor->process_courses();
+
+        interaction_manager::handle_interaction($this->emailstep->id, $proc1->id, self::ACTION_KEEP);
+
+        $this->setUser($u2);
+        interaction_manager::handle_interaction($this->emailstep->id, $proc2->id, self::ACTION_KEEP);
+
+        $userlist = new approved_userlist(context_system::instance(), 'tool_lifecycle', [$u1->id]);
+        provider::delete_data_for_users($userlist);
+        $this->assertEquals(0, $DB->count_records_select('tool_lifecycle_action_log', "userid = $u1->id"));
+        $this->assertEquals(1, $DB->count_records_select('tool_lifecycle_action_log', "userid = $u2->id"));
+        $this->assertEquals(1, $DB->count_records_select('tool_lifecycle_action_log', "userid = -1"));
     }
 
 }
