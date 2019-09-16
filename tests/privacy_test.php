@@ -138,13 +138,11 @@ class tool_lifecycle_privacy_test extends provider_testcase {
         $subcontext = ['tool_lifecycle', 'action_log', "process_$p1->id", $step->instancename,
                 "action_" . self::ACTION_KEEP];
         $data1 = $writer->get_data($subcontext);
-        $this->assertIsObject($data1);
         $this->assertEquals($u1->id, $data1->userid);
         $this->assertEquals(self::ACTION_KEEP, $data1->action);
         $subcontext = ['tool_lifecycle', 'action_log', "process_$p2->id", $step->instancename,
                 "action_" . self::ACTION_KEEP];
         $data2 = $writer->get_data($subcontext);
-        $this->assertIsObject($data2);
         $this->assertEquals($u1->id, $data2->userid);
         $this->assertEquals(self::ACTION_KEEP, $data2->action);
     }
