@@ -86,7 +86,7 @@ class process_rollback extends \core\event\base {
         $processid = $this->other['processid'];
         $workflowid = $this->other['workflowid'];
         $stepindex = $this->other['stepindex'];
-        $coursid = $this->other['courseid'];
+        $courseid = $this->other['courseid'];
 
         return "The workflow with id '$workflowid' was rolled back on step '$stepindex' for course '$courseid' " .
                 "in the process with id '$processid'";
