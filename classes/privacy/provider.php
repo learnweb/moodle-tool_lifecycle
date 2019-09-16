@@ -148,7 +148,7 @@ class provider implements
     public static function get_users_in_context(userlist $userlist) {
         $context = $userlist->get_context();
         if ($context instanceof \context_system) {
-            $sql = "SELECT userid 
+            $sql = "SELECT userid
                     FROM {tool_lifecycle_action_log}";
             $userlist->add_from_sql('userid', $sql, array());
         }

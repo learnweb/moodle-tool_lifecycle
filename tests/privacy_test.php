@@ -174,7 +174,6 @@ class tool_lifecycle_privacy_test extends provider_testcase {
         $u1 = $this->getDataGenerator()->create_user();
         $u2 = $this->getDataGenerator()->create_user();
 
-
         $p1 = $this->generator->create_process($c1->id, $this->workflow->id);
         $p2 = $this->generator->create_process($c2->id, $this->workflow->id);
 
@@ -186,7 +185,6 @@ class tool_lifecycle_privacy_test extends provider_testcase {
 
         $this->setUser($u2);
         interaction_manager::handle_interaction($this->emailstep->id, $p2->id, self::ACTION_KEEP);
-
 
         $contextlist = new approved_contextlist($u1, 'tool_lifecycle', [1]);
         provider::delete_data_for_user($contextlist);
