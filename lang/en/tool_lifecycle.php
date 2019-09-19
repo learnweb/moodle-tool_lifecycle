@@ -175,6 +175,7 @@ $string['restore_subplugins_invalid'] = 'Wrong format of the backup file. The st
 $string['restore_step_does_not_exist'] = 'The step {$a} is not installed, but is included in the backup file. Please installed it first and try again.';
 $string['restore_trigger_does_not_exist'] = 'The trigger {$a} is not installed, but is included in the backup file. Please installed it first and try again.';
 
+// Events
 $string['process_triggered_event'] = 'A process has been triggered';
 $string['process_proceeded_event'] = 'A process has been proceeded';
 $string['process_rollback_event'] = 'A process has been rolled back';
@@ -188,3 +189,5 @@ $string['privacy:metadata:tool_lifecycle_action_log:stepindex'] = 'Index of the 
 $string['privacy:metadata:tool_lifecycle_action_log:time'] = 'Time when the action was done.';
 $string['privacy:metadata:tool_lifecycle_action_log:userid'] = 'ID of the user that did the action.';
 $string['privacy:metadata:tool_lifecycle_action_log:action'] = 'Identifier of the action that was done.';
+// Delays
+$string['delayed_courses_header'] = 'Delayed courses';
