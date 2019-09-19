@@ -21,6 +21,9 @@
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use tool_lifecycle\table\delayed_courses_table;
+
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
@@ -35,5 +38,10 @@ $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/delayedcourses.php'));
 $PAGE->set_title(get_string('delayed_courses_header', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('delayed_courses_header', 'tool_lifecycle'));
 
+$table = new delayed_courses_table();
+$table->define_baseurl($PAGE->url);
+
+
 echo $OUTPUT->header();
+$table->out(100, false);
 echo $OUTPUT->footer();
