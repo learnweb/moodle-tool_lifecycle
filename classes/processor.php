@@ -102,18 +102,23 @@ class processor {
             $workflow = workflow_manager::get_workflow($process->workflowid);
             while (true) {
 
-                if ($process->stepindex == 0) {
-                    process_manager::proceed_process($process);
-                }
-
-                $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
-                $lib = lib_manager::get_step_lib($step->subpluginname);
                 try {
                     $course = get_course($process->courseid);
                 } catch (\dml_missing_record_exception $e) {
                     // Course no longer exists!
                     break;
                 }
+
+                if ($process->stepindex == 0) {
+                    if (!process_manager::proceed_process($process)) {
+                        // Happens for a workflow with no step.
+                        delayed_courses_manager::set_course_delayed_for_workflow($course->id, false, $workflow);
+                        break;
+                    }
+                }
+
+                $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
+                $lib = lib_manager::get_step_lib($step->subpluginname);
                 if ($process->waiting) {
                     $result = $lib->process_waiting_course($process->id, $step->id, $course);
                 } else {
