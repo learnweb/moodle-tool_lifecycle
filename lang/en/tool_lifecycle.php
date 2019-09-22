@@ -191,3 +191,13 @@ $string['privacy:metadata:tool_lifecycle_action_log:userid'] = 'ID of the user t
 $string['privacy:metadata:tool_lifecycle_action_log:action'] = 'Identifier of the action that was done.';
 // Delays
 $string['delayed_courses_header'] = 'Delayed courses';
+$string['delete_delay'] = 'Delete delay';
+$string['globally_until_date'] = 'Globally until {$a}';
+$string['name_until_date'] = '"{$a->name}" until {$a->date}';
+$string['delayed_globally_and_seperately'] = 'Delayed globally and seperately for {$a} workflows';
+$string['delayed_globally_and_seperately_for_one'] = 'Delayed globally and seperately for 1 workflow';
+$string['delayed_globally'] = 'Delayed globally until {$a}';
+$string['delayed_for_workflow_until'] = 'Delayed for "{$a->name}" until {$a->date}';
+$string['delayed_for_workflows'] = 'Delayed for {$a} workflows';
+$string['delays'] = "Delays";
+

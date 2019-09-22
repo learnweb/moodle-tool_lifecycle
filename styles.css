@@ -8,3 +8,7 @@
     font-size: .9em;
     padding: 0.5em;
 }
+
+span.tool_lifecycle-hint {
+    text-decoration: underline dashed #444;
+}

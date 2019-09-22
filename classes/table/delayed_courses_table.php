@@ -23,10 +23,6 @@
  */
 namespace tool_lifecycle\table;
 
-use tool_lifecycle\manager\interaction_manager;
-use tool_lifecycle\manager\lib_manager;
-use tool_lifecycle\manager\step_manager;
-
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
@@ -46,21 +42,21 @@ class delayed_courses_table extends \table_sql {
      */
     public function __construct() {
         parent::__construct('tool_lifecycle-delayed-courses');
-        $fields = "c.id as courseid, c.fullname as coursefullname, cat.name as category, dw.workflowid, w.title as workflow, dw.delayeduntil AS workflowdelay, d.delayeduntil AS globaldelay, maxtable.wfcount AS workflowcount";
+        $fields = 'c.id as courseid, c.fullname as coursefullname, cat.name as category, dw.workflowid, w.title as workflow, dw.delayeduntil AS workflowdelay, d.delayeduntil AS globaldelay, maxtable.wfcount AS workflowcount';
 
-        $from = "(" .
-                "SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount " .
-                "FROM {tool_lifecycle_delayed_workf} dw " .
-                "JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id " . // To make sure no outdated delays are counted.
-                "WHERE dw.delayeduntil >= :time " .
+        $from = '(' .
+                'SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount ' .
+                'FROM {tool_lifecycle_delayed_workf} dw ' .
+                'JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id ' . // To make sure no outdated delays are counted.
+                'WHERE dw.delayeduntil >= :time ' .
                 // TODO AND dw.workflowid IN $workflows
-                "GROUP BY courseid " .
-            ") maxtable " .
-            "JOIN {tool_lifecycle_delayed_workf} dw ON maxtable.maxid = dw.id " .
-            "JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id " .
-            "FULL JOIN  {tool_lifecycle_delayed} d ON dw.courseid = d.courseid " .
-            "JOIN {course} c ON c.id = dw.courseid " .
-            "JOIN {course_categories} cat ON c.category = cat.id";
+                'GROUP BY courseid ' .
+            ') maxtable ' .
+            'JOIN {tool_lifecycle_delayed_workf} dw ON maxtable.maxid = dw.id ' .
+            'JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id ' .
+            'FULL JOIN  {tool_lifecycle_delayed} d ON dw.courseid = d.courseid ' .
+            'JOIN {course} c ON c.id = COALESCE(dw.courseid, d.courseid) ' .
+            'JOIN {course_categories} cat ON c.category = cat.id';
         $where = 'true';
         $params = ['time' => time()];
 
@@ -70,27 +66,65 @@ class delayed_courses_table extends \table_sql {
         $this->define_headers([
                 get_string('coursename', 'tool_lifecycle'),
                 get_string('category'),
-                get_string('workflow', 'tool_lifecycle'),
+                get_string('delays', 'tool_lifecycle'),
                 get_string('tools', 'tool_lifecycle')
         ]);
     }
 
     public function col_workflow($row) {
-        global $DB;
-        if ($row->workflowcount == 1) {
-            return $row->workflow . ' UNTIL ' . $row->workflowdelay;
-        } else {
-            $sql = "SELECT dw.delayeduntil, w.title
-                FROM {tool_lifecycle_delayed_workf} dw
-                JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id
-                WHERE dw.courseid = :courseid";
-            $records = $DB->get_records_sql($sql, ['courseid' => $row->courseid]);
-            $output = "";
-            foreach ($records as $record) {
-                $output .= $record->title . ' UNTIL ' . $record->delayeduntil . '<br>';
+        if($row->globaldelay >= time()) {
+            if ($row->workflowcount == 1) {
+                $text = get_string('delayed_globally_and_seperately_for_one', 'tool_lifecycle');
+            } else if ($row->workflowcount > 1) {
+                $text = get_string('delayed_globally_and_seperately', 'tool_lifecycle', $row->workflowcount);
+            } else {
+                $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
+                $date = userdate($row->globaldelay, $dateformat);
+                $text = get_string('delayed_globally', 'tool_lifecycle', $date);
             }
-            return $output;
+        } else {
+            if ($row->workflowcount <= 0) {
+                $text = '';
+            } else if($row->workflowcount == 1) {
+                $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
+                $date = userdate($row->workflowdelay, $dateformat);
+                $text = get_string('delayed_for_workflow_until', 'tool_lifecycle',
+                        array('name' => $row->workflow, 'date' => $date));
+            } else {
+                $text = get_string('delayed_for_workflows', 'tool_lifecycle', $row->workflowcount);
+            }
         }
+
+        return \html_writer::start_span('tool_lifecycle-hint', array('title' => $this->get_mouseover($row))) .
+                $text .
+                \html_writer::end_span();
+    }
+
+    private function get_mouseover($row) {
+        global $DB;
+        $text = '';
+        $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
+        if($row->globaldelay >= time()) {
+            $date = userdate($row->globaldelay, $dateformat);
+            $text .= get_string('globally_until_date', 'tool_lifecycle', $date) . '&#13;';
+        }
+        if($row->workflowcount == 1) {
+            $date = userdate($row->workflowdelay, $dateformat);
+            $text .= get_string('name_until_date', 'tool_lifecycle',
+                    array('name' => $row->workflow, 'date' => $date)) . '&#13;';
+        } else if ($row->workflowcount > 1) {
+            $sql = 'SELECT dw.id, dw.delayeduntil, w.title
+                    FROM {tool_lifecycle_delayed_workf} dw
+                    JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id
+                    WHERE dw.courseid = :courseid';
+            $records = $DB->get_records_sql($sql, ['courseid' => $row->courseid]);
+            foreach ($records as $record) {
+                $date = userdate($record->delayeduntil, $dateformat);
+                $text .= get_string('name_until_date', 'tool_lifecycle',
+                        array('name' => $record->title, 'date' => $date)) . '&#13;';
+            }
+        }
+        return $text;
     }
 
     /**
@@ -101,5 +135,10 @@ class delayed_courses_table extends \table_sql {
      * @throws \invalid_parameter_exception
      */
     public function col_tools($row) {
+        global $PAGE, $OUTPUT;
+        $button = new \single_button(
+                new \moodle_url($PAGE->url, array('cid' => $row->courseid)),
+                get_string('delete_delay', 'tool_lifecycle'));
+        return $OUTPUT->render($button);
     }
 }
