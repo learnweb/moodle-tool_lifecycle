@@ -33,6 +33,27 @@ require_capability('moodle/site:config', context_system::instance());
 
 admin_externalpage_setup('tool_lifecycle_delayed_courses');
 
+$action = optional_param('action', null, PARAM_ALPHANUMEXT);
+if ($action) {
+    if ($action == 'delete') {
+        global $DB;
+        require_sesskey();
+        $cid = required_param('cid', PARAM_INT);
+        $workflow = optional_param('workflow', null, PARAM_ALPHANUM);
+        if ($workflow) {
+            if (is_int($workflow)) {
+                $DB->delete_records('tool_lifecycle_delayed_workf', array('courseid' => $cid, 'workflowid' => $workflow));
+            } else if ($workflow == 'global') {
+                $DB->delete_records('tool_lifecycle_delayed', array('courseid' => $cid));
+            }
+        } else {
+            $DB->delete_records('tool_lifecycle_delayed', array('courseid' => $cid));
+            $DB->delete_records('tool_lifecycle_delayed_workf', array('courseid' => $cid));
+        }
+    }
+    redirect($PAGE->url);
+}
+
 $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/delayedcourses.php'));
 
 $PAGE->set_title(get_string('delayed_courses_header', 'tool_lifecycle'));
@@ -40,7 +61,6 @@ $PAGE->set_heading(get_string('delayed_courses_header', 'tool_lifecycle'));
 
 $table = new delayed_courses_table();
 $table->define_baseurl($PAGE->url);
-
 
 echo $OUTPUT->header();
 $table->out(100, false);

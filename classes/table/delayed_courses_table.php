@@ -49,6 +49,7 @@ class delayed_courses_table extends \table_sql {
                 'FROM {tool_lifecycle_delayed_workf} dw ' .
                 'JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id ' . // To make sure no outdated delays are counted.
                 'WHERE dw.delayeduntil >= :time ' .
+                'AND w.timeactive IS NOT NULL ' .
                 // TODO AND dw.workflowid IN $workflows
                 'GROUP BY courseid ' .
             ') maxtable ' .
@@ -137,7 +138,8 @@ class delayed_courses_table extends \table_sql {
     public function col_tools($row) {
         global $PAGE, $OUTPUT;
         $button = new \single_button(
-                new \moodle_url($PAGE->url, array('cid' => $row->courseid)),
+                new \moodle_url($PAGE->url,
+                        array('action' => 'delete', 'cid' => $row->courseid, 'sesskey' => sesskey())),
                 get_string('delete_delay', 'tool_lifecycle'));
         return $OUTPUT->render($button);
     }
