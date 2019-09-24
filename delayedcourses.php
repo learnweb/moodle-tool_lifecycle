@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\form\form_delays_filter;
 use tool_lifecycle\table\delayed_courses_table;
 
 require_once(__DIR__ . '/../../../config.php');
@@ -59,9 +60,14 @@ $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/delayedcourses.php'));
 $PAGE->set_title(get_string('delayed_courses_header', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('delayed_courses_header', 'tool_lifecycle'));
 
-$table = new delayed_courses_table();
+$mform = new form_delays_filter($PAGE->url);
+
+$data = $mform->get_data();
+
+$table = new delayed_courses_table($data);
 $table->define_baseurl($PAGE->url);
 
 echo $OUTPUT->header();
+$mform->display();
 $table->out(100, false);
 echo $OUTPUT->footer();
