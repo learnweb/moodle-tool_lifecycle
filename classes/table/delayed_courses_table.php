@@ -36,30 +36,82 @@ require_once($CFG->libdir . '/tablelib.php');
  */
 class delayed_courses_table extends \table_sql {
 
+    /** @var $filterdata object|null data from mform */
+    private $filterdata;
+
     /**
-     * Constructor for deactivated_workflows_table.
-
+     * Constructor for delayed_courses_table.
      */
-    public function __construct() {
+    public function __construct($filterdata) {
         parent::__construct('tool_lifecycle-delayed-courses');
-        $fields = 'c.id as courseid, c.fullname as coursefullname, cat.name as category, dw.workflowid, w.title as workflow, dw.delayeduntil AS workflowdelay, d.delayeduntil AS globaldelay, maxtable.wfcount AS workflowcount';
+        $this->filterdata = $filterdata;
 
-        $from = '(' .
-                'SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount ' .
-                'FROM {tool_lifecycle_delayed_workf} dw ' .
-                'JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id ' . // To make sure no outdated delays are counted.
-                'WHERE dw.delayeduntil >= :time ' .
-                'AND w.timeactive IS NOT NULL ' .
-                // TODO AND dw.workflowid IN $workflows
-                'GROUP BY courseid ' .
-            ') maxtable ' .
-            'JOIN {tool_lifecycle_delayed_workf} dw ON maxtable.maxid = dw.id ' .
-            'JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id ' .
-            'FULL JOIN  {tool_lifecycle_delayed} d ON dw.courseid = d.courseid ' .
-            'JOIN {course} c ON c.id = COALESCE(dw.courseid, d.courseid) ' .
-            'JOIN {course_categories} cat ON c.category = cat.id';
+        $fields = 'c.id as courseid, c.fullname as coursefullname, cat.name as category, ';
+
+        $selectseperatedelays = true;
+        $selectglobaldelays = true;
+        $workflowfilterid = null;
+        if ($filterdata && $filterdata->workflow) {
+            if ($filterdata->workflow == 'global') {
+                $selectseperatedelays = false;
+            } else if (is_number($filterdata->workflow)) {
+                $selectglobaldelays = false;
+                $workflowfilterid = $filterdata->workflow;
+            } else {
+                throw new \coding_exception('action has to be "global" or a int value');
+            }
+        }
+
+
+
+        if ($selectseperatedelays) {
+            $fields .= 'dw.workflowid, w.title as workflow, dw.delayeduntil AS workflowdelay, maxtable.wfcount AS workflowcount, ';
+        } else {
+            $fields .= 'null as workflowid, null as workflow, null AS workflowdelay, null AS workflowcount, ';
+        }
+
+        $params = [];
+
+        if ($selectglobaldelays) {
+            $fields .= 'd.delayeduntil AS globaldelay';
+        } else {
+            $fields .= 'null AS globaldelay';
+        }
+
+        if ($selectglobaldelays && !$selectseperatedelays) {
+            $from = '{tool_lifecycle_delayed} d ' .
+                    'JOIN {course} c ON c.id = d.courseid ' .
+                    'JOIN {course_categories} cat ON c.category = cat.id';
+        } else {
+            $from = '(' .
+                    'SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount ' .
+                    'FROM {tool_lifecycle_delayed_workf} dw ' .
+                    'JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id ' . // To make sure no outdated delays are counted.
+                    'WHERE dw.delayeduntil >= :time ' .
+                    'AND w.timeactive IS NOT NULL ';
+            $params['time'] = time();
+
+            if ($workflowfilterid) {
+                $from .= 'AND w.id = :workflowid';
+                $params['workflowid'] = $workflowfilterid;
+            }
+
+            $from .= 'GROUP BY courseid ' .
+                    ') maxtable ' .
+                    'JOIN {tool_lifecycle_delayed_workf} dw ON maxtable.maxid = dw.id ' .
+                    'JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id ';
+
+            if ($selectglobaldelays) {
+                $from .= 'FULL JOIN {tool_lifecycle_delayed} d ON dw.courseid = d.courseid ' .
+                        'JOIN {course} c ON c.id = COALESCE(dw.courseid, d.courseid) ';
+            } else {
+                $from .= 'JOIN {course} c ON c.id = dw.courseid ';
+            }
+
+            $from .= 'JOIN {course_categories} cat ON c.category = cat.id';
+        }
+
         $where = 'true';
-        $params = ['time' => time()];
 
         $this->set_sql($fields, $from, $where, $params);
         $this->column_nosort = ['workflow', 'tools'];
@@ -72,6 +124,14 @@ class delayed_courses_table extends \table_sql {
         ]);
     }
 
+    /**
+     * Render workflow column
+     *
+     * @param $row
+     * @return string
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function col_workflow($row) {
         if($row->globaldelay >= time()) {
             if ($row->workflowcount == 1) {
@@ -101,6 +161,14 @@ class delayed_courses_table extends \table_sql {
                 \html_writer::end_span();
     }
 
+    /**
+     * Returns mouseover text for Delaystatus.
+     *
+     * @param $row
+     * @return string
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     private function get_mouseover($row) {
         global $DB;
         $text = '';
@@ -114,10 +182,14 @@ class delayed_courses_table extends \table_sql {
             $text .= get_string('name_until_date', 'tool_lifecycle',
                     array('name' => $row->workflow, 'date' => $date)) . '&#13;';
         } else if ($row->workflowcount > 1) {
+
+            // TODO Make sure dw.workflowid is distinct.
+
             $sql = 'SELECT dw.id, dw.delayeduntil, w.title
                     FROM {tool_lifecycle_delayed_workf} dw
                     JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id
-                    WHERE dw.courseid = :courseid';
+                    WHERE dw.courseid = :courseid
+                    AND w.timeactive IS NOT NULL';
             $records = $DB->get_records_sql($sql, ['courseid' => $row->courseid]);
             foreach ($records as $record) {
                 $date = userdate($record->delayeduntil, $dateformat);
@@ -137,9 +209,14 @@ class delayed_courses_table extends \table_sql {
      */
     public function col_tools($row) {
         global $PAGE, $OUTPUT;
+        // TODO Add view specific workflow parameter.
+
         $button = new \single_button(
-                new \moodle_url($PAGE->url,
-                        array('action' => 'delete', 'cid' => $row->courseid, 'sesskey' => sesskey())),
+                new \moodle_url($PAGE->url, array(
+                        'action' => 'delete',
+                        'cid' => $row->courseid,
+                        'sesskey' => sesskey()
+                )),
                 get_string('delete_delay', 'tool_lifecycle'));
         return $OUTPUT->render($button);
     }

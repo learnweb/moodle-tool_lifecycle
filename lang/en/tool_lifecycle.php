@@ -199,5 +199,9 @@ $string['delayed_globally_and_seperately_for_one'] = 'Delayed globally and seper
 $string['delayed_globally'] = 'Delayed globally until {$a}';
 $string['delayed_for_workflow_until'] = 'Delayed for "{$a->name}" until {$a->date}';
 $string['delayed_for_workflows'] = 'Delayed for {$a} workflows';
-$string['delays'] = "Delays";
-
+$string['delays'] = 'Delays';
+$string['apply'] = 'Apply';
+$string['show_delays'] = 'Kind of view';
+$string['all_delays'] = 'All delays';
+$string['globally'] = 'Global delays';
+$string['delays_for_workflow'] = 'Delays for "{$a}"';
