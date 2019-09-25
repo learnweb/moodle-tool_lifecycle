@@ -47,6 +47,9 @@ class delayed_courses_table extends \table_sql {
     public function __construct($filterdata) {
         parent::__construct('tool_lifecycle-delayed-courses');
 
+        global $DB;
+        $DB->set_debug(true);
+
         $fields = 'c.id as courseid, c.fullname as coursefullname, cat.name as category, ';
 
         $selectseperatedelays = true;
@@ -117,7 +120,18 @@ class delayed_courses_table extends \table_sql {
             $from .= 'JOIN {course_categories} cat ON c.category = cat.id';
         }
 
-        $where = 'true';
+        $where = 'true ';
+
+        if ($filterdata && $filterdata->category) {
+            $where .= 'AND cat.id = :catid ';
+            $params['catid'] = $filterdata->category;
+        }
+
+        if ($filterdata && $filterdata->coursename) {
+            global $DB;
+            $where .= 'AND c.fullname LIKE \'%' . $DB->sql_like_escape($filterdata->coursename) . '%\' ';
+            $params['cname'] = $filterdata->coursename;
+        }
 
         $this->set_sql($fields, $from, $where, $params);
         $this->column_nosort = ['workflow', 'tools'];
