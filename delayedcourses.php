@@ -42,7 +42,7 @@ if ($action) {
         $cid = required_param('cid', PARAM_INT);
         $workflow = optional_param('workflow', null, PARAM_ALPHANUM);
         if ($workflow) {
-            if (is_int($workflow)) {
+            if (is_number($workflow)) {
                 $DB->delete_records('tool_lifecycle_delayed_workf', array('courseid' => $cid, 'workflowid' => $workflow));
             } else if ($workflow == 'global') {
                 $DB->delete_records('tool_lifecycle_delayed', array('courseid' => $cid));

@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Cache Definition for Admin Approve Step
+ * Cache Definition for tool_lifecycle
  *
- * @package tool_lifecycle_step
- * @subpackage adminapprove
+ * @package tool_lifecycle
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
