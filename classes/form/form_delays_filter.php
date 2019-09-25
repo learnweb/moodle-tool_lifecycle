@@ -119,6 +119,7 @@ class form_delays_filter extends \moodleform {
     }
 
     /**
+     * Gets the cache.
      * @return cache the cache to get the cached mform data.
      */
     private function get_cache() {

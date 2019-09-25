@@ -36,13 +36,14 @@ require_once($CFG->libdir . '/tablelib.php');
  */
 class delayed_courses_table extends \table_sql {
 
-    /** @var $workflow null|int|string workflow to filter for. Might be workflowid or "global" to filter for global delays. */
+    /** @var null|int|string $workflow workflow to filter for. Might be workflowid or "global" to filter for global delays. */
     private $workflow;
 
     /**
      * Constructor for delayed_courses_table.
      *
-     * @param $filterdata object|null filterdata from moodle form.
+     * @param object|null $filterdata filterdata from moodle form.
+     * @throws \coding_exception
      */
     public function __construct($filterdata) {
         parent::__construct('tool_lifecycle-delayed-courses');
@@ -147,8 +148,10 @@ class delayed_courses_table extends \table_sql {
     /**
      * Render workflow column
      *
-     * @param $row
+     * @param object $row
      * @return string
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function col_workflow($row) {
         if ($row->globaldelay >= time()) {
@@ -182,8 +185,10 @@ class delayed_courses_table extends \table_sql {
     /**
      * Returns mouseover text for Delaystatus.
      *
-     * @param $row
-     * @return string
+     * @param object $row the dataset row
+     * @return string the mouseover text
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     private function get_mouseover($row) {
         global $DB;
@@ -215,8 +220,11 @@ class delayed_courses_table extends \table_sql {
 
     /**
      * Render tools column.
+     *
      * @param object $row Row data.
      * @return string pluginname of the subplugin
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function col_tools($row) {
         global $PAGE, $OUTPUT;
