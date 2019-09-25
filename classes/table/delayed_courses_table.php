@@ -48,9 +48,6 @@ class delayed_courses_table extends \table_sql {
     public function __construct($filterdata) {
         parent::__construct('tool_lifecycle-delayed-courses');
 
-        global $DB;
-        $DB->set_debug(true);
-
         $fields = 'c.id as courseid, c.fullname as coursefullname, cat.name as category, ';
 
         $selectseperatedelays = true;

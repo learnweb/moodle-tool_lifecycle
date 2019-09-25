@@ -62,7 +62,19 @@ $PAGE->set_heading(get_string('delayed_courses_header', 'tool_lifecycle'));
 
 $mform = new form_delays_filter($PAGE->url);
 
-$data = $mform->get_data();
+// Cache handling.
+$cache = cache::make('tool_lifecycle', 'mformdata');
+if ($mform->is_cancelled()) {
+    $cache->delete('delays_filter');
+    redirect($PAGE->url);
+} else if ($data = $mform->get_data()) {
+    $cache->set('delays_filter', $data);
+} else {
+    $data = $cache->get('delays_filter');
+    if ($data) {
+        $mform->set_data($data);
+    }
+}
 
 $table = new delayed_courses_table($data);
 $table->define_baseurl($PAGE->url);
@@ -70,4 +82,14 @@ $table->define_baseurl($PAGE->url);
 echo $OUTPUT->header();
 $mform->display();
 $table->out(100, false);
+
+$params = ['sesskey' => sesskey(), 'action' => 'bulk-delete'];
+if ($data) {
+    $params = array_merge($params, (array) $data);
+}
+
+$button = new single_button(new moodle_url($PAGE->url, $params),
+        get_string('delete_all_delays', 'tool_lifecycle'));
+
+echo $OUTPUT->render($button);
 echo $OUTPUT->footer();

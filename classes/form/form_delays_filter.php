@@ -88,46 +88,4 @@ class form_delays_filter extends \moodleform {
         $this->add_action_buttons(true, get_string('apply', 'tool_lifecycle'));
     }
 
-    /**
-     * This method is called after definition(), data submission and set_data().
-     * All form setup that is dependent on form values should go in here.
-     */
-    public function definition_after_data() {
-        $cache = $this->get_cache();
-        if ($this->is_submitted() && $this->is_validated()) {
-            if ($this->is_cancelled()) {
-                $cache->delete('delays_filter');
-            } else {
-                $cache->set('delays_filter', $this->get_data());
-            }
-        } else {
-            $this->set_data($cache->get('delays_filter'));
-        }
-    }
-
-    /**
-     * Override get data to return cached data when nothing was submitted.
-     * @return object
-     */
-    public function get_data() {
-        $data = parent::get_data();
-        if ($data) {
-            return $data;
-        } else {
-            return $this->get_cache()->get('delays_filter');
-        }
-    }
-
-    /**
-     * Gets the cache.
-     * @return cache the cache to get the cached mform data.
-     */
-    private function get_cache() {
-        if (!$this->cache) {
-            $this->cache = cache::make('tool_lifecycle', 'mformdata');
-        }
-        return $this->cache;
-    }
-
-
 }

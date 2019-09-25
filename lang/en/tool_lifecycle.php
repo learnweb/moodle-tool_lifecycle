@@ -205,3 +205,4 @@ $string['show_delays'] = 'Kind of view';
 $string['all_delays'] = 'All delays';
 $string['globally'] = 'Global delays';
 $string['delays_for_workflow'] = 'Delays for "{$a}"';
+$string['delete_all_delays'] = 'Delete all delays';
