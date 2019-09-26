@@ -74,25 +74,25 @@ if ($action) {
         $categoryid = optional_param('catid', null, PARAM_INT);
 
         $params = [];
-        $where_course = [];
+        $whereforcourse = [];
 
         if ($coursename) {
-            $where_course[] = 'c.fullname LIKE :cname';
+            $whereforcourse[] = 'c.fullname LIKE :cname';
             $params['cname'] = '%' . $DB->sql_like_escape($coursename) . '%';
         }
         if ($categoryid) {
-            $where_course[] = 'cat.id = :catid';
+            $whereforcourse[] = 'cat.id = :catid';
             $params['catid'] = $categoryid;
         }
 
-        $where_course = implode(' AND ', $where_course);
+        $whereforcourse = implode(' AND ', $whereforcourse);
         if ($deleteglobal) {
             $sql = 'DELETE FROM {tool_lifecycle_delayed} d ';
-            if ($where_course) {
+            if ($whereforcourse) {
                 $sql .= 'WHERE d.courseid IN ( ' .
                             'SELECT c.id FROM {course} c ' .
                             'JOIN {course_categories} cat ON c.category = cat.id ' .
-                            'WHERE ' . $where_course .
+                            'WHERE ' . $whereforcourse .
                         ')';
             }
             $DB->execute($sql, $params);
@@ -101,11 +101,11 @@ if ($action) {
         if ($deleteseperate) {
             $sql = 'DELETE FROM {tool_lifecycle_delayed_workf} dw ' .
                     'WHERE TRUE ';
-            if ($where_course) {
+            if ($whereforcourse) {
                 $sql .= 'AND dw.courseid IN ( ' .
                             'SELECT c.id FROM {course} c ' .
                             'JOIN {course_categories} cat ON c.category = cat.id ' .
-                            'WHERE ' . $where_course .
+                            'WHERE ' . $whereforcourse .
                         ')';
             }
             if ($workflowfilterid) {

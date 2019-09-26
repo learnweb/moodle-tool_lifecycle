@@ -45,20 +45,6 @@ require_once($CFG->libdir . '/formslib.php');
 class form_delays_filter extends \moodleform {
 
     /**
-     * @var $cache cache the cache to get stored data from;
-     */
-    private $cache;
-
-    /**
-     * Constructor
-     *
-     * @param \moodle_url $url .
-     */
-    public function __construct($url) {
-        parent::__construct($url);
-    }
-
-    /**
      * Defines forms elements
      */
     public function definition() {
