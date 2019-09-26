@@ -34,11 +34,12 @@ require_capability('moodle/site:config', context_system::instance());
 
 admin_externalpage_setup('tool_lifecycle_delayed_courses');
 
+// Action handling (delete, bulk-delete).
 $action = optional_param('action', null, PARAM_ALPHANUMEXT);
 if ($action) {
+    global $DB;
+    require_sesskey();
     if ($action == 'delete') {
-        global $DB;
-        require_sesskey();
         $cid = required_param('cid', PARAM_INT);
         $workflow = optional_param('workflow', null, PARAM_ALPHANUM);
         if ($workflow) {
@@ -46,10 +47,72 @@ if ($action) {
                 $DB->delete_records('tool_lifecycle_delayed_workf', array('courseid' => $cid, 'workflowid' => $workflow));
             } else if ($workflow == 'global') {
                 $DB->delete_records('tool_lifecycle_delayed', array('courseid' => $cid));
+            } else {
+                throw new \coding_exception('workflow has to be "global" or a int value');
             }
         } else {
             $DB->delete_records('tool_lifecycle_delayed', array('courseid' => $cid));
             $DB->delete_records('tool_lifecycle_delayed_workf', array('courseid' => $cid));
+        }
+    } else if ($action == 'bulk-delete') {
+        $workflow = optional_param('workflow', null, PARAM_ALPHANUM);
+        $deleteglobal = true;
+        $deleteseperate = true;
+        $workflowfilterid = null;
+        if ($workflow) {
+            if ($workflow == 'global') {
+                $deleteseperate = false;
+            } else if (is_number($workflow)) {
+                $deleteglobal = false;
+                $workflowfilterid = $workflow;
+            } else {
+                throw new \coding_exception('workflow has to be "global" or a int value');
+            }
+        }
+
+        $coursename = optional_param('coursename', null, PARAM_TEXT);
+        $categoryid = optional_param('catid', null, PARAM_INT);
+
+        $params = [];
+        $where_course = [];
+
+        if ($coursename) {
+            $where_course[] = 'c.fullname LIKE :cname';
+            $params['cname'] = '%' . $DB->sql_like_escape($coursename) . '%';
+        }
+        if ($categoryid) {
+            $where_course[] = 'cat.id = :catid';
+            $params['catid'] = $categoryid;
+        }
+
+        $where_course = implode(' AND ', $where_course);
+        if ($deleteglobal) {
+            $sql = 'DELETE FROM {tool_lifecycle_delayed} d ';
+            if ($where_course) {
+                $sql .= 'WHERE d.courseid IN ( ' .
+                            'SELECT c.id FROM {course} c ' .
+                            'JOIN {course_categories} cat ON c.category = cat.id ' .
+                            'WHERE ' . $where_course .
+                        ')';
+            }
+            $DB->execute($sql, $params);
+        }
+
+        if ($deleteseperate) {
+            $sql = 'DELETE FROM {tool_lifecycle_delayed_workf} dw ' .
+                    'WHERE TRUE ';
+            if ($where_course) {
+                $sql .= 'AND dw.courseid IN ( ' .
+                            'SELECT c.id FROM {course} c ' .
+                            'JOIN {course_categories} cat ON c.category = cat.id ' .
+                            'WHERE ' . $where_course .
+                        ')';
+            }
+            if ($workflowfilterid) {
+                $sql .= 'AND dw.workflowid = :workflowid';
+                $params['workflowid'] = $workflowfilterid;
+            }
+            $DB->execute($sql, $params);
         }
     }
     redirect($PAGE->url);
@@ -91,5 +154,6 @@ if ($data) {
 $button = new single_button(new moodle_url($PAGE->url, $params),
         get_string('delete_all_delays', 'tool_lifecycle'));
 
+echo "<br>";
 echo $OUTPUT->render($button);
 echo $OUTPUT->footer();
