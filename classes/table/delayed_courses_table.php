@@ -127,8 +127,8 @@ class delayed_courses_table extends \table_sql {
 
         if ($filterdata && $filterdata->coursename) {
             global $DB;
-            $where .= 'AND c.fullname LIKE \'%' . $DB->sql_like_escape($filterdata->coursename) . '%\' ';
-            $params['cname'] = $filterdata->coursename;
+            $where .= 'AND c.fullname LIKE :cname';
+            $params['cname'] = '%' . $DB->sql_like_escape($filterdata->coursename) . '%';
         }
 
         $this->set_sql($fields, $from, $where, $params);
