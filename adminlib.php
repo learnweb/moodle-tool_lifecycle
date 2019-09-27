@@ -402,8 +402,6 @@ class workflow_settings {
                 'triggername', $triggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
         }
 
-
-
         if (workflow_manager::is_editable($this->workflowid)) {
             $steps = step_manager::get_step_types();
             echo '<span class="ml-1"></span>';
