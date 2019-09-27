@@ -23,7 +23,7 @@
  */
 namespace lifecyclestep_duplicate;
 
-use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\step\interactionduplicate;
 
 defined('MOODLE_INTERNAL') || die();

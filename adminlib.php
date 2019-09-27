@@ -23,22 +23,22 @@
  */
 namespace tool_lifecycle;
 
-use tool_lifecycle\entity\trigger_subplugin;
-use tool_lifecycle\form\form_workflow_instance;
-use tool_lifecycle\form\form_upload_workflow;
-use tool_lifecycle\form\form_step_instance;
-use tool_lifecycle\form\form_trigger_instance;
+use tool_lifecycle\local\entity\trigger_subplugin;
+use tool_lifecycle\local\form\form_workflow_instance;
+use tool_lifecycle\local\form\form_upload_workflow;
+use tool_lifecycle\local\form\form_step_instance;
+use tool_lifecycle\local\form\form_trigger_instance;
 use tool_lifecycle\local\backup\restore_lifecycle_workflow;
-use tool_lifecycle\manager\step_manager;
-use tool_lifecycle\manager\settings_manager;
-use tool_lifecycle\manager\trigger_manager;
-use tool_lifecycle\entity\workflow;
-use tool_lifecycle\entity\step_subplugin;
-use tool_lifecycle\manager\workflow_manager;
-use tool_lifecycle\table\active_manual_workflows_table;
-use tool_lifecycle\table\workflow_definition_table;
-use tool_lifecycle\table\active_automatic_workflows_table;
-use tool_lifecycle\table\step_table;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\settings_manager;
+use tool_lifecycle\local\manager\trigger_manager;
+use tool_lifecycle\local\entity\workflow;
+use tool_lifecycle\local\entity\step_subplugin;
+use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\table\active_manual_workflows_table;
+use tool_lifecycle\local\table\workflow_definition_table;
+use tool_lifecycle\local\table\active_automatic_workflows_table;
+use tool_lifecycle\local\table\step_table;
 
 defined('MOODLE_INTERNAL') || die;
 

@@ -32,7 +32,7 @@ admin_externalpage_setup('tool_lifecycle_activeprocesses');
 
 $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/activeprocesses.php'));
 
-$table = new tool_lifecycle\table\active_processes_table('tool_lifecycle_active_processes');
+$table = new tool_lifecycle\local\table\active_processes_table('tool_lifecycle_active_processes');
 
 $PAGE->set_title(get_string('active_processes_list_header', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('active_processes_list_header', 'tool_lifecycle'));

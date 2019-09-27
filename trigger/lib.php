@@ -25,7 +25,7 @@
  */
 namespace tool_lifecycle\trigger;
 
-use tool_lifecycle\response\trigger_response;
+use tool_lifecycle\local\response\trigger_response;
 
 defined('MOODLE_INTERNAL') || die();
 

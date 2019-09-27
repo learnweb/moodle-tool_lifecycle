@@ -25,9 +25,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 use tool_lifecycle\action;
-use tool_lifecycle\entity\workflow;
-use tool_lifecycle\manager\workflow_manager;
-use tool_lifecycle\manager\trigger_manager;
+use tool_lifecycle\local\entity\workflow;
+use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\data\manual_trigger_tool;
 
 /**

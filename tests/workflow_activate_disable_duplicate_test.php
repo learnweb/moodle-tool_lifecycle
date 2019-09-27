@@ -30,8 +30,8 @@ require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/workflow_actions_testcase.php');
 
 use tool_lifecycle\action;
-use tool_lifecycle\manager\workflow_manager;
-use tool_lifecycle\entity\workflow;
+use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\entity\workflow;
 
 /**
  * Tests activating, disabling and duplicating workflows
@@ -105,8 +105,8 @@ class tool_lifecycle_workflow_activate_disable_duplicate_testcase extends workfl
             }
         }
         $this->assertEquals($this->workflow1->displaytitle, $duplicate->displaytitle);
-        $workflow1stepcount = count(\tool_lifecycle\manager\step_manager::get_step_instances($this->workflow1->id));
-        $duplicatestepcount = count(\tool_lifecycle\manager\step_manager::get_step_instances($duplicate->id));
+        $workflow1stepcount = count(\tool_lifecycle\local\manager\step_manager::get_step_instances($this->workflow1->id));
+        $duplicatestepcount = count(\tool_lifecycle\local\manager\step_manager::get_step_instances($duplicate->id));
         $this->assertEquals($workflow1stepcount, $duplicatestepcount);
     }
 

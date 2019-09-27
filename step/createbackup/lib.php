@@ -23,9 +23,9 @@
  */
 namespace tool_lifecycle\step;
 
-use tool_lifecycle\manager\settings_manager;
-use tool_lifecycle\response\step_response;
-use tool_lifecycle\manager\backup_manager;
+use tool_lifecycle\local\manager\settings_manager;
+use tool_lifecycle\local\response\step_response;
+use tool_lifecycle\local\manager\backup_manager;
 use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();

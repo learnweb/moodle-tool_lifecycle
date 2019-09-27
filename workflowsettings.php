@@ -30,7 +30,7 @@ require_capability('moodle/site:config', context_system::instance());
 
 $workflowid = required_param('workflowid', PARAM_INT);
 
-$workflow = tool_lifecycle\manager\workflow_manager::get_workflow($workflowid);
+$workflow = tool_lifecycle\local\manager\workflow_manager::get_workflow($workflowid);
 
 if (!$workflow) {
     throw new moodle_exception('workflownotfound', 'tool_lifecycle',

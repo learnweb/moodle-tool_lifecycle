@@ -57,7 +57,7 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
 
     /**
      * Renders the workflow upload form including errors, which occured during upload.
-     * @param \tool_lifecycle\form\form_upload_workflow $form
+     * @param \tool_lifecycle\local\form\form_upload_workflow $form
      * @param array $errors
      * @throws coding_exception
      */

@@ -24,13 +24,13 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-use tool_lifecycle\entity\step_subplugin;
-use tool_lifecycle\entity\trigger_subplugin;
-use tool_lifecycle\entity\workflow;
-use tool_lifecycle\manager\step_manager;
-use tool_lifecycle\manager\settings_manager;
-use tool_lifecycle\manager\subplugin_manager;
-use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\local\entity\step_subplugin;
+use tool_lifecycle\local\entity\trigger_subplugin;
+use tool_lifecycle\local\entity\workflow;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\settings_manager;
+use tool_lifecycle\local\manager\subplugin_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\settings_type;
 
 /**
@@ -66,7 +66,7 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
         $this->workflow = $generator->create_workflow();
         $this->step = new step_subplugin('instancename', 'email', $this->workflow->id);
         step_manager::insert_or_update($this->step);
-        $this->trigger = \tool_lifecycle\manager\trigger_manager::get_triggers_for_workflow($this->workflow->id)[0];
+        $this->trigger = \tool_lifecycle\local\manager\trigger_manager::get_triggers_for_workflow($this->workflow->id)[0];
     }
 
     /**

@@ -23,7 +23,7 @@
  */
 require_once(__DIR__ . '/../../../config.php');
 
-use tool_lifecycle\manager\backup_manager;
+use tool_lifecycle\local\manager\backup_manager;
 
 $PAGE->set_context(context_system::instance());
 require_login(null, false);

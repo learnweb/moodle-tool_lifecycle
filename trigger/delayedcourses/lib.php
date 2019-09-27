@@ -23,8 +23,8 @@
  */
 namespace tool_lifecycle\trigger;
 
-use tool_lifecycle\response\trigger_response;
-use tool_lifecycle\manager\delayed_courses_manager;
+use tool_lifecycle\local\response\trigger_response;
+use tool_lifecycle\local\manager\delayed_courses_manager;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
