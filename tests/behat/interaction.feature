@@ -16,29 +16,29 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
       | teacher1 | C2     | editingteacher |
       | teacher1 | C3     | editingteacher |
     And I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow Settings" in site administration
-    And I press "Add Workflow"
+    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow settings" in site administration
+    And I press "Add workflow"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
     And I select "Start date delay trigger" from the "triggername" singleselect
     And I set the following fields to these values:
-      | Instance Name    | My Trigger                 |
+      | Instance name    | My Trigger                 |
       | delay[number]    | 3                          |
       | delay[timeunit]  | days                       |
     And I press "Save changes"
-    And I select "Email Step" from the "stepname" singleselect
+    And I select "Email step" from the "stepname" singleselect
     And I set the following fields to these values:
-      | Instance Name              | Email Step                  |
+      | Instance name              | Email step                  |
       | responsetimeout[number]    | 8                           |
       | responsetimeout[timeunit]  | seconds                     |
-      | Subject Template           | Subject                     |
+      | Subject template           | Subject                     |
       | Content plain text template           | Content                     |
       | Content HTML Template      | Content HTML                |
     And I press "Save changes"
-    And I select "Delete Course Step" from the "stepname" singleselect
-    And I set the field "Instance Name" to "Delete Course 2"
+    And I select "Delete course step" from the "stepname" singleselect
+    And I set the field "Instance name" to "Delete Course 2"
     And I press "Save changes"
     And I press "Back"
     And I press "Activate"
@@ -55,9 +55,9 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
     Then I should see "Course 1" in the "tool_lifecycle_remaining" "table"
     And I should see "Course 2" in the "tool_lifecycle_interaction" "table"
     And I should see "Course 3" in the "tool_lifecycle_interaction" "table"
-    And I should see the tool "Keep Course" in the "Course 2" row of the "tool_lifecycle_interaction" table
-    And I should see the tool "Keep Course" in the "Course 3" row of the "tool_lifecycle_interaction" table
-    When I click on the tool "Keep Course" in the "Course 2" row of the "tool_lifecycle_interaction" table
+    And I should see the tool "Keep course" in the "Course 2" row of the "tool_lifecycle_interaction" table
+    And I should see the tool "Keep course" in the "Course 3" row of the "tool_lifecycle_interaction" table
+    When I click on the tool "Keep course" in the "Course 2" row of the "tool_lifecycle_interaction" table
     Then I should see "Course 1" in the "tool_lifecycle_remaining" "table"
     And I should see "Course 2" in the "tool_lifecycle_remaining" "table"
     And I should see "Course 3" in the "tool_lifecycle_interaction" "table"
