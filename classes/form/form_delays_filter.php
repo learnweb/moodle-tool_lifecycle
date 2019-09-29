@@ -48,6 +48,7 @@ class form_delays_filter extends \moodleform {
      * Defines forms elements
      */
     public function definition() {
+        global $CFG;
         $mform = $this->_form;
 
         $activeworkflows = workflow_manager::get_active_workflows();
@@ -61,7 +62,14 @@ class form_delays_filter extends \moodleform {
         }
         $mform->addElement('select', 'workflow', get_string('show_delays', 'tool_lifecycle'), $workflowoptions);
 
-        $categories = \core_course_category::get_all();
+        // Use core_course_category for moodle 3.6 and higher.
+        if ($CFG->version >= 2018120300) {
+            $categories = \core_course_category::get_all();
+        } else {
+            require_once($CFG->libdir . '/coursecatlib.php');
+            $categories = \coursecat::get_all();
+        }
+
         $categoryoptions = ['' => '-'];
         foreach ($categories as $category) {
             $categoryoptions[$category->id] = $category->name;
