@@ -22,6 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Delete Course Step';
+$string['pluginname'] = 'Delete course step';
 
 $string['deletecourse_maximumdeletionspercron'] = 'Maximum number of courses deleted per cron';

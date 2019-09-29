@@ -29,25 +29,25 @@ $string['plugintitle'] = 'Course Life Cycle';
 $string['lifecycle:managecourses'] = 'May manage courses in tool_lifecycle';
 $string['managecourses_link'] = 'Manage courses';
 
-$string['general_config_header'] = "General & Subplugins";
+$string['general_config_header'] = "General & subplugins";
 $string['config_delay_duration'] = 'Default duration of a course delay';
 $string['config_delay_duration_desc'] = 'This setting defines the default delay duration of a workflow
 in case one of its processes is rolled back or finishes.
 The delay duration determines how long a course will be excepted from being processed again in either of the cases.';
-$string['active_processes_list_header'] = 'Active Processes';
-$string['adminsettings_heading'] = 'Workflow Settings';
-$string['active_manual_workflows_heading'] = 'Active Manual Workflows';
-$string['active_automatic_workflows_heading'] = 'Active Automatic Workflows';
-$string['workflow_definition_heading'] = 'Workflow Definitions';
-$string['adminsettings_edit_workflow_definition_heading'] = 'Workflow Definition';
-$string['adminsettings_workflow_definition_steps_heading'] = 'Workflow Steps';
+$string['active_processes_list_header'] = 'Active processes';
+$string['adminsettings_heading'] = 'Workflow settings';
+$string['active_manual_workflows_heading'] = 'Active manual workflows';
+$string['active_automatic_workflows_heading'] = 'Active automatic workflows';
+$string['workflow_definition_heading'] = 'Workflow definitions';
+$string['adminsettings_edit_workflow_definition_heading'] = 'Workflow definition';
+$string['adminsettings_workflow_definition_steps_heading'] = 'Workflow steps';
 $string['adminsettings_edit_trigger_instance_heading'] = 'Trigger for workflow \'{$a}\'';
-$string['adminsettings_edit_step_instance_heading'] = 'Step Instance for workflow \'{$a}\'';
-$string['add_new_step_instance'] = 'Add New Step Instance...';
-$string['add_new_trigger_instance'] = 'Add New Trigger Instance...';
+$string['adminsettings_edit_step_instance_heading'] = 'Step instance for workflow \'{$a}\'';
+$string['add_new_step_instance'] = 'Add new step instance...';
+$string['add_new_trigger_instance'] = 'Add new trigger instance...';
 $string['step_settings_header'] = 'Specific settings of the step type';
 $string['trigger_settings_header'] = 'Specific settings of the trigger type';
-$string['general_settings_header'] = 'General Settings';
+$string['general_settings_header'] = 'General settings';
 $string['followedby_none'] = 'None';
 $string['invalid_workflow'] = 'Invalid workflow configuration';
 $string['invalid_workflow_details'] = 'Go to details view, to create a trigger for this workflow';
@@ -61,17 +61,17 @@ $string['error_wrong_trigger_selected'] = 'You tried to request a non-manual tri
 
 $string['lifecycle_task'] = 'Run the life cycle processes';
 
-$string['trigger_subpluginname'] = 'Subplugin Name';
+$string['trigger_subpluginname'] = 'Subplugin name';
 $string['trigger_subpluginname_help'] = 'Step subplugin/trigger title (visible for admins only).';
-$string['trigger_instancename'] = 'Instance Name';
+$string['trigger_instancename'] = 'Instance name';
 $string['trigger_instancename_help'] = 'Trigger instance title (visible for admins only).';
 $string['trigger_enabled'] = 'Enabled';
 $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_workflow'] = 'Workflow';
 
 $string['workflow'] = 'Workflow';
-$string['add_workflow'] = 'Add Workflow';
-$string['upload_workflow'] = 'Upload Workflow';
+$string['add_workflow'] = 'Add workflow';
+$string['upload_workflow'] = 'Upload workflow';
 $string['workflow_title'] = 'Title';
 $string['workflow_title_help'] = 'Workflow title (visible for admins only).';
 $string['workflow_displaytitle'] = 'Displayed workflow title';
@@ -82,7 +82,7 @@ this value describes the time until a process for this combination of course and
 $string['workflow_finishdelay'] = 'Delay in case of finished course';
 $string['workflow_finishdelay_help'] = 'If a course has finished a process instance of this workflow,
 this value describes the time until a process for this combination of course and workflow can be started again.';
-$string['workflow_delayforallworkflows'] = 'Delay for all Workflows?';
+$string['workflow_delayforallworkflows'] = 'Delay for all workflows?';
 $string['workflow_delayforallworkflows_help'] = 'If ticked, the durations on top do not only delay the execution
 of this workflow for a course, but for all other workflows as well. Thus, until the time passes no process can be started
 for the respective course.';
@@ -91,16 +91,16 @@ $string['workflow_processes'] = 'Active processes';
 $string['workflow_timeactive'] = 'Active since';
 $string['workflow_sortindex'] = 'Up/Down';
 $string['workflow_tools'] = 'Actions';
-$string['viewsteps'] = 'View Workflow Steps';
-$string['editworkflow'] = 'Edit General Settings';
-$string['backupworkflow'] = 'Backup Workflow';
-$string['duplicateworkflow'] = 'Duplicate Workflow';
-$string['deleteworkflow'] = 'Delete Workflow';
+$string['viewsteps'] = 'View workflow steps';
+$string['editworkflow'] = 'Edit general settings';
+$string['backupworkflow'] = 'Backup workflow';
+$string['duplicateworkflow'] = 'Duplicate workflow';
+$string['deleteworkflow'] = 'Delete workflow';
 $string['deleteworkflow_confirm'] = 'The workflow is going to be deleted. This can\'t be undone. Are you sure?';
 $string['activateworkflow'] = 'Activate';
-$string['disableworkflow'] = 'Disable Workflow (processes keep running)';
+$string['disableworkflow'] = 'Disable workflow (processes keep running)';
 $string['disableworkflow_confirm'] = 'The workflow is going to be disabled. Are you sure?';
-$string['abortdisableworkflow'] = 'Disable Workflow (abort processes, maybe unsafe!)';
+$string['abortdisableworkflow'] = 'Disable workflow (abort processes, maybe unsafe!)';
 $string['abortdisableworkflow_confirm'] = 'The workflow is going to be disabled and all running processes of this workflow will be aborted. Are you sure?';
 $string['abortprocesses'] = 'Abort running processes (maybe unsafe!)';
 $string['abortprocesses_confirm'] = 'All running processes of this workflow will be aborted. Are you sure?';
@@ -113,9 +113,9 @@ $string['workflow_timedeactive'] = 'Deactivated since';
 $string['active_workflows_list'] = 'List active workflows and workflow definitions';
 
 $string['step_type'] = 'Type';
-$string['step_subpluginname'] = 'Subplugin Name';
+$string['step_subpluginname'] = 'Subplugin name';
 $string['step_subpluginname_help'] = 'Step subplugin/trigger title (visible for admins only).';
-$string['step_instancename'] = 'Instance Name';
+$string['step_instancename'] = 'Instance name';
 $string['step_instancename_help'] = 'Step instance title (visible for admins only).';
 $string['step_sortindex'] = 'Up/Down';
 $string['step_edit'] = 'Edit';
@@ -135,7 +135,7 @@ $string['subplugintype_lifecycletrigger_plural'] = 'Triggers for starting a life
 $string['subplugintype_lifecyclestep'] = 'Step within a lifecycle process';
 $string['subplugintype_lifecyclestep_plural'] = 'Steps within a lifecycle process';
 
-$string['nointeractioninterface'] = 'No Interaction Interface available!';
+$string['nointeractioninterface'] = 'No interaction interface available!';
 $string['tools'] = 'Tools';
 $string['status'] = 'Status';
 $string['date'] = 'Due date';
@@ -145,7 +145,7 @@ $string['noprocessfound'] = 'A process with the given processid could not be fou
 
 $string['nocoursestodisplay'] = 'There are currently no courses which require your attention!';
 
-$string['course_backups_list_header'] = 'Course Backups';
+$string['course_backups_list_header'] = 'Course backups';
 $string['backupcreated'] = 'Created at';
 $string['restore'] = 'Restore';
 $string['download'] = 'Download';
@@ -155,7 +155,7 @@ $string['workflownotfound'] = 'Workflow with id {$a} could not be found';
 // View.php.
 $string['tablecoursesrequiringattention'] = 'Courses that require your attention';
 $string['tablecoursesremaining'] = 'Remaining courses';
-$string['tablecourseslog'] = 'Past Actions';
+$string['tablecourseslog'] = 'Past actions';
 $string['viewheading'] = 'Manage courses';
 $string['interaction_success'] = 'Action successfully saved.';
 $string['manual_trigger_success'] = 'Workflow started successfully.';
