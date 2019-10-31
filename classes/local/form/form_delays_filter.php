@@ -21,15 +21,9 @@
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_lifecycle\form;
+namespace tool_lifecycle\local\form;
 
-use cache;
-use tool_lifecycle\action;
-use tool_lifecycle\entity\step_subplugin;
-use tool_lifecycle\entity\workflow;
-use tool_lifecycle\manager\lib_manager;
-use tool_lifecycle\manager\workflow_manager;
-use tool_lifecycle\step\libbase;
+use tool_lifecycle\local\manager\workflow_manager;
 
 defined('MOODLE_INTERNAL') || die();
 

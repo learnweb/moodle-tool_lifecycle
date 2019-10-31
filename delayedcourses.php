@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use tool_lifecycle\form\form_delays_filter;
-use tool_lifecycle\table\delayed_courses_table;
+use tool_lifecycle\local\form\form_delays_filter;
+use tool_lifecycle\local\table\delayed_courses_table;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');

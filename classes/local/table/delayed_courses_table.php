@@ -15,13 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Table listing all courses for a specific user and a specific subplugin
+ * Table listing all delayed courses
  *
  * @package tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_lifecycle\table;
+namespace tool_lifecycle\local\table;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -31,7 +31,7 @@ require_once($CFG->libdir . '/tablelib.php');
  * Table listing all delayed courses
  *
  * @package tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class delayed_courses_table extends \table_sql {
