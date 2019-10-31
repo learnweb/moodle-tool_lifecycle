@@ -35,5 +35,14 @@ $tasks = array(
         'month' => '*',
         'dayofweek' => '*',
         'faildelay' => 1,
+    ),
+    array(
+        'classname' => 'tool_lifecycle\task\lifecycle_cleanup_task',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '4',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '0',
     )
 );
