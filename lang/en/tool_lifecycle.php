@@ -60,6 +60,7 @@ $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not 
 $string['error_wrong_trigger_selected'] = 'You tried to request a non-manual trigger.';
 
 $string['lifecycle_task'] = 'Run the life cycle processes';
+$string['lifecycle_cleanup_task'] = 'Runs the life cycle cleanup';
 
 $string['trigger_subpluginname'] = 'Subplugin name';
 $string['trigger_subpluginname_help'] = 'Step subplugin/trigger title (visible for admins only).';
