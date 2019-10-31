@@ -24,14 +24,15 @@
 
 namespace tool_lifecycle\privacy;
 
+use context;
+use context_system;
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
-use core_privacy\local\request\context;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
-use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\local\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -95,7 +96,7 @@ class provider implements
     public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
         foreach ($contextlist->get_contexts() as $context) {
-            if ($context instanceof \context_system) {
+            if ($context instanceof context_system) {
                 $records = $DB->get_records('tool_lifecycle_action_log', array('userid' => $contextlist->get_user()->id));
                 $writer = writer::with_context($contextlist->current());
                 foreach ($records as $record) {
@@ -114,9 +115,9 @@ class provider implements
      *
      * @param context $context The specific context to delete data for.
      */
-    public static function delete_data_for_all_users_in_context(\context $context) {
+    public static function delete_data_for_all_users_in_context(context $context) {
         global $DB;
-        if ($context instanceof \context_system) {
+        if ($context instanceof context_system) {
             $sql = "UPDATE {tool_lifecycle_action_log}
                     SET userid = -1";
             $DB->execute($sql);
@@ -131,7 +132,7 @@ class provider implements
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
         foreach ($contextlist->get_contexts() as $context) {
-            if ($context instanceof \context_system) {
+            if ($context instanceof context_system) {
                 $sql = "UPDATE {tool_lifecycle_action_log}
                     SET userid = -1
                     WHERE userid = :userid";
@@ -147,7 +148,7 @@ class provider implements
      */
     public static function get_users_in_context(userlist $userlist) {
         $context = $userlist->get_context();
-        if ($context instanceof \context_system) {
+        if ($context instanceof context_system) {
             $sql = "SELECT userid
                     FROM {tool_lifecycle_action_log}";
             $userlist->add_from_sql('userid', $sql, array());
@@ -162,7 +163,7 @@ class provider implements
     public static function delete_data_for_users(approved_userlist $userlist) {
         global $DB;
         $context = $userlist->get_context();
-        if ($context instanceof \context_system) {
+        if ($context instanceof context_system) {
             list($insql, $params) = $DB->get_in_or_equal($userlist->get_userids());
             $sql = "UPDATE {tool_lifecycle_action_log}
                     SET userid = -1

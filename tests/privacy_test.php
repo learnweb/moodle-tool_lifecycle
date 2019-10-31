@@ -27,21 +27,18 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 use core_privacy\local\request\approved_userlist;
-use core_privacy\local\request\content_writer;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 use core_privacy\tests\provider_testcase;
 use core_privacy\tests\request\approved_contextlist;
 use tool_lifecycle\action;
-use tool_lifecycle\entity\step_subplugin;
-use tool_lifecycle\entity\workflow;
-use tool_lifecycle\manager\interaction_manager;
-use tool_lifecycle\manager\process_manager;
-use tool_lifecycle\manager\step_manager;
-use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\local\entity\step_subplugin;
+use tool_lifecycle\local\entity\workflow;
+use tool_lifecycle\local\manager\interaction_manager;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\privacy\provider;
 use tool_lifecycle\processor;
-use tool_lifecycle\task\lifecycle_task;
 
 /**
  * Tests Privacy Implementation
