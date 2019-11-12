@@ -26,9 +26,9 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
 
-use tool_lifecycle\entity\workflow;
-use tool_lifecycle\manager\delayed_courses_manager;
-use \tool_lifecycle\manager\process_manager;
+use tool_lifecycle\local\entity\workflow;
+use tool_lifecycle\local\manager\delayed_courses_manager;
+use tool_lifecycle\local\manager\process_manager;
 
 /**
  * Tests creating storing and retrieving a process object.

@@ -29,11 +29,11 @@ require_once(__DIR__ . '/../lib.php');
 
 use tool_lifecycle\local\backup\backup_lifecycle_workflow;
 use tool_lifecycle\local\backup\restore_lifecycle_workflow;
-use tool_lifecycle\manager\workflow_manager;
-use tool_lifecycle\manager\settings_manager;
-use tool_lifecycle\manager\step_manager;
-use tool_lifecycle\manager\trigger_manager;
-use tool_lifecycle\entity\workflow;
+use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\manager\settings_manager;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\trigger_manager;
+use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\settings_type;
 
 /**
@@ -109,7 +109,7 @@ class tool_lifecycle_backup_and_restore_workflow_testcase extends \advanced_test
             $this->assertEquals($newworkflow->id, $newstep->workflowid);
             $oldsettings = settings_manager::get_settings($oldstep->id, settings_type::STEP);
             $newsettings = settings_manager::get_settings($newstep->id, settings_type::STEP);
-            $lib = \tool_lifecycle\manager\lib_manager::get_step_lib($newstep->subpluginname);
+            $lib = \tool_lifecycle\local\manager\lib_manager::get_step_lib($newstep->subpluginname);
             $settingsdef = $lib->instance_settings();
             foreach ($settingsdef as $def) {
                 if (array_key_exists($def->name, $oldsettings)) {
@@ -131,7 +131,7 @@ class tool_lifecycle_backup_and_restore_workflow_testcase extends \advanced_test
             $this->assertEquals($newworkflow->id, $newtrig->workflowid);
             $oldsettings = settings_manager::get_settings($oldtrig->id, settings_type::TRIGGER);
             $newsettings = settings_manager::get_settings($newtrig->id, settings_type::TRIGGER);
-            $lib = \tool_lifecycle\manager\lib_manager::get_trigger_lib($newtrig->subpluginname);
+            $lib = \tool_lifecycle\local\manager\lib_manager::get_trigger_lib($newtrig->subpluginname);
             $settingsdef = $lib->instance_settings();
             foreach ($settingsdef as $def) {
                 if (array_key_exists($def->name, $oldsettings)) {

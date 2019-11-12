@@ -26,10 +26,10 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
 
-use tool_lifecycle\entity\process;
-use \tool_lifecycle\manager\process_manager;
-use \tool_lifecycle\manager\process_data_manager;
-use \tool_lifecycle\manager\step_manager;
+use tool_lifecycle\local\entity\process;
+use tool_lifecycle\local\manager\process_manager;
+use tool_lifecycle\local\manager\process_data_manager;
+use tool_lifecycle\local\manager\step_manager;
 
 /**
  * Tests creating storing and retrieving process data.

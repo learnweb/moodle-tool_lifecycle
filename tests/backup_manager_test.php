@@ -24,7 +24,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-use tool_lifecycle\manager\backup_manager;
+use tool_lifecycle\local\manager\backup_manager;
 
 /**
  * Tests the beckup manager.

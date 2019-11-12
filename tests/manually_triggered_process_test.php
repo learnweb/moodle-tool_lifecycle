@@ -29,11 +29,11 @@ require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 
 use tool_lifecycle\action;
-use tool_lifecycle\entity\trigger_subplugin;
-use tool_lifecycle\manager\settings_manager;
-use tool_lifecycle\manager\workflow_manager;
-use tool_lifecycle\manager\trigger_manager;
-use tool_lifecycle\manager\process_manager;
+use tool_lifecycle\local\entity\trigger_subplugin;
+use tool_lifecycle\local\manager\settings_manager;
+use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\manager\trigger_manager;
+use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\processor;
 use tool_lifecycle\settings_type;
 

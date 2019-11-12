@@ -27,8 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../../lib.php');
 
 use tool_lifecycle\action;
-use \tool_lifecycle\entity\workflow;
-use \tool_lifecycle\manager\step_manager;
+use tool_lifecycle\local\entity\workflow;
+use tool_lifecycle\local\manager\step_manager;
 
 /**
  * Tests creating storing and retrieving a step object.

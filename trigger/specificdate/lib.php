@@ -24,9 +24,9 @@
 namespace tool_lifecycle\trigger;
 
 use DateTime;
-use tool_lifecycle\manager\settings_manager;
-use tool_lifecycle\manager\trigger_manager;
-use tool_lifecycle\response\trigger_response;
+use tool_lifecycle\local\manager\settings_manager;
+use tool_lifecycle\local\manager\trigger_manager;
+use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();

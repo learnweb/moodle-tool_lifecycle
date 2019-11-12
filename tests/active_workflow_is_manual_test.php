@@ -28,8 +28,8 @@ require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 
 use tool_lifecycle\action;
-use tool_lifecycle\manager\workflow_manager;
-use tool_lifecycle\entity\workflow;
+use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\entity\workflow;
 
 /**
  * Tests the field is manual after activating workflows.

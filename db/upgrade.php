@@ -247,13 +247,13 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
     }
 
     if ($oldversion < 2018022005) {
-        $workflows = \tool_lifecycle\manager\workflow_manager::get_active_workflows();
+        $workflows = \tool_lifecycle\local\manager\workflow_manager::get_active_workflows();
         foreach ($workflows as $workflow) {
             if ($workflow->manual === null) {
-                $trigger = \tool_lifecycle\manager\trigger_manager::get_triggers_for_workflow($workflow->id)[0];
-                $lib = \tool_lifecycle\manager\lib_manager::get_trigger_lib($trigger->subpluginname);
+                $trigger = \tool_lifecycle\local\manager\trigger_manager::get_triggers_for_workflow($workflow->id)[0];
+                $lib = \tool_lifecycle\local\manager\lib_manager::get_trigger_lib($trigger->subpluginname);
                 $workflow->manual = $lib->is_manual_trigger();
-                \tool_lifecycle\manager\workflow_manager::insert_or_update($workflow);
+                \tool_lifecycle\local\manager\workflow_manager::insert_or_update($workflow);
             }
         }
         // Lifecycle savepoint reached.

@@ -23,8 +23,8 @@
  */
 namespace tool_lifecycle\task;
 
-use tool_lifecycle\manager\lib_manager;
-use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\processor;
 
 defined('MOODLE_INTERNAL') || die;

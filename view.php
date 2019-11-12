@@ -23,9 +23,9 @@
  */
 require_once(__DIR__ . '/../../../config.php');
 
-use tool_lifecycle\manager\step_manager;
-use tool_lifecycle\manager\interaction_manager;
-use tool_lifecycle\table\interaction_attention_table;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\interaction_manager;
+use tool_lifecycle\local\table\interaction_attention_table;
 
 require_login(null, false);
 

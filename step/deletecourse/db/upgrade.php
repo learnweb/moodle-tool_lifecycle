@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use tool_lifecycle\manager\settings_manager;
-use tool_lifecycle\manager\step_manager;
+use tool_lifecycle\local\manager\settings_manager;
+use tool_lifecycle\local\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die();
 

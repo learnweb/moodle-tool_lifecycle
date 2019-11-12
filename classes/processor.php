@@ -23,17 +23,17 @@
  */
 namespace tool_lifecycle;
 
-use tool_lifecycle\entity\trigger_subplugin;
+use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\event\process_triggered;
-use tool_lifecycle\manager\process_manager;
-use tool_lifecycle\manager\step_manager;
-use tool_lifecycle\manager\trigger_manager;
-use tool_lifecycle\manager\lib_manager;
-use tool_lifecycle\manager\workflow_manager;
-use tool_lifecycle\manager\delayed_courses_manager;
-use tool_lifecycle\response\step_interactive_response;
-use tool_lifecycle\response\step_response;
-use tool_lifecycle\response\trigger_response;
+use tool_lifecycle\local\manager\process_manager;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\trigger_manager;
+use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\manager\delayed_courses_manager;
+use tool_lifecycle\local\response\step_interactive_response;
+use tool_lifecycle\local\response\step_response;
+use tool_lifecycle\local\response\trigger_response;
 
 
 defined('MOODLE_INTERNAL') || die;

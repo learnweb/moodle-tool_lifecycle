@@ -24,10 +24,10 @@
 namespace tool_lifecycle\plugininfo;
 
 use core\plugininfo\base;
-use tool_lifecycle\manager\lib_manager;
-use tool_lifecycle\manager\step_manager;
-use tool_lifecycle\manager\trigger_manager;
-use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\trigger_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_usertours\step;
 
 defined('MOODLE_INTERNAL') || die();

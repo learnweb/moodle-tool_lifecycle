@@ -25,7 +25,7 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/adminlib.php');
 
-use tool_lifecycle\table\deactivated_workflows_table;
+use tool_lifecycle\local\table\deactivated_workflows_table;
 
 $PAGE->set_context(context_system::instance());
 require_login(null, false);
@@ -42,7 +42,7 @@ admin_externalpage_setup('tool_lifecycle_deactivatedworkflows');
 $workflowid = optional_param('workflowid', null, PARAM_INT);
 $action = optional_param('action', null, PARAM_TEXT);
 if ($workflowid && $action) {
-    \tool_lifecycle\manager\workflow_manager::handle_action($action, $workflowid);
+    \tool_lifecycle\local\manager\workflow_manager::handle_action($action, $workflowid);
 }
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');

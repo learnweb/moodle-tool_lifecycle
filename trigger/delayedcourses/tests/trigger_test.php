@@ -24,10 +24,10 @@
  */
 namespace tool_lifecycle\trigger;
 
-use tool_lifecycle\entity\trigger_subplugin;
-use tool_lifecycle\entity\workflow;
+use tool_lifecycle\local\entity\trigger_subplugin;
+use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\processor;
-use tool_lifecycle\manager\delayed_courses_manager;
+use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle_trigger_delayedcourses_generator as trigger_generator;
 
 defined('MOODLE_INTERNAL') || die();

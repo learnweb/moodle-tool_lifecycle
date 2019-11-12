@@ -30,7 +30,7 @@ require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/workflow_actions_testcase.php');
 
 use tool_lifecycle\action;
-use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 
 /**
  * Tests the different state changes of the workflow sortindex for up and down action.

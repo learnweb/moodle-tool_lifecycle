@@ -27,9 +27,9 @@ namespace tool_lifecycle\step;
 
 use core_user;
 use MongoDB\BSON\Timestamp;
-use tool_lifecycle\entity\process;
-use tool_lifecycle\entity\step_subplugin;
-use tool_lifecycle\response\step_interactive_response;
+use tool_lifecycle\local\entity\process;
+use tool_lifecycle\local\entity\step_subplugin;
+use tool_lifecycle\local\response\step_interactive_response;
 
 defined('MOODLE_INTERNAL') || die();
 

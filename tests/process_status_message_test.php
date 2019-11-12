@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 use tool_lifecycle\action;
-use tool_lifecycle\entity\workflow;
-use tool_lifecycle\manager\workflow_manager;
+use tool_lifecycle\local\entity\workflow;
+use tool_lifecycle\local\manager\workflow_manager;
 
 /**
  * Tests assembly of manual trigger tools.
@@ -78,15 +78,15 @@ class tool_lifecycle_process_status_message_testcase extends \advanced_testcase 
      */
     public function test_get_status_message() {
         $process = $this->generator->create_process(2, $this->workflow->id);
-        $message = \tool_lifecycle\manager\interaction_manager::get_process_status_message($process->id);
+        $message = \tool_lifecycle\local\manager\interaction_manager::get_process_status_message($process->id);
         $this->assertEquals(get_string("workflow_started", "tool_lifecycle"), $message);
 
-        \tool_lifecycle\manager\process_manager::proceed_process($process);
-        $message = \tool_lifecycle\manager\interaction_manager::get_process_status_message($process->id);
+        \tool_lifecycle\local\manager\process_manager::proceed_process($process);
+        $message = \tool_lifecycle\local\manager\interaction_manager::get_process_status_message($process->id);
         $this->assertEquals(get_string("workflow_is_running", "tool_lifecycle"), $message);
 
-        \tool_lifecycle\manager\process_manager::proceed_process($process);
-        $message = \tool_lifecycle\manager\interaction_manager::get_process_status_message($process->id);
+        \tool_lifecycle\local\manager\process_manager::proceed_process($process);
+        $message = \tool_lifecycle\local\manager\interaction_manager::get_process_status_message($process->id);
         $this->assertEquals(get_string('status_message_requiresattention', 'lifecyclestep_email'), $message);
     }
 }

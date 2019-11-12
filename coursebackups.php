@@ -32,7 +32,7 @@ admin_externalpage_setup('tool_lifecycle_coursebackups');
 
 $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/coursebackups.php'));
 
-$table = new tool_lifecycle\table\course_backups_table('tool_lifecycle_course_backups');
+$table = new tool_lifecycle\local\table\course_backups_table('tool_lifecycle_course_backups');
 
 $PAGE->set_title(get_string('course_backups_list_header', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('course_backups_list_header', 'tool_lifecycle'));

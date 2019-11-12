@@ -24,15 +24,15 @@
 namespace tool_lifecycle;
 
 use core\notification;
-use tool_lifecycle\manager\interaction_manager;
-use tool_lifecycle\manager\lib_manager;
-use tool_lifecycle\manager\process_manager;
-use tool_lifecycle\manager\settings_manager;
-use tool_lifecycle\manager\step_manager;
-use tool_lifecycle\manager\trigger_manager;
-use tool_lifecycle\table\interaction_log_table;
-use tool_lifecycle\table\interaction_remaining_table;
-use tool_lifecycle\table\interaction_attention_table;
+use tool_lifecycle\local\manager\interaction_manager;
+use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\process_manager;
+use tool_lifecycle\local\manager\settings_manager;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\trigger_manager;
+use tool_lifecycle\local\table\interaction_log_table;
+use tool_lifecycle\local\table\interaction_remaining_table;
+use tool_lifecycle\local\table\interaction_attention_table;
 
 defined('MOODLE_INTERNAL') || die();
 
