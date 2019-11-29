@@ -163,6 +163,7 @@ $string['manual_trigger_process_existed'] = 'A workflow for this course already 
 
 $string['coursename'] = 'Course name';
 $string['lastaction'] = 'Last action on';
+$string['anonymous_user'] = 'Anonymous User';
 
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_is_running'] = 'Workflow is running.';

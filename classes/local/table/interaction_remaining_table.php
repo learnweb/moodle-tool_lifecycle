@@ -165,7 +165,7 @@ class interaction_remaining_table extends interaction_table {
         // Otherwise, show latest action commited by user.
         global $CFG;
         if ($row->userid == -1) {
-            $userlink = get_string("anonymous_user");
+            $userlink = get_string("anonymous_user", 'tool_lifecycle');
         } else {
             $userlink = \html_writer::link($CFG->wwwroot . '/user/profile.php?id=' . $row->userid, fullname($row));
         }
