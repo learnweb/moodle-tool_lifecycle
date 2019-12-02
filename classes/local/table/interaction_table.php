@@ -62,7 +62,7 @@ abstract class interaction_table extends \table_sql {
      * @return string course link
      */
     public function col_coursefullname($row) {
-        $courselink = \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
+        $courselink = \html_writer::link(course_get_url($row->courseid), format_string($row->coursefullname));
         return $courselink . '<br><span class="secondary-info">' . $row->courseshortname . '</span>';
     }
 

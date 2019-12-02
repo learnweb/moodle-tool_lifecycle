@@ -101,9 +101,9 @@ class course_backups_table extends \table_sql {
      */
     public function col_coursefullname($row) {
         try {
-            return \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
+            return \html_writer::link(course_get_url($row->courseid), format_string($row->coursefullname));
         } catch (\dml_missing_record_exception $e) {
-            return $row->coursefullname;
+            return format_string($row->coursefullname);
         }
     }
 
