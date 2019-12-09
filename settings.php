@@ -38,6 +38,11 @@ if ($hassiteconfig) {
         get_string('config_delay_duration_desc', 'tool_lifecycle'),
         183 * 24 * 60 * 60)); // Dafault value is 180 days.
 
+    $settings->add(new admin_setting_configtext('tool_lifecycle/backup_path',
+        get_string('config_backup_path', 'tool_lifecycle'),
+        get_string('config_backup_path_desc', 'tool_lifecycle'),
+        $CFG->dataroot . DIRECTORY_SEPARATOR . 'lifecycle_backups'));
+
     $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_active_processes());
     $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_course_backups());
     $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_sublugins());
