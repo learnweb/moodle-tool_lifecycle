@@ -75,13 +75,13 @@ class backup_manager {
             /* @var $file \stored_file instance of the backup file*/
             $file = $results['backup_destination'];
             if (!empty($file)) {
-                $file->copy_content_to($path . '/' . $archivefile);
+                $file->copy_content_to($path . DIRECTORY_SEPARATOR . $archivefile);
             }
             $bc->destroy();
             unset($bc);
 
             // First check if the file was created.
-            if (!file_exists($path . '/' . $archivefile)) {
+            if (!file_exists($path . DIRECTORY_SEPARATOR . $archivefile)) {
                 return false;
             }
 
@@ -110,14 +110,14 @@ class backup_manager {
         $backuprecord = $DB->get_record('tool_lifecycle_backups', array('id' => $backupid));
 
         // Check if backup tmp dir exists.
-        $backuptmpdir = $CFG->tempdir . '/backup';
+        $backuptmpdir = $CFG->tempdir . DIRECTORY_SEPARATOR . 'backup';
         if (!check_dir_exists($backuptmpdir, true, true)) {
             throw new \restore_controller_exception('cannot_create_backup_temp_dir');
         }
 
         // Create the file location in the backup temp.
         $targetfilename = \restore_controller::get_tempdir_name($backuprecord->courseid, get_admin()->id);
-        $target = $backuptmpdir . '/' . $targetfilename;
+        $target = $backuptmpdir . DIRECTORY_SEPARATOR . $targetfilename;
         // Create the location of the actual backup file.
         $source = get_config('tool_lifecycle', 'backup_path') . DIRECTORY_SEPARATOR . $backuprecord->backupfile;
         // Check if the backup file exists.
