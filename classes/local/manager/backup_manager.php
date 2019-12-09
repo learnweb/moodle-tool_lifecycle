@@ -58,7 +58,7 @@ class backup_manager {
             $archivefile = date("Y-m-d") . "-ID-{$recordid}-COURSE-{$courseid}.mbz";
 
             // Path of backup folder.
-            $path = $CFG->dataroot . '/lifecycle_backups';
+            $path = get_config('tool_lifecycle', 'backup_path');
             // If the path doesn't exist, make it so!
             if (!is_dir($path)) {
                 umask(0000);
@@ -119,7 +119,7 @@ class backup_manager {
         $targetfilename = \restore_controller::get_tempdir_name($backuprecord->courseid, get_admin()->id);
         $target = $backuptmpdir . '/' . $targetfilename;
         // Create the location of the actual backup file.
-        $source = $CFG->dataroot . '/lifecycle_backups/' . $backuprecord->backupfile;
+        $source = get_config('tool_lifecycle', 'backup_path') . DIRECTORY_SEPARATOR . $backuprecord->backupfile;
         // Check if the backup file exists.
         if (!file_exists($source)) {
             throw new \moodle_exception('errorbackupfiledoesnotexist', 'tool_lifecycle', $source);

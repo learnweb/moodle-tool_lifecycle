@@ -34,6 +34,9 @@ $string['config_delay_duration'] = 'Default duration of a course delay';
 $string['config_delay_duration_desc'] = 'This setting defines the default delay duration of a workflow
 in case one of its processes is rolled back or finishes.
 The delay duration determines how long a course will be excepted from being processed again in either of the cases.';
+$string['config_backup_path'] = 'Path of the lifecycle backup folder';
+$string['config_backup_path_desc'] = 'This settings defines the storage location of the backups created by the backup step.
+The path has to be specified as an absolute path on your server.';
 $string['active_processes_list_header'] = 'Active processes';
 $string['adminsettings_heading'] = 'Workflow settings';
 $string['active_manual_workflows_heading'] = 'Active manual workflows';
