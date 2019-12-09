@@ -29,7 +29,7 @@ require_capability('moodle/site:config', context_system::instance());
 $backupid = required_param('backupid', PARAM_INT);
 
 $backuprecord = $DB->get_record('tool_lifecycle_backups', array('id' => $backupid), 'backupfile', MUST_EXIST);
-$source = $CFG->dataroot . '/lifecycle_backups/' . $backuprecord->backupfile;
+$source = get_config('tool_lifecycle', 'backup_path') . DIRECTORY_SEPARATOR . $backuprecord->backupfile;
 
 if (!file_exists($source)) {
     throw new \moodle_exception('errorbackupfiledoesnotexist', 'tool_lifecycle', $source);
