@@ -67,6 +67,21 @@ class deletecourse extends libbase {
     }
 
     /**
+     * Processes the course in status waiting and returns a repsonse.
+     * The response tells either
+     *  - that the subplugin is finished processing.
+     *  - that the subplugin is not yet finished processing.
+     *  - that a rollback for this course is necessary.
+     * @param int $processid of the respective process.
+     * @param int $instanceid of the step instance.
+     * @param mixed $course to be processed.
+     * @return step_response
+     */
+    public function process_waiting_course($processid, $instanceid, $course) {
+        return $this->process_course($processid, $instanceid, $course);
+    }
+
+    /**
      * The return value should be equivalent with the name of the subplugin folder.
      * @return string technical name of the subplugin
      */
