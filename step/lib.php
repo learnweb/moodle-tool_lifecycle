@@ -64,7 +64,7 @@ abstract class libbase {
      * @return step_response
      */
     public function process_waiting_course($processid, $instanceid, $course) {
-        return step_response::proceed();
+        throw new \coding_exception("Processing of waiting courses is not supported for this workflow step.");
     }
 
     /**
