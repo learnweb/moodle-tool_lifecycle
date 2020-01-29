@@ -406,7 +406,8 @@ class workflow_settings {
             $steps = step_manager::get_step_types();
             echo '<span class="ml-1"></span>';
             echo $OUTPUT->single_select(new \moodle_url($PAGE->url,
-                array('action' => action::STEP_INSTANCE_FORM, 'sesskey' => sesskey(), 'workflowid' => $this->workflowid, 'class' => 'ml-1')),
+                array('action' => action::STEP_INSTANCE_FORM, 'sesskey' => sesskey(),
+                    'workflowid' => $this->workflowid, 'class' => 'ml-1')),
                 'stepname', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
         }
 

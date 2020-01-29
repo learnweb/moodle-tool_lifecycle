@@ -183,7 +183,7 @@ $string['process_triggered_event'] = 'A process has been triggered';
 $string['process_proceeded_event'] = 'A process has been proceeded';
 $string['process_rollback_event'] = 'A process has been rolled back';
 
-// Privacy API
+// Privacy API.
 $string['privacy:metadata:tool_lifecycle_action_log'] = 'A log of actions done by course managers.';
 $string['privacy:metadata:tool_lifecycle_action_log:processid'] = 'ID of the Process the action was done in.';
 $string['privacy:metadata:tool_lifecycle_action_log:workflowid'] = 'ID of the Workflow the action was done in.';
