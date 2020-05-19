@@ -1,13 +1,9 @@
 language: php
-
-sudo: true
+os: linux
+dist: xenial
 
 addons:
-  firefox: "47.0.1"
   postgresql: "9.5"
-  apt:
-    packages:
-      - openjdk-8-jre-headless
 
 cache:
   directories:
@@ -16,87 +12,73 @@ cache:
 
 services:
   - mysql
+  - docker
 
 php:
-  - 7.0
-  - 7.1
+  - 7.2
   - 7.3
+  - 7.4
 
 env:
-  matrix:
-   - DB=pgsql MOODLE_BRANCH=MOODLE_35_STABLE
-   - DB=pgsql MOODLE_BRANCH=MOODLE_36_STABLE
-   - DB=pgsql MOODLE_BRANCH=MOODLE_37_STABLE
-   - DB=pgsql MOODLE_BRANCH=MOODLE_38_STABLE
-   - DB=pgsql MOODLE_BRANCH=master
-   - DB=mysqli MOODLE_BRANCH=MOODLE_35_STABLE
-   - DB=mysqli MOODLE_BRANCH=MOODLE_36_STABLE
-   - DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE
-   - DB=mysqli MOODLE_BRANCH=MOODLE_38_STABLE
-   - DB=mysqli MOODLE_BRANCH=master
-
-matrix:
- exclude:
-  - php: 7.0
-    env: DB=pgsql MOODLE_BRANCH=MOODLE_37_STABLE
-  - php: 7.0
-    env: DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE
-  - php: 7.0
-    env: DB=pgsql MOODLE_BRANCH=MOODLE_38_STABLE
-  - php: 7.0
-    env: DB=mysqli MOODLE_BRANCH=MOODLE_38_STABLE
-  - php: 7.0
-    env: DB=pgsql MOODLE_BRANCH=master
-  - php: 7.0
-    env: DB=mysqli MOODLE_BRANCH=master
-  - php: 7.1
-    env: DB=pgsql MOODLE_BRANCH=master
-  - php: 7.1
-    env: DB=mysqli MOODLE_BRANCH=master
-  - php: 7.3
-    env: DB=pgsql MOODLE_BRANCH=MOODLE_35_STABLE
-  - php: 7.3
-    env: DB=mysqli MOODLE_BRANCH=MOODLE_35_STABLE
- fast_finish: true
+  jobs:
+    - DB=pgsql MOODLE_BRANCH=MOODLE_35_STABLE
+    - DB=pgsql MOODLE_BRANCH=MOODLE_37_STABLE
+    - DB=pgsql MOODLE_BRANCH=MOODLE_38_STABLE
+    #- DB=pgsql MOODLE_BRANCH=MOODLE_39_STABLE
+    - DB=pgsql MOODLE_BRANCH=master
+    - DB=mysqli MOODLE_BRANCH=MOODLE_35_STABLE
+    - DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE
+    - DB=mysqli MOODLE_BRANCH=MOODLE_38_STABLE
+    #- DB=mysqli MOODLE_BRANCH=MOODLE_39_STABLE
+    - DB=mysqli MOODLE_BRANCH=master
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install 8.9
-  - nvm use 8.9
+  - nvm install 14
   - cd ../..
-  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
+  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci dev-master
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
 
 jobs:
+  fast_finish: true
   include:
     # Prechecks against latest Moodle stable only.
     - stage: static
-      php: 7.3
-      env: DB=mysqli MOODLE_BRANCH=MOODLE_38_STABLE
+      php: 7.4
+      env: DB=mysqli MOODLE_BRANCH=master #TODO 39
       install:
-      - moodle-plugin-ci install --no-init
+        - moodle-plugin-ci install --no-init
       script:
-      - moodle-plugin-ci phpdoc
-      - moodle-plugin-ci phplint
-      - moodle-plugin-ci phpcpd
-      - moodle-plugin-ci phpmd
-      - moodle-plugin-ci codechecker
-      - moodle-plugin-ci validate
-      - moodle-plugin-ci savepoints
-      - moodle-plugin-ci mustache
-      - moodle-plugin-ci grunt
+        - moodle-plugin-ci phpdoc
+        - moodle-plugin-ci phplint
+        - moodle-plugin-ci phpcpd
+        - moodle-plugin-ci phpmd
+        - moodle-plugin-ci codechecker
+        - moodle-plugin-ci validate
+        - moodle-plugin-ci savepoints
+        - moodle-plugin-ci mustache
+        - moodle-plugin-ci grunt
     # Smaller build matrix for development builds
     - stage: develop
-      php: 7.3
-      env: DB=mysqli MOODLE_BRANCH=MOODLE_38_STABLE
-      install:
-      - moodle-plugin-ci install
-      script:
-      - moodle-plugin-ci phpunit --coverage-clover
-      - moodle-plugin-ci behat
+      php: 7.4
+      env: DB=mysqli MOODLE_BRANCH=master #TODO 39
+  exclude:
+    - php: 7.3
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_35_STABLE
+    - php: 7.3
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_35_STABLE
+    - php: 7.4
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_35_STABLE
+    - php: 7.4
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_35_STABLE
+    - php: 7.4
+      env: DB=pgsql MOODLE_BRANCH=MOODLE_37_STABLE
+    - php: 7.4
+      env: DB=mysqli MOODLE_BRANCH=MOODLE_37_STABLE
 
 # Unit tests and behat tests against full matrix.
 install:
+  - docker run -d -p 127.0.0.1:4444:4444 --net=host -v /dev/shm:/dev/shm selenium/standalone-firefox:2.53.1
   - moodle-plugin-ci install
 script:
   - moodle-plugin-ci phpunit --coverage-clover
