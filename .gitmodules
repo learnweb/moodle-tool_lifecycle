@@ -10,3 +10,6 @@
 [submodule "step/makeinvisible"]
 	path = step/makeinvisible
 	url = git@github.com:learnweb/moodle-lifecyclestep_makeinvisible.git
+[submodule "trigger/customfielddelay"]
+	path = trigger/customfielddelay
+	url = git@github.com:learnweb/moodle-lifecycletrigger_customfielddelay.git
