@@ -76,6 +76,7 @@ class backup_manager {
             $file = $results['backup_destination'];
             if (!empty($file)) {
                 $file->copy_content_to($path . DIRECTORY_SEPARATOR . $archivefile);
+                $file->delete();
             }
             $bc->destroy();
             unset($bc);
