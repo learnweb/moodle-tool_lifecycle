@@ -230,10 +230,19 @@ class process_manager {
     public static function course_deletion_observed($event) {
         $process = self::get_process_by_course_id($event->get_data()['courseid']);
         if ($process) {
-            $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
-            $steplib = lib_manager::get_step_lib($step->subpluginname);
-            $steplib->abort_course($process);
-            self::remove_process($process);
+            self::abort_process($process);
         }
+    }
+
+    /**
+     * Aborts a running process.
+     * @param process $process The process to abort.
+     * @throws \dml_exception
+     */
+    public static function abort_process($process) {
+        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
+        $steplib = lib_manager::get_step_lib($step->subpluginname);
+        $steplib->abort_course($process);
+        self::remove_process($process);
     }
 }
