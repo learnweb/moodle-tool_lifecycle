@@ -48,7 +48,7 @@ class tool_lifecycle_trigger_startdatedelay_testcase extends \advanced_testcase 
     /** @var $processor processor Instance of the lifecycle processor. */
     private $processor;
 
-    public function setUp() {
+    public function setUp() : void {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 

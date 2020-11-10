@@ -45,7 +45,7 @@ class tool_lifecycle_persist_workflow_testcase extends \advanced_testcase {
     /**
      * Setup the testcase.
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->resetAfterTest(true);
         $record = new stdClass();
         $record->id = null;
