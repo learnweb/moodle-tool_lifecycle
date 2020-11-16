@@ -122,7 +122,7 @@ class settings_manager {
     /**
      * Returns an array of local subplugin settings for a given instance id
      * @param int $instanceid id of the step instance
-     * @param string $type Type of the setting (see {@link settings_type}).
+     * @param string $type Type of the setting (see {@see settings_type}).
      * @return array|null settings key-value pairs
      * @throws \coding_exception
      * @throws \dml_exception
@@ -164,7 +164,7 @@ class settings_manager {
     /**
      * Removes all local settings for a given instance id
      * @param int $instanceid id of the step instance
-     * @param string $type Type of the setting (see {@link settings_type}).
+     * @param string $type Type of the setting (see {@see settings_type}).
      * @throws \coding_exception
      * @throws \dml_exception
      */
@@ -179,7 +179,7 @@ class settings_manager {
 
     /**
      * Validates the type param for the two possibilities 'step' and 'trigger'.
-     * @param string $type Type of the setting (see {@link settings_type}).
+     * @param string $type Type of the setting (see {@see settings_type}).
      * @throws \coding_exception
      */
     private static function validate_type($type) {

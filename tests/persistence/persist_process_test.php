@@ -50,7 +50,7 @@ class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
      * Setup the testcase.
      * @throws coding_exception
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 

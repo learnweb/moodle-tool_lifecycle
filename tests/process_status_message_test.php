@@ -54,7 +54,7 @@ class tool_lifecycle_process_status_message_testcase extends \advanced_testcase 
      * Setup the testcase.
      * @throws coding_exception
      */
-    public function setUp() {
+    public function setUp() : void {
         global $USER;
 
         // We do not need a sesskey check in theses tests.

@@ -62,7 +62,7 @@ class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
      * Setup the testcase.
      * @throws coding_exception
      */
-    public function setUp() {
+    public function setUp() : void {
         global $USER;
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');

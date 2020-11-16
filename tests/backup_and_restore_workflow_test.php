@@ -56,7 +56,7 @@ class tool_lifecycle_backup_and_restore_workflow_testcase extends \advanced_test
      * Setup the testcase.
      * @throws coding_exception
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
         $this->workflow = $generator->create_workflow(['startdatedelay', 'categories'], ['email', 'createbackup', 'deletecourse']);

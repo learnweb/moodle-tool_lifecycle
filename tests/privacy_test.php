@@ -74,7 +74,7 @@ class tool_lifecycle_privacy_test extends provider_testcase {
      * Setup the testcase.
      * @throws coding_exception
      */
-    public function setUp() {
+    public function setUp() : void {
         global $USER;
 
         // We do not need a sesskey check in theses tests.
