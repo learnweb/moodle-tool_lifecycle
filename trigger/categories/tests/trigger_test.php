@@ -60,7 +60,7 @@ class tool_lifecycle_trigger_categories_testcase extends \advanced_testcase {
      * Setup the testcase.
      * @throws \moodle_exception
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 

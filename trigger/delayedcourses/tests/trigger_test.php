@@ -57,7 +57,7 @@ class tool_lifecycle_trigger_delayedcourses_testcase extends \advanced_testcase 
     /** @var workflow Workflow delaying processes for all workflows */
     private $workflowdealayingallworkflows;
 
-    public function setUp() {
+    public function setUp() : void {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
