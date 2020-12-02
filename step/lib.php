@@ -24,6 +24,7 @@
  */
 namespace tool_lifecycle\step;
 
+use tool_lifecycle\local\entity\process;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\response\step_response;
 
@@ -121,6 +122,14 @@ abstract class libbase {
      * @param array $settings array containing the settings from the db.
      */
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
+    }
+
+    /**
+     * This method can be overridden. It is called when a course and the
+     * corresponding process get deleted.
+     * @param process $process the process that was aborted.
+     */
+    public function abort_course($process) {
     }
 
 }

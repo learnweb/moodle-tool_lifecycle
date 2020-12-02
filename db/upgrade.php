@@ -433,5 +433,18 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019082300, 'tool', 'lifecycle');
     }
 
+    if ($oldversion < 2020091800) {
+        $sql = "SELECT p.* FROM {tool_lifecycle_process} p " .
+                "LEFT JOIN {course} c ON p.courseid = c.id " .
+                "WHERE c.id IS NULL";
+        $processes = $DB->get_records_sql($sql);
+        foreach ($processes as $procrecord) {
+            $process = \tool_lifecycle\local\entity\process::from_record($procrecord);
+            \tool_lifecycle\local\manager\process_manager::abort_process($process);
+        }
+
+        upgrade_plugin_savepoint(true, 2020091800, 'tool', 'lifecycle');
+    }
+
     return true;
 }
