@@ -51,7 +51,7 @@ class tool_lifecycle_persist_step_testcase extends \advanced_testcase {
      * @throws coding_exception
      * @throws moodle_exception
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->resetAfterTest(true);
         $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 

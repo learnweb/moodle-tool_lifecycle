@@ -65,7 +65,7 @@ class tool_lifecycle_manually_triggered_process_testcase extends \advanced_testc
      * @throws coding_exception
      * @throws moodle_exception
      */
-    public function setUp() {
+    public function setUp() : void {
         global $USER;
 
         // We do not need a sesskey check in theses tests.

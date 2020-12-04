@@ -266,7 +266,7 @@ class admin_settings {
 
     /**
      * This is the entry point for this controller class.
-     * @param string $action Action string (see {@link action}).
+     * @param string $action Action string (see {@see action}).
      * @param int $workflowid Id of the workflow.
      * @throws \coding_exception
      * @throws \dml_exception

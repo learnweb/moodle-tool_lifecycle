@@ -15,17 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Event observer.
  *
- * @package    tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   tool_lifecycle
+ * @copyright 2020 Justus Dieckmann WWU
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$plugin->maturity = MATURITY_BETA;
-$plugin->version  = 2020111600;
-$plugin->component = 'tool_lifecycle';
-$plugin->requires = 2017111300; // Require Moodle 3.4 (or above).
-$plugin->release = 'v3.10-r1';
+$observers = array(
+        array(
+                'eventname' => 'core\event\course_deleted',
+                'callback' => 'tool_lifecycle\local\manager\process_manager::course_deletion_observed',
+        )
+);
