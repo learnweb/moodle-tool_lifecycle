@@ -54,7 +54,7 @@ abstract class interaction_table extends \table_sql {
     /**
      * Initialises the columns of the table. Necessary since attention_table has extra column date.
      */
-    public abstract function init();
+    abstract public function init();
 
     /**
      * Render coursefullname column.
@@ -86,7 +86,7 @@ abstract class interaction_table extends \table_sql {
      * @param object $row Row data.
      * @return string Rendered tools html
      */
-    public abstract function col_tools($row);
+    abstract public function col_tools($row);
 
     /**
      * Render status column.
