@@ -43,7 +43,7 @@ abstract class base {
      * The return value should be equivalent with the name of the subplugin folder.
      * @return string technical name of the subplugin
      */
-    public abstract function get_subpluginname();
+    abstract public function get_subpluginname();
 
     /**
      * Defines which settings each instance of the subplugin offers for the user to define.
@@ -94,7 +94,7 @@ abstract class base {
      * Specifies if the trigger is a manual or an automatic trigger.
      * @return boolean
      */
-    public abstract function is_manual_trigger();
+    abstract public function is_manual_trigger();
 
     /**
      * Returns the status message for the trigger.
@@ -123,7 +123,7 @@ abstract class base_automatic extends base {
      * @param int $triggerid Id of the trigger instance.
      * @return trigger_response
      */
-    public abstract function check_course($course, $triggerid);
+    abstract public function check_course($course, $triggerid);
 
     /**
      * Defines if the trigger subplugin is started manually or automatically.

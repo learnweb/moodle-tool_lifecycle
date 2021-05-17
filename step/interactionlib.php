@@ -48,7 +48,7 @@ abstract class interactionlibbase {
      * Returns the capability a user has to have to make decisions for a specific course.
      * @return string capability string.
      */
-    public abstract function get_relevant_capability();
+    abstract public function get_relevant_capability();
 
     /**
      * Returns if only the courses of a step instance should be shown or all courses for the submodule.
@@ -66,7 +66,7 @@ abstract class interactionlibbase {
      * @param process $process process the action tools are requested for
      * @return array of action tools
      */
-    public abstract function get_action_tools($process);
+    abstract public function get_action_tools($process);
 
 
     /**
@@ -74,7 +74,7 @@ abstract class interactionlibbase {
      * @param process $process process the status message is requested for
      * @return string status message
      */
-    public abstract function get_status_message($process);
+    abstract public function get_status_message($process);
 
     /**
      * Returns the display name for the given action.
@@ -83,7 +83,7 @@ abstract class interactionlibbase {
      * @param string $user html-link with username as text that refers to the user profile.
      * @return string action display name
      */
-    public abstract function get_action_string($action, $user);
+    abstract public function get_action_string($action, $user);
 
     /**
      * Called when a user triggered an action for a process instance.
@@ -96,7 +96,7 @@ abstract class interactionlibbase {
      *      - noaction: the action is not defined for the step.
      *      - rollback: the step has finished and respective controller class should rollback the process.
      */
-    public abstract function handle_interaction($process, $step, $action = 'default');
+    abstract public function handle_interaction($process, $step, $action = 'default');
 
     /**
      * Returns the due date.
