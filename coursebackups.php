@@ -32,7 +32,23 @@ admin_externalpage_setup('tool_lifecycle_coursebackups');
 
 $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/coursebackups.php'));
 
-$table = new tool_lifecycle\local\table\course_backups_table('tool_lifecycle_course_backups');
+$mform = new \tool_lifecycle\local\form\form_backups_filter();
+
+// Cache handling.
+$cache = cache::make('tool_lifecycle', 'mformdata');
+if ($mform->is_cancelled()) {
+    $cache->delete('coursebackups_filter');
+    redirect($PAGE->url);
+} else if ($data = $mform->get_data()) {
+    $cache->set('coursebackups_filter', $data);
+} else {
+    $data = $cache->get('coursebackups_filter');
+    if ($data) {
+        $mform->set_data($data);
+    }
+}
+
+$table = new tool_lifecycle\local\table\course_backups_table('tool_lifecycle_course_backups', $data);
 
 $PAGE->set_title(get_string('course_backups_list_header', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('course_backups_list_header', 'tool_lifecycle'));
@@ -40,6 +56,13 @@ $PAGE->set_heading(get_string('course_backups_list_header', 'tool_lifecycle'));
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
+
+echo '<br>';
+
+$mform->display();
+
+echo '<br>';
+
 $table->out(50, false);
 echo $renderer->footer();
 
