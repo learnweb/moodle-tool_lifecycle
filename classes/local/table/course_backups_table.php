@@ -39,14 +39,31 @@ class course_backups_table extends \table_sql {
     /**
      * Constructor for course_backups_table.
      * @param int $uniqueid Unique id of this table.
+     * @param \stdClass|null $filterdata
      */
-    public function __construct($uniqueid) {
+    public function __construct($uniqueid, $filterdata) {
         parent::__construct($uniqueid);
-        global $PAGE;
+        global $PAGE, $DB;
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
+
+        $where = ['TRUE'];
+        $params = [];
+
+        if ($filterdata) {
+            if ($filterdata && $filterdata->shortname) {
+                $where[] = $DB->sql_like('b.shortname', ':shortname', false, false);
+                $params['shortname'] = '%' . $DB->sql_like_escape($filterdata->shortname) . '%';
+            }
+
+            if ($filterdata && $filterdata->fullname) {
+                $where[] = $DB->sql_like('b.fullname', ':fullname', false, false);
+                $params['fullname'] = '%' . $DB->sql_like_escape($filterdata->fullname) . '%';
+            }
+        }
+
         $this->set_sql('b.id, b.courseid, b.shortname as courseshortname, b.fullname as coursefullname, b.backupcreated',
             '{tool_lifecycle_backups} b',
-            "TRUE");
+            join(" AND ", $where), $params);
         $this->no_sorting('download');
         $this->no_sorting('restore');
         $this->define_baseurl($PAGE->url);
