@@ -24,6 +24,7 @@
  */
 namespace tool_lifecycle\step;
 
+use tool_lifecycle\local\entity\process;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\response\step_response;
 
@@ -50,7 +51,7 @@ abstract class libbase {
      * @param mixed $course to be processed.
      * @return step_response
      */
-    public abstract function process_course($processid, $instanceid, $course);
+    abstract public function process_course($processid, $instanceid, $course);
 
     /**
      * Processes the course in status waiting and returns a repsonse.
@@ -96,7 +97,7 @@ abstract class libbase {
      * The return value should be equivalent with the name of the subplugin folder.
      * @return string technical name of the subplugin
      */
-    public abstract function get_subpluginname();
+    abstract public function get_subpluginname();
 
     /**
      * Defines which settings each instance of the subplugin offers for the user to define.
@@ -121,6 +122,14 @@ abstract class libbase {
      * @param array $settings array containing the settings from the db.
      */
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
+    }
+
+    /**
+     * This method can be overridden. It is called when a course and the
+     * corresponding process get deleted.
+     * @param process $process the process that was aborted.
+     */
+    public function abort_course($process) {
     }
 
 }

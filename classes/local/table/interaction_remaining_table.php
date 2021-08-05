@@ -49,7 +49,7 @@ class interaction_remaining_table extends interaction_table {
      */
     public function __construct($uniqueid, $courseids) {
         parent::__construct($uniqueid);
-        global $PAGE;
+        global $PAGE, $CFG;
 
         $this->availabletools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
 
@@ -58,8 +58,13 @@ class interaction_remaining_table extends interaction_table {
         // Otherwise, it would mess up the sorting.
         $fields = "c.id as courseid, p.id AS processid, c.fullname AS coursefullname, c.shortname AS courseshortname, " .
                   "c.startdate, cc.name AS category, COALESCE(l.time, 0) AS lastmodified, l.userid, " .
-                  "l.action, s.subpluginname, " .
-                   get_all_user_name_fields(true, 'u');
+                  "l.action, s.subpluginname, ";
+        if ($CFG->branch >= 311) {
+            $fields .= \core_user\fields::for_name()->get_sql('u', false, '', '', false)->selects;
+        } else {
+            $fields .= get_all_user_name_fields(true, 'u');
+        }
+
         $from = '{course} c ' .
             'LEFT JOIN (' .
                 /* This Subquery creates a table with the one record per course from {tool_lifecycle_action_log}

@@ -50,7 +50,7 @@ abstract class workflow_actions_testcase extends \advanced_testcase {
      * Setup the testcase.
      * @throws coding_exception
      */
-    public function setUp() {
+    public function setUp() : void {
         global $USER;
         // We do not need a sesskey check in theses tests.
         $USER->ignoresesskey = true;

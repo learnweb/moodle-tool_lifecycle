@@ -269,6 +269,7 @@ class email extends libbase {
      * @param array $settings array containing the settings from the db.
      */
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
-        $mform->setDefault('contenthtml', array('text' => $settings['contenthtml'], 'format' => FORMAT_HTML));
+        $mform->setDefault('contenthtml',
+                array('text' => isset($settings['contenthtml']) ? $settings['contenthtml'] : '', 'format' => FORMAT_HTML));
     }
 }
