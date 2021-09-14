@@ -56,17 +56,17 @@ class notifystudents extends libbase {
      */
     public function process_course($processid, $instanceid, $course) {
 
-        $user_records = get_enrolled_users(context_course::instance($course->id), '', 0, '*');
+        $userrecords = get_enrolled_users(context_course::instance($course->id), '', 0, '*');
         $message = html_entity_decode(settings_manager::get_settings($instanceid, settings_type::STEP)['mail_text']);
 
-        foreach ($user_records as $user_record) {
-            $toUser = $user_record;
-            $fromUser = settings_manager::get_settings($instanceid, settings_type::STEP)['sender'];
+        foreach ($userrecords as $userrecord) {
+            $touser = $userrecord;
+            $fromuser = settings_manager::get_settings($instanceid, settings_type::STEP)['sender'];
             $subject = settings_manager::get_settings($instanceid, settings_type::STEP)['title'] . strval($course->fullname);
-            $messageText = html_to_text($message);
-            $messageHtml = $message;
+            $messagetext = html_to_text($message);
+            $messagehtml = $message;
 
-            email_to_user($toUser, $fromUser, $subject, $messageText, $messageHtml);
+            email_to_user($touser, $fromuser, $subject, $messagetext, $messagehtml);
         }
 
         return step_response::proceed();
