@@ -58,7 +58,6 @@ class notifystudents extends libbase {
 
         $user_records = get_enrolled_users(context_course::instance($course->id), '', 0, '*');
         $message = html_entity_decode(settings_manager::get_settings($instanceid, settings_type::STEP)['mail_text']);
-        //$message = get_string('mail_text', 'lifecyclestep_notifystudents');
 
         foreach ($user_records as $user_record) {
             $toUser = $user_record;
@@ -69,8 +68,6 @@ class notifystudents extends libbase {
 
             email_to_user($toUser, $fromUser, $subject, $messageText, $messageHtml);
         }
-
-        //return step_response::waiting();
 
         return step_response::proceed();
     }
