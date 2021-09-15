@@ -27,16 +27,16 @@ $string['mail_title'] = 'Email Titel';
 $string['mail_text'] = 'Email Text';
 $string['mail_title_default'] = 'Kurse werden gelöscht';
 $string['mail_text_default'] = '<p>' . 'Lieber Studierender,'
-    . '<br>' . 'die folgenden Kurse werden bald gelöscht:'
+    . '<br><br>' . 'die folgenden Kurse werden bald gelöscht:'
     . '<br>' . '##courses-html##'
     . '<br>' . 'Bitte speichern Sie alle noetigen Materialien.'
-    . '<br>' . 'Mit freundlichen Gruessen'
+    . '<br><br>' . 'Mit freundlichen Gruessen'
     . '<br>' . 'Dein Learnweb Team'
     . '</p>';
 $emailplaceholders = '<p>' . 'Sie können die folgenden Platzhalter benutzen:'
     . '<br>' . 'Vorname des Empfängers: ##firstname##'
     . '<br>' . 'Nachname des Empfängers: ##lastname##'
-    . '<br>' . 'Betroffene Kurse: ##courses##'
+    . '<br>' . 'Betroffene Kurse: ##courses-html##'
     . '</p>';
 $string['mail_title_help'] = $emailplaceholders;
 $string['mail_text_help'] = $emailplaceholders;

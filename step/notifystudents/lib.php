@@ -26,6 +26,7 @@ namespace tool_lifecycle\step;
 use context_course;
 use core_user;
 use tool_lifecycle\local\manager\settings_manager;
+use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\settings_type;
 
@@ -43,7 +44,7 @@ require_once(__DIR__ . '/../lib.php');
 class notifystudents extends libbase {
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
@@ -62,7 +63,7 @@ class notifystudents extends libbase {
         foreach ($userrecords as $userrecord) {
             if (user_has_role_assignment($userrecord->id,5)) {
                 $record = new \stdClass();
-                $record->touser = $userrecord;
+                $record->touser = $userrecord->id;
                 $record->courseid = $course->id;
                 $record->instanceid = $instanceid;
                 $DB->insert_record('lifecyclestep_notifystudents', $record);
