@@ -23,12 +23,20 @@
  */
 
 $string['pluginname'] = 'Notify students step';
-$string['title_missing'] = 'Please enter an email title';
-$string['text_missing'] = 'Please enter an email text';
-$string['title'] = 'Email Title';
-$string['text'] = 'Email Text';
-$string['mail_title'] = 'Course is being deleted: ';
-$string['mail_text'] = '<p>Dear Student,</p><p>the course is being deleted. Please save all necessary material before deletion.</p><p>Best Regards</p><p>Your Learnweb Team</p>';
-$string['sender'] = 'Sender Id';
-$string['sender_missing'] = 'Please enter a Sender Id.';
-$string['sender_default'] = '-99';
+$string['subject'] = 'Email Title';
+$string['contenthtml'] = 'Email Text';
+$string['subject_default'] = 'Courses are being deleted';
+$string['contenthtml_default'] = '<p>' . 'Dear Student,'
+    . '<br>' . 'the following courses are being deleted:'
+    . '<br>' . '##courses-html##'
+    . '<br>' . 'Please save all necessary material before deletion.'
+    . '<br>' . 'Best Regards'
+    . '<br>' . 'Your Learnweb Team'
+    . '</p>';
+$emailplaceholders = '<p>' . 'You can use the following placeholders:'
+    . '<br>' . 'First name of recipient: ##firstname##'
+    . '<br>' . 'Last name of recipient: ##lastname##'
+    . '<br>' . 'Impacted courses: ##courses##'
+    . '</p>';
+$string['subject_help'] = $emailplaceholders;
+$string['contenthtml_help'] = $emailplaceholders;

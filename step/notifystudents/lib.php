@@ -24,6 +24,7 @@
 namespace tool_lifecycle\step;
 
 use context_course;
+use core_user;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\settings_type;
@@ -55,25 +56,24 @@ class notifystudents extends libbase {
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
-
-        $userrecords = get_enrolled_users(context_course::instance($course->id), '', 0, '*');
-        $message = html_entity_decode(settings_manager::get_settings($instanceid, settings_type::STEP)['mail_text']);
-
+        global $DB;
+        $context = context_course::instance($course->id);
+        $userrecords = get_enrolled_users($context, '', 0, '*');
         foreach ($userrecords as $userrecord) {
-            $touser = $userrecord;
-            $fromuser = settings_manager::get_settings($instanceid, settings_type::STEP)['sender'];
-            $subject = settings_manager::get_settings($instanceid, settings_type::STEP)['title'] . strval($course->fullname);
-            $messagetext = html_to_text($message);
-            $messagehtml = $message;
-
-            email_to_user($touser, $fromuser, $subject, $messagetext, $messagehtml);
+            if (user_has_role_assignment($userrecord->id,5)) {
+                $record = new \stdClass();
+                $record->touser = $userrecord;
+                $record->courseid = $course->id;
+                $record->instanceid = $instanceid;
+                $DB->insert_record('lifecyclestep_notifystudents', $record);
+            }
         }
 
         return step_response::proceed();
     }
 
     /**
-     * Processes the course in status waiting and returns a repsonse.
+     * Processes the course in status waiting and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
@@ -85,6 +85,114 @@ class notifystudents extends libbase {
      */
     public function process_waiting_course($processid, $instanceid, $course) {
         return $this->process_course($processid, $instanceid, $course);
+    }
+
+    /**
+     * Send emails to all students, but only one mail per students.
+     */
+    public function post_processing_bulk_operation() {
+        global $DB, $PAGE;
+        $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
+        foreach ($stepinstances as $step) {
+            $settings = settings_manager::get_settings($step->id, settings_type::STEP);
+            // Set system context, since format_text needs a context.
+            $PAGE->set_context(\context_system::instance());
+            // Format the raw string in the DB to FORMAT_HTML.
+            $settings['contenthtml'] = format_text($settings['contenthtml'], FORMAT_HTML);
+
+            $userstobeinformed = $DB->get_records('lifecyclestep_notifystudents',
+                array('instanceid' => $step->id), '', 'distinct touser');
+            foreach ($userstobeinformed as $userrecord) {
+                $user = \core_user::get_user($userrecord->touser);
+                $transaction = $DB->start_delegated_transaction();
+                $mailentries = $DB->get_records('lifecyclestep_notifystudents',
+                    array('instanceid' => $step->id,
+                        'touser' => $user->id));
+
+                $parsedsettings = $this->replace_placeholders($settings, $user, $step->id, $mailentries);
+
+                $subject = $parsedsettings['subject'];
+                // $content = $parsedsettings['content'];
+                $contenthtml = $parsedsettings['contenthtml'];
+                // TODO: use course info to parse content template!
+                email_to_user($user, \core_user::get_noreply_user(), $subject, html_to_text($contenthtml), $contenthtml);
+                $DB->delete_records('lifecyclestep_notifystudents',
+                    array('instanceid' => $step->id,
+                        'touser' => $user->id));
+                $transaction->allow_commit();
+            }
+        }
+
+    }
+
+    /**
+     * Replaces certain placeholders within the mail template.
+     * @param string[] $strings array of mail templates.
+     * @param core_user $user User object.
+     * @param int $stepid Id of the step instance.
+     * @param array[] $mailentries Array consisting of course entries from the database.
+     * @return string[] array of mail text.
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     */
+    private function replace_placeholders($strings, $user, $stepid, $mailentries) {
+
+        $patterns = array();
+        $replacements = array();
+
+        // Replaces firstname of the user.
+        $patterns [] = '##firstname##';
+        $replacements [] = $user->firstname;
+
+        // Replaces lastname of the user.
+        $patterns [] = '##lastname##';
+        $replacements [] = $user->lastname;
+
+        // Replace courses list.
+        $patterns [] = '##courses##';
+        $courses = $mailentries;
+        $coursesstring = '';
+        $coursesstring .= $this->parse_course(array_pop($courses)->courseid);
+        foreach ($courses as $entry) {
+            $coursesstring .= "\n" . $this->parse_course($entry->courseid);
+        }
+        $replacements [] = $coursesstring;
+
+        // Replace courses html.
+        $patterns [] = '##courses-html##';
+        $courses = $mailentries;
+        $coursestabledata = array();
+        foreach ($courses as $entry) {
+            $coursestabledata[$entry->courseid] = $this->parse_course_row_data($entry->courseid);
+        }
+        $coursestable = new \html_table();
+        $coursestable->data = $coursestabledata;
+        $replacements [] = \html_writer::table($coursestable);
+
+        return str_ireplace($patterns, $replacements, $strings);
+    }
+
+    /**
+     * Parses a course for the non html format.
+     * @param int $courseid id of the course
+     * @return string
+     * @throws \dml_exception
+     */
+    private function parse_course($courseid) {
+        $course = get_course($courseid);
+        $result = $course->fullname;
+        return $result;
+    }
+
+    /**
+     * Parses a course for the html format.
+     * @param int $courseid id of the course
+     * @return array column of a course
+     * @throws \dml_exception
+     */
+    private function parse_course_row_data($courseid) {
+        $course = get_course($courseid);
+        return array($course->fullname);
     }
 
     /**
@@ -101,9 +209,8 @@ class notifystudents extends libbase {
      */
     public function instance_settings() {
         return array(
-            new instance_setting('title', PARAM_TEXT),
-            new instance_setting('mail_text', PARAM_RAW),
-            new instance_setting('sender', PARAM_INT),
+            new instance_setting('subject', PARAM_TEXT),
+            new instance_setting('contenthtml', PARAM_RAW),
         );
     }
 
@@ -115,25 +222,20 @@ class notifystudents extends libbase {
      */
     public function extend_add_instance_form_definition($mform) {
 
-        // Adding a title field for the email.
-        $mform->addElement('textarea', 'title', get_string('title', 'lifecyclestep_notifystudents'),
+        // Adding a subject field for the email.
+        $elementname = 'subject';
+        $mform->addElement('textarea', $elementname, get_string('subject', 'lifecyclestep_notifystudents'),
             array('style="resize:none" wrap="virtual" rows="1" cols="100"'));
-        $mform->addRule('title', get_string('title_missing', 'lifecyclestep_notifystudents'), 'required', null, 'server');
-        $mform->addRule('title', 'Max Length is 30 characters', 'maxlength', 30, 'server');
-        $mform->setType('title', PARAM_TEXT);
-        $mform->setDefault('title', get_string('mail_title', 'lifecyclestep_notifystudents'));
+        $mform->addHelpButton($elementname, 'subject', 'lifecyclestep_notifystudents');
+        $mform->setType($elementname, PARAM_TEXT);
+        $mform->setDefault($elementname, get_string('subject_default', 'lifecyclestep_notifystudents'));
 
-        // Adding a text field for the email.
-        $mform->addElement('textarea', 'mail_text', get_string('text', 'lifecyclestep_notifystudents'),
-            array('wrap="virtual" rows="5" cols="100"'));
-        $mform->addRule('mail_text', get_string('text_missing', 'lifecyclestep_notifystudents'), 'required', null, 'server');
-        $mform->setType('mail_text', PARAM_RAW);
-        $mform->setDefault('mail_text', get_string('mail_text', 'lifecyclestep_notifystudents'));
+        // Adding a content field for the email.
+        $elementname = 'contenthtml';
+        $mform->addElement('editor', $elementname, get_string('contenthtml', 'lifecyclestep_notifystudents'))
+            ->setValue(array('text' => get_string('contenthtml_default', 'lifecyclestep_notifystudents')));
+        $mform->addHelpButton($elementname, 'contenthtml', 'lifecyclestep_notifystudents');
+        $mform->setType($elementname, PARAM_RAW);
 
-        // Adding a sender field for the email.
-        $mform->addElement('text', 'sender', get_string('sender', 'lifecyclestep_notifystudents'));
-        $mform->addRule('sender', get_string('sender_missing', 'lifecyclestep_notifystudents'), 'required', null, 'server');
-        $mform->setType('sender', PARAM_INT);
-        $mform->setDefault('sender', get_string('sender_default', 'lifecyclestep_notifystudents'));
     }
 }

@@ -15,14 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life Cycle Notify Students Step
- *
- * @package    lifecyclestep_notifystudents
+ * Capability definitions for the notifystudents step subplugin
+ * @package lifecyclestep_notifystudents
  * @copyright  2021 Aaron Koßler WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
-
-$plugin->version  = 2021091501;
-$plugin->component = 'lifecyclestep_notifystudents';
+defined('MOODLE_INTERNAL') || die();

@@ -23,12 +23,20 @@
  */
 
 $string['pluginname'] = 'Studierende-benachrichtigen-Schritt';
-$string['title_missing'] = 'Please enter an email title';
-$string['text_missing'] = 'Please enter an email text';
-$string['title'] = 'Email Title';
-$string['text'] = 'Email Text';
-$string['mail_title'] = 'Kurs wird gelöscht: ';
-$string['mail_text'] = '<p>Lieber Studierender,</p><p>der im Titel genannte Kurs wird bald gelöscht. Bitte speichern Sie alle noetigen Materialien.</p><p>Mit freundlichen Gruessen</p><p>Dein Learnweb Team</p>';
-$string['sender'] = 'Absender Id';
-$string['sender_missing'] = 'Bitte tragen Sie eine Absender Id ein.';
-$string['sender_default'] = '-99';
+$string['mail_title'] = 'Email Titel';
+$string['mail_text'] = 'Email Text';
+$string['mail_title_default'] = 'Kurse werden gelöscht';
+$string['mail_text_default'] = '<p>' . 'Lieber Studierender,'
+    . '<br>' . 'die folgenden Kurse werden bald gelöscht:'
+    . '<br>' . '##courses-html##'
+    . '<br>' . 'Bitte speichern Sie alle noetigen Materialien.'
+    . '<br>' . 'Mit freundlichen Gruessen'
+    . '<br>' . 'Dein Learnweb Team'
+    . '</p>';
+$emailplaceholders = '<p>' . 'Sie können die folgenden Platzhalter benutzen:'
+    . '<br>' . 'Vorname des Empfängers: ##firstname##'
+    . '<br>' . 'Nachname des Empfängers: ##lastname##'
+    . '<br>' . 'Betroffene Kurse: ##courses##'
+    . '</p>';
+$string['mail_title_help'] = $emailplaceholders;
+$string['mail_text_help'] = $emailplaceholders;
