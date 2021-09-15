@@ -61,7 +61,7 @@ class notifystudents extends libbase {
         $context = context_course::instance($course->id);
         $userrecords = get_enrolled_users($context, '', 0, '*');
         foreach ($userrecords as $userrecord) {
-            if (user_has_role_assignment($userrecord->id,5)) {
+            if (user_has_role_assignment($userrecord->id, 5)) {
                 $record = new \stdClass();
                 $record->touser = $userrecord->id;
                 $record->courseid = $course->id;
@@ -113,9 +113,7 @@ class notifystudents extends libbase {
                 $parsedsettings = $this->replace_placeholders($settings, $user, $step->id, $mailentries);
 
                 $subject = $parsedsettings['subject'];
-                // $content = $parsedsettings['content'];
                 $contenthtml = $parsedsettings['contenthtml'];
-                // TODO: use course info to parse content template!
                 email_to_user($user, \core_user::get_noreply_user(), $subject, html_to_text($contenthtml), $contenthtml);
                 $DB->delete_records('lifecyclestep_notifystudents',
                     array('instanceid' => $step->id,
@@ -148,16 +146,6 @@ class notifystudents extends libbase {
         // Replaces lastname of the user.
         $patterns [] = '##lastname##';
         $replacements [] = $user->lastname;
-
-        // Replace courses list.
-        $patterns [] = '##courses##';
-        $courses = $mailentries;
-        $coursesstring = '';
-        $coursesstring .= $this->parse_course(array_pop($courses)->courseid);
-        foreach ($courses as $entry) {
-            $coursesstring .= "\n" . $this->parse_course($entry->courseid);
-        }
-        $replacements [] = $coursesstring;
 
         // Replace courses html.
         $patterns [] = '##courses-html##';
