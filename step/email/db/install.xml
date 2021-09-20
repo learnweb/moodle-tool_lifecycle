@@ -9,6 +9,7 @@
         <FIELD NAME="touser" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="user id to which the email should go to"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="course the user should be informed about"/>
         <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the step instance responsible"/>
+        <FIELD NAME="emailtype" TYPE="text" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="type of email (who it is addressed to)"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
