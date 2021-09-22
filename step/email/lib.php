@@ -221,10 +221,10 @@ class email extends libbase {
      */
     public function instance_settings() {
         return array(
-            new instance_setting('responsetimeout', PARAM_INT),
-            new instance_setting('subject', PARAM_TEXT),
-            new instance_setting('content', PARAM_RAW),
-            new instance_setting('contenthtml', PARAM_RAW),
+            new instance_setting('responsetimeout', PARAM_INT, true),
+            new instance_setting('subject', PARAM_TEXT, true),
+            new instance_setting('content', PARAM_RAW, true),
+            new instance_setting('contenthtml', PARAM_RAW, true),
         );
     }
 

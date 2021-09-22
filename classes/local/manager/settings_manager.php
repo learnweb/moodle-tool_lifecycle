@@ -63,6 +63,8 @@ class settings_manager {
         global $DB;
         self::validate_type($type);
 
+        // TODO before PR merges: Saveguard for changing settings
+
         if (!$data) {
             return;
         }
