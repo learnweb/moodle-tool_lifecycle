@@ -194,4 +194,18 @@ class interaction_remaining_table extends interaction_table {
         return userdate($row->lastmodified, $dateformat);
     }
 
+    /**
+     * This function is not part of the public api.
+     */
+    public function print_nothing_to_display() {
+        global $OUTPUT;
+
+        // Render button to allow user to reset table preferences.
+        echo $this->render_reset_button();
+
+        $this->print_initials_bar();
+
+        echo $OUTPUT->box(get_string('noremainingcoursestodisplay', 'tool_lifecycle'));
+    }
+
 }
