@@ -66,13 +66,15 @@ class interaction_remaining_table extends interaction_table {
         }
 
         $from = '{course} c ' .
-            'LEFT JOIN (' .
+            'INNER JOIN (' .
                 /* This Subquery creates a table with the one record per course from {tool_lifecycle_action_log}
                    with the highest id (the newest record per course) */
                 'SELECT * FROM {tool_lifecycle_action_log} a ' .
                 'INNER JOIN ( ' .
                     'SELECT b.courseid as cid, MAX(b.id) as maxlogid ' .
                     'FROM {tool_lifecycle_action_log} b ' .
+                    'INNER JOIN {tool_lifecycle_workflow} w ON b.workflowid = w.id ' .
+                    'WHERE w.timeactive IS NOT NULL ' .
                     'GROUP BY b.courseid ' .
                 ') m ON a.courseid = m.cid AND a.id = m.maxlogid ' .
             ') l ON c.id = l.courseid ' .
