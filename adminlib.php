@@ -639,7 +639,7 @@ class workflow_settings {
             }
             if (!empty($data->id)) {
                 $step = step_manager::get_step_instance($data->id);
-                if ($data->instancename) {
+                if (isset($data->instancename)) {
                     $step->instancename = $data->instancename;
                 }
             } else {

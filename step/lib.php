@@ -108,6 +108,16 @@ abstract class libbase {
     }
 
     /**
+     * Is called when a setting is changed after a workflow is activated.
+     * @param string $settingname name of the setting
+     * @param mixed $newvalue the new value
+     * @param mixed $oldvalue the old value
+     */
+    public function on_setting_changed($settingname, $newvalue, $oldvalue) {
+
+    }
+
+    /**
      * This method can be overriden, to add form elements to the form_step_instance.
      * It is called in definition().
      * @param \MoodleQuickForm $mform

@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\manager;
 
+use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
@@ -63,8 +64,6 @@ class settings_manager {
         global $DB;
         self::validate_type($type);
 
-        // TODO before PR merges: Saveguard for changing settings
-
         if (!$data) {
             return;
         }
@@ -76,8 +75,12 @@ class settings_manager {
 
         if ($type == settings_type::TRIGGER) {
             $lib = lib_manager::get_trigger_lib($subpluginname);
+            $trigger = trigger_manager::get_instance($instanceid);
+            $wfeditable = workflow_manager::is_editable($trigger->workflowid);
         } else {
             $lib = lib_manager::get_step_lib($subpluginname);
+            $step = step_manager::get_step_instance($instanceid);
+            $wfeditable = workflow_manager::is_editable($step->workflowid);
         }
 
         $settingsfields = $lib->instance_settings();
@@ -85,6 +88,9 @@ class settings_manager {
             throw new \moodle_exception('id of the step instance has to be set!');
         }
         foreach ($settingsfields as $setting) {
+            if (!$wfeditable && !$setting->editable) {
+                continue;
+            }
             if (array_key_exists($setting->name, $data)) {
                 $value = $data[$setting->name];
                 // Needed for editor support.
@@ -107,8 +113,14 @@ class settings_manager {
                         'name' => $setting->name)
                 );
                 if ($record) {
-                    $record->value = $cleanedvalue;
-                    $DB->update_record('tool_lifecycle_settings', $record);
+                    if ($record->value != $cleanedvalue) {
+                        $oldvalue = $record->value;
+                        $record->value = $cleanedvalue;
+                        $DB->update_record('tool_lifecycle_settings', $record);
+                        if (!$wfeditable) {
+                            $lib->on_setting_changed($setting->name, $cleanedvalue, $oldvalue);
+                        }
+                    }
                 } else {
                     $newrecord = new \stdClass();
                     $newrecord->instanceid = $instanceid;
