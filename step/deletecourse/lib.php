@@ -95,7 +95,7 @@ class deletecourse extends libbase {
      */
     public function instance_settings() {
         return array(
-            new instance_setting('maximumdeletionspercron', PARAM_INT),
+            new instance_setting('maximumdeletionspercron', PARAM_INT, true),
         );
     }
 
