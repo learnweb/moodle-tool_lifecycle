@@ -66,7 +66,7 @@ class interaction_remaining_table extends interaction_table {
         }
 
         $from = '{course} c ' .
-            'INNER JOIN (' .
+            'LEFT JOIN (' .
                 /* This Subquery creates a table with the one record per course from {tool_lifecycle_action_log}
                    with the highest id (the newest record per course) */
                 'SELECT * FROM {tool_lifecycle_action_log} a ' .
