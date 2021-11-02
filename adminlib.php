@@ -647,7 +647,7 @@ class workflow_settings {
             }
             step_manager::insert_or_update($step);
             // Save local subplugin settings.
-            settings_manager::save_settings($step->id, settings_type::STEP, $form->subpluginname, $data);
+            settings_manager::save_settings($step->id, settings_type::STEP, $form->subpluginname, $data, true);
         } else {
             $this->view_step_instance_form($form);
             return true;

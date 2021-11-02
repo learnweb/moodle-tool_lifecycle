@@ -103,8 +103,8 @@ class categories extends base_automatic {
      */
     public function instance_settings() {
         return array(
-            new instance_setting('categories', PARAM_SEQUENCE),
-            new instance_setting('exclude', PARAM_BOOL),
+            new instance_setting('categories', PARAM_SEQUENCE, true),
+            new instance_setting('exclude', PARAM_BOOL, true),
         );
     }
 

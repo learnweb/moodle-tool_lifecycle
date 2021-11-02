@@ -58,9 +58,11 @@ class settings_manager {
      * @param 'step'|'trigger' $type type of the subplugin.
      * @param string $subpluginname name of the subplugin.
      * @param mixed $data submitted data of the form.
+     * @param bool $accessvalidation whether to do only change settings that are editable once the workflow has started.
+     *          Then also calls the on_setting_changed listener. Defaults to false.
      * @throws \moodle_exception
      */
-    public static function save_settings($instanceid, $type, $subpluginname, $data) {
+    public static function save_settings($instanceid, $type, $subpluginname, $data, $accessvalidation = false) {
         global $DB;
         self::validate_type($type);
 
@@ -88,7 +90,7 @@ class settings_manager {
             throw new \moodle_exception('id of the step instance has to be set!');
         }
         foreach ($settingsfields as $setting) {
-            if (!$wfeditable && !$setting->editable) {
+            if ($accessvalidation && !$wfeditable && !$setting->editable) {
                 continue;
             }
             if (array_key_exists($setting->name, $data)) {
@@ -117,7 +119,7 @@ class settings_manager {
                         $oldvalue = $record->value;
                         $record->value = $cleanedvalue;
                         $DB->update_record('tool_lifecycle_settings', $record);
-                        if (!$wfeditable) {
+                        if ($accessvalidation && !$wfeditable) {
                             $lib->on_setting_changed($setting->name, $cleanedvalue, $oldvalue);
                         }
                     }
