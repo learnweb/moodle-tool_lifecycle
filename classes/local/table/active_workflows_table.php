@@ -59,7 +59,11 @@ abstract class active_workflows_table extends workflow_table {
         $icon = 't/viewdetails';
         $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
             array('workflowid' => $row->id, 'sesskey' => sesskey()));
+        $overviewurl = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php',
+            array('wf' => $row->id, 'sesskey' => sesskey()));
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+            null, array('title' => $alt));
+        $output .= $OUTPUT->action_icon($overviewurl, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null, array('title' => $alt));
 
         if (workflow_manager::is_disableable($row->id)) {
