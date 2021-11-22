@@ -176,7 +176,7 @@ $string['process_triggered_event'] = 'Ein Prozess wurde ausgelöst';
 $string['process_proceeded_event'] = 'Ein Prozess wurde fortgeführt';
 $string['process_rollback_event'] = 'Ein Prozess wurde zurückgesetzt';
 
-// Workflowoverview
+// Workflowoverview.
 $string['workflowoverview'] = 'Übersicht zum Workflow';
 $string['workflowoverview_list_header'] = 'Details zu Workflows';
 $string['affcourses'] = 'Beinhaltete Kurse';

@@ -54,7 +54,7 @@ foreach ($trigger as $key => $value) {
     // FUTURE: Nice to have Icon for each subplugin.
     // FUTURE: Nice to have How many courses will be caught by the trigger?
     $objectvar = (object) $trigger[$key];
-    $arrayoftrigger[$objectvar->sortindex -1] = $objectvar;
+    $arrayoftrigger[$objectvar->sortindex - 1] = $objectvar;
     asort($arrayoftrigger);
 }
 
@@ -64,7 +64,7 @@ foreach ($steps as $key => $step) {
     $ncourses = $DB->count_records('tool_lifecycle_process',
         array('stepindex' => $stepobject->sortindex, 'workflowid' => $workflowid));
     $stepobject->numberofcourses = $ncourses;
-    $arrayofsteps[$stepobject->sortindex -1] = $stepobject;
+    $arrayofsteps[$stepobject->sortindex - 1] = $stepobject;
 }
 asort($arrayofsteps);
 
@@ -77,7 +77,6 @@ $data = [
     'steps' => $arrayofsteps,
     'listofcourses' => $arrayofcourses,
     'steplink' => $url
-    //'table' => $table->finish_output()
 ];
 echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);
 if ($stepid) {

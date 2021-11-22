@@ -40,12 +40,12 @@ span.tool_lifecycle-hint {
     justify-content: space-between;
 }
 .wf-steps-wrapper {
-    width:max-content;
+    width: max-content;
     background-color: var(--wwu-info-bg);
     border-color: var(--wwu-info-border);
     color: var(--wwu-info-fg);
 }
-.workflow-single-step-wrapper .workflow-arrow-wrapper{
+.workflow-single-step-wrapper .workflow-arrow-wrapper {
     text-align: center;
     width: inherit;
 }

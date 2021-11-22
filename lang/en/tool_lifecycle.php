@@ -211,7 +211,7 @@ $string['globally'] = 'Global delays';
 $string['delays_for_workflow'] = 'Delays for "{$a}"';
 $string['delete_all_delays'] = 'Delete all delays';
 
-// Workflowoverview
+// Workflowoverview.
 $string['workflowoverview'] = 'Overview of Workflow';
 $string['workflowoverview_list_header'] = 'Details of Workflows';
 $string['affcourses'] = 'Affected Courses';
