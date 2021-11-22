@@ -227,3 +227,9 @@ $string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} new tool_lifec
 $string['errorbackuppath'] = "Error while trying to create the backup directory. You might be missing the permission to do so.
 Please check your path at Site administration/Plugins/Admin tools/Life Cycle/General & subplugins/backup_path.";
 $string['errornobackup'] = "No backup was created at the specified directory, reasons unknown.";
+
+// Workflowoverview
+$string['workflowoverview'] = 'Overview of Workflow';
+$string['workflowoverview_list_header'] = 'Details of Workflows';
+$string['affcourses'] = 'Affected Courses';
+$string['arrowdown'] = 'Pfeil der nach unten zeigt';

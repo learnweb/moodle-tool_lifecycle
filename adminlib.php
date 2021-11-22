@@ -131,7 +131,27 @@ class admin_page_sublugins extends \admin_externalpage {
             $url);
     }
 }
+/**
+ * External Page for showing active lifecycle processes
+ *
+ * @package tool_lifecycle
+ * @copyright  2017 Tobias Reischmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class admin_page_workflow_overview extends \admin_externalpage {
 
+    /**
+     * The constructor - calls parent constructor
+     *
+     * @throws \moodle_exception
+     */
+    public function __construct() {
+        $url = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php');
+        parent::__construct('tool_lifecycle_workflowoverview',
+            get_string('workflowoverview_list_header', 'tool_lifecycle'),
+            $url);
+    }
+}
 /**
  * Class that handles the display and configuration the settings.
  *

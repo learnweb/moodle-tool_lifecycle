@@ -191,3 +191,9 @@ $string['errorbackuppath'] = "Ein Fehler ist aufgetreten beim Versuchen das Back
 Ihnen fehlen wahrscheinlich die Berechtigung dazu. Bitte überprüfen Sie den Pfad unter
 Seitenadministration/Plugins/Dienstprogramme/Kurs-Lebenszyklus/Allgemein & Subplugins.";
 $string['errornobackup'] = "Es wurde kein Backup in dem angegebenen Pfad erstellt.";
+
+// Workflowoverview
+$string['workflowoverview'] = 'Übersicht zum Workflow';
+$string['workflowoverview_list_header'] = 'Details zu Workflows';
+$string['affcourses'] = 'Beinhaltete Kurse';
+$string['arrowdown'] = 'Pfeil der nach unten zeigt';
