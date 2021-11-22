@@ -14,9 +14,8 @@ span.tool_lifecycle-hint {
 }
 .workflow {
     display: block;
-    width: 100%;
-    height: 200px;
 }
+
 .workflow-item {
     text-align: center;
     padding: 8px 14px 8px 14px;
@@ -26,25 +25,33 @@ span.tool_lifecycle-hint {
     border-radius: 4px;
     margin-left: 2%;
 }
-.workflow .workflow-trigger {
-    float: left;
-    max-width: 20%;
-    justify-content: space-between;
+
+.workflow.wf-trigger-wrapper {
+    width: inherit;
+    /* fit underlying divs*/
+    height: 100px;
     background-color: var(--wwu-success-bg);
     border-color: var(--wwu-success-border);
     color: var(--wwu-success-fg);
 }
-
-.workflow-single-step-wrapper {
-    text-align: center
+.workflow .workflow-trigger {
+    float: left;
+    width: 18%;
+    justify-content: space-between;
 }
-.workflow .workflow-step {
-    text-align: center;
-    max-width: 25%;
-    display: inline-block;
+.wf-steps-wrapper {
+    width:max-content;
     background-color: var(--wwu-info-bg);
     border-color: var(--wwu-info-border);
     color: var(--wwu-info-fg);
+}
+.workflow-single-step-wrapper .workflow-arrow-wrapper{
+    text-align: center;
+    width: inherit;
+}
+.workflow .workflow-step {
+    /*text-align: center;*/
+    display: inline-block;
 }
 .workflow .wf-course-counter {
     text-align: right;
