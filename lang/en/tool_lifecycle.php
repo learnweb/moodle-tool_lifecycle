@@ -228,7 +228,7 @@ $string['errorbackuppath'] = "Error while trying to create the backup directory.
 Please check your path at Site administration/Plugins/Admin tools/Life Cycle/General & subplugins/backup_path.";
 $string['errornobackup'] = "No backup was created at the specified directory, reasons unknown.";
 
-// Workflowoverview
+// Workflowoverview.
 $string['workflowoverview'] = 'Overview of Workflow';
 $string['workflowoverview_list_header'] = 'Details of Workflows';
 $string['affcourses'] = 'Affected Courses';

@@ -192,7 +192,7 @@ Ihnen fehlen wahrscheinlich die Berechtigung dazu. Bitte überprüfen Sie den Pf
 Seitenadministration/Plugins/Dienstprogramme/Kurs-Lebenszyklus/Allgemein & Subplugins.";
 $string['errornobackup'] = "Es wurde kein Backup in dem angegebenen Pfad erstellt.";
 
-// Workflowoverview
+// Workflowoverview.
 $string['workflowoverview'] = 'Übersicht zum Workflow';
 $string['workflowoverview_list_header'] = 'Details zu Workflows';
 $string['affcourses'] = 'Beinhaltete Kurse';
