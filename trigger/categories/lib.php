@@ -118,17 +118,20 @@ class categories extends base_automatic {
     public function extend_add_instance_form_definition($mform) {
         global $DB;
         $categories = $DB->get_records('course_categories');
-        $categorynames = array();
-        foreach ($categories as $category) {
-            $categorynames[$category->id] = $category->name;
-        }
+        //$categorynames = array();
+        //foreach ($categories as $category) {
+        //    $categorynames[$category->id] = $category->name;
+        //}
         $options = array(
             'multiple' => true,
             'noselectionstring' => get_string('categories_noselection', 'lifecycletrigger_categories'),
         );
+        //Cangelog: Added core course lookup functionality, with flat hierachical representation
+        $displaylist = \core_course_category::make_categories_list('moodle/course:changecategory');
+
         $mform->addElement('autocomplete', 'categories',
             get_string('categories', 'lifecycletrigger_categories'),
-            $categorynames, $options);
+            $displaylist, $options);
         $mform->setType('categories', PARAM_SEQUENCE);
 
         $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));
