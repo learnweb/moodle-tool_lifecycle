@@ -119,10 +119,15 @@ class processor {
 
                 $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
                 $lib = lib_manager::get_step_lib($step->subpluginname);
-                if ($process->waiting) {
-                    $result = $lib->process_waiting_course($process->id, $step->id, $course);
-                } else {
-                    $result = $lib->process_course($process->id, $step->id, $course);
+                try {
+                    if ($process->waiting) {
+                        $result = $lib->process_waiting_course($process->id, $step->id, $course);
+                    } else {
+                        $result = $lib->process_course($process->id, $step->id, $course);
+                    }
+                } catch (\Exception $e) {
+                    process_manager::insert_process_error($process, $e);
+                    break;
                 }
                 if ($result == step_response::waiting()) {
                     process_manager::set_process_waiting($process);
@@ -220,7 +225,9 @@ class processor {
         $sql = 'SELECT {course}.* from {course} '.
             'left join {tool_lifecycle_process} '.
             'ON {course}.id = {tool_lifecycle_process}.courseid '.
-            'WHERE {tool_lifecycle_process}.courseid is null AND ' . $where;
+            'LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid ' .
+            'WHERE {tool_lifecycle_process}.courseid is null AND ' .
+            'pe.courseid IS NULL AND '. $where;
         return $DB->get_recordset_sql($sql, $whereparams);
     }
 

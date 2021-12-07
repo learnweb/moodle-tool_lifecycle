@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="admin/tool/lifecycle/db" VERSION="20190822" COMMENT="XMLDB file for Moodle tool/lifecycle"
+<XMLDB PATH="admin/tool/lifecycle/db" VERSION="20211122" COMMENT="XMLDB file for Moodle tool/lifecycle"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
@@ -144,6 +144,24 @@
         <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_lifecycle_workflow" REFFIELDS="id"/>
         <KEY NAME="courseid_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
         <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="tool_lifecycle_proc_error" COMMENT="table containing all errored lifecycle processes">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true" COMMENT="id of the process"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="course id"/>
+        <FIELD NAME="workflowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the workflow"/>
+        <FIELD NAME="stepindex" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="sortindex of the step within the workflow"/>
+        <FIELD NAME="waiting" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="tells if the process is in status waiting"/>
+        <FIELD NAME="timestepchanged" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="unix timestamp - time the step instance of the process was changed last."/>
+        <FIELD NAME="errormessage" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Message of the error"/>
+        <FIELD NAME="errortrace" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="errorhash" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Where the error occured in the form 'path/to/filename.php:line'"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid_fk" TYPE="foreign-unique" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" COMMENT="Foreign key on course table"/>
+        <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_lifecycle_workflow" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

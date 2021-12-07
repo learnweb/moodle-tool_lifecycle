@@ -210,3 +210,9 @@ $string['all_delays'] = 'All delays';
 $string['globally'] = 'Global delays';
 $string['delays_for_workflow'] = 'Delays for "{$a}"';
 $string['delete_all_delays'] = 'Delete all delays';
+
+$string['courseid'] = 'Course ID';
+$string['process_errors_header'] = 'Process errors';
+$string['proceed'] = 'Proceed';
+$string['rollback'] = 'Rollback';
+$string['forselected'] = 'For all selected processes';
