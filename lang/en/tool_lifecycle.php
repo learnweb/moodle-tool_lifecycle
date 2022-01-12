@@ -219,6 +219,6 @@ $string['forselected'] = 'For all selected processes';
 $string['noprocesserrors'] = 'There are no process errors to handle!';
 
 $string['lifecycle_error_notify_task'] = 'Notify the admin upon errors in tool_lifecycle processes';
-$string['notifyerrorsemailsubject'] = 'There are {$a->amount} tool_lifecycle process errors waiting to be fixed!';
-$string['notifyerrorsemailcontent'] = 'There are {$a->amount} tool_lifecycle process errors waiting to be fixed!' . "\n" . 'Please review them at {$a->url}.';
-$string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} tool_lifecycle process errors waiting to be fixed!<br>Please review them at the <a href="{$a->url}">error handling overview</a>.';
+$string['notifyerrorsemailsubject'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!';
+$string['notifyerrorsemailcontent'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!' . "\n" . 'Please review them at {$a->url}.';
+$string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!<br>Please review them at the <a href="{$a->url}">error handling overview</a>.';

@@ -260,6 +260,7 @@ class process_manager {
         $procerror = (object) clone $process;
         $procerror->errormessage = get_class($e) . ': ' . $e->getMessage();
         $procerror->errortrace = $e->getTraceAsString();
+        $procerror->errortime = time();
         $m = '';
         foreach ($e->getTrace() as $v) {
             $m .= $v['file'] . ':' . $v['line'] . '::';
@@ -283,6 +284,7 @@ class process_manager {
         unset($process->errormessage);
         unset($process->errortrace);
         unset($process->errorhash);
+        unset($process->errortime);
 
         $DB->insert_record_raw('tool_lifecycle_process', $process, false, false, true);
         $DB->delete_records('tool_lifecycle_proc_error', ['id' => $process->id]);
@@ -301,6 +303,7 @@ class process_manager {
         unset($process->errormessage);
         unset($process->errortrace);
         unset($process->errorhash);
+        unset($process->errortime);
 
         $DB->insert_record_raw('tool_lifecycle_process', $process, false, false, true);
         $DB->delete_records('tool_lifecycle_proc_error', ['id' => $process->id]);

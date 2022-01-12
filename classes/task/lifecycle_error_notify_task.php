@@ -50,7 +50,16 @@ class lifecycle_error_notify_task extends \core\task\scheduled_task {
     public function execute() {
         global $DB, $CFG;
 
-        $errorcount = $DB->count_records('tool_lifecycle_proc_error');
+        $lastrun = get_config('tool_lifecycle', 'adminerrornotifylastrun');
+        if (!$lastrun) {
+            $lastrun = 0;
+        }
+
+        $currenttime = time();
+
+        $errorcount = $DB->count_records_select('tool_lifecycle_proc_error', 'errortime > :lastrun', ['lastrun' => $lastrun]);
+
+        set_config('adminerrornotifylastrun', $currenttime, 'tool_lifecycle');
 
         if (!$errorcount) {
             return;
