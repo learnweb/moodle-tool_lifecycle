@@ -95,9 +95,9 @@ class process_errors_table extends \table_sql {
     public function col_error($row) {
         return "<details><summary>" .
                 nl2br(htmlentities($row->errormessage)) .
-                "</summary>" .
+                "</summary><code>" .
                 nl2br(htmlentities($row->errortrace)) .
-                "</details>";
+                "</code></details>";
     }
 
     /**
@@ -163,6 +163,27 @@ class process_errors_table extends \table_sql {
             return parent::show_hide_link($column, $index);
         }
         return '';
+    }
+
+    /**
+     * Show custom nothing to display message.
+     * @return void
+     */
+    public function print_nothing_to_display() {
+        global $OUTPUT;
+
+        // Render the dynamic table header.
+        echo $this->get_dynamic_table_html_start();
+
+        // Render button to allow user to reset table preferences.
+        echo $this->render_reset_button();
+
+        $this->print_initials_bar();
+
+        echo $OUTPUT->heading(get_string('noprocesserrors', 'tool_lifecycle'));
+
+        // Render the dynamic table footer.
+        echo $this->get_dynamic_table_html_end();
     }
 
     /**

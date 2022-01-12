@@ -50,6 +50,8 @@ if ($action) {
         foreach ($ids as $id) {
             process_manager::rollback_process_after_error($id);
         }
+    } else {
+        throw new coding_exception("action must be either 'proceed' or 'rollback'");
     }
     redirect($PAGE->url);
 }

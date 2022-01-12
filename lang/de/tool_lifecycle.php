@@ -177,5 +177,12 @@ $string['process_proceeded_event'] = 'Ein Prozess wurde fortgeführt';
 $string['process_rollback_event'] = 'Ein Prozess wurde zurückgesetzt';
 
 $string['courseid'] = 'Kurs-ID';
-$string['process_errors_header'] = 'Prozessfehler';
+$string['process_errors_header'] = 'Fehlermanagement';
+$string['proceed'] = 'Fortfahren';
 $string['forselected'] = 'Für alle ausgewählten Prozesse';
+$string['noprocesserrors'] = 'Es gibt keine fehlerhaften Prozesse, die behandelt werden müssen!';
+
+$string['lifecycle_error_notify_task'] = 'Benachrichtigt die Administratoren bei Fehlern in tool_lifecycle-Prozessen.';
+$string['notifyerrorsemailsubject'] = '{$a->amount} fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!';
+$string['notifyerrorsemailcontent'] = '{$a->amount} fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!' . "\n" . 'Bitte besuchen Sie {$a->url}.';
+$string['notifyerrorsemailcontenthtml'] = '{$a->amount} fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!<br>Bitte besuchen Sie <a href="{$a->url}">die Übersichtsseite</a>.';
