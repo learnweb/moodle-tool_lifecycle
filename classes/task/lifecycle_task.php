@@ -27,8 +27,6 @@ use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\processor;
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Scheduled task for working on lifecycle processes
  *

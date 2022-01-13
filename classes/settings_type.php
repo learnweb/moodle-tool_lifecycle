@@ -22,8 +22,6 @@
  */
 namespace tool_lifecycle;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Defines available settings_types.
  * @package    tool_lifecycle

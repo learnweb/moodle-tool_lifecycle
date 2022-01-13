@@ -35,8 +35,6 @@ use core_privacy\local\request\writer;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Implementation of the privacy subsystem plugin provider for the Life Cycle tool.
  *

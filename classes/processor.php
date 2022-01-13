@@ -35,9 +35,6 @@ use tool_lifecycle\local\response\step_interactive_response;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\local\response\trigger_response;
 
-
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Offers functionality to trigger, process and finish lifecycle processes.
  *

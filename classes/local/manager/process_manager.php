@@ -29,8 +29,6 @@ use tool_lifecycle\local\entity\process;
 use tool_lifecycle\event\process_proceeded;
 use tool_lifecycle\event\process_rollback;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Manager for Life Cycle Processes
  *

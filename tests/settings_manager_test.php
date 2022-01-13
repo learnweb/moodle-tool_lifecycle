@@ -22,7 +22,6 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\entity\trigger_subplugin;
