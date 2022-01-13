@@ -461,7 +461,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         $table->add_field('errormessage', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
         $table->add_field('errortrace', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
         $table->add_field('errorhash', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('errortime', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('errortimecreated', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
 
         // Adding keys to table tool_lifecycle_proc_error.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);

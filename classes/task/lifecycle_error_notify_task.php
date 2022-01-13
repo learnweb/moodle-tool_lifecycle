@@ -57,7 +57,8 @@ class lifecycle_error_notify_task extends \core\task\scheduled_task {
 
         $currenttime = time();
 
-        $errorcount = $DB->count_records_select('tool_lifecycle_proc_error', 'errortime > :lastrun', ['lastrun' => $lastrun]);
+        $errorcount = $DB->count_records_select('tool_lifecycle_proc_error', 'errortimecreated > :lastrun',
+                ['lastrun' => $lastrun]);
 
         set_config('adminerrornotifylastrun', $currenttime, 'tool_lifecycle');
 

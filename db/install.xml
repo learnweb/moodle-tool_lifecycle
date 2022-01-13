@@ -157,7 +157,7 @@
         <FIELD NAME="errormessage" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Message of the error"/>
         <FIELD NAME="errortrace" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="errorhash" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Where the error occured in the form 'path/to/filename.php:line'"/>
-        <FIELD NAME="errortime" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="unix timestamp - time the error occured"/>
+        <FIELD NAME="errortimecreated" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="unix timestamp - time the error occured"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
