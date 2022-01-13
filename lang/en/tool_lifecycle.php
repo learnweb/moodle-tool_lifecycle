@@ -215,4 +215,6 @@ $string['delete_all_delays'] = 'Delete all delays';
 $string['workflowoverview'] = 'Overview of Workflow';
 $string['workflowoverview_list_header'] = 'Details of Workflows';
 $string['affcourses'] = 'Affected Courses';
-$string['arrowdown'] = 'Pfeil der nach unten zeigt';
+$string['coursestartdate'] = 'Course start date';
+$string['category'] = 'Category';
+

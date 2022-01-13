@@ -3,7 +3,9 @@
 }
 
 .lifecycle-table span.workflow_displaytitle,
-.lifecycle-table span.secondary-info {
+span.workflow_displaytitle,
+.lifecycle-table span.secondary-info,
+span.secondary-info {
     color: #888;
     font-size: .9em;
     padding: 0.5em;
@@ -12,6 +14,7 @@
 span.tool_lifecycle-hint {
     text-decoration: underline dashed #444;
 }
+
 .workflow {
     display: block;
 }
@@ -29,29 +32,64 @@ span.tool_lifecycle-hint {
 .workflow.wf-trigger-wrapper {
     width: inherit;
     /* fit underlying divs*/
-    height: 100px;
+    /*height: 100px;*/
     background-color: var(--wwu-success-bg);
     border-color: var(--wwu-success-border);
     color: var(--wwu-success-fg);
 }
+
 .workflow .workflow-trigger {
-    float: left;
-    width: 18%;
+/*    float: left;
+    width: 18%;*/
     justify-content: space-between;
 }
-.wf-steps-wrapper {
+
+.wf-wrapper .wf-steps-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
     width: 20%;
+/*    background-color: var(--wwu-info-bg);
+    border-color: var(--wwu-info-border);
+    color: var(--wwu-info-fg);*/
+}
+
+.workflow-single-step-wrapper{
+    width: 100%;
+    margin-bottom: 5px;
     background-color: var(--wwu-info-bg);
     border-color: var(--wwu-info-border);
+    word-wrap: break-word;
+}
+
+.workflow-arrow-wrapper{
+    width: 5%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.workflow-single-step-wrapper,
+.workflow-arrow-wrapper {
+    text-align: center;
     color: var(--wwu-info-fg);
 }
-.workflow-single-step-wrapper .workflow-arrow-wrapper {
-    text-align: center;
-}
+
 .workflow .workflow-step {
     /*text-align: center;*/
     display: block;
 }
+
 .workflow .wf-course-counter {
     text-align: right;
+}
+
+.wf-wrapper {
+    display: flex;
+}
+
+.wf-wrapper .wf-table-wrapper {
+    display: block;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    width: 80%;
 }

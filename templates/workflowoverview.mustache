@@ -40,16 +40,40 @@
     </div>
 {{/trigger}}
 </div>
-<div class="workflow wf-steps-wrapper">
-    {{#steps}}
-        <div class="workflow-single-step-wrapper">
-            <div class="workflow-step workflow-item">
-                <div class="workflow-arrow-wrapper">{{#pix}} i/down, core, {{#str}} arrowdown, tool_lifecycle{{/str}} {{/pix}}</div>
-                <strong>{{instancename}}</strong> &nbsp; <a href="{{steplink}}&step={{sortindex}}">{{icon}}{{name}}<span class="wf-course-counter">{{#pix}} i/courseevent, core, {{#str}} affcourses, tool_lifecycle{{/str}} {{/pix}} {{numberofcourses}}</span></a><br><em>{{subpluginname}}</em>
+<div class="wf-wrapper">
+    <div class="wf-steps-wrapper">
+        {{#steps}}
+            <div class="workflow-single-step-wrapper">
+                <div class="workflow-step workflow-item">
+                    <strong>{{instancename}}</strong> &nbsp; <a href="{{steplink}}&step={{sortindex}}">{{icon}}{{name}}<span class="wf-course-counter">{{#pix}} i/courseevent, core, {{#str}} affcourses, tool_lifecycle{{/str}} {{/pix}} {{numberofcourses}}</span></a><br><em>{{subpluginname}}</em>
+                </div>
             </div>
+        {{/steps}}
+    </div>
+    <div class="wf-table-wrapper">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <th>{{# str }} coursename, tool_lifecycle {{/ str }}</th>
+                    <th>{{# str }} coursestartdate, tool_lifecycle {{/ str }}/th>
+                    <th>{{# str }} category, tool_lifecycle {{/ str }}</th>
+                    <th>{{# str }} status, tool_lifecycle {{/ str }}</th>
+                    <th>{{# str }} tools, tool_lifecycle {{/ str }}</th>
+                    <th>{{# str }} date, tool_lifecycle {{/ str }}</th>
+                </thead>
+                <tbody>
+                    {{#courses}}
+                        <tr>
+                            <td>{{{courselink}}}</td>
+                            <td>{{#userdate}}{{{startdate}}}, %d.%m.%y {{/userdate}}</td>
+                            <td>{{category}}</td>
+                            <td>{{{status}}}</td>
+                            <td>{{{tools}}}</td>
+                            <td>{{date}}</td>
+                        </tr>
+                    {{/courses}}
+                </tbody>
+            </table>
         </div>
-    {{/steps}}
+    </div>
 </div>
-{{#listofcourses}}
-    {{table}}
-{{/listofcourses}}

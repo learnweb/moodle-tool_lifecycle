@@ -24,6 +24,11 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/adminlib.php');
 
+use tool_lifecycle\local\manager\interaction_manager;
+use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\process_manager;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\table\interaction_attention_table;
 
 global $OUTPUT, $PAGE, $DB;
@@ -78,24 +83,69 @@ $data = [
     'listofcourses' => $arrayofcourses,
     'steplink' => $url
 ];
-echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);
+
 if ($stepid) {
 
     $listofcourses = $DB->get_records_sql("SELECT p.id as processid, c.id as courseid, c.fullname as coursefullname, " .
-        "c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname " .
+        "c.shortname as courseshortname, c.startdate as startdate, cc.name as category, " .
+        "s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname as subpluginname, " .
+        "p.workflowid as workflowid " .
         "FROM {tool_lifecycle_process} p join " .
         "{course} c on p.courseid = c.id join " .
         "{tool_lifecycle_step} s ".
-        "on p.workflowid = s.workflowid AND p.stepindex = s.sortindex " .
+        "on p.workflowid = s.workflowid AND p.stepindex = s.sortindex join " .
+        "{course_categories} cc on c.category = cc.id " .
         "WHERE p.stepindex = :stepindex AND p.workflowid = :wfid;", array('stepindex' => $stepid, 'wfid' => $workflowid));
-    $listofids = array();
+
     foreach ($listofcourses as $key => $value) {
-        $listofids = $value->courseid;
-        $objectvar = (object) $listofcourses[$key];
-        array_push($arrayofcourses, $objectvar);
+
+        // Course name.
+        $courselink = \html_writer::link(course_get_url($value->courseid), format_string($value->coursefullname));
+        $value->courselink = $courselink . '<br><span class="secondary-info">' . $value->courseshortname . '</span>';
+
+        // Status.
+        if ($value->processid !== null) {
+            $workflow = workflow_manager::get_workflow($value->workflowid);
+            $value->status = interaction_manager::get_process_status_message($value->processid) .
+            '<br><span class="workflow_displaytitle">' . $workflow->displaytitle . '</span>';
+        }
+
+        // Tools.
+        $output = '';
+        $step = step_manager::get_step_instance($value->stepinstanceid);
+        $tools = interaction_manager::get_action_tools($step->subpluginname, $value->processid);
+        foreach ($tools as $tool) {
+            $button = new \single_button(new \moodle_url($PAGE->url,
+                array(
+                    'stepid' => $step->id,
+                    'action' => $tool['action'],
+                    'processid' => $value->processid,
+                    'sesskey' => sesskey()
+                )), $tool['alt']
+            );
+            $output .= $OUTPUT->render($button);
+        }
+        $value->tools = $output;
+
+        // Due date.
+        $lib = lib_manager::get_step_interactionlib($value->subpluginname);
+        $date = $lib->get_due_date($value->processid, $value->stepinstanceid);
+        $value->date = $date;
     }
-    asort($arrayofcourses);
+
+    $data['courses'] = array_values($listofcourses);
+
+    /*$listofids = array();
+    foreach ($listofcourses as $key => $value) {
+        // $listofids = $value->courseid;
+        array_push($listofids, $value->courseid);
+        // $objectvar = (object) $listofcourses[$key];
+        // array_push($arrayofcourses, $objectvar);
+    }
+    // asort($arrayofcourses);
+    asort($listofids);
     $table = new interaction_attention_table('tool_lifecycle_interaction', $listofids);
-    $table->out(50, false);
+    $table->out(50, false);*/
 }
+echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);
 echo $renderer->footer();

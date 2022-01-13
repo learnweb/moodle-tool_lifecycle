@@ -180,4 +180,5 @@ $string['process_rollback_event'] = 'Ein Prozess wurde zurückgesetzt';
 $string['workflowoverview'] = 'Übersicht zum Workflow';
 $string['workflowoverview_list_header'] = 'Details zu Workflows';
 $string['affcourses'] = 'Beinhaltete Kurse';
-$string['arrowdown'] = 'Pfeil der nach unten zeigt';
+$string['coursestartdate'] = 'Kurs Startdatum';
+$string['category'] = 'Kategorie';
