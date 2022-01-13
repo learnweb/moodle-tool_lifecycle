@@ -39,7 +39,7 @@ span.tool_lifecycle-hint {
 }
 
 .workflow .workflow-trigger {
-/*    float: left;
+/*  float: left;
     width: 18%;*/
     justify-content: space-between;
 }
@@ -49,12 +49,12 @@ span.tool_lifecycle-hint {
     flex-wrap: wrap;
     flex-direction: column;
     width: 20%;
-/*    background-color: var(--wwu-info-bg);
+/*  background-color: var(--wwu-info-bg);
     border-color: var(--wwu-info-border);
     color: var(--wwu-info-fg);*/
 }
 
-.workflow-single-step-wrapper{
+.workflow-single-step-wrapper {
     width: 100%;
     margin-bottom: 5px;
     background-color: var(--wwu-info-bg);
@@ -62,7 +62,7 @@ span.tool_lifecycle-hint {
     word-wrap: break-word;
 }
 
-.workflow-arrow-wrapper{
+.workflow-arrow-wrapper {
     width: 5%;
     margin-top: auto;
     margin-bottom: auto;
