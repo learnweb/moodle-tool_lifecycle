@@ -39,7 +39,7 @@ span.tool_lifecycle-hint {
 }
 
 .workflow .workflow-trigger {
-/*  float: left;
+    /*  float: left;
     width: 18%;*/
     justify-content: space-between;
 }
@@ -49,7 +49,7 @@ span.tool_lifecycle-hint {
     flex-wrap: wrap;
     flex-direction: column;
     width: 20%;
-/*  background-color: var(--wwu-info-bg);
+    /*  background-color: var(--wwu-info-bg);
     border-color: var(--wwu-info-border);
     color: var(--wwu-info-fg);*/
 }
