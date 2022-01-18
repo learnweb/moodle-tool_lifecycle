@@ -88,8 +88,7 @@ if ($stepid) {
 
     $listofcourses = $DB->get_records_sql("SELECT p.id as processid, c.id as courseid, c.fullname as coursefullname, " .
         "c.shortname as courseshortname, c.startdate as startdate, cc.name as category, " .
-        "s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname as subpluginname, " .
-        "p.workflowid as workflowid " .
+        "s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname as subpluginname " .
         "FROM {tool_lifecycle_process} p join " .
         "{course} c on p.courseid = c.id join " .
         "{tool_lifecycle_step} s ".
@@ -105,7 +104,7 @@ if ($stepid) {
 
         // Status.
         if ($value->processid !== null) {
-            $workflow = workflow_manager::get_workflow($value->workflowid);
+            $workflow = workflow_manager::get_workflow($workflowid);
             $value->status = interaction_manager::get_process_status_message($value->processid) .
             '<br><span class="workflow_displaytitle">' . $workflow->displaytitle . '</span>';
         }
@@ -114,13 +113,15 @@ if ($stepid) {
         $output = '';
         $step = step_manager::get_step_instance($value->stepinstanceid);
         $tools = interaction_manager::get_action_tools($step->subpluginname, $value->processid);
+        $url = '/admin/tool/lifecycle/action.php';
         foreach ($tools as $tool) {
-            $button = new \single_button(new \moodle_url($PAGE->url,
+            $button = new \single_button(new \moodle_url($url,
                 array(
                     'stepid' => $step->id,
                     'action' => $tool['action'],
                     'processid' => $value->processid,
-                    'sesskey' => sesskey()
+                    'sesskey' => sesskey(),
+                    'workflowid' => $workflowid
                 )), $tool['alt']
             );
             $output .= $OUTPUT->render($button);
