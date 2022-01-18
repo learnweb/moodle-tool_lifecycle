@@ -43,6 +43,7 @@ $courseid = optional_param('courseid', null, PARAM_INT);
 
 // Workflowoverview params.
 $workflowid = optional_param('workflowid', null, PARAM_INT);
+$sortindex = optional_param('step', null, PARAM_INT);
 
 $controller = new \tool_lifecycle\view_controller();
 
@@ -60,6 +61,6 @@ if ($action !== null && $processid !== null && $stepid !== null) {
 $url = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php',
     array(
         'wf' => $workflowid,
-        'step' => $stepid
+        'step' => $sortindex
     ));
 redirect($url);

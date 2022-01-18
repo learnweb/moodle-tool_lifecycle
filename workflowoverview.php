@@ -121,7 +121,8 @@ if ($stepid) {
                     'action' => $tool['action'],
                     'processid' => $value->processid,
                     'sesskey' => sesskey(),
-                    'workflowid' => $workflowid
+                    'workflowid' => $workflowid,
+                    'step' => $stepid
                 )), $tool['alt']
             );
             $output .= $OUTPUT->render($button);
