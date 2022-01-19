@@ -75,6 +75,10 @@ class interaction_remaining_table extends interaction_table {
                     'FROM {tool_lifecycle_action_log} b ' .
                     'INNER JOIN {tool_lifecycle_workflow} w ON b.workflowid = w.id ' .
                     'WHERE w.timeactive IS NOT NULL ' .
+                    'OR (' .
+                        'SELECT COUNT(id) ' .
+                        'FROM {tool_lifecycle_process} p ' .
+                        'WHERE w.id = p.workflowid) > 0 ' .
                     'GROUP BY b.courseid ' .
                 ') m ON a.courseid = m.cid AND a.id = m.maxlogid ' .
             ') l ON c.id = l.courseid ' .
