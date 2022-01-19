@@ -57,7 +57,7 @@ if ($action !== null && $processid !== null && $stepid !== null) {
     exit;
 }
 
-// TODO: Fix redirect.
+// TODO: Fix redirect. issue: handle_interaction does another redirect, which does not pass the needed params.
 $url = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php',
     array(
         'wf' => $workflowid,
