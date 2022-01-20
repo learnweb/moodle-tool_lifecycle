@@ -29,6 +29,8 @@ use tool_lifecycle\local\table\interaction_attention_table;
 
 require_login(null, false);
 
+global $USER, $PAGE;
+
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
 $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/view.php'));
@@ -46,23 +48,32 @@ $courseid = optional_param('courseid', null, PARAM_INT);
 
 $PAGE->set_title(get_string('viewheading', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('viewheading', 'tool_lifecycle'));
-
 $controller = new \tool_lifecycle\view_controller();
 
-if ($action !== null && $processid !== null && $stepid !== null) {
-    require_sesskey();
-    $controller->handle_interaction($action, $processid, $stepid);
-    exit;
-} else if ($triggerid !== null && $courseid !== null) {
-    require_sesskey();
-    $controller->handle_trigger($triggerid, $courseid);
-    exit;
-}
-
 $renderer = $PAGE->get_renderer('tool_lifecycle');
-
 echo $renderer->header();
 
-$controller->handle_view($renderer);
+$admins = get_admins();
+$isadmin = false;
+foreach ($admins as $admin) {
+    if ($USER->id == $admin->id) {
+        $isadmin = true;
+        break; }
+}
+if ($isadmin) {
+    if ($action !== null && $processid !== null && $stepid !== null) {
+        require_sesskey();
+        $controller->handle_interaction($action, $processid, $stepid);
+        exit;
+    } else if ($triggerid !== null && $courseid !== null) {
+        require_sesskey();
+        $controller->handle_trigger($triggerid, $courseid);
+        exit;
+    }
+
+    $controller->handle_view($renderer);
+} else {
+    echo "Please contact out support for your request.";
+}
 
 echo $renderer->footer();
