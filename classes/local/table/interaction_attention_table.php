@@ -45,9 +45,9 @@ class interaction_attention_table extends interaction_table {
      * @param int $uniqueid Unique id of this table.
      * @param int[] $courseids List of ids for courses that require attention.
      */
-    public function __construct($uniqueid, $courseids) {
+    public function __construct($uniqueid, $courseids, $filterdata) {
         parent::__construct($uniqueid);
-        global $PAGE;
+        global $PAGE, $DB;
 
         $fields = "p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, " .
             "c.startdate, cc.name as category , s.id as stepinstanceid, s.instancename as stepinstancename, ".
@@ -59,13 +59,27 @@ class interaction_attention_table extends interaction_table {
             'left join {course_categories} cc on c.category = cc.id';
         $ids = implode(',', $courseids);
 
-        $where = 'FALSE';
+        $where = ['FALSE'];
         if ($ids) {
-            $where = 'p.courseid IN (' . $ids . ')';
+            $where = ['p.courseid IN (' . $ids . ')'];
+        }
+
+        $params = [];
+
+        if ($filterdata) {
+            if ($filterdata && $filterdata->shortname) {
+                $where[] = $DB->sql_like('c.shortname', ':shortname', false, false);
+                $params['shortname'] = '%' . $DB->sql_like_escape($filterdata->shortname) . '%';
+            }
+
+            if ($filterdata && $filterdata->fullname) {
+                $where[] = $DB->sql_like('c.fullname', ':fullname', false, false);
+                $params['fullname'] = '%' . $DB->sql_like_escape($filterdata->fullname) . '%';
+            }
         }
 
         $this->column_nosort = array('status', 'tools');
-        $this->set_sql($fields, $from, $where, []);
+        $this->set_sql($fields, $from, join(" AND ", $where), $params);
         $this->define_baseurl($PAGE->url);
         $this->init();
     }
