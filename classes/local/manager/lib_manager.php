@@ -28,8 +28,6 @@ use tool_lifecycle\trigger\base;
 use tool_lifecycle\trigger\base_automatic;
 use tool_lifecycle\trigger\base_manual;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Manager to retrive the lib of each subplugin.
  *

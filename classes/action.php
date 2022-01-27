@@ -22,8 +22,6 @@
  */
 namespace tool_lifecycle;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Delivers all available action names throughout the plugin.
  * @package    tool_lifecycle

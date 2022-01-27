@@ -30,8 +30,6 @@ namespace tool_lifecycle\local\manager;
 use tool_lifecycle\local\entity\process;
 use tool_lifecycle\local\entity\trigger_subplugin;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Manager for data of Life Cycle Processes.
  *

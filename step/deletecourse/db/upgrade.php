@@ -25,8 +25,6 @@
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\step_manager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Update script for lifecycles subplugin deletecourse
  *

@@ -50,6 +50,9 @@ if ($hassiteconfig) {
     $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_delayed_courses',
             get_string('delayed_courses_header', 'tool_lifecycle'),
             new moodle_url('/admin/tool/lifecycle/delayedcourses.php')));
+    $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_process_errors',
+        get_string('process_errors_header', 'tool_lifecycle'),
+        new moodle_url('/admin/tool/lifecycle/errors.php')));
 
     if ($ADMIN->fulltree) {
         $triggers = core_component::get_plugin_list('lifecycletrigger');

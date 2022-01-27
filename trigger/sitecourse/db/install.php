@@ -23,8 +23,6 @@
  */
 use tool_lifecycle\local\manager\trigger_manager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Register site course trigger exclusion as initial workflow.
  */

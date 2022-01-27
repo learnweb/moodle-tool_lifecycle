@@ -23,8 +23,6 @@
  */
 namespace tool_lifecycle\local\entity;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Trigger subplugin class
  *
@@ -32,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class trigger_subplugin extends subplugin{
+class trigger_subplugin extends subplugin {
 
     /**
      * Creates a subplugin from a db record.
