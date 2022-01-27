@@ -101,7 +101,7 @@ class createbackup extends libbase {
      */
     public function instance_settings() {
         return array(
-            new instance_setting('maximumbackupspercron', PARAM_INT),
+            new instance_setting('maximumbackupspercron', PARAM_INT, true),
         );
     }
 
