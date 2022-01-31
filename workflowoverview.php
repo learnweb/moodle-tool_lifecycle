@@ -137,17 +137,6 @@ if ($stepid) {
 
     $data['courses'] = array_values($listofcourses);
 
-    /*$listofids = array();
-    foreach ($listofcourses as $key => $value) {
-        // $listofids = $value->courseid;
-        array_push($listofids, $value->courseid);
-        // $objectvar = (object) $listofcourses[$key];
-        // array_push($arrayofcourses, $objectvar);
-    }
-    // asort($arrayofcourses);
-    asort($listofids);
-    $table = new interaction_attention_table('tool_lifecycle_interaction', $listofids);
-    $table->out(50, false);*/
 }
 echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);
 echo $renderer->footer();

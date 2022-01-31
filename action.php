@@ -47,7 +47,7 @@ $sortindex = optional_param('step', null, PARAM_INT);
 
 $controller = new \tool_lifecycle\view_controller();
 
-if($workflowid && $sortindex) {
+if ($workflowid && $sortindex) {
     $url = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php',
         array(
             'wf' => $workflowid,

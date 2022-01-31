@@ -112,6 +112,7 @@ class view_controller {
      * @param string $action triggered action code.
      * @param int $processid id of the process the action was triggered for.
      * @param int $stepid id of the step the action was triggered for.
+     * @param string $url url of previous site.
      * @throws \coding_exception
      * @throws \dml_exception
      * @throws \invalid_parameter_exception
@@ -136,6 +137,7 @@ class view_controller {
      *
      * @param int $triggerid id of the trigger whose workflow was requested.
      * @param int $courseid id of the course the workflow was requested for.
+     * @param string $url url of previous site.
      * @throws \coding_exception
      * @throws \dml_exception
      * @throws \moodle_exception
