@@ -127,10 +127,11 @@ class interaction_remaining_table extends interaction_table {
         }
 
         $actions = [];
+        $url = '/admin/tool/lifecycle/action.php';
         foreach ($this->availabletools as $tool) {
             if (has_capability($tool->capability, \context_course::instance($row->courseid), null, false)) {
                 $actions[$tool->triggerid] = new \action_menu_link_secondary(
-                    new \moodle_url($PAGE->url, array('triggerid' => $tool->triggerid,
+                    new \moodle_url($url, array('triggerid' => $tool->triggerid,
                         'courseid' => $row->courseid, 'sesskey' => sesskey())),
                     new \pix_icon($tool->icon, $tool->displayname, 'moodle', array('class' => 'iconsmall', 'title' => '')),
                     $tool->displayname

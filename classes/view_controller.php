@@ -118,7 +118,7 @@ class view_controller {
      * @throws \moodle_exception
      * @throws \required_capability_exception
      */
-    public function handle_interaction($action, $processid, $stepid) {
+    public function handle_interaction($action, $processid, $stepid, $url) {
         global $PAGE;
 
         $process = process_manager::get_process_by_id($processid);
@@ -127,7 +127,7 @@ class view_controller {
         require_capability($capability, \context_course::instance($process->courseid), null, false);
 
         if (interaction_manager::handle_interaction($stepid, $processid, $action)) {
-            redirect($PAGE->url, get_string('interaction_success', 'tool_lifecycle'), null, notification::SUCCESS);
+            redirect($url, get_string('interaction_success', 'tool_lifecycle'), null, notification::SUCCESS);
         }
     }
 
@@ -141,7 +141,7 @@ class view_controller {
      * @throws \moodle_exception
      * @throws \required_capability_exception
      */
-    public function handle_trigger($triggerid, $courseid) {
+    public function handle_trigger($triggerid, $courseid, $url) {
         global $PAGE;
         // TODO check if trigger to triggerid exists.
         // Check if trigger is manual.
@@ -158,7 +158,7 @@ class view_controller {
         // Check if course does not have a running process.
         $runningprocess = process_manager::get_process_by_course_id($courseid);
         if ($runningprocess !== null) {
-            redirect($PAGE->url, get_string('manual_trigger_process_existed', 'tool_lifecycle'), null, notification::ERROR);
+            redirect($url, get_string('manual_trigger_process_existed', 'tool_lifecycle'), null, notification::ERROR);
         }
 
         // Actually trigger process.
@@ -166,7 +166,7 @@ class view_controller {
 
         $processor = new processor();
         if ($processor->process_course_interactive($process->id)) {
-            redirect($PAGE->url, get_string('manual_trigger_success', 'tool_lifecycle'), null, notification::SUCCESS);
+            redirect($url, get_string('manual_trigger_success', 'tool_lifecycle'), null, notification::SUCCESS);
         }
     }
 }

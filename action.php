@@ -47,20 +47,22 @@ $sortindex = optional_param('step', null, PARAM_INT);
 
 $controller = new \tool_lifecycle\view_controller();
 
+if($workflowid && $sortindex) {
+    $url = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php',
+        array(
+            'wf' => $workflowid,
+            'step' => $sortindex
+        ));
+} else {
+    $url = new \moodle_url('/admin/tool/lifecycle/view.php');
+}
+
 if ($action !== null && $processid !== null && $stepid !== null) {
     require_sesskey();
-    $controller->handle_interaction($action, $processid, $stepid);
+    $controller->handle_interaction($action, $processid, $stepid, $url);
     exit;
 } else if ($triggerid !== null && $courseid !== null) {
     require_sesskey();
-    $controller->handle_trigger($triggerid, $courseid);
+    $controller->handle_trigger($triggerid, $courseid, $url);
     exit;
 }
-
-// TODO: Fix redirect. issue: handle_interaction does another redirect, which does not pass the needed params.
-$url = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php',
-    array(
-        'wf' => $workflowid,
-        'step' => $sortindex
-    ));
-redirect($url);

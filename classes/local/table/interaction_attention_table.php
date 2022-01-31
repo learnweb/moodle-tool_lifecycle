@@ -134,7 +134,8 @@ class interaction_attention_table extends interaction_table {
     private function format_icon_link($action, $processid, $stepinstanceid, $alt) {
         global $PAGE, $OUTPUT;
 
-        $button = new \single_button(new \moodle_url($PAGE->url,
+        $url = '/admin/tool/lifecycle/action.php';
+        $button = new \single_button(new \moodle_url($url,
             array(
                 'stepid' => $stepinstanceid,
                 'action' => $action,
