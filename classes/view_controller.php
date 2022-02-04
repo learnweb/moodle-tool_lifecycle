@@ -46,6 +46,7 @@ class view_controller {
      * Handles actions triggered in the view.php and displays the view.
      *
      * @param \renderer_base $renderer
+     * @param object $filterdata
      * @throws \coding_exception
      * @throws \dml_exception
      * @throws \invalid_parameter_exception

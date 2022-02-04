@@ -44,6 +44,7 @@ class interaction_attention_table extends interaction_table {
      * Constructor for deactivated_workflows_table.
      * @param int $uniqueid Unique id of this table.
      * @param int[] $courseids List of ids for courses that require attention.
+     * @param object $filterdata Object of filter criteria
      */
     public function __construct($uniqueid, $courseids, $filterdata) {
         parent::__construct($uniqueid);
