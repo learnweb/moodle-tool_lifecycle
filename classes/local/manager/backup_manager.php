@@ -45,57 +45,51 @@ class backup_manager {
      */
     public static function create_course_backup($courseid) {
         global $CFG, $DB;
-        try {
-            $course = get_course($courseid);
-            $record = new \stdClass();
-            $record->courseid = $courseid;
-            $record->fullname = $course->fullname;
-            $record->shortname = $course->shortname;
-            $recordid = $DB->insert_record('tool_lifecycle_backups', $record, true);
-            $record->id = $recordid;
+        $course = get_course($courseid);
+        $record = new \stdClass();
+        $record->courseid = $courseid;
+        $record->fullname = $course->fullname;
+        $record->shortname = $course->shortname;
+        $recordid = $DB->insert_record('tool_lifecycle_backups', $record, true);
+        $record->id = $recordid;
 
-            // Build filename.
-            $archivefile = date("Y-m-d") . "-ID-{$recordid}-COURSE-{$courseid}.mbz";
+        // Build filename.
+        $archivefile = date("Y-m-d") . "-ID-{$recordid}-COURSE-{$courseid}.mbz";
 
-            // Path of backup folder.
-            $path = get_config('tool_lifecycle', 'backup_path');
-            // If the path doesn't exist, make it so!
-            if (!is_dir($path)) {
-                umask(0000);
-                // Create the directory for Backups.
-                if (!mkdir($path, $CFG->directorypermissions, true)) {
-                    throw new \moodle_exception(get_string('errorbackuppath', 'tool_lifecycle'));
-                }
+        // Path of backup folder.
+        $path = get_config('tool_lifecycle', 'backup_path');
+        // If the path doesn't exist, make it so!
+        if (!is_dir($path)) {
+            umask(0000);
+            // Create the directory for Backups.
+            if (!mkdir($path, $CFG->directorypermissions, true)) {
+                throw new \moodle_exception(get_string('errorbackuppath', 'tool_lifecycle'));
             }
-            // Perform Backup.
-            $bc = new \backup_controller(\backup::TYPE_1COURSE, $courseid, \backup::FORMAT_MOODLE,
-                \backup::INTERACTIVE_NO, \backup::MODE_AUTOMATED, get_admin()->id);
-            $bc->execute_plan();  // Execute backup.
-            $results = $bc->get_results(); // Get the file information needed.
-            /* @var $file \stored_file instance of the backup file*/
-            $file = $results['backup_destination'];
-            if (!empty($file)) {
-                $file->copy_content_to($path . DIRECTORY_SEPARATOR . $archivefile);
-                $file->delete();
-            }
-            $bc->destroy();
-            unset($bc);
+        }
+        // Perform Backup.
+        $bc = new \backup_controller(\backup::TYPE_1COURSE, $courseid, \backup::FORMAT_MOODLE,
+            \backup::INTERACTIVE_NO, \backup::MODE_AUTOMATED, get_admin()->id);
+        $bc->execute_plan();  // Execute backup.
+        $results = $bc->get_results(); // Get the file information needed.
+        /* @var $file \stored_file instance of the backup file*/
+        $file = $results['backup_destination'];
+        if (!empty($file)) {
+            $file->copy_content_to($path . DIRECTORY_SEPARATOR . $archivefile);
+            $file->delete();
+        }
+        $bc->destroy();
+        unset($bc);
 
-            // First check if the file was created.
-            if (!file_exists($path . DIRECTORY_SEPARATOR . $archivefile)) {
-                return false;
-            }
-
-            $record->backupfile = $archivefile;
-            $record->backupcreated = time();
-            $DB->update_record('tool_lifecycle_backups', $record, true);
-
-            return true;
-        } catch (\moodle_exception $e) {
-            debugging('There was a problem during backup!');
-            debugging($e->getMessage());
+        // First check if the file was created.
+        if (!file_exists($path . DIRECTORY_SEPARATOR . $archivefile)) {
             return false;
         }
+
+        $record->backupfile = $archivefile;
+        $record->backupcreated = time();
+        $DB->update_record('tool_lifecycle_backups', $record, true);
+
+        return true;
     }
 
     /**
