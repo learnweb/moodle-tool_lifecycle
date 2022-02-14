@@ -117,7 +117,7 @@ class categories extends base_automatic {
      * @throws \dml_exception
      */
     public function extend_add_instance_form_definition($mform) {
-        global $DB;
+        
         $displaylist = core_course_category::make_categories_list();
         
         $options = array(
