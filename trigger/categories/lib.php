@@ -120,14 +120,6 @@ class categories extends base_automatic {
         global $DB;
         $displaylist = core_course_category::make_categories_list();
         
-        /*
-        $categories = $DB->get_records('course_categories');
-        $categorynames = array();
-        foreach ($categories as $category) {
-            $categorynames[$category->id] = $category->name;
-        }
-        */
-
         $options = array(
             'multiple' => true,
             'noselectionstring' => get_string('categories_noselection', 'lifecycletrigger_categories'),
