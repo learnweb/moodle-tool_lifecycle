@@ -156,6 +156,27 @@ class interaction_manager {
     }
 
     /**
+     * Returns an array of interaction tools strings which are in fact displayed to the given user on the view.php.
+     *
+     * @param string $subpluginname name of the step
+     * @param int $processid id of the process the action strings are requested for
+     * @param int $userid id of the user for whom the actions are visible or not
+     * @return array of action strings visible to the given usertools
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
+     */
+    public static function get_available_actions_for_user(string $subpluginname, int $processid, int $userid) : array {
+        $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
+        $process = process_manager::get_process_by_id($processid);
+        if (!$process) {
+            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_lifecycle'));
+        }
+        $actionstrings = array_map(fn($action) => $action['action'], $interactionlib->get_action_tools($process));
+        return $interactionlib->get_available_actions_for_user($actionstrings, $userid, $process->courseid);
+    }
+
+    /**
      * Returns the status message for the given process.
      * @param int $processid id of the process the status message is requested for
      * @return string status message
