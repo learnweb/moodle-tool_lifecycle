@@ -214,6 +214,7 @@ $string['move_down'] = 'Move down';
 $string['move_up'] = 'Move up';
 $string['name_until_date'] = '"{$a->name}" until {$a->date}';
 $string['nextrun'] = 'Next run: {$a}';
+$string['noactionsavailable'] = 'You cannot execute any action but have to wait for another user to handle this course.';
 $string['noactiontools'] = 'No tools available';
 $string['nocoursestodisplay'] = 'There are currently no courses which require your attention!';
 $string['noentriesselected'] = 'No table entries selected.';
