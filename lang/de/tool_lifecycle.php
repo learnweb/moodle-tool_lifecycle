@@ -162,6 +162,7 @@ $string['manual_trigger_process_existed'] = 'Es existiert bereits ein Workflow f
 
 $string['coursename'] = 'Kursname';
 $string['lastaction'] = 'Letzte Aktion am';
+$string['noactionsavailable'] = 'Sie können keine Aktion ausführen. Warten Sie, bis ein anderer Benutzer dies tut.';
 
 $string['workflow_started'] = 'Workflow gestartet.';
 $string['workflow_is_running'] = 'Workflow läuft.';

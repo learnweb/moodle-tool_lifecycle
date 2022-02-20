@@ -167,6 +167,7 @@ $string['manual_trigger_process_existed'] = 'A workflow for this course already 
 
 $string['coursename'] = 'Course name';
 $string['lastaction'] = 'Last action on';
+$string['noactionsavailable'] = 'You cannot execute any action but have to wait for another user to handle this course.';
 $string['anonymous_user'] = 'Anonymous User';
 
 $string['workflow_started'] = 'Workflow started.';
