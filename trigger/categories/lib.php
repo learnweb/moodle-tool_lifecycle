@@ -27,6 +27,7 @@ use coursecat;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\settings_type;
+use core_course_category;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
@@ -103,8 +104,8 @@ class categories extends base_automatic {
      */
     public function instance_settings() {
         return array(
-            new instance_setting('categories', PARAM_SEQUENCE),
-            new instance_setting('exclude', PARAM_BOOL),
+            new instance_setting('categories', PARAM_SEQUENCE, true),
+            new instance_setting('exclude', PARAM_BOOL, true),
         );
     }
 
@@ -116,19 +117,14 @@ class categories extends base_automatic {
      * @throws \dml_exception
      */
     public function extend_add_instance_form_definition($mform) {
-        global $DB;
-        $categories = $DB->get_records('course_categories');
-        $categorynames = array();
-        foreach ($categories as $category) {
-            $categorynames[$category->id] = $category->name;
-        }
+        $displaylist = core_course_category::make_categories_list();
         $options = array(
             'multiple' => true,
             'noselectionstring' => get_string('categories_noselection', 'lifecycletrigger_categories'),
         );
         $mform->addElement('autocomplete', 'categories',
             get_string('categories', 'lifecycletrigger_categories'),
-            $categorynames, $options);
+            $displaylist, $options);
         $mform->setType('categories', PARAM_SEQUENCE);
 
         $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));

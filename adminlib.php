@@ -636,17 +636,18 @@ class workflow_settings {
                 \core\notification::add(
                     get_string('active_workflow_not_changeable', 'tool_lifecycle'),
                     \core\notification::WARNING);
-            } else {
-                if (!empty($data->id)) {
-                    $step = step_manager::get_step_instance($data->id);
-                    $step->instancename = $data->instancename;
-                } else {
-                    $step = step_subplugin::from_record($data);
-                }
-                step_manager::insert_or_update($step);
-                // Save local subplugin settings.
-                settings_manager::save_settings($step->id, settings_type::STEP, $form->subpluginname, $data);
             }
+            if (!empty($data->id)) {
+                $step = step_manager::get_step_instance($data->id);
+                if (isset($data->instancename)) {
+                    $step->instancename = $data->instancename;
+                }
+            } else {
+                $step = step_subplugin::from_record($data);
+            }
+            step_manager::insert_or_update($step);
+            // Save local subplugin settings.
+            settings_manager::save_settings($step->id, settings_type::STEP, $form->subpluginname, $data, true);
         } else {
             $this->view_step_instance_form($form);
             return true;

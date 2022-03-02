@@ -80,7 +80,7 @@ class startdatedelay extends base_automatic {
      */
     public function instance_settings() {
         return array(
-            new instance_setting('delay', PARAM_INT)
+            new instance_setting('delay', PARAM_INT, true)
         );
     }
 

@@ -24,11 +24,10 @@
 namespace tool_lifecycle\local\manager;
 
 use core\event\course_deleted;
+use Exception;
 use tool_lifecycle\local\entity\process;
 use tool_lifecycle\event\process_proceeded;
 use tool_lifecycle\event\process_rollback;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Manager for Life Cycle Processes
@@ -244,5 +243,70 @@ class process_manager {
         $steplib = lib_manager::get_step_lib($step->subpluginname);
         $steplib->abort_course($process);
         self::remove_process($process);
+    }
+
+    /**
+     * Moves a process into the procerror table.
+     *
+     * @param process $process The process
+     * @param Exception $e The exception
+     * @return void
+     */
+    public static function insert_process_error(process $process, Exception $e) {
+        global $DB;
+
+        $procerror = (object) clone $process;
+        $procerror->errormessage = get_class($e) . ': ' . $e->getMessage();
+        $procerror->errortrace = $e->getTraceAsString();
+        $procerror->errortimecreated = time();
+        $m = '';
+        foreach ($e->getTrace() as $v) {
+            $m .= $v['file'] . ':' . $v['line'] . '::';
+        }
+        $procerror->errorhash = md5($m);
+        $procerror->waiting = intval($procerror->waiting);
+
+        $DB->insert_record_raw('tool_lifecycle_proc_error', $procerror, false, false, true);
+        $DB->delete_records('tool_lifecycle_process', ['id' => $process->id]);
+    }
+
+    /**
+     * Proceed process from procerror back into the process board.
+     * @param int $processid the processid
+     * @return void
+     */
+    public static function proceed_process_after_error(int $processid) {
+        global $DB;
+        $process = $DB->get_record('tool_lifecycle_proc_error', ['id' => $processid]);
+        // Unset process error entries.
+        unset($process->errormessage);
+        unset($process->errortrace);
+        unset($process->errorhash);
+        unset($process->errortimecreated);
+
+        $DB->insert_record_raw('tool_lifecycle_process', $process, false, false, true);
+        $DB->delete_records('tool_lifecycle_proc_error', ['id' => $process->id]);
+    }
+
+    /**
+     * Rolls back a process from procerror table
+     * @param int $processid the processid
+     * @return void
+     */
+    public static function rollback_process_after_error(int $processid) {
+        global $DB;
+
+        $process = $DB->get_record('tool_lifecycle_proc_error', ['id' => $processid]);
+        // Unset process error entries.
+        unset($process->errormessage);
+        unset($process->errortrace);
+        unset($process->errorhash);
+        unset($process->errortimecreated);
+
+        $DB->insert_record_raw('tool_lifecycle_process', $process, false, false, true);
+        $DB->delete_records('tool_lifecycle_proc_error', ['id' => $process->id]);
+
+        delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);
+        self::rollback_process($process);
     }
 }

@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\manager;
 
+use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
@@ -57,9 +58,11 @@ class settings_manager {
      * @param 'step'|'trigger' $type type of the subplugin.
      * @param string $subpluginname name of the subplugin.
      * @param mixed $data submitted data of the form.
+     * @param bool $accessvalidation whether to do only change settings that are editable once the workflow has started.
+     *          Then also calls the on_setting_changed listener. Defaults to false.
      * @throws \moodle_exception
      */
-    public static function save_settings($instanceid, $type, $subpluginname, $data) {
+    public static function save_settings($instanceid, $type, $subpluginname, $data, $accessvalidation = false) {
         global $DB;
         self::validate_type($type);
 
@@ -74,8 +77,12 @@ class settings_manager {
 
         if ($type == settings_type::TRIGGER) {
             $lib = lib_manager::get_trigger_lib($subpluginname);
+            $trigger = trigger_manager::get_instance($instanceid);
+            $wfeditable = workflow_manager::is_editable($trigger->workflowid);
         } else {
             $lib = lib_manager::get_step_lib($subpluginname);
+            $step = step_manager::get_step_instance($instanceid);
+            $wfeditable = workflow_manager::is_editable($step->workflowid);
         }
 
         $settingsfields = $lib->instance_settings();
@@ -83,6 +90,9 @@ class settings_manager {
             throw new \moodle_exception('id of the step instance has to be set!');
         }
         foreach ($settingsfields as $setting) {
+            if ($accessvalidation && !$wfeditable && !$setting->editable) {
+                continue;
+            }
             if (array_key_exists($setting->name, $data)) {
                 $value = $data[$setting->name];
                 // Needed for editor support.
@@ -105,8 +115,14 @@ class settings_manager {
                         'name' => $setting->name)
                 );
                 if ($record) {
-                    $record->value = $cleanedvalue;
-                    $DB->update_record('tool_lifecycle_settings', $record);
+                    if ($record->value != $cleanedvalue) {
+                        $oldvalue = $record->value;
+                        $record->value = $cleanedvalue;
+                        $DB->update_record('tool_lifecycle_settings', $record);
+                        if ($accessvalidation && !$wfeditable) {
+                            $lib->on_setting_changed($setting->name, $cleanedvalue, $oldvalue);
+                        }
+                    }
                 } else {
                     $newrecord = new \stdClass();
                     $newrecord->instanceid = $instanceid;

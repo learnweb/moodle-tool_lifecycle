@@ -23,8 +23,6 @@
  */
 namespace tool_lifecycle\local\entity;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Subplugin class
  *
@@ -32,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class subplugin{
+abstract class subplugin {
 
     /** @var int $id Id of subplugin */
     public $id;

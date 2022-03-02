@@ -30,8 +30,6 @@ use tool_lifecycle\local\backup\backup_lifecycle_workflow;
 use tool_lifecycle\local\data\manual_trigger_tool;
 use tool_lifecycle\settings_type;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Manager for Life Cycle Workflows
  *

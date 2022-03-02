@@ -54,6 +54,16 @@ abstract class base {
     }
 
     /**
+     * Is called when a setting is changed after a workflow is activated.
+     * @param string $settingname name of the setting
+     * @param mixed $newvalue the new value
+     * @param mixed $oldvalue the old value
+     */
+    public function on_setting_changed($settingname, $newvalue, $oldvalue) {
+
+    }
+
+    /**
      * This method can be overriden, to add form elements to the form_step_instance.
      * It is called in definition().
      * @param \MoodleQuickForm $mform
@@ -179,14 +189,19 @@ class instance_setting {
     /** @var string param type of the setting, e.g. PARAM_INT */
     public $paramtype;
 
+    /** @var bool if editable after activation */
+    public $editable;
+
     /**
      * Create a local settings object.
      * @param string $name name of the setting
      * @param string $paramtype param type. Used for cleansing and parsing, e.g. PARAM_INT.
+     * @param bool $editable if setting is editable after activation
      */
-    public function __construct($name, $paramtype) {
+    public function __construct(string $name, string $paramtype, bool $editable = false) {
         $this->name = $name;
         $this->paramtype = $paramtype;
+        $this->editable = $editable;
     }
 
 }

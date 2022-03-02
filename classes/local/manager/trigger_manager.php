@@ -28,8 +28,6 @@ use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\settings_type;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Manager for Trigger subplugins
  *

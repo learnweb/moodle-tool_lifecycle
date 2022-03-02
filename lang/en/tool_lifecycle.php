@@ -54,7 +54,7 @@ $string['general_settings_header'] = 'General settings';
 $string['followedby_none'] = 'None';
 $string['invalid_workflow'] = 'Invalid workflow configuration';
 $string['invalid_workflow_details'] = 'Go to details view, to create a trigger for this workflow';
-$string['active_workflow_not_changeable'] = 'The workflow instance was already activated. It is not possible to change any of its steps anymore.';
+$string['active_workflow_not_changeable'] = 'The workflow instance was already activated. Depending on the step type, some of its settings might be still editable. Changes to triggers will not affect already triggered courses.';
 $string['active_workflow_not_removeable'] = 'The workflow instance is active. It is not possible to remove it.';
 $string['workflow_not_removeable'] = 'It is not possible to remove this workflow instance. Maybe it still has running processes?';
 $string['invalid_workflow_cannot_be_activated'] = 'The workflow definition is invalid, thus it cannot be activated.';
@@ -210,3 +210,15 @@ $string['all_delays'] = 'All delays';
 $string['globally'] = 'Global delays';
 $string['delays_for_workflow'] = 'Delays for "{$a}"';
 $string['delete_all_delays'] = 'Delete all delays';
+
+$string['courseid'] = 'Course ID';
+$string['process_errors_header'] = 'Error handling';
+$string['proceed'] = 'Proceed';
+$string['rollback'] = 'Rollback';
+$string['forselected'] = 'For all selected processes';
+$string['noprocesserrors'] = 'There are no process errors to handle!';
+
+$string['lifecycle_error_notify_task'] = 'Notify the admin upon errors in tool_lifecycle processes';
+$string['notifyerrorsemailsubject'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!';
+$string['notifyerrorsemailcontent'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!' . "\n" . 'Please review them at {$a->url}.';
+$string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!<br>Please review them at the <a href="{$a->url}">error handling overview</a>.';

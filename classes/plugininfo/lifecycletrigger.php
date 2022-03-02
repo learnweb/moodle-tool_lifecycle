@@ -30,8 +30,6 @@ use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_usertours\step;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Pluginfo for life cycle trigger
  *
