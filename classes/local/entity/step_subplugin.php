@@ -23,8 +23,6 @@
  */
 namespace tool_lifecycle\local\entity;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Subplugin class
  *

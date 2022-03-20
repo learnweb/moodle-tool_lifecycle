@@ -135,12 +135,7 @@ class form_trigger_instance extends \moodleform {
             $this->lib->extend_add_instance_form_definition($mform);
         }
 
-        // For active workflows, we do not want the form to be editable.
-        if ($this->workflowid && !workflow_manager::is_editable($this->workflowid)) {
-            $this->add_cancel_button();
-        } else {
-            $this->add_action_buttons();
-        }
+        $this->add_action_buttons();
     }
 
     /**

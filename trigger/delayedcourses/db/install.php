@@ -24,8 +24,6 @@
  */
 use tool_lifecycle\local\manager\trigger_manager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Register delayed courses as initial workflow.
  */

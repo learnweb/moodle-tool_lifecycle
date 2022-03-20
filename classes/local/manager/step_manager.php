@@ -27,8 +27,6 @@ use tool_lifecycle\action;
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\settings_type;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Manager for Subplugins
  *

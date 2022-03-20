@@ -211,6 +211,18 @@ $string['globally'] = 'Global delays';
 $string['delays_for_workflow'] = 'Delays for "{$a}"';
 $string['delete_all_delays'] = 'Delete all delays';
 
+$string['courseid'] = 'Course ID';
+$string['process_errors_header'] = 'Error handling';
+$string['proceed'] = 'Proceed';
+$string['rollback'] = 'Rollback';
+$string['forselected'] = 'For all selected processes';
+$string['noprocesserrors'] = 'There are no process errors to handle!';
+
+$string['lifecycle_error_notify_task'] = 'Notify the admin upon errors in tool_lifecycle processes';
+$string['notifyerrorsemailsubject'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!';
+$string['notifyerrorsemailcontent'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!' . "\n" . 'Please review them at {$a->url}.';
+$string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!<br>Please review them at the <a href="{$a->url}">error handling overview</a>.';
+
 // Workflowoverview.
 $string['workflowoverview'] = 'Overview of Workflow';
 $string['workflowoverview_list_header'] = 'Details of Workflows';

@@ -45,6 +45,28 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
 
-$controller->handle_view($renderer);
+$mform = new \tool_lifecycle\local\form\form_backups_filter();
+
+// Cache handling.
+$cache = cache::make('tool_lifecycle', 'mformdata');
+if ($mform->is_cancelled()) {
+    $cache->delete('coursebackups_filter');
+    redirect($PAGE->url);
+} else if ($data = $mform->get_data()) {
+    $cache->set('coursebackups_filter', $data);
+} else {
+    $data = $cache->get('coursebackups_filter');
+    if ($data) {
+        $mform->set_data($data);
+    }
+}
+
+echo '<br>';
+
+$mform->display();
+
+echo '<br>';
+
+$controller->handle_view($renderer, $data);
 
 echo $renderer->footer();

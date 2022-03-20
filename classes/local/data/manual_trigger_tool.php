@@ -25,8 +25,6 @@ namespace tool_lifecycle\local\data;
 
 use renderable;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class representing a manual trigger tool
  *

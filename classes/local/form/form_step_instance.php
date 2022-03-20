@@ -129,7 +129,6 @@ class form_step_instance extends \moodleform {
             $this->lib->extend_add_instance_form_definition($mform);
         }
 
-        // For active workflows, we do not want the form to be editable.
         $this->add_action_buttons();
     }
 
