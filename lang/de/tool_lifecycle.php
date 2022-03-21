@@ -174,6 +174,7 @@ $string['restore_trigger_does_not_exist'] = 'Der Trigger {$a} ist nicht installi
 
 $string['process_triggered_event'] = 'Ein Prozess wurde ausgelöst';
 $string['process_proceeded_event'] = 'Ein Prozess wurde fortgeführt';
+$string['process_processed_event'] = 'Ein Prozess wurde behandelt';
 $string['process_rollback_event'] = 'Ein Prozess wurde zurückgesetzt';
 
 $string['courseid'] = 'Kurs-ID';

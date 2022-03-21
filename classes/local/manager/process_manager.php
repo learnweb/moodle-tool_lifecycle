@@ -25,6 +25,7 @@ namespace tool_lifecycle\local\manager;
 
 use core\event\course_deleted;
 use Exception;
+use tool_lifecycle\event\process_processed;
 use tool_lifecycle\local\entity\process;
 use tool_lifecycle\event\process_proceeded;
 use tool_lifecycle\event\process_rollback;
@@ -154,9 +155,15 @@ class process_manager {
             $process->waiting = false;
             $process->timestepchanged = time();
             $DB->update_record('tool_lifecycle_process', $process);
+            process_processed::event_from_process($process->id, $process->workflowid, $process->courseid)->trigger();
             return true;
         } else {
+            // Backup information before we remove the process, so we can trigger the process_processed event after the deletion.
+            $processid = $process->id;
+            $workflowid = $process->workflowid;
+            $courseid = $process->courseid;
             self::remove_process($process);
+            process_processed::event_from_process($processid, $workflowid, $courseid)->trigger();
             return false;
         }
     }
@@ -191,7 +198,12 @@ class process_manager {
             }
             $lib->rollback_course($process->id, $step->id, $course);
         }
+        // Backup information before we remove the process, so we can trigger the process_proceeded event after the deletion.
+        $processid = $process->id;
+        $workflowid = $process->workflowid;
+        $courseid = $process->courseid;
         self::remove_process($process);
+        process_processed::event_from_process($processid, $workflowid, $courseid)->trigger();
     }
 
     /**

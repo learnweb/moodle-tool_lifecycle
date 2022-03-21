@@ -181,6 +181,7 @@ $string['restore_trigger_does_not_exist'] = 'The trigger {$a} is not installed, 
 // Events.
 $string['process_triggered_event'] = 'A process has been triggered';
 $string['process_proceeded_event'] = 'A process has been proceeded';
+$string['process_processed_event'] = 'A process has been treated';
 $string['process_rollback_event'] = 'A process has been rolled back';
 
 // Privacy API.
