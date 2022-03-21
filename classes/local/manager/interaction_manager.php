@@ -167,10 +167,13 @@ class interaction_manager {
      * @throws \invalid_parameter_exception
      */
     public static function get_available_actions_for_user(string $subpluginname, int $processid, int $userid) : array {
-        $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
         $process = process_manager::get_process_by_id($processid);
         if (!$process) {
             throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_lifecycle'));
+        }
+        $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
+        if (!$interactionlib) {
+            return [];
         }
         $actionstrings = array_map(fn($action) => $action['action'], $interactionlib->get_action_tools($process));
         return $interactionlib->get_available_actions_for_user($actionstrings, $userid, $process->courseid);
