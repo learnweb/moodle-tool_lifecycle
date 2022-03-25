@@ -24,12 +24,17 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/adminlib.php');
 
+use tool_lifecycle\action;
+use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\manager\interaction_manager;
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\local\table\interaction_attention_table;
+use tool_lifecycle\processor;
 
 global $OUTPUT, $PAGE, $DB;
 $PAGE->set_context(context_system::instance());
@@ -41,16 +46,55 @@ $workflowid = required_param('wf', PARAM_INT);
 $stepid = optional_param('step', 0, PARAM_INT);
 $triggerid = optional_param('trigger', 0, PARAM_INT);
 
+$wfname = $DB->get_field('tool_lifecycle_workflow', 'title', ['id' => $workflowid]);
+$heading = get_string('workflowoverview_list_header', 'tool_lifecycle') . $wfname;
+
 $PAGE->set_pagelayout('standard');
 $PAGE->set_url(new \moodle_url("/admin/tool/lifecycle/workflowoverview.php"));
-$PAGE->set_title(get_string('workflowoverview_list_header', 'tool_lifecycle'));
-$PAGE->set_heading(get_string('workflowoverview_list_header', 'tool_lifecycle'));
+$PAGE->set_title($heading);
+$PAGE->set_heading($heading);
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
+
+$exclude = array();
+$countcourses = 0;
+$counttriggered = 0;
+$countexcluded = 0;
+$processor = new processor();
+$triggers = trigger_manager::get_triggers_for_workflow($workflowid);
+$delayedcourses = delayed_courses_manager::get_delayed_courses_for_workflow($workflowid);
+$recordset = $processor->get_course_recordset($triggers, array_merge($exclude, $delayedcourses));
+while ($recordset->valid()) {
+    $course = $recordset->current();
+    $countcourses++;
+    foreach ($triggers as $trigger) {
+        $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+        $response = $lib->check_course($course, $trigger->id);
+        if ($response == trigger_response::next()) {
+            $recordset->next();
+            continue 2;
+        }
+        if ($response == trigger_response::exclude()) {
+            array_push($exclude, $course->id);
+            $countexcluded++;
+            $recordset->next();
+            continue 2;
+        }
+        if ($response == trigger_response::trigger()) {
+            continue;
+        }
+    }
+    $counttriggered++;
+    $recordset->next();
+}
+
 $steps = $DB->get_records('tool_lifecycle_step', array('workflowid' => $workflowid));
 $trigger = $DB->get_records('tool_lifecycle_trigger', array('workflowid' => $workflowid));
+$alt = 'view';
+$icon = 't/viewdetails';
+$url = '/admin/tool/lifecycle/workflowsettings.php';
 
 $arrayoftrigger = array();
 foreach ($trigger as $key => $value) {
@@ -59,6 +103,13 @@ foreach ($trigger as $key => $value) {
     // FUTURE: Nice to have Icon for each subplugin.
     // FUTURE: Nice to have How many courses will be caught by the trigger?
     $objectvar = (object) $trigger[$key];
+    $objectvar->show = $OUTPUT->action_icon(new \moodle_url($url,
+            array('action' => action::STEP_INSTANCE_FORM,
+                'subplugin' => $objectvar->id,
+                'sesskey' => sesskey(),
+                'workflowid' => $workflowid)),
+            new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+            null, array('title' => $alt)) . ' ';
     $arrayoftrigger[$objectvar->sortindex - 1] = $objectvar;
     asort($arrayoftrigger);
 }
@@ -69,6 +120,17 @@ foreach ($steps as $key => $step) {
     $ncourses = $DB->count_records('tool_lifecycle_process',
         array('stepindex' => $stepobject->sortindex, 'workflowid' => $workflowid));
     $stepobject->numberofcourses = $ncourses;
+    $stepobject->show = $OUTPUT->action_icon(new \moodle_url($url,
+            array('action' => action::STEP_INSTANCE_FORM,
+                'subplugin' => $stepobject->id,
+                'sesskey' => sesskey(),
+                'workflowid' => $workflowid)),
+            new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+            null, array('title' => $alt)) . ' ';
+    $stepobject->highlight = false;
+    if ($stepid == $stepobject->sortindex) {
+        $stepobject->highlight = true;
+    }
     $arrayofsteps[$stepobject->sortindex - 1] = $stepobject;
 }
 asort($arrayofsteps);
@@ -79,6 +141,7 @@ $url = new moodle_url("/admin/tool/lifecycle/workflowoverview.php", array('wf' =
 
 $data = [
     'trigger' => $arrayoftrigger,
+    'triggered' => get_string('triggered', 'tool_lifecycle', ['courses' => $countcourses, 'triggered' => $counttriggered, 'excluded' => $countexcluded]),
     'steps' => $arrayofsteps,
     'listofcourses' => $arrayofcourses,
     'steplink' => $url

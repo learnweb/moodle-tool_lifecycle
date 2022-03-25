@@ -148,7 +148,7 @@ class admin_page_workflow_overview extends \admin_externalpage {
     public function __construct() {
         $url = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php');
         parent::__construct('tool_lifecycle_workflowoverview',
-            get_string('workflowoverview_list_header', 'tool_lifecycle'),
+            get_string('workflowoverview_admin', 'tool_lifecycle'),
             $url);
     }
 }

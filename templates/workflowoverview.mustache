@@ -35,18 +35,27 @@
 <link rel="stylesheet" href="scss/styles.scss">
 <div class="workflow wf-trigger-wrapper">
 {{#trigger}}
-    <div class="workflow-trigger workflow-item">
-        <strong>{{instancename}}</strong><br> {{subpluginname}}
+    <div class="workflow-single-trigger-wrapper">
+        <div class="workflow-trigger workflow-item">
+            <strong>{{instancename}}</strong> &nbsp; {{{show}}} <br> {{subpluginname}}
+        </div>
     </div>
 {{/trigger}}
+    <div class="workflow-single-trigger-wrapper">
+        <div class="workflow-trigger workflow-item">
+            {{triggered}}
+        </div>
+    </div>
 </div>
 <div class="wf-wrapper">
     <div class="wf-steps-wrapper">
         {{#steps}}
             <div class="workflow-single-step-wrapper">
-                <div class="workflow-step workflow-item">
-                    <strong>{{instancename}}</strong> &nbsp; <a href="{{steplink}}&step={{sortindex}}">{{icon}}{{name}}<span class="wf-course-counter">{{#pix}} i/courseevent, core, {{#str}} affcourses, tool_lifecycle{{/str}} {{/pix}} {{numberofcourses}}</span></a><br><em>{{subpluginname}}</em>
-                </div>
+                {{#highlight}}<div class="workflow-step-highlight">{{/highlight}}
+                    <div class="workflow-step workflow-item">
+                        <strong>{{instancename}}</strong> &nbsp; <a href="{{steplink}}&step={{sortindex}}">{{icon}}{{name}}<span class="wf-course-counter">{{#pix}} i/courseevent, core, {{#str}} affcourses, tool_lifecycle{{/str}} {{/pix}} {{numberofcourses}}</span></a> &nbsp; {{{show}}}<br><em>{{subpluginname}}</em>
+                    </div>
+                {{#highlight}}</div>{{/highlight}}
             </div>
         {{/steps}}
     </div>

@@ -225,8 +225,10 @@ $string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} new tool_lifec
 
 // Workflowoverview.
 $string['workflowoverview'] = 'Overview of Workflow';
-$string['workflowoverview_list_header'] = 'Details of Workflows';
+$string['workflowoverview_list_header'] = 'Details of Workflow: ';
+$string['workflowoverview_admin'] = 'Details of Workflows';
 $string['affcourses'] = 'Affected Courses';
 $string['coursestartdate'] = 'Course start date';
 $string['category'] = 'Category';
+$string['triggered'] = 'Total Courses: {$a->courses}, Courses to trigger: {$a->triggered}, Courses to be excluded: {$a->excluded}';
 
