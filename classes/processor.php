@@ -100,8 +100,7 @@ class processor {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function check_trigger($workflowid): stdClass
-    {
+    public function check_trigger($workflowid): stdClass {
         $exclude = array();
         $values = new stdClass();
         $values->countcourses = 0;

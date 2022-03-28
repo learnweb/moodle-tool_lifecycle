@@ -109,7 +109,8 @@ $values = $processor->check_trigger($workflowid);
 
 $data = [
     'trigger' => $arrayoftrigger,
-    'triggered' => get_string('triggered', 'tool_lifecycle', ['courses' => $values->countcourses, 'triggered' => $values->counttriggered, 'excluded' => $values->countexcluded]),
+    'triggered' => get_string('triggered', 'tool_lifecycle',
+        ['courses' => $values->countcourses, 'triggered' => $values->counttriggered, 'excluded' => $values->countexcluded]),
     'steps' => $arrayofsteps,
     'steplink' => $url
 ];
