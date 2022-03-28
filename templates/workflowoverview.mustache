@@ -68,8 +68,8 @@
                         <th>{{# str }} coursestartdate, tool_lifecycle {{/ str }}</th>
                         <th>{{# str }} category, tool_lifecycle {{/ str }}</th>
                         <th>{{# str }} status, tool_lifecycle {{/ str }}</th>
-                        <th>{{# str }} tools, tool_lifecycle {{/ str }}</th>
-                        <th>{{# str }} date, tool_lifecycle {{/ str }}</th>
+                        <th>{{# str }} proceed, tool_lifecycle {{/ str }}</th>
+                        <th>{{# str }} rollback, tool_lifecycle {{/ str }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -79,8 +79,8 @@
                             <td>{{#userdate}}{{{startdate}}}, %d.%m.%y {{/userdate}}</td>
                             <td>{{category}}</td>
                             <td>{{{status}}}</td>
-                            <td>{{{tools}}}</td>
-                            <td>{{date}}</td>
+                            <td>{{{proceed}}}</td>
+                            <td>{{{rollback}}}</td>
                         </tr>
                     {{/courses}}
                 </tbody>

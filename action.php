@@ -23,6 +23,8 @@
  */
 require_once(__DIR__ . '/../../../config.php');
 
+use tool_lifecycle\local\manager\delayed_courses_manager;
+use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\interaction_manager;
 use tool_lifecycle\local\table\interaction_attention_table;
@@ -42,27 +44,34 @@ $triggerid = optional_param('triggerid', null, PARAM_INT);
 $courseid = optional_param('courseid', null, PARAM_INT);
 
 // Workflowoverview params.
-$workflowid = optional_param('workflowid', null, PARAM_INT);
 $sortindex = optional_param('step', null, PARAM_INT);
+$option = optional_param('option', null, PARAM_ALPHA);
 
 $controller = new \tool_lifecycle\view_controller();
 
-if ($workflowid && $sortindex) {
+if ($sortindex) {
+    $process = process_manager::get_process_by_id($processid);
+    if ($option == 'rollback') {
+        delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);
+        process_manager::rollback_process($process);
+    } else {
+        process_manager::proceed_process($process);
+    }
     $url = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php',
         array(
-            'wf' => $workflowid,
+            'wf' => $process->workflowid,
             'step' => $sortindex
         ));
+    redirect($url);
 } else {
     $url = new \moodle_url('/admin/tool/lifecycle/view.php');
-}
-
-if ($action !== null && $processid !== null && $stepid !== null) {
-    require_sesskey();
-    $controller->handle_interaction($action, $processid, $stepid, $url);
-    exit;
-} else if ($triggerid !== null && $courseid !== null) {
-    require_sesskey();
-    $controller->handle_trigger($triggerid, $courseid, $url);
-    exit;
+    if ($action !== null && $processid !== null && $stepid !== null) {
+        require_sesskey();
+        $controller->handle_interaction($action, $processid, $stepid, $url);
+        exit;
+    } else if ($triggerid !== null && $courseid !== null) {
+        require_sesskey();
+        $controller->handle_trigger($triggerid, $courseid, $url);
+        exit;
+    }
 }

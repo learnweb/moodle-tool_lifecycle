@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle;
 
+use stdClass;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\event\process_triggered;
 use tool_lifecycle\local\manager\process_manager;
@@ -89,6 +90,50 @@ class processor {
             mtrace("   $counttriggered courses triggered.");
             mtrace("   $countexcluded courses excluded.");
         }
+    }
+
+    /**
+     * Checks how many Courses are triggered in a specific Workflow.
+     *
+     * @param int $workflowid Id of Workflow to be checked.
+     * @return stdClass $values Amount of total courses, courses to be triggered and courses to be excluded.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    public function check_trigger($workflowid): stdClass
+    {
+        $exclude = array();
+        $values = new stdClass();
+        $values->countcourses = 0;
+        $values->counttriggered = 0;
+        $values->countexcluded = 0;
+        $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
+        $delayedcourses = delayed_courses_manager::get_delayed_courses_for_workflow($workflowid);
+        $recordset = $this->get_course_recordset($triggers, array_merge($exclude, $delayedcourses));
+        while ($recordset->valid()) {
+            $course = $recordset->current();
+            $values->countcourses++;
+            foreach ($triggers as $trigger) {
+                $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+                $response = $lib->check_course($course, $trigger->id);
+                if ($response == trigger_response::next()) {
+                    $recordset->next();
+                    continue 2;
+                }
+                if ($response == trigger_response::exclude()) {
+                    array_push($exclude, $course->id);
+                    $values->countexcluded++;
+                    $recordset->next();
+                    continue 2;
+                }
+                if ($response == trigger_response::trigger()) {
+                    continue;
+                }
+            }
+            $values->counttriggered++;
+            $recordset->next();
+        }
+        return $values;
     }
 
     /**

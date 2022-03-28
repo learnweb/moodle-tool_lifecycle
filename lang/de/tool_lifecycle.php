@@ -189,7 +189,9 @@ $string['notifyerrorsemailcontenthtml'] = '{$a->amount} neue fehlerhafte tool_li
 
 // Workflowoverview.
 $string['workflowoverview'] = 'Übersicht zum Workflow';
-$string['workflowoverview_list_header'] = 'Details zu Workflows';
+$string['workflowoverview_list_header'] = 'Details zu Workflow: ';
+$string['workflowoverview_admin'] = 'Details of Workflows';
 $string['affcourses'] = 'Beinhaltete Kurse';
 $string['coursestartdate'] = 'Kurs Startdatum';
 $string['category'] = 'Kategorie';
+$string['triggered'] = 'Kursanzahl: {$a->courses}, Beinflusste Kurse: {$a->triggered}, Ausgeschlossene Kurse: {$a->excluded}';

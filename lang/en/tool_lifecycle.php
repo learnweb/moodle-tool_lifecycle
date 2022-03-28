@@ -231,4 +231,3 @@ $string['affcourses'] = 'Affected Courses';
 $string['coursestartdate'] = 'Course start date';
 $string['category'] = 'Category';
 $string['triggered'] = 'Total Courses: {$a->courses}, Courses to trigger: {$a->triggered}, Courses to be excluded: {$a->excluded}';
-

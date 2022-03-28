@@ -58,38 +58,6 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
 
-$exclude = array();
-$countcourses = 0;
-$counttriggered = 0;
-$countexcluded = 0;
-$processor = new processor();
-$triggers = trigger_manager::get_triggers_for_workflow($workflowid);
-$delayedcourses = delayed_courses_manager::get_delayed_courses_for_workflow($workflowid);
-$recordset = $processor->get_course_recordset($triggers, array_merge($exclude, $delayedcourses));
-while ($recordset->valid()) {
-    $course = $recordset->current();
-    $countcourses++;
-    foreach ($triggers as $trigger) {
-        $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-        $response = $lib->check_course($course, $trigger->id);
-        if ($response == trigger_response::next()) {
-            $recordset->next();
-            continue 2;
-        }
-        if ($response == trigger_response::exclude()) {
-            array_push($exclude, $course->id);
-            $countexcluded++;
-            $recordset->next();
-            continue 2;
-        }
-        if ($response == trigger_response::trigger()) {
-            continue;
-        }
-    }
-    $counttriggered++;
-    $recordset->next();
-}
-
 $steps = $DB->get_records('tool_lifecycle_step', array('workflowid' => $workflowid));
 $trigger = $DB->get_records('tool_lifecycle_trigger', array('workflowid' => $workflowid));
 $alt = 'view';
@@ -101,7 +69,6 @@ foreach ($trigger as $key => $value) {
     // The array from the DB Function uses ids as keys.
     // Mustache cannot handle arrays which have other keys therefore a new array is build.
     // FUTURE: Nice to have Icon for each subplugin.
-    // FUTURE: Nice to have How many courses will be caught by the trigger?
     $objectvar = (object) $trigger[$key];
     $objectvar->show = $OUTPUT->action_icon(new \moodle_url($url,
             array('action' => action::STEP_INSTANCE_FORM,
@@ -135,15 +102,15 @@ foreach ($steps as $key => $step) {
 }
 asort($arrayofsteps);
 
-$arrayofcourses = array();
-
 $url = new moodle_url("/admin/tool/lifecycle/workflowoverview.php", array('wf' => $workflowid));
+
+$processor = new processor();
+$values = $processor->check_trigger($workflowid);
 
 $data = [
     'trigger' => $arrayoftrigger,
-    'triggered' => get_string('triggered', 'tool_lifecycle', ['courses' => $countcourses, 'triggered' => $counttriggered, 'excluded' => $countexcluded]),
+    'triggered' => get_string('triggered', 'tool_lifecycle', ['courses' => $values->countcourses, 'triggered' => $values->counttriggered, 'excluded' => $values->countexcluded]),
     'steps' => $arrayofsteps,
-    'listofcourses' => $arrayofcourses,
     'steplink' => $url
 ];
 
@@ -172,30 +139,23 @@ if ($stepid) {
             '<br><span class="workflow_displaytitle">' . $workflow->displaytitle . '</span>';
         }
 
-        // Tools.
-        $output = '';
-        $step = step_manager::get_step_instance($value->stepinstanceid);
-        $tools = interaction_manager::get_action_tools($step->subpluginname, $value->processid);
-        $url = '/admin/tool/lifecycle/action.php';
-        foreach ($tools as $tool) {
+        // Proceed and Rollback.
+        $buttons = ['proceed', 'rollback'];
+        foreach ($buttons as $but) {
+            $output = '';
+            $step = step_manager::get_step_instance($value->stepinstanceid);
+            $url = '/admin/tool/lifecycle/action.php';
             $button = new \single_button(new \moodle_url($url,
                 array(
                     'stepid' => $step->id,
-                    'action' => $tool['action'],
                     'processid' => $value->processid,
-                    'sesskey' => sesskey(),
-                    'workflowid' => $workflowid,
-                    'step' => $stepid
-                )), $tool['alt']
+                    'step' => $stepid,
+                    'option' => $but
+                )), get_string($but, 'tool_lifecycle')
             );
             $output .= $OUTPUT->render($button);
+            $value->$but = $output;
         }
-        $value->tools = $output;
-
-        // Due date.
-        $lib = lib_manager::get_step_interactionlib($value->subpluginname);
-        $date = $lib->get_due_date($value->processid, $value->stepinstanceid);
-        $value->date = $date;
     }
 
     $data['courses'] = array_values($listofcourses);
