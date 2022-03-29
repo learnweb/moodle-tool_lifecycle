@@ -140,7 +140,7 @@ class interaction_remaining_table extends interaction_table {
         }
 
         $menu = new \action_menu();
-        $menu->set_menu_left();
+        $menu->set_alignment(\action_menu::TR, \action_menu::BR);
         $menu->set_menu_trigger(get_string('action'));
 
         foreach ($actions as $action) {
