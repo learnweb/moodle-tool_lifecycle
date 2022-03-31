@@ -82,7 +82,7 @@ class backup_manager {
 
         // First check if the file was created.
         if (!file_exists($path . DIRECTORY_SEPARATOR . $archivefile)) {
-            return false;
+            throw new \moodle_exception(get_string('errornobackup', 'tool_lifecycle'));
         }
 
         $record->backupfile = $archivefile;
