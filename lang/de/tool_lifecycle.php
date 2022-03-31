@@ -187,3 +187,7 @@ $string['lifecycle_error_notify_task'] = 'Benachrichtigt die Administratoren bei
 $string['notifyerrorsemailsubject'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!';
 $string['notifyerrorsemailcontent'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!' . "\n" . 'Bitte besuchen Sie {$a->url}.';
 $string['notifyerrorsemailcontenthtml'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!<br>Bitte besuchen Sie <a href="{$a->url}">die Übersichtsseite</a>.';
+$string['errorbackuppath'] = "Ein Fehler ist aufgetreten beim Versuchen das Backup Verzeichnis zu erstellen.
+Ihnen fehlen wahrscheinlich die Berechtigung dazu. Bitte überprüfen Sie den Pfad unter
+Seitenadministration/Plugins/Dienstprogramme/Kurs-Lebenszyklus/Allgemein & Subplugins.";
+$string['errornobackup'] = "Es wurde kein Backup in dem angegebenen Pfad erstellt.";

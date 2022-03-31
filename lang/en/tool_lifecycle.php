@@ -223,3 +223,6 @@ $string['lifecycle_error_notify_task'] = 'Notify the admin upon errors in tool_l
 $string['notifyerrorsemailsubject'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!';
 $string['notifyerrorsemailcontent'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!' . "\n" . 'Please review them at {$a->url}.';
 $string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!<br>Please review them at the <a href="{$a->url}">error handling overview</a>.';
+$string['errorbackuppath'] = "Error while trying to create the backup directory. You might be missing the permission to do so.
+Please check your path at Site administration/Plugins/Admin tools/Life Cycle/General & subplugins/backup_path.";
+$string['errornobackup'] = "No backup was created at the specified directory, reasons unknown.";
