@@ -143,6 +143,7 @@ $string['nostepfound'] = 'Es konnte kein Schritt mit der gegeben Schrittid gefun
 $string['noprocessfound'] = 'Es konnte kein Prozess mit der gegebenen Prozessid gefunden werden!';
 
 $string['nocoursestodisplay'] = 'Es gibt derzeit keine Kurse, die Ihre Aufmerksamkeit erfordern!';
+$string['noremainingcoursestodisplay'] = 'Es gibt derzeit keine verbleibenden Kurse!';
 
 $string['course_backups_list_header'] = 'Kurssicherungen';
 $string['backupcreated'] = 'Erstellt am';
