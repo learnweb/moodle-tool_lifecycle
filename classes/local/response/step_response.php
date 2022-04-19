@@ -23,8 +23,6 @@
  */
 namespace tool_lifecycle\local\response;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Possible Responses of a Subplugin
  *

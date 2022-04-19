@@ -51,7 +51,7 @@ $string['general_settings_header'] = 'Allgemeine Einstellungen';
 $string['followedby_none'] = 'Keine';
 $string['invalid_workflow'] = 'Ungültige Workflowkonfiguration';
 $string['invalid_workflow_details'] = 'Gehe zur Detailanzeige, um einen Trigger für diesen Workflow zu erstellen.';
-$string['active_workflow_not_changeable'] = 'Die Workflow-Instanz wurde bereits aktiviert. Es ist nicht mehr möglich, Schritte zu ändern.';
+$string['active_workflow_not_changeable'] = 'Die Workflow-Instanz wurde bereits aktiviert. Je nach Schritt-Typ können dessen Einstellungen eventuell noch geändert werden. Änderungen an Trigger-Instanzen wirken sich nicht auf bereits getriggerte Kurse aus.';
 $string['active_workflow_not_removeable'] = 'Die Workflow-Instanz ist aktiv. Es ist nicht möglich, sie zu entfernen.';
 $string['workflow_not_removeable'] = 'Es ist nicht möglich, diese Workflow-Instanz zu entfernen. Vielleicht hat sie noch laufende Prozesse?';
 $string['invalid_workflow_cannot_be_activated'] = 'Der Workflow kann nicht aktiviert werden, da die Workflowdefinition ungültig ist';
@@ -143,6 +143,7 @@ $string['nostepfound'] = 'Es konnte kein Schritt mit der gegeben Schrittid gefun
 $string['noprocessfound'] = 'Es konnte kein Prozess mit der gegebenen Prozessid gefunden werden!';
 
 $string['nocoursestodisplay'] = 'Es gibt derzeit keine Kurse, die Ihre Aufmerksamkeit erfordern!';
+$string['noremainingcoursestodisplay'] = 'Es gibt derzeit keine verbleibenden Kurse!';
 
 $string['course_backups_list_header'] = 'Kurssicherungen';
 $string['backupcreated'] = 'Erstellt am';
@@ -175,3 +176,18 @@ $string['restore_trigger_does_not_exist'] = 'Der Trigger {$a} ist nicht installi
 $string['process_triggered_event'] = 'Ein Prozess wurde ausgelöst';
 $string['process_proceeded_event'] = 'Ein Prozess wurde fortgeführt';
 $string['process_rollback_event'] = 'Ein Prozess wurde zurückgesetzt';
+
+$string['courseid'] = 'Kurs-ID';
+$string['process_errors_header'] = 'Fehlermanagement';
+$string['proceed'] = 'Fortfahren';
+$string['forselected'] = 'Für alle ausgewählten Prozesse';
+$string['noprocesserrors'] = 'Es gibt keine fehlerhaften Prozesse, die behandelt werden müssen!';
+
+$string['lifecycle_error_notify_task'] = 'Benachrichtigt die Administratoren bei Fehlern in tool_lifecycle-Prozessen.';
+$string['notifyerrorsemailsubject'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!';
+$string['notifyerrorsemailcontent'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!' . "\n" . 'Bitte besuchen Sie {$a->url}.';
+$string['notifyerrorsemailcontenthtml'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!<br>Bitte besuchen Sie <a href="{$a->url}">die Übersichtsseite</a>.';
+$string['errorbackuppath'] = "Ein Fehler ist aufgetreten beim Versuchen das Backup Verzeichnis zu erstellen.
+Ihnen fehlen wahrscheinlich die Berechtigung dazu. Bitte überprüfen Sie den Pfad unter
+Seitenadministration/Plugins/Dienstprogramme/Kurs-Lebenszyklus/Allgemein & Subplugins.";
+$string['errornobackup'] = "Es wurde kein Backup in dem angegebenen Pfad erstellt.";

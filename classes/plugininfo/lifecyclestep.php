@@ -27,8 +27,6 @@ use core\plugininfo\base;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Pluginfo for life cycle step
  *

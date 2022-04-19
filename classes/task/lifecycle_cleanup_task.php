@@ -23,8 +23,6 @@
  */
 namespace tool_lifecycle\task;
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Scheduled task for cleanup past delays
  *

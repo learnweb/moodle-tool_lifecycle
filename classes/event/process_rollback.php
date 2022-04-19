@@ -27,8 +27,6 @@ namespace tool_lifecycle\event;
 use moodle_url;
 use tool_lifecycle\local\entity\process;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The process_rollback event class.
  *

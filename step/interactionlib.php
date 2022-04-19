@@ -31,8 +31,6 @@ use tool_lifecycle\local\entity\process;
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\response\step_interactive_response;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Interface for the interactions of the subplugintype step.
  *

@@ -112,7 +112,7 @@ jobs:
     steps:
       - name: Start MariaDB
         if: matrix.database == 'mariadb'
-        run: docker run -p 3306:3306 -e MYSQL_USER=root -e MYSQL_ALLOW_EMPTY_PASSWORD=true -d mariadb:10
+        run: docker run -p 3306:3306 -e MYSQL_USER=root -e MYSQL_ALLOW_EMPTY_PASSWORD=true -d mariadb:10.5
 
       - name: Start PostgreSQL
         if: matrix.database == 'pgsql'

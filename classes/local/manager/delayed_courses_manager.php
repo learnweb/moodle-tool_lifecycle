@@ -24,7 +24,6 @@
  */
 namespace tool_lifecycle\local\manager;
 
-defined('MOODLE_INTERNAL') || die();
 /**
  * Manager for Delayed Courses.
  *

@@ -61,17 +61,30 @@ foreach ($admins as $admin) {
         break; }
 }
 if ($isadmin) {
-    if ($action !== null && $processid !== null && $stepid !== null) {
-        require_sesskey();
-        $controller->handle_interaction($action, $processid, $stepid);
-        exit;
-    } else if ($triggerid !== null && $courseid !== null) {
-        require_sesskey();
-        $controller->handle_trigger($triggerid, $courseid);
-        exit;
-    }
+  $mform = new \tool_lifecycle\local\form\form_backups_filter();
 
-    $controller->handle_view($renderer);
+  // Cache handling.
+  $cache = cache::make('tool_lifecycle', 'mformdata');
+  if ($mform->is_cancelled()) {
+      $cache->delete('coursebackups_filter');
+      redirect($PAGE->url);
+  } else if ($data = $mform->get_data()) {
+      $cache->set('coursebackups_filter', $data);
+  } else {
+      $data = $cache->get('coursebackups_filter');
+      if ($data) {
+          $mform->set_data($data);
+      }
+  }
+
+  echo '<br>';
+
+  $mform->display();
+
+  echo '<br>';
+
+  $controller->handle_view($renderer, $data);
+
 } else {
     echo "Please contact out support for your request.";
 }

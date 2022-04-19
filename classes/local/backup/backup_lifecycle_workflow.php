@@ -31,8 +31,6 @@ use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\settings_type;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class to backup a workflow.
  * @package    tool_lifecycle
@@ -73,7 +71,7 @@ class backup_lifecycle_workflow {
         make_temp_directory('lifecycle');
         $this->tempfilename = $CFG->tempdir .'/lifecycle/'. md5(sesskey().microtime());
         if (!$handle = fopen($this->tempfilename, 'w+b')) {
-            print_error('cannotcreatetempdir');
+            throw new \moodle_exception('cannotcreatetempdir');
         }
         $this->writer = new \XMLWriter();
         $this->writer->openMemory();

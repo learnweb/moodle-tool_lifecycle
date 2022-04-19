@@ -27,8 +27,6 @@ use tool_lifecycle\local\entity\process;
 use tool_lifecycle\processor;
 use tool_lifecycle\local\response\step_interactive_response;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Manager to handle interactions by users
  *

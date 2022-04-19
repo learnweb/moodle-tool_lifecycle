@@ -22,10 +22,11 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_lifecycle\trigger;
+namespace lifecycletrigger_sitecourse;
 
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\response\trigger_response;
+use tool_lifecycle\trigger\sitecourse;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -40,7 +41,7 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_trigger_sitecourse_testcase extends \advanced_testcase {
+class trigger_test extends \advanced_testcase {
 
     /** @var trigger_subplugin $triggerinstance Instance of the trigger. */
     private $triggerinstance;

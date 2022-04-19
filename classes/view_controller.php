@@ -32,9 +32,7 @@ use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\table\interaction_log_table;
 use tool_lifecycle\local\table\interaction_remaining_table;
-use tool_lifecycle\local\table\interaction_attention_table;
-
-defined('MOODLE_INTERNAL') || die();
+use tool_lifecycle\local\table\interaction_attention_table;;
 
 /**
  * Controller for view.php
@@ -48,11 +46,12 @@ class view_controller {
      * Handles actions triggered in the view.php and displays the view.
      *
      * @param \renderer_base $renderer
+     * @param object $filterdata
      * @throws \coding_exception
      * @throws \dml_exception
      * @throws \invalid_parameter_exception
      */
-    public function handle_view($renderer) {
+    public function handle_view($renderer, $filterdata) {
         global $DB;
 
         $courses = get_user_capability_course('tool/lifecycle:managecourses', null, false);
@@ -91,7 +90,7 @@ class view_controller {
         }
 
         echo $renderer->heading(get_string('tablecoursesrequiringattention', 'tool_lifecycle'), 3);
-        $table1 = new interaction_attention_table('tool_lifecycle_interaction', $requiresinteraction);
+        $table1 = new interaction_attention_table('tool_lifecycle_interaction', $requiresinteraction, $filterdata);
 
         echo $renderer->box_start("managing_courses_tables");
         $table1->out(50, false);

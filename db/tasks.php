@@ -44,5 +44,14 @@ $tasks = array(
         'day' => '*',
         'month' => '*',
         'dayofweek' => '0',
-    )
+    ),
+    array(
+        'classname' => 'tool_lifecycle\task\lifecycle_error_notify_task',
+        'blocking' => 0,
+        'minute' => 'R',
+        'hour' => '5',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '0',
+    ),
 );
