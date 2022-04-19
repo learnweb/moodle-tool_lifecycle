@@ -90,7 +90,7 @@ class process_manager {
         $records = $DB->get_records('tool_lifecycle_process');
         $processes = array();
         foreach ($records as $record) {
-            $processes [] = process::from_record($record);
+            $processes[] = process::from_record($record);
         }
         return $processes;
     }
@@ -133,7 +133,7 @@ class process_manager {
         $records = $DB->get_records('tool_lifecycle_process', array('workflowid' => $workflowid));
         $processes = array();
         foreach ($records as $record) {
-            $processes [] = process::from_record($record);
+            $processes[] = process::from_record($record);
         }
         return $processes;
     }

@@ -104,15 +104,15 @@ class step_table extends \table_sql {
             get_string('step_subpluginname', 'tool_lifecycle'),
             ];
         if (! workflow_manager::is_editable($this->workflowid)) {
-            $columns [] = 'show_action';
-            $headers [] = get_string('step_show', 'tool_lifecycle');
+            $columns[] = 'show_action';
+            $headers[] = get_string('step_show', 'tool_lifecycle');
         } else {
-            $columns [] = 'sortindex';
-            $headers [] = get_string('step_sortindex', 'tool_lifecycle');
-            $columns [] = 'edit';
-            $headers [] = get_string('step_edit', 'tool_lifecycle');
-            $columns [] = 'delete';
-            $headers [] = get_string('step_delete', 'tool_lifecycle');
+            $columns[] = 'sortindex';
+            $headers[] = get_string('step_sortindex', 'tool_lifecycle');
+            $columns[] = 'edit';
+            $headers[] = get_string('step_edit', 'tool_lifecycle');
+            $columns[] = 'delete';
+            $headers[] = get_string('step_delete', 'tool_lifecycle');
         }
         $this->define_columns($columns);
         $this->define_headers($headers);
