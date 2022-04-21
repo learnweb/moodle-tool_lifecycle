@@ -22,6 +22,7 @@
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_lifecycle;
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/generator/lib.php');
@@ -34,7 +35,6 @@ use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\entity\workflow;
-use tool_lifecycle\settings_type;
 
 /**
  * Tests the field is manual after activating workflows.
@@ -44,7 +44,7 @@ use tool_lifecycle\settings_type;
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_backup_and_restore_workflow_testcase extends \advanced_testcase {
+class backup_and_restore_workflow_test extends \advanced_testcase {
 
     /** @var $workflow workflow */
     private $workflow;
@@ -54,7 +54,7 @@ class tool_lifecycle_backup_and_restore_workflow_testcase extends \advanced_test
 
     /**
      * Setup the testcase.
-     * @throws coding_exception
+     * @throws \coding_exception
      */
     public function setUp() : void {
         $this->resetAfterTest(true);
