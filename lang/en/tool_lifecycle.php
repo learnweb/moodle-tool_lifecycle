@@ -25,6 +25,7 @@
 
 $string['pluginname'] = 'Life Cycle';
 $string['plugintitle'] = 'Course Life Cycle';
+$string['cachedef_mformdata'] = 'Caches the mform data.';
 
 $string['lifecycle:managecourses'] = 'May manage courses in tool_lifecycle';
 $string['managecourses_link'] = 'Manage courses';
