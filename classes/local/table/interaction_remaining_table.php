@@ -25,6 +25,7 @@ namespace tool_lifecycle\local\table;
 
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\data\manual_trigger_tool;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -139,7 +140,6 @@ class interaction_remaining_table extends interaction_table {
         }
 
         $menu = new \action_menu();
-        $menu->set_alignment(\action_menu::TR, \action_menu::BR);
         $menu->set_menu_trigger(get_string('action'));
 
         foreach ($actions as $action) {
