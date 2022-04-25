@@ -27,5 +27,6 @@ $string['privacy:metadata'] = 'This subplugin does not store any personal data.'
 
 $string['dates'] = 'Dates at which the workflow should run.';
 $string['dates_desc'] = 'Write one date per line with the format Day.Month';
+$string['dates_desc_help'] = 'One date per line for example: 04.08 , for 4th of august. If you are putting todays date it will be triggered';
 $string['timelastrun'] = 'Date when the trigger last run.';
 $string['dates_not_parseable'] = 'Dates must be of the format Day.Month';

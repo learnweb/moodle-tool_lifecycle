@@ -64,38 +64,24 @@ class specificdate extends base_automatic {
      */
     public function get_course_recordset_where($triggerid) {
         $settings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
-        $lastrun = getdate($settings['timelastrun']);
         $datesraw = $settings['dates'];
         $dates = $this->parse_dates($datesraw);
-
-        $triggerat = array();
-
-        foreach ($dates as $dateparts) {
-            if ($dateparts['mon'] > $lastrun['mon']) {
-                $date = new DateTime($lastrun['year'].'-'.$dateparts['mon'].'-'.$dateparts['day']);
-            } else if ($dateparts['mon'] === $lastrun['mon']) {
-                if ($dateparts['day'] > $lastrun['day']) {
-                    $date = new DateTime($lastrun['year'].'-'.$dateparts['mon'].'-'.$dateparts['day']);
-                } else {
-                    $date = new DateTime(($lastrun['year'] + 1) .'-'.$dateparts['mon'].'-'.$dateparts['day']);
-                }
-            } else {
-                $date = new DateTime(($lastrun['year'] + 1) .'-'.$dateparts['mon'].'-'.$dateparts['day']);
-            }
-
-            $triggerat[] = $date->getTimestamp();
-        }
-
-        sort($triggerat);
-
+        $lastrun = getdate($settings['timelastrun']);
         $current = time();
+        $today = getdate($current);
 
-        foreach ($triggerat as $timestamp) {
-            if ($timestamp < $current) {
-                $settings['timelastrun'] = $current;
-                $trigger = trigger_manager::get_instance($triggerid);
-                settings_manager::save_settings($triggerid, settings_type::TRIGGER, $trigger->subpluginname, $settings);
-                return array('true', array());
+        foreach ($dates as $date) {
+            // We want to trigger only if the $date is today.
+            if ($date['mon'] == $today['mon'] && $date['day'] == $today['mday']) {
+                // Now only make sure if $lastrun was today -> don't trigger.
+                if ($lastrun['yday'] == $today['yday'] && $lastrun['year'] == $today['year']) {
+                    continue;
+                } else {
+                    $settings['timelastrun'] = $current;
+                    $trigger = trigger_manager::get_instance($triggerid);
+                    settings_manager::save_settings($triggerid, settings_type::TRIGGER, $trigger->subpluginname, $settings);
+                    return array('true', array());
+                }
             }
         }
         return array('false', array());
