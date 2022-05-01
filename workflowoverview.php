@@ -27,17 +27,16 @@ require_once(__DIR__ . '/adminlib.php');
 use tool_lifecycle\local\table\interaction_attention_table;
 
 global $OUTPUT, $PAGE, $DB;
-$PAGE->set_context(context_system::instance());
-require_login(null, false);
-require_capability('moodle/site:config', context_system::instance());
+
 admin_externalpage_setup('tool_lifecycle_workflowoverview');
+$PAGE->set_context(context_system::instance());
 
 $workflowid = required_param('wf', PARAM_INT);
 $stepid = optional_param('step', 0, PARAM_INT);
 $triggerid = optional_param('trigger', 0, PARAM_INT);
 
 $PAGE->set_pagelayout('standard');
-$PAGE->set_url(new \moodle_url("/admin/tool/lifecycle/workflowoverview.php"));
+$PAGE->set_url(new \moodle_url("/admin/tool/lifecycle/workflowoverview.php", ['wf' => $workflowid]));
 $PAGE->set_title(get_string('workflowoverview_list_header', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('workflowoverview_list_header', 'tool_lifecycle'));
 
@@ -47,6 +46,10 @@ echo $renderer->header();
 $steps = $DB->get_records('tool_lifecycle_step', array('workflowid' => $workflowid));
 $trigger = $DB->get_records('tool_lifecycle_trigger', array('workflowid' => $workflowid));
 
+$str = [
+    'edit' => get_string('edit'),
+];
+
 $arrayoftrigger = array();
 foreach ($trigger as $key => $value) {
     // The array from the DB Function uses ids as keys.
@@ -54,6 +57,11 @@ foreach ($trigger as $key => $value) {
     // FUTURE: Nice to have Icon for each subplugin.
     // FUTURE: Nice to have How many courses will be caught by the trigger?
     $objectvar = (object) $trigger[$key];
+    $actionmenu = new action_menu([
+        new action_menu_link_secondary(new moodle_url('/asdf'), new pix_icon('i/edit', $str['edit']), $str['edit'])
+    ]);
+    $objectvar->actionmenu = $OUTPUT->render($actionmenu);
+
     $arrayoftrigger[$objectvar->sortindex - 1] = $objectvar;
     asort($arrayoftrigger);
 }
@@ -64,6 +72,10 @@ foreach ($steps as $key => $step) {
     $ncourses = $DB->count_records('tool_lifecycle_process',
         array('stepindex' => $stepobject->sortindex, 'workflowid' => $workflowid));
     $stepobject->numberofcourses = $ncourses;
+    $actionmenu = new action_menu([
+        new action_menu_link_secondary(new moodle_url('/asdf'), new pix_icon('i/edit', $str['edit']), $str['edit'])
+    ]);
+    $stepobject->actionmenu = $OUTPUT->render($actionmenu);
     $arrayofsteps[$stepobject->sortindex - 1] = $stepobject;
 }
 asort($arrayofsteps);

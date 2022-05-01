@@ -248,7 +248,7 @@ class admin_settings {
      */
     private function view_workflow_details($workflowid) {
         $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
-            array('workflowid' => $workflowid, 'sesskey' => sesskey()));
+            array('workflowid' => $workflowid));
         redirect($url);
     }
 

@@ -58,9 +58,9 @@ abstract class active_workflows_table extends workflow_table {
         $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
         $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
-            array('workflowid' => $row->id, 'sesskey' => sesskey()));
+            array('workflowid' => $row->id));
         $overviewurl = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php',
-            array('wf' => $row->id, 'sesskey' => sesskey()));
+            array('wf' => $row->id));
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null, array('title' => $alt));
         $output .= $OUTPUT->action_icon($overviewurl, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),

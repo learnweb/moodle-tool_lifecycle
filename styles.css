@@ -12,46 +12,73 @@
 span.tool_lifecycle-hint {
     text-decoration: underline dashed #444;
 }
-.workflow {
-    display: block;
+
+/* Workflowoverview */
+
+.wf-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1em 0;
+}
+
+.workflow-item,
+.workflow-trigger {
+    text-align: center;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    min-width: 200px;
 }
 
 .workflow-item {
-    text-align: center;
-    padding: 8px 14px 8px 14px;
-    margin-bottom: 5px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    margin-left: 2%;
+    box-shadow: 1px 1px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.workflow-trigger {
+    max-width: 300px;
+    margin: 8px;
+}
+
+.wf-header {
+    border-bottom: 1px solid #aaa;
+    line-height: 1;
+    display: flex;
+    padding: 8px 4px 8px 16px;
+    align-items: center;
+}
+
+.wf-header-text {
+    flex: auto 1 1;
+}
+
+.wf-actionmenu {
+    margin-left: 16px;
+}
+
+.wf-content {
+    padding: 8px;
+}
+
+.wf-arrow {
+    height: 32px;
+    width: 0;
+    border-left: 1px solid #777;
+}
+
+.wf-arrow::after {
+    display: block;
+    height: 8px;
+    width: 8px;
+    content: '';
+    border: 1px solid #777;
+    border-top: none;
+    border-right: none;
+    transform: translate(-4.5px, 23px) rotate(-45deg);
 }
 
 .workflow.wf-trigger-wrapper {
-    width: inherit;
-    /* fit underlying divs*/
-    height: 100px;
-    background-color: var(--wwu-success-bg);
-    border-color: var(--wwu-success-border);
-    color: var(--wwu-success-fg);
-}
-.workflow .workflow-trigger {
-    float: left;
-    width: 18%;
-    justify-content: space-between;
-}
-.wf-steps-wrapper {
-    width: 20%;
-    background-color: var(--wwu-info-bg);
-    border-color: var(--wwu-info-border);
-    color: var(--wwu-info-fg);
-}
-.workflow-single-step-wrapper .workflow-arrow-wrapper {
-    text-align: center;
-}
-.workflow .workflow-step {
-    /*text-align: center;*/
-    display: block;
-}
-.workflow .wf-course-counter {
-    text-align: right;
+    display: inline-flex;
+    margin-top: -8px;
+    flex-wrap: wrap;
+    justify-content: center;
 }

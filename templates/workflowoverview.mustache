@@ -32,20 +32,43 @@
     {
     }
 }}
-<link rel="stylesheet" href="scss/styles.scss">
-<div class="workflow wf-trigger-wrapper">
-{{#trigger}}
-    <div class="workflow-trigger workflow-item">
-        <strong>{{instancename}}</strong><br> {{subpluginname}}
+<div class="wf-wrapper">
+    <div class="wf-trigger-block workflow-item">
+        <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}}</h5>
+    <div class="workflow wf-trigger-wrapper">
+        {{#trigger}}
+            <div class="workflow-trigger">
+                <div class="wf-header">
+                    <div class="wf-header-text">
+                        <span>{{instancename}}</span><br>
+                        <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
+                    </div>
+                    <div class="wf-actionmenu">
+                        {{{ actionmenu }}}
+                    </div>
+                </div>
+                <div class="wf-content">
+                </div>
+            </div>
+        {{/trigger}}
     </div>
-{{/trigger}}
-</div>
-<div class="workflow wf-steps-wrapper">
+    </div>
     {{#steps}}
-        <div class="workflow-single-step-wrapper">
-            <div class="workflow-step workflow-item">
-                <div class="workflow-arrow-wrapper">{{#pix}} i/down, core, {{#str}} arrowdown, tool_lifecycle{{/str}} {{/pix}}</div>
-                <strong>{{instancename}}</strong> &nbsp; <a href="{{steplink}}&step={{sortindex}}">{{icon}}{{name}}<span class="wf-course-counter">{{#pix}} i/courseevent, core, {{#str}} affcourses, tool_lifecycle{{/str}} {{/pix}} {{numberofcourses}}</span></a><br><em>{{subpluginname}}</em>
+        <div class="wf-arrow"></div>
+        <div class="workflow-step workflow-item">
+            <div class="wf-header">
+                <div class="wf-header-text">
+                    <span>{{instancename}}</span><br>
+                    <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
+                </div>
+                <div class="wf-actionmenu">
+                    {{{ actionmenu }}}
+                </div>
+            </div>
+            <div class="wf-content">
+                <a href="{{steplink}}&step={{sortindex}}">{{icon}}{{name}}
+                {{#str}} courses {{/str}}: {{numberofcourses}}
+                </a>
             </div>
         </div>
     {{/steps}}
