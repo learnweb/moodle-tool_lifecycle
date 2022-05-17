@@ -46,113 +46,6 @@ require_once($CFG->libdir . '/adminlib.php');
 require_once(__DIR__ . '/lib.php');
 
 /**
- * External Page for showing active lifecycle processes
- *
- * @package tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class admin_page_active_processes extends \admin_externalpage {
-
-    /**
-     * The constructor - calls parent constructor
-     *
-     * @throws \moodle_exception
-     */
-    public function __construct() {
-        $url = new \moodle_url('/admin/tool/lifecycle/activeprocesses.php');
-        parent::__construct('tool_lifecycle_activeprocesses',
-            get_string('active_processes_list_header', 'tool_lifecycle'),
-            $url);
-    }
-}
-
-/**
- * External Page for showing deactivated lifecycle workflows
- *
- * @package tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class admin_page_deactivated_workflows extends \admin_externalpage {
-    /**
-     * admin_page_deactivated_workflows constructor.
-     * @throws \coding_exception
-     * @throws \moodle_exception
-     */
-    public function __construct() {
-        $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php');
-        parent::__construct('tool_lifecycle_deactivatedworkflows',
-            get_string('deactivated_workflows_list_header', 'tool_lifecycle'),
-            $url);
-    }
-}
-
-/**
- * External Page for showing course backups
- *
- * @package tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class admin_page_course_backups extends \admin_externalpage {
-
-    /**
-     * The constructor - calls parent constructor
-     *
-     * @throws \moodle_exception
-     */
-    public function __construct() {
-        $url = new \moodle_url('/admin/tool/lifecycle/coursebackups.php');
-        parent::__construct('tool_lifecycle_coursebackups',
-            get_string('course_backups_list_header', 'tool_lifecycle'),
-            $url);
-    }
-}
-
-/**
- * External Page for defining settings for subplugins
- *
- * @package tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class admin_page_sublugins extends \admin_externalpage {
-
-    /**
-     * The constructor - calls parent constructor
-     *
-     * @throws \moodle_exception
-     */
-    public function __construct() {
-        $url = new \moodle_url('/admin/tool/lifecycle/adminsettings.php');
-        parent::__construct('tool_lifecycle_adminsettings',
-            get_string('adminsettings_heading', 'tool_lifecycle'),
-            $url);
-    }
-}
-/**
- * External Page for showing active lifecycle processes
- *
- * @package tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class admin_page_workflow_overview extends \admin_externalpage {
-
-    /**
-     * The constructor - calls parent constructor
-     *
-     * @throws \moodle_exception
-     */
-    public function __construct() {
-        $url = new \moodle_url('/admin/tool/lifecycle/workflowoverview.php');
-        parent::__construct('tool_lifecycle_workflowoverview',
-            get_string('workflowoverview_list_header', 'tool_lifecycle'),
-            $url);
-    }
-}
-/**
  * Class that handles the display and configuration the settings.
  *
  * @package   tool_lifecycle
@@ -301,7 +194,7 @@ class admin_settings {
         $renderer = $PAGE->get_renderer('tool_lifecycle');
 
         // Has to be called before moodleform is created!
-        admin_externalpage_setup('tool_lifecycle_adminsettings');
+        admin_externalpage_setup('tool_lifecycle_workflow_drafts');
 
         workflow_manager::handle_action($action, $workflowid);
 
@@ -396,7 +289,7 @@ class workflow_settings {
     public function __construct($workflowid) {
         global $PAGE;
         // Has to be called before moodleform is created!
-        admin_externalpage_setup('tool_lifecycle_adminsettings');
+        admin_externalpage_setup('tool_lifecycle_active_workflows');
         $this->pageurl = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php');
         $PAGE->set_title(get_string('adminsettings_workflow_definition_steps_heading', 'tool_lifecycle'));
         $PAGE->set_url($this->pageurl);

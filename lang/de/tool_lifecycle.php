@@ -70,7 +70,9 @@ $string['trigger_sortindex'] = 'Hoch/Runter';
 $string['trigger_workflow'] = 'Workflow';
 
 $string['workflow'] = 'Workflow';
-$string['add_workflow'] = 'Workflow hinzufügen';
+$string['workflow_drafts_header'] = 'Workflow-Entwürfe';
+$string['active_workflow_header'] = 'Aktive Workflows';
+$string['add_workflow'] = 'Neuen Workflow hinzufügen';
 $string['upload_workflow'] = 'Workflow hochladen';
 $string['workflow_title'] = 'Titel';
 $string['workflow_title_help'] = 'Titel des Workflows (nur sichtbar für Admins).';

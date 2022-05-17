@@ -36,7 +36,7 @@ $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php')
 $PAGE->set_title(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));
 
-admin_externalpage_setup('tool_lifecycle_deactivatedworkflows');
+admin_externalpage_setup('tool_lifecycle_active_workflows');
 
 
 $workflowid = optional_param('workflowid', null, PARAM_INT);

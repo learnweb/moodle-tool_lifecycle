@@ -75,7 +75,9 @@ $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_workflow'] = 'Workflow';
 
 $string['workflow'] = 'Workflow';
-$string['add_workflow'] = 'Add workflow';
+$string['workflow_drafts_header'] = 'Workflow drafts';
+$string['active_workflow_header'] = 'Active workflows';
+$string['add_workflow'] = 'Create new workflow';
 $string['upload_workflow'] = 'Upload workflow';
 $string['workflow_title'] = 'Title';
 $string['workflow_title_help'] = 'Workflow title (visible for admins only).';

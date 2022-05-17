@@ -28,7 +28,7 @@ use tool_lifecycle\local\table\interaction_attention_table;
 
 global $OUTPUT, $PAGE, $DB;
 
-admin_externalpage_setup('tool_lifecycle_workflowoverview');
+admin_externalpage_setup('tool_lifecycle_active_workflows');
 $PAGE->set_context(context_system::instance());
 
 $workflowid = required_param('wf', PARAM_INT);
