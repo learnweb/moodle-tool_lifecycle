@@ -28,6 +28,7 @@ use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\urls;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -109,8 +110,8 @@ class workflow_definition_table extends workflow_table {
 
         $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
-        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
-            array('workflowid' => $row->id, 'sesskey' => sesskey()));
+        $url = new \moodle_url(urls::WORKFLOW_DETAILS,
+            array('wf' => $row->id));
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null, array('title' => $alt));
 
@@ -120,16 +121,21 @@ class workflow_definition_table extends workflow_table {
         }
 
         if (!isset($lib) || $lib->has_multiple_instances()) {
-
-            $action = action::WORKFLOW_INSTANCE_FROM;
             $alt = get_string('editworkflow', 'tool_lifecycle');
-            $icon = 't/edit';
-            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+            $output .= $OUTPUT->action_icon(new \moodle_url(urls::EDIT_WORKFLOW,
+                ['wf' => $row->id]),
+                new \pix_icon('t/edit', $alt, 'moodle', array('title' => $alt)),
+                null, array('title' => $alt));
 
             $action = action::WORKFLOW_DUPLICATE;
             $alt = get_string('duplicateworkflow', 'tool_lifecycle');
             $icon = 't/copy';
-            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+            $output .= $OUTPUT->action_icon(new \moodle_url(urls::WORKFLOW_DRAFTS,
+                    array('action' => $action,
+                        'workflowid' => $row->id,
+                        'sesskey' => sesskey())),
+                    new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                    null , array('title' => $alt)) . ' ';
 
             $action = action::WORKFLOW_BACKUP;
             $alt = get_string('backupworkflow', 'tool_lifecycle');

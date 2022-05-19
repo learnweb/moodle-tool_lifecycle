@@ -76,9 +76,10 @@ $string['trigger_workflow'] = 'Workflow';
 
 $string['workflow'] = 'Workflow';
 $string['workflow_drafts_header'] = 'Workflow drafts';
-$string['active_workflow_header'] = 'Active workflows';
+$string['active_workflows_header'] = 'Active workflows';
 $string['add_workflow'] = 'Create new workflow';
 $string['upload_workflow'] = 'Upload workflow';
+$string['create_workflow_from_existing'] = 'Copy new workflow from existing';
 $string['workflow_title'] = 'Title';
 $string['workflow_title_help'] = 'Workflow title (visible for admins only).';
 $string['workflow_displaytitle'] = 'Displayed workflow title';
@@ -117,7 +118,8 @@ $string['workflow_duplicate_title'] = '{$a} (Copy)';
 $string['deactivated_workflows_list'] = 'List deactivated workflows';
 $string['deactivated_workflows_list_header'] = 'Deactivated workflows';
 $string['workflow_timedeactive'] = 'Deactivated since';
-$string['active_workflows_list'] = 'List active workflows and workflow definitions';
+$string['active_workflows_list'] = 'List active workflows';
+$string['workflow_drafts_list'] = 'List workflow drafts';
 
 $string['step_type'] = 'Type';
 $string['step_subpluginname'] = 'Subplugin name';
@@ -231,7 +233,7 @@ Please check your path at Site administration/Plugins/Admin tools/Life Cycle/Gen
 $string['errornobackup'] = "No backup was created at the specified directory, reasons unknown.";
 
 // Workflowoverview.
-$string['workflowoverview'] = 'Overview of Workflow';
+$string['workflowoverview'] = 'View workflow';
 $string['workflowoverview_list_header'] = 'Details of Workflows';
 $string['affcourses'] = 'Affected Courses';
 $string['arrowdown'] = 'Pfeil der nach unten zeigt';

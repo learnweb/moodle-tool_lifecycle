@@ -71,9 +71,10 @@ $string['trigger_workflow'] = 'Workflow';
 
 $string['workflow'] = 'Workflow';
 $string['workflow_drafts_header'] = 'Workflow-Entwürfe';
-$string['active_workflow_header'] = 'Aktive Workflows';
+$string['active_workflows_header'] = 'Aktive Workflows';
 $string['add_workflow'] = 'Neuen Workflow hinzufügen';
 $string['upload_workflow'] = 'Workflow hochladen';
+$string['create_workflow_from_existing'] = 'Kopie von bestehendem Workflow erstellen';
 $string['workflow_title'] = 'Titel';
 $string['workflow_title_help'] = 'Titel des Workflows (nur sichtbar für Admins).';
 $string['workflow_displaytitle'] = 'Angezeigter Titel des Workflows';
@@ -111,7 +112,8 @@ $string['workflow_duplicate_title'] = '{$a} (Kopie)';
 $string['deactivated_workflows_list'] = 'Zeige deaktivierte Workflows';
 $string['deactivated_workflows_list_header'] = 'Deaktivierte Workflows';
 $string['workflow_timedeactive'] = 'Deaktiviert seit';
-$string['active_workflows_list'] = 'Zeige aktive Workflows und Workflowdefinitionen';
+$string['active_workflows_list'] = 'Zeige aktive Workflows';
+$string['workflow_drafts_list'] = 'Zeige Workflow-Entwürfe';
 
 $string['step_type'] = 'Typ';
 $string['step_subpluginname'] = 'Subpluginname';
@@ -195,7 +197,7 @@ Seitenadministration/Plugins/Dienstprogramme/Kurs-Lebenszyklus/Allgemein & Subpl
 $string['errornobackup'] = "Es wurde kein Backup in dem angegebenen Pfad erstellt.";
 
 // Workflowoverview.
-$string['workflowoverview'] = 'Übersicht zum Workflow';
+$string['workflowoverview'] = 'Workflow ansehen';
 $string['workflowoverview_list_header'] = 'Details zu Workflows';
 $string['affcourses'] = 'Beinhaltete Kurse';
 $string['arrowdown'] = 'Pfeil der nach unten zeigt';

@@ -45,11 +45,11 @@ if ($hassiteconfig) {
 
     $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_workflow_drafts',
         get_string('workflow_drafts_header', 'tool_lifecycle'),
-        new moodle_url('/admin/tool/lifecycle/adminsettings.php')));
+        new moodle_url('/admin/tool/lifecycle/workflowdrafts.php')));
 
     $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_active_workflows',
-        get_string('active_workflow_header', 'tool_lifecycle'),
-        new moodle_url('/admin/tool/lifecycle/adminsettings.php')));
+        get_string('active_workflows_header', 'tool_lifecycle'),
+        new moodle_url('/admin/tool/lifecycle/activeworkflows.php')));
 
     $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_coursebackups',
         get_string('course_backups_list_header', 'tool_lifecycle'),

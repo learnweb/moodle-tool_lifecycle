@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Displays the tables of active and inactive workflow definitions and handles all action associated with it.
+ * Displays a workflow in a nice visual form.
  *
  * @package tool_lifecycle
  * @copyright  2021 Nina Herrmann WWU
@@ -25,20 +25,23 @@ require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/adminlib.php');
 
 use tool_lifecycle\local\table\interaction_attention_table;
+use tool_lifecycle\urls;
 
 global $OUTPUT, $PAGE, $DB;
 
-admin_externalpage_setup('tool_lifecycle_active_workflows');
-$PAGE->set_context(context_system::instance());
-
 $workflowid = required_param('wf', PARAM_INT);
-$stepid = optional_param('step', 0, PARAM_INT);
-$triggerid = optional_param('trigger', 0, PARAM_INT);
 
-$PAGE->set_pagelayout('standard');
-$PAGE->set_url(new \moodle_url("/admin/tool/lifecycle/workflowoverview.php", ['wf' => $workflowid]));
+$workflow = \tool_lifecycle\local\manager\workflow_manager::get_workflow($workflowid);
+\tool_lifecycle\permission_and_navigation::setup_workflow($workflow);
+
+$PAGE->set_url(new \moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid]));
 $PAGE->set_title(get_string('workflowoverview_list_header', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('workflowoverview_list_header', 'tool_lifecycle'));
+
+$PAGE->navbar->add(get_string('workflowoverview', 'tool_lifecycle', $PAGE->url));
+
+$stepid = optional_param('step', 0, PARAM_INT);
+$triggerid = optional_param('trigger', 0, PARAM_INT);
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
@@ -82,7 +85,7 @@ asort($arrayofsteps);
 
 $arrayofcourses = array();
 
-$url = new moodle_url("/admin/tool/lifecycle/workflowoverview.php", array('wf' => $workflowid));
+$url = new moodle_url(urls::WORKFLOW_DETAILS, array('wf' => $workflowid));
 
 $data = [
     'trigger' => $arrayoftrigger,

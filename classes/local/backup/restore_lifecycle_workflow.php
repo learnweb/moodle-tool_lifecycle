@@ -213,4 +213,15 @@ class restore_lifecycle_workflow {
             }
         }
     }
+
+    /**
+     * Returns the workflow in case there were no errors.
+     * @return workflow
+     */
+    public function get_workflow() {
+        if (empty($this->errors)) {
+            return $this->workflow;
+        }
+        return null;
+    }
 }
