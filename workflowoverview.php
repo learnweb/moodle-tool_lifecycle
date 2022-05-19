@@ -22,9 +22,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(__DIR__ . '/../../../config.php');
-require_once(__DIR__ . '/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
+use tool_lifecycle\action;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\trigger_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\table\interaction_attention_table;
+use tool_lifecycle\settings_type;
 use tool_lifecycle\urls;
 
 global $OUTPUT, $PAGE, $DB;
@@ -34,65 +39,114 @@ $workflowid = required_param('wf', PARAM_INT);
 $workflow = \tool_lifecycle\local\manager\workflow_manager::get_workflow($workflowid);
 \tool_lifecycle\permission_and_navigation::setup_workflow($workflow);
 
-$PAGE->set_url(new \moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid]));
-$PAGE->set_title(get_string('workflowoverview_list_header', 'tool_lifecycle'));
-$PAGE->set_heading(get_string('workflowoverview_list_header', 'tool_lifecycle'));
+$iseditable = workflow_manager::is_editable($workflow->id);
 
-$PAGE->navbar->add(get_string('workflowoverview', 'tool_lifecycle', $PAGE->url));
+$PAGE->set_url(new \moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]));
+$PAGE->set_title($workflow->title);
+$PAGE->set_heading($workflow->title);
 
-$stepid = optional_param('step', 0, PARAM_INT);
-$triggerid = optional_param('trigger', 0, PARAM_INT);
+$stepid = optional_param('step', null, PARAM_INT);
+$triggerid = optional_param('trigger', null, PARAM_INT);
+$action = optional_param('action', null, PARAM_TEXT);
+
+if ($action) {
+    step_manager::handle_action($action, $stepid, $workflow->id);
+    trigger_manager::handle_action($action, $triggerid, $workflow->id);
+    redirect($PAGE->url);
+}
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
-echo $renderer->header();
-$steps = $DB->get_records('tool_lifecycle_step', array('workflowid' => $workflowid));
-$trigger = $DB->get_records('tool_lifecycle_trigger', array('workflowid' => $workflowid));
+$steps = \tool_lifecycle\local\manager\step_manager::get_step_instances($workflow->id);
+$triggers = \tool_lifecycle\local\manager\trigger_manager::get_triggers_for_workflow($workflow->id);
 
 $str = [
     'edit' => get_string('edit'),
+    'delete' => get_string('delete'),
+    'move_up' => get_string('move_up', 'tool_lifecycle'),
+    'move_down' => get_string('move_down', 'tool_lifecycle')
 ];
 
-$arrayoftrigger = array();
-foreach ($trigger as $key => $value) {
+foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
     // Mustache cannot handle arrays which have other keys therefore a new array is build.
     // FUTURE: Nice to have Icon for each subplugin.
     // FUTURE: Nice to have How many courses will be caught by the trigger?
-    $objectvar = (object) $trigger[$key];
-    $actionmenu = new action_menu([
-        new action_menu_link_secondary(new moodle_url('/asdf'), new pix_icon('i/edit', $str['edit']), $str['edit'])
-    ]);
-    $objectvar->actionmenu = $OUTPUT->render($actionmenu);
 
-    $arrayoftrigger[$objectvar->sortindex - 1] = $objectvar;
-    asort($arrayoftrigger);
+    $actionmenu = new action_menu([
+        new action_menu_link_secondary(
+            new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::TRIGGER, 'elementid' => $trigger->id]),
+            new pix_icon('i/edit', $str['edit']), $str['edit'])
+    ]);
+    if ($iseditable) {
+        $actionmenu->add(new action_menu_link_secondary(
+            new moodle_url($PAGE->url,
+                ['action' => action::TRIGGER_INSTANCE_DELETE, 'sesskey' => sesskey(), 'trigger' => $trigger->id]),
+            new pix_icon('t/delete', $str['delete']), $str['delete'])
+        );
+    }
+    $trigger->actionmenu = $OUTPUT->render($actionmenu);
 }
 
-$arrayofsteps = array();
-foreach ($steps as $key => $step) {
-    $stepobject = (object) $steps[$key];
+foreach ($steps as $step) {
     $ncourses = $DB->count_records('tool_lifecycle_process',
-        array('stepindex' => $stepobject->sortindex, 'workflowid' => $workflowid));
-    $stepobject->numberofcourses = $ncourses;
+        array('stepindex' => $step->sortindex, 'workflowid' => $workflowid));
+    $step->numberofcourses = $ncourses;
     $actionmenu = new action_menu([
-        new action_menu_link_secondary(new moodle_url('/asdf'), new pix_icon('i/edit', $str['edit']), $str['edit'])
+        new action_menu_link_secondary(
+            new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::STEP, 'elementid' => $step->id]),
+            new pix_icon('i/edit', $str['edit']), $str['edit'])
     ]);
-    $stepobject->actionmenu = $OUTPUT->render($actionmenu);
-    $arrayofsteps[$stepobject->sortindex - 1] = $stepobject;
+    if ($iseditable) {
+        $actionmenu->add(new action_menu_link_secondary(
+            new moodle_url($PAGE->url,
+                ['action' => action::STEP_INSTANCE_DELETE, 'sesskey' => sesskey(), 'step' => $step->id]),
+            new pix_icon('t/delete', $str['delete']), $str['delete'])
+        );
+        if ($step->sortindex > 1) {
+            $actionmenu->add(new action_menu_link_secondary(
+                new moodle_url($PAGE->url,
+                    ['action' => action::UP_STEP, 'sesskey' => sesskey(), 'step' => $step->id]),
+                new pix_icon('t/up', $str['move_up']), $str['move_up'])
+            );
+        }
+        if ($step->sortindex < count($steps)) {
+            $actionmenu->add(new action_menu_link_secondary(
+                    new moodle_url($PAGE->url,
+                        ['action' => action::DOWN_STEP, 'sesskey' => sesskey(), 'step' => $step->id]),
+                    new pix_icon('t/down', $str['move_down']), $str['move_down'])
+            );
+        }
+    }
+    $step->actionmenu = $OUTPUT->render($actionmenu);
 }
-asort($arrayofsteps);
 
 $arrayofcourses = array();
 
 $url = new moodle_url(urls::WORKFLOW_DETAILS, array('wf' => $workflowid));
 
 $data = [
-    'trigger' => $arrayoftrigger,
-    'steps' => $arrayofsteps,
+    'trigger' => array_values($triggers),
+    'steps' => array_values($steps),
     'listofcourses' => $arrayofcourses,
     'steplink' => $url
 ];
+
+echo $renderer->header();
+
+if (workflow_manager::is_editable($workflow->id)) {
+    $triggers = trigger_manager::get_chooseable_trigger_types();
+    echo $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
+        array('type' => settings_type::TRIGGER, 'wf' => $workflow->id)),
+        'subplugin', $triggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
+
+    $steps = step_manager::get_step_types();
+    echo '<span class="ml-1"></span>';
+    echo $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
+        array('type' => settings_type::STEP, 'wf' => $workflow->id)),
+        'subplugin', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
+}
+
 echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);
 if ($stepid) {
 

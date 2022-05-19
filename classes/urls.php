@@ -42,5 +42,7 @@ class urls {
     const UPLOAD_WORKFLOW = '/admin/tool/lifecycle/uploadworkflow.php';
     /** @var string Displays a nice visual representation of the workflow. */
     const WORKFLOW_DETAILS = '/admin/tool/lifecycle/workflowoverview.php';
+    /** @var string Edits settings of triggers and steps */
+    const EDIT_ELEMENT = '/admin/tool/lifecycle/editelement.php';
 
 }

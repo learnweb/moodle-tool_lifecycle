@@ -30,7 +30,7 @@ use tool_lifecycle\local\table\workflow_definition_table;
 use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
-require_once(__DIR__ . '/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 global $OUTPUT, $PAGE, $DB;
 
@@ -41,7 +41,7 @@ $returnurl = new moodle_url(urls::WORKFLOW_DRAFTS);
 
 if ($workflowid) {
     $workflow = workflow_manager::get_workflow($workflowid);
-    \tool_lifecycle\permission_and_navigation::setup_workflow($workflow);
+    \tool_lifecycle\permission_and_navigation::setup_workflow($workflow, false);
 
     $title = get_string('editworkflow', 'tool_lifecycle');
     $PAGE->set_url(new \moodle_url(urls::EDIT_WORKFLOW), ['wf' => $workflowid]);

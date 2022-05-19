@@ -46,7 +46,7 @@ class interaction_attention_table extends interaction_table {
      * @param int[] $courseids List of ids for courses that require attention.
      * @param object $filterdata Object of filter criteria
      */
-    public function __construct($uniqueid, $courseids, $filterdata) {
+    public function __construct($uniqueid, $courseids, $filterdata = null) {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
 

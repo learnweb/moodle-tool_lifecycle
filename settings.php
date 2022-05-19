@@ -24,7 +24,6 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-    require_once(__DIR__ . '/adminlib.php');
 
     $category = new admin_category('lifecycle_category',
         get_string('pluginname', 'tool_lifecycle'));

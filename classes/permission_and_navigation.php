@@ -37,8 +37,10 @@ class permission_and_navigation {
     /**
      * Check permission and setup breadcrumbs for the given workflow.
      * @param workflow $workflow
+     * @param bool $includeworkflowname whether to add the title of the workflow to the navbar. Default true.
      */
-    public static function setup_workflow(workflow $workflow) {
+    public static function setup_workflow(workflow $workflow, bool $includeworkflowname = true) {
+        global $PAGE;
         if (!$workflow) {
             throw new \coding_exception('Workflow does not exists!');
         }
@@ -48,6 +50,10 @@ class permission_and_navigation {
             self::setup_active();
         } else {
             self::setup_draft();
+        }
+
+        if ($includeworkflowname) {
+            $PAGE->navbar->add($workflow->title, new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]));
         }
     }
 
