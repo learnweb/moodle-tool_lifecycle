@@ -207,3 +207,6 @@ $string['edit_step'] = 'Step bearbeiten';
 $string['edit_trigger'] = 'Trigger bearbeiten';
 $string['move_up'] = 'Nach oben bewegen';
 $string['move_down'] = 'Nach unten bewegen';
+$string['courses_triggered'] = 'Kurse insgesamt getriggered: {$a}';
+$string['courses_excluded'] = 'Kurse insgesamt ausgeschlossen: {$a}';
+$string['courses_size'] = 'Kurse insgesamt genauer betrachtet: {$a}';

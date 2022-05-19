@@ -32,12 +32,38 @@
     {
     }
 }}
-<div class="wf-wrapper">
-    <div class="wf-trigger-block workflow-item">
-        <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}}</h5>
-    <div class="workflow wf-trigger-wrapper">
-        {{#trigger}}
-            <div class="workflow-trigger">
+<div class="d-flex" id="lifecycle-workflow-details">
+    <div class="wf-wrapper">
+        <div class="wf-trigger-block workflow-item">
+            <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}}</h5>
+            <div class="mb-2">
+                {{#str}} courses_triggered, tool_lifecycle, {{coursestriggered}} {{/str}}<br>
+                {{#str}} courses_excluded, tool_lifecycle, {{coursesexcluded}} {{/str}}<br>
+                {{#str}} courses_size, tool_lifecycle, {{coursesetsize}} {{/str}}
+            </div>
+            <div class="workflow wf-trigger-wrapper">
+                {{#trigger}}
+                    <div class="workflow-trigger">
+                        <div class="wf-header">
+                            <div class="wf-header-text">
+                                <span>{{instancename}}</span><br>
+                                <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
+                            </div>
+                            <div class="wf-actionmenu">
+                                {{{ actionmenu }}}
+                            </div>
+                        </div>
+                        <div class="wf-content">
+                            <span>Courses triggered: {{triggeredcourses}} </span><br>
+                            <span>Courses excluded: {{excludedcourses}} </span>
+                        </div>
+                    </div>
+                {{/trigger}}
+            </div>
+        </div>
+        {{#steps}}
+            <div class="wf-arrow"></div>
+            <div class="workflow-step workflow-item {{#selected}}wf-selected{{/selected}}">
                 <div class="wf-header">
                     <div class="wf-header-text">
                         <span>{{instancename}}</span><br>
@@ -48,31 +74,19 @@
                     </div>
                 </div>
                 <div class="wf-content">
+                    <a href="{{nosteplink}}&step={{id}}">{{icon}}{{name}}
+                    {{#str}} courses {{/str}}: {{numberofcourses}}
+                    </a>
                 </div>
             </div>
-        {{/trigger}}
+        {{/steps}}
     </div>
-    </div>
-    {{#steps}}
-        <div class="wf-arrow"></div>
-        <div class="workflow-step workflow-item">
-            <div class="wf-header">
-                <div class="wf-header-text">
-                    <span>{{instancename}}</span><br>
-                    <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
-                </div>
-                <div class="wf-actionmenu">
-                    {{{ actionmenu }}}
-                </div>
-            </div>
-            <div class="wf-content">
-                <a href="{{steplink}}&step={{sortindex}}">{{icon}}{{name}}
-                {{#str}} courses {{/str}}: {{numberofcourses}}
-                </a>
-            </div>
+{{# table }}
+    <div class="courses-table">
+        <div class="bar">
+            <a class="close-button" href="{{nosteplink}}">×</a>
         </div>
-    {{/steps}}
+        {{{ table }}}
+    </div>
+{{/table}}
 </div>
-{{#listofcourses}}
-    {{table}}
-{{/listofcourses}}

@@ -82,3 +82,35 @@ span.tool_lifecycle-hint {
     flex-wrap: wrap;
     justify-content: center;
 }
+
+.workflow-step.wf-selected {
+    border: 2px solid black;
+    background-color: rgba(0, 178, 255, 0.15);
+}
+
+#lifecycle-workflow-details .wf-wrapper {
+    flex: 60% 1 1;
+}
+
+#lifecycle-workflow-details .courses-table {
+    flex: 40% 1 1;
+    border: 1px solid #bbb;
+    border-right: none;
+}
+
+#lifecycle-workflow-details .bar {
+    border: 1px solid #dee2e6;
+    border-right: none;
+}
+
+#lifecycle-workflow-details .close-button {
+    cursor: pointer;
+    padding: 0 12px;
+    border-right: 1px solid #dee2e6;
+    display: inline-block;
+    font-size: 1.75em;
+}
+
+#lifecycle-workflow-details .close-button:hover {
+    text-decoration: none;
+}

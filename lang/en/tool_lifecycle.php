@@ -243,3 +243,6 @@ $string['edit_step'] = 'Edit step';
 $string['edit_trigger'] = 'Edit trigger';
 $string['move_up'] = 'Move up';
 $string['move_down'] = 'Move down';
+$string['courses_triggered'] = 'Courses triggered in total: {$a}';
+$string['courses_excluded'] = 'Courses excluded in total: {$a}';
+$string['courses_size'] = 'Courses gone through in detail: {$a}';

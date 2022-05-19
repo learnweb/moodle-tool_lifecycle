@@ -41,17 +41,32 @@ $workflow = \tool_lifecycle\local\manager\workflow_manager::get_workflow($workfl
 
 $iseditable = workflow_manager::is_editable($workflow->id);
 
-$PAGE->set_url(new \moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]));
+$stepid = optional_param('step', null, PARAM_INT);
+
+$params = ['wf' => $workflow->id];
+$nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
+
+if ($stepid) {
+    $params['step'] = $stepid;
+}
+$PAGE->set_url(new \moodle_url(urls::WORKFLOW_DETAILS, $params));
 $PAGE->set_title($workflow->title);
 $PAGE->set_heading($workflow->title);
 
-$stepid = optional_param('step', null, PARAM_INT);
-$triggerid = optional_param('trigger', null, PARAM_INT);
 $action = optional_param('action', null, PARAM_TEXT);
 
 if ($action) {
-    step_manager::handle_action($action, $stepid, $workflow->id);
-    trigger_manager::handle_action($action, $triggerid, $workflow->id);
+    step_manager::handle_action($action, optional_param('actionstep', null, PARAM_INT), $workflow->id);
+    trigger_manager::handle_action($action, optional_param('actiontrigger', null, PARAM_INT), $workflow->id);
+    $processid = optional_param('processid', null, PARAM_INT);
+    $process = \tool_lifecycle\local\manager\process_manager::get_process_by_id($processid);
+    if ($action === 'rollback') {
+        \tool_lifecycle\local\manager\process_manager::rollback_process($process);
+    } else if ($action === 'proceed') {
+        \tool_lifecycle\local\manager\process_manager::proceed_process($process);
+    } else {
+        throw new coding_exception('processid was specified but action was neither "rollback" nor "proceed"!');
+    }
     redirect($PAGE->url);
 }
 
@@ -67,6 +82,8 @@ $str = [
     'move_down' => get_string('move_down', 'tool_lifecycle')
 ];
 
+$amounts = (new \tool_lifecycle\processor())->get_count_of_courses_to_trigger_for_workflow($workflow->id);
+
 foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
     // Mustache cannot handle arrays which have other keys therefore a new array is build.
@@ -81,17 +98,22 @@ foreach ($triggers as $trigger) {
     if ($iseditable) {
         $actionmenu->add(new action_menu_link_secondary(
             new moodle_url($PAGE->url,
-                ['action' => action::TRIGGER_INSTANCE_DELETE, 'sesskey' => sesskey(), 'trigger' => $trigger->id]),
+                ['action' => action::TRIGGER_INSTANCE_DELETE, 'sesskey' => sesskey(), 'actiontrigger' => $trigger->id]),
             new pix_icon('t/delete', $str['delete']), $str['delete'])
         );
     }
     $trigger->actionmenu = $OUTPUT->render($actionmenu);
+    $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
+    $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
 }
 
 foreach ($steps as $step) {
     $ncourses = $DB->count_records('tool_lifecycle_process',
         array('stepindex' => $step->sortindex, 'workflowid' => $workflowid));
     $step->numberofcourses = $ncourses;
+    if ($step->id == $stepid) {
+        $step->selected = true;
+    }
     $actionmenu = new action_menu([
         new action_menu_link_secondary(
             new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::STEP, 'elementid' => $step->id]),
@@ -100,20 +122,20 @@ foreach ($steps as $step) {
     if ($iseditable) {
         $actionmenu->add(new action_menu_link_secondary(
             new moodle_url($PAGE->url,
-                ['action' => action::STEP_INSTANCE_DELETE, 'sesskey' => sesskey(), 'step' => $step->id]),
+                ['action' => action::STEP_INSTANCE_DELETE, 'sesskey' => sesskey(), 'actionstep' => $step->id]),
             new pix_icon('t/delete', $str['delete']), $str['delete'])
         );
         if ($step->sortindex > 1) {
             $actionmenu->add(new action_menu_link_secondary(
                 new moodle_url($PAGE->url,
-                    ['action' => action::UP_STEP, 'sesskey' => sesskey(), 'step' => $step->id]),
+                    ['action' => action::UP_STEP, 'sesskey' => sesskey(), 'actionstep' => $step->id]),
                 new pix_icon('t/up', $str['move_up']), $str['move_up'])
             );
         }
         if ($step->sortindex < count($steps)) {
             $actionmenu->add(new action_menu_link_secondary(
                     new moodle_url($PAGE->url,
-                        ['action' => action::DOWN_STEP, 'sesskey' => sesskey(), 'step' => $step->id]),
+                        ['action' => action::DOWN_STEP, 'sesskey' => sesskey(), 'actionstep' => $step->id]),
                     new pix_icon('t/down', $str['move_down']), $str['move_down'])
             );
         }
@@ -125,11 +147,24 @@ $arrayofcourses = array();
 
 $url = new moodle_url(urls::WORKFLOW_DETAILS, array('wf' => $workflowid));
 
+$out = null;
+if ($stepid) {
+    $table = new \tool_lifecycle\local\table\courses_in_step_table(step_manager::get_step_instance($stepid));
+    ob_start();
+    $table->out(30, false);
+    $out = ob_get_contents();
+    ob_end_clean();
+}
+
 $data = [
     'trigger' => array_values($triggers),
+    'coursestriggered' => $amounts['all']->triggered,
+    'coursesexcluded' => $amounts['all']->excluded,
+    'coursesetsize' => $amounts['all']->coursesetsize,
     'steps' => array_values($steps),
     'listofcourses' => $arrayofcourses,
-    'steplink' => $url
+    'nosteplink' => $nosteplink,
+    'table' => $out
 ];
 
 echo $renderer->header();
@@ -147,24 +182,7 @@ if (workflow_manager::is_editable($workflow->id)) {
         'subplugin', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
 }
 
-echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);
-if ($stepid) {
 
-    $listofcourses = $DB->get_records_sql("SELECT p.id as processid, c.id as courseid, c.fullname as coursefullname, " .
-        "c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname " .
-        "FROM {tool_lifecycle_process} p join " .
-        "{course} c on p.courseid = c.id join " .
-        "{tool_lifecycle_step} s ".
-        "on p.workflowid = s.workflowid AND p.stepindex = s.sortindex " .
-        "WHERE p.stepindex = :stepindex AND p.workflowid = :wfid;", array('stepindex' => $stepid, 'wfid' => $workflowid));
-    $listofids = array();
-    foreach ($listofcourses as $key => $value) {
-        $listofids = $value->courseid;
-        $objectvar = (object) $listofcourses[$key];
-        array_push($arrayofcourses, $objectvar);
-    }
-    asort($arrayofcourses);
-    $table = new interaction_attention_table('tool_lifecycle_interaction', $listofids);
-    $table->out(50, false);
-}
+echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);
+
 echo $renderer->footer();
