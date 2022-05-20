@@ -55,7 +55,7 @@ echo html_writer::link(new \moodle_url(urls::EDIT_WORKFLOW),
 echo html_writer::link(new \moodle_url(urls::UPLOAD_WORKFLOW),
     get_string('upload_workflow', 'tool_lifecycle'), ['class' => 'btn btn-secondary mx-1']);
 
-echo html_writer::link(new \moodle_url(urls::DEACTIVATED_WORKFLOWS, ['createnew' => '1']),
+echo html_writer::link(new \moodle_url(urls::CREATE_FROM_EXISTING),
     get_string('create_workflow_from_existing', 'tool_lifecycle'), ['class' => 'btn btn-secondary mx-1']);
 
 $table = new workflow_definition_table('tool_lifecycle_workflow_definitions');

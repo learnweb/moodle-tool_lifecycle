@@ -210,3 +210,9 @@ $string['move_down'] = 'Nach unten bewegen';
 $string['courses_triggered'] = 'Kurse insgesamt getriggered: {$a}';
 $string['courses_excluded'] = 'Kurse insgesamt ausgeschlossen: {$a}';
 $string['courses_size'] = 'Kurse insgesamt genauer betrachtet: {$a}';
+
+// Create copy from existing.
+$string['create_copy'] = 'Kopie erstellen';
+$string['active'] = 'Aktiv';
+$string['deactivated'] = 'Deaktiviert';
+$string['draft'] = 'Entwurf';

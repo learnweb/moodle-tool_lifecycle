@@ -44,5 +44,6 @@ class urls {
     const WORKFLOW_DETAILS = '/admin/tool/lifecycle/workflowoverview.php';
     /** @var string Edits settings of triggers and steps */
     const EDIT_ELEMENT = '/admin/tool/lifecycle/editelement.php';
-
+    /** @var string Edits settings of triggers and steps */
+    const CREATE_FROM_EXISTING = '/admin/tool/lifecycle/createworkflowfromexisting.php';
 }

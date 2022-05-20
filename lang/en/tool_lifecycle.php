@@ -246,3 +246,9 @@ $string['move_down'] = 'Move down';
 $string['courses_triggered'] = 'Courses triggered in total: {$a}';
 $string['courses_excluded'] = 'Courses excluded in total: {$a}';
 $string['courses_size'] = 'Courses gone through in detail: {$a}';
+
+// Create copy from existing workflow
+$string['create_copy'] = 'Create copy';
+$string['active'] = 'Active';
+$string['deactivated'] = 'Deactivated';
+$string['draft'] = 'Draft';
