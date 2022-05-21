@@ -34,10 +34,11 @@ $string['config_delay_duration'] = 'Standardlänge eines Kursausschlusses';
 $string['config_delay_duration_desc'] = 'Diese Einstellung definiert den Standardlänge einer Kursausschlusses in einem Workflow
  falls ein Prozess des Workflows zurückgesetzt oder beendigt wird. Die Länge des Kursausschlusses besagt, wie lange es dauert, bis
  der Kurs wieder vom Workflow bearbeitet wird.';
-$string['active_processes_list_header'] = 'Aktive Prozesse';
+$string['find_course_list_header'] = 'Kurse finden';
 $string['adminsettings_heading'] = 'Workflow-Einstellungen';
 $string['active_manual_workflows_heading'] = 'Aktive manuelle Workflows';
 $string['active_automatic_workflows_heading'] = 'Aktive automatische Workflows';
+$string['see_in_workflow'] = 'In Workflow ansehen';
 $string['workflow_definition_heading'] = 'Workflowdefinitionen';
 $string['adminsettings_edit_workflow_definition_heading'] = 'Workflowdefinition';
 $string['adminsettings_workflow_definition_steps_heading'] = 'Workflowschritte';

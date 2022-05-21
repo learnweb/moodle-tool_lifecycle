@@ -9,6 +9,10 @@
     padding: 0.5em;
 }
 
+.lifecycle-highlighted {
+    background-color: rgba(0, 178, 255, 0.15);
+}
+
 span.tool_lifecycle-hint {
     text-decoration: underline dashed #444;
 }

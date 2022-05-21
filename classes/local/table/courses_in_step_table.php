@@ -41,13 +41,17 @@ require_once($CFG->libdir . '/tablelib.php');
  */
 class courses_in_step_table extends \table_sql {
 
+    private $courseid;
+
     /**
      * Constructor for courses_in_step_table.
      * @param step_subplugin $step Id of the step.
      */
-    public function __construct($step) {
+    public function __construct($step, $courseid) {
         parent::__construct('tool_lifecycle-courses-in-step');
         global $PAGE;
+
+        $this->courseid = $courseid;
 
         $this->define_baseurl($PAGE->url);
         $this->define_columns(['courseid', 'coursefullname', 'startdate', 'tools']);
@@ -69,6 +73,33 @@ class courses_in_step_table extends \table_sql {
 
         $this->column_nosort = array('status', 'tools');
         $this->set_sql($fields, $from, $where, ['stepindex' => $step->sortindex, 'wfid' => $step->workflowid]);
+        if ($courseid) {
+            $this->set_sortdata([]);
+        }
+    }
+
+    public function jump_to_course($courseid, $pagesize) {
+        global $DB;
+        $params = $this->sql->params;
+        $params['courseid'] = $courseid;
+        $count = $DB->count_records_sql(
+            "SELECT COUNT (*) FROM {$this->sql->from} WHERE {$this->sql->where} AND c.id < :courseid",
+            $params);
+        $this->set_page_number(intdiv($count, $pagesize) + 1);
+    }
+
+    public function query_db($pagesize, $useinitialsbar = true) {
+        if ($this->courseid) {
+            $this->jump_to_course($this->courseid, $pagesize);
+        }
+        parent::query_db($pagesize, $useinitialsbar);
+    }
+
+    public function get_row_class($row) {
+        if ($row->courseid == $this->courseid) {
+            return 'table-primary';
+        }
+        return '';
     }
 
     /**

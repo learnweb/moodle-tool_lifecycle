@@ -43,7 +43,8 @@ class form_courses_filter extends \moodleform {
         $mform = $this->_form;
 
         $mform->addElement('text', 'courseid', get_string('courseid', 'tool_lifecycle'));
-        $mform->setType('courseid', PARAM_INT);
+        $mform->setType('courseid', PARAM_ALPHANUM);
+        $mform->addRule('courseid', null, 'numeric', null, 'client');
 
         $mform->addElement('text', 'shortname', get_string('shortname'));
         $mform->setType('shortname', PARAM_TEXT);

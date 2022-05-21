@@ -49,6 +49,9 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header(' ');
 
+echo html_writer::link(new moodle_url(urls::ACTIVE_PROCESSES),
+    get_string('find_course_list_header', 'tool_lifecycle'), ['class' => 'btn btn-secondary mb-3']);
+
 echo $OUTPUT->heading(get_string('active_automatic_workflows_heading', 'tool_lifecycle'));
 
 $table = new active_automatic_workflows_table('tool_lifecycle_active_automatic_workflows');

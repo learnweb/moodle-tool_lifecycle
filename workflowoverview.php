@@ -154,9 +154,11 @@ $url = new moodle_url(urls::WORKFLOW_DETAILS, array('wf' => $workflowid));
 
 $out = null;
 if ($stepid) {
-    $table = new \tool_lifecycle\local\table\courses_in_step_table(step_manager::get_step_instance($stepid));
+    $step = step_manager::get_step_instance($stepid);
+    $table = new \tool_lifecycle\local\table\courses_in_step_table($step,
+        optional_param('courseid', null, PARAM_INT));
     ob_start();
-    $table->out(30, false);
+    $table->out(20, false);
     $out = ob_get_contents();
     ob_end_clean();
 }
