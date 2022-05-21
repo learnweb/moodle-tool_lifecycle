@@ -83,6 +83,7 @@ $str = [
 ];
 
 $amounts = (new \tool_lifecycle\processor())->get_count_of_courses_to_trigger_for_workflow($workflow->id);
+$displaytotaltriggered = !empty($triggers);
 
 foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
@@ -103,8 +104,12 @@ foreach ($triggers as $trigger) {
         );
     }
     $trigger->actionmenu = $OUTPUT->render($actionmenu);
-    $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
-    $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
+    $trigger->automatic = $amounts[$trigger->sortindex]->automatic;
+    $displaytotaltriggered &= $trigger->automatic;
+    if ($trigger->automatic) {
+        $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
+        $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
+    }
 }
 
 foreach ($steps as $step) {
@@ -158,6 +163,7 @@ if ($stepid) {
 
 $data = [
     'trigger' => array_values($triggers),
+    'automatic' => $displaytotaltriggered,
     'coursestriggered' => $amounts['all']->triggered,
     'coursesexcluded' => $amounts['all']->excluded,
     'coursesetsize' => $amounts['all']->coursesetsize,

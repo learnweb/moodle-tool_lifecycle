@@ -239,19 +239,28 @@ class processor {
         $countexcluded = 0;
         $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
         $delayedcourses = delayed_courses_manager::get_delayed_courses_for_workflow($workflowid);
-        $recordset = $this->get_course_recordset($triggers, $delayedcourses);
         $amounts = [];
+        $autotriggers = [];
         foreach ($triggers as $trigger) {
             $obj = new \stdClass();
-            $obj->triggered = 0;
-            $obj->excluded = 0;
+            if (lib_manager::get_trigger_lib($trigger->subpluginname)->is_manual_trigger()) {
+                $obj->automatic = false;
+            } else {
+                $obj->automatic = true;
+                $obj->triggered = 0;
+                $obj->excluded = 0;
+                $autotriggers[] = $trigger;
+            }
             $amounts[$trigger->sortindex] = $obj;
         }
+
+        $recordset = $this->get_course_recordset($autotriggers, $delayedcourses);
+
         while ($recordset->valid()) {
             $course = $recordset->current();
             $countcourses++;
             $action = false;
-            foreach ($triggers as $trigger) {
+            foreach ($autotriggers as $trigger) {
                 $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                 $response = $lib->check_course($course, $trigger->id);
                 if ($response == trigger_response::next()) {
