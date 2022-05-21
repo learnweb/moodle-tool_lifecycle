@@ -32,7 +32,7 @@ admin_externalpage_setup('tool_lifecycle_coursebackups');
 
 $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/coursebackups.php'));
 
-$mform = new \tool_lifecycle\local\form\form_backups_filter();
+$mform = new \tool_lifecycle\local\form\form_courses_filter();
 
 // Cache handling.
 $cache = cache::make('tool_lifecycle', 'mformdata');

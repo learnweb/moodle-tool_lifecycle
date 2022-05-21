@@ -63,7 +63,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
 
-$mform = new \tool_lifecycle\local\form\form_backups_filter();
+$mform = new \tool_lifecycle\local\form\form_courses_filter();
 
 // Cache handling.
 $cache = cache::make('tool_lifecycle', 'mformdata');

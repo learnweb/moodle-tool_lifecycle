@@ -68,14 +68,19 @@ class interaction_attention_table extends interaction_table {
         $params = [];
 
         if ($filterdata) {
-            if ($filterdata && $filterdata->shortname) {
+            if ($filterdata->shortname) {
                 $where[] = $DB->sql_like('c.shortname', ':shortname', false, false);
                 $params['shortname'] = '%' . $DB->sql_like_escape($filterdata->shortname) . '%';
             }
 
-            if ($filterdata && $filterdata->fullname) {
+            if ($filterdata->fullname) {
                 $where[] = $DB->sql_like('c.fullname', ':fullname', false, false);
                 $params['fullname'] = '%' . $DB->sql_like_escape($filterdata->fullname) . '%';
+            }
+
+            if ($filterdata->courseid) {
+                $where[] = 'b.courseid = :courseid';
+                $params['courseid'] = $filterdata->courseid;
             }
         }
 
