@@ -83,7 +83,7 @@ class specificdate extends base_automatic {
                 $date = new DateTime(($lastrun['year'] + 1) .'-'.$dateparts['mon'].'-'.$dateparts['day']);
             }
 
-            $triggerat [] = $date->getTimestamp();
+            $triggerat[] = $date->getTimestamp();
         }
 
         sort($triggerat);
@@ -115,7 +115,7 @@ class specificdate extends base_automatic {
             if (count($dateparts) !== 2) {
                 throw new \moodle_exception("Each date has to consist of two parts devided by point. We got: " . $date);
             }
-            $result [] = array(
+            $result[] = array(
                 'mon' => $dateparts[1],
                 'day' => $dateparts[0]
             );
