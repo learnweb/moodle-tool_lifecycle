@@ -82,10 +82,10 @@ $string['workflow_displaytitle'] = 'Angezeigter Titel des Workflows';
 $string['workflow_displaytitle_help'] = 'Dieser Titel wird Nutzern beim Verwalten ihrer Kurse angezeigt.';
 $string['workflow_rollbackdelay'] = 'Kursauschluss beim Zurücksetzen';
 $string['workflow_rollbackdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs
- gestarted werden kann, nachdem der Kurs innerhalb eines Prozesses dieses Workflows zurückgesetzt wurde.';
+ gestartet werden kann, nachdem der Kurs innerhalb eines Prozesses dieses Workflows zurückgesetzt wurde.';
 $string['workflow_finishdelay'] = 'Kursauschluss bei Beendigung';
 $string['workflow_finishdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs
- gestarted werden kann, nachdem der Kurs einen Prozess dieses Workflows beendingt hat.';
+ gestartet werden kann, nachdem der Kurs einen Prozess dieses Workflows beendingt hat.';
 $string['workflow_delayforallworkflows'] = 'Ausschluss für alle Workflows?';
 $string['workflow_delayforallworkflows_help'] = 'Falls ja, wird ein Kurs für die oben genannte Zeit nicht nur von diesem, sondern
  von allen Workflows ausgeschlossen. Das heißt, bis die Zeit abgelaufen ist, kann kein Prozess für den Kurs gestartet werden.';
@@ -200,8 +200,6 @@ $string['errornobackup'] = "Es wurde kein Backup in dem angegebenen Pfad erstell
 // Workflowoverview.
 $string['workflowoverview'] = 'Workflow ansehen';
 $string['workflowoverview_list_header'] = 'Details zu Workflows';
-$string['affcourses'] = 'Beinhaltete Kurse';
-$string['arrowdown'] = 'Pfeil der nach unten zeigt';
 $string['create_step'] = 'Step erstellen';
 $string['create_trigger'] = 'Trigger erstellen';
 $string['edit_step'] = 'Step bearbeiten';
@@ -211,6 +209,19 @@ $string['move_down'] = 'Nach unten bewegen';
 $string['courses_triggered'] = 'Kurse insgesamt getriggered: {$a}';
 $string['courses_excluded'] = 'Kurse insgesamt ausgeschlossen: {$a}';
 $string['courses_size'] = 'Kurse insgesamt genauer betrachtet: {$a}';
+$string['details:displaytitle'] = 'Wird Lehrenden als <b>{$a}</b> angezeigt.';
+$string['details:rollbackdelay'] = 'Nachdem ein Kurs zurückgesetzt wird, wird er für <b>{$a}</b> verzögert.';
+$string['details:finishdelay'] = 'Nachdem ein Kurs einen Workflow beendet, wird er für <b>{$a}</b> verzögert.';
+$string['details:globaldelay_yes'] = 'Diese Verzögerungen gelten <b>für alle Workflows</b>.';
+$string['details:globaldelay_no'] = 'Diese Verzögerungen gelten <b>nur für diesen Workflow</b>.';
+$string['courses_will_be_triggered_total'] = '{$a} Kurse werden insgesamt getriggert';
+$string['courses_will_be_excluded_total'] = '{$a} Kurse werden insgesamt ausgeschlossen';
+$string['courses_will_be_triggered'] = '{$a} Kurse werden getriggert';
+$string['courses_will_be_excluded'] = '{$a} Kurse werden ausgeschlossen';
+$string['overview:trigger'] = 'Trigger';
+$string['overview:trigger_help'] = 'Ein Kurs fängt nur dann an, einen Workflow zu durchlaufen, wenn alle Trigger des Workflows dies übereinstimmend (UND-Verknüpfung) aussagen.<br><br>
+In den hier genannten Zahlen werden Kurse, die verzögert werden oder sich bereits in anderen Workflows befinden, nicht mitgezählt.<br>
+Trotzdem sind die Zahlen nur approximiert, da es sein könnte, dass die Kurse vor diesem einen anderen Workflow auslösen.';
 
 // Create copy from existing.
 $string['create_copy'] = 'Kopie erstellen';

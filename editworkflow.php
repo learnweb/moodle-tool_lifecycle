@@ -36,18 +36,12 @@ global $OUTPUT, $PAGE, $DB;
 
 $workflowid = optional_param('wf', null, PARAM_INT);
 
-// Return to drafts, or to deactivated workflows if workflow was deactivated
-$returnurl = new moodle_url(urls::WORKFLOW_DRAFTS);
-
 if ($workflowid) {
     $workflow = workflow_manager::get_workflow($workflowid);
     \tool_lifecycle\permission_and_navigation::setup_workflow($workflow, false);
 
     $title = get_string('editworkflow', 'tool_lifecycle');
     $PAGE->set_url(new \moodle_url(urls::EDIT_WORKFLOW), ['wf' => $workflowid]);
-    if ($workflow->timedeactive) {
-        $returnurl = new moodle_url(urls::DEACTIVATED_WORKFLOWS);
-    }
 } else {
     \tool_lifecycle\permission_and_navigation::setup_draft();
 
@@ -62,8 +56,13 @@ $PAGE->navbar->add($title, $PAGE->url);
 
 $form = new form_workflow_instance($PAGE->url, $workflow);
 if ($form->is_cancelled()) {
-    // Cancelled, redirect back to workflow drafts.
-    redirect($returnurl);
+    if ($workflowid) {
+        // Aborted updating workflow, redirect back to workflow details.
+        redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]));
+    } else {
+        // Aborted creating new workflow, redirect back to workflow drafts.
+        redirect(new moodle_url(urls::WORKFLOW_DRAFTS));
+    }
 }
 if ($data = $form->get_data()) {
     if ($data->id) {
@@ -80,13 +79,8 @@ if ($data = $form->get_data()) {
     }
     workflow_manager::insert_or_update($workflow);
 
-    if ($workflowid) {
-        // Workflow updated, redirect back to workflow drafts.
-        redirect($returnurl);
-    } else {
-        // New Workflow created, redirect to details page.
-        redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]));
-    }
+    // New Workflow created, redirect to details page.
+    redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]));
 }
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');

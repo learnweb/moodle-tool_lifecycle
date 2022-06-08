@@ -24,6 +24,8 @@
  */
 namespace tool_lifecycle\local\manager;
 
+use tool_lifecycle\local\entity\workflow;
+
 /**
  * Manager for Delayed Courses.
  *
@@ -38,7 +40,7 @@ class delayed_courses_manager {
      * Sets a delay for a course for specific workflow.
      * @param int $courseid Id of the course.
      * @param bool $becauserollback True, if the delay is caused by a rollback.
-     * @param int $workfloworid Id of the workflow.
+     * @param int|workflow $workfloworid Id of the workflow.
      * @throws \dml_exception
      */
     public static function set_course_delayed_for_workflow($courseid, $becauserollback, $workfloworid) {
@@ -134,6 +136,17 @@ class delayed_courses_manager {
         $where = "{course}.id IN (SELECT courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :now)";
         $params = array("now" => time());
         return array($where, $params);
+    }
+
+    /**
+     * Get the globally delayed courses.
+     * @return array array of course ids.
+     * @throws \dml_exception
+     */
+    public static function get_globally_delayed_courses() {
+        global $DB;
+        $sql = 'SELECT courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :now';
+        return $DB->get_fieldset_sql($sql, array('now' => time()));
     }
 
     /**

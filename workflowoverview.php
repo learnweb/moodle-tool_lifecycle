@@ -18,17 +18,17 @@
  * Displays a workflow in a nice visual form.
  *
  * @package tool_lifecycle
- * @copyright  2021 Nina Herrmann WWU
+ * @copyright  2021 Nina Herrmann and Justus Dieckmann, WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 use tool_lifecycle\action;
+use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
-use tool_lifecycle\local\table\interaction_attention_table;
 use tool_lifecycle\settings_type;
 use tool_lifecycle\urls;
 
@@ -59,13 +59,17 @@ if ($action) {
     step_manager::handle_action($action, optional_param('actionstep', null, PARAM_INT), $workflow->id);
     trigger_manager::handle_action($action, optional_param('actiontrigger', null, PARAM_INT), $workflow->id);
     $processid = optional_param('processid', null, PARAM_INT);
-    $process = \tool_lifecycle\local\manager\process_manager::get_process_by_id($processid);
-    if ($action === 'rollback') {
-        \tool_lifecycle\local\manager\process_manager::rollback_process($process);
-    } else if ($action === 'proceed') {
-        \tool_lifecycle\local\manager\process_manager::proceed_process($process);
-    } else {
-        throw new coding_exception('processid was specified but action was neither "rollback" nor "proceed"!');
+    if ($processid) {
+        $process = \tool_lifecycle\local\manager\process_manager::get_process_by_id($processid);
+        if ($action === 'rollback') {
+            \tool_lifecycle\local\manager\process_manager::rollback_process($process);
+            delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $workflow);
+        } else if ($action === 'proceed') {
+            \tool_lifecycle\local\manager\process_manager::proceed_process($process);
+            delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, false, $workflow);
+        } else {
+            throw new coding_exception('processid was specified but action was neither "rollback" nor "proceed"!');
+        }
     }
     redirect($PAGE->url);
 }
@@ -164,6 +168,13 @@ if ($stepid) {
 }
 
 $data = [
+    'triggerhelp' => $OUTPUT->help_icon('overview:trigger', 'tool_lifecycle', null),
+    'editsettingslink' => (new moodle_url(urls::EDIT_WORKFLOW, ['wf' => $workflow->id]))->out(false),
+    'title' => $workflow->title,
+    'displaytitle' => $workflow->displaytitle,
+    'rollbackdelay' => format_time($workflow->rollbackdelay),
+    'finishdelay' => format_time($workflow->finishdelay),
+    'delayglobally' => $workflow->delayforallworkflows,
     'trigger' => array_values($triggers),
     'automatic' => $displaytotaltriggered,
     'coursestriggered' => $amounts['all']->triggered,
@@ -178,16 +189,18 @@ $data = [
 echo $renderer->header();
 
 if (workflow_manager::is_editable($workflow->id)) {
+    $addinstance = '';
     $triggers = trigger_manager::get_chooseable_trigger_types();
-    echo $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
+    $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
         array('type' => settings_type::TRIGGER, 'wf' => $workflow->id)),
         'subplugin', $triggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
 
     $steps = step_manager::get_step_types();
-    echo '<span class="ml-1"></span>';
-    echo $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
+    $addinstance .= '<span class="ml-1"></span>';
+    $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
         array('type' => settings_type::STEP, 'wf' => $workflow->id)),
         'subplugin', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
+    $data['addinstance'] = $addinstance;
 }
 
 

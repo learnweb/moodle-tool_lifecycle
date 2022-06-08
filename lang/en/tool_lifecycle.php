@@ -236,17 +236,25 @@ $string['errornobackup'] = "No backup was created at the specified directory, re
 // Workflowoverview.
 $string['workflowoverview'] = 'View workflow';
 $string['workflowoverview_list_header'] = 'Details of Workflows';
-$string['affcourses'] = 'Affected Courses';
-$string['arrowdown'] = 'Pfeil der nach unten zeigt';
 $string['create_step'] = 'Create step';
 $string['create_trigger'] = 'Create trigger';
 $string['edit_step'] = 'Edit step';
 $string['edit_trigger'] = 'Edit trigger';
 $string['move_up'] = 'Move up';
 $string['move_down'] = 'Move down';
-$string['courses_triggered'] = 'Courses triggered in total: {$a}';
-$string['courses_excluded'] = 'Courses excluded in total: {$a}';
-$string['courses_size'] = 'Courses gone through in detail: {$a}';
+$string['details:displaytitle'] = 'Displayed to teachers as <b>{$a}</b>.';
+$string['details:rollbackdelay'] = 'When a course is rolled back, it will be delayed for <b>{$a}</b>.';
+$string['details:finishdelay'] = 'When a course has finished the workflow, it will be delayed for <b>{$a}</b>.';
+$string['details:globaldelay_yes'] = 'These delays apply <b>to all workflows</b>.';
+$string['details:globaldelay_no'] = 'These delays apply <b>only to this workflow</b>.';
+$string['courses_will_be_triggered_total'] = '{$a} courses will be triggered in total';
+$string['courses_will_be_excluded_total'] = '{$a} courses will be excluded in total';
+$string['courses_will_be_triggered'] = '{$a} Courses will be triggered';
+$string['courses_will_be_excluded'] = '{$a} Courses will be excluded';
+$string['overview:trigger'] = 'Trigger';
+$string['overview:trigger_help'] = 'A course will only trigger a workflow, if all triggers agree on it (AND operation).<br><br>
+Courses which are delayed, or already in another workflow are not included in the displayed counts.<br>
+Still, these numbers are only approximates, since it could be that a course is excluded by another workflow, or will trigger another workflow before this one.';
 
 // Create copy from existing workflow
 $string['create_copy'] = 'Create copy';

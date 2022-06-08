@@ -238,7 +238,12 @@ class processor {
         $counttriggered = 0;
         $countexcluded = 0;
         $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
-        $delayedcourses = delayed_courses_manager::get_delayed_courses_for_workflow($workflowid);
+
+        // Exclude globally delayed courses, courses delayed for this workflow, and the site course.
+        $exclude = delayed_courses_manager::get_globally_delayed_courses();
+        $exclude = array_merge($exclude, delayed_courses_manager::get_delayed_courses_for_workflow($workflowid));
+        $exclude []= SITEID;
+
         $amounts = [];
         $autotriggers = [];
         foreach ($triggers as $trigger) {
@@ -254,7 +259,7 @@ class processor {
             $amounts[$trigger->sortindex] = $obj;
         }
 
-        $recordset = $this->get_course_recordset($autotriggers, $delayedcourses);
+        $recordset = $this->get_course_recordset($autotriggers, $exclude);
 
         while ($recordset->valid()) {
             $course = $recordset->current();

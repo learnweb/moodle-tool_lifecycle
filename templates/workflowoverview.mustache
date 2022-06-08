@@ -34,13 +34,22 @@
 }}
 <div class="d-flex" id="lifecycle-workflow-details">
     <div class="wf-wrapper">
+        <div class="bg-light d-inline-block p-3 position-relative" style="max-width: 800px;">
+            <a class="edit-pen" href="{{{editsettingslink}}}">{{#pix}} i/edit, core, {{/pix}}</a>
+            <h4 class="pr-5">{{title}}</h4>
+            <span>{{#str}}details:displaytitle, tool_lifecycle, {{displaytitle}}{{/str}}</span><br>
+            <span>{{#str}}details:rollbackdelay, tool_lifecycle, {{rollbackdelay}}{{/str}}</span><br>
+            <span>{{#str}}details:finishdelay, tool_lifecycle, {{finishdelay}}{{/str}}</span><br>
+            <span>{{# delayglobally }}{{#str}}details:globaldelay_yes, tool_lifecycle{{/str}}{{/ delayglobally }}
+                {{^delayglobally}}{{#str}}details:globaldelay_no, tool_lifecycle{{/str}}{{/delayglobally}}</span>
+        </div>
+        <div class="mt-5 mb-3">{{{addinstance}}}</div>
         <div class="wf-trigger-block workflow-item">
-            <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}}</h5>
+            <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}} {{{triggerhelp}}}</h5>
             {{#automatic}}
                 <div class="mb-2 mx-2">
-                    {{#str}} courses_triggered, tool_lifecycle, {{coursestriggered}} {{/str}}<br>
-                    {{#str}} courses_excluded, tool_lifecycle, {{coursesexcluded}} {{/str}}<br>
-                    {{#str}} courses_size, tool_lifecycle, {{coursesetsize}} {{/str}}
+                    {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{coursestriggered}} {{/str}}<br>
+                    {{#str}} courses_will_be_excluded_total, tool_lifecycle, {{coursesexcluded}} {{/str}}<br>
                 </div>
             {{/automatic}}
             <div class="workflow wf-trigger-wrapper">
@@ -57,8 +66,8 @@
                         </div>
                         <div class="wf-content">
                             {{#automatic}}
-                            <span>Courses triggered: {{triggeredcourses}} </span><br>
-                            <span>Courses excluded: {{excludedcourses}} </span>
+                                <span>{{#str}} courses_will_be_triggered, tool_lifecycle, {{triggeredcourses}} {{/str}}</span><br>
+                                <span>{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}</span>
                             {{/automatic}}
                         </div>
                     </div>

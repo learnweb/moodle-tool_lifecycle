@@ -93,22 +93,6 @@ class deactivated_workflows_table extends workflow_table {
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null, array('title' => $alt));
 
-        $action = action::WORKFLOW_DUPLICATE;
-        $alt = get_string('duplicateworkflow', 'tool_lifecycle');
-        $icon = 't/copy';
-        $output .= $OUTPUT->action_icon(new \moodle_url(urls::WORKFLOW_DRAFTS,
-                array('action' => $action,
-                    'workflowid' => $row->id,
-                    'sesskey' => sesskey())),
-                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                null , array('title' => $alt)) . ' ';
-
-        $alt = get_string('editworkflow', 'tool_lifecycle');
-        $output .= $OUTPUT->action_icon(new \moodle_url(urls::EDIT_WORKFLOW,
-            ['wf' => $row->id]),
-            new \pix_icon('t/edit', $alt, 'moodle', array('title' => $alt)),
-            null, array('title' => $alt));
-
         if (workflow_manager::is_abortable($row->id)) {
             $alt = get_string('abortprocesses', 'tool_lifecycle');
             $icon = 't/stop';
@@ -120,7 +104,6 @@ class deactivated_workflows_table extends workflow_table {
                 $confirmaction,
                 array('title' => $alt)
             );
-
         }
 
         if (workflow_manager::is_removable($row->id)) {

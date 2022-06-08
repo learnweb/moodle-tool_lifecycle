@@ -121,22 +121,6 @@ class workflow_definition_table extends workflow_table {
         }
 
         if (!isset($lib) || $lib->has_multiple_instances()) {
-            $alt = get_string('editworkflow', 'tool_lifecycle');
-            $output .= $OUTPUT->action_icon(new \moodle_url(urls::EDIT_WORKFLOW,
-                ['wf' => $row->id]),
-                new \pix_icon('t/edit', $alt, 'moodle', array('title' => $alt)),
-                null, array('title' => $alt));
-
-            $action = action::WORKFLOW_DUPLICATE;
-            $alt = get_string('duplicateworkflow', 'tool_lifecycle');
-            $icon = 't/copy';
-            $output .= $OUTPUT->action_icon(new \moodle_url(urls::WORKFLOW_DRAFTS,
-                    array('action' => $action,
-                        'workflowid' => $row->id,
-                        'sesskey' => sesskey())),
-                    new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                    null , array('title' => $alt)) . ' ';
-
             $action = action::WORKFLOW_BACKUP;
             $alt = get_string('backupworkflow', 'tool_lifecycle');
             $icon = 't/backup';
