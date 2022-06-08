@@ -86,7 +86,7 @@ class workflow_definition_table extends workflow_table {
             return userdate($row->timeactive, get_string('strftimedatetime'), 0);
         }
         if (workflow_manager::is_valid($row->id)) {
-            return $OUTPUT->single_button(new \moodle_url($PAGE->url,
+            return $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
                 array('action' => action::WORKFLOW_ACTIVATE,
                     'sesskey' => sesskey(),
                     'workflowid' => $row->id)),
