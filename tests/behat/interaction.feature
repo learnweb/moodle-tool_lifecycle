@@ -16,19 +16,19 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
       | teacher1 | C2     | editingteacher |
       | teacher1 | C3     | editingteacher |
     And I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow settings" in site administration
-    And I press "Add workflow"
+    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow drafts" in site administration
+    And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
-    And I select "Start date delay trigger" from the "triggername" singleselect
+    And I select "Start date delay trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name    | My Trigger                 |
       | delay[number]    | 3                          |
       | delay[timeunit]  | days                       |
     And I press "Save changes"
-    And I select "Email step" from the "stepname" singleselect
+    And I select "Email step" from the "tool_lifecycle-choose-step" singleselect
     And I set the following fields to these values:
       | Instance name              | Email step                  |
       | responsetimeout[number]    | 8                           |
@@ -37,10 +37,10 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
       | Content plain text template           | Content                     |
       | Content HTML Template      | Content HTML                |
     And I press "Save changes"
-    And I select "Delete course step" from the "stepname" singleselect
+    And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 2"
     And I press "Save changes"
-    And I press "Back"
+    And I click on "Workflow drafts" "link"
     And I press "Activate"
     And I log out
 

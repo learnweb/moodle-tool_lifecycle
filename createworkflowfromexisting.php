@@ -61,7 +61,7 @@ if ($workflowid) {
         $newworkflow->displaytitle = $data->displaytitle;
         $newworkflow->rollbackdelay = $data->rollbackdelay;
         $newworkflow->finishdelay = $data->finishdelay;
-        $newworkflow->delayforallworkflows = $data->delayforallworkflows;
+        $newworkflow->delayforallworkflows = $data->delayforallworkflows ?? 0;
         workflow_manager::insert_or_update($newworkflow);
 
         // Workflow created, redirect to workflow detail page.

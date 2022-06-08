@@ -93,7 +93,6 @@ foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
     // Mustache cannot handle arrays which have other keys therefore a new array is build.
     // FUTURE: Nice to have Icon for each subplugin.
-    // FUTURE: Nice to have How many courses will be caught by the trigger?
 
     $actionmenu = new action_menu([
         new action_menu_link_secondary(
@@ -206,13 +205,15 @@ if (workflow_manager::is_editable($workflow->id)) {
 
     $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
         array('type' => settings_type::TRIGGER, 'wf' => $workflow->id)),
-        'subplugin', $selectabletriggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
+        'subplugin', $selectabletriggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')),
+        null, ['id' => 'tool_lifecycle-choose-trigger']);
 
     $steps = step_manager::get_step_types();
     $addinstance .= '<span class="ml-1"></span>';
     $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
         array('type' => settings_type::STEP, 'wf' => $workflow->id)),
-        'subplugin', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
+        'subplugin', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')),
+        null, ['id' => 'tool_lifecycle-choose-step']);
     $data['addinstance'] = $addinstance;
 }
 

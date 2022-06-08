@@ -50,6 +50,7 @@ class select_workflow_table extends \flexible_table {
         parent::__construct($uniqueid);
         global $PAGE;
         $this->set_attribute('class', 'lifecycle-table');
+        $this->set_attribute('id', $uniqueid);
         $this->define_baseurl($PAGE->url);
         $this->define_columns(['title', 'status', 'since', 'trigger', 'processes', 'tools']);
         $this->define_headers([
@@ -156,9 +157,9 @@ class select_workflow_table extends \flexible_table {
      */
     public function col_tools($row) {
         global $PAGE;
-
+        $createcopy = get_string('create_copy', 'tool_lifecycle');
         return \html_writer::link(new \moodle_url($PAGE->url, ['wf' => $row->id]),
-            get_string('create_copy', 'tool_lifecycle'), ['class' => 'btn btn-primary']);
+            $createcopy, ['class' => 'btn btn-primary', 'title' => $createcopy]);
     }
 
 }

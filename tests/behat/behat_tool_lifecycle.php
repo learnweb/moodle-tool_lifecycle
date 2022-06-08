@@ -362,7 +362,9 @@ class behat_tool_lifecycle extends behat_base {
      * @throws ExpectationException
      */
     public function the_step_should_be_at_the_position($stepname, $position) {
-        $xpathelement = "//table/tbody/tr[@id = 'tool_lifecycle_workflows_r$position']/td[contains(text(),'$stepname')]";
+        $xpathelement = "(//*[@id='lifecycle-workflow-details']" .
+            "//*[contains(concat(' ', normalize-space(@class), ' '), ' workflow-step ')])[$position]" .
+            "//span[contains(text(),'$stepname')]";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -372,6 +374,53 @@ class behat_tool_lifecycle extends behat_base {
         }
     }
 
+    /**
+     * Click on a link in a step card with a specific title.
+     *
+     * @When /^I click on "([^"]*)" in the step "([^"]*)"$/
+     *
+     * @param string $linktext
+     * @param string $stepname
+     * @throws ElementNotFoundException
+     * @throws ExpectationException
+     */
+    public function i_click_on_in_the_step($linktext, $stepname) {
+        $xpathelement = "//*[@id='lifecycle-workflow-details']" .
+            "//*[contains(concat(' ', normalize-space(@class), ' '), ' workflow-step ') and " .
+            "descendant::span[contains(text(),'$stepname')]]";
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The step ' . $stepname . ' was not found.', $this->getSession());
+        }
+        $xpathelement = $xpathelement . "//span[contains(text(), '$linktext')]/parent::a";
+        $element = $this->find('xpath', $xpathelement);
+        $element->click();
+    }
+
+    /**
+     * Click on a link in a trigger card with a specific title.
+     *
+     * @When /^I click on "([^"]*)" in the trigger "([^"]*)"$/
+     *
+     * @param string $linktext
+     * @param string $triggername
+     * @throws ElementNotFoundException
+     * @throws ExpectationException
+     */
+    public function i_click_on_in_the_trigger($linktext, $triggername) {
+        $xpathelement = "//*[@id='lifecycle-workflow-details']" .
+            "//*[contains(concat(' ', normalize-space(@class), ' '), ' workflow-trigger ') and " .
+            "descendant::span[contains(text(),'$triggername')]]";
+        try {
+            $this->find('xpath', $xpathelement);
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('"The trigger ' . $triggername . ' was not found.', $this->getSession());
+        }
+        $xpathelement = $xpathelement . "//span[contains(text(), '$linktext')]/parent::a";
+        $element = $this->find('xpath', $xpathelement);
+        $element->click();
+    }
 
     /**
      * Opens Teacher's Courses Overview.

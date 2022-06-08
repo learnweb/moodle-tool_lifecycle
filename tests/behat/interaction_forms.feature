@@ -12,24 +12,24 @@ Feature: Add a workflow with a manual trigger and a duplicate step and test the 
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
     And I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow settings" in site administration
-    And I press "Add workflow"
+    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow drafts" in site administration
+    And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
-    And I select "Manual trigger" from the "triggername" singleselect
+    And I select "Manual trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name              | My Trigger                                |
       | Icon                       | t/delete                                  |
       | Action name                | Duplicate course                          |
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
-    And I select "Duplicate step" from the "stepname" singleselect
+    And I select "Duplicate step" from the "tool_lifecycle-choose-step" singleselect
     And I set the following fields to these values:
       | Instance name              | Duplicate step                  |
     And I press "Save changes"
-    And I press "Back"
+    And I click on "Workflow drafts" "link"
     And I press "Activate"
     And I log out
 
