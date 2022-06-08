@@ -85,7 +85,7 @@ class courses_in_step_table extends \table_sql {
         $count = $DB->count_records_sql(
             "SELECT COUNT (*) FROM {$this->sql->from} WHERE {$this->sql->where} AND c.id < :courseid",
             $params);
-        $this->set_page_number(intdiv($count, $pagesize) + 1);
+        $this->set_page_number(intval(ceil(($count + 1) / $pagesize)));
     }
 
     public function query_db($pagesize, $useinitialsbar = true) {
@@ -146,5 +146,9 @@ class courses_in_step_table extends \table_sql {
             get_string('proceed', 'tool_lifecycle')
         );
         return $output;
+    }
+
+    public function print_nothing_to_display() {
+        echo \html_writer::tag('h4', 'There are no courses in the selected step!', ['class' => 'm-2']);
     }
 }
