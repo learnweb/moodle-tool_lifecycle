@@ -79,7 +79,7 @@ class interaction_attention_table extends interaction_table {
             }
 
             if ($filterdata->courseid) {
-                $where[] = 'b.courseid = :courseid';
+                $where[] = 'c.id = :courseid';
                 $params['courseid'] = $filterdata->courseid;
             }
         }
