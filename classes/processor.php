@@ -242,7 +242,7 @@ class processor {
         // Exclude globally delayed courses, courses delayed for this workflow, and the site course.
         $exclude = delayed_courses_manager::get_globally_delayed_courses();
         $exclude = array_merge($exclude, delayed_courses_manager::get_delayed_courses_for_workflow($workflowid));
-        $exclude []= SITEID;
+        $exclude[] = SITEID;
 
         $amounts = [];
         $autotriggers = [];

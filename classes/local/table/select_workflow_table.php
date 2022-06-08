@@ -64,13 +64,17 @@ class select_workflow_table extends \flexible_table {
         $this->setup();
     }
 
+    /**
+     * Method to display the table.
+     * @return void
+     */
     public function out() {
         global $DB;
         $records = $DB->get_records_sql('SELECT id, title, displaytitle, timeactive, timedeactive, sortindex ' .
             'FROM {tool_lifecycle_workflow} ORDER BY timedeactive IS NOT NULL, timeactive IS NOT NULL');
         $this->format_and_add_array_of_rows($records, true);
+        $this->finish_output();
     }
-
 
     /**
      * Render title column.
@@ -128,6 +132,11 @@ class select_workflow_table extends \flexible_table {
         }
     }
 
+    /**
+     * Render since column.
+     * @param object $row Row data.
+     * @return string since column
+     */
     public function col_since($row) {
         if ($row->timedeactive) {
             return userdate($row->timedeactive, get_string('strftimedatetime'));

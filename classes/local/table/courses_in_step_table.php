@@ -41,11 +41,13 @@ require_once($CFG->libdir . '/tablelib.php');
  */
 class courses_in_step_table extends \table_sql {
 
+    /** @var int|null if set, it is the courseid to focus on. */
     private $courseid;
 
     /**
      * Constructor for courses_in_step_table.
-     * @param step_subplugin $step Id of the step.
+     * @param step_subplugin $step step to show courses of
+     * @param int|null $courseid if supplied, courseid to focus on
      */
     public function __construct($step, $courseid) {
         parent::__construct('tool_lifecycle-courses-in-step');
@@ -78,23 +80,39 @@ class courses_in_step_table extends \table_sql {
         }
     }
 
-    public function jump_to_course($courseid, $pagesize) {
+    /**
+     * Sets the page number to the page where the courseid is located.
+     * @param int $pagesize pagesize, items per page.
+     */
+    public function jump_to_course($pagesize) {
         global $DB;
         $params = $this->sql->params;
-        $params['courseid'] = $courseid;
+        $params['courseid'] = $this->courseid;
         $count = $DB->count_records_sql(
             "SELECT COUNT (*) FROM {$this->sql->from} WHERE {$this->sql->where} AND c.id < :courseid",
             $params);
         $this->set_page_number(intval(ceil(($count + 1) / $pagesize)));
     }
 
+    /**
+     * Query the db. Store results in the table object for use by build_table.
+     *
+     * @param int $pagesize size of page for paginated displayed table.
+     * @param bool $useinitialsbar do you want to use the initials bar. Bar
+     * will only be used if there is a fullname column defined for the table.
+     */
     public function query_db($pagesize, $useinitialsbar = true) {
         if ($this->courseid) {
-            $this->jump_to_course($this->courseid, $pagesize);
+            $this->jump_to_course($pagesize);
         }
         parent::query_db($pagesize, $useinitialsbar);
     }
 
+    /**
+     * Get any extra classes names to add to this row in the HTML.
+     * @param object $row the data for this row.
+     * @return string added to the class="" attribute of the tr.
+     */
     public function get_row_class($row) {
         if ($row->courseid == $this->courseid) {
             return 'table-primary';
@@ -148,6 +166,9 @@ class courses_in_step_table extends \table_sql {
         return $output;
     }
 
+    /**
+     * Prints a customized "nothing to display" message.
+     */
     public function print_nothing_to_display() {
         echo \html_writer::tag('h4', 'There are no courses in the selected step!', ['class' => 'm-2']);
     }

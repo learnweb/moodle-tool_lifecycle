@@ -49,9 +49,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 if ($workflowid) {
     $workflow = workflow_manager::get_workflow($workflowid);
     $PAGE->set_url(new \moodle_url(urls::CREATE_FROM_EXISTING), ['wf' => $workflowid]);
-    try {
-        $workflow->title = get_string('workflow_duplicate_title', 'tool_lifecycle', $workflow->title);
-    } catch (\coding_exception $e) {}
+    $workflow->title = get_string('workflow_duplicate_title', 'tool_lifecycle', $workflow->title);
     $form = new form_workflow_instance($PAGE->url, $workflow);
     if ($form->is_cancelled()) {
         // Cancelled, redirect back to workflow drafts.

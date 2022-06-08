@@ -30,6 +30,44 @@
 
     Example context (json):
     {
+      "triggerhelp": "<a></a>",
+      "editsettingslink": "http://localhost/moodle400/admin/tool/lifecycle/editworkflow.php?wf=8",
+      "title": "My Workflow Title",
+      "displaytitle": "My Workflow displaytitle",
+      "rollbackdelay": "183 days",
+      "finishdelay": "183 days",
+      "delayglobally": "1",
+      "trigger": [
+        {
+          "id": "8",
+          "instancename": "Immediately!",
+          "workflowid": "8",
+          "subpluginname": "startdatedelay",
+          "sortindex": "1",
+          "actionmenu": "<div></div>",
+          "automatic": true,
+          "triggeredcourses": 0,
+          "excludedcourses": 0
+        }
+      ],
+      "automatic": 1,
+      "coursestriggered": 0,
+      "coursesexcluded": 0,
+      "coursesetsize": 0,
+      "steps": [
+        {
+          "id": "2",
+          "instancename": "First email step",
+          "workflowid": "8",
+          "subpluginname": "email",
+          "sortindex": "1",
+          "numberofcourses": 2,
+          "actionmenu": "<div></div>"
+        }
+      ],
+      "listofcourses": [],
+      "nosteplink": {},
+      "table": null
     }
 }}
 <div class="d-flex" id="lifecycle-workflow-details">
