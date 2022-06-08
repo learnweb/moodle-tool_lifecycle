@@ -39,6 +39,15 @@ $mform = new \tool_lifecycle\local\form\form_courses_filter();
 // Cache handling.
 $cachekey = 'activeprocesses_filter';
 $cache = cache::make('tool_lifecycle', 'mformdata');
+if ($search = optional_param('search', null, PARAM_RAW)) {
+    $obj = new stdClass();
+    $obj->fullname = $search;
+    $obj->courseid = null;
+    $obj->shortname = null;
+    $cache->set($cachekey, $obj);
+    redirect($PAGE->url);
+}
+
 if ($mform->is_cancelled()) {
     $cache->delete($cachekey);
     redirect($PAGE->url);

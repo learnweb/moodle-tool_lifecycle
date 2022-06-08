@@ -49,8 +49,14 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header(' ');
 
-echo html_writer::link(new moodle_url(urls::ACTIVE_PROCESSES),
-    get_string('find_course_list_header', 'tool_lifecycle'), ['class' => 'btn btn-secondary mb-3']);
+echo $renderer->render_from_template('core/search_input', [
+    'action' => (new moodle_url(urls::ACTIVE_PROCESSES))->out(false),
+    'uniqid' => 'tool_lifecycle-search-courses',
+    'inputname' => 'search',
+    'extraclasses' => 'mb-3',
+    'inform' => false,
+    'searchstring' => 'Search for courses'
+]);
 
 echo $OUTPUT->heading(get_string('active_automatic_workflows_heading', 'tool_lifecycle'));
 
