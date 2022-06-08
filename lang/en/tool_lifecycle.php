@@ -255,6 +255,8 @@ $string['overview:trigger'] = 'Trigger';
 $string['overview:trigger_help'] = 'A course will only trigger a workflow, if all triggers agree on it (AND operation).<br><br>
 Courses which are delayed, or already in another workflow are not included in the displayed counts.<br>
 Still, these numbers are only approximates, since it could be that a course is excluded by another workflow, or will trigger another workflow before this one.';
+$string['overview:add_trigger'] = 'Add trigger';
+$string['overview:add_trigger_help'] = 'You can only add one instance of each trigger type.';
 
 // Create copy from existing workflow
 $string['create_copy'] = 'Create copy';

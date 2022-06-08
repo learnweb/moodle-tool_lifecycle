@@ -125,6 +125,12 @@ if ($data = $form->get_data()) {
                 $element->instancename = $data->instancename;
             }
         } else {
+            $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+            foreach ($triggers as $trigger) {
+                if ($trigger->subpluginname == $data->subpluginname) {
+                    throw new coding_exception('Only one instance of each trigger type allowed!');
+                }
+            }
             $element = trigger_subplugin::from_record($data);
         }
         trigger_manager::insert_or_update($element);

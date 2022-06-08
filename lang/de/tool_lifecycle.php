@@ -222,6 +222,8 @@ $string['overview:trigger'] = 'Trigger';
 $string['overview:trigger_help'] = 'Ein Kurs fängt nur dann an, einen Workflow zu durchlaufen, wenn alle Trigger des Workflows dies übereinstimmend (UND-Verknüpfung) aussagen.<br><br>
 In den hier genannten Zahlen werden Kurse, die verzögert werden oder sich bereits in anderen Workflows befinden, nicht mitgezählt.<br>
 Trotzdem sind die Zahlen nur approximiert, da es sein könnte, dass die Kurse vor diesem einen anderen Workflow auslösen.';
+$string['overview:add_trigger'] = 'Trigger hinzufügen';
+$string['overview:add_trigger_help'] = 'Es kann nur eine Instanz jedes Triggertyps hinzugefügt werden.';
 
 // Create copy from existing.
 $string['create_copy'] = 'Kopie erstellen';

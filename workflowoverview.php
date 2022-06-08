@@ -190,10 +190,23 @@ echo $renderer->header();
 
 if (workflow_manager::is_editable($workflow->id)) {
     $addinstance = '';
-    $triggers = trigger_manager::get_chooseable_trigger_types();
+    $triggertypes = trigger_manager::get_chooseable_trigger_types();
+    $workflowtriggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+    $selectabletriggers = [];
+    foreach ($triggertypes as $triggertype => $triggername) {
+        foreach ($workflowtriggers as $workflowtrigger) {
+            if ($triggertype == $workflowtrigger->subpluginname) {
+                continue 2;
+            }
+        }
+        $selectabletriggers[$triggertype] = $triggername;
+    }
+    $icondata = (new help_icon('overview:add_trigger', 'tool_lifecycle'))->export_for_template($OUTPUT);
+    $addinstance .= $OUTPUT->render_from_template('tool_lifecycle/warn_icon', $icondata);
+
     $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
         array('type' => settings_type::TRIGGER, 'wf' => $workflow->id)),
-        'subplugin', $triggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
+        'subplugin', $selectabletriggers, '', array('' => get_string('add_new_trigger_instance', 'tool_lifecycle')));
 
     $steps = step_manager::get_step_types();
     $addinstance .= '<span class="ml-1"></span>';
@@ -202,7 +215,6 @@ if (workflow_manager::is_editable($workflow->id)) {
         'subplugin', $steps, '', array('' => get_string('add_new_step_instance', 'tool_lifecycle')));
     $data['addinstance'] = $addinstance;
 }
-
 
 echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);
 
