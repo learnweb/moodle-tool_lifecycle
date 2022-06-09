@@ -151,35 +151,35 @@ class email extends libbase {
         $replacements = array();
 
         // Replaces firstname of the user.
-        $patterns [] = '##firstname##';
-        $replacements [] = $user->firstname;
+        $patterns[] = '##firstname##';
+        $replacements[] = $user->firstname;
 
         // Replaces lastname of the user.
-        $patterns [] = '##lastname##';
-        $replacements [] = $user->lastname;
+        $patterns[] = '##lastname##';
+        $replacements[] = $user->lastname;
 
         // Replace link to interaction page.
         $interactionlink = new \moodle_url('admin/tool/lifecycle/view.php');
         $url = $CFG->wwwroot . '/' . $interactionlink->out();
-        $patterns [] = '##link##';
-        $replacements [] = $url;
+        $patterns[] = '##link##';
+        $replacements[] = $url;
 
         // Replace html link to interaction page.
-        $patterns [] = '##link-html##';
-        $replacements [] = \html_writer::link($url, $url);
+        $patterns[] = '##link-html##';
+        $replacements[] = \html_writer::link($url, $url);
 
         // Replace courses list.
-        $patterns [] = '##courses##';
+        $patterns[] = '##courses##';
         $courses = $mailentries;
         $coursesstring = '';
         $coursesstring .= $this->parse_course(array_pop($courses)->courseid);
         foreach ($courses as $entry) {
             $coursesstring .= "\n" . $this->parse_course($entry->courseid);
         }
-        $replacements [] = $coursesstring;
+        $replacements[] = $coursesstring;
 
         // Replace courses html.
-        $patterns [] = '##courses-html##';
+        $patterns[] = '##courses-html##';
         $courses = $mailentries;
         $coursestabledata = array();
         foreach ($courses as $entry) {
@@ -187,7 +187,7 @@ class email extends libbase {
         }
         $coursestable = new \html_table();
         $coursestable->data = $coursestabledata;
-        $replacements [] = \html_writer::table($coursestable);
+        $replacements[] = \html_writer::table($coursestable);
 
         return str_ireplace($patterns, $replacements, $strings);
     }

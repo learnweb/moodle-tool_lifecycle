@@ -23,15 +23,15 @@
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_lifecycle;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/workflow_actions_testcase.php');
 
-use tool_lifecycle\action;
 use tool_lifecycle\local\manager\workflow_manager;
-use tool_lifecycle\local\entity\workflow;
 
 /**
  * Tests activating, disabling and duplicating workflows
@@ -42,7 +42,7 @@ use tool_lifecycle\local\entity\workflow;
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_workflow_activate_disable_duplicate_testcase extends workflow_actions_testcase {
+class workflow_activate_disable_duplicate_test extends workflow_actions_testcase {
 
     /**
      * Test to activate the first workflow.

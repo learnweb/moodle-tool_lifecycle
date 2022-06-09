@@ -22,12 +22,13 @@
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_lifecycle;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/generator/lib.php');
 require_once(__DIR__ . '/../lib.php');
 
-use tool_lifecycle\action;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\entity\workflow;
 
@@ -39,7 +40,7 @@ use tool_lifecycle\local\entity\workflow;
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_workflow_is_manual_testcase extends \advanced_testcase {
+class workflow_is_manual_test extends \advanced_testcase {
 
     /** Icon of the trigger. */
     const MANUAL_TRIGGER1_ICON = 't/up';
@@ -55,14 +56,14 @@ class tool_lifecycle_workflow_is_manual_testcase extends \advanced_testcase {
 
     /**
      * Setup the testcase.
-     * @throws coding_exception
+     * @throws \coding_exception
      */
     public function setUp() : void {
         global $USER;
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
-        $settings = new stdClass();
+        $settings = new \stdClass();
         $settings->icon = self::MANUAL_TRIGGER1_ICON;
         $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $settings->capability = self::MANUAL_TRIGGER1_CAPABILITY;

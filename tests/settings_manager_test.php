@@ -22,15 +22,14 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_lifecycle;
 
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\settings_manager;
-use tool_lifecycle\local\manager\subplugin_manager;
 use tool_lifecycle\local\manager\workflow_manager;
-use tool_lifecycle\settings_type;
 
 /**
  * Tests the settings manager.
@@ -40,7 +39,7 @@ use tool_lifecycle\settings_type;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
+class settings_manager_test extends \advanced_testcase {
 
     /** @var step_subplugin $step Instance of the step plugin. */
     private $step;
@@ -56,7 +55,7 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
 
     /**
      * Setup the testcase.
-     * @throws coding_exception
+     * @throws \coding_exception
      */
     public function setUp() : void {
         $this->resetAfterTest(false);
@@ -72,7 +71,7 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
      * Test setting and getting settings data for steps.
      */
     public function test_set_get_step_settings() {
-        $data = new stdClass();
+        $data = new \stdClass();
         $data->subject = self::EMAIL_VALUE;
         settings_manager::save_settings($this->step->id, settings_type::STEP, $this->step->subpluginname, $data);
         $settings = settings_manager::get_settings($this->step->id, settings_type::STEP);
@@ -84,7 +83,7 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
      * Test setting and getting settings data for triggers.
      */
     public function test_set_get_trigger_settings() {
-        $data = new stdClass();
+        $data = new \stdClass();
         $data->delay = self::STARTDELAY_VALUE;
         settings_manager::save_settings($this->trigger->id, settings_type::TRIGGER, $this->trigger->subpluginname, $data);
         $settings = settings_manager::get_settings($this->trigger->id, settings_type::TRIGGER);
@@ -97,10 +96,10 @@ class tool_lifecycle_settings_manager_testcase extends \advanced_testcase {
      */
     public function test_remove_workflow() {
         global $DB;
-        $data = new stdClass();
+        $data = new \stdClass();
         $data->subject = self::EMAIL_VALUE;
         settings_manager::save_settings($this->step->id, settings_type::STEP, $this->step->subpluginname, $data);
-        $data = new stdClass();
+        $data = new \stdClass();
         $data->delay = 100;
         settings_manager::save_settings($this->trigger->id, settings_type::TRIGGER, $this->trigger->subpluginname, $data);
         $settingsstep = $DB->get_records('tool_lifecycle_settings', array('instanceid' => $this->step->id,
