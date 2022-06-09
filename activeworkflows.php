@@ -49,7 +49,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header(' ');
 
-echo $renderer->render_from_template('core/search_input', [
+echo $renderer->render_from_template('tool_lifecycle/search_input', [
     'action' => (new moodle_url(urls::ACTIVE_PROCESSES))->out(false),
     'uniqid' => 'tool_lifecycle-search-courses',
     'inputname' => 'search',
