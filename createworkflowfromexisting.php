@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Displays form for creating or editing a new workflow.
+ * Displays form for copying a new workflow from a existing one.
  *
  * @package tool_lifecycle
  * @copyright  2022 Justus Dieckmann WWU

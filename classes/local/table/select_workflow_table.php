@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Table listing all active automatically triggered workflows.
+ * Table listing all workflows with a "copy from" button.
  *
- * @package tool_lifecycle
- * @copyright  2018 Jan Dageförde WWU
+ * @package    tool_lifecycle
+ * @copyright  2022 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace tool_lifecycle\local\table;
@@ -34,10 +34,10 @@ require_once($CFG->libdir . '/tablelib.php');
 require_once(__DIR__ . '/../../../lib.php');
 
 /**
- * Table listing all active automatically triggered workflows.
+ * Table listing all workflows with a "copy from" button.
  *
- * @package tool_lifecycle
- * @copyright  2018 Jan Dageförde WWU
+ * @package    tool_lifecycle
+ * @copyright  2022 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class select_workflow_table extends \flexible_table {
