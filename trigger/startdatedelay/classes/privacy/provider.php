@@ -14,16 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace lifecycletrigger_startdatedelay\privacy;
+
+use core_privacy\local\metadata\null_provider;
+
 /**
- * Lang strings for start date delay trigger
+ * Privacy subsystem implementation for lifecycletrigger_startdatedelay.
  *
- * @package    lifecycletrigger_startdatedelay
- * @copyright  2017 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     lifecycletrigger_startdatedelay
+ * @copyright   2022 ISB Bayern
+ * @author      Philipp Memmel
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class provider implements null_provider {
 
-$string['pluginname'] = 'Startdatumsabstand - Trigger';
-$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
-
-$string['delay'] = 'Zeit seit Kursstartdatum, bis ein Prozess gestartet wird';
-$string['delay_help'] = 'Der Trigger wird ausgeführt, falls die Zeit, die seit dem Start des Kurses vergangen ist, größer ist, als der angegebene Zeitraum.';
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return string the reason
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}
