@@ -23,5 +23,6 @@
  */
 
 $string['pluginname'] = 'Kurslöschen-Schritt';
+$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 
 $string['deletecourse_maximumdeletionspercron'] = 'Maximale Anzahl an Kurslöschungen per cron';

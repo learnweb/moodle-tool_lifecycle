@@ -14,15 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace lifecyclestep_deletecourse\privacy;
+
+use core_privacy\local\metadata\null_provider;
+
 /**
- * Lang strings for delete course step
+ * Privacy subsystem implementation for lifecyclestep_deletecourse.
  *
- * @package lifecyclestep_deletecourse
- * @copyright  2017 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     lifecyclestep_deletecourse
+ * @copyright   2022 ISB Bayern
+ * @author      Philipp Memmel
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class provider implements null_provider {
 
-$string['pluginname'] = 'Delete course step';
-$string['privacy:metadata'] = 'This subplugin does not store any personal data.';
-
-$string['deletecourse_maximumdeletionspercron'] = 'Maximum number of courses deleted per cron';
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return string the reason
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}
