@@ -14,17 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace lifecycletrigger_categories\privacy;
+
+use core_privacy\local\metadata\null_provider;
+
 /**
- * Lang strings for categories trigger
+ * Privacy subsystem implementation for lifecycletrigger_categories.
  *
- * @package lifecycletrigger_categories
- * @copyright  2018 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     lifecycletrigger_categories
+ * @copyright   2022 ISB Bayern
+ * @author      Philipp Memmel
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class provider implements null_provider {
 
-$string['pluginname'] = 'Categories trigger';
-$string['privacy:metadata'] = 'This subplugin does not store any personal data.';
-
-$string['categories'] = 'Categories, for which the workflow should be triggered';
-$string['categories_noselection'] = 'Please choose at least one category.';
-$string['exclude'] = 'If ticked, the named categories are excluded from triggering instead.';
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return string the reason
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}
