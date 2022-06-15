@@ -23,6 +23,7 @@
  */
 
 $string['pluginname'] = 'Kurs-Duplizieren-Schritt';
+$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 
 $string['duplicate_form'] = 'Daten eingeben';
 
