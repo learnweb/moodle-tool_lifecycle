@@ -135,11 +135,11 @@ class specificdate extends base_automatic {
      * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
-        $mform->addElement('textarea', 'dates', get_string('dates', 'lifecycletrigger_specificdate'),
-            get_string('dates_desc', 'lifecycletrigger_specificdate'));
+        $mform->addElement('textarea', 'dates', get_string('dates', 'lifecycletrigger_specificdate'));
         $mform->setType('dates', PARAM_TEXT);
+        $mform->addHelpButton('dates', 'dates', 'lifecycletrigger_specificdate');
         $mform->addElement('hidden', 'timelastrun');
-        $mform->setDefault('timelastrun', time());
+        $mform->setDefault('timelastrun', 0);
         $mform->setType('timelastrun', PARAM_INT);
     }
 
