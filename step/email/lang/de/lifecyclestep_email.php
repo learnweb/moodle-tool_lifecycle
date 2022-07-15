@@ -49,3 +49,8 @@ $string['email:preventdeletion'] = 'Löschen verhindern';
 $string['keep_course'] = 'Kurs behalten';
 $string['status_message_requiresattention'] = 'Kurs ist zum Löschen vorgemerkt';
 $string['action_prevented_deletion'] = '{$a} verhinderte Löschung';
+
+$string['privacy:metadata:lifecyclestep_email:courseid'] = 'Die ID des Kurses, zu dem E-Mail-Benachrichtigungen versandt werden';
+$string['privacy:metadata:lifecyclestep_email:instanceid'] = 'Die ID der Schritt-Instanz, der E-Mails verschickt';
+$string['privacy:metadata:lifecyclestep_email:summary'] = 'Informationen, welche Benutzer per E-Mail benachrichtigt werden';
+$string['privacy:metadata:lifecyclestep_email:touser'] = 'Die ID des Benutzers, an den eine E-Mail verschickt wird';

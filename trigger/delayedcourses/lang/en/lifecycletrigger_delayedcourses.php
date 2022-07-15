@@ -23,5 +23,6 @@
  */
 
 $string['pluginname'] = 'Exclude delayed courses trigger';
+$string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
 $string['delay'] = 'This module will exclude all courses, which were delayed by user interaction';

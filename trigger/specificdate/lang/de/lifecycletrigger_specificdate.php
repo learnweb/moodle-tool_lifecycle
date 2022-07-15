@@ -23,6 +23,7 @@
  */
 
 $string['pluginname'] = 'Bestimmtes Datum - Trigger';
+$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 
 $string['dates'] = 'Daten, an denen der Workflow ausgeführt werden soll.';
 $string['dates_desc'] = 'Ein Datum pro Zeile in dem Format Tag.Monat';
