@@ -71,7 +71,7 @@ class backup_lifecycle_workflow {
         make_temp_directory('lifecycle');
         $this->tempfilename = $CFG->tempdir .'/lifecycle/'. md5(sesskey().microtime());
         if (!$handle = fopen($this->tempfilename, 'w+b')) {
-            print_error('cannotcreatetempdir');
+            throw new \moodle_exception('cannotcreatetempdir');
         }
         $this->writer = new \XMLWriter();
         $this->writer->openMemory();

@@ -78,7 +78,7 @@ class trigger_manager extends subplugin_manager {
         $records = $DB->get_records('tool_lifecycle_trigger', array('subpluginname' => $subpluginname));
         foreach ($records as $record) {
             $subplugin = trigger_subplugin::from_record($record);
-            $result [] = $subplugin;
+            $result[] = $subplugin;
         }
         return $result;
     }
@@ -164,7 +164,7 @@ class trigger_manager extends subplugin_manager {
         $output = array();
         foreach ($records as $record) {
             $subplugin = trigger_subplugin::from_record($record);
-            $output [] = $subplugin;
+            $output[] = $subplugin;
         }
         return $output;
     }

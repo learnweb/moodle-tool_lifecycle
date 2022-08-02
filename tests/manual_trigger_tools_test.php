@@ -22,6 +22,7 @@
  * @copyright  2018 Tobias Reischmann, Jan Dageforde WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_lifecycle;
 
 use tool_lifecycle\action;
 use tool_lifecycle\local\entity\workflow;
@@ -37,7 +38,7 @@ use tool_lifecycle\local\data\manual_trigger_tool;
  * @copyright  2018 Tobias Reischmann, Jan Dageforde WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
+class manual_trigger_tools_test extends \advanced_testcase {
     /** Icon of the manual trigger 1. */
     const MANUAL_TRIGGER1_ICON = 't/up';
     /** Display name of the manual trigger 1. */
@@ -59,20 +60,20 @@ class tool_lifecycle_manual_trigger_tools_testcase extends \advanced_testcase {
 
     /**
      * Setup the testcase.
-     * @throws coding_exception
+     * @throws \coding_exception
      */
     public function setUp() : void {
         global $USER;
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
-        $triggersettings = new stdClass();
+        $triggersettings = new \stdClass();
         $triggersettings->icon = self::MANUAL_TRIGGER1_ICON;
         $triggersettings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
         $this->workflow1 = $generator->create_manual_workflow($triggersettings);
 
-        $triggersettings = new stdClass();
+        $triggersettings = new \stdClass();
         $triggersettings->icon = self::MANUAL_TRIGGER2_ICON;
         $triggersettings->displayname = self::MANUAL_TRIGGER2_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER2_CAPABILITY;

@@ -49,3 +49,8 @@ $string['email:preventdeletion'] = 'Prevent deletion';
 $string['keep_course'] = 'Keep course';
 $string['status_message_requiresattention'] = 'Course is marked for deletion';
 $string['action_prevented_deletion'] = '{$a} prevented deletion';
+
+$string['privacy:metadata:lifecyclestep_email:courseid'] = 'ID of the course, emails will be sent for';
+$string['privacy:metadata:lifecyclestep_email:instanceid'] = 'ID of the step instance sending emails';
+$string['privacy:metadata:lifecyclestep_email:summary'] = 'Information about whhich users will be informed by email';
+$string['privacy:metadata:lifecyclestep_email:touser'] = 'ID of the user who is being notified via email';

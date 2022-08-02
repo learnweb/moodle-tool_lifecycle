@@ -151,7 +151,7 @@ class workflow_manager {
                   WHERE timeactive IS NOT NULL ORDER BY sortindex');
         $result = array();
         foreach ($records as $record) {
-            $result [] = workflow::from_record($record);
+            $result[] = workflow::from_record($record);
         }
         return $result;
     }
@@ -170,7 +170,7 @@ class workflow_manager {
                   manual = ? ORDER BY sortindex', array(false));
         $result = array();
         foreach ($records as $record) {
-            $result [] = workflow::from_record($record);
+            $result[] = workflow::from_record($record);
         }
         return $result;
     }
@@ -188,7 +188,7 @@ class workflow_manager {
         $records = $DB->get_records_sql($sql, array(true));
         $result = array();
         foreach ($records as $record) {
-            $result [] = trigger_subplugin::from_record($record);
+            $result[] = trigger_subplugin::from_record($record);
         }
         return $result;
     }

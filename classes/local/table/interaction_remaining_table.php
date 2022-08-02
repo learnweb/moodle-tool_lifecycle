@@ -25,6 +25,7 @@ namespace tool_lifecycle\local\table;
 
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\data\manual_trigger_tool;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -139,7 +140,6 @@ class interaction_remaining_table extends interaction_table {
         }
 
         $menu = new \action_menu();
-        $menu->set_alignment(\action_menu::TR, \action_menu::BR);
         $menu->set_menu_trigger(get_string('action'));
 
         foreach ($actions as $action) {
@@ -192,6 +192,20 @@ class interaction_remaining_table extends interaction_table {
 
         $dateformat = get_string('strftimedatetime', 'core_langconfig');
         return userdate($row->lastmodified, $dateformat);
+    }
+
+    /**
+     * This function is not part of the public api.
+     */
+    public function print_nothing_to_display() {
+        global $OUTPUT;
+
+        // Render button to allow user to reset table preferences.
+        echo $this->render_reset_button();
+
+        $this->print_initials_bar();
+
+        echo $OUTPUT->box(get_string('noremainingcoursestodisplay', 'tool_lifecycle'));
     }
 
 }

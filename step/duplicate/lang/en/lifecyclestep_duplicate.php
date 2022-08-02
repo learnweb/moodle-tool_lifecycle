@@ -23,6 +23,7 @@
  */
 
 $string['pluginname'] = 'Duplicate step';
+$string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
 $string['duplicate_form'] = 'Enter data';
 

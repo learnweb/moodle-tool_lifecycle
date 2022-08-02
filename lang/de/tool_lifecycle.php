@@ -143,6 +143,7 @@ $string['nostepfound'] = 'Es konnte kein Schritt mit der gegeben Schrittid gefun
 $string['noprocessfound'] = 'Es konnte kein Prozess mit der gegebenen Prozessid gefunden werden!';
 
 $string['nocoursestodisplay'] = 'Es gibt derzeit keine Kurse, die Ihre Aufmerksamkeit erfordern!';
+$string['noremainingcoursestodisplay'] = 'Es gibt derzeit keine verbleibenden Kurse!';
 
 $string['course_backups_list_header'] = 'Kurssicherungen';
 $string['backupcreated'] = 'Erstellt am';
@@ -186,3 +187,7 @@ $string['lifecycle_error_notify_task'] = 'Benachrichtigt die Administratoren bei
 $string['notifyerrorsemailsubject'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!';
 $string['notifyerrorsemailcontent'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!' . "\n" . 'Bitte besuchen Sie {$a->url}.';
 $string['notifyerrorsemailcontenthtml'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!<br>Bitte besuchen Sie <a href="{$a->url}">die Übersichtsseite</a>.';
+$string['errorbackuppath'] = "Ein Fehler ist aufgetreten beim Versuchen das Backup Verzeichnis zu erstellen.
+Ihnen fehlen wahrscheinlich die Berechtigung dazu. Bitte überprüfen Sie den Pfad unter
+Seitenadministration/Plugins/Dienstprogramme/Kurs-Lebenszyklus/Allgemein & Subplugins.";
+$string['errornobackup'] = "Es wurde kein Backup in dem angegebenen Pfad erstellt.";

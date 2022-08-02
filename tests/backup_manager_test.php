@@ -22,6 +22,7 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_lifecycle;
 
 use tool_lifecycle\local\manager\backup_manager;
 
@@ -33,7 +34,7 @@ use tool_lifecycle\local\manager\backup_manager;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_backup_manager_testcase extends \advanced_testcase {
+class backup_manager_test extends \advanced_testcase {
 
     /** @var array $course Instance of the course under test. */
     private $course;
@@ -67,7 +68,7 @@ class tool_lifecycle_backup_manager_testcase extends \advanced_testcase {
         $backupid = array_pop($backups)->id;
         try {
             backup_manager::restore_course_backup($backupid);
-        } catch (moodle_exception $e) {
+        } catch (\moodle_exception $e) {
             $this->assertEquals('redirecterrordetected', $e->errorcode);
         }
     }

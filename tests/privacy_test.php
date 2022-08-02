@@ -22,6 +22,7 @@
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_lifecycle\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
@@ -48,7 +49,7 @@ use tool_lifecycle\processor;
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_privacy_test extends provider_testcase {
+class privacy_test extends provider_testcase {
 
 
     /** Icon of the manual trigger. */
@@ -64,7 +65,7 @@ class tool_lifecycle_privacy_test extends provider_testcase {
     /** @var workflow $workflow Workflow of this test. */
     private $workflow;
 
-    /** @var tool_lifecycle_generator $generator Instance of the test generator. */
+    /** @var \tool_lifecycle_generator $generator Instance of the test generator. */
     private $generator;
 
     /** @var step_subplugin $emailstep Instance of the Email step */
@@ -72,7 +73,7 @@ class tool_lifecycle_privacy_test extends provider_testcase {
 
     /**
      * Setup the testcase.
-     * @throws coding_exception
+     * @throws \coding_exception
      */
     public function setUp() : void {
         global $USER;
@@ -81,7 +82,7 @@ class tool_lifecycle_privacy_test extends provider_testcase {
         $USER->ignoresesskey = true;
         $this->resetAfterTest();
         $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
-        $settings = new stdClass();
+        $settings = new \stdClass();
         $settings->icon = self::MANUAL_TRIGGER1_ICON;
         $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $settings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
@@ -110,7 +111,7 @@ class tool_lifecycle_privacy_test extends provider_testcase {
 
         $contextlist = provider::get_contexts_for_userid($u1->id);
         $this->assertEquals(1, $contextlist->count());
-        $this->assertTrue($contextlist->current() instanceof context_system);
+        $this->assertTrue($contextlist->current() instanceof \context_system);
     }
 
     public function test_export_user_data() {
@@ -128,9 +129,9 @@ class tool_lifecycle_privacy_test extends provider_testcase {
         interaction_manager::handle_interaction($this->emailstep->id, $p1->id, self::ACTION_KEEP);
         interaction_manager::handle_interaction($this->emailstep->id, $p2->id, self::ACTION_KEEP);
 
-        $contextlist = new approved_contextlist($u1, 'tool_lifecycle', [context_system::instance()->id]);
+        $contextlist = new approved_contextlist($u1, 'tool_lifecycle', [\context_system::instance()->id]);
         provider::export_user_data($contextlist);
-        $writer = writer::with_context(context_system::instance());
+        $writer = writer::with_context(\context_system::instance());
         $step = step_manager::get_step_instance_by_workflow_index($this->workflow->id, 1);
         $subcontext = ['tool_lifecycle', 'action_log', "process_$p1->id", $step->instancename,
                 "action_" . self::ACTION_KEEP];
@@ -157,7 +158,7 @@ class tool_lifecycle_privacy_test extends provider_testcase {
 
         interaction_manager::handle_interaction($this->emailstep->id, $p1->id, self::ACTION_KEEP);
 
-        provider::delete_data_for_all_users_in_context(context_system::instance());
+        provider::delete_data_for_all_users_in_context(\context_system::instance());
 
         $this->assertFalse($DB->record_exists_select('tool_lifecycle_action_log', 'userid != -1'));
     }
@@ -203,7 +204,7 @@ class tool_lifecycle_privacy_test extends provider_testcase {
         interaction_manager::handle_interaction($this->emailstep->id, $p1->id, self::ACTION_KEEP);
         interaction_manager::handle_interaction($this->emailstep->id, $p2->id, self::ACTION_KEEP);
 
-        $userlist = new userlist(context_system::instance(), 'tool_lifecycle');
+        $userlist = new userlist(\context_system::instance(), 'tool_lifecycle');
         provider::get_users_in_context($userlist);
         $this->assertEquals(1, $userlist->count());
         $this->assertEquals($u1->id, $userlist->current()->id);
@@ -228,7 +229,7 @@ class tool_lifecycle_privacy_test extends provider_testcase {
         $this->setUser($u2);
         interaction_manager::handle_interaction($this->emailstep->id, $proc2->id, self::ACTION_KEEP);
 
-        $userlist = new approved_userlist(context_system::instance(), 'tool_lifecycle', [$u1->id]);
+        $userlist = new approved_userlist(\context_system::instance(), 'tool_lifecycle', [$u1->id]);
         provider::delete_data_for_users($userlist);
         $this->assertEquals(0, $DB->count_records_select('tool_lifecycle_action_log', "userid = $u1->id"));
         $this->assertEquals(1, $DB->count_records_select('tool_lifecycle_action_log', "userid = $u2->id"));
