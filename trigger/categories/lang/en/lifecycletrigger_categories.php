@@ -23,6 +23,7 @@
  */
 
 $string['pluginname'] = 'Categories trigger';
+$string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
 $string['categories'] = 'Categories, for which the workflow should be triggered';
 $string['categories_noselection'] = 'Please choose at least one category.';

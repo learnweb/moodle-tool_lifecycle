@@ -23,5 +23,6 @@
  */
 
 $string['pluginname'] = 'Create backup step';
+$string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
 $string['maximumbackupspercron'] = 'Maximum number of backups per cron';

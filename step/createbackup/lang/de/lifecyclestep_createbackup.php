@@ -23,5 +23,6 @@
  */
 
 $string['pluginname'] = 'Kurssicherungs-Schritt';
+$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 
 $string['maximumbackupspercron'] = 'Maximale Anzahl an Sicherungen per cron';

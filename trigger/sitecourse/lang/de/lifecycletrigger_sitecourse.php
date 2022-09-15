@@ -23,5 +23,6 @@
  */
 
 $string['pluginname'] = 'Startseitenkurs ausschließen - Trigger';
+$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 
 $string['delay'] = 'Dieser Trigger wird den Startseitenkurs ausschließen.';

@@ -23,6 +23,7 @@
  */
 
 $string['pluginname'] = 'Manual trigger';
+$string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 $string['setting_capability'] = 'Capability';
 $string['setting_capability_help'] = 'The Moodle capability needed to see and invoke a workflow using this trigger, e.g. "enrol/manual:enrol". Please see Moodle access API documentation for details.';
 $string['setting_icon'] = 'Icon';
