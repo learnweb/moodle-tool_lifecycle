@@ -65,6 +65,8 @@ $table->define_baseurl($PAGE->url);
 $PAGE->requires->js_call_amd('tool_lifecycle/tablebulkactions', 'init');
 
 echo $OUTPUT->header();
+$renderer = $PAGE->get_renderer('tool_lifecycle');
+echo $renderer->render_extra_navigation();
 $table->out(100, false);
 
 echo $OUTPUT->footer();

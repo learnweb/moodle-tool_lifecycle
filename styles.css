@@ -13,7 +13,9 @@ body.path-admin-tool-lifecycle .wf-secondary-info,
 .lifecycle-highlighted {
     background-color: rgba(0, 178, 255, 0.15);
 }
-
+nav.moremenu {
+    opacity: 1;
+}
 span.tool_lifecycle-hint {
     text-decoration: underline dashed #444;
 }

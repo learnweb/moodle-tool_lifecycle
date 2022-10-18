@@ -56,7 +56,7 @@ $PAGE->set_heading(get_string('course_backups_list_header', 'tool_lifecycle'));
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
-
+echo $renderer->render_extra_navigation();
 echo '<br>';
 
 $mform->display();

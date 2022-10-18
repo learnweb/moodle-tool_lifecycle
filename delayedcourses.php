@@ -143,6 +143,9 @@ $table = new delayed_courses_table($data);
 $table->define_baseurl($PAGE->url);
 
 echo $OUTPUT->header();
+$renderer = $PAGE->get_renderer('tool_lifecycle');
+echo $renderer->render_extra_navigation();
+
 $mform->display();
 $table->out(100, false);
 
