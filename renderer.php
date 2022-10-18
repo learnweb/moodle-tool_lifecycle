@@ -64,6 +64,15 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
         echo $form->render();
         $this->footer();
     }
+
+    /**
+     * Renders a menu with the "necessary" items for some pages
+     * General Settings - Workflow drafts - Active Workflows - Delayed Courses - Admin Approve Steps - Error Handling
+     *  - Restore Backups
+     * @return bool|string
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
     public function render_extra_navigation () {
         $data2 = new stdClass();
         $children = array();
