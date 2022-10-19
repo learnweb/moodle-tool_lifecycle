@@ -35,6 +35,7 @@ use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+require_login();
 
 global $OUTPUT, $PAGE, $DB;
 
@@ -96,7 +97,7 @@ if ($isstep) {
 $titlestrid = ($element ? 'edit' : 'create') . '_' . $type;
 $title = get_string($titlestrid, 'tool_lifecycle');
 
-// Return to drafts, or to deactivated workflows if workflow was deactivated
+// Return to drafts, or to deactivated workflows if workflow was deactivated.
 $returnurl = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]);
 
 $PAGE->set_title($title);

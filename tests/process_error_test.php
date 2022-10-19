@@ -90,6 +90,7 @@ class process_error_test extends \advanced_testcase {
 
     /**
      * Test if the correct process error was put into the table.
+     * @covers \tool_lifecycle\processor
      */
     public function test_process_error_in_table() {
         global $DB;

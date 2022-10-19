@@ -258,7 +258,7 @@ Still, these numbers are only approximates, since it could be that a course is e
 $string['overview:add_trigger'] = 'Add trigger';
 $string['overview:add_trigger_help'] = 'You can only add one instance of each trigger type.';
 
-// Create copy from existing workflow
+// Create copy from existing workflow.
 $string['create_copy'] = 'Create copy';
 $string['active'] = 'Active';
 $string['deactivated'] = 'Deactivated';

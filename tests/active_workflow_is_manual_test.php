@@ -40,7 +40,7 @@ use tool_lifecycle\local\entity\workflow;
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class workflow_is_manual_test extends \advanced_testcase {
+class active_workflow_is_manual_test extends \advanced_testcase {
 
     /** Icon of the trigger. */
     const MANUAL_TRIGGER1_ICON = 't/up';
@@ -79,6 +79,11 @@ class workflow_is_manual_test extends \advanced_testcase {
 
     /**
      * Test to activate the manual workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager manual workflows
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
+     * @throws \moodle_exception
      */
     public function test_activate_manual() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->manualworkflow->id);
@@ -89,6 +94,11 @@ class workflow_is_manual_test extends \advanced_testcase {
 
     /**
      * Test to activate the automatic workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager active workflows
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
+     * @throws \moodle_exception
      */
     public function test_activate_automatic() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->automaticworkflow->id);

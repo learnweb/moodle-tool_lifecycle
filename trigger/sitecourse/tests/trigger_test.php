@@ -59,6 +59,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if the site course is excluded by this plugin.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\sitecourse
      */
     public function test_sitecourse_course() {
 
@@ -72,6 +73,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are older than the default of 190 days are triggered by this plugin.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\sitecourse
      */
     public function test_normal_course() {
 

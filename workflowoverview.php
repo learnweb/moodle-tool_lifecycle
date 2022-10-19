@@ -23,6 +23,7 @@
  */
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+require_login();
 
 use tool_lifecycle\action;
 use tool_lifecycle\local\manager\delayed_courses_manager;

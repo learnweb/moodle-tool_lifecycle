@@ -31,6 +31,7 @@ use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+require_login();
 
 global $OUTPUT, $PAGE, $DB;
 

@@ -41,10 +41,11 @@ use tool_lifecycle\local\manager\workflow_manager;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class workflow_sortindex_updown_test extends workflow_actions_testcase {
+class active_workflow_sortindex_updown_test extends workflow_actions_testcase {
 
     /**
      * Test to put down the first workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager move actions down
      */
     public function test_down_first() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
@@ -64,6 +65,7 @@ class workflow_sortindex_updown_test extends workflow_actions_testcase {
 
     /**
      * Test to put down the second workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager move actions down
      */
     public function test_down_second() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
@@ -83,6 +85,7 @@ class workflow_sortindex_updown_test extends workflow_actions_testcase {
 
     /**
      * Test to put down the third workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager move actions down
      */
     public function test_down_third() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
@@ -102,6 +105,7 @@ class workflow_sortindex_updown_test extends workflow_actions_testcase {
 
     /**
      * Test to put up the third workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager move actions up
      */
     public function test_up_first() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
@@ -121,6 +125,7 @@ class workflow_sortindex_updown_test extends workflow_actions_testcase {
 
     /**
      * Test to put up the third workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager move actions up
      */
     public function test_up_second() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
@@ -140,6 +145,7 @@ class workflow_sortindex_updown_test extends workflow_actions_testcase {
 
     /**
      * Test to put up the third workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager move actions up
      */
     public function test_up_third() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
