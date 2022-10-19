@@ -48,7 +48,7 @@ class persist_workflow_test extends \advanced_testcase {
      */
     public function setUp() : void {
         $this->resetAfterTest(true);
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->id = null;
         $record->title = 'Title';
         $this->workflow = workflow::from_record($record);
