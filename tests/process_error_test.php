@@ -109,7 +109,11 @@ class process_error_test extends \advanced_testcase {
         $record = reset($records);
 
         $this->assertEquals($this->course->id, $record->courseid);
-        $this->assertStringContainsString("Trying to get property 'id' of non-object", $record->errormessage);
+        if (version_compare(PHP_VERSION, '8.0', '<')) {
+            $this->assertStringContainsString("Trying to get property 'id' of non-object", $record->errormessage);
+        } else {
+            $this->assertStringContainsString("Attempt to read property \"id\" on bool", $record->errormessage);
+        }
         $this->assertEquals($process->id, $record->id);
     }
 
