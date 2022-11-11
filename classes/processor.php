@@ -116,6 +116,7 @@ class processor {
 
                 $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
                 $lib = lib_manager::get_step_lib($step->subpluginname);
+                mtrace("Processing '$step->subpluginname' step on course $course->id...");
                 try {
                     if ($process->waiting) {
                         $result = $lib->process_waiting_course($process->id, $step->id, $course);
