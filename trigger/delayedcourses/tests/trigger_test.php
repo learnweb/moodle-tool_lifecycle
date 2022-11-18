@@ -69,6 +69,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests that a course is not excluded by this plugin, when there exists no dalayed entry, yet.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\delayedcourses
      */
     public function test_course_not_delayed() {
 
@@ -87,6 +88,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests that a course is excluded by this plugin, when there exists a dalayed entry.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\delayedcourses
      */
     public function test_course_delayed() {
 
@@ -107,6 +109,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests that a course is not excluded by this plugin, when there exists a dalayed entry, but it is expired.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\delayedcourses
      */
     public function test_course_delay_expired() {
         $course = $this->getDataGenerator()->create_course();
@@ -124,6 +127,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests that a course is not excluded by this plugin, when it was delayed for a single workflow.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\delayedcourses
      */
     public function test_course_delay_for_single_workflow() {
         $course = $this->getDataGenerator()->create_course();
@@ -141,6 +145,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests that a course is excluded by this plugin, when it was delayed for all workflows.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\delayedcourses
      */
     public function test_course_delay_for_all_workflows() {
         $course = $this->getDataGenerator()->create_course();

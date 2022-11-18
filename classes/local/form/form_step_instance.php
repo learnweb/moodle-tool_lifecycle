@@ -70,13 +70,13 @@ class form_step_instance extends \moodleform {
      * Constructor
      *
      * @param \moodle_url $url .
+     * @param int $workflowid id of the step's workflow
      * @param step_subplugin $step step entity.
-     * @param int $workflowid if of the step's workflow
      * @param string $subpluginname name of the subplugin.
      * @param array $stepsettings settings of the step.
      * @throws \moodle_exception if neither step nor subpluginname are set.
      */
-    public function __construct($url, $step, $workflowid, $subpluginname = null, $stepsettings = null) {
+    public function __construct($url, $workflowid, $step, $subpluginname = null, $stepsettings = null) {
         $this->step = $step;
         $this->workflowid = $workflowid;
         if ($step) {

@@ -38,10 +38,11 @@ The delay duration determines how long a course will be excepted from being proc
 $string['config_backup_path'] = 'Path of the lifecycle backup folder';
 $string['config_backup_path_desc'] = 'This settings defines the storage location of the backups created by the backup step.
 The path has to be specified as an absolute path on your server.';
-$string['active_processes_list_header'] = 'Active processes';
+$string['find_course_list_header'] = 'Find courses';
 $string['adminsettings_heading'] = 'Workflow settings';
 $string['active_manual_workflows_heading'] = 'Active manual workflows';
 $string['active_automatic_workflows_heading'] = 'Active automatic workflows';
+$string['see_in_workflow'] = 'See in workflow';
 $string['workflow_definition_heading'] = 'Workflow definitions';
 $string['adminsettings_edit_workflow_definition_heading'] = 'Workflow definition';
 $string['adminsettings_workflow_definition_steps_heading'] = 'Workflow steps';
@@ -75,8 +76,11 @@ $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_workflow'] = 'Workflow';
 
 $string['workflow'] = 'Workflow';
-$string['add_workflow'] = 'Add workflow';
+$string['workflow_drafts_header'] = 'Workflow drafts';
+$string['active_workflows_header'] = 'Active workflows';
+$string['add_workflow'] = 'Create new workflow';
 $string['upload_workflow'] = 'Upload workflow';
+$string['create_workflow_from_existing'] = 'Copy new workflow from existing';
 $string['workflow_title'] = 'Title';
 $string['workflow_title_help'] = 'Workflow title (visible for admins only).';
 $string['workflow_displaytitle'] = 'Displayed workflow title';
@@ -115,7 +119,8 @@ $string['workflow_duplicate_title'] = '{$a} (Copy)';
 $string['deactivated_workflows_list'] = 'List deactivated workflows';
 $string['deactivated_workflows_list_header'] = 'Deactivated workflows';
 $string['workflow_timedeactive'] = 'Deactivated since';
-$string['active_workflows_list'] = 'List active workflows and workflow definitions';
+$string['active_workflows_list'] = 'List active workflows';
+$string['workflow_drafts_list'] = 'List workflow drafts';
 
 $string['step_type'] = 'Type';
 $string['step_subpluginname'] = 'Subplugin name';
@@ -227,3 +232,34 @@ $string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} new tool_lifec
 $string['errorbackuppath'] = "Error while trying to create the backup directory. You might be missing the permission to do so.
 Please check your path at Site administration/Plugins/Admin tools/Life Cycle/General & subplugins/backup_path.";
 $string['errornobackup'] = "No backup was created at the specified directory, reasons unknown.";
+
+// Workflowoverview.
+$string['workflowoverview'] = 'View workflow';
+$string['workflowoverview_list_header'] = 'Details of Workflows';
+$string['create_step'] = 'Create step';
+$string['create_trigger'] = 'Create trigger';
+$string['edit_step'] = 'Edit step';
+$string['edit_trigger'] = 'Edit trigger';
+$string['move_up'] = 'Move up';
+$string['move_down'] = 'Move down';
+$string['details:displaytitle'] = 'Displayed to teachers as <b>{$a}</b>.';
+$string['details:rollbackdelay'] = 'When a course is rolled back, it will be delayed for <b>{$a}</b>.';
+$string['details:finishdelay'] = 'When a course has finished the workflow, it will be delayed for <b>{$a}</b>.';
+$string['details:globaldelay_yes'] = 'These delays apply <b>to all workflows</b>.';
+$string['details:globaldelay_no'] = 'These delays apply <b>only to this workflow</b>.';
+$string['courses_will_be_triggered_total'] = '{$a} courses will be triggered in total';
+$string['courses_will_be_excluded_total'] = '{$a} courses will be excluded in total';
+$string['courses_will_be_triggered'] = '{$a} Courses will be triggered';
+$string['courses_will_be_excluded'] = '{$a} Courses will be excluded';
+$string['overview:trigger'] = 'Trigger';
+$string['overview:trigger_help'] = 'A course will only trigger a workflow, if all triggers agree on it (AND operation).<br><br>
+Courses which are delayed, or already in another workflow are not included in the displayed counts.<br>
+Still, these numbers are only approximates, since it could be that a course is excluded by another workflow, or will trigger another workflow before this one.';
+$string['overview:add_trigger'] = 'Add trigger';
+$string['overview:add_trigger_help'] = 'You can only add one instance of each trigger type.';
+
+// Create copy from existing workflow.
+$string['create_copy'] = 'Create copy';
+$string['active'] = 'Active';
+$string['deactivated'] = 'Deactivated';
+$string['draft'] = 'Draft';

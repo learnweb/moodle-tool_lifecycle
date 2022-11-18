@@ -22,6 +22,7 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_lifecycle;
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../lib.php');
@@ -38,7 +39,7 @@ use tool_lifecycle\local\manager\process_manager;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
+class persist_process_test extends \advanced_testcase {
 
     /** @var workflow $workflow Instance of the workflow. */
     private $workflow;
@@ -60,6 +61,7 @@ class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
 
     /**
      * Test the creation of a process.
+     * @covers \tool_lifecycle\local\manager\process_manager
      */
     public function test_create() {
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
@@ -73,6 +75,7 @@ class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
 
     /**
      * Tests setting a process on waiting.
+     * @covers \tool_lifecycle\local\manager\process_manager
      */
     public function test_process_waiting() {
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
@@ -84,6 +87,7 @@ class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
 
     /**
      * Tests deletion of a process when rolledback.
+     * @covers \tool_lifecycle\local\manager\process_manager
      */
     public function test_process_rollback() {
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
@@ -95,6 +99,7 @@ class tool_lifecycle_persist_process_testcase extends \advanced_testcase {
 
     /**
      * Tests proceeding a process to the next step.
+     * @covers \tool_lifecycle\local\manager\process_manager
      */
     public function test_process_proceed() {
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
