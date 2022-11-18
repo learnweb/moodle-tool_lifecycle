@@ -84,6 +84,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are in the category are correctly triggered.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\categories
      */
     public function test_course_has_cat() {
 
@@ -108,6 +109,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are in the category are correctly triggered.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\categories
      */
     public function test_course_within_cat() {
 
@@ -132,6 +134,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are not in the category are correctly triggered.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\categories
      */
     public function test_course_not_within_cat() {
         $course = $this->getDataGenerator()->create_course();

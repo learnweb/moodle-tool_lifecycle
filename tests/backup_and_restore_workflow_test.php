@@ -67,6 +67,7 @@ class backup_and_restore_workflow_test extends \advanced_testcase {
 
     /**
      * Test to activate the manual workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager check if backup is created
      */
     public function test_backup_workflow() {
         $backuptask = new backup_lifecycle_workflow($this->workflow->id);

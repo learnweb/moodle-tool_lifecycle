@@ -193,7 +193,7 @@ class processor {
     /**
      * Returns a record set with all relevant courses.
      * Relevant means that there is currently no lifecycle process running for this course.
-     * @param trigger[] $triggers List of triggers, which will be asked for additional where requirements.
+     * @param trigger_subplugin[] $triggers List of triggers, which will be asked for additional where requirements.
      * @param int[] $exclude List of course id, which should be excluded from execution.
      * @return \moodle_recordset with relevant courses.
      * @throws \coding_exception
@@ -226,6 +226,79 @@ class processor {
             'WHERE {tool_lifecycle_process}.courseid is null AND ' .
             'pe.courseid IS NULL AND '. $where;
         return $DB->get_recordset_sql($sql, $whereparams);
+    }
+
+    /**
+     * Calculates triggered and excluded courses for every trigger of a workflow, and in total.
+     * @param int $workflowid
+     * @return array
+     */
+    public function get_count_of_courses_to_trigger_for_workflow($workflowid) {
+        $countcourses = 0;
+        $counttriggered = 0;
+        $countexcluded = 0;
+        $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
+
+        // Exclude globally delayed courses, courses delayed for this workflow, and the site course.
+        $exclude = delayed_courses_manager::get_globally_delayed_courses();
+        $exclude = array_merge($exclude, delayed_courses_manager::get_delayed_courses_for_workflow($workflowid));
+        $exclude[] = SITEID;
+
+        $amounts = [];
+        $autotriggers = [];
+        foreach ($triggers as $trigger) {
+            $obj = new \stdClass();
+            if (lib_manager::get_trigger_lib($trigger->subpluginname)->is_manual_trigger()) {
+                $obj->automatic = false;
+            } else {
+                $obj->automatic = true;
+                $obj->triggered = 0;
+                $obj->excluded = 0;
+                $autotriggers[] = $trigger;
+            }
+            $amounts[$trigger->sortindex] = $obj;
+        }
+
+        $recordset = $this->get_course_recordset($autotriggers, $exclude);
+
+        while ($recordset->valid()) {
+            $course = $recordset->current();
+            $countcourses++;
+            $action = false;
+            foreach ($autotriggers as $trigger) {
+                $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+                $response = $lib->check_course($course, $trigger->id);
+                if ($response == trigger_response::next()) {
+                    if (!$action) {
+                        $action = true;
+                    }
+                    continue;
+                }
+                if ($response == trigger_response::exclude()) {
+                    if (!$action) {
+                        $action = true;
+                        $countexcluded++;
+                    }
+                    $amounts[$trigger->sortindex]->excluded++;
+                    continue;
+                }
+                if ($response == trigger_response::trigger()) {
+                    $amounts[$trigger->sortindex]->triggered++;
+                }
+            }
+            if (!$action) {
+                $counttriggered++;
+            }
+            $recordset->next();
+        }
+
+        $all = new \stdClass();
+        $all->excluded = $countexcluded;
+        $all->triggered = $counttriggered;
+        $all->coursesetsize = $countcourses;
+
+        $amounts['all'] = $all;
+        return $amounts;
     }
 
 }

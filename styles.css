@@ -2,13 +2,126 @@
     overflow: initial;
 }
 
+body.path-admin-tool-lifecycle .wf-secondary-info,
 .lifecycle-table span.workflow_displaytitle,
 .lifecycle-table span.secondary-info {
-    color: #888;
+    color: #777;
     font-size: .9em;
     padding: 0.5em;
 }
 
+.lifecycle-highlighted {
+    background-color: rgba(0, 178, 255, 0.15);
+}
+
 span.tool_lifecycle-hint {
     text-decoration: underline dashed #444;
+}
+
+/* Workflowoverview */
+
+#lifecycle-workflow-details .wf-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1em 0;
+}
+
+#lifecycle-workflow-details .workflow-item,
+#lifecycle-workflow-details .workflow-trigger {
+    text-align: center;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    min-width: 200px;
+}
+
+#lifecycle-workflow-details .workflow-item {
+    box-shadow: 1px 1px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+#lifecycle-workflow-details .workflow-trigger {
+    max-width: 300px;
+    margin: 8px;
+}
+
+#lifecycle-workflow-details .wf-header {
+    border-bottom: 1px solid #aaa;
+    line-height: 1;
+    display: flex;
+    padding: 8px 4px 8px 16px;
+    align-items: center;
+}
+
+#lifecycle-workflow-details .wf-header-text {
+    flex: auto 1 1;
+}
+
+#lifecycle-workflow-details .wf-actionmenu {
+    margin-left: 16px;
+}
+
+#lifecycle-workflow-details .wf-content {
+    padding: 8px 12px;
+}
+
+#lifecycle-workflow-details .wf-arrow {
+    height: 32px;
+    width: 0;
+    border-left: 1px solid #777;
+}
+
+#lifecycle-workflow-details .wf-arrow::after {
+    display: block;
+    height: 8px;
+    width: 8px;
+    content: '';
+    border: 1px solid #777;
+    border-top: none;
+    border-right: none;
+    transform: translate(-4.5px, 23px) rotate(-45deg);
+}
+
+#lifecycle-workflow-details .workflow.wf-trigger-wrapper {
+    display: inline-flex;
+    margin-top: -8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#lifecycle-workflow-details .workflow-step.wf-selected {
+    border: 2px solid black;
+    background-color: rgba(0, 178, 255, 0.15);
+}
+
+#lifecycle-workflow-details .wf-wrapper {
+    flex: 60% 1 1;
+}
+
+#lifecycle-workflow-details .courses-table {
+    flex: 40% 1 1;
+    border: 1px solid #bbb;
+    border-right: none;
+}
+
+#lifecycle-workflow-details .bar {
+    border: 1px solid #dee2e6;
+    border-right: none;
+}
+
+#lifecycle-workflow-details .close-button {
+    cursor: pointer;
+    padding: 0 12px;
+    border-right: 1px solid #dee2e6;
+    display: inline-block;
+    font-size: 1.75em;
+}
+
+#lifecycle-workflow-details .close-button:hover {
+    text-decoration: none;
+}
+
+#lifecycle-workflow-details .edit-pen {
+    position: absolute;
+    top: 1em;
+    right: 1em;
 }

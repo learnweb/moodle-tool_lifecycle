@@ -47,8 +47,6 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
         echo $this->output->header();
         if ($title) {
             echo $this->output->heading($title);
-        } else {
-            echo $this->output->heading($this->page->heading);
         }
     }
 

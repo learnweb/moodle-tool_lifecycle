@@ -34,7 +34,7 @@ require_once($CFG->libdir . '/formslib.php');
  * @copyright  2021 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class form_backups_filter extends \moodleform {
+class form_courses_filter extends \moodleform {
 
     /**
      * Defines forms elements
@@ -42,13 +42,23 @@ class form_backups_filter extends \moodleform {
     public function definition() {
         $mform = $this->_form;
 
+        $mform->addElement('text', 'courseid', get_string('courseid', 'tool_lifecycle'));
+        $mform->setType('courseid', PARAM_ALPHANUM);
+        $mform->addRule('courseid', null, 'numeric', null, 'client');
+
         $mform->addElement('text', 'shortname', get_string('shortname'));
         $mform->setType('shortname', PARAM_TEXT);
 
         $mform->addElement('text', 'fullname', get_string('fullname'));
         $mform->setType('fullname', PARAM_TEXT);
 
-        $this->add_action_buttons(true, get_string('apply', 'tool_lifecycle'));
+        // Edited from $this->add_action_buttons to allow custom cancel text.
+        $buttonarray = array();
+        $buttonarray[] = &$mform->createElement('submit', 'submitbutton',
+            get_string('apply', 'tool_lifecycle'));
+        $buttonarray[] = &$mform->createElement('cancel', 'cancel', get_string('reset'));
+        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->closeHeaderBefore('buttonar');
     }
 
 }

@@ -34,10 +34,11 @@ $string['config_delay_duration'] = 'Standardlänge eines Kursausschlusses';
 $string['config_delay_duration_desc'] = 'Diese Einstellung definiert den Standardlänge einer Kursausschlusses in einem Workflow
  falls ein Prozess des Workflows zurückgesetzt oder beendigt wird. Die Länge des Kursausschlusses besagt, wie lange es dauert, bis
  der Kurs wieder vom Workflow bearbeitet wird.';
-$string['active_processes_list_header'] = 'Aktive Prozesse';
+$string['find_course_list_header'] = 'Kurse finden';
 $string['adminsettings_heading'] = 'Workflow-Einstellungen';
 $string['active_manual_workflows_heading'] = 'Aktive manuelle Workflows';
 $string['active_automatic_workflows_heading'] = 'Aktive automatische Workflows';
+$string['see_in_workflow'] = 'In Workflow ansehen';
 $string['workflow_definition_heading'] = 'Workflowdefinitionen';
 $string['adminsettings_edit_workflow_definition_heading'] = 'Workflowdefinition';
 $string['adminsettings_workflow_definition_steps_heading'] = 'Workflowschritte';
@@ -70,18 +71,21 @@ $string['trigger_sortindex'] = 'Hoch/Runter';
 $string['trigger_workflow'] = 'Workflow';
 
 $string['workflow'] = 'Workflow';
-$string['add_workflow'] = 'Workflow hinzufügen';
+$string['workflow_drafts_header'] = 'Workflow-Entwürfe';
+$string['active_workflows_header'] = 'Aktive Workflows';
+$string['add_workflow'] = 'Neuen Workflow hinzufügen';
 $string['upload_workflow'] = 'Workflow hochladen';
+$string['create_workflow_from_existing'] = 'Kopie von bestehendem Workflow erstellen';
 $string['workflow_title'] = 'Titel';
 $string['workflow_title_help'] = 'Titel des Workflows (nur sichtbar für Admins).';
 $string['workflow_displaytitle'] = 'Angezeigter Titel des Workflows';
 $string['workflow_displaytitle_help'] = 'Dieser Titel wird Nutzern beim Verwalten ihrer Kurse angezeigt.';
 $string['workflow_rollbackdelay'] = 'Kursauschluss beim Zurücksetzen';
 $string['workflow_rollbackdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs
- gestarted werden kann, nachdem der Kurs innerhalb eines Prozesses dieses Workflows zurückgesetzt wurde.';
+ gestartet werden kann, nachdem der Kurs innerhalb eines Prozesses dieses Workflows zurückgesetzt wurde.';
 $string['workflow_finishdelay'] = 'Kursauschluss bei Beendigung';
 $string['workflow_finishdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs
- gestarted werden kann, nachdem der Kurs einen Prozess dieses Workflows beendingt hat.';
+ gestartet werden kann, nachdem der Kurs einen Prozess dieses Workflows beendingt hat.';
 $string['workflow_delayforallworkflows'] = 'Ausschluss für alle Workflows?';
 $string['workflow_delayforallworkflows_help'] = 'Falls ja, wird ein Kurs für die oben genannte Zeit nicht nur von diesem, sondern
  von allen Workflows ausgeschlossen. Das heißt, bis die Zeit abgelaufen ist, kann kein Prozess für den Kurs gestartet werden.';
@@ -109,7 +113,8 @@ $string['workflow_duplicate_title'] = '{$a} (Kopie)';
 $string['deactivated_workflows_list'] = 'Zeige deaktivierte Workflows';
 $string['deactivated_workflows_list_header'] = 'Deaktivierte Workflows';
 $string['workflow_timedeactive'] = 'Deaktiviert seit';
-$string['active_workflows_list'] = 'Zeige aktive Workflows und Workflowdefinitionen';
+$string['active_workflows_list'] = 'Zeige aktive Workflows';
+$string['workflow_drafts_list'] = 'Zeige Workflow-Entwürfe';
 
 $string['step_type'] = 'Typ';
 $string['step_subpluginname'] = 'Subpluginname';
@@ -191,3 +196,37 @@ $string['errorbackuppath'] = "Ein Fehler ist aufgetreten beim Versuchen das Back
 Ihnen fehlen wahrscheinlich die Berechtigung dazu. Bitte überprüfen Sie den Pfad unter
 Seitenadministration/Plugins/Dienstprogramme/Kurs-Lebenszyklus/Allgemein & Subplugins.";
 $string['errornobackup'] = "Es wurde kein Backup in dem angegebenen Pfad erstellt.";
+
+// Workflowoverview.
+$string['workflowoverview'] = 'Workflow ansehen';
+$string['workflowoverview_list_header'] = 'Details zu Workflows';
+$string['create_step'] = 'Step erstellen';
+$string['create_trigger'] = 'Trigger erstellen';
+$string['edit_step'] = 'Step bearbeiten';
+$string['edit_trigger'] = 'Trigger bearbeiten';
+$string['move_up'] = 'Nach oben bewegen';
+$string['move_down'] = 'Nach unten bewegen';
+$string['courses_triggered'] = 'Kurse insgesamt getriggered: {$a}';
+$string['courses_excluded'] = 'Kurse insgesamt ausgeschlossen: {$a}';
+$string['courses_size'] = 'Kurse insgesamt genauer betrachtet: {$a}';
+$string['details:displaytitle'] = 'Wird Lehrenden als <b>{$a}</b> angezeigt.';
+$string['details:rollbackdelay'] = 'Nachdem ein Kurs zurückgesetzt wird, wird er für <b>{$a}</b> verzögert.';
+$string['details:finishdelay'] = 'Nachdem ein Kurs einen Workflow beendet, wird er für <b>{$a}</b> verzögert.';
+$string['details:globaldelay_yes'] = 'Diese Verzögerungen gelten <b>für alle Workflows</b>.';
+$string['details:globaldelay_no'] = 'Diese Verzögerungen gelten <b>nur für diesen Workflow</b>.';
+$string['courses_will_be_triggered_total'] = '{$a} Kurse werden insgesamt getriggert';
+$string['courses_will_be_excluded_total'] = '{$a} Kurse werden insgesamt ausgeschlossen';
+$string['courses_will_be_triggered'] = '{$a} Kurse werden getriggert';
+$string['courses_will_be_excluded'] = '{$a} Kurse werden ausgeschlossen';
+$string['overview:trigger'] = 'Trigger';
+$string['overview:trigger_help'] = 'Ein Kurs fängt nur dann an, einen Workflow zu durchlaufen, wenn alle Trigger des Workflows dies übereinstimmend (UND-Verknüpfung) aussagen.<br><br>
+In den hier genannten Zahlen werden Kurse, die verzögert werden oder sich bereits in anderen Workflows befinden, nicht mitgezählt.<br>
+Trotzdem sind die Zahlen nur approximiert, da es sein könnte, dass die Kurse vor diesem einen anderen Workflow auslösen.';
+$string['overview:add_trigger'] = 'Trigger hinzufügen';
+$string['overview:add_trigger_help'] = 'Es kann nur eine Instanz jedes Triggertyps hinzugefügt werden.';
+
+// Create copy from existing.
+$string['create_copy'] = 'Kopie erstellen';
+$string['active'] = 'Aktiv';
+$string['deactivated'] = 'Deaktiviert';
+$string['draft'] = 'Entwurf';

@@ -23,23 +23,48 @@
  */
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+require_login();
+\tool_lifecycle\permission_and_navigation::setup_active();
 
-$PAGE->set_context(context_system::instance());
-require_login(null, false);
-require_capability('moodle/site:config', context_system::instance());
+$PAGE->set_url(new \moodle_url(\tool_lifecycle\urls::ACTIVE_PROCESSES));
 
-admin_externalpage_setup('tool_lifecycle_activeprocesses');
-
-$PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/activeprocesses.php'));
-
-$table = new tool_lifecycle\local\table\active_processes_table('tool_lifecycle_active_processes');
-
-$PAGE->set_title(get_string('active_processes_list_header', 'tool_lifecycle'));
-$PAGE->set_heading(get_string('active_processes_list_header', 'tool_lifecycle'));
+$title = get_string('find_course_list_header', 'tool_lifecycle');
+$PAGE->set_title($title);
+$PAGE->set_heading($title);
+$PAGE->navbar->add($title, $PAGE->url);
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
+$mform = new \tool_lifecycle\local\form\form_courses_filter();
+
+// Cache handling.
+$cachekey = 'activeprocesses_filter';
+$cache = cache::make('tool_lifecycle', 'mformdata');
+if ($search = optional_param('search', null, PARAM_RAW)) {
+    $obj = new stdClass();
+    $obj->fullname = $search;
+    $obj->courseid = null;
+    $obj->shortname = null;
+    $cache->set($cachekey, $obj);
+    redirect($PAGE->url);
+}
+
+if ($mform->is_cancelled()) {
+    $cache->delete($cachekey);
+    redirect($PAGE->url);
+} else if ($data = $mform->get_data()) {
+    $cache->set($cachekey, $data);
+} else {
+    $data = $cache->get($cachekey);
+    if ($data) {
+        $mform->set_data($data);
+    }
+}
+
+$table = new tool_lifecycle\local\table\active_processes_table('tool_lifecycle_active_processes', $data);
 
 echo $renderer->header();
+
+$mform->display();
 
 $table->out(50, false);
 

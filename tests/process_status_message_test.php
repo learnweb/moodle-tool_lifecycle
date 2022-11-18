@@ -74,6 +74,7 @@ class process_status_message_test extends \advanced_testcase {
 
     /**
      * Test getting status message for a process.
+     * @covers \tool_lifecycle\local\manager\interaction_manager
      */
     public function test_get_status_message() {
         $process = $this->generator->create_process(2, $this->workflow->id);

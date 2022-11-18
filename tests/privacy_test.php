@@ -22,7 +22,7 @@
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace tool_lifecycle\privacy;
+namespace tool_lifecycle;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
@@ -92,6 +92,14 @@ class privacy_test extends provider_testcase {
         $this->emailstep = $this->generator->create_step("instance2", "email", $this->workflow->id);
     }
 
+    /**
+     * Get all contextes in which users are effected.
+     * @covers \tool_lifecycle\privacy\provider contexts
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
+     * @throws \moodle_exception
+     */
     public function test_get_contexts_for_userid() {
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
@@ -114,6 +122,14 @@ class privacy_test extends provider_testcase {
         $this->assertTrue($contextlist->current() instanceof \context_system);
     }
 
+    /**
+     * Export all data for privacy provider
+     * @covers \tool_lifecycle\privacy\provider data
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
+     * @throws \moodle_exception
+     */
     public function test_export_user_data() {
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
@@ -145,6 +161,14 @@ class privacy_test extends provider_testcase {
         $this->assertEquals(self::ACTION_KEEP, $data2->action);
     }
 
+    /**
+     * delete data for context - privacy provider
+     * @covers \tool_lifecycle\privacy\provider data
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
+     * @throws \moodle_exception
+     */
     public function test_delete_data_for_all_users_in_context() {
         global $DB;
         $c1 = $this->getDataGenerator()->create_course();
@@ -163,6 +187,14 @@ class privacy_test extends provider_testcase {
         $this->assertFalse($DB->record_exists_select('tool_lifecycle_action_log', 'userid != -1'));
     }
 
+    /**
+     * delete data for user - privacy provider
+     * @covers \tool_lifecycle\privacy\provider data
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
+     * @throws \moodle_exception
+     */
     public function test_delete_data_for_user() {
         global $DB;
         $c1 = $this->getDataGenerator()->create_course();
@@ -189,6 +221,14 @@ class privacy_test extends provider_testcase {
         $this->assertEquals(1, $DB->count_records_select('tool_lifecycle_action_log', "userid = -1"));
     }
 
+    /**
+     * all users of context - privacy provider
+     * @covers \tool_lifecycle\privacy\provider user in context
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
+     * @throws \moodle_exception
+     */
     public function test_get_users_in_context() {
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
@@ -210,6 +250,14 @@ class privacy_test extends provider_testcase {
         $this->assertEquals($u1->id, $userlist->current()->id);
     }
 
+    /**
+     * delete data for *users* - privacy provider
+     * @covers \tool_lifecycle\privacy\provider data *users*
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
+     * @throws \moodle_exception
+     */
     public function test_delete_data_for_users() {
         global $DB;
         $c1 = $this->getDataGenerator()->create_course();
