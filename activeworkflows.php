@@ -49,7 +49,6 @@ $PAGE->set_heading(get_string('active_workflows_header', 'tool_lifecycle'));
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header(' ');
-echo $renderer->render_extra_navigation();
 
 echo $renderer->render_from_template('tool_lifecycle/search_input', [
     'action' => (new moodle_url(urls::ACTIVE_PROCESSES))->out(false),

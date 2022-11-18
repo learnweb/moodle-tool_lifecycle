@@ -49,8 +49,6 @@ $PAGE->set_heading(get_string('workflow_drafts_header', 'tool_lifecycle'));
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
-echo $renderer->render_extra_navigation();
-
 
 echo html_writer::link(new \moodle_url(urls::EDIT_WORKFLOW),
     get_string('add_workflow', 'tool_lifecycle'), ['class' => 'btn btn-primary mx-1']);
@@ -66,6 +64,9 @@ echo $OUTPUT->box_start("lifecycle-enable-overflow lifecycle-table");
 $table->out(10, false);
 echo $OUTPUT->box_end();
 
+echo \html_writer::link(new \moodle_url(urls::ACTIVE_WORKFLOWS),
+    get_string('active_workflows_list', 'tool_lifecycle'));
+echo '<br>';
 echo \html_writer::link(new \moodle_url(urls::DEACTIVATED_WORKFLOWS),
     get_string('deactivated_workflows_list', 'tool_lifecycle'));
 
