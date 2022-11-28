@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         php: ['8.0']
-        moodle-branch: ['master'] # To be replaced with MOODLE_401_STABLE.
+        moodle-branch: ['MOODLE_401_STABLE']
         database: ['pgsql']
 
     steps:
@@ -108,7 +108,7 @@ jobs:
       fail-fast: false
       matrix:
         php: ['8.0']
-        moodle-branch: ['MOODLE_311_STABLE', 'MOODLE_400_STABLE', 'master'] # To be replaced with MOODLE_401_STABLE.
+        moodle-branch: ['MOODLE_311_STABLE', 'MOODLE_400_STABLE', 'MOODLE_401_STABLE']
         database: ['mariadb', 'pgsql']
         include:
           - php: '7.4'
