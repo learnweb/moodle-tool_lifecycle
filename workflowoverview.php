@@ -87,8 +87,15 @@ $str = [
     'move_down' => get_string('move_down', 'tool_lifecycle')
 ];
 
-$amounts = (new \tool_lifecycle\processor())->get_count_of_courses_to_trigger_for_workflow($workflow->id);
-$displaytotaltriggered = !empty($triggers);
+$showcoursecounts = get_config('tool_lifecycle', 'showcoursecounts');
+if ($showcoursecounts) {
+    // On moodle instances with many courses the following call can be fatal, because each trigger
+    // check function will be called for every single course of the instance to determine how many
+    // courses will be triggered by the workflow/the specific trigger. This count is only being
+    // used to show the admin how many courses will be triggered, it has no functional aspect.
+    $amounts = (new \tool_lifecycle\processor())->get_count_of_courses_to_trigger_for_workflow($workflow->id);
+    $displaytotaltriggered = !empty($triggers);
+}
 
 foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
@@ -108,11 +115,13 @@ foreach ($triggers as $trigger) {
         );
     }
     $trigger->actionmenu = $OUTPUT->render($actionmenu);
-    $trigger->automatic = $amounts[$trigger->sortindex]->automatic;
-    $displaytotaltriggered &= $trigger->automatic;
-    if ($trigger->automatic) {
-        $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
-        $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
+    if ($showcoursecounts) {
+        $trigger->automatic = $amounts[$trigger->sortindex]->automatic;
+        $displaytotaltriggered &= $trigger->automatic;
+        if ($trigger->automatic) {
+            $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
+            $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
+        }
     }
 }
 
@@ -176,10 +185,11 @@ $data = [
     'finishdelay' => format_time($workflow->finishdelay),
     'delayglobally' => $workflow->delayforallworkflows,
     'trigger' => array_values($triggers),
-    'automatic' => $displaytotaltriggered,
-    'coursestriggered' => $amounts['all']->triggered,
-    'coursesexcluded' => $amounts['all']->excluded,
-    'coursesetsize' => $amounts['all']->coursesetsize,
+    'showcoursecounts' => $showcoursecounts,
+    'automatic' => $showcoursecounts ?? $displaytotaltriggered,
+    'coursestriggered' => $showcoursecounts ?? $amounts['all']->triggered,
+    'coursesexcluded' => $showcoursecounts ?? $amounts['all']->excluded,
+    'coursesetsize' => $showcoursecounts ?? $amounts['all']->coursesetsize,
     'steps' => array_values($steps),
     'listofcourses' => $arrayofcourses,
     'nosteplink' => $nosteplink,

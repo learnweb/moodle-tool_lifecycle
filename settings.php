@@ -42,6 +42,11 @@ if ($hassiteconfig) {
         get_string('config_backup_path_desc', 'tool_lifecycle'),
         $CFG->dataroot . DIRECTORY_SEPARATOR . 'lifecycle_backups'));
 
+    $settings->add(new admin_setting_configcheckbox('tool_lifecycle/showcoursecounts',
+        get_string('config_showcoursecounts', 'tool_lifecycle'),
+        get_string('config_showcoursecounts_desc', 'tool_lifecycle'),
+        1));
+
     $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_workflow_drafts',
         get_string('workflow_drafts_header', 'tool_lifecycle'),
         new moodle_url(\tool_lifecycle\urls::WORKFLOW_DRAFTS)));
