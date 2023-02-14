@@ -3,6 +3,9 @@
 [![Build Status](https://travis-ci.org/learnweb/moodle-tool_lifecycle.svg?branch=master)](https://travis-ci.org/learnweb/moodle-tool_lifecycle)
 [![codecov](https://codecov.io/gh/learnweb/moodle-tool_lifecycle/branch/master/graph/badge.svg)](https://codecov.io/gh/learnweb/moodle-tool_lifecycle)
 
+[Presentation Video Moodle Moot 2022](https://www.youtube.com/watch?v=7IduhrBMve4) | 
+[Slides](https://moodle.academy/pluginfile.php/42164/mod_data/content/2470/04-9-Finally_%20Deleting%20Courses%20Automatically.pdf)
+
 This plugin provides a modular framework, similar to a workflow engine, which allows the to execute recurring tasks within moodle associated with courses. 
 Possible use cases are (not limited to):
    - Deleting courses at end of life (including asking teachers for permission).
