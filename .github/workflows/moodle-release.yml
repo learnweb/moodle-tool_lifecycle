@@ -44,7 +44,7 @@ jobs:
                                          --data-urlencode "altdownloadurl=${ZIPURL}" \
                                          --data-urlencode "releasenotes=${BODY}" \
                                          --data-urlencode "releasenotesformat=4")
-          echo "::set-output name=response::${RESPONSE}"
+          echo "response=${RESPONSE}" >> $GITHUB_OUTPUT
       - name: Evaluate the response
         id: evaluate-response
         env:
