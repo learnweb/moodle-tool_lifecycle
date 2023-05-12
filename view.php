@@ -69,33 +69,33 @@ $isadmin = false;
 foreach ($admins as $admin) {
     if ($USER->id == $admin->id) {
         $isadmin = true;
-        break; 
+        break;
     }
 }
 if ($isadmin) {
-  $mform = new \tool_lifecycle\local\form\form_backups_filter();
+    $mform = new \tool_lifecycle\local\form\form_backups_filter();
 
-  // Cache handling.
-  $cache = cache::make('tool_lifecycle', 'mformdata');
-  if ($mform->is_cancelled()) {
-      $cache->delete('coursebackups_filter');
-      redirect($PAGE->url);
-  } else if ($data = $mform->get_data()) {
-      $cache->set('coursebackups_filter', $data);
-  } else {
-      $data = $cache->get('coursebackups_filter');
-      if ($data) {
-          $mform->set_data($data);
-      }
-  }
+    // Cache handling.
+    $cache = cache::make('tool_lifecycle', 'mformdata');
+    if ($mform->is_cancelled()) {
+        $cache->delete('coursebackups_filter');
+        redirect($PAGE->url);
+    } else if ($data = $mform->get_data()) {
+        $cache->set('coursebackups_filter', $data);
+    } else {
+        $data = $cache->get('coursebackups_filter');
+        if ($data) {
+            $mform->set_data($data);
+        }
+    }
 
-  echo '<br>';
+    echo '<br>';
 
-  $mform->display();
+    $mform->display();
 
-  echo '<br>';
+    echo '<br>';
 
-  $controller->handle_view($renderer, $data);
+    $controller->handle_view($renderer, $data);
 
 } else {
     echo "Please contact out support for your request.";
