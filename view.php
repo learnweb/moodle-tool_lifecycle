@@ -25,6 +25,8 @@ require_once(__DIR__ . '/../../../config.php');
 
 require_login(null, false);
 
+global $USER, $PAGE;
+
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
 $PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/view.php'));
@@ -42,21 +44,9 @@ $courseid = optional_param('courseid', null, PARAM_INT);
 
 $PAGE->set_title(get_string('viewheading', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('viewheading', 'tool_lifecycle'));
-
 $controller = new \tool_lifecycle\view_controller();
 
-if ($action !== null && $processid !== null && $stepid !== null) {
-    require_sesskey();
-    $controller->handle_interaction($action, $processid, $stepid);
-    exit;
-} else if ($triggerid !== null && $courseid !== null) {
-    require_sesskey();
-    $controller->handle_trigger($triggerid, $courseid);
-    exit;
-}
-
 $renderer = $PAGE->get_renderer('tool_lifecycle');
-
 echo $renderer->header();
 
 $mform = new \tool_lifecycle\local\form\form_courses_filter();
@@ -74,13 +64,41 @@ if ($mform->is_cancelled()) {
         $mform->set_data($data);
     }
 }
+$admins = get_admins();
+$isadmin = false;
+foreach ($admins as $admin) {
+    if ($USER->id == $admin->id) {
+        $isadmin = true;
+        break; 
+    }
+}
+if ($isadmin) {
+  $mform = new \tool_lifecycle\local\form\form_backups_filter();
 
-echo '<br>';
+  // Cache handling.
+  $cache = cache::make('tool_lifecycle', 'mformdata');
+  if ($mform->is_cancelled()) {
+      $cache->delete('coursebackups_filter');
+      redirect($PAGE->url);
+  } else if ($data = $mform->get_data()) {
+      $cache->set('coursebackups_filter', $data);
+  } else {
+      $data = $cache->get('coursebackups_filter');
+      if ($data) {
+          $mform->set_data($data);
+      }
+  }
 
-$mform->display();
+  echo '<br>';
 
-echo '<br>';
+  $mform->display();
 
-$controller->handle_view($renderer, $data);
+  echo '<br>';
+
+  $controller->handle_view($renderer, $data);
+
+} else {
+    echo "Please contact out support for your request.";
+}
 
 echo $renderer->footer();
