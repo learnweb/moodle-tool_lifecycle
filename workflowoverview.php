@@ -186,15 +186,17 @@ $data = [
     'delayglobally' => $workflow->delayforallworkflows,
     'trigger' => array_values($triggers),
     'showcoursecounts' => $showcoursecounts,
-    'automatic' => $showcoursecounts ?? $displaytotaltriggered,
-    'coursestriggered' => $showcoursecounts ?? $amounts['all']->triggered,
-    'coursesexcluded' => $showcoursecounts ?? $amounts['all']->excluded,
-    'coursesetsize' => $showcoursecounts ?? $amounts['all']->coursesetsize,
     'steps' => array_values($steps),
     'listofcourses' => $arrayofcourses,
     'nosteplink' => $nosteplink,
     'table' => $out
 ];
+if ($showcoursecounts) {
+    $data['automatic'] = $displaytotaltriggered;
+    $data['coursestriggered'] = $amounts['all']->triggered;
+    $data['coursesexcluded'] = $amounts['all']->excluded;
+    $data['coursesetsize'] = $amounts['all']->coursesetsize;
+}
 
 echo $renderer->header();
 
