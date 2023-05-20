@@ -38,6 +38,10 @@ The delay duration determines how long a course will be excepted from being proc
 $string['config_backup_path'] = 'Path of the lifecycle backup folder';
 $string['config_backup_path_desc'] = 'This settings defines the storage location of the backups created by the backup step.
 The path has to be specified as an absolute path on your server.';
+$string['config_showcoursecounts'] = 'Show amount of courses which will be triggered';
+$string['config_showcoursecounts_desc'] = 'The workflow overview page by default shows the amount of courses which will be
+triggered by the configured triggers which can be load heavy. Disable this option if you experience issues loading the workflow
+overview.';
 $string['find_course_list_header'] = 'Find courses';
 $string['adminsettings_heading'] = 'Workflow settings';
 $string['active_manual_workflows_heading'] = 'Active manual workflows';
