@@ -23,6 +23,8 @@
  */
 namespace tool_lifecycle\local\table;
 
+use tool_lifecycle\urls;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
@@ -39,35 +41,57 @@ class active_processes_table extends \table_sql {
     /**
      * Constructor for active_processes_table.
      * @param int $uniqueid Unique id of this table.
+     * @param \stdClass|null $filterdata
      */
-    public function __construct($uniqueid) {
+    public function __construct($uniqueid, $filterdata) {
         parent::__construct($uniqueid);
-        global $PAGE;
-        $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
+        global $PAGE, $DB;
+        $this->set_attribute('class', $this->attributes['class'] . ' lifecycle-table ' . $uniqueid);
+
+        $where = ['TRUE'];
+        $params = [];
+
+        if ($filterdata) {
+            if ($filterdata->shortname) {
+                $where[] = $DB->sql_like('c.shortname', ':shortname', false, false);
+                $params['shortname'] = '%' . $DB->sql_like_escape($filterdata->shortname) . '%';
+            }
+
+            if ($filterdata->fullname) {
+                $where[] = $DB->sql_like('c.fullname', ':fullname', false, false);
+                $params['fullname'] = '%' . $DB->sql_like_escape($filterdata->fullname) . '%';
+            }
+
+            if ($filterdata->courseid) {
+                $where[] = 'c.courseid = :courseid';
+                $params['courseid'] = $filterdata->courseid;
+            }
+        }
+
         $this->set_sql('c.id as courseid, ' .
             'c.fullname as coursefullname, ' .
             'c.shortname as courseshortname, ' .
-            'instancename as instancename ',
-            '{tool_lifecycle_process} p join ' .
-            '{course} c on p.courseid = c.id join ' .
-            '{tool_lifecycle_step} s '.
-            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex',
-            "TRUE");
+            'instancename as instancename, ' .
+            's.id as stepid, ' .
+            'w.title as workflow, ' .
+            'w.displaytitle as wfdisplaytitle, ' .
+            'w.id as wfid ',
+            '{tool_lifecycle_process} p ' .
+            'JOIN {course} c ON p.courseid = c.id ' .
+            'JOIN {tool_lifecycle_step} s ON p.workflowid = s.workflowid AND p.stepindex = s.sortindex ' .
+            'JOIN {tool_lifecycle_workflow} w ON p.workflowid = w.id',
+            join(' AND ', $where), $params);
         $this->define_baseurl($PAGE->url);
-        $this->init();
-    }
-
-    /**
-     * Initialize the table.
-     */
-    public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'instancename']);
+        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'workflow', 'instancename', 'tools']);
         $this->define_headers([
             get_string('course'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
-            get_string('step', 'tool_lifecycle')]);
-        $this->setup();
+            get_string('workflow', 'tool_lifecycle'),
+            get_string('step', 'tool_lifecycle'),
+            get_string('tools', 'tool_lifecycle')]);
+
+        $this->column_nosort = ['tools'];
     }
 
     /**
@@ -98,12 +122,22 @@ class active_processes_table extends \table_sql {
     }
 
     /**
-     * Render instancename column.
+     * Render workflow column.
      * @param object $row Row data.
-     * @return string pluginname of the instance
+     * @return string Workflow title
      */
-    public function col_instancename($row) {
+    public function col_workflow($row) {
+        return $row->workflow . '<br><span class="workflow_displaytitle">' . $row->wfdisplaytitle . '</span>';
+    }
 
-        return $row->instancename;
+    /**
+     * Render tools column.
+     * @param object $row Row data.
+     * @return string Tools.
+     */
+    public function col_tools($row) {
+        return \html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
+            ['wf' => $row->wfid, 'courseid' => $row->courseid, 'step' => $row->stepid]
+        ), get_string('see_in_workflow', 'tool_lifecycle'), ['class' => 'btn btn-secondary']);
     }
 }

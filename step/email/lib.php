@@ -60,7 +60,8 @@ class email extends libbase {
     public function process_course($processid, $instanceid, $course) {
         global $DB;
         $coursecontext = \context_course::instance($course->id);
-        $userstobeinformed = get_users_by_capability($coursecontext, 'lifecyclestep/email:preventdeletion');
+        $userstobeinformed = get_enrolled_users($coursecontext, 'lifecyclestep/email:preventdeletion', 0,
+            'u.id', null, null, null, true);
         foreach ($userstobeinformed as $user) {
             $record = new \stdClass();
             $record->touser = $user->id;

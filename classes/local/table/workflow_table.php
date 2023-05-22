@@ -25,9 +25,8 @@ namespace tool_lifecycle\local\table;
 
 use tool_lifecycle\action;
 use tool_lifecycle\local\manager\process_manager;
-use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
-use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\urls;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -133,10 +132,10 @@ abstract class workflow_table extends \table_sql {
 
         $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
-        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
-            array('workflowid' => $row->id, 'sesskey' => sesskey()));
+        $url = new \moodle_url(urls::WORKFLOW_DETAILS,
+            array('wf' => $row->id));
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-            null , array('title' => $alt));
+            null, array('title' => $alt));
 
         return $output;
     }
@@ -152,12 +151,12 @@ abstract class workflow_table extends \table_sql {
      * @throws \moodle_exception
      */
     protected function format_icon_link($action, $workflowid, $icon, $alt) {
-        global $OUTPUT;
+        global $OUTPUT, $PAGE;
 
-        return $OUTPUT->action_icon(new \moodle_url( '/admin/tool/lifecycle/adminsettings.php',
+        return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
                 array('action' => $action,
-                    'sesskey' => sesskey(),
-                    'workflowid' => $workflowid)),
+                    'workflowid' => $workflowid,
+                    'sesskey' => sesskey())),
                 new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
                 null , array('title' => $alt)) . ' ';
     }

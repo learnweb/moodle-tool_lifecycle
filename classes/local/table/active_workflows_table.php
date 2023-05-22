@@ -24,10 +24,8 @@
 namespace tool_lifecycle\local\table;
 
 use tool_lifecycle\action;
-use tool_lifecycle\local\manager\lib_manager;
-use tool_lifecycle\local\manager\step_manager;
-use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\urls;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -57,17 +55,12 @@ abstract class active_workflows_table extends workflow_table {
 
         $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
-        $url = new \moodle_url('/admin/tool/lifecycle/workflowsettings.php',
-            array('workflowid' => $row->id, 'sesskey' => sesskey()));
-        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+        $overviewurl = new \moodle_url(urls::WORKFLOW_DETAILS,
+            array('wf' => $row->id));
+        $output .= $OUTPUT->action_icon($overviewurl, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
             null, array('title' => $alt));
 
         if (workflow_manager::is_disableable($row->id)) {
-            $action = action::WORKFLOW_DUPLICATE;
-            $alt = get_string('duplicateworkflow', 'tool_lifecycle');
-            $icon = 't/copy';
-            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
-
             $action = action::WORKFLOW_BACKUP;
             $alt = get_string('backupworkflow', 'tool_lifecycle');
             $icon = 't/backup';
@@ -75,7 +68,7 @@ abstract class active_workflows_table extends workflow_table {
 
             $alt = get_string('disableworkflow', 'tool_lifecycle');
             $icon = 't/disable';
-            $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
+            $url = new \moodle_url(urls::DEACTIVATED_WORKFLOWS,
                 array('workflowid' => $row->id, 'action' => action::WORKFLOW_DISABLE, 'sesskey' => sesskey()));
             $confirmaction = new \confirm_action(get_string('disableworkflow_confirm', 'tool_lifecycle'));
             $output .= $OUTPUT->action_icon($url,
@@ -85,7 +78,7 @@ abstract class active_workflows_table extends workflow_table {
 
             $alt = get_string('abortdisableworkflow', 'tool_lifecycle');
             $icon = 't/stop';
-            $url = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php',
+            $url = new \moodle_url(urls::DEACTIVATED_WORKFLOWS,
                 array('workflowid' => $row->id, 'action' => action::WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()));
             $confirmaction = new \confirm_action(get_string('abortdisableworkflow_confirm', 'tool_lifecycle'));
             $output .= $OUTPUT->action_icon($url,

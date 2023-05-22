@@ -290,10 +290,6 @@ class workflow_manager {
             // If no action has been called. Continue.
             return;
         }
-        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
-            // In case of a called action, redirect to mainview.
-            redirect(new \moodle_url('/admin/tool/lifecycle/adminsettings.php'));
-        }
     }
 
     /**

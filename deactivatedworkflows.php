@@ -23,21 +23,19 @@
  */
 
 require_once(__DIR__ . '/../../../config.php');
-require_once(__DIR__ . '/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
+require_login();
 
 use tool_lifecycle\local\table\deactivated_workflows_table;
+use tool_lifecycle\urls;
 
-$PAGE->set_context(context_system::instance());
-require_login(null, false);
-require_capability('moodle/site:config', context_system::instance());
+global $PAGE, $OUTPUT;
 
-$PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php'));
+\tool_lifecycle\permission_and_navigation::setup_deactived();
 
+$PAGE->set_url(new \moodle_url(urls::DEACTIVATED_WORKFLOWS));
 $PAGE->set_title(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));
-
-admin_externalpage_setup('tool_lifecycle_deactivatedworkflows');
-
 
 $workflowid = optional_param('workflowid', null, PARAM_INT);
 $action = optional_param('action', null, PARAM_TEXT);
@@ -51,10 +49,16 @@ $table = new deactivated_workflows_table('tool_lifecycle_deactivated_workflows')
 
 echo $renderer->header();
 
+echo $OUTPUT->box_start("lifecycle-enable-overflow lifecycle-table");
+
 $table->out(50, false);
 
-$surl = new \moodle_url('/admin/tool/lifecycle/adminsettings.php',
-    array('sesskey' => sesskey()));
-echo \html_writer::link($surl, get_string('active_workflows_list', 'tool_lifecycle'));
+echo $OUTPUT->box_end();
+
+echo \html_writer::link(new \moodle_url(urls::WORKFLOW_DRAFTS),
+    get_string('workflow_drafts_list', 'tool_lifecycle'));
+echo '<br>';
+echo \html_writer::link(new \moodle_url(urls::ACTIVE_WORKFLOWS),
+    get_string('active_workflows_list', 'tool_lifecycle'));
 
 echo $renderer->footer();

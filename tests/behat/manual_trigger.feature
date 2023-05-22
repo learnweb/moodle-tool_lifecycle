@@ -24,20 +24,20 @@ Feature: Add a manual trigger and test view and actions as a teacher
     And I set the following system permissions of "Non-editing teacher" role:
       | capability | permission |
       | tool/lifecycle:managecourses | Allow |
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow settings" in site administration
-    And I press "Add workflow"
+    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow drafts" in site administration
+    And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
-    And I select "Manual trigger" from the "triggername" singleselect
+    And I select "Manual trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name              | My Trigger                                |
       | Icon                       | t/delete                                  |
       | Action name                | Delete course                             |
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
-    And I press "Back"
+    And I click on "Workflow drafts" "link"
     And I press "Activate"
     And I log out
     And I log in as "teacher1"
@@ -52,26 +52,26 @@ Feature: Add a manual trigger and test view and actions as a teacher
   @javascript
   Scenario: Manually trigger backup and course deletion
     Given I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow settings" in site administration
-    And I press "Add workflow"
+    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow drafts" in site administration
+    And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
-    And I select "Manual trigger" from the "triggername" singleselect
+    And I select "Manual trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name              | My Trigger                                |
       | Icon                       | t/delete                                  |
       | Action name                | Delete course                             |
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
-    And I select "Create backup step" from the "stepname" singleselect
+    And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Create backup step"
     And I press "Save changes"
-    And I select "Delete course step" from the "stepname" singleselect
+    And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 2"
     And I press "Save changes"
-    And I press "Back"
+    And I click on "Workflow drafts" "link"
     And I press "Activate"
     And I log out
     And I log in as "teacher1"

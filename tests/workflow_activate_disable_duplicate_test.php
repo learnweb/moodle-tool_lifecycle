@@ -46,6 +46,7 @@ class workflow_activate_disable_duplicate_test extends workflow_actions_testcase
 
     /**
      * Test to activate the first workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager
      */
     public function test_activate_first() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
@@ -56,6 +57,7 @@ class workflow_activate_disable_duplicate_test extends workflow_actions_testcase
 
     /**
      * Test to activate the first and the second workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager
      */
     public function test_activate_second() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
@@ -68,6 +70,7 @@ class workflow_activate_disable_duplicate_test extends workflow_actions_testcase
 
     /**
      * Test to activate all three workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager
      */
     public function test_activate_third() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
@@ -81,6 +84,7 @@ class workflow_activate_disable_duplicate_test extends workflow_actions_testcase
 
     /**
      * Test to deactivate the first workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager
      */
     public function test_deactivate_first() {
         workflow_manager::handle_action(action::WORKFLOW_ABORTDISABLE, $this->workflow1->id);
@@ -89,6 +93,7 @@ class workflow_activate_disable_duplicate_test extends workflow_actions_testcase
 
     /**
      * Test to duplicate the first workflow.
+     * @covers \tool_lifecycle\local\manager\workflow_manager
      */
     public function test_duplicate_first() {
         workflow_manager::handle_action(action::WORKFLOW_DUPLICATE, $this->workflow1->id);

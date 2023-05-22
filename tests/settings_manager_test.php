@@ -69,6 +69,7 @@ class settings_manager_test extends \advanced_testcase {
 
     /**
      * Test setting and getting settings data for steps.
+     * @covers \tool_lifecycle\local\manager\settings_manager
      */
     public function test_set_get_step_settings() {
         $data = new \stdClass();
@@ -81,6 +82,7 @@ class settings_manager_test extends \advanced_testcase {
 
     /**
      * Test setting and getting settings data for triggers.
+     * @covers \tool_lifecycle\local\manager\settings_manager
      */
     public function test_set_get_trigger_settings() {
         $data = new \stdClass();
@@ -93,6 +95,7 @@ class settings_manager_test extends \advanced_testcase {
 
     /**
      * Test correct removal of setting, if steps, triggers or workflows are deleted.
+     * @covers \tool_lifecycle\local\manager\settings_manager
      */
     public function test_remove_workflow() {
         global $DB;

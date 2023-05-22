@@ -71,7 +71,7 @@ class lifecycle_error_notify_task extends \core\task\scheduled_task {
         email_to_user(get_admin(), \core_user::get_noreply_user(),
             get_string('notifyerrorsemailsubject', 'tool_lifecycle', $obj),
             get_string('notifyerrorsemailcontent', 'tool_lifecycle', $obj),
-            get_string('notifyerrorsemailcontenthtml', 'tool_lifecycle', $obj),
+            get_string('notifyerrorsemailcontenthtml', 'tool_lifecycle', $obj)
         );
     }
 }

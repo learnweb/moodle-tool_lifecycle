@@ -85,6 +85,7 @@ class manual_trigger_tools_test extends \advanced_testcase {
 
     /**
      * Test getting manual trigger tools of active workflows.
+     * @covers \tool_lifecycle\local\manager\workflow_manager get triggers for one wf
      */
     public function test_get_manual_trigger_tools_for_one_active_workflow() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
@@ -99,6 +100,7 @@ class manual_trigger_tools_test extends \advanced_testcase {
 
     /**
      * Test getting manual trigger tools of active workflows.
+     * @covers \tool_lifecycle\local\manager\workflow_manager get triggers for multiple wf
      */
     public function test_get_manual_trigger_tools_for_active_workflows() {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);

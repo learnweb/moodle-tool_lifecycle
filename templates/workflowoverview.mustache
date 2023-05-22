@@ -1,0 +1,147 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template tool_lifecycle/workflowoverview
+
+    Template purpose and description.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * none
+
+    Example context (json):
+    {
+      "triggerhelp": "<a></a>",
+      "editsettingslink": "http://localhost/moodle400/admin/tool/lifecycle/editworkflow.php?wf=8",
+      "title": "My Workflow Title",
+      "displaytitle": "My Workflow displaytitle",
+      "rollbackdelay": "183 days",
+      "finishdelay": "183 days",
+      "delayglobally": "1",
+      "trigger": [
+        {
+          "id": "8",
+          "instancename": "Immediately!",
+          "workflowid": "8",
+          "subpluginname": "startdatedelay",
+          "sortindex": "1",
+          "actionmenu": "<div></div>",
+          "automatic": true,
+          "triggeredcourses": 0,
+          "excludedcourses": 0
+        }
+      ],
+      "automatic": 1,
+      "coursestriggered": 0,
+      "coursesexcluded": 0,
+      "coursesetsize": 0,
+      "steps": [
+        {
+          "id": "2",
+          "instancename": "First email step",
+          "workflowid": "8",
+          "subpluginname": "email",
+          "sortindex": "1",
+          "numberofcourses": 2,
+          "actionmenu": "<div></div>"
+        }
+      ],
+      "listofcourses": [],
+      "nosteplink": {},
+      "table": null
+    }
+}}
+<div class="d-flex" id="lifecycle-workflow-details">
+    <div class="wf-wrapper">
+        <div class="bg-light d-inline-block p-3 position-relative" style="max-width: 800px;">
+            <a class="edit-pen" href="{{{editsettingslink}}}">{{#pix}} i/edit, core, {{/pix}}</a>
+            <h4 class="pr-5">{{title}}</h4>
+            <span>{{#str}}details:displaytitle, tool_lifecycle, {{displaytitle}}{{/str}}</span><br>
+            <span>{{#str}}details:rollbackdelay, tool_lifecycle, {{rollbackdelay}}{{/str}}</span><br>
+            <span>{{#str}}details:finishdelay, tool_lifecycle, {{finishdelay}}{{/str}}</span><br>
+            <span>{{# delayglobally }}{{#str}}details:globaldelay_yes, tool_lifecycle{{/str}}{{/ delayglobally }}
+                {{^delayglobally}}{{#str}}details:globaldelay_no, tool_lifecycle{{/str}}{{/delayglobally}}</span>
+        </div>
+        <div class="mt-5 mb-3">{{{addinstance}}}</div>
+        <div class="wf-trigger-block workflow-item">
+            <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}} {{{triggerhelp}}}</h5>
+            {{#showcoursecounts}}
+              {{#automatic}}
+                <div class="mb-2 mx-2">
+                    {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{coursestriggered}} {{/str}}<br>
+                    {{#str}} courses_will_be_excluded_total, tool_lifecycle, {{coursesexcluded}} {{/str}}<br>
+                </div>
+              {{/automatic}}
+            {{/showcoursecounts}}
+            <div class="workflow wf-trigger-wrapper">
+                {{#trigger}}
+                    <div class="workflow-trigger">
+                        <div class="wf-header">
+                            <div class="wf-header-text">
+                                <span>{{instancename}}</span><br>
+                                <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
+                            </div>
+                            <div class="wf-actionmenu">
+                                {{{ actionmenu }}}
+                            </div>
+                        </div>
+                        <div class="wf-content">
+                          {{#showcoursecounts}}
+                            {{#automatic}}
+                              <span>{{#str}} courses_will_be_triggered, tool_lifecycle, {{triggeredcourses}} {{/str}}</span><br>
+                              <span>{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}</span>
+                            {{/automatic}}
+                          {{/showcoursecounts}}
+                        </div>
+                    </div>
+                {{/trigger}}
+            </div>
+        </div>
+        {{#steps}}
+            <div class="wf-arrow"></div>
+            <div class="workflow-step workflow-item {{#selected}}wf-selected{{/selected}}">
+                <div class="wf-header">
+                    <div class="wf-header-text">
+                        <span>{{instancename}}</span><br>
+                        <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
+                    </div>
+                    <div class="wf-actionmenu">
+                        {{{ actionmenu }}}
+                    </div>
+                </div>
+                <div class="wf-content">
+                    <a href="{{nosteplink}}&step={{id}}">{{icon}}{{name}}
+                    {{#str}} courses {{/str}}: {{numberofcourses}}
+                    </a>
+                </div>
+            </div>
+        {{/steps}}
+    </div>
+{{# table }}
+    <div class="courses-table">
+        <div class="bar">
+            <a class="close-button" href="{{nosteplink}}">×</a>
+        </div>
+        {{{ table }}}
+    </div>
+{{/table}}
+</div>

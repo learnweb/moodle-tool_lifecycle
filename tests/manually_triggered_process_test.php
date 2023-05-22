@@ -93,6 +93,7 @@ class manually_triggered_process_test extends \advanced_testcase {
 
     /**
      * Test to proceed a manually triggered process to step index 1.
+     * @covers \tool_lifecycle\local\manager\process_manager test if manual process started
      */
     public function test_proceeding_of_manually_triggered_processes() {
         $process = process_manager::manually_trigger_process($this->course->id, $this->trigger->id);

@@ -23,10 +23,6 @@
  */
 require_once(__DIR__ . '/../../../config.php');
 
-use tool_lifecycle\local\manager\step_manager;
-use tool_lifecycle\local\manager\interaction_manager;
-use tool_lifecycle\local\table\interaction_attention_table;
-
 require_login(null, false);
 
 global $USER, $PAGE;
@@ -53,12 +49,28 @@ $controller = new \tool_lifecycle\view_controller();
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 echo $renderer->header();
 
+
 $admins = get_admins();
 $isadmin = false;
 foreach ($admins as $admin) {
     if ($USER->id == $admin->id) {
         $isadmin = true;
         break;
+    }
+}
+$mform = new \tool_lifecycle\local\form\form_courses_filter();
+
+// Cache handling.
+$cache = cache::make('tool_lifecycle', 'mformdata');
+if ($mform->is_cancelled()) {
+    $cache->delete('viewcourses_filter');
+    redirect($PAGE->url);
+} else if ($data = $mform->get_data()) {
+    $cache->set('viewcourses_filter', $data);
+} else {
+    $data = $cache->get('viewcourses_filter');
+    if ($data) {
+        $mform->set_data($data);
     }
 }
 if ($isadmin) {

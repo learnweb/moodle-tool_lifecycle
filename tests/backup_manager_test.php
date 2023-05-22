@@ -49,6 +49,7 @@ class backup_manager_test extends \advanced_testcase {
 
     /**
      * Test creating a backup for a course.
+     * @covers \tool_lifecycle\local\manager\backup_manager create backup
      */
     public function test_backup_create() {
         global $DB;
@@ -60,6 +61,7 @@ class backup_manager_test extends \advanced_testcase {
 
     /**
      * Test redirect without errors when starting to restore a backup.
+     * @covers \tool_lifecycle\local\manager\backup_manager restore backup
      */
     public function test_backup_restore() {
         global $DB;

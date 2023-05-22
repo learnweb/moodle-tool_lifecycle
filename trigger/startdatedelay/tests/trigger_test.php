@@ -58,6 +58,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are newer than the default of 190 days are not triggered by this plugin.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\startdatedelay
      */
     public function test_young_course() {
 
@@ -76,6 +77,7 @@ class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are older than the default of 190 days are triggered by this plugin.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\startdatedelay
      */
     public function test_old_course() {
 

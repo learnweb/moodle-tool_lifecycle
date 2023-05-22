@@ -24,7 +24,6 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-    require_once(__DIR__ . '/adminlib.php');
 
     $category = new admin_category('lifecycle_category',
         get_string('pluginname', 'tool_lifecycle'));
@@ -43,13 +42,27 @@ if ($hassiteconfig) {
         get_string('config_backup_path_desc', 'tool_lifecycle'),
         $CFG->dataroot . DIRECTORY_SEPARATOR . 'lifecycle_backups'));
 
-    $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_active_processes());
-    $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_course_backups());
-    $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_sublugins());
-    $ADMIN->add('lifecycle_category', new tool_lifecycle\admin_page_deactivated_workflows());
+    $settings->add(new admin_setting_configcheckbox('tool_lifecycle/showcoursecounts',
+        get_string('config_showcoursecounts', 'tool_lifecycle'),
+        get_string('config_showcoursecounts_desc', 'tool_lifecycle'),
+        1));
+
+    $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_workflow_drafts',
+        get_string('workflow_drafts_header', 'tool_lifecycle'),
+        new moodle_url(\tool_lifecycle\urls::WORKFLOW_DRAFTS)));
+
+    $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_active_workflows',
+        get_string('active_workflows_header', 'tool_lifecycle'),
+        new moodle_url(\tool_lifecycle\urls::ACTIVE_WORKFLOWS)));
+
+    $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_coursebackups',
+        get_string('course_backups_list_header', 'tool_lifecycle'),
+        new \moodle_url('/admin/tool/lifecycle/coursebackups.php')));
+
     $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_delayed_courses',
-            get_string('delayed_courses_header', 'tool_lifecycle'),
-            new moodle_url('/admin/tool/lifecycle/delayedcourses.php')));
+        get_string('delayed_courses_header', 'tool_lifecycle'),
+        new moodle_url('/admin/tool/lifecycle/delayedcourses.php')));
+
     $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_process_errors',
         get_string('process_errors_header', 'tool_lifecycle'),
         new moodle_url('/admin/tool/lifecycle/errors.php')));
