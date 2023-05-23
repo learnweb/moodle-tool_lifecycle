@@ -107,7 +107,9 @@ class backup_lifecycle_workflow {
      */
     private function write_workflow() {
         foreach (get_object_vars($this->workflow) as $prop => $value) {
-            $this->writer->writeAttribute($prop, $value);
+            if (!is_null($value)) {
+                $this->writer->writeAttribute($prop, $value);
+            }
         }
     }
 
@@ -118,13 +120,17 @@ class backup_lifecycle_workflow {
         foreach ($this->trigger as $trigger) {
             $this->writer->startElement("trigger");
             foreach (get_object_vars($trigger) as $prop => $value) {
-                $this->writer->writeAttribute($prop, $value);
+                if (!is_null($value)) {
+                    $this->writer->writeAttribute($prop, $value);
+                }
             }
             $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
             foreach ($settings as $name => $value) {
                 $this->writer->startElement("setting");
                 $this->writer->writeAttribute('name', $name);
-                $this->writer->writeAttribute('value', $value);
+                if (!is_null($value)) {
+                    $this->writer->writeAttribute('value', $value);
+                }
                 $this->writer->endElement();
             }
             $this->writer->endElement();
@@ -139,13 +145,17 @@ class backup_lifecycle_workflow {
         foreach ($this->steps as $step) {
             $this->writer->startElement("step");
             foreach (get_object_vars($step) as $prop => $value) {
-                $this->writer->writeAttribute($prop, $value);
+                if (!is_null($value)) {
+                    $this->writer->writeAttribute($prop, $value);
+                }
             }
             $settings = settings_manager::get_settings($step->id, settings_type::STEP);
             foreach ($settings as $name => $value) {
                 $this->writer->startElement("setting");
                 $this->writer->writeAttribute('name', $name);
-                $this->writer->writeAttribute('value', $value);
+                if (!is_null($value)) {
+                    $this->writer->writeAttribute('value', $value);
+                }
                 $this->writer->endElement();
             }
             $this->writer->endElement();
