@@ -17,9 +17,7 @@
 /**
  * Interface for the interactions of the subplugintype step.
  *
- * It has to be implemented by all subplugins that want to use the interaction view.
  * @package tool_lifecycle
- * @subpackage step
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,7 +32,6 @@ use tool_lifecycle\local\response\step_interactive_response;
 /**
  * Interface for the interactions of the subplugintype step.
  *
- * It has to be implemented by all subplugins that want to use the interaction view.
  * @package tool_lifecycle
  * @subpackage step
  * @copyright  2017 Tobias Reischmann WWU
