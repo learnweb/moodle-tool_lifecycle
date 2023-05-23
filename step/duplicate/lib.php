@@ -172,7 +172,7 @@ class duplicate extends libbase {
                 // Strict check for a correct value (allways 1 or 0, true or false).
                 $value = clean_param($option['value'], PARAM_INT);
 
-                if ($value !== 0 and $value !== 1) {
+                if ($value !== 0 && $value !== 1) {
                     throw new \moodle_exception('invalidextparam', 'webservice', '', $option['name']);
                 }
 
