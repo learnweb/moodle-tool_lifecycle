@@ -82,8 +82,9 @@ class specificdate extends base_automatic {
                     settings_manager::save_settings($triggerid, settings_type::TRIGGER, $trigger->subpluginname, $settings);
                     return array('true', array());
                 }
+            }
+            return array('false', array());
         }
-        return array('false', array());
     }
 
     /**

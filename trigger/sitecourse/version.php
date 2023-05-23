@@ -24,5 +24,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2017050900;
+$plugin->version = 2017050900;
 $plugin->component = 'lifecycletrigger_sitecourse';

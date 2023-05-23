@@ -25,5 +25,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2017061900;
+$plugin->version = 2017061900;
 $plugin->component = 'lifecycletrigger_delayedcourses';

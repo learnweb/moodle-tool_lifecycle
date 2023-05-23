@@ -77,7 +77,7 @@ class categories extends base_automatic {
         foreach ($categories as $category) {
             array_push($allcategories , $category);
             $children = $categoryobjects[$category]->get_all_children_ids();
-            $allcategories  = array_merge($allcategories , $children);
+            $allcategories = array_merge($allcategories , $children);
         }
 
         list($insql, $inparams) = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED);

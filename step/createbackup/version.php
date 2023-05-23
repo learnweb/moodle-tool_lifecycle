@@ -24,5 +24,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2019052900;
+$plugin->version = 2019052900;
 $plugin->component = 'lifecyclestep_createbackup';

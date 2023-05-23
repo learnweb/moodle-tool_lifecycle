@@ -110,7 +110,7 @@ class workflow {
 
         $timedeactive = null;
         if (object_property_exists($record, 'timedeactive') && $record->timedeactive) {
-            $timedeactive  = $record->timedeactive;
+            $timedeactive = $record->timedeactive;
         }
 
         $sortindex = null;

@@ -24,5 +24,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2018122300;
+$plugin->version = 2018122300;
 $plugin->component = 'lifecyclestep_deletecourse';

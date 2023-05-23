@@ -217,7 +217,7 @@ class duplicate extends libbase {
             }
         }
 
-        $backupid       = $bc->get_backupid();
+        $backupid = $bc->get_backupid();
         $backupbasepath = $bc->get_plan()->get_basepath();
 
         $bc->execute_plan();

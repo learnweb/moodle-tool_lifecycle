@@ -24,5 +24,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2018101000;
+$plugin->version = 2018101000;
 $plugin->component = 'lifecycletrigger_specificdate';

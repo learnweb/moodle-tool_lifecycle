@@ -24,5 +24,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2017050901;
+$plugin->version = 2017050901;
 $plugin->component = 'lifecycletrigger_categories';
