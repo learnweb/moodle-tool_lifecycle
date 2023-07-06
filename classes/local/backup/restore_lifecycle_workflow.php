@@ -101,7 +101,7 @@ class restore_lifecycle_workflow {
         $this->workflow->timeactive = null;
         $this->workflow->timedeactive = null;
         $this->workflow->sortindex = null;
-        $this->workflow->id = workflow_manager::insert_or_update($this->workflow);
+        workflow_manager::insert_or_update($this->workflow);
     }
 
     /**
