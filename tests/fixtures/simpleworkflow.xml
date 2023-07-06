@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<workflow id="143" title="Ein Workflow basierend auf Rollen" timeactive="1688629134" timedeactive="" sortindex="6" manual="" displaytitle="Find courses without students" rollbackdelay="7776000" finishdelay="7776000" delayforallworkflows="0">
+ <step id="100" instancename="Test all courses" workflowid="143" subpluginname="adminapprove" sortindex="1">
+  <setting name="statusmessage" value="Manually check"/>
+ </step>
+ <trigger id="67" instancename="Filter without students" workflowid="143" subpluginname="byrole" sortindex="1">
+  <setting name="roles" value="5"/>
+  <setting name="delay" value="120"/>
+ </trigger>
+</workflow>
