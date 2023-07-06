@@ -22,13 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use tool_lifecycle\action;
 use tool_lifecycle\local\backup\restore_lifecycle_workflow;
-use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\local\form\form_upload_workflow;
-use tool_lifecycle\local\form\form_workflow_instance;
-use tool_lifecycle\local\manager\workflow_manager;
-use tool_lifecycle\local\table\workflow_definition_table;
+use tool_lifecycle\permission_and_navigation;
 use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
@@ -36,7 +32,7 @@ require_once($CFG->libdir . '/adminlib.php');
 require_login();
 global $OUTPUT, $PAGE, $DB;
 
-\tool_lifecycle\permission_and_navigation::setup_draft();
+permission_and_navigation::setup_draft();
 
 $PAGE->set_url(new \moodle_url(urls::UPLOAD_WORKFLOW));
 $title = get_string('upload_workflow', 'tool_lifecycle');
@@ -63,7 +59,7 @@ if ($data = $form->get_data()) {
         die();
     } else {
         // Redirect to workflow page.
-        redirect(urls::WORKFLOW_DETAILS, ['wf' => $restore->get_workflow()->id]);
+        redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $restore->get_workflow()->id]));
     }
 }
 
