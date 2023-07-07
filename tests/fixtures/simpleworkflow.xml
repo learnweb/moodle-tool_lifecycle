@@ -1,7 +1,15 @@
-<workflow id="7" title="Ein Workflow basierend auf Rollen" manual="" displaytitle="Find courses without students" rollbackdelay="7776000" finishdelay="7776000" delayforallworkflows="0">
-    <step id="7" instancename="Duplicate course" workflowid="7" subpluginname="duplicate" sortindex="1"/>
-    <trigger id="7" instancename="Filter without students" workflowid="7" subpluginname="byrole" sortindex="1">
-        <setting name="roles" value="5"/>
-        <setting name="delay" value="120"/>
-    </trigger>
+<workflow id="3" title="A Workflow" manual="" displaytitle="Delete old courses" rollbackdelay="15811200" finishdelay="15811200" delayforallworkflows="0">
+<step id="1" instancename="Create Backup" workflowid="3" subpluginname="createbackup" sortindex="1">
+<setting name="maximumbackupspercron" value="10"/>
+</step>
+<step id="2" instancename="Delete Course" workflowid="3" subpluginname="deletecourse" sortindex="2">
+<setting name="maximumdeletionspercron" value="10"/>
+</step>
+<trigger id="3" instancename="Date to trigger" workflowid="3" subpluginname="specificdate" sortindex="1">
+<setting name="dates" value="01.08"/>
+<setting name="timelastrun" value="0"/>
+</trigger>
+<trigger id="4" instancename="Age of course" workflowid="3" subpluginname="startdatedelay" sortindex="2">
+<setting name="delay" value="31536000"/>
+</trigger>
 </workflow>

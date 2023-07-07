@@ -8,4 +8,4 @@ Feature: Upload a workflow definition
     And I click on "Upload workflow" "link"
     And I upload "admin/tool/lifecycle/tests/fixtures/simpleworkflow.xml" file to "File" filemanager
     And I press "Upload"
-    Then I should see "Ein Workflow basierend auf Rollen"
+    Then I should see "A Workflow"
