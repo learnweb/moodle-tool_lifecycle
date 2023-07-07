@@ -55,6 +55,7 @@ class workflow_manager {
             $workflow->id = $DB->insert_record('tool_lifecycle_workflow', $workflow);
         }
         $transaction->allow_commit();
+        return $workflow->id;
     }
 
     /**

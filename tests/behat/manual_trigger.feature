@@ -1,4 +1,4 @@
-@tool @tool_lifecycle
+@tool @tool_lifecycle @manual_trigger
 Feature: Add a manual trigger and test view and actions as a teacher
 
   Background:

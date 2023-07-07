@@ -1,0 +1,15 @@
+<workflow id="3" title="A Workflow" manual="" displaytitle="Delete old courses" rollbackdelay="15811200" finishdelay="15811200" delayforallworkflows="0">
+<step id="1" instancename="Create Backup" workflowid="3" subpluginname="createbackup" sortindex="1">
+<setting name="maximumbackupspercron" value="10"/>
+</step>
+<step id="2" instancename="Delete Course" workflowid="3" subpluginname="deletecourse" sortindex="2">
+<setting name="maximumdeletionspercron" value="10"/>
+</step>
+<trigger id="3" instancename="Date to trigger" workflowid="3" subpluginname="specificdate" sortindex="1">
+<setting name="dates" value="01.08"/>
+<setting name="timelastrun" value="0"/>
+</trigger>
+<trigger id="4" instancename="Age of course" workflowid="3" subpluginname="startdatedelay" sortindex="2">
+<setting name="delay" value="31536000"/>
+</trigger>
+</workflow>

@@ -59,7 +59,6 @@ class restore_lifecycle_workflow {
     public function __construct($xmldata) {
         $this->reader = new \XMLReader();
         $this->reader->XML($xmldata);
-
     }
 
     /**
@@ -102,6 +101,7 @@ class restore_lifecycle_workflow {
         $this->workflow->timeactive = null;
         $this->workflow->timedeactive = null;
         $this->workflow->sortindex = null;
+        workflow_manager::insert_or_update($this->workflow);
     }
 
     /**
