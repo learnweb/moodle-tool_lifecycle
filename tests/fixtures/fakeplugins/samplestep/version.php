@@ -15,17 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Fake component for testing
  *
- * @package    tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
+ * @package    core
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$plugin->maturity = MATURITY_BETA;
-$plugin->version  = 2023050201;
-$plugin->component = 'tool_lifecycle';
-$plugin->requires = 2020061500; // Requires Moodle 3.9+.
-$plugin->release   = 'v4.2-r1';
+$plugin->version   = 2023100400;
+$plugin->requires  = 2022041200;
+$plugin->component = 'tool_samplestep';
