@@ -161,8 +161,11 @@ class form_step_instance extends \moodleform {
             $mform->setDefault('id', '');
             $subpluginname = $this->subpluginname;
         }
-        $mform->setDefault('subpluginnamestatic',
-            get_string('pluginname', 'lifecyclestep_' . $subpluginname));
+
+        if (isset($this->lib)) {
+            $mform->setDefault('subpluginnamestatic', $this->lib->get_plugin_description());
+        }
+
         $mform->setDefault('subpluginname', $subpluginname);
 
         // Setting the default values for the local step settings.

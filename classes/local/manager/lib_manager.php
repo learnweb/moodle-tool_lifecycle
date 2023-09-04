@@ -102,18 +102,27 @@ class lib_manager {
      * @return null|base|libbase
      */
     private static function get_lib($subpluginname, $subplugintype, $libsubtype = '') {
+        // Plugins defined in subplugins.json file.
         $triggerlist = \core_component::get_plugin_list('lifecycle' . $subplugintype);
-        if (!array_key_exists($subpluginname, $triggerlist)) {
-            return null;
-        }
-        $filename = $triggerlist[$subpluginname].'/'.$libsubtype.'lib.php';
-        if (file_exists($filename)) {
-            require_once($filename);
-            $extendedclass = "tool_lifecycle\\$subplugintype\\$libsubtype$subpluginname";
-            if (class_exists($extendedclass)) {
-                return new $extendedclass();
+        if (array_key_exists($subpluginname, $triggerlist)) {
+            $filename = $triggerlist[$subpluginname].'/'.$libsubtype.'lib.php';
+            if (file_exists($filename)) {
+                require_once($filename);
+                $extendedclass = "tool_lifecycle\\$subplugintype\\$libsubtype$subpluginname";
+                if (class_exists($extendedclass)) {
+                    return new $extendedclass();
+                }
             }
         }
+
+        // Plugins defined under "lifecycle" name space.
+        // The base class has already been checked by get_trigger_types or get_steps_types.
+        $classname = !$libsubtype ? $subplugintype : $libsubtype;
+        $classname = "$subpluginname\\lifecycle\\$classname";
+        if (class_exists($classname)) {
+            return new $classname();
+        }
+
         return null;
     }
 }
