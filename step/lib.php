@@ -190,6 +190,40 @@ abstract class libbase {
     public function is_stoppable() {
         return false;
     }
+
+    /**
+     * Define name of the step.
+     * Allow subplugins to have custom name.
+     *
+     * @return string name of the trigger.
+     */
+    public function get_plugin_name() {
+        return get_string("pluginname", "lifecyclestep_" . $this->get_subpluginname());
+    }
+
+    /**
+     * Define description of the step.
+     * Allow subplugins to have custom description.
+     *
+     * @return string description of the trigger.
+     */
+    public function get_plugin_description() {
+        return get_string("plugindescription", "lifecyclestep_" . $this->get_subpluginname());
+    }
+
+    /**
+     * Returns the settings of the step.
+     *
+     * @return void
+     */
+    public function get_plugin_settings() {
+        $step = $this->get_subpluginname();
+        $file = __DIR__ . "/$step/settings.php";
+
+        if (file_exists($file)) {
+            include($file);
+        }
+    }
 }
 
 /**

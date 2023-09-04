@@ -131,6 +131,40 @@ abstract class base {
     public function get_icon() {
         return 'i/nosubcat';
     }
+
+    /**
+     * Defgine name of the trigger.
+     * Allow subplugins to have custom names.
+     *
+     * @return string name of the trigger.
+     */
+    public function get_plugin_name() {
+        return get_string("pluginname", "lifecycletrigger_" . $this->get_subpluginname());
+    }
+
+    /**
+     * Define description of the trigger.
+     * Allow subplugins to have custom description.
+     *
+     * @return string description of the trigger.
+     */
+    public function get_plugin_description() {
+        return get_string("pluginname", "lifecycletrigger_" . $this->get_subpluginname());
+    }
+
+    /**
+     * Returns the settings of the trigger.
+     *
+     * @return void
+     */
+    public function get_plugin_settings() {
+        $trigger = $this->get_subpluginname();
+        $file = __DIR__ . "/$trigger/settings.php";
+
+        if (file_exists($file)) {
+            include($file);
+        }
+    }
 }
 
 /**

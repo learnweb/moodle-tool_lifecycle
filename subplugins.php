@@ -24,6 +24,8 @@
  */
 
 use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
@@ -50,17 +52,16 @@ $renderer->tabs($tabrow, 'subplugins');
 echo html_writer::link('https://github.com/learnweb/moodle-tool_lifecycle/wiki/List-of-Installed-Subplugins',
     get_string('documentationlink', 'tool_lifecycle'), ['target' => '_blank']);
 
-$triggers = core_component::get_plugin_list('lifecycletrigger');
+$triggers = trigger_manager::get_trigger_types();
 if ($triggers) {
     echo html_writer::div(get_string('triggers_installed', 'tool_lifecycle'), 'h2 mt-2');
     foreach ($triggers as $trigger => $path) {
         $lib = lib_manager::get_trigger_lib($trigger);
         $triggericon = $lib->get_icon();
         echo $OUTPUT->pix_icon($triggericon, $trigger, 'moodle', ['class' => 'mr-1']);
-        echo html_writer::div(get_string('pluginname', 'lifecycletrigger_' . $trigger),
-            "font-weight-bold d-inline-block");
+        echo html_writer::div($lib->get_plugin_name(), "font-weight-bold d-inline-block");
         try {
-            $plugindescription = get_string('plugindescription', 'lifecycletrigger_' . $trigger);
+            $plugindescription = $lib->get_plugin_description();
         } catch (Exception $e) {
             $plugindescription = "";
         }
@@ -80,17 +81,16 @@ if ($triggers) {
     echo html_writer::div(get_string('adminsettings_notriggers', 'tool_lifecycle'));
 }
 
-$steps = core_component::get_plugin_list('lifecyclestep');
+$steps = step_manager::get_step_types();
 if ($steps) {
     echo html_writer::div(get_string('steps_installed', 'tool_lifecycle'), 'h2 mt-2');
     foreach ($steps as $step => $path) {
         $lib = lib_manager::get_step_lib($step);
         $stepicon = $lib->get_icon();
         echo $OUTPUT->pix_icon($stepicon, $step, 'moodle', ['class' => 'mr-1']);
-        echo html_writer::div(get_string('pluginname', 'lifecyclestep_' . $step),
-            "font-weight-bold d-inline-block");
+        echo html_writer::div($lib->get_plugin_name(), "font-weight-bold d-inline-block");
         try {
-            $plugindescription = get_string('plugindescription', 'lifecyclestep_' . $step);
+            $plugindescription = $lib->get_plugin_description();
         } catch (Exception $e) {
             $plugindescription = "";
         }

@@ -15,18 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Fake component for testing
  *
- * @package    tool_lifecycle
- * @copyright  2025 Thomas Niedermaier University Münster
+ * @package    core
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'tool_lifecycle';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->version  = 2026012004;
-$plugin->requires = 2024100700; // Requires Moodle 4.5+.
-$plugin->supported = [405, 501];
-$plugin->release   = 'v5.1-r4';
+$plugin->version   = 2023100400;
+$plugin->requires  = 2022041200;
+$plugin->component = 'tool_samplestep';
