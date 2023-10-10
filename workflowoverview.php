@@ -97,11 +97,14 @@ if ($showcoursecounts) {
     $displaytotaltriggered = !empty($triggers);
 }
 
+$displaytriggers = [];
+$displaysteps = [];
+
 foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
     // Mustache cannot handle arrays which have other keys therefore a new array is build.
     // FUTURE: Nice to have Icon for each subplugin.
-
+    $trigger = (object)(array) $trigger; // Cast to normal object to be able to set dynamic properties.
     $actionmenu = new action_menu([
         new action_menu_link_secondary(
             new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::TRIGGER, 'elementid' => $trigger->id]),
@@ -123,9 +126,11 @@ foreach ($triggers as $trigger) {
             $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
         }
     }
+    $displaytriggers[] = $trigger;
 }
 
 foreach ($steps as $step) {
+    $step = (object)(array) $step; // Cast to normal object to be able to set dynamic properties.
     $ncourses = $DB->count_records('tool_lifecycle_process',
         array('stepindex' => $step->sortindex, 'workflowid' => $workflowid));
     $step->numberofcourses = $ncourses;
@@ -159,6 +164,7 @@ foreach ($steps as $step) {
         }
     }
     $step->actionmenu = $OUTPUT->render($actionmenu);
+    $displaysteps[] = $step;
 }
 
 $arrayofcourses = array();
@@ -184,9 +190,9 @@ $data = [
     'rollbackdelay' => format_time($workflow->rollbackdelay),
     'finishdelay' => format_time($workflow->finishdelay),
     'delayglobally' => $workflow->delayforallworkflows,
-    'trigger' => array_values($triggers),
+    'trigger' => $displaytriggers,
     'showcoursecounts' => $showcoursecounts,
-    'steps' => array_values($steps),
+    'steps' => $displaysteps,
     'listofcourses' => $arrayofcourses,
     'nosteplink' => $nosteplink,
     'table' => $out
