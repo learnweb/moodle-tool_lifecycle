@@ -88,7 +88,7 @@ class email extends libbase {
     public function process_waiting_course($processid, $instanceid, $course) {
         // When time runs up and no one wants to keep the course, then proceed.
         $process = process_manager::get_process_by_id($processid);
-        if ($process->timestepchanged < time() - settings_manager::get_settings(
+        if (null !== $process && $process->timestepchanged < time() - settings_manager::get_settings(
                 $instanceid,
                 settings_type::STEP
                 )['responsetimeout']) {
