@@ -52,7 +52,7 @@ class provider implements \core_privacy\local\metadata\provider,
             [
                 'touser' => 'privacy:metadata:lifecyclestep_email:touser',
                 'courseid' => 'privacy:metadata:lifecyclestep_email:courseid',
-                'instanceid' => 'privacy:metadata:lifecyclestep_email:instanceid'
+                'instanceid' => 'privacy:metadata:lifecyclestep_email:instanceid',
             ],
             'privacy:metadata:lifecyclestep_email:summary'
         );
@@ -133,7 +133,7 @@ class provider implements \core_privacy\local\metadata\provider,
                 $DB->delete_records('lifecyclestep_email', ['touser' => $userid]);
             } else if ($userlist->get_context() instanceof context_course) {
                 $DB->delete_records('lifecyclestep_email', ['touser' => $userid,
-                    'courseid' => $userlist->get_context()->instanceid]);
+                    'courseid' => $userlist->get_context()->instanceid, ]);
             }
         }
     }

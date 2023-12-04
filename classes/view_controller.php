@@ -61,7 +61,7 @@ class view_controller {
             return;
         }
 
-        $arrayofcourseids = array();
+        $arrayofcourseids = [];
         foreach ($courses as $course) {
             $arrayofcourseids[$course->id] = $course->id;
         }
@@ -75,7 +75,7 @@ class view_controller {
             "on p.workflowid = s.workflowid AND p.stepindex = s.sortindex " .
             "WHERE p.courseid IN (". $listofcourseids . ")");
 
-        $requiresinteraction = array();
+        $requiresinteraction = [];
         $remainingcourses = $arrayofcourseids;
 
         foreach ($processes as $process) {

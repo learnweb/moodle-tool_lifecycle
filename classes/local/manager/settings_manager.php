@@ -109,10 +109,10 @@ class settings_manager {
                     $cleanedvalue = clean_param($value, $setting->paramtype);
                 }
                 $record = $DB->get_record('tool_lifecycle_settings',
-                    array(
+                    [
                         'instanceid' => $instanceid,
                         'type' => $type,
-                        'name' => $setting->name)
+                        'name' => $setting->name, ]
                 );
                 if ($record) {
                     if ($record->value != $cleanedvalue) {
@@ -164,11 +164,11 @@ class settings_manager {
             $lib = lib_manager::get_step_lib($instance->subpluginname);
         }
 
-        $settingsvalues = array();
+        $settingsvalues = [];
         foreach ($lib->instance_settings() as $setting) {
-            $record = $DB->get_record('tool_lifecycle_settings', array('instanceid' => $instanceid,
+            $record = $DB->get_record('tool_lifecycle_settings', ['instanceid' => $instanceid,
                     'type' => $type,
-                    'name' => $setting->name));
+                    'name' => $setting->name, ]);
             if ($record) {
                 $value = clean_param($record->value, $setting->paramtype);
                 $settingsvalues[$setting->name] = $value;
@@ -189,8 +189,8 @@ class settings_manager {
         self::validate_type($type);
 
         $DB->delete_records('tool_lifecycle_settings',
-                array('instanceid' => $instanceid,
-                    'type' => $type));
+                ['instanceid' => $instanceid,
+                    'type' => $type, ]);
     }
 
     /**

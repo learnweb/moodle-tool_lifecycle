@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$tasks = array(
-    array(
+$tasks = [
+    [
         'classname' => 'tool_lifecycle\task\lifecycle_task',
         'blocking' => 0,
         'minute' => '*',
@@ -35,8 +35,8 @@ $tasks = array(
         'month' => '*',
         'dayofweek' => '*',
         'faildelay' => 1,
-    ),
-    array(
+    ],
+    [
         'classname' => 'tool_lifecycle\task\lifecycle_cleanup_task',
         'blocking' => 0,
         'minute' => '0',
@@ -44,8 +44,8 @@ $tasks = array(
         'day' => '*',
         'month' => '*',
         'dayofweek' => '0',
-    ),
-    array(
+    ],
+    [
         'classname' => 'tool_lifecycle\task\lifecycle_error_notify_task',
         'blocking' => 0,
         'minute' => 'R',
@@ -53,5 +53,5 @@ $tasks = array(
         'day' => '*',
         'month' => '*',
         'dayofweek' => '0',
-    ),
-);
+    ],
+];

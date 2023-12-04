@@ -56,7 +56,7 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
      * @param array $errors
      * @throws coding_exception
      */
-    public function render_workflow_upload_form($form, $errors = array()) {
+    public function render_workflow_upload_form($form, $errors = []) {
         $this->header(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));
         foreach ($errors as $error) {
             \core\notification::add($error, \core\notification::ERROR);

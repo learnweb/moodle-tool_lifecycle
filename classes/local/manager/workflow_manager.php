@@ -70,7 +70,7 @@ class workflow_manager {
         if ($hard || self::is_removable($workflowid)) {
             trigger_manager::remove_instances_of_workflow($workflowid);
             step_manager::remove_instances_of_workflow($workflowid);
-            $DB->delete_records('tool_lifecycle_workflow', array('id' => $workflowid));
+            $DB->delete_records('tool_lifecycle_workflow', ['id' => $workflowid]);
         }
     }
 
@@ -114,7 +114,7 @@ class workflow_manager {
      */
     public static function get_workflow($workflowid) {
         global $DB;
-        $record = $DB->get_record('tool_lifecycle_workflow', array('id' => $workflowid));
+        $record = $DB->get_record('tool_lifecycle_workflow', ['id' => $workflowid]);
         if ($record) {
             $workflow = workflow::from_record($record);
             return $workflow;
@@ -131,7 +131,7 @@ class workflow_manager {
      */
     public static function get_workflows() {
         global $DB;
-        $result = array();
+        $result = [];
         $records = $DB->get_records('tool_lifecycle_workflow');
         foreach ($records as $record) {
             $result[] = workflow::from_record($record);
@@ -150,7 +150,7 @@ class workflow_manager {
         $records = $DB->get_records_sql(
             'SELECT * FROM {tool_lifecycle_workflow}
                   WHERE timeactive IS NOT NULL ORDER BY sortindex');
-        $result = array();
+        $result = [];
         foreach ($records as $record) {
             $result[] = workflow::from_record($record);
         }
@@ -168,8 +168,8 @@ class workflow_manager {
         $records = $DB->get_records_sql(
             'SELECT * FROM {tool_lifecycle_workflow}
                   WHERE timeactive IS NOT NULL AND
-                  manual = ? ORDER BY sortindex', array(false));
-        $result = array();
+                  manual = ? ORDER BY sortindex', [false]);
+        $result = [];
         foreach ($records as $record) {
             $result[] = workflow::from_record($record);
         }
@@ -186,8 +186,8 @@ class workflow_manager {
         global $DB;
         $sql = 'SELECT t.* FROM {tool_lifecycle_workflow} w JOIN {tool_lifecycle_trigger} t ON t.workflowid = w.id' .
             ' WHERE w.timeactive IS NOT NULL AND w.manual = ?';
-        $records = $DB->get_records_sql($sql, array(true));
-        $result = array();
+        $records = $DB->get_records_sql($sql, [true]);
+        $result = [];
         foreach ($records as $record) {
             $result[] = trigger_subplugin::from_record($record);
         }
@@ -204,7 +204,7 @@ class workflow_manager {
      */
     public static function get_manual_trigger_tools_for_active_workflows() {
         $triggers = self::get_active_manual_workflow_triggers();
-        $tools = array();
+        $tools = [];
         foreach ($triggers as $trigger) {
             $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
             $tools[] = new manual_trigger_tool($trigger->id, $settings['icon'], $settings['displayname'], $settings['capability']);
@@ -325,8 +325,8 @@ class workflow_manager {
         $transaction = $DB->start_delegated_transaction();
 
         $otherrecord = $DB->get_record('tool_lifecycle_workflow',
-            array(
-                'sortindex' => $otherindex)
+            [
+                'sortindex' => $otherindex, ]
         );
         $otherworkflow = workflow::from_record($otherrecord);
 

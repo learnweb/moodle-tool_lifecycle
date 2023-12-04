@@ -44,7 +44,7 @@ class step_manager extends subplugin_manager {
      */
     public static function get_step_instance($stepinstanceid) {
         global $DB;
-        $record = $DB->get_record('tool_lifecycle_step', array('id' => $stepinstanceid));
+        $record = $DB->get_record('tool_lifecycle_step', ['id' => $stepinstanceid]);
         if ($record) {
             $subplugin = step_subplugin::from_record($record);
             return $subplugin;
@@ -63,9 +63,9 @@ class step_manager extends subplugin_manager {
     public static function get_step_instance_by_workflow_index($workflowid, $sortindex) {
         global $DB;
         $record = $DB->get_record('tool_lifecycle_step',
-            array(
+            [
                 'workflowid' => $workflowid,
-                'sortindex' => $sortindex)
+                'sortindex' => $sortindex, ]
         );
         if ($record) {
             $subplugin = step_subplugin::from_record($record);
@@ -118,7 +118,7 @@ class step_manager extends subplugin_manager {
     private static function remove($stepinstanceid) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
-        if ($record = $DB->get_record('tool_lifecycle_step', array('id' => $stepinstanceid))) {
+        if ($record = $DB->get_record('tool_lifecycle_step', ['id' => $stepinstanceid])) {
             $step = step_subplugin::from_record($record);
             self::remove_from_sortindex($step);
             settings_manager::remove_settings($step->id, settings_type::STEP);
@@ -138,7 +138,7 @@ class step_manager extends subplugin_manager {
         if (isset($toberemoved->sortindex)) {
             $subplugins = $DB->get_records_select('tool_lifecycle_step',
                 "sortindex > $toberemoved->sortindex",
-                array('workflowid' => $toberemoved->workflowid));
+                ['workflowid' => $toberemoved->workflowid]);
             foreach ($subplugins as $record) {
                 $subplugin = step_subplugin::from_record($record);
                 $subplugin->sortindex--;
@@ -174,9 +174,9 @@ class step_manager extends subplugin_manager {
         $transaction = $DB->start_delegated_transaction();
 
         $otherrecord = $DB->get_record('tool_lifecycle_step',
-            array(
+            [
                 'sortindex' => $otherindex,
-                'workflowid' => $step->workflowid)
+                'workflowid' => $step->workflowid, ]
         );
         $otherstep = step_subplugin::from_record($otherrecord);
 
@@ -196,10 +196,10 @@ class step_manager extends subplugin_manager {
      */
     public static function get_step_instances($workflowid) {
         global $DB;
-        $records = $DB->get_records('tool_lifecycle_step', array(
-            'workflowid' => $workflowid
-        ), 'sortindex');
-        $steps = array();
+        $records = $DB->get_records('tool_lifecycle_step', [
+            'workflowid' => $workflowid,
+        ], 'sortindex');
+        $steps = [];
         foreach ($records as $id => $record) {
             $steps[$id] = step_subplugin::from_record($record);
         }
@@ -214,8 +214,8 @@ class step_manager extends subplugin_manager {
      */
     public static function get_step_instances_by_subpluginname($subpluginname) {
         global $DB;
-        $records = $DB->get_records('tool_lifecycle_step', array('subpluginname' => $subpluginname));
-        $steps = array();
+        $records = $DB->get_records('tool_lifecycle_step', ['subpluginname' => $subpluginname]);
+        $steps = [];
         foreach ($records as $id => $record) {
             $steps[$id] = step_subplugin::from_record($record);
         }
@@ -229,7 +229,7 @@ class step_manager extends subplugin_manager {
      */
     public static function get_step_types() {
         $subplugins = \core_component::get_plugin_list('lifecyclestep');
-        $result = array();
+        $result = [];
         foreach (array_keys($subplugins) as $plugin) {
             $result[$plugin] = get_string('pluginname', 'lifecyclestep_' . $plugin);
         }
@@ -291,7 +291,7 @@ class step_manager extends subplugin_manager {
     public static function count_steps_of_workflow($workflowid) {
         global $DB;
         return $DB->count_records('tool_lifecycle_step',
-            array('workflowid' => $workflowid)
+            ['workflowid' => $workflowid]
         );
     }
 
@@ -307,7 +307,7 @@ class step_manager extends subplugin_manager {
         foreach ($instances as $instance) {
             settings_manager::remove_settings($instance->id, settings_type::STEP);
         }
-        $DB->delete_records('tool_lifecycle_step', array('workflowid' => $workflowid));
+        $DB->delete_records('tool_lifecycle_step', ['workflowid' => $workflowid]);
     }
 
     /**

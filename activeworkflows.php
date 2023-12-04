@@ -56,7 +56,7 @@ echo $renderer->render_from_template('tool_lifecycle/search_input', [
     'inputname' => 'search',
     'extraclasses' => 'mb-3',
     'inform' => false,
-    'searchstring' => 'Search for courses'
+    'searchstring' => 'Search for courses',
 ]);
 
 echo $OUTPUT->heading(get_string('active_automatic_workflows_heading', 'tool_lifecycle'));

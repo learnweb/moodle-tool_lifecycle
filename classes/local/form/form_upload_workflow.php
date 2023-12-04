@@ -42,7 +42,7 @@ class form_upload_workflow extends \moodleform {
         $mform = $this->_form;
 
         $mform->addElement('filepicker', 'backupfile', get_string('file'), null,
-            array('accepted_types' => 'xml'));
+            ['accepted_types' => 'xml']);
         $this->add_action_buttons('true', get_string('upload'));
     }
 

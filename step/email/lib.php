@@ -111,13 +111,13 @@ class email extends libbase {
             $settings['contenthtml'] = format_text($settings['contenthtml'], FORMAT_HTML);
 
             $userstobeinformed = $DB->get_records('lifecyclestep_email',
-                array('instanceid' => $step->id), '', 'distinct touser');
+                ['instanceid' => $step->id], '', 'distinct touser');
             foreach ($userstobeinformed as $userrecord) {
                 $user = \core_user::get_user($userrecord->touser);
                 $transaction = $DB->start_delegated_transaction();
                 $mailentries = $DB->get_records('lifecyclestep_email',
-                    array('instanceid' => $step->id,
-                        'touser' => $user->id));
+                    ['instanceid' => $step->id,
+                        'touser' => $user->id, ]);
 
                     $parsedsettings = $this->replace_placeholders($settings, $user, $step->id, $mailentries);
 
@@ -127,8 +127,8 @@ class email extends libbase {
                     // TODO: use course info to parse content template!
                     email_to_user($user, \core_user::get_noreply_user(), $subject, $content, $contenthtml);
                     $DB->delete_records('lifecyclestep_email',
-                    array('instanceid' => $step->id,
-                        'touser' => $user->id));
+                    ['instanceid' => $step->id,
+                        'touser' => $user->id, ]);
                     $transaction->allow_commit();
             }
         }
@@ -148,8 +148,8 @@ class email extends libbase {
     private function replace_placeholders($strings, $user, $stepid, $mailentries) {
         global $CFG;
 
-        $patterns = array();
-        $replacements = array();
+        $patterns = [];
+        $replacements = [];
 
         // Replaces firstname of the user.
         $patterns[] = '##firstname##';
@@ -182,7 +182,7 @@ class email extends libbase {
         // Replace courses html.
         $patterns[] = '##courses-html##';
         $courses = $mailentries;
-        $coursestabledata = array();
+        $coursestabledata = [];
         foreach ($courses as $entry) {
             $coursestabledata[$entry->courseid] = $this->parse_course_row_data($entry->courseid);
         }
@@ -213,7 +213,7 @@ class email extends libbase {
      */
     private function parse_course_row_data($courseid) {
         $course = get_course($courseid);
-        return array($course->fullname);
+        return [$course->fullname];
     }
 
     /**
@@ -221,12 +221,12 @@ class email extends libbase {
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
-        return array(
+        return [
             new instance_setting('responsetimeout', PARAM_INT, false),
             new instance_setting('subject', PARAM_TEXT, true),
             new instance_setting('content', PARAM_RAW, true),
             new instance_setting('contenthtml', PARAM_RAW, true),
-        );
+        ];
     }
 
     /**
@@ -271,6 +271,6 @@ class email extends libbase {
      */
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
         $mform->setDefault('contenthtml',
-                array('text' => isset($settings['contenthtml']) ? $settings['contenthtml'] : '', 'format' => FORMAT_HTML));
+                ['text' => isset($settings['contenthtml']) ? $settings['contenthtml'] : '', 'format' => FORMAT_HTML]);
     }
 }

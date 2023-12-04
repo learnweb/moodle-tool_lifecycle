@@ -46,9 +46,9 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
     $url = null;
     $settingnode = null;
 
-    $url = new moodle_url('/admin/tool/lifecycle/view.php', array(
-        'contextid' => $context->id
-    ));
+    $url = new moodle_url('/admin/tool/lifecycle/view.php', [
+        'contextid' => $context->id,
+    ]);
 
     // Add the course life cycle link.
     $linktext = get_string('managecourses_link', 'tool_lifecycle');

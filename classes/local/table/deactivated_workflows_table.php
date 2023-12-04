@@ -89,20 +89,20 @@ class deactivated_workflows_table extends workflow_table {
         $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
         $url = new \moodle_url(urls::WORKFLOW_DETAILS,
-            array('wf' => $row->id));
-        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-            null, array('title' => $alt));
+            ['wf' => $row->id]);
+        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
+            null, ['title' => $alt]);
 
         if (workflow_manager::is_abortable($row->id)) {
             $alt = get_string('abortprocesses', 'tool_lifecycle');
             $icon = 't/stop';
             $url = new \moodle_url(urls::DEACTIVATED_WORKFLOWS,
-                array('workflowid' => $row->id, 'action' => action::WORKFLOW_ABORT, 'sesskey' => sesskey()));
+                ['workflowid' => $row->id, 'action' => action::WORKFLOW_ABORT, 'sesskey' => sesskey()]);
             $confirmaction = new \confirm_action(get_string('abortprocesses_confirm', 'tool_lifecycle'));
             $output .= $OUTPUT->action_icon($url,
-                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
                 $confirmaction,
-                array('title' => $alt)
+                ['title' => $alt]
             );
         }
 
@@ -110,12 +110,12 @@ class deactivated_workflows_table extends workflow_table {
             $alt = get_string('deleteworkflow', 'tool_lifecycle');
             $icon = 't/delete';
             $url = new \moodle_url(urls::DEACTIVATED_WORKFLOWS,
-                array('workflowid' => $row->id, 'action' => action::WORKFLOW_DELETE, 'sesskey' => sesskey()));
+                ['workflowid' => $row->id, 'action' => action::WORKFLOW_DELETE, 'sesskey' => sesskey()]);
             $confirmaction = new \confirm_action(get_string('deleteworkflow_confirm', 'tool_lifecycle'));
             $output .= $OUTPUT->action_icon($url,
-                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
                 $confirmaction,
-                array('title' => $alt)
+                ['title' => $alt]
             );
         }
 

@@ -71,7 +71,7 @@ $workflow = workflow_manager::get_workflow($workflowid);
 \tool_lifecycle\permission_and_navigation::setup_workflow($workflow);
 
 $params = [
-    'type' => $type
+    'type' => $type,
 ];
 if ($elementid) {
     $params['elementid'] = $element->id;

@@ -82,7 +82,7 @@ class manually_triggered_process_test extends \advanced_testcase {
         $manualworkflow = $generator->create_manual_workflow($triggersettings);
         $step = $generator->create_step("instance1", "createbackup", $manualworkflow->id);
         settings_manager::save_settings($step->id, settings_type::STEP, "createbackup",
-                array("maximumbackupspercron" => 10)
+                ["maximumbackupspercron" => 10]
         );
 
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $manualworkflow->id);
