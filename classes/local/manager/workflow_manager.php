@@ -328,12 +328,14 @@ class workflow_manager {
             array(
                 'sortindex' => $otherindex)
         );
-        $otherworkflow = workflow::from_record($otherrecord);
+        if (false !== $otherrecord) {
+            $otherworkflow = workflow::from_record($otherrecord);
+            $otherworkflow->sortindex = $index;
+            self::insert_or_update($otherworkflow);
+        }
 
         $workflow->sortindex = $otherindex;
-        $otherworkflow->sortindex = $index;
         self::insert_or_update($workflow);
-        self::insert_or_update($otherworkflow);
 
         $transaction->allow_commit();
     }
