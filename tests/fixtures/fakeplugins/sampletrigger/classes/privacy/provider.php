@@ -14,18 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_sampletrigger\privacy;
+
+use core_privacy\local\metadata\null_provider;
+
 /**
- * Version details.
+ * Privacy subsystem implementation for tool_sampletrigger.
  *
- * @package    tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     tool_sampletrigger
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class provider implements null_provider {
 
-defined('MOODLE_INTERNAL') || die;
-
-$plugin->maturity = MATURITY_BETA;
-$plugin->version  = 2023050201;
-$plugin->component = 'tool_lifecycle';
-$plugin->requires = 2020061500; // Requires Moodle 3.9+.
-$plugin->release   = 'v4.2-r1';
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return string the reason
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}

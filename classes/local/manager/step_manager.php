@@ -228,11 +228,27 @@ class step_manager extends subplugin_manager {
      * @throws \coding_exception
      */
     public static function get_step_types() {
+        // Sub plugins in 'step' folder.
         $subplugins = \core_component::get_plugin_list('lifecyclestep');
         $result = array();
         foreach (array_keys($subplugins) as $plugin) {
             $result[$plugin] = get_string('pluginname', 'lifecyclestep_' . $plugin);
         }
+
+        // Additional sub plugins defined under "lifecycle" name space, ie "local_newstep\lifecycle".
+        // The class name must be step (step.php) and placed under "classes/lifecycle" folder.
+        // The name space must be "local_newstep\lifecycle"
+        // The "local_newstep\lifecycle\step" class must extend the step base classes.
+        foreach (array_keys(\core_component::get_plugin_types()) as $plugintype) {
+            $potentialsteps = \core_component::get_plugin_list_with_class($plugintype, 'lifecycle\\step');
+            foreach ($potentialsteps as $plugin => $potentialstep) {
+                // Check if it implements the step base class.
+                if (is_a($potentialstep, \tool_lifecycle\step\libbase::class, true)) {
+                    $result[$plugin] = get_string('pluginname', $plugin);
+                }
+            }
+        }
+
         return $result;
     }
 

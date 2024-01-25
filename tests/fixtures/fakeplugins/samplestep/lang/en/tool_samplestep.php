@@ -14,18 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Version details.
- *
- * @package    tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die;
-
-$plugin->maturity = MATURITY_BETA;
-$plugin->version  = 2023050201;
-$plugin->component = 'tool_lifecycle';
-$plugin->requires = 2020061500; // Requires Moodle 3.9+.
-$plugin->release   = 'v4.2-r1';
+$string['pluginname'] = 'Sample step';
+$string['privacy:metadata'] = 'The plugin does not store any personal data.';
