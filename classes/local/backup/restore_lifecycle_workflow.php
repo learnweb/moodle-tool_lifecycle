@@ -176,6 +176,9 @@ class restore_lifecycle_workflow {
         return true;
     }
 
+    /**
+     * Calls the subplugins to check the consistency and validity of the step and trigger settings.
+     */
     private function check_subplugin_validity() {
         foreach ($this->steps as $step) {
             $steplib = lib_manager::get_step_lib($step->subpluginname);
