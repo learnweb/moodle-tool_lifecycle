@@ -32,7 +32,7 @@
  * @throws moodle_exception
  */
 function tool_lifecycle_extend_navigation_course($navigation, $course, $context) {
-    global $PAGE;
+    global $DB, $PAGE;
 
     // Only add this settings item on non-site course pages.
     if (!$PAGE->course || $PAGE->course->id == SITEID) {
@@ -43,8 +43,17 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
         return null;
     }
 
-    $url = null;
-    $settingnode = null;
+    $cache = cache::make('tool_lifecycle', 'application');
+    if ($cache->has('manualworkflowexists')) {
+        $manualwfexists = $cache->get('manualworkflowexists');
+    } else {
+        $manualwfexists = $DB->record_exists_select('tool_lifecycle_workflow', 'manual = 1 AND timeactive IS NOT NULL');
+        $cache->set('manualworkflowsexist', $manualwfexists);
+    }
+
+    if (!$manualwfexists) {
+        return null;
+    }
 
     $url = new moodle_url('/admin/tool/lifecycle/view.php', [
         'contextid' => $context->id,
