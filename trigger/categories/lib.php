@@ -131,4 +131,22 @@ class categories extends base_automatic {
         $mform->setType('exclude', PARAM_BOOL);
     }
 
+    /**
+     * Ensure validity of settings upon backup restoration.
+     * @param array $settings
+     * @return array List of errors with settings. If empty, the given settings are valid.
+     */
+    public function ensure_validity(array $settings): array {
+        $errors = [];
+        $categories = explode(',', $settings['categories']);
+        // Use core_course_category for moodle 3.6 and higher.
+        $categoryobjects = \core_course_category::get_many($categories);
+        foreach ($categories as $category) {
+            if (!$categoryobjects[$category]) {
+                $errors[] = get_string('category_does_not_exist', 'lifecycletrigger_categories', $category);
+            }
+        }
+        return $errors;
+    }
+
 }

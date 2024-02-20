@@ -25,6 +25,7 @@ namespace tool_lifecycle\local\backup;
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\entity\workflow;
+use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
@@ -76,6 +77,7 @@ class restore_lifecycle_workflow {
         // If the workflow could be loaded continue with the subplugins.
         if ($this->workflow) {
             $this->load_subplugins();
+            $this->check_subplugin_validity();
             // Validate the subplugin data.
             if (empty($this->errors) && $this->all_subplugins_installed()) {
                 // If all loaded data is valid, the new workflow and the steps can be stored in the database.
@@ -172,6 +174,38 @@ class restore_lifecycle_workflow {
             return false;
         }
         return true;
+    }
+
+    private function check_subplugin_validity() {
+        foreach ($this->steps as $step) {
+            $steplib = lib_manager::get_step_lib($step->subpluginname);
+            $filteredsettings = [];
+            foreach ($this->settings as $setting) {
+                if ($setting->pluginid === $step->id) {
+                    $filteredsettings[$setting->name] = $setting->value;
+                }
+            }
+            $errors = array_map(
+                    fn($x) => get_string('restore_error_in_step', 'tool_lifecycle', $step->instancename) . $x,
+                    $steplib->ensure_validity($filteredsettings)
+            );
+            $this->errors = array_merge($this->errors, $errors);
+        }
+
+        foreach ($this->trigger as $trigger) {
+            $steplib = lib_manager::get_trigger_lib($trigger->subpluginname);
+            $filteredsettings = [];
+            foreach ($this->settings as $setting) {
+                if ($setting->pluginid === $trigger->id) {
+                    $filteredsettings[$setting->name] = $setting->value;
+                }
+            }
+            $errors = array_map(
+                    fn($x) => get_string('restore_error_in_trigger', 'tool_lifecycle', $trigger->instancename) . $x,
+                    $steplib->ensure_validity($filteredsettings)
+            );
+            $this->errors = array_merge($this->errors, $errors);
+        }
     }
 
     /**

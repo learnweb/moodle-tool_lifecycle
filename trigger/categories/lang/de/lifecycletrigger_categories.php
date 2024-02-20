@@ -28,3 +28,4 @@ $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Da
 $string['categories'] = 'Kategorien, für die der Workflow ausgelöst werden soll.';
 $string['categories_noselection'] = 'Bitte wählen sie mindestens eine Kategorie aus.';
 $string['exclude'] = 'Falls ausgewählt, werden gerade die Kurse der angegebenen Kategorien nicht ausgelöst.';
+$string['category_does_not_exist'] = 'Es gibt keine Kurskategorie mit der ID {$a}.';
