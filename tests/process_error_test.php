@@ -75,7 +75,7 @@ class process_error_test extends \advanced_testcase {
         $manualworkflow = $generator->create_manual_workflow($triggersettings);
         $step = $generator->create_step("instance1", "deletecourse", $manualworkflow->id);
         settings_manager::save_settings($step->id, settings_type::STEP, "deletecourse",
-                array("maximumdeletionspercron" => 10)
+                ["maximumdeletionspercron" => 10]
         );
 
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $manualworkflow->id);

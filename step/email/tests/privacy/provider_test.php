@@ -146,7 +146,7 @@ class provider_test extends provider_testcase {
         $writer = writer::with_context($course1context);
         $this->assertTrue($writer->has_any_data());
         $recordids = $DB->get_records('lifecyclestep_email', ['touser' => $this->user1->id,
-            'courseid' => $this->course1->id], '', 'id');
+            'courseid' => $this->course1->id, ], '', 'id');
         foreach ($recordids as $id) {
             $exportedrecord = $writer->get_data(['lifecyclestep_email-' . $id->id]);
             $this->assertEquals($this->user1->id, $exportedrecord->touser);
@@ -156,7 +156,7 @@ class provider_test extends provider_testcase {
         $writer = writer::with_context($course2context);
         $this->assertTrue($writer->has_any_data());
         $recordids = $DB->get_records('lifecyclestep_email', ['touser' => $this->user1->id,
-            'courseid' => $this->course2->id], '', 'id');
+            'courseid' => $this->course2->id, ], '', 'id');
         foreach ($recordids as $id) {
             $exportedrecord = $writer->get_data(['lifecyclestep_email-' . $id->id]);
             $this->assertEquals($this->user1->id, $exportedrecord->touser);

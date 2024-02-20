@@ -73,9 +73,9 @@ abstract class workflow_table extends \table_sql {
             return userdate($row->timeactive, get_string('strftimedatetime'), 0);
         }
         return $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            array('action' => action::WORKFLOW_ACTIVATE,
+            ['action' => action::WORKFLOW_ACTIVATE,
                 'sesskey' => sesskey(),
-                'workflowid' => $row->id)),
+                'workflowid' => $row->id, ]),
             get_string('activateworkflow', 'tool_lifecycle'));
     }
 
@@ -133,9 +133,9 @@ abstract class workflow_table extends \table_sql {
         $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
         $url = new \moodle_url(urls::WORKFLOW_DETAILS,
-            array('wf' => $row->id));
-        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-            null, array('title' => $alt));
+            ['wf' => $row->id]);
+        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
+            null, ['title' => $alt]);
 
         return $output;
     }
@@ -154,11 +154,11 @@ abstract class workflow_table extends \table_sql {
         global $OUTPUT, $PAGE;
 
         return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
-                array('action' => $action,
+                ['action' => $action,
                     'workflowid' => $workflowid,
-                    'sesskey' => sesskey())),
-                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-                null , array('title' => $alt)) . ' ';
+                    'sesskey' => sesskey(), ]),
+                new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
+                null , ['title' => $alt]) . ' ';
     }
 
 }

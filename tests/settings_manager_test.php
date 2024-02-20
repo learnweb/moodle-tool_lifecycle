@@ -105,18 +105,18 @@ class settings_manager_test extends \advanced_testcase {
         $data = new \stdClass();
         $data->delay = 100;
         settings_manager::save_settings($this->trigger->id, settings_type::TRIGGER, $this->trigger->subpluginname, $data);
-        $settingsstep = $DB->get_records('tool_lifecycle_settings', array('instanceid' => $this->step->id,
-            'type' => settings_type::STEP));
+        $settingsstep = $DB->get_records('tool_lifecycle_settings', ['instanceid' => $this->step->id,
+            'type' => settings_type::STEP, ]);
         $this->assertNotEmpty($settingsstep);
-        $settingstrigger = $DB->get_records('tool_lifecycle_settings', array('instanceid' => $this->trigger->id,
-            'type' => settings_type::TRIGGER));
+        $settingstrigger = $DB->get_records('tool_lifecycle_settings', ['instanceid' => $this->trigger->id,
+            'type' => settings_type::TRIGGER, ]);
         $this->assertNotEmpty($settingstrigger);
         workflow_manager::remove($this->workflow->id);
-        $settingsstep = $DB->get_records('tool_lifecycle_settings', array('instanceid' => $this->step->id,
-            'type' => settings_type::STEP));
+        $settingsstep = $DB->get_records('tool_lifecycle_settings', ['instanceid' => $this->step->id,
+            'type' => settings_type::STEP, ]);
         $this->assertEmpty($settingsstep);
-        $settingstrigger = $DB->get_records('tool_lifecycle_settings', array('instanceid' => $this->trigger->id,
-            'type' => settings_type::TRIGGER));
+        $settingstrigger = $DB->get_records('tool_lifecycle_settings', ['instanceid' => $this->trigger->id,
+            'type' => settings_type::TRIGGER, ]);
         $this->assertEmpty($settingstrigger);
     }
 

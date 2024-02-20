@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$observers = array(
-        array(
+$observers = [
+        [
                 'eventname' => 'core\event\course_deleted',
                 'callback' => 'tool_lifecycle\local\manager\process_manager::course_deletion_observed',
-        )
-);
+        ],
+];

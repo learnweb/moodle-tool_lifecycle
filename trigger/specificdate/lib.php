@@ -80,11 +80,11 @@ class specificdate extends base_automatic {
                     $settings['timelastrun'] = $current;
                     $trigger = trigger_manager::get_instance($triggerid);
                     settings_manager::save_settings($triggerid, settings_type::TRIGGER, $trigger->subpluginname, $settings);
-                    return array('true', array());
+                    return ['true', []];
                 }
             }
         }
-        return array('false', array());
+        return ['false', []];
     }
 
     /**
@@ -95,16 +95,16 @@ class specificdate extends base_automatic {
      */
     private function parse_dates($datesraw) {
         $dates = preg_split('/\r\n|\r|\n/', $datesraw);
-        $result = array();
+        $result = [];
         foreach ($dates as $date) {
             $dateparts = explode('.', $date);
             if (count($dateparts) !== 2) {
                 throw new \moodle_exception("Each date has to consist of two parts devided by point. We got: " . $date);
             }
-            $result[] = array(
+            $result[] = [
                 'mon' => $dateparts[1],
-                'day' => $dateparts[0]
-            );
+                'day' => $dateparts[0],
+            ];
         }
         return $result;
     }
@@ -122,10 +122,10 @@ class specificdate extends base_automatic {
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
-        return array(
+        return [
             new instance_setting('dates', PARAM_TEXT),
             new instance_setting('timelastrun', PARAM_INT),
-        );
+        ];
     }
 
     /**

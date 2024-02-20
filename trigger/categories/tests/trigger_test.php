@@ -70,11 +70,11 @@ class trigger_test extends \advanced_testcase {
 
         $this->category = $generator->create_category();
         $othercategory = $generator->create_category();
-        $this->childcategory = $generator->create_category(array('parent' => $this->category->id));
-        $data = array(
+        $this->childcategory = $generator->create_category(['parent' => $this->category->id]);
+        $data = [
             'categories' => $othercategory->id . ',' . $this->category->id,
             'exclude' => true,
-        );
+        ];
 
         $this->excludetrigger = \tool_lifecycle_trigger_categories_generator::create_trigger_with_workflow($data);
 
@@ -88,7 +88,7 @@ class trigger_test extends \advanced_testcase {
      */
     public function test_course_has_cat() {
 
-        $course = $this->getDataGenerator()->create_course(array('category' => $this->category->id));
+        $course = $this->getDataGenerator()->create_course(['category' => $this->category->id]);
 
         $recordset = $this->processor->get_course_recordset([$this->excludetrigger], []);
         foreach ($recordset as $element) {
@@ -113,7 +113,7 @@ class trigger_test extends \advanced_testcase {
      */
     public function test_course_within_cat() {
 
-        $course = $this->getDataGenerator()->create_course(array('category' => $this->childcategory->id));
+        $course = $this->getDataGenerator()->create_course(['category' => $this->childcategory->id]);
 
         $recordset = $this->processor->get_course_recordset([$this->excludetrigger], []);
         foreach ($recordset as $element) {

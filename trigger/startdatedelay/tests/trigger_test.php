@@ -62,7 +62,7 @@ class trigger_test extends \advanced_testcase {
      */
     public function test_young_course() {
 
-        $course = $this->getDataGenerator()->create_course(array('startdate' => time() - 50 * 24 * 60 * 60));
+        $course = $this->getDataGenerator()->create_course(['startdate' => time() - 50 * 24 * 60 * 60]);
 
         $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
         $found = false;
@@ -81,7 +81,7 @@ class trigger_test extends \advanced_testcase {
      */
     public function test_old_course() {
 
-        $course = $this->getDataGenerator()->create_course(array('startdate' => time() - 200 * 24 * 60 * 60));
+        $course = $this->getDataGenerator()->create_course(['startdate' => time() - 200 * 24 * 60 * 60]);
 
         $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
         $found = false;

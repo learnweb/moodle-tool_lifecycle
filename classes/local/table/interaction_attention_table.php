@@ -84,7 +84,7 @@ class interaction_attention_table extends interaction_table {
             }
         }
 
-        $this->column_nosort = array('status', 'tools');
+        $this->column_nosort = ['status', 'tools'];
         $this->set_sql($fields, $from, join(" AND ", $where), $params);
         $this->define_baseurl($PAGE->url);
         $this->init();
@@ -155,12 +155,12 @@ class interaction_attention_table extends interaction_table {
         global $PAGE, $OUTPUT;
 
         $button = new \single_button(new \moodle_url($PAGE->url,
-            array(
+            [
                 'stepid' => $stepinstanceid,
                 'action' => $action,
                 'processid' => $processid,
-                'sesskey' => sesskey()
-            )), $alt
+                'sesskey' => sesskey(),
+            ]), $alt
         );
         return $OUTPUT->render($button);
     }

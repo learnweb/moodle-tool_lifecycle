@@ -145,7 +145,7 @@ class delayed_courses_table extends \table_sql {
                 get_string('coursename', 'tool_lifecycle'),
                 get_string('category'),
                 get_string('delays', 'tool_lifecycle'),
-                get_string('tools', 'tool_lifecycle')
+                get_string('tools', 'tool_lifecycle'),
         ]);
     }
 
@@ -175,13 +175,13 @@ class delayed_courses_table extends \table_sql {
                 $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
                 $date = userdate($row->workflowdelay, $dateformat);
                 $text = get_string('delayed_for_workflow_until', 'tool_lifecycle',
-                        array('name' => $row->workflow, 'date' => $date));
+                        ['name' => $row->workflow, 'date' => $date]);
             } else {
                 $text = get_string('delayed_for_workflows', 'tool_lifecycle', $row->workflowcount);
             }
         }
 
-        return \html_writer::start_span('tool_lifecycle-hint', array('title' => $this->get_mouseover($row))) .
+        return \html_writer::start_span('tool_lifecycle-hint', ['title' => $this->get_mouseover($row)]) .
                 $text .
                 \html_writer::end_span();
     }
@@ -205,7 +205,7 @@ class delayed_courses_table extends \table_sql {
         if ($row->workflowcount == 1) {
             $date = userdate($row->workflowdelay, $dateformat);
             $text .= get_string('name_until_date', 'tool_lifecycle',
-                    array('name' => $row->workflow, 'date' => $date)) . '&#13;';
+                    ['name' => $row->workflow, 'date' => $date]) . '&#13;';
         } else if ($row->workflowcount > 1) {
             $sql = 'SELECT dw.id, dw.delayeduntil, w.title
                     FROM {tool_lifecycle_delayed_workf} dw
@@ -216,7 +216,7 @@ class delayed_courses_table extends \table_sql {
             foreach ($records as $record) {
                 $date = userdate($record->delayeduntil, $dateformat);
                 $text .= get_string('name_until_date', 'tool_lifecycle',
-                        array('name' => $record->title, 'date' => $date)) . '&#13;';
+                        ['name' => $record->title, 'date' => $date]) . '&#13;';
             }
         }
         return $text;
@@ -233,11 +233,11 @@ class delayed_courses_table extends \table_sql {
     public function col_tools($row) {
         global $PAGE, $OUTPUT;
 
-        $params = array(
+        $params = [
                 'action' => 'delete',
                 'cid' => $row->courseid,
-                'sesskey' => sesskey()
-        );
+                'sesskey' => sesskey(),
+        ];
 
         if ($this->workflow) {
             $params['workflow'] = $this->workflow;

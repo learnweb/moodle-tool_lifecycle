@@ -48,7 +48,7 @@ class lifecycle_cleanup_task extends \core\task\scheduled_task {
     public function execute() {
         global $DB;
         $twomonthago = time() - 60 * 24 * 60 * 60;
-        $DB->delete_records_select('tool_lifecycle_delayed', 'delayeduntil <= :time', array('time' => $twomonthago));
-        $DB->delete_records_select('tool_lifecycle_delayed_workf', 'delayeduntil <= :time', array('time' => $twomonthago));
+        $DB->delete_records_select('tool_lifecycle_delayed', 'delayeduntil <= :time', ['time' => $twomonthago]);
+        $DB->delete_records_select('tool_lifecycle_delayed_workf', 'delayeduntil <= :time', ['time' => $twomonthago]);
     }
 }

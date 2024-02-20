@@ -49,7 +49,7 @@ function xmldb_lifecyclestep_deletecourse_upgrade($oldversion) {
         foreach ($coursedeletesteps as $step) {
             if (empty(settings_manager::get_settings($step->id, 'step'))) {
                 settings_manager::save_settings($step->id, 'step', 'deletecourse',
-                    array($settingsname => $settingsvalue));
+                    [$settingsname => $settingsvalue]);
             }
         }
 

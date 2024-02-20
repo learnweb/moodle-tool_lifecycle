@@ -102,7 +102,7 @@ class backup_manager {
      */
     public static function restore_course_backup($backupid) {
         global $DB, $CFG;
-        $backuprecord = $DB->get_record('tool_lifecycle_backups', array('id' => $backupid));
+        $backuprecord = $DB->get_record('tool_lifecycle_backups', ['id' => $backupid]);
 
         // Check if backup tmp dir exists.
         $backuptmpdir = $CFG->tempdir . DIRECTORY_SEPARATOR . 'backup';
@@ -125,10 +125,10 @@ class backup_manager {
 
         $context = \context_system::instance();
         $restoreurl = new \moodle_url('/backup/restore.php',
-            array(
+            [
                 'contextid' => $context->id,
                 'filename' => $targetfilename,
-            )
+            ]
         );
         redirect($restoreurl);
 

@@ -55,7 +55,7 @@ class lifecycle_task extends \core\task\scheduled_task {
 
         $steps = step_manager::get_step_types();
         /* @var \tool_lifecycle\step\libbase[] $steplibs stores the lib classes of all step subplugins.*/
-        $steplibs = array();
+        $steplibs = [];
         foreach ($steps as $id => $step) {
             $steplibs[$id] = lib_manager::get_step_lib($id);
             $steplibs[$id]->pre_processing_bulk_operation();

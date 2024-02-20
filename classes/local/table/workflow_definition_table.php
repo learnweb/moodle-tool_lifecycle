@@ -87,9 +87,9 @@ class workflow_definition_table extends workflow_table {
         }
         if (workflow_manager::is_valid($row->id)) {
             return $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
-                array('action' => action::WORKFLOW_ACTIVATE,
+                ['action' => action::WORKFLOW_ACTIVATE,
                     'sesskey' => sesskey(),
-                    'workflowid' => $row->id)),
+                    'workflowid' => $row->id, ]),
                 get_string('activateworkflow', 'tool_lifecycle'));
         } else {
             return $OUTPUT->pix_icon('i/warning', get_string('invalid_workflow_details', 'tool_lifecycle')) .
@@ -111,9 +111,9 @@ class workflow_definition_table extends workflow_table {
         $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
         $url = new \moodle_url(urls::WORKFLOW_DETAILS,
-            array('wf' => $row->id));
-        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-            null, array('title' => $alt));
+            ['wf' => $row->id]);
+        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
+            null, ['title' => $alt]);
 
         $trigger = trigger_manager::get_triggers_for_workflow($row->id);
         if (!empty($trigger)) {

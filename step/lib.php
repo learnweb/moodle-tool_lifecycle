@@ -104,7 +104,7 @@ abstract class libbase {
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
-        return array();
+        return [];
     }
 
     /**

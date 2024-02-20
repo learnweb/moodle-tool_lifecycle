@@ -73,7 +73,7 @@ class courses_in_step_table extends \table_sql {
 
         $where = "p.stepindex = :stepindex AND p.workflowid = :wfid";
 
-        $this->column_nosort = array('status', 'tools');
+        $this->column_nosort = ['status', 'tools'];
         $this->set_sql($fields, $from, $where, ['stepindex' => $step->sortindex, 'wfid' => $step->workflowid]);
         if ($courseid) {
             $this->set_sortdata([]);

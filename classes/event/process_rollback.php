@@ -53,15 +53,15 @@ class process_rollback extends \core\event\base {
      * @throws \dml_exception
      */
     public static function event_from_process($process) {
-        $data = array(
+        $data = [
                 'context' => \context_system::instance(),
-                'other' => array(
+                'other' => [
                     'processid' => $process->id,
                     'workflowid' => $process->workflowid,
                     'stepindex' => $process->stepindex,
-                    'courseid' => $process->courseid
-                )
-        );
+                    'courseid' => $process->courseid,
+                ],
+        ];
         return self::create($data);
     }
 

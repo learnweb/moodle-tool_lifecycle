@@ -48,7 +48,7 @@ class form_delays_filter extends \moodleform {
         $activeworkflows = workflow_manager::get_active_workflows();
         $workflowoptions = [
                 '' => get_string('all_delays', 'tool_lifecycle'),
-                'global' => get_string('globally', 'tool_lifecycle')
+                'global' => get_string('globally', 'tool_lifecycle'),
         ];
         foreach ($activeworkflows as $activeworkflow) {
             // Only show non-static workflows.

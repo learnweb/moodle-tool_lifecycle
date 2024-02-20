@@ -50,7 +50,7 @@ abstract class base {
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
-        return array();
+        return [];
     }
 
     /**
@@ -152,7 +152,7 @@ abstract class base_automatic extends base {
      * @return array A list containing the constructed sql fragment and an array of parameters.
      */
     public function get_course_recordset_where($triggerid) {
-        return array('', array());
+        return ['', []];
     }
 }
 

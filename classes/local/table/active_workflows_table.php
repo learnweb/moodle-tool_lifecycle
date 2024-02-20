@@ -56,9 +56,9 @@ abstract class active_workflows_table extends workflow_table {
         $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
         $overviewurl = new \moodle_url(urls::WORKFLOW_DETAILS,
-            array('wf' => $row->id));
-        $output .= $OUTPUT->action_icon($overviewurl, new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
-            null, array('title' => $alt));
+            ['wf' => $row->id]);
+        $output .= $OUTPUT->action_icon($overviewurl, new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
+            null, ['title' => $alt]);
 
         if (workflow_manager::is_disableable($row->id)) {
             $action = action::WORKFLOW_BACKUP;
@@ -69,22 +69,22 @@ abstract class active_workflows_table extends workflow_table {
             $alt = get_string('disableworkflow', 'tool_lifecycle');
             $icon = 't/disable';
             $url = new \moodle_url(urls::DEACTIVATED_WORKFLOWS,
-                array('workflowid' => $row->id, 'action' => action::WORKFLOW_DISABLE, 'sesskey' => sesskey()));
+                ['workflowid' => $row->id, 'action' => action::WORKFLOW_DISABLE, 'sesskey' => sesskey()]);
             $confirmaction = new \confirm_action(get_string('disableworkflow_confirm', 'tool_lifecycle'));
             $output .= $OUTPUT->action_icon($url,
-                new \pix_icon($icon, $alt, 'tool_lifecycle', array('title' => $alt)),
+                new \pix_icon($icon, $alt, 'tool_lifecycle', ['title' => $alt]),
                 $confirmaction,
-                array('title' => $alt));
+                ['title' => $alt]);
 
             $alt = get_string('abortdisableworkflow', 'tool_lifecycle');
             $icon = 't/stop';
             $url = new \moodle_url(urls::DEACTIVATED_WORKFLOWS,
-                array('workflowid' => $row->id, 'action' => action::WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()));
+                ['workflowid' => $row->id, 'action' => action::WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()]);
             $confirmaction = new \confirm_action(get_string('abortdisableworkflow_confirm', 'tool_lifecycle'));
             $output .= $OUTPUT->action_icon($url,
-                new \pix_icon($icon, $alt, 'moodle', array('title' => $alt)),
+                new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
                 $confirmaction,
-                array('title' => $alt)
+                ['title' => $alt]
             );
         }
 
