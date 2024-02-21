@@ -77,11 +77,13 @@ class restore_lifecycle_workflow {
         // If the workflow could be loaded continue with the subplugins.
         if ($this->workflow) {
             $this->load_subplugins();
-            $this->check_subplugin_validity();
             // Validate the subplugin data.
             if (empty($this->errors) && $this->all_subplugins_installed()) {
-                // If all loaded data is valid, the new workflow and the steps can be stored in the database.
-                $this->persist();
+                $this->check_subplugin_validity();
+                if (empty($this->errors)) {
+                    // If all loaded data is valid, the new workflow and the steps can be stored in the database.
+                    $this->persist();
+                }
             }
         }
         return $this->errors;
@@ -103,7 +105,6 @@ class restore_lifecycle_workflow {
         $this->workflow->timeactive = null;
         $this->workflow->timedeactive = null;
         $this->workflow->sortindex = null;
-        workflow_manager::insert_or_update($this->workflow);
     }
 
     /**

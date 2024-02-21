@@ -76,6 +76,9 @@ class categories extends base_automatic {
         $allcategories = [];
         foreach ($categories as $category) {
             array_push($allcategories, $category);
+            if (!isset($categoryobjects[$category]) || !$categoryobjects[$category]) {
+                continue;
+            }
             $children = $categoryobjects[$category]->get_all_children_ids();
             $allcategories = array_merge($allcategories, $children);
         }
@@ -139,7 +142,7 @@ class categories extends base_automatic {
         // Use core_course_category for moodle 3.6 and higher.
         $categoryobjects = \core_course_category::get_many($categories);
         foreach ($categories as $category) {
-            if (!isset($categoryobjects[$category])) {
+            if (!isset($categoryobjects[$category]) || !$categoryobjects[$category]) {
                 $errors[] = get_string('category_does_not_exist', 'lifecycletrigger_categories', $category);
             }
         }
