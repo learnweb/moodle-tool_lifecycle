@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle;
 
+use tool_lifecycle\local\entity\process;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\event\process_triggered;
 use tool_lifecycle\local\manager\process_manager;
@@ -154,11 +155,31 @@ class processor {
      * @param int $processid Id of the process
      * @return boolean if true, interaction finished.
      *      If false, the current step is still processing and cares for displaying the view.
-     * @throws \coding_exception
-     * @throws \dml_exception
      */
     public function process_course_interactive($processid) {
         $process = process_manager::get_process_by_id($processid);
+        $steps = step_manager::get_step_types();
+        /* @var \tool_lifecycle\step\libbase[] $steplibs stores the lib classes of all step subplugins.*/
+        $steplibs = [];
+        foreach ($steps as $id => $step) {
+            $steplibs[$id] = lib_manager::get_step_lib($id);
+            $steplibs[$id]->pre_processing_bulk_operation();
+        }
+        $result = $this->process_course_interactive_recursive($process);
+        foreach ($steps as $id => $step) {
+            $steplibs[$id]->post_processing_bulk_operation();
+        }
+        return $result;
+    }
+
+    /**
+     * See process_course_interactive().
+     *
+     * @param process $process the process
+     * @return boolean if true, interaction finished.
+     *      If false, the current step is still processing and cares for displaying the view.
+     */
+    protected function process_course_interactive_recursive($process) {
         $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
         // If there is no next step, then proceed, which will delete/finish the process.
         if (!$step) {
@@ -178,7 +199,7 @@ class processor {
                     break;
                 case step_interactive_response::proceed():
                     // In case of proceed, call recursively.
-                    return $this->process_course_interactive($processid);
+                    return $this->process_course_interactive($process);
                     break;
                 case step_interactive_response::rollback():
                     delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);
