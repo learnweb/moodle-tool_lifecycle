@@ -63,7 +63,7 @@ class categories extends base_automatic {
     public function get_course_recordset_where($triggerid) {
         global $DB, $CFG;
         $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
-        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'] && true;
+        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
 
         $categories = explode(',', $categories);
         // Use core_course_category for moodle 3.6 and higher.
@@ -75,17 +75,14 @@ class categories extends base_automatic {
         }
         $allcategories = [];
         foreach ($categories as $category) {
-            array_push($allcategories , $category);
+            array_push($allcategories, $category);
             $children = $categoryobjects[$category]->get_all_children_ids();
-            $allcategories  = array_merge($allcategories , $children);
+            $allcategories = array_merge($allcategories, $children);
         }
 
-        list($insql, $inparams) = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED);
+        list($insql, $inparams) = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED, 'param', !$exclude);
 
         $where = "{course}.category {$insql}";
-        if ($exclude) {
-            $where = "NOT " . $where;
-        }
 
         return [$where, $inparams];
     }
@@ -142,7 +139,7 @@ class categories extends base_automatic {
         // Use core_course_category for moodle 3.6 and higher.
         $categoryobjects = \core_course_category::get_many($categories);
         foreach ($categories as $category) {
-            if (!$categoryobjects[$category]) {
+            if (!isset($categoryobjects[$category])) {
                 $errors[] = get_string('category_does_not_exist', 'lifecycletrigger_categories', $category);
             }
         }
