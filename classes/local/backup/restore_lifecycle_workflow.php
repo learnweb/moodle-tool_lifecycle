@@ -71,7 +71,7 @@ class restore_lifecycle_workflow {
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function execute(bool $force) {
+    public function execute(bool $force = false) {
         $this->reader->read();
 
         $this->load_workflow();
