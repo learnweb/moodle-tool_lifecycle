@@ -66,24 +66,30 @@ class restore_lifecycle_workflow {
      * Executes the restore process. It loads the workflow with all steps and triggers from the xml data.
      * If all data is valid, it restores the workflow with all subplugins and settings.
      * Otherwise an array with error strings is returned.
+     * @param bool $force force import, even if there are errors.
      * @return string[] Errors, which occurred during the restore process.
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function execute() {
+    public function execute(bool $force) {
         $this->reader->read();
 
         $this->load_workflow();
         // If the workflow could be loaded continue with the subplugins.
         if ($this->workflow) {
             $this->load_subplugins();
+
+            if (!$this->all_subplugins_installed()) {
+                return $this->errors;
+            }
+
             // Validate the subplugin data.
-            if (empty($this->errors) && $this->all_subplugins_installed()) {
-                $this->check_subplugin_validity();
-                if (empty($this->errors)) {
-                    // If all loaded data is valid, the new workflow and the steps can be stored in the database.
-                    $this->persist();
-                }
+            $this->check_subplugin_validity();
+            if (empty($this->errors) || $force) {
+                // If all loaded data is valid, the new workflow and the steps can be stored in the database.
+                // If we force the import, we empty the errors;
+                $this->errors = [];
+                $this->persist();
             }
         }
         return $this->errors;

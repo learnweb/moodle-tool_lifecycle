@@ -190,6 +190,8 @@ $string['restore_step_does_not_exist'] = 'The step {$a} is not installed, but is
 $string['restore_trigger_does_not_exist'] = 'The trigger {$a} is not installed, but is included in the backup file. Please installed it first and try again.';
 $string['restore_error_in_step'] = 'An error occurred when importing step "{$a}": ';
 $string['restore_error_in_trigger'] = 'An error occurred when importing trigger "{$a}": ';
+$string['workflow_was_not_imported'] = 'The workflow was not imported!';
+$string['force_import'] = 'Try ignoring errors and import the workflow anyway. <b>Use this at your own risk!</b>';
 
 // Events.
 $string['process_triggered_event'] = 'A process has been triggered';
