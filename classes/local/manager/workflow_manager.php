@@ -247,7 +247,7 @@ class workflow_manager {
     /**
      * Resets the 'does a manual workflow exist?'-cache.
      */
-    private static function reset_manual_workflow_cache() {
+    private static function reset_has_workflow_cache() {
         $cache = \cache::make('tool_lifecycle', 'application');
         $cache->delete('workflowactive');
     }
@@ -268,7 +268,7 @@ class workflow_manager {
         }
         if ($action === action::WORKFLOW_ACTIVATE) {
             self::activate_workflow($workflowid);
-            self::reset_manual_workflow_cache();
+            self::reset_has_workflow_cache();
         } else if ($action === action::UP_WORKFLOW) {
             self::change_sortindex($workflowid, true);
         } else if ($action === action::DOWN_WORKFLOW) {
@@ -279,12 +279,12 @@ class workflow_manager {
             self::backup_workflow($workflowid);
         } else if ($action === action::WORKFLOW_DISABLE) {
             self::disable($workflowid);
-            self::reset_manual_workflow_cache();
+            self::reset_has_workflow_cache();
             return; // Return, since we do not want to redirect outside to deactivated workflows.
         } else if ($action === action::WORKFLOW_ABORTDISABLE) {
             self::disable($workflowid);
             self::abortprocesses($workflowid);
-            self::reset_manual_workflow_cache();
+            self::reset_has_workflow_cache();
             return; // Return, since we do not want to redirect outside to deactivated workflows.
         } else if ($action === action::WORKFLOW_ABORT) {
             self::abortprocesses($workflowid);
@@ -294,7 +294,7 @@ class workflow_manager {
             if (self::get_workflow($workflowid) &&
                 self::is_removable($workflowid)) {
                 self::remove($workflowid);
-                self::reset_manual_workflow_cache();
+                self::reset_has_workflow_cache();
             } else {
                 \core\notification::add(get_string('workflow_not_removeable', 'tool_lifecycle')
                     , \core\notification::WARNING);
