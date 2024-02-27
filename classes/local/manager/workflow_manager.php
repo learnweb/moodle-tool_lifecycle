@@ -249,7 +249,7 @@ class workflow_manager {
      */
     private static function reset_manual_workflow_cache() {
         $cache = \cache::make('tool_lifecycle', 'application');
-        $cache->delete('manualworkflowexists');
+        $cache->delete('workflowactive');
     }
 
     /**
