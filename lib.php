@@ -47,7 +47,9 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
     if ($cache->has('workflowactive')) {
         $wfexists = $cache->get('workflowactive');
     } else {
-        $wfexists = $DB->record_exists_select('tool_lifecycle_workflow', 'timeactive IS NOT NULL');
+        $wfexists = $DB->record_exists_sql("SELECT 'yes' FROM {tool_lifecycle_workflow} wf " .
+                "JOIN {tool_lifecycle_trigger} t ON wf.id = t.workflowid " .
+                "WHERE wf.timeactive IS NOT NULL AND t.subpluginname NOT IN ('sitecourse', 'delayedcourses')");
         $cache->set('workflowactive', $wfexists);
     }
 
