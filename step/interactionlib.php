@@ -105,4 +105,23 @@ abstract class interactionlibbase {
     public function get_due_date($processid, $stepid) {
         return null;
     }
+
+    /**
+     * Method to limit the actions to specific users. Returns all actions by default so if not overwritten all actions are available
+     * to any user. You can overwrite this method to filter the $actionstrings array according to your needs to limit the actions
+     * shown to the given user.
+     *
+     * Care: When overwriting this method you want to make sure that at least one user can use at least one action or have a timeout
+     * in your step to avoid any deadlocked workflows.
+     *
+     * @param array $actionstrings array of action strings. These should match the strings with the key 'action'
+     *  in {@see get_action_tools} return array.
+     * @param int $userid the id of the user for whom the returned actions should be visible
+     * @param int $courseid the id of the currently handled course
+     * @return array the (possibly) filtered $actions array containing the strings of the actions which should be available to the
+     *  given user
+     */
+    public function get_available_actions_for_user(array $actionstrings, int $userid, int $courseid) : array {
+        return $actionstrings;
+    }
 }
