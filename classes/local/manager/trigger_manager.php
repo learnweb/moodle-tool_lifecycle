@@ -179,8 +179,8 @@ class trigger_manager extends subplugin_manager {
         global $DB;
         if (isset($toberemoved->sortindex)) {
             $subplugins = $DB->get_records_select('tool_lifecycle_trigger',
-                "sortindex > $toberemoved->sortindex",
-                ['workflowid' => $toberemoved->workflowid]);
+                'workflowid = :workflowid AND sortindex > :sortindex',
+                ['workflowid' => $toberemoved->workflowid, 'sortindex' => $toberemoved->sortindex]);
             foreach ($subplugins as $record) {
                 $subplugin = trigger_subplugin::from_record($record);
                 $subplugin->sortindex--;
