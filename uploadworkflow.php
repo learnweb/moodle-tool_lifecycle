@@ -51,11 +51,18 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 if ($data = $form->get_data()) {
     $xmldata = $form->get_file_content('backupfile');
     $restore = new restore_lifecycle_workflow($xmldata);
-    $errors = $restore->execute();
+    $force = $data->force ?? false;
+    $errors = $restore->execute($force);
     if (count($errors) != 0) {
+        \core\notification::add(get_string('workflow_was_not_imported', 'tool_lifecycle'), \core\notification::ERROR);
+        foreach ($errors as $error) {
+            \core\notification::add($error, \core\notification::ERROR);
+        }
+        $form = new form_upload_workflow(null, ['showforce' => true]);
+
         /** @var \tool_lifecycle_renderer $renderer */
         $renderer = $PAGE->get_renderer('tool_lifecycle');
-        $renderer->render_workflow_upload_form($form, $errors);
+        $renderer->render_workflow_upload_form($form);
         die();
     } else {
         // Redirect to workflow page.
