@@ -44,14 +44,16 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
     }
 
     $cache = cache::make('tool_lifecycle', 'application');
-    if ($cache->has('manualworkflowexists')) {
-        $manualwfexists = $cache->get('manualworkflowexists');
+    if ($cache->has('workflowactive')) {
+        $wfexists = $cache->get('workflowactive');
     } else {
-        $manualwfexists = $DB->record_exists_select('tool_lifecycle_workflow', 'manual = 1 AND timeactive IS NOT NULL');
-        $cache->set('manualworkflowsexist', $manualwfexists);
+        $wfexists = $DB->record_exists_sql("SELECT 'yes' FROM {tool_lifecycle_workflow} wf " .
+                "JOIN {tool_lifecycle_trigger} t ON wf.id = t.workflowid " .
+                "WHERE wf.timeactive IS NOT NULL AND t.subpluginname NOT IN ('sitecourse', 'delayedcourses')");
+        $cache->set('workflowactive', $wfexists);
     }
 
-    if (!$manualwfexists) {
+    if (!$wfexists) {
         return null;
     }
 
