@@ -82,12 +82,36 @@ class workflow_manager {
      * @throws \dml_transaction_exception
      */
     public static function disable($workflowid) {
+        global $DB;
+        $transaction = $DB->start_delegated_transaction();
         $workflow = self::get_workflow($workflowid);
         if ($workflow && self::is_disableable($workflowid)) {
             $workflow->timeactive = null;
+            self::remove_from_sortindex($workflow);
             $workflow->sortindex = null;
             $workflow->timedeactive = time();
-            self::insert_or_update($workflow);
+            $DB->update_record('tool_lifecycle_workflow', $workflow);
+        }
+        $transaction->allow_commit();
+    }
+
+    /**
+     * Removes a workflow from the sortindex.
+     *
+     * @param workflow $toberemoved
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
+     */
+    public static function remove_from_sortindex($toberemoved) {
+        global $DB;
+        if (isset($toberemoved->sortindex)) {
+            $workflows = self::get_active_automatic_workflows();
+            foreach ($workflows as $workflow) {
+                if ($workflow->sortindex > $toberemoved->sortindex) {
+                    $workflow->sortindex--;
+                    $DB->update_record('tool_lifecycle_workflow', $workflow);
+                }
+            }
         }
     }
 
