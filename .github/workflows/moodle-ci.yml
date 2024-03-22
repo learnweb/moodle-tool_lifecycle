@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         php: ['8.2']
-        moodle-branch: ['MOODLE_403_STABLE']
+        moodle-branch: ['main']
         database: ['pgsql']
 
     steps:
@@ -17,7 +17,7 @@ jobs:
         run: docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres:14
 
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: plugin
 
@@ -28,29 +28,9 @@ jobs:
           ini-values: max_input_vars=5000
           coverage: none
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Composer cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-      - name: npm cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
       - name: Initialise moodle-plugin-ci
         run: |
-          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^3
+          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
           echo $(cd ci/bin; pwd) >> $GITHUB_PATH
           echo $(cd ci/vendor/bin; pwd) >> $GITHUB_PATH
           sudo locale-gen en_AU.UTF-8
@@ -108,30 +88,20 @@ jobs:
       fail-fast: false
       matrix:
         php: ['8.0', '8.1', '8.2']
-        moodle-branch: ['MOODLE_401_STABLE', 'MOODLE_402_STABLE', 'MOODLE_403_STABLE']
+        moodle-branch: ['MOODLE_401_STABLE', 'MOODLE_402_STABLE', 'MOODLE_403_STABLE', 'main']
         database: ['mariadb', 'pgsql']
         exclude:
+          - php: '8.0'
+            moodle-branch: 'main'
           - php: '8.2'
             moodle-branch: 'MOODLE_401_STABLE'
         include:
           - php: '7.4'
-            moodle-branch: 'MOODLE_39_STABLE'
-            database: 'mariadb'
+            moodle-branch: 'MOODLE_401_STABLE'
+            database: 'pgsql'
           - php: '7.4'
-            moodle-branch: 'MOODLE_39_STABLE'
-            database: 'pgsql'
-          - php: '8.0'
-            moodle-branch: 'MOODLE_311_STABLE'
+            moodle-branch: 'MOODLE_401_STABLE'
             database: 'mariadb'
-          - php: '8.0'
-            moodle-branch: 'MOODLE_311_STABLE'
-            database: 'pgsql'
-          - php: '8.0'
-            moodle-branch: 'MOODLE_400_STABLE'
-            database: 'mariadb'
-          - php: '8.0'
-            moodle-branch: 'MOODLE_400_STABLE'
-            database: 'pgsql'
 
     steps:
       - name: Start MariaDB
@@ -143,7 +113,7 @@ jobs:
         run: docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres:14
 
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: plugin
 
@@ -153,24 +123,6 @@ jobs:
           php-version: ${{ matrix.php }}
           ini-values: max_input_vars=5000
           coverage: none
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-      - name: Composer cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - name: npm cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
 
       - name: Initialise moodle-plugin-ci
         run: |
@@ -194,3 +146,15 @@ jobs:
       - name: Behat features
         if: ${{ always() }}
         run: moodle-plugin-ci behat --profile chrome --auto-rerun 0
+
+      # This step allows to upload Behat faildump (screenshots) as workflow artifact,
+      # so it can be downloaded and inspected. You don't need this step if you
+      # are not running Behat test. Artifact will be retained for 7 days.
+      - name: Upload Behat Faildump
+        if: ${{ failure() && steps.behat.outcome == 'failure' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Behat Faildump (${{ join(matrix.*, ', ') }})
+          path: ${{ github.workspace }}/moodledata/behat_dump
+          retention-days: 7
+          if-no-files-found: ignore
