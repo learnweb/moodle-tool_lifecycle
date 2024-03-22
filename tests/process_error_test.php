@@ -41,7 +41,7 @@ use tool_lifecycle\local\manager\process_manager;
  * @copyright  2022 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class process_error_test extends \advanced_testcase {
+final class process_error_test extends \advanced_testcase {
     /** Icon of the manual trigger. */
     const MANUAL_TRIGGER1_ICON = 't/up';
     /** Display name of the manual trigger. */
@@ -60,7 +60,7 @@ class process_error_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         global $USER, $DB;
 
         // We do not need a sesskey check in theses tests.
@@ -92,7 +92,7 @@ class process_error_test extends \advanced_testcase {
      * Test if the correct process error was put into the table.
      * @covers \tool_lifecycle\processor
      */
-    public function test_process_error_in_table() {
+    public function test_process_error_in_table(): void {
         global $DB;
         $process = process_manager::manually_trigger_process($this->course->id, $this->trigger->id);
 

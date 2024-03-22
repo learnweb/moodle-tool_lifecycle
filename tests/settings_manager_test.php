@@ -39,7 +39,7 @@ use tool_lifecycle\local\manager\workflow_manager;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class settings_manager_test extends \advanced_testcase {
+final class settings_manager_test extends \advanced_testcase {
 
     /** @var step_subplugin $step Instance of the step plugin. */
     private $step;
@@ -57,7 +57,7 @@ class settings_manager_test extends \advanced_testcase {
      * Setup the testcase.
      * @throws \coding_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         $this->resetAfterTest(false);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
@@ -71,7 +71,7 @@ class settings_manager_test extends \advanced_testcase {
      * Test setting and getting settings data for steps.
      * @covers \tool_lifecycle\local\manager\settings_manager
      */
-    public function test_set_get_step_settings() {
+    public function test_set_get_step_settings(): void {
         $data = new \stdClass();
         $data->subject = self::EMAIL_VALUE;
         settings_manager::save_settings($this->step->id, settings_type::STEP, $this->step->subpluginname, $data);
@@ -84,7 +84,7 @@ class settings_manager_test extends \advanced_testcase {
      * Test setting and getting settings data for triggers.
      * @covers \tool_lifecycle\local\manager\settings_manager
      */
-    public function test_set_get_trigger_settings() {
+    public function test_set_get_trigger_settings(): void {
         $data = new \stdClass();
         $data->delay = self::STARTDELAY_VALUE;
         settings_manager::save_settings($this->trigger->id, settings_type::TRIGGER, $this->trigger->subpluginname, $data);
@@ -97,7 +97,7 @@ class settings_manager_test extends \advanced_testcase {
      * Test correct removal of setting, if steps, triggers or workflows are deleted.
      * @covers \tool_lifecycle\local\manager\settings_manager
      */
-    public function test_remove_workflow() {
+    public function test_remove_workflow(): void {
         global $DB;
         $data = new \stdClass();
         $data->subject = self::EMAIL_VALUE;

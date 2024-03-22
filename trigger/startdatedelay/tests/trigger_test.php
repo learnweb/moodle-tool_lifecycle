@@ -40,7 +40,7 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class trigger_test extends \advanced_testcase {
+final class trigger_test extends \advanced_testcase {
 
     /** @var $triggerinstance trigger_subplugin Instance of the trigger. */
     private $triggerinstance;
@@ -48,7 +48,7 @@ class trigger_test extends \advanced_testcase {
     /** @var $processor processor Instance of the lifecycle processor. */
     private $processor;
 
-    public function setUp() : void {
+    public function setUp(): void {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
@@ -60,7 +60,7 @@ class trigger_test extends \advanced_testcase {
      * Tests if courses, which are newer than the default of 190 days are not triggered by this plugin.
      * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\startdatedelay
      */
-    public function test_young_course() {
+    public function test_young_course(): void {
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - 50 * 24 * 60 * 60]);
 
@@ -79,7 +79,7 @@ class trigger_test extends \advanced_testcase {
      * Tests if courses, which are older than the default of 190 days are triggered by this plugin.
      * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\startdatedelay
      */
-    public function test_old_course() {
+    public function test_old_course(): void {
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - 200 * 24 * 60 * 60]);
 

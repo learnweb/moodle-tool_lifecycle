@@ -40,7 +40,7 @@ use tool_lifecycle\local\entity\workflow;
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class active_workflow_is_manual_test extends \advanced_testcase {
+final class active_workflow_is_manual_test extends \advanced_testcase {
 
     /** Icon of the trigger. */
     const MANUAL_TRIGGER1_ICON = 't/up';
@@ -58,7 +58,7 @@ class active_workflow_is_manual_test extends \advanced_testcase {
      * Setup the testcase.
      * @throws \coding_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         global $USER;
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
@@ -85,7 +85,7 @@ class active_workflow_is_manual_test extends \advanced_testcase {
      * @throws \dml_transaction_exception
      * @throws \moodle_exception
      */
-    public function test_activate_manual() {
+    public function test_activate_manual(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->manualworkflow->id);
         $reloadworkflow = workflow_manager::get_workflow($this->manualworkflow->id);
         $this->assertTrue(workflow_manager::is_active($this->manualworkflow->id));
@@ -100,7 +100,7 @@ class active_workflow_is_manual_test extends \advanced_testcase {
      * @throws \dml_transaction_exception
      * @throws \moodle_exception
      */
-    public function test_activate_automatic() {
+    public function test_activate_automatic(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->automaticworkflow->id);
         $reloadworkflow = workflow_manager::get_workflow($this->automaticworkflow->id);
         $this->assertTrue(workflow_manager::is_active($this->automaticworkflow->id));

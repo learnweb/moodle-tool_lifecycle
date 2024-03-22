@@ -49,7 +49,7 @@ use tool_lifecycle\processor;
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class privacy_test extends provider_testcase {
+final class privacy_test extends provider_testcase {
 
 
     /** Icon of the manual trigger. */
@@ -75,7 +75,7 @@ class privacy_test extends provider_testcase {
      * Setup the testcase.
      * @throws \coding_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         global $USER;
 
         // We do not need a sesskey check in theses tests.
@@ -100,7 +100,7 @@ class privacy_test extends provider_testcase {
      * @throws \invalid_parameter_exception
      * @throws \moodle_exception
      */
-    public function test_get_contexts_for_userid() {
+    public function test_get_contexts_for_userid(): void {
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
         $u1 = $this->getDataGenerator()->create_user();
@@ -130,7 +130,7 @@ class privacy_test extends provider_testcase {
      * @throws \invalid_parameter_exception
      * @throws \moodle_exception
      */
-    public function test_export_user_data() {
+    public function test_export_user_data(): void {
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
         $u1 = $this->getDataGenerator()->create_user();
@@ -169,7 +169,7 @@ class privacy_test extends provider_testcase {
      * @throws \invalid_parameter_exception
      * @throws \moodle_exception
      */
-    public function test_delete_data_for_all_users_in_context() {
+    public function test_delete_data_for_all_users_in_context(): void {
         global $DB;
         $c1 = $this->getDataGenerator()->create_course();
         $u1 = $this->getDataGenerator()->create_user();
@@ -195,7 +195,7 @@ class privacy_test extends provider_testcase {
      * @throws \invalid_parameter_exception
      * @throws \moodle_exception
      */
-    public function test_delete_data_for_user() {
+    public function test_delete_data_for_user(): void {
         global $DB;
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
@@ -229,7 +229,7 @@ class privacy_test extends provider_testcase {
      * @throws \invalid_parameter_exception
      * @throws \moodle_exception
      */
-    public function test_get_users_in_context() {
+    public function test_get_users_in_context(): void {
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
         $u1 = $this->getDataGenerator()->create_user();
@@ -258,7 +258,7 @@ class privacy_test extends provider_testcase {
      * @throws \invalid_parameter_exception
      * @throws \moodle_exception
      */
-    public function test_delete_data_for_users() {
+    public function test_delete_data_for_users(): void {
         global $DB;
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();

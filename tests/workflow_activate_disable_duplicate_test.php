@@ -42,13 +42,13 @@ use tool_lifecycle\local\manager\workflow_manager;
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class workflow_activate_disable_duplicate_test extends workflow_actions_testcase {
+final class workflow_activate_disable_duplicate_test extends workflow_actions_testcase {
 
     /**
      * Test to activate the first workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager
      */
-    public function test_activate_first() {
+    public function test_activate_first(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
         $reloadworkflow = workflow_manager::get_workflow($this->workflow1->id);
         $this->assertTrue(workflow_manager::is_active($this->workflow1->id));
@@ -59,7 +59,7 @@ class workflow_activate_disable_duplicate_test extends workflow_actions_testcase
      * Test to activate the first and the second workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager
      */
-    public function test_activate_second() {
+    public function test_activate_second(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
 
@@ -72,7 +72,7 @@ class workflow_activate_disable_duplicate_test extends workflow_actions_testcase
      * Test to activate all three workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager
      */
-    public function test_activate_third() {
+    public function test_activate_third(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
@@ -86,7 +86,7 @@ class workflow_activate_disable_duplicate_test extends workflow_actions_testcase
      * Test to deactivate the first workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager
      */
-    public function test_deactivate_first() {
+    public function test_deactivate_first(): void {
         workflow_manager::handle_action(action::WORKFLOW_ABORTDISABLE, $this->workflow1->id);
         $this->assertFalse(workflow_manager::is_active($this->workflow1->id));
     }
@@ -95,7 +95,7 @@ class workflow_activate_disable_duplicate_test extends workflow_actions_testcase
      * Test to duplicate the first workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager
      */
-    public function test_duplicate_first() {
+    public function test_duplicate_first(): void {
         workflow_manager::handle_action(action::WORKFLOW_DUPLICATE, $this->workflow1->id);
         $workflows = workflow_manager::get_workflows();
         $this->assertCount(4, $workflows);

@@ -41,7 +41,7 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class trigger_test extends \advanced_testcase {
+final class trigger_test extends \advanced_testcase {
 
     /** @var trigger_subplugin $triggerinstance Instance of the trigger. */
     private $triggerinstance;
@@ -50,7 +50,7 @@ class trigger_test extends \advanced_testcase {
      * Setup the testcase.
      * @throws coding_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
@@ -61,7 +61,7 @@ class trigger_test extends \advanced_testcase {
      * Tests if the site course is excluded by this plugin.
      * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\sitecourse
      */
-    public function test_sitecourse_course() {
+    public function test_sitecourse_course(): void {
 
         $course = get_site();
 
@@ -75,7 +75,7 @@ class trigger_test extends \advanced_testcase {
      * Tests if courses, which are older than the default of 190 days are triggered by this plugin.
      * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\sitecourse
      */
-    public function test_normal_course() {
+    public function test_normal_course(): void {
 
         $course = $this->getDataGenerator()->create_course();
 
