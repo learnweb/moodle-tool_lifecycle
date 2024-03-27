@@ -53,11 +53,11 @@ class process_triggered extends \core\event\base {
      */
     public static function event_from_process($process) {
         $data = [
-                'context' => \context_system::instance(),
+                'courseid' => $process->courseid,
+                'context' => \context_course::instance($process->courseid),
                 'other' => [
                         'processid' => $process->id,
                         'workflowid' => $process->workflowid,
-                        'courseid' => $process->courseid,
                 ],
         ];
         return self::create($data);
@@ -81,7 +81,7 @@ class process_triggered extends \core\event\base {
     public function get_description() {
         $processid = $this->other['processid'];
         $workflowid = $this->other['workflowid'];
-        $courseid = $this->other['courseid'];
+        $courseid = $this->courseid;
 
         return "The workflow with id '$workflowid' triggered for course '$courseid' and created process with id '$processid'";
     }
@@ -122,7 +122,7 @@ class process_triggered extends \core\event\base {
             throw new \coding_exception('The \'workflowid\' value must be set');
         }
 
-        if (!isset($this->other['courseid'])) {
+        if (!isset($this->courseid)) {
             throw new \coding_exception('The \'courseid\' value must be set');
         }
     }

@@ -123,6 +123,7 @@ class processor {
                         $result = $lib->process_course($process->id, $step->id, $course);
                     }
                 } catch (\Exception $e) {
+                    unset($process->context);
                     process_manager::insert_process_error($process, $e);
                     break;
                 }

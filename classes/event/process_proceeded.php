@@ -35,7 +35,6 @@ use tool_lifecycle\local\entity\process;
  *      - int processid: the id of the process.
  *      - int workflowid: the id of the workflow.
  *      - int stepindex: the index of the step.
- *      - int courseid: the id of the course.
  * }
  *
  * @package    tool_lifecycle
@@ -54,12 +53,12 @@ class process_proceeded extends \core\event\base {
      */
     public static function event_from_process($process) {
         $data = [
-                'context' => \context_system::instance(),
+                'courseid' => $process->courseid,
+                'context' => $process->context,
                 'other' => [
                         'processid' => $process->id,
                         'workflowid' => $process->workflowid,
                         'stepindex' => $process->stepindex,
-                        'courseid' => $process->courseid,
                 ],
         ];
         return self::create($data);
@@ -84,7 +83,7 @@ class process_proceeded extends \core\event\base {
         $processid = $this->other['processid'];
         $workflowid = $this->other['workflowid'];
         $stepindex = $this->other['stepindex'];
-        $courseid = $this->other['courseid'];
+        $courseid = $this->courseid;
 
         return "The workflow with id '$workflowid' finished step '$stepindex' successfully for course '$courseid' " .
                 "in the process with id '$processid'";
@@ -130,7 +129,7 @@ class process_proceeded extends \core\event\base {
             throw new \coding_exception('The \'stepindex\' value must be set');
         }
 
-        if (!isset($this->other['courseid'])) {
+        if (!isset($this->courseid)) {
             throw new \coding_exception('The \'courseid\' value must be set');
         }
     }
