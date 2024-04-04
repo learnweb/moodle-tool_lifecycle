@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['delay'] = 'Dieser Trigger wird alle Kurse ausschließen, die durch Nutzerinteraktion verzögert wurden.';
 $string['pluginname'] = 'Verzögerte Kurse ausschließen - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 
-$string['delay'] = 'Dieser Trigger wird alle Kurse ausschließen, die durch Nutzerinteraktion verzögert wurden.';

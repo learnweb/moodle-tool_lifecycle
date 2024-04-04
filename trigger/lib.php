@@ -120,7 +120,7 @@ abstract class base {
      * @param array $settings
      * @return array List of errors with settings. If empty, the given settings are valid.
      */
-    public function ensure_validity(array $settings) : array {
+    public function ensure_validity(array $settings): array {
         return [];
     }
 

@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['deletecourse_maximumdeletionspercron'] = 'Maximum number of courses deleted per cron';
 $string['pluginname'] = 'Delete course step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
-$string['deletecourse_maximumdeletionspercron'] = 'Maximum number of courses deleted per cron';
