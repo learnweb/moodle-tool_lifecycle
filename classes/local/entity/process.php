@@ -50,19 +50,24 @@ class process {
     /** @var /timestamp $timestepchanged Date the process was moved to the current step instance */
     public $timestepchanged;
 
+    /** @var int $context context of the course in the workflow */
+    public $context;
+
     /**
      * Process constructor.
      * @param int $id Id of the process.
      * @param int $workflowid Id of the workflow.
      * @param int $courseid Id of the course.
+     * @param int $context context of the course.
      * @param int $stepindex Sortindex of the step within the workflow.
      * @param bool $waiting True if course is in status waiting.
      * @param null $timestepchanged Date the process was moved to the current step instance.
      */
-    private function __construct($id, $workflowid, $courseid, $stepindex, $waiting = false, $timestepchanged = null) {
+    private function __construct($id, $workflowid, $courseid, $context, $stepindex, $waiting = false, $timestepchanged = null) {
         $this->id = $id;
         $this->workflowid = $workflowid;
         $this->courseid = $courseid;
+        $this->context = $context;
         $this->waiting = $waiting;
         $this->stepindex = $stepindex;
         if ($timestepchanged === null) {
@@ -99,7 +104,14 @@ class process {
             $stepindex = 0;
         }
 
-        $instance = new self($record->id, $record->workflowid, $record->courseid, $stepindex, $waiting, $record->timestepchanged);
+        $context = \context_course::instance($record->courseid);
+        $instance = new self($record->id,
+                $record->workflowid,
+                $record->courseid,
+                $context,
+                $stepindex,
+                $waiting,
+                $record->timestepchanged);
 
         return $instance;
     }
