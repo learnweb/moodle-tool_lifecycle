@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\notification;
 use tool_lifecycle\local\backup\restore_lifecycle_workflow;
 use tool_lifecycle\local\form\form_upload_workflow;
 use tool_lifecycle\permission_and_navigation;
@@ -54,9 +55,9 @@ if ($data = $form->get_data()) {
     $force = $data->force ?? false;
     $errors = $restore->execute($force);
     if (count($errors) != 0) {
-        \core\notification::add(get_string('workflow_was_not_imported', 'tool_lifecycle'), \core\notification::ERROR);
-        foreach ($errors as $error) {
-            \core\notification::add($error, \core\notification::ERROR);
+        notification::add(get_string('workflow_was_not_imported', 'tool_lifecycle'), notification::ERROR);
+        foreach (array_unique($errors) as $error) {
+            notification::add($error, notification::ERROR);
         }
         $form = new form_upload_workflow(null, ['showforce' => true]);
 
