@@ -23,6 +23,20 @@
  */
 
 /**
+ * Fix any gaps in the workflows sortindex.
+ */
+function tool_lifecycle_fix_workflow_sortindex() {
+    $workflows = \tool_lifecycle\local\manager\workflow_manager::get_active_workflows();
+    for ($i = 1; $i <= count($workflows); $i++) {
+        $workflow = $workflows[$i - 1];
+        if ($workflow->sortindex != $i) {
+            $workflow->sortindex = $i;
+            \tool_lifecycle\local\manager\workflow_manager::insert_or_update($workflow);
+        }
+    }
+}
+
+/**
  * Update script for tool_lifecycle.
  * @param int $oldversion Version id of the previously installed version.
  * @return bool
@@ -473,6 +487,15 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2021112300, 'tool', 'lifecycle');
+    }
+
+    if ($oldversion < 2024042300) {
+
+        tool_lifecycle_fix_workflow_sortindex();
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2024042300, 'tool', 'lifecycle');
+
     }
 
     return true;
