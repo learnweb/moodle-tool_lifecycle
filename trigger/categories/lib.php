@@ -63,7 +63,7 @@ class categories extends base_automatic {
     public function get_course_recordset_where($triggerid) {
         global $DB, $CFG;
         $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
-        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'] && true;
+        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
 
         $categories = explode(',', $categories);
         // Use core_course_category for moodle 3.6 and higher.
@@ -75,17 +75,17 @@ class categories extends base_automatic {
         }
         $allcategories = [];
         foreach ($categories as $category) {
-            array_push($allcategories , $category);
+            array_push($allcategories, $category);
+            if (!isset($categoryobjects[$category]) || !$categoryobjects[$category]) {
+                continue;
+            }
             $children = $categoryobjects[$category]->get_all_children_ids();
-            $allcategories  = array_merge($allcategories , $children);
+            $allcategories = array_merge($allcategories, $children);
         }
 
-        list($insql, $inparams) = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED);
+        list($insql, $inparams) = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED, 'param', !$exclude);
 
         $where = "{course}.category {$insql}";
-        if ($exclude) {
-            $where = "NOT " . $where;
-        }
 
         return [$where, $inparams];
     }
@@ -129,6 +129,27 @@ class categories extends base_automatic {
 
         $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));
         $mform->setType('exclude', PARAM_BOOL);
+    }
+
+    /**
+     * Ensure validity of settings upon backup restoration.
+     * @param array $settings
+     * @return array List of errors with settings. If empty, the given settings are valid.
+     */
+    public function ensure_validity(array $settings): array {
+        $missingcategories = [];
+        $categories = explode(',', $settings['categories']);
+        $categoryobjects = \core_course_category::get_many($categories);
+        foreach ($categories as $category) {
+            if (!isset($categoryobjects[$category]) || !$categoryobjects[$category]) {
+                $missingcategories[] = $category;
+            }
+        }
+        if ($missingcategories) {
+            return [get_string('categories_do_not_exist', 'lifecycletrigger_categories', join(', ', $missingcategories))];
+        } else {
+            return [];
+        }
     }
 
 }
