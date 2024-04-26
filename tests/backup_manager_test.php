@@ -34,7 +34,7 @@ use tool_lifecycle\local\manager\backup_manager;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class backup_manager_test extends \advanced_testcase {
+final class backup_manager_test extends \advanced_testcase {
 
     /** @var array $course Instance of the course under test. */
     private $course;
@@ -42,7 +42,7 @@ class backup_manager_test extends \advanced_testcase {
     /**
      * Setup the testcase.
      */
-    public function setUp() : void {
+    public function setUp(): void {
         $this->resetAfterTest(false);
         $this->course = $this->getDataGenerator()->create_course();
     }
@@ -51,7 +51,7 @@ class backup_manager_test extends \advanced_testcase {
      * Test creating a backup for a course.
      * @covers \tool_lifecycle\local\manager\backup_manager create backup
      */
-    public function test_backup_create() {
+    public function test_backup_create(): void {
         global $DB;
         $result = backup_manager::create_course_backup($this->course->id);
         $this->assertTrue($result);
@@ -63,7 +63,7 @@ class backup_manager_test extends \advanced_testcase {
      * Test redirect without errors when starting to restore a backup.
      * @covers \tool_lifecycle\local\manager\backup_manager restore backup
      */
-    public function test_backup_restore() {
+    public function test_backup_restore(): void {
         global $DB;
         $backups = $DB->get_records('tool_lifecycle_backups');
         $this->assertEquals(1, count($backups));

@@ -39,7 +39,7 @@ use tool_lifecycle\local\manager\process_manager;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class persist_process_test extends \advanced_testcase {
+final class persist_process_test extends \advanced_testcase {
 
     /** @var workflow $workflow Instance of the workflow. */
     private $workflow;
@@ -51,7 +51,7 @@ class persist_process_test extends \advanced_testcase {
      * Setup the testcase.
      * @throws coding_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 
@@ -63,7 +63,7 @@ class persist_process_test extends \advanced_testcase {
      * Test the creation of a process.
      * @covers \tool_lifecycle\local\manager\process_manager
      */
-    public function test_create() {
+    public function test_create(): void {
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
         $this->assertNotNull($process);
         $this->assertNotEmpty($process->id);
@@ -77,7 +77,7 @@ class persist_process_test extends \advanced_testcase {
      * Tests setting a process on waiting.
      * @covers \tool_lifecycle\local\manager\process_manager
      */
-    public function test_process_waiting() {
+    public function test_process_waiting(): void {
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
         $this->assertFalse($process->waiting);
         process_manager::set_process_waiting($process);
@@ -89,7 +89,7 @@ class persist_process_test extends \advanced_testcase {
      * Tests deletion of a process when rolledback.
      * @covers \tool_lifecycle\local\manager\process_manager
      */
-    public function test_process_rollback() {
+    public function test_process_rollback(): void {
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
         delayed_courses_manager::set_course_delayed($process->courseid, get_config('tool_lifecycle', 'duration'));
         process_manager::rollback_process($process);
@@ -101,7 +101,7 @@ class persist_process_test extends \advanced_testcase {
      * Tests proceeding a process to the next step.
      * @covers \tool_lifecycle\local\manager\process_manager
      */
-    public function test_process_proceed() {
+    public function test_process_proceed(): void {
         $process = process_manager::create_process($this->course->id, $this->workflow->id);
         $this->assertEquals(0, $process->stepindex);
         process_manager::proceed_process($process);

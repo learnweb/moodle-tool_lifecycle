@@ -38,7 +38,7 @@ use tool_lifecycle\local\manager\workflow_manager;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class persist_workflow_test extends \advanced_testcase {
+final class persist_workflow_test extends \advanced_testcase {
 
     /** @var workflow $workflow Instance of the workflow. */
     private $workflow;
@@ -46,7 +46,7 @@ class persist_workflow_test extends \advanced_testcase {
     /**
      * Setup the testcase.
      */
-    public function setUp() : void {
+    public function setUp(): void {
         $this->resetAfterTest(true);
         $record = new \stdClass();
         $record->id = null;
@@ -58,7 +58,7 @@ class persist_workflow_test extends \advanced_testcase {
      * Test the creation of a process.
      * @covers \tool_lifecycle\local\manager\workflow_manager create a wf.
      */
-    public function test_create() {
+    public function test_create(): void {
         $this->assertNull($this->workflow->id);
         workflow_manager::insert_or_update($this->workflow);
         $this->assertNotNull($this->workflow->id);

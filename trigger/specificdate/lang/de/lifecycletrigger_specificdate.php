@@ -22,10 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['dates'] = 'Daten, an denen der Workflow ausgeführt werden soll.';
+$string['dates_help'] = 'Ein Datum pro Zeile in dem Format Tag.Monat<br><br>Zum Beispiel 04.08 für den 4. August. Wenn Sie das heutige Datum wählen, wird es getriggert.';
+$string['dates_not_parseable'] = 'Daten müssen in dem Format Tag.Monat sein!';
 $string['pluginname'] = 'Bestimmtes Datum - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 
-$string['dates'] = 'Daten, an denen der Workflow ausgeführt werden soll.';
-$string['dates_help'] = 'Ein Datum pro Zeile in dem Format Tag.Monat<br><br>Zum Beispiel 04.08 für den 4. August. Wenn Sie das heutige Datum wählen, wird es getriggert.';
 $string['timelastrun'] = 'Datum, an dem der Trigger zuletzt ausgeführt wurde.';
-$string['dates_not_parseable'] = 'Daten müssen in dem Format Tag.Monat sein!';

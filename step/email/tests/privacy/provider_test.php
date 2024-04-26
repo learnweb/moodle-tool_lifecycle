@@ -44,7 +44,7 @@ use tool_lifecycle\local\manager\workflow_manager;
  * @author     Philipp Memmel
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider_test extends provider_testcase {
+final class provider_test extends provider_testcase {
 
     /**
      * Basic setup for the provider tests.
@@ -190,7 +190,7 @@ class provider_test extends provider_testcase {
      * @return void
      * @throws dml_exception
      */
-    public function test_delete_data_for_users() {
+    public function test_delete_data_for_users(): void {
         global $DB;
         $approveduserlist = new approved_userlist(context_system::instance(), 'lifecyclestep_email',
             [$this->user1->id, $this->user2->id]);
@@ -212,7 +212,7 @@ class provider_test extends provider_testcase {
      * @return void
      * @throws dml_exception
      */
-    public function test_delete_data_for_users_coursecontext() {
+    public function test_delete_data_for_users_coursecontext(): void {
         global $DB;
         $approveduserlist = new approved_userlist(context_course::instance($this->course1->id), 'lifecyclestep_email',
             [$this->user1->id, $this->user2->id]);

@@ -47,7 +47,7 @@ use tool_lifecycle\settings_type;
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class manually_triggered_process_test extends \advanced_testcase {
+final class manually_triggered_process_test extends \advanced_testcase {
     /** Icon of the manual trigger. */
     const MANUAL_TRIGGER1_ICON = 't/up';
     /** Display name of the manual trigger. */
@@ -66,7 +66,7 @@ class manually_triggered_process_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         global $USER;
 
         // We do not need a sesskey check in theses tests.
@@ -95,7 +95,7 @@ class manually_triggered_process_test extends \advanced_testcase {
      * Test to proceed a manually triggered process to step index 1.
      * @covers \tool_lifecycle\local\manager\process_manager test if manual process started
      */
-    public function test_proceeding_of_manually_triggered_processes() {
+    public function test_proceeding_of_manually_triggered_processes(): void {
         $process = process_manager::manually_trigger_process($this->course->id, $this->trigger->id);
         $this->assertEquals(0, $process->stepindex);
 

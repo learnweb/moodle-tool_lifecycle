@@ -45,7 +45,7 @@ use tool_lifecycle\local\entity\workflow;
  * @copyright  2018 WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class backup_and_restore_workflow_test extends \advanced_testcase {
+final class backup_and_restore_workflow_test extends \advanced_testcase {
 
     /** @var $workflow workflow */
     private $workflow;
@@ -57,7 +57,7 @@ class backup_and_restore_workflow_test extends \advanced_testcase {
      * Setup the testcase.
      * @throws \coding_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
         $this->workflow = $generator->create_workflow(['startdatedelay', 'categories'], ['email', 'createbackup', 'deletecourse']);
@@ -78,7 +78,7 @@ class backup_and_restore_workflow_test extends \advanced_testcase {
      * Test to activate the manual workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager check if backup is created
      */
-    public function test_backup_workflow() {
+    public function test_backup_workflow(): void {
         $backuptask = new backup_lifecycle_workflow($this->workflow->id);
         $backuptask->execute();
         $filename = $backuptask->get_temp_filename();
