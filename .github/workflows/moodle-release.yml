@@ -28,10 +28,11 @@ jobs:
     steps:
       - name: Call the service function
         id: add-version
+        env:
+          TAGNAME: ${{ github.event.release.tag_name }}
+          BODY: ${{ github.event.release.body }}
+          ZIPURL: ${{ github.event.release.zipball_url }}
         run: |
-          TAGNAME="${{ github.event.release.tag_name }}"
-          BODY="${{ github.event.release.body }}"
-          ZIPURL="${{ github.event.release.zipball_url }}"
           RESPONSE=$(${CURL} ${ENDPOINT} --data-urlencode "wstoken=${TOKEN}" \
                                          --data-urlencode "wsfunction=${FUNCTION}" \
                                          --data-urlencode "moodlewsrestformat=json" \
