@@ -48,6 +48,20 @@ use tool_lifecycle\local\manager\workflow_manager;
  */
 final class provider_test extends provider_testcase {
 
+    /** @var stdClass test user1 */
+    private $user1;
+    /** @var stdClass test user2 */
+    private $user2;
+    /** @var stdClass test user3 */
+    private $user3;
+
+    /** @var stdClass test course1 */
+    private $course1;
+    /** @var stdClass test course2 */
+    private $course2;
+    /** @var stdClass test course3 */
+    private $course3;
+
     /**
      * Basic setup for the provider tests.
      *
