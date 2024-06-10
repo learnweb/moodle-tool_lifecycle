@@ -52,6 +52,8 @@ $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not 
 $string['config_backup_path'] = 'Path of the lifecycle backup folder';
 $string['config_backup_path_desc'] = 'This settings defines the storage location of the backups created by the backup step.
 The path has to be specified as an absolute path on your server.';
+$string['config_coursecategorydepth'] = 'Depth of categories to be shown in the interaction table.';
+$string['config_coursecategorydepth_desc'] = 'By default the first category is shown when teachers manage the status of their courses on the view.php. The setting enables to show not the first level of categories but subcategories.';
 $string['config_delay_duration'] = 'Default duration of a course delay';
 $string['config_delay_duration_desc'] = 'This setting defines the default delay duration of a workflow
 in case one of its processes is rolled back or finishes.
