@@ -30,6 +30,7 @@ $string['email_content_help'] = 'Set the template for the content of the email (
         . '<br>' . 'Last name of recipient: ##lastname##'
         . '<br>' . 'Link to response page: ##link##'
         . '<br>' . 'Impacted courses: ##courses##'
+        . '<br>' . 'Short names of impacted courses: ##shortcourses##'
         . '</p>';
 $string['email_content_html'] = 'Content HTML Template';
 $string['email_content_html_help'] = 'Set the html template for the content of the email (HTML email, will be used instead of plaintext field if not empty!)' . '<p>' .  'You can use the following placeholders:'
@@ -37,6 +38,7 @@ $string['email_content_html_help'] = 'Set the html template for the content of t
         . '<br>' . 'Last name of recipient: ##lastname##'
         . '<br>' . 'Link to response page: ##link-html##'
         . '<br>' . 'Impacted courses: ##courses-html##'
+        . '<br>' . 'Short names of impacted courses: ##shortcourses-html##'
         . '</p>';
 $string['email_responsetimeout'] = 'Time the user has for the response';
 $string['email_subject'] = 'Subject template';
