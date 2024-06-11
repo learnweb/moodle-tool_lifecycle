@@ -52,13 +52,13 @@ $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not 
 $string['config_backup_path'] = 'Path of the lifecycle backup folder';
 $string['config_backup_path_desc'] = 'This settings defines the storage location of the backups created by the backup step.
 The path has to be specified as an absolute path on your server.';
-$string['config_coursecategorydepth'] = 'Depth of categories to be shown in the interaction table.';
+$string['config_coursecategorydepth'] = 'Depth of categories to be shown in the interaction table';
 $string['config_coursecategorydepth_desc'] = 'By default the first category is shown when teachers manage the status of their courses on the view.php. The setting enables to show not the first level of categories but subcategories.';
 $string['config_delay_duration'] = 'Default duration of a course delay';
 $string['config_delay_duration_desc'] = 'This setting defines the default delay duration of a workflow
 in case one of its processes is rolled back or finishes.
 The delay duration determines how long a course will be excepted from being processed again in either of the cases.';
-$string['config_enablecategoryhierachy'] = 'Enable to show a specified level of the course category hierarchy in the interaction table.';
+$string['config_enablecategoryhierachy'] = 'Show a specified level of the course category hierarchy in the interaction table';
 $string['config_enablecategoryhierachy_desc'] = 'By default the directly assigned course category is shown when teachers manage the status of their courses on the view.php. The setting enables to show a specified level of the course category tree.';
 $string['config_showcoursecounts'] = 'Show amount of courses which will be triggered';
 $string['config_showcoursecounts_desc'] = 'The workflow overview page by default shows the amount of courses which will be

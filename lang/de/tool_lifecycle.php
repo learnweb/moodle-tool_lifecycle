@@ -45,13 +45,13 @@ $string['adminsettings_workflow_definition_steps_heading'] = 'Workflowschritte';
 $string['backupcreated'] = 'Erstellt am';
 $string['backupworkflow'] = 'Workflow sichern';
 $string['cannot_trigger_workflow_manually'] = 'Der Workflow konnte nicht manuell ausgelöst werden.';
-$string['config_coursecategorydepth'] = 'Tiefe der Kurskategorien, die in der Interaktionstabelle angezeigt werden sollen.';
+$string['config_coursecategorydepth'] = 'Tiefe der Kurskategorien, die in der Interaktionstabelle angezeigt werden sollen';
 $string['config_coursecategorydepth_desc'] = 'Standardmäßig wird die erste Kategorie angezeigt, wenn Lehrkräfte den Status ihrer Kurse in der view.php verwalten. Die Einstellung ermöglicht es, nicht die erste Ebene der Kategorien, sondern Unterkategorien anzuzeigen.';
 $string['config_delay_duration'] = 'Standardlänge eines Kursausschlusses';
 $string['config_delay_duration_desc'] = 'Diese Einstellung definiert den Standardlänge einer Kursausschlusses in einem Workflow
  falls ein Prozess des Workflows zurückgesetzt oder beendigt wird. Die Länge des Kursausschlusses besagt, wie lange es dauert, bis
  der Kurs wieder vom Workflow bearbeitet wird.';
-$string['config_enablecategoryhierachy'] = 'Aktivieren Sie diese Option, um eine bestimmte Ebene der Kurskategorienhierarchie in der Interaktionstabelle anzuzeigen.';
+$string['config_enablecategoryhierachy'] = 'Kurskategorienhierarchie in der Interaktionstabelle spezifizieren';
 $string['config_enablecategoryhierachy_desc'] = 'Standardmäßig wird die direkt zugewiesene Kurskategorie angezeigt, wenn Lehrkräfte den Status ihrer Kurse in der view.php verwalten. Die Einstellung ermöglicht es, eine bestimmte Ebene des Kurskategorienbaums anzuzeigen.';
 $string['config_showcoursecounts'] = 'Zeige Anzahl der Kurse, die getriggert werden';
 $string['config_showcoursecounts_desc'] = 'Die Workflow-Konfigurationsseite zeigt normalerweise die Anzahl an Kursen, die durch
