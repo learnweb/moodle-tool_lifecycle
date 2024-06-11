@@ -126,7 +126,9 @@ class interaction_remaining_table extends interaction_table {
         if ($row->processid !== null) {
             return '';
         }
-
+        if (empty($this->availabletools)) {
+            return get_string('noactiontools', 'tool_lifecycle');
+        }
         $actions = [];
         foreach ($this->availabletools as $tool) {
             if (has_capability($tool->capability, \context_course::instance($row->courseid), null, false)) {

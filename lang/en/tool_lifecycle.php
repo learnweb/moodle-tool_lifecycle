@@ -129,6 +129,7 @@ $string['manual_trigger_success'] = 'Workflow started successfully.';
 $string['move_down'] = 'Move down';
 $string['move_up'] = 'Move up';
 $string['name_until_date'] = '"{$a->name}" until {$a->date}';
+$string['noactiontools'] = 'No tools available';
 $string['nocoursestodisplay'] = 'There are currently no courses which require your attention!';
 $string['nointeractioninterface'] = 'No interaction interface available!';
 $string['noprocesserrors'] = 'There are no process errors to handle!';
