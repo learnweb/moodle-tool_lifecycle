@@ -121,15 +121,18 @@ class email extends libbase {
 
                     $parsedsettings = $this->replace_placeholders($settings, $user, $step->id, $mailentries);
 
-                    $subject = $parsedsettings['subject'];
-                    $content = $parsedsettings['content'];
-                    $contenthtml = $parsedsettings['contenthtml'];
-                    // TODO: use course info to parse content template!
-                    email_to_user($user, \core_user::get_noreply_user(), $subject, $content, $contenthtml);
-                    $DB->delete_records('lifecyclestep_email',
+                $subject = $parsedsettings['subject'];
+                $content = $parsedsettings['content'];
+                $contenthtml = $parsedsettings['contenthtml'];
+                // TODO: use course info to parse content template!
+                $success = email_to_user($user, \core_user::get_noreply_user(), $subject, $content, $contenthtml);
+                if (!$success) {
+                    mtrace("E-mail to user {$user->id} failed.");
+                }
+                $DB->delete_records('lifecyclestep_email',
                     ['instanceid' => $step->id,
                         'touser' => $user->id, ]);
-                    $transaction->allow_commit();
+                $transaction->allow_commit();
             }
         }
 
