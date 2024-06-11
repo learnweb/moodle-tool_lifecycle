@@ -129,7 +129,7 @@ class email extends libbase {
                     mtrace("E-mail to user {$user->id} failed.");
                 }
                 $DB->delete_records('lifecyclestep_email',
-                    ['instanceid' => $step->id, 'touser' => $user->id, ]);
+                    ['instanceid' => $step->id, 'touser' => $user->id]);
                 $transaction->allow_commit();
             }
         }
