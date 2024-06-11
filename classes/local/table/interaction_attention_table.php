@@ -136,8 +136,8 @@ class interaction_attention_table extends interaction_table {
     /**
      * Dependent on the setting either returns the closest category or the category that is on the specified depth,
      * if the category depth is not reached the last category is returned.
-     * @param $row
-     * @return string
+     * @param object $row Row data.
+     * @return string category name
      * @throws \dml_exception
      */
     public function col_category($row): String {
