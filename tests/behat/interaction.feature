@@ -80,6 +80,7 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
     And I am on lifecycle view
     Then I should see "Course 1" in the "tool_lifecycle_remaining" "table"
     And I should see "Course 2" in the "tool_lifecycle_remaining" "table"
+    And I should see "<category1>" in the "tool_lifecycle_remaining" "table"
     And I should not see "Course 3"
     Examples:
       | config | config1 | category1 | category2 |
