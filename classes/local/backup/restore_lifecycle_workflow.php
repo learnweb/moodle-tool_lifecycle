@@ -87,7 +87,7 @@ class restore_lifecycle_workflow {
             $this->check_subplugin_validity();
             if (empty($this->errors) || $force) {
                 // If all loaded data is valid, the new workflow and the steps can be stored in the database.
-                // If we force the import, we empty the errors;
+                // If we force the import, we empty the errors.
                 $this->errors = [];
                 $this->persist();
             }
