@@ -58,7 +58,7 @@ class interaction_remaining_table extends interaction_table {
         // We need to do this, so that courses without any action have a smaller timestamp than courses with an recorded action.
         // Otherwise, it would mess up the sorting.
         $fields = "c.id as courseid, p.id AS processid, c.fullname AS coursefullname, c.shortname AS courseshortname, " .
-                  "c.startdate, cc.name AS category, COALESCE(l.time, 0) AS lastmodified, l.userid, " .
+                  "c.startdate, cc.name AS category, cc.path as categorypath, COALESCE(l.time, 0) AS lastmodified, l.userid, " .
                   "l.action, s.subpluginname, ";
         if ($CFG->branch >= 311) {
             $fields .= \core_user\fields::for_name()->get_sql('u', false, '', '', false)->selects;

@@ -41,12 +41,6 @@ require_once($CFG->libdir . '/tablelib.php');
 class interaction_attention_table extends interaction_table {
 
     /**
-     * In case a specific course category should be shown, all course categories are fetched once ...
-     * ... to find the suitable category later.
-     * @var \stdClass
-     */
-    private $coursecategories;
-    /**
      * Constructor for deactivated_workflows_table.
      * @param int $uniqueid Unique id of this table.
      * @param int[] $courseids List of ids for courses that require attention.
@@ -65,10 +59,6 @@ class interaction_attention_table extends interaction_table {
             'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex ' .
             'left join {course_categories} cc on c.category = cc.id';
         $ids = implode(',', $courseids);
-        if (get_config('tool_lifecycle', 'enablecategoryhierachy')) {
-            // We have to get the complete category tree.
-            $this->coursecategories = $DB->get_records_sql('SELECT id, name, depth, path, parent FROM {course_categories} ');
-        }
         $where = ['FALSE'];
         if ($ids) {
             $where = ['p.courseid IN (' . $ids . ')'];
@@ -133,30 +123,6 @@ class interaction_attention_table extends interaction_table {
         return $output;
     }
 
-    /**
-     * Dependent on the setting either returns the closest category or the category that is on the specified depth,
-     * if the category depth is not reached the last category is returned.
-     * @param object $row Row data.
-     * @return string category name
-     * @throws \dml_exception
-     */
-    public function col_category($row): String {
-        $categorydepth = get_config('tool_lifecycle', 'enablecategoryhierachy');
-        if ($categorydepth == false) {
-            return $row->category;
-        } else {
-            $categorydepth = (int) get_config('tool_lifecycle', 'coursecategorydepth');
-            $categoryhierachy = explode('/', substr($row->categorypath, 1));
-            $categoryhierachy = array_map('intval', $categoryhierachy);
-            if (isset($categoryhierachy[$categorydepth])) {
-                $category = $this->coursecategories[$categoryhierachy[$categorydepth]];
-                return $category->name;
-            } else {
-                $category = $this->coursecategories[end($categoryhierachy)];
-                return $category->name;
-            }
-        }
-    }
     /**
      * Render date column.
      * @param object $row Row data.
