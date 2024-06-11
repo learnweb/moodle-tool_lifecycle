@@ -50,7 +50,6 @@ if ($hassiteconfig) {
         get_string('config_enablecategoryhierachy', 'tool_lifecycle'),
         get_string('config_enablecategoryhierachy_desc', 'tool_lifecycle'),
         false);
-    // $settingenablehierachy->set_updatedcallback('tool_lifecycle_');
     $settings->add($settingenablehierachy);
     $coursehierachysetting = new admin_setting_configtext('tool_lifecycle/coursecategorydepth',
         get_string('config_coursecategorydepth', 'tool_lifecycle'),
