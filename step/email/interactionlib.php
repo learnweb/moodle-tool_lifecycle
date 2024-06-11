@@ -126,7 +126,7 @@ class interactionemail extends interactionlibbase {
                 $date += $settings['responsetimeout'];
             }
         }
-        // TODO default format -- seconds -> not in this class !
+        // Software enhancement default format -- seconds -> not in this class !
         return date('d.m.Y', $date);
     }
 

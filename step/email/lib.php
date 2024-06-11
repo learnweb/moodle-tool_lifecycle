@@ -124,7 +124,7 @@ class email extends libbase {
                     $subject = $parsedsettings['subject'];
                     $content = $parsedsettings['content'];
                     $contenthtml = $parsedsettings['contenthtml'];
-                    // TODO: use course info to parse content template!
+                    // Software enhancement: use course info to parse content template!
                     email_to_user($user, \core_user::get_noreply_user(), $subject, $content, $contenthtml);
                     $DB->delete_records('lifecyclestep_email',
                     ['instanceid' => $step->id,

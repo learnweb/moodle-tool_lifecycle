@@ -257,7 +257,7 @@ class workflow_manager {
         $transaction = $DB->start_delegated_transaction();
         $workflow = self::get_workflow($workflowid);
         if (!self::is_active($workflow->id)) {
-            // TODO: Rethink behaviour for multiple triggers.
+            // Software enhancement: Rethink behaviour for multiple triggers.
             $trigger = trigger_manager::get_triggers_for_workflow($workflowid)[0];
             $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
             $workflow->manual = $lib->is_manual_trigger();
