@@ -43,12 +43,12 @@ final class lib_test extends \advanced_testcase {
         $course1 = $this->getDataGenerator()->create_course(['fullname' => 'Course 1', 'shortname' => 'C1']);
         $course2 = $this->getDataGenerator()->create_course(['fullname' => 'Course 2', 'shortname' => 'C2']);
         $lib = new \tool_lifecycle\step\email();
-        $callReplacePlaceholders = function($strings, $user, $stepid, $mailentries) {
+        $callreplaceplaceholders = function($strings, $user, $stepid, $mailentries) {
             return $this->replace_placeholders($strings, $user, $stepid, $mailentries);
         };
-        $response = $callReplacePlaceholders->call($lib, [
+        $response = $callreplaceplaceholders->call($lib, [
                 "##firstname##\n##lastname##\n##courses##\n##shortcourses##",
-                "##firstname##<br>##lastname##<br>##courses-html##<br>##shortcourses-html##"
+                "##firstname##<br>##lastname##<br>##courses-html##<br>##shortcourses-html##",
         ], $user1, 0, [(object) ['courseid' => $course1->id], (object) ['courseid' => $course2->id]]);
 
         $this->assertCount(2, $response);
