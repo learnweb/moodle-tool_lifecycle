@@ -49,6 +49,8 @@ $string['config_delay_duration'] = 'Standardlänge eines Kursausschlusses';
 $string['config_delay_duration_desc'] = 'Diese Einstellung definiert den Standardlänge einer Kursausschlusses in einem Workflow
  falls ein Prozess des Workflows zurückgesetzt oder beendigt wird. Die Länge des Kursausschlusses besagt, wie lange es dauert, bis
  der Kurs wieder vom Workflow bearbeitet wird.';
+$string['config_logreceivedmails'] = 'Zusätzliches Logging von E-mails zu Nutzern.';
+$string['config_logreceivedmails_desc'] = 'Das Schreiben in die Datenbank hat den Vorteil, dass es explizit nachgeguckt werden kann, allerdings verbraucht es Speicher.';
 $string['config_showcoursecounts'] = 'Zeige Anzahl der Kurse, die getriggert werden';
 $string['config_showcoursecounts_desc'] = 'Die Workflow-Konfigurationsseite zeigt normalerweise die Anzahl an Kursen, die durch
 die konfigurierten Trigger getriggert werden, was Performance-Probleme verursachen kann. Bei Performance-Problemen kann dies hiermit
