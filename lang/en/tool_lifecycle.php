@@ -47,6 +47,7 @@ $string['anonymous_user'] = 'Anonymous User';
 $string['apply'] = 'Apply';
 $string['backupcreated'] = 'Created at';
 $string['backupworkflow'] = 'Backup workflow';
+$string['cachedef_application'] = 'Cache for course menu if there are workflows enabled.';
 $string['cachedef_mformdata'] = 'Caches the mform data.';
 $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not be triggered manually.';
 $string['config_backup_path'] = 'Path of the lifecycle backup folder';
