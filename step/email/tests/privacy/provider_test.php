@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Unit tests for the lifecyclestep_email implementation of the privacy API.
  *
@@ -21,6 +22,7 @@
  * @author     Philipp Memmel
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace lifecyclestep_email\privacy;
 
 use context_course;
