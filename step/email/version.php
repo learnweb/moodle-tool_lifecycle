@@ -24,5 +24,5 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2019070200;
+$plugin->version  = 2024061301;
 $plugin->component = 'lifecyclestep_email';

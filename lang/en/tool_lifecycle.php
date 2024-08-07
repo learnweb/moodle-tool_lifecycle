@@ -57,6 +57,8 @@ $string['config_delay_duration'] = 'Default duration of a course delay';
 $string['config_delay_duration_desc'] = 'This setting defines the default delay duration of a workflow
 in case one of its processes is rolled back or finishes.
 The delay duration determines how long a course will be excepted from being processed again in either of the cases.';
+$string['config_logreceivedmails'] = 'Save sent mails to the database';
+$string['config_logreceivedmails_desc'] = 'Additionally writing to the database has the advantage that it can be looked up, however it consumes memory.';
 $string['config_showcoursecounts'] = 'Show amount of courses which will be triggered';
 $string['config_showcoursecounts_desc'] = 'The workflow overview page by default shows the amount of courses which will be
 triggered by the configured triggers which can be load heavy. Disable this option if you experience issues loading the workflow
