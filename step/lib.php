@@ -166,7 +166,6 @@ abstract class libbase {
         }
     }
 
-
     /**
      * Ensure validity of settings upon backup restoration.
      * @param array $settings
@@ -175,7 +174,6 @@ abstract class libbase {
     public function ensure_validity(array $settings): array {
         return [];
     }
-
 }
 
 /**
