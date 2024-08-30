@@ -76,7 +76,7 @@ class manual extends base_manual {
 
         $elementname = 'capability';
         $capabilities = get_all_capabilities();
-        $capabilitynames = array();
+        $capabilitynames = [];
         foreach ($capabilities as $cap) {
             $capabilitynames[$cap['name']] = $cap['name'];
         }

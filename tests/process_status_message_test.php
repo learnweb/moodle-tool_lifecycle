@@ -35,7 +35,7 @@ use tool_lifecycle\local\manager\workflow_manager;
  * @copyright  2018 Tamara Gunkel, Jan Dageforde WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class process_status_message_test extends \advanced_testcase {
+final class process_status_message_test extends \advanced_testcase {
     /** Icon of the manual trigger. */
     const MANUAL_TRIGGER1_ICON = 't/up';
     /** Display name of the manual trigger. */
@@ -53,7 +53,7 @@ class process_status_message_test extends \advanced_testcase {
      * Setup the testcase.
      * @throws \coding_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         global $USER;
 
         // We do not need a sesskey check in theses tests.
@@ -76,7 +76,7 @@ class process_status_message_test extends \advanced_testcase {
      * Test getting status message for a process.
      * @covers \tool_lifecycle\local\manager\interaction_manager
      */
-    public function test_get_status_message() {
+    public function test_get_status_message(): void {
         $process = $this->generator->create_process(2, $this->workflow->id);
         $message = \tool_lifecycle\local\manager\interaction_manager::get_process_status_message($process->id);
         $this->assertEquals(get_string("workflow_started", "tool_lifecycle"), $message);

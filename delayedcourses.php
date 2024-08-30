@@ -44,15 +44,15 @@ if ($action) {
         $workflow = optional_param('workflow', null, PARAM_ALPHANUM);
         if ($workflow) {
             if (is_number($workflow)) {
-                $DB->delete_records('tool_lifecycle_delayed_workf', array('courseid' => $cid, 'workflowid' => $workflow));
+                $DB->delete_records('tool_lifecycle_delayed_workf', ['courseid' => $cid, 'workflowid' => $workflow]);
             } else if ($workflow == 'global') {
-                $DB->delete_records('tool_lifecycle_delayed', array('courseid' => $cid));
+                $DB->delete_records('tool_lifecycle_delayed', ['courseid' => $cid]);
             } else {
                 throw new \coding_exception('workflow has to be "global" or a int value');
             }
         } else {
-            $DB->delete_records('tool_lifecycle_delayed', array('courseid' => $cid));
-            $DB->delete_records('tool_lifecycle_delayed_workf', array('courseid' => $cid));
+            $DB->delete_records('tool_lifecycle_delayed', ['courseid' => $cid]);
+            $DB->delete_records('tool_lifecycle_delayed_workf', ['courseid' => $cid]);
         }
     } else if ($action == 'bulk-delete') {
         $workflow = optional_param('workflow', null, PARAM_ALPHANUM);

@@ -14,13 +14,14 @@ Possible use cases are (not limited to):
    
 To be adaptable to the needs of different institutions the plugin provides two subplugin types:
 
-**Trigger**: These subplugins control the conditions a course have to meet so that a specific process is started for it.
+**Trigger**: These subplugins control the conditions a course must meet so that a specific process is started.
 
 **Step**: These subplugins represent atomic, reusable tasks that should be executed for a specific course.
 
+## Subplugins
 Requirements that are specific to your institution can be added through additional subplugins.
-For more information please have a look at the [wiki](https://github.com/learnweb/moodle-tool_lifecycle/wiki).
-It provides instructions for administrators as well as for developers to implement own requirements into subplugins.
+A list of all subplugins and more information can be found in the [Wiki](https://github.com/learnweb/moodle-tool_lifecycle/wiki/List-of-Additional-Subplugins) ([subpluginslist](https://github.com/learnweb/moodle-tool_lifecycle/wiki/List-of-Additional-Subplugins)).
+It provides instructions for administrators as well as for developers to implement their own requirements into subplugins.
 
 Installation
 ============
@@ -31,7 +32,7 @@ Moodle version
 ==============
 The plugin is continously tested with all moodle versions, which are security supported by the moodle headquarter.
 Therefore, Travis uses the most current release to build a test instance and run the behat and unit tests on them.
-In addition to all stable branches the version is also tested against the master branch to support early adopters.
+In addition to all stable branches the version is tested against the master branch to support early adopters.
 
 Changelog
 =========

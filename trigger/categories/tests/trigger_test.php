@@ -41,7 +41,7 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class trigger_test extends \advanced_testcase {
+final class trigger_test extends \advanced_testcase {
 
     /** @var trigger_subplugin $excludetrigger Trigger instance that excludes a category. */
     private $excludetrigger;
@@ -60,7 +60,7 @@ class trigger_test extends \advanced_testcase {
      * Setup the testcase.
      * @throws \moodle_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
@@ -70,11 +70,11 @@ class trigger_test extends \advanced_testcase {
 
         $this->category = $generator->create_category();
         $othercategory = $generator->create_category();
-        $this->childcategory = $generator->create_category(array('parent' => $this->category->id));
-        $data = array(
+        $this->childcategory = $generator->create_category(['parent' => $this->category->id]);
+        $data = [
             'categories' => $othercategory->id . ',' . $this->category->id,
             'exclude' => true,
-        );
+        ];
 
         $this->excludetrigger = \tool_lifecycle_trigger_categories_generator::create_trigger_with_workflow($data);
 
@@ -86,9 +86,9 @@ class trigger_test extends \advanced_testcase {
      * Tests if courses, which are in the category are correctly triggered.
      * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\categories
      */
-    public function test_course_has_cat() {
+    public function test_course_has_cat(): void {
 
-        $course = $this->getDataGenerator()->create_course(array('category' => $this->category->id));
+        $course = $this->getDataGenerator()->create_course(['category' => $this->category->id]);
 
         $recordset = $this->processor->get_course_recordset([$this->excludetrigger], []);
         foreach ($recordset as $element) {
@@ -111,9 +111,9 @@ class trigger_test extends \advanced_testcase {
      * Tests if courses, which are in the category are correctly triggered.
      * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\categories
      */
-    public function test_course_within_cat() {
+    public function test_course_within_cat(): void {
 
-        $course = $this->getDataGenerator()->create_course(array('category' => $this->childcategory->id));
+        $course = $this->getDataGenerator()->create_course(['category' => $this->childcategory->id]);
 
         $recordset = $this->processor->get_course_recordset([$this->excludetrigger], []);
         foreach ($recordset as $element) {
@@ -136,7 +136,7 @@ class trigger_test extends \advanced_testcase {
      * Tests if courses, which are not in the category are correctly triggered.
      * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\categories
      */
-    public function test_course_not_within_cat() {
+    public function test_course_not_within_cat(): void {
         $course = $this->getDataGenerator()->create_course();
 
         $recordset = $this->processor->get_course_recordset([$this->includetrigger], []);

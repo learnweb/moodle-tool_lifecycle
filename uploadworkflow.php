@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\notification;
 use tool_lifecycle\local\backup\restore_lifecycle_workflow;
 use tool_lifecycle\local\form\form_upload_workflow;
 use tool_lifecycle\permission_and_navigation;
@@ -51,11 +52,18 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 if ($data = $form->get_data()) {
     $xmldata = $form->get_file_content('backupfile');
     $restore = new restore_lifecycle_workflow($xmldata);
-    $errors = $restore->execute();
+    $force = $data->force ?? false;
+    $errors = $restore->execute($force);
     if (count($errors) != 0) {
+        notification::add(get_string('workflow_was_not_imported', 'tool_lifecycle'), notification::ERROR);
+        foreach (array_unique($errors) as $error) {
+            notification::add($error, notification::ERROR);
+        }
+        $form = new form_upload_workflow(null, ['showforce' => true]);
+
         /** @var \tool_lifecycle_renderer $renderer */
         $renderer = $PAGE->get_renderer('tool_lifecycle');
-        $renderer->render_workflow_upload_form($form, $errors);
+        $renderer->render_workflow_upload_form($form);
         die();
     } else {
         // Redirect to workflow page.

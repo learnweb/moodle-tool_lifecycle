@@ -53,7 +53,7 @@ class process_errors_table extends \table_sql {
 
         $this->strings = [
                 'proceed' => get_string('proceed', 'tool_lifecycle'),
-                'rollback' => get_string('rollback', 'tool_lifecycle')
+                'rollback' => get_string('rollback', 'tool_lifecycle'),
         ];
 
         $fields = 'c.fullname as course, w.title as workflow, s.instancename as step, pe.*';
@@ -80,7 +80,7 @@ class process_errors_table extends \table_sql {
                 get_string('courseid', 'tool_lifecycle'),
                 get_string('course'),
                 get_string('error'),
-                get_string('tools', 'tool_lifecycle')
+                get_string('tools', 'tool_lifecycle'),
         ]);
     }
 
@@ -94,9 +94,9 @@ class process_errors_table extends \table_sql {
      */
     public function col_error($row) {
         return "<details><summary>" .
-                nl2br(htmlentities($row->errormessage)) .
+                nl2br(htmlentities($row->errormessage, ENT_COMPAT)) .
                 "</summary><code>" .
-                nl2br(htmlentities($row->errortrace)) .
+                nl2br(htmlentities($row->errortrace, ENT_COMPAT)) .
                 "</code></details>";
     }
 

@@ -22,9 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Categories trigger';
-$string['privacy:metadata'] = 'This subplugin does not store any personal data.';
-
 $string['categories'] = 'Categories, for which the workflow should be triggered';
+$string['categories_do_not_exist'] = 'There are no categories with the following ids: {$a}.';
 $string['categories_noselection'] = 'Please choose at least one category.';
 $string['exclude'] = 'If ticked, the named categories are excluded from triggering instead.';
+$string['pluginname'] = 'Categories trigger';
+$string['privacy:metadata'] = 'This subplugin does not store any personal data.';

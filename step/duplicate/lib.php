@@ -71,7 +71,7 @@ class duplicate extends libbase {
                     $shortname,
                     $course->category,
                     $course->visible,
-                    array());
+                    []);
             } catch (\moodle_exception $e) {
                 if ($e->getCode() == 'shortnametaken') {
                     process_data_manager::set_process_data($processid, $instanceid, self::PROC_DATA_COURSESHORTNAME, '');
@@ -130,18 +130,18 @@ class duplicate extends libbase {
         require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
 
         // Parameter validation.
-        $params = array(
+        $params = [
                 'courseid' => $courseid,
                 'fullname' => $fullname,
                 'shortname' => $shortname,
                 'categoryid' => $categoryid,
                 'visible' => $visible,
-                'options' => $options
-        );
+                'options' => $options,
+        ];
 
         // Context validation.
 
-        if (! ($course = $DB->get_record('course', array('id' => $params['courseid'])))) {
+        if (! ($course = $DB->get_record('course', ['id' => $params['courseid']]))) {
             throw new \moodle_exception('invalidcourseid', 'error');
         }
 
@@ -151,7 +151,7 @@ class duplicate extends libbase {
         // Course to be duplicated.
         $coursecontext = \context_course::instance($course->id);
 
-        $backupdefaults = array(
+        $backupdefaults = [
             'activities' => 1,
             'blocks' => 1,
             'filters' => 1,
@@ -161,10 +161,10 @@ class duplicate extends libbase {
             'comments' => 0,
             'userscompletion' => 0,
             'logs' => 0,
-            'grade_histories' => 0
-        );
+            'grade_histories' => 0,
+        ];
 
-        $backupsettings = array();
+        $backupsettings = [];
         // Check for backup and restore options.
         if (!empty($params['options'])) {
             foreach ($params['options'] as $option) {
@@ -172,7 +172,7 @@ class duplicate extends libbase {
                 // Strict check for a correct value (allways 1 or 0, true or false).
                 $value = clean_param($option['value'], PARAM_INT);
 
-                if ($value !== 0 and $value !== 1) {
+                if ($value !== 0 && $value !== 1) {
                     throw new \moodle_exception('invalidextparam', 'webservice', '', $option['name']);
                 }
 
@@ -197,7 +197,7 @@ class duplicate extends libbase {
         }
 
         // Check if the shortname is used.
-        if ($foundcourses = $DB->get_records('course', array('shortname' => $shortname))) {
+        if ($foundcourses = $DB->get_records('course', ['shortname' => $shortname])) {
             foreach ($foundcourses as $foundcourse) {
                 $foundcoursenames[] = $foundcourse->fullname;
             }
@@ -272,7 +272,7 @@ class duplicate extends libbase {
         $rc->execute_plan();
         $rc->destroy();
 
-        $course = $DB->get_record('course', array('id' => $newcourseid), '*', MUST_EXIST);
+        $course = $DB->get_record('course', ['id' => $newcourseid], '*', MUST_EXIST);
         $course->fullname = $params['fullname'];
         $course->shortname = $params['shortname'];
         $course->visible = $params['visible'];

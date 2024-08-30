@@ -74,8 +74,8 @@ class trigger_manager extends subplugin_manager {
      */
     public static function get_instances($subpluginname) {
         global $DB;
-        $result = array();
-        $records = $DB->get_records('tool_lifecycle_trigger', array('subpluginname' => $subpluginname));
+        $result = [];
+        $records = $DB->get_records('tool_lifecycle_trigger', ['subpluginname' => $subpluginname]);
         foreach ($records as $record) {
             $subplugin = trigger_subplugin::from_record($record);
             $result[] = $subplugin;
@@ -91,7 +91,7 @@ class trigger_manager extends subplugin_manager {
      */
     private static function get_subplugin_by_id($subpluginid) {
         global $DB;
-        $record = $DB->get_record('tool_lifecycle_trigger', array('id' => $subpluginid));
+        $record = $DB->get_record('tool_lifecycle_trigger', ['id' => $subpluginid]);
         if ($record) {
             $subplugin = trigger_subplugin::from_record($record);
             return $subplugin;
@@ -142,7 +142,7 @@ class trigger_manager extends subplugin_manager {
     private static function remove($triggerinstanceid) {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
-        if ($record = $DB->get_record('tool_lifecycle_trigger', array('id' => $triggerinstanceid))) {
+        if ($record = $DB->get_record('tool_lifecycle_trigger', ['id' => $triggerinstanceid])) {
             $trigger = trigger_subplugin::from_record($record);
             self::remove_from_sortindex($trigger);
             settings_manager::remove_settings($trigger->id, settings_type::TRIGGER);
@@ -160,8 +160,8 @@ class trigger_manager extends subplugin_manager {
      */
     public static function get_triggers_for_workflow($workflowid) {
         global $DB;
-        $records = $DB->get_records('tool_lifecycle_trigger', array('workflowid' => $workflowid), 'sortindex');
-        $output = array();
+        $records = $DB->get_records('tool_lifecycle_trigger', ['workflowid' => $workflowid], 'sortindex');
+        $output = [];
         foreach ($records as $record) {
             $subplugin = trigger_subplugin::from_record($record);
             $output[] = $subplugin;
@@ -179,8 +179,8 @@ class trigger_manager extends subplugin_manager {
         global $DB;
         if (isset($toberemoved->sortindex)) {
             $subplugins = $DB->get_records_select('tool_lifecycle_trigger',
-                "sortindex > $toberemoved->sortindex",
-                array('workflowid' => $toberemoved->workflowid));
+                'workflowid = :workflowid AND sortindex > :sortindex',
+                ['workflowid' => $toberemoved->workflowid, 'sortindex' => $toberemoved->sortindex]);
             foreach ($subplugins as $record) {
                 $subplugin = trigger_subplugin::from_record($record);
                 $subplugin->sortindex--;
@@ -216,9 +216,9 @@ class trigger_manager extends subplugin_manager {
         $transaction = $DB->start_delegated_transaction();
 
         $otherrecord = $DB->get_record('tool_lifecycle_trigger',
-            array(
+            [
                 'sortindex' => $otherindex,
-                'workflowid' => $trigger->workflowid)
+                'workflowid' => $trigger->workflowid, ]
         );
         $othertrigger = trigger_subplugin::from_record($otherrecord);
 
@@ -237,7 +237,7 @@ class trigger_manager extends subplugin_manager {
      */
     public static function get_trigger_types() {
         $subplugins = \core_component::get_plugin_list('lifecycletrigger');
-        $result = array();
+        $result = [];
         foreach (array_keys($subplugins) as $plugin) {
             $result[$plugin] = get_string('pluginname', 'lifecycletrigger_' . $plugin);
         }
@@ -266,7 +266,7 @@ class trigger_manager extends subplugin_manager {
      */
     public static function get_chooseable_trigger_types() {
         $triggers = self::get_trigger_types();
-        $result = array();
+        $result = [];
         foreach ($triggers as $id => $trigger) {
             $lib = lib_manager::get_trigger_lib($id);
             if ($lib->has_multiple_instances()) {
@@ -315,7 +315,7 @@ class trigger_manager extends subplugin_manager {
     public static function count_triggers_of_workflow($workflowid) {
         global $DB;
         return $DB->count_records('tool_lifecycle_trigger',
-            array('workflowid' => $workflowid)
+            ['workflowid' => $workflowid]
         );
     }
 
@@ -331,7 +331,7 @@ class trigger_manager extends subplugin_manager {
         foreach ($instances as $instance) {
             settings_manager::remove_settings($instance->id, settings_type::TRIGGER);
         }
-        $DB->delete_records('tool_lifecycle_trigger', array('workflowid' => $workflowid));
+        $DB->delete_records('tool_lifecycle_trigger', ['workflowid' => $workflowid]);
     }
 
     /**

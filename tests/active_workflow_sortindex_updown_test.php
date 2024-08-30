@@ -41,13 +41,13 @@ use tool_lifecycle\local\manager\workflow_manager;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class active_workflow_sortindex_updown_test extends workflow_actions_testcase {
+final class active_workflow_sortindex_updown_test extends workflow_actions_testcase {
 
     /**
      * Test to put down the first workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager move actions down
      */
-    public function test_down_first() {
+    public function test_down_first(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
@@ -67,7 +67,7 @@ class active_workflow_sortindex_updown_test extends workflow_actions_testcase {
      * Test to put down the second workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager move actions down
      */
-    public function test_down_second() {
+    public function test_down_second(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
@@ -87,7 +87,7 @@ class active_workflow_sortindex_updown_test extends workflow_actions_testcase {
      * Test to put down the third workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager move actions down
      */
-    public function test_down_third() {
+    public function test_down_third(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
@@ -107,7 +107,7 @@ class active_workflow_sortindex_updown_test extends workflow_actions_testcase {
      * Test to put up the third workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager move actions up
      */
-    public function test_up_first() {
+    public function test_up_first(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
@@ -127,7 +127,7 @@ class active_workflow_sortindex_updown_test extends workflow_actions_testcase {
      * Test to put up the third workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager move actions up
      */
-    public function test_up_second() {
+    public function test_up_second(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);
@@ -147,7 +147,7 @@ class active_workflow_sortindex_updown_test extends workflow_actions_testcase {
      * Test to put up the third workflow.
      * @covers \tool_lifecycle\local\manager\workflow_manager move actions up
      */
-    public function test_up_third() {
+    public function test_up_third(): void {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow1->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow2->id);
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow3->id);

@@ -53,11 +53,11 @@ class form_courses_filter extends \moodleform {
         $mform->setType('fullname', PARAM_TEXT);
 
         // Edited from $this->add_action_buttons to allow custom cancel text.
-        $buttonarray = array();
+        $buttonarray = [];
         $buttonarray[] = &$mform->createElement('submit', 'submitbutton',
             get_string('apply', 'tool_lifecycle'));
         $buttonarray[] = &$mform->createElement('cancel', 'cancel', get_string('reset'));
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
     }
 

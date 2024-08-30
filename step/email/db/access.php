@@ -22,20 +22,20 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-    'lifecyclestep/email:preventdeletion' => array(
+    'lifecyclestep/email:preventdeletion' => [
         'contextlevel' => CONTEXT_COURSE,
         'captype' => 'write',
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_PREVENT,
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_PREVENT,
             'students' => CAP_PREVENT,
-        ),
-        'clonepermissionsfrom' => 'tool/lifecycle:managecourses'
-    ),
-);
+        ],
+        'clonepermissionsfrom' => 'tool/lifecycle:managecourses',
+    ],
+];
 
 
 

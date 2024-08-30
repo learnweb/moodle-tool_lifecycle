@@ -59,15 +59,15 @@ class provider implements
      */
     public static function get_metadata(collection $collection): collection {
         $collection->add_database_table('tool_lifecycle_action_log',
-                array(
+                [
                         'processid' => 'privacy:metadata:tool_lifecycle_action_log:processid',
                         'workflowid' => 'privacy:metadata:tool_lifecycle_action_log:workflowid',
                         'courseid' => 'privacy:metadata:tool_lifecycle_action_log:courseid',
                         'stepindex' => 'privacy:metadata:tool_lifecycle_action_log:stepindex',
                         'time' => 'privacy:metadata:tool_lifecycle_action_log:time',
                         'userid' => 'privacy:metadata:tool_lifecycle_action_log:userid',
-                        'action' => 'privacy:metadata:tool_lifecycle_action_log:action'
-                ),
+                        'action' => 'privacy:metadata:tool_lifecycle_action_log:action',
+                ],
                 'privacy:metadata:tool_lifecycle_action_log');
         return $collection;
     }
@@ -81,7 +81,7 @@ class provider implements
     public static function get_contexts_for_userid(int $userid): contextlist {
         global $DB;
         $contextlist = new contextlist();
-        if ($DB->record_exists('tool_lifecycle_action_log', array('userid' => $userid))) {
+        if ($DB->record_exists('tool_lifecycle_action_log', ['userid' => $userid])) {
             $contextlist->add_system_context();
         }
         return $contextlist;
@@ -96,7 +96,7 @@ class provider implements
         global $DB;
         foreach ($contextlist->get_contexts() as $context) {
             if ($context instanceof context_system) {
-                $records = $DB->get_records('tool_lifecycle_action_log', array('userid' => $contextlist->get_user()->id));
+                $records = $DB->get_records('tool_lifecycle_action_log', ['userid' => $contextlist->get_user()->id]);
                 $writer = writer::with_context($contextlist->current());
                 foreach ($records as $record) {
                     $step = step_manager::get_step_instance_by_workflow_index($record->workflowid, $record->stepindex);
@@ -105,7 +105,7 @@ class provider implements
                     $record->step = $step->instancename;
                     $record->workflow = $workflow->displaytitle;
                     $subcontext = ['tool_lifecycle', 'action_log', "process_$record->processid", $step->instancename,
-                            "action_$record->action"];
+                            "action_$record->action", ];
                     $writer->export_data($subcontext, $record);
                 }
             }
@@ -139,7 +139,7 @@ class provider implements
                 $sql = "UPDATE {tool_lifecycle_action_log}
                     SET userid = -1
                     WHERE userid = :userid";
-                $DB->execute($sql, array('userid' => $contextlist->get_user()->id));
+                $DB->execute($sql, ['userid' => $contextlist->get_user()->id]);
             }
         }
     }
@@ -154,7 +154,7 @@ class provider implements
         if ($context instanceof context_system) {
             $sql = "SELECT userid
                     FROM {tool_lifecycle_action_log}";
-            $userlist->add_from_sql('userid', $sql, array());
+            $userlist->add_from_sql('userid', $sql, []);
         }
     }
 

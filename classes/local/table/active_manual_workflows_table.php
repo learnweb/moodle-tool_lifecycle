@@ -73,7 +73,7 @@ class active_manual_workflows_table extends active_workflows_table {
             get_string('workflow_processes', 'tool_lifecycle'),
             get_string('workflow_tools', 'tool_lifecycle'),
             ]);
-        $this->sortable(true, 'title');
+        $this->sortable(false, 'title');
         $this->setup();
     }
 

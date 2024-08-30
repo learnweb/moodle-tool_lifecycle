@@ -25,6 +25,7 @@ namespace tool_lifecycle\local\backup;
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\entity\workflow;
+use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
@@ -65,20 +66,29 @@ class restore_lifecycle_workflow {
      * Executes the restore process. It loads the workflow with all steps and triggers from the xml data.
      * If all data is valid, it restores the workflow with all subplugins and settings.
      * Otherwise an array with error strings is returned.
+     * @param bool $force force import, even if there are errors.
      * @return string[] Errors, which occurred during the restore process.
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function execute() {
+    public function execute(bool $force = false) {
         $this->reader->read();
 
         $this->load_workflow();
         // If the workflow could be loaded continue with the subplugins.
         if ($this->workflow) {
             $this->load_subplugins();
+
+            if (!$this->all_subplugins_installed()) {
+                return $this->errors;
+            }
+
             // Validate the subplugin data.
-            if (empty($this->errors) && $this->all_subplugins_installed()) {
+            $this->check_subplugin_validity();
+            if (empty($this->errors) || $force) {
                 // If all loaded data is valid, the new workflow and the steps can be stored in the database.
+                // If we force the import, we empty the errors.
+                $this->errors = [];
                 $this->persist();
             }
         }
@@ -101,7 +111,6 @@ class restore_lifecycle_workflow {
         $this->workflow->timeactive = null;
         $this->workflow->timedeactive = null;
         $this->workflow->sortindex = null;
-        workflow_manager::insert_or_update($this->workflow);
     }
 
     /**
@@ -172,6 +181,41 @@ class restore_lifecycle_workflow {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Calls the subplugins to check the consistency and validity of the step and trigger settings.
+     */
+    private function check_subplugin_validity() {
+        foreach ($this->steps as $step) {
+            $steplib = lib_manager::get_step_lib($step->subpluginname);
+            $filteredsettings = [];
+            foreach ($this->settings as $setting) {
+                if ($setting->pluginid === $step->id) {
+                    $filteredsettings[$setting->name] = $setting->value;
+                }
+            }
+            $errors = array_map(
+                    fn($x) => get_string('restore_error_in_step', 'tool_lifecycle', $step->instancename) . $x,
+                    $steplib->ensure_validity($filteredsettings)
+            );
+            $this->errors = array_merge($this->errors, $errors);
+        }
+
+        foreach ($this->trigger as $trigger) {
+            $steplib = lib_manager::get_trigger_lib($trigger->subpluginname);
+            $filteredsettings = [];
+            foreach ($this->settings as $setting) {
+                if ($setting->pluginid === $trigger->id) {
+                    $filteredsettings[$setting->name] = $setting->value;
+                }
+            }
+            $errors = array_map(
+                    fn($x) => get_string('restore_error_in_trigger', 'tool_lifecycle', $trigger->instancename) . $x,
+                    $steplib->ensure_validity($filteredsettings)
+            );
+            $this->errors = array_merge($this->errors, $errors);
+        }
     }
 
     /**

@@ -70,13 +70,13 @@ class interactionduplicate extends interactionlibbase {
         $shortname = process_data_manager::get_process_data($process->id, $step->id, duplicate::PROC_DATA_COURSESHORTNAME);
         $fullname = process_data_manager::get_process_data($process->id, $step->id, duplicate::PROC_DATA_COURSEFULLNAME);
         if (!empty($fullname) && !empty($shortname)) {
-            return array();
+            return [];
         }
-        return array(
-            array('action' => self::ACTION_DUPLICATE_FORM,
+        return [
+            ['action' => self::ACTION_DUPLICATE_FORM,
                 'alt' => get_string('duplicate_form', 'lifecyclestep_duplicate'),
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -116,7 +116,7 @@ class interactionduplicate extends interactionlibbase {
             return step_interactive_response::rollback();
         }
         if ($data = $form->get_submitted_data()) {
-            if ($foundcourses = $DB->get_records('course', array('shortname' => $data->shortname))) {
+            if ($foundcourses = $DB->get_records('course', ['shortname' => $data->shortname])) {
                 foreach ($foundcourses as $foundcourse) {
                     $foundcoursenames[] = $foundcourse->fullname;
                 }

@@ -67,11 +67,11 @@ class interactionemail extends interactionlibbase {
      * @throws \coding_exception
      */
     public function get_action_tools($process) {
-        return array(
-            array('action' => self::ACTION_KEEP,
+        return [
+            ['action' => self::ACTION_KEEP,
                 'alt' => get_string('keep_course', 'lifecyclestep_email'),
-            ),
-        );
+            ],
+        ];
     }
 
     /**

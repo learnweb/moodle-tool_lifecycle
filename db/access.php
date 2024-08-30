@@ -22,20 +22,20 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-    'tool/lifecycle:managecourses' => array(
+    'tool/lifecycle:managecourses' => [
         'contextlevel' => CONTEXT_COURSE,
         'captype' => 'write',
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_PREVENT,
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_PREVENT,
             'students' => CAP_PREVENT,
-        ),
-        'clonepermissionsfrom' => 'moodle/course:update'
-    ),
-);
+        ],
+        'clonepermissionsfrom' => 'moodle/course:update',
+    ],
+];
 
 
 

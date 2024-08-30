@@ -32,7 +32,7 @@
  * @throws moodle_exception
  */
 function tool_lifecycle_extend_navigation_course($navigation, $course, $context) {
-    global $PAGE;
+    global $DB, $PAGE;
 
     // Only add this settings item on non-site course pages.
     if (!$PAGE->course || $PAGE->course->id == SITEID) {
@@ -43,12 +43,23 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
         return null;
     }
 
-    $url = null;
-    $settingnode = null;
+    $cache = cache::make('tool_lifecycle', 'application');
+    if ($cache->has('workflowactive')) {
+        $wfexists = $cache->get('workflowactive');
+    } else {
+        $wfexists = $DB->record_exists_sql("SELECT 'yes' FROM {tool_lifecycle_workflow} wf " .
+                "JOIN {tool_lifecycle_trigger} t ON wf.id = t.workflowid " .
+                "WHERE wf.timeactive IS NOT NULL AND t.subpluginname NOT IN ('sitecourse', 'delayedcourses')");
+        $cache->set('workflowactive', $wfexists);
+    }
 
-    $url = new moodle_url('/admin/tool/lifecycle/view.php', array(
-        'contextid' => $context->id
-    ));
+    if (!$wfexists) {
+        return null;
+    }
+
+    $url = new moodle_url('/admin/tool/lifecycle/view.php', [
+        'contextid' => $context->id,
+    ]);
 
     // Add the course life cycle link.
     $linktext = get_string('managecourses_link', 'tool_lifecycle');

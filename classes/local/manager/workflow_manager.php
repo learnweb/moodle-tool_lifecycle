@@ -68,9 +68,11 @@ class workflow_manager {
     public static function remove($workflowid, $hard = false) {
         global $DB;
         if ($hard || self::is_removable($workflowid)) {
+            $workflow = self::get_workflow($workflowid);
+            self::remove_from_sortindex($workflow);
             trigger_manager::remove_instances_of_workflow($workflowid);
             step_manager::remove_instances_of_workflow($workflowid);
-            $DB->delete_records('tool_lifecycle_workflow', array('id' => $workflowid));
+            $DB->delete_records('tool_lifecycle_workflow', ['id' => $workflowid]);
         }
     }
 
@@ -82,12 +84,36 @@ class workflow_manager {
      * @throws \dml_transaction_exception
      */
     public static function disable($workflowid) {
+        global $DB;
+        $transaction = $DB->start_delegated_transaction();
         $workflow = self::get_workflow($workflowid);
         if ($workflow && self::is_disableable($workflowid)) {
             $workflow->timeactive = null;
+            self::remove_from_sortindex($workflow);
             $workflow->sortindex = null;
             $workflow->timedeactive = time();
-            self::insert_or_update($workflow);
+            $DB->update_record('tool_lifecycle_workflow', $workflow);
+        }
+        $transaction->allow_commit();
+    }
+
+    /**
+     * Removes a workflow from the sortindex.
+     *
+     * @param workflow $toberemoved
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
+     */
+    public static function remove_from_sortindex($toberemoved) {
+        global $DB;
+        if (isset($toberemoved->sortindex)) {
+            $workflows = self::get_active_automatic_workflows();
+            foreach ($workflows as $workflow) {
+                if ($workflow->sortindex > $toberemoved->sortindex) {
+                    $workflow->sortindex--;
+                    $DB->update_record('tool_lifecycle_workflow', $workflow);
+                }
+            }
         }
     }
 
@@ -114,7 +140,7 @@ class workflow_manager {
      */
     public static function get_workflow($workflowid) {
         global $DB;
-        $record = $DB->get_record('tool_lifecycle_workflow', array('id' => $workflowid));
+        $record = $DB->get_record('tool_lifecycle_workflow', ['id' => $workflowid]);
         if ($record) {
             $workflow = workflow::from_record($record);
             return $workflow;
@@ -131,7 +157,7 @@ class workflow_manager {
      */
     public static function get_workflows() {
         global $DB;
-        $result = array();
+        $result = [];
         $records = $DB->get_records('tool_lifecycle_workflow');
         foreach ($records as $record) {
             $result[] = workflow::from_record($record);
@@ -150,7 +176,7 @@ class workflow_manager {
         $records = $DB->get_records_sql(
             'SELECT * FROM {tool_lifecycle_workflow}
                   WHERE timeactive IS NOT NULL ORDER BY sortindex');
-        $result = array();
+        $result = [];
         foreach ($records as $record) {
             $result[] = workflow::from_record($record);
         }
@@ -168,8 +194,8 @@ class workflow_manager {
         $records = $DB->get_records_sql(
             'SELECT * FROM {tool_lifecycle_workflow}
                   WHERE timeactive IS NOT NULL AND
-                  manual = ? ORDER BY sortindex', array(false));
-        $result = array();
+                  manual = ? ORDER BY sortindex', [false]);
+        $result = [];
         foreach ($records as $record) {
             $result[] = workflow::from_record($record);
         }
@@ -186,8 +212,8 @@ class workflow_manager {
         global $DB;
         $sql = 'SELECT t.* FROM {tool_lifecycle_workflow} w JOIN {tool_lifecycle_trigger} t ON t.workflowid = w.id' .
             ' WHERE w.timeactive IS NOT NULL AND w.manual = ?';
-        $records = $DB->get_records_sql($sql, array(true));
-        $result = array();
+        $records = $DB->get_records_sql($sql, [true]);
+        $result = [];
         foreach ($records as $record) {
             $result[] = trigger_subplugin::from_record($record);
         }
@@ -204,7 +230,7 @@ class workflow_manager {
      */
     public static function get_manual_trigger_tools_for_active_workflows() {
         $triggers = self::get_active_manual_workflow_triggers();
-        $tools = array();
+        $tools = [];
         foreach ($triggers as $trigger) {
             $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
             $tools[] = new manual_trigger_tool($trigger->id, $settings['icon'], $settings['displayname'], $settings['capability']);
@@ -245,6 +271,14 @@ class workflow_manager {
     }
 
     /**
+     * Resets the 'does a manual workflow exist?'-cache.
+     */
+    private static function reset_has_workflow_cache() {
+        $cache = \cache::make('tool_lifecycle', 'application');
+        $cache->delete('workflowactive');
+    }
+
+    /**
      * Handles an action of the subplugin_settings.
      *
      * @param string $action action to be executed
@@ -260,6 +294,7 @@ class workflow_manager {
         }
         if ($action === action::WORKFLOW_ACTIVATE) {
             self::activate_workflow($workflowid);
+            self::reset_has_workflow_cache();
         } else if ($action === action::UP_WORKFLOW) {
             self::change_sortindex($workflowid, true);
         } else if ($action === action::DOWN_WORKFLOW) {
@@ -270,10 +305,12 @@ class workflow_manager {
             self::backup_workflow($workflowid);
         } else if ($action === action::WORKFLOW_DISABLE) {
             self::disable($workflowid);
+            self::reset_has_workflow_cache();
             return; // Return, since we do not want to redirect outside to deactivated workflows.
         } else if ($action === action::WORKFLOW_ABORTDISABLE) {
             self::disable($workflowid);
             self::abortprocesses($workflowid);
+            self::reset_has_workflow_cache();
             return; // Return, since we do not want to redirect outside to deactivated workflows.
         } else if ($action === action::WORKFLOW_ABORT) {
             self::abortprocesses($workflowid);
@@ -283,6 +320,7 @@ class workflow_manager {
             if (self::get_workflow($workflowid) &&
                 self::is_removable($workflowid)) {
                 self::remove($workflowid);
+                self::reset_has_workflow_cache();
             } else {
                 \core\notification::add(get_string('workflow_not_removeable', 'tool_lifecycle')
                     , \core\notification::WARNING);
@@ -325,8 +363,8 @@ class workflow_manager {
         $transaction = $DB->start_delegated_transaction();
 
         $otherrecord = $DB->get_record('tool_lifecycle_workflow',
-            array(
-                'sortindex' => $otherindex)
+            [
+                'sortindex' => $otherindex, ]
         );
         $otherworkflow = workflow::from_record($otherrecord);
 

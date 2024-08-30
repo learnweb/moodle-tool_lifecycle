@@ -89,7 +89,7 @@ class active_processes_table extends \table_sql {
             get_string('fullnamecourse'),
             get_string('workflow', 'tool_lifecycle'),
             get_string('step', 'tool_lifecycle'),
-            get_string('tools', 'tool_lifecycle')]);
+            get_string('tools', 'tool_lifecycle'), ]);
 
         $this->column_nosort = ['tools'];
     }

@@ -53,15 +53,11 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
     /**
      * Renders the workflow upload form including errors, which occured during upload.
      * @param \tool_lifecycle\local\form\form_upload_workflow $form
-     * @param array $errors
      * @throws coding_exception
      */
-    public function render_workflow_upload_form($form, $errors = array()) {
+    public function render_workflow_upload_form($form) {
         $this->header(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));
-        foreach ($errors as $error) {
-            \core\notification::add($error, \core\notification::ERROR);
-        }
-        echo $form->render();
+        $form->display();
         $this->footer();
     }
 

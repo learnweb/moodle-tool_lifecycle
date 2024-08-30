@@ -60,10 +60,10 @@ class startdatedelay extends base_automatic {
     public function get_course_recordset_where($triggerid) {
         $delay = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['delay'];
         $where = "{course}.startdate < :startdatedelay";
-        $params = array(
+        $params = [
             "startdatedelay" => time() - $delay,
-        );
-        return array($where, $params);
+        ];
+        return [$where, $params];
     }
 
     /**
@@ -79,9 +79,9 @@ class startdatedelay extends base_automatic {
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
-        return array(
-            new instance_setting('delay', PARAM_INT, true)
-        );
+        return [
+            new instance_setting('delay', PARAM_INT, true),
+        ];
     }
 
     /**

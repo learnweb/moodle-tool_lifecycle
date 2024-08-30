@@ -28,10 +28,11 @@ jobs:
     steps:
       - name: Call the service function
         id: add-version
+        env:
+          TAGNAME: ${{ github.event.release.tag_name }}
+          BODY: ${{ github.event.release.body }}
+          ZIPURL: ${{ github.event.release.zipball_url }}
         run: |
-          TAGNAME="${{ github.event.release.tag_name }}"
-          BODY="${{ github.event.release.body }}"
-          ZIPURL="${{ github.event.release.zipball_url }}"
           RESPONSE=$(${CURL} ${ENDPOINT} --data-urlencode "wstoken=${TOKEN}" \
                                          --data-urlencode "wsfunction=${FUNCTION}" \
                                          --data-urlencode "moodlewsrestformat=json" \
@@ -42,7 +43,7 @@ jobs:
                                          --data-urlencode "vcstag=${TAGNAME}" \
                                          --data-urlencode "changelogurl=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commits/${TAGNAME}" \
                                          --data-urlencode "altdownloadurl=${ZIPURL}" \
-                                         --data-urlencode "releasenotes=${BODY}" \
+                                         --data-urlencode "releasenotes=${BODY@Q}" \
                                          --data-urlencode "releasenotesformat=4")
           echo "response=${RESPONSE}" >> $GITHUB_OUTPUT
       - name: Evaluate the response

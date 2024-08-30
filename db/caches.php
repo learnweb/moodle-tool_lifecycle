@@ -24,8 +24,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$definitions = array(
-        'mformdata' => array(
-                'mode' => cache_store::MODE_SESSION
-        )
-);
+$definitions = [
+        'mformdata' => [
+                'mode' => cache_store::MODE_SESSION,
+        ],
+        'application' => [
+                'mode' => cache_store::MODE_APPLICATION,
+                'simplekeys' => true,
+                'simpledata' => true,
+        ],
+];

@@ -86,7 +86,7 @@ class course_backups_table extends \table_sql {
             get_string('fullnamecourse'),
             get_string('backupcreated', 'tool_lifecycle'),
             get_string('download', 'tool_lifecycle'),
-            get_string('restore', 'tool_lifecycle')]);
+            get_string('restore', 'tool_lifecycle'), ]);
         $this->setup();
     }
 
@@ -147,7 +147,7 @@ class course_backups_table extends \table_sql {
      */
     public function col_download($row) {
         return \html_writer::link(
-                new \moodle_url('/admin/tool/lifecycle/downloadbackup.php', array('backupid' => $row->id)),
+                new \moodle_url('/admin/tool/lifecycle/downloadbackup.php', ['backupid' => $row->id]),
                 get_string('download', 'tool_lifecycle')
         );
     }
@@ -161,7 +161,7 @@ class course_backups_table extends \table_sql {
      */
     public function col_restore($row) {
         return \html_writer::link(
-            new \moodle_url('/admin/tool/lifecycle/restore.php', array('backupid' => $row->id)),
+            new \moodle_url('/admin/tool/lifecycle/restore.php', ['backupid' => $row->id]),
                 get_string('restore', 'tool_lifecycle')
         );
     }

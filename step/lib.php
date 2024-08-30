@@ -104,7 +104,7 @@ abstract class libbase {
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
-        return array();
+        return [];
     }
 
     /**
@@ -166,6 +166,14 @@ abstract class libbase {
         }
     }
 
+    /**
+     * Ensure validity of settings upon backup restoration.
+     * @param array $settings
+     * @return array List of errors with settings. If empty, the given settings are valid.
+     */
+    public function ensure_validity(array $settings): array {
+        return [];
+    }
 }
 
 /**

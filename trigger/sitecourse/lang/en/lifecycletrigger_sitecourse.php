@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['delay'] = 'This module will exclude the site course from processing';
 $string['pluginname'] = 'Exclude site course trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
-$string['delay'] = 'This module will exclude the site course from processing';

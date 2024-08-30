@@ -59,7 +59,7 @@ class sitecourse extends base_automatic {
     public function get_course_recordset_where($triggerid) {
         global $DB;
         list($insql, $inparam) = $DB->get_in_or_equal(SITEID, SQL_PARAMS_NAMED);
-        return array("{course}.id {$insql}", $inparam);
+        return ["{course}.id {$insql}", $inparam];
     }
 
     /**

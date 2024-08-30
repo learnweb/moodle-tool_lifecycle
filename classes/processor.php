@@ -49,7 +49,7 @@ class processor {
      */
     public function call_trigger() {
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
-        $exclude = array();
+        $exclude = [];
 
         foreach ($activeworkflows as $workflow) {
             $countcourses = 0;
@@ -203,7 +203,7 @@ class processor {
         global $DB;
 
         $where = 'true';
-        $whereparams = array();
+        $whereparams = [];
         foreach ($triggers as $trigger) {
             $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
             list($sql, $params) = $lib->get_course_recordset_where($trigger->id);

@@ -53,10 +53,10 @@ class process_data_manager {
      */
     public static function get_process_data($processid, $stepid, $key) {
         global $DB;
-        $params = array(
+        $params = [
             'processid' => $processid,
             'keyname' => $key,
-        );
+        ];
         if (step_manager::is_process_data_instance_dependent($stepid)) {
             $params['stepid'] = $stepid;
         } else {
@@ -78,10 +78,10 @@ class process_data_manager {
      */
     public static function set_process_data($processid, $stepid, $key, $value) {
         global $DB;
-        $entry = array(
+        $entry = [
             'processid' => $processid,
             'keyname' => $key,
-        );
+        ];
         if (step_manager::is_process_data_instance_dependent($stepid)) {
             $entry['stepid'] = $stepid;
         } else {

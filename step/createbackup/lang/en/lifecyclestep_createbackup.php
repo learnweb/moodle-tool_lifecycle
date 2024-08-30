@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['maximumbackupspercron'] = 'Maximum number of backups per cron';
 $string['pluginname'] = 'Create backup step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
-$string['maximumbackupspercron'] = 'Maximum number of backups per cron';

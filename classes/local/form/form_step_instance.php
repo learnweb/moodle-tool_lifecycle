@@ -139,9 +139,9 @@ class form_step_instance extends \moodleform {
         $mform =& $this->_form;
 
         // Add a group 'buttonar' to allow excluding it from freezing.
-        $buttonarray = array();
+        $buttonarray = [];
         $buttonarray[] = &$mform->createElement('cancel');
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
     }
 

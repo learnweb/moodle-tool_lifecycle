@@ -22,17 +22,17 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-    'lifecyclestep/duplicate:enterdata' => array(
+    'lifecyclestep/duplicate:enterdata' => [
         'contextlevel' => CONTEXT_COURSE,
         'captype' => 'write',
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-        ),
-        'clonepermissionsfrom' => 'tool/lifecycle:managecourses'
-    ),
-);
+        ],
+        'clonepermissionsfrom' => 'tool/lifecycle:managecourses',
+    ],
+];
 
 
 

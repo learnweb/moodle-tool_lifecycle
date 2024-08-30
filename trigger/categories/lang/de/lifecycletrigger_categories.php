@@ -22,9 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Kategorie-Trigger';
-$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
-
 $string['categories'] = 'Kategorien, für die der Workflow ausgelöst werden soll.';
+$string['categories_do_not_exist'] = 'Es gibt keine Kurskategorien mit den folgenden IDs: {$a}.';
 $string['categories_noselection'] = 'Bitte wählen sie mindestens eine Kategorie aus.';
 $string['exclude'] = 'Falls ausgewählt, werden gerade die Kurse der angegebenen Kategorien nicht ausgelöst.';
+$string['pluginname'] = 'Kategorie-Trigger';
+$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';

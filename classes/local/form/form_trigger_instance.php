@@ -144,9 +144,9 @@ class form_trigger_instance extends \moodleform {
     private function add_cancel_button() {
         $mform =& $this->_form;
 
-        $buttonarray = array();
+        $buttonarray = [];
         $buttonarray[] = &$mform->createElement('cancel');
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
     }
 
@@ -194,7 +194,8 @@ class form_trigger_instance extends \moodleform {
         }
     }
 
-    /** Validate the form.
+    /**
+     * Validate the form.
      * @param array $data array of ("fieldname"=>value) of submitted data
      * @param array $files array of uploaded files "element_name"=>tmp_file_path
      * @return array of "element_name"=>"error_description" if there are errors,

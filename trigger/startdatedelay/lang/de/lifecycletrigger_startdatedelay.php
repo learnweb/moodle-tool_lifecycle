@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['delay'] = 'Zeit seit Kursstartdatum, bis ein Prozess gestartet wird';
+$string['delay_help'] = 'Der Trigger wird ausgeführt, falls die Zeit, die seit dem Start des Kurses vergangen ist, größer ist, als der angegebene Zeitraum.';
 $string['pluginname'] = 'Startdatumsabstand - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 
-$string['delay'] = 'Zeit seit Kursstartdatum, bis ein Prozess gestartet wird';
-$string['delay_help'] = 'Der Trigger wird ausgeführt, falls die Zeit, die seit dem Start des Kurses vergangen ist, größer ist, als der angegebene Zeitraum.';

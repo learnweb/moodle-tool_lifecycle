@@ -46,27 +46,27 @@ class tool_lifecycle_generator extends testing_module_generator {
     /** @var array $defaultsteps Default steps configuration. */
     private static $defaultsteps = [
         "deletecourse" => [
-            "maximumdeletionspercron" => 10
+            "maximumdeletionspercron" => 10,
         ],
         "email" => [
             "responsetimeout" => 10,
             "subject" => "Test Email",
             "content" => "Content",
-            "contenthtml" => "Content HTML"
+            "contenthtml" => "Content HTML",
         ],
         "createbackup" => [
-            "maximumbackupspercron" => 10
+            "maximumbackupspercron" => 10,
         ],
     ];
 
     /** @var array $defaulttrigger Default trigger configuration. */
     private static $defaulttrigger = [
         "startdatedelay" => [
-            "delay" => 10000
+            "delay" => 10000,
         ],
         "categories" => [
             "categories" => "1,10",
-                "exclude" => true
+                "exclude" => true,
         ],
     ];
 

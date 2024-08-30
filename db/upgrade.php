@@ -23,6 +23,20 @@
  */
 
 /**
+ * Fix any gaps in the workflows sortindex.
+ */
+function tool_lifecycle_fix_workflow_sortindex() {
+    $workflows = \tool_lifecycle\local\manager\workflow_manager::get_active_workflows();
+    for ($i = 1; $i <= count($workflows); $i++) {
+        $workflow = $workflows[$i - 1];
+        if ($workflow->sortindex != $i) {
+            $workflow->sortindex = $i;
+            \tool_lifecycle\local\manager\workflow_manager::insert_or_update($workflow);
+        }
+    }
+}
+
+/**
  * Update script for tool_lifecycle.
  * @param int $oldversion Version id of the previously installed version.
  * @return bool
@@ -46,7 +60,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'id');
         $table->add_field('active', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'title');
         $table->add_field('timeactive', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'active');
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Conditionally create the table.
         if (!$dbman->table_exists($table)) {
@@ -63,7 +77,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         }
 
         $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'subpluginname');
-        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_lifecycle_workflow', array('id'));
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, ['workflowid'], 'tool_lifecycle_workflow', ['id']);
 
         // Conditionally create the field.
         if (!$dbman->field_exists($table, $field)) {
@@ -89,7 +103,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         // Add workflowfield to trigger.
         $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'enabled');
-        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_lifecycle_workflow', array('id'));
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, ['workflowid'], 'tool_lifecycle_workflow', ['id']);
 
         // Conditionally create the field.
         if (!$dbman->field_exists($table, $field)) {
@@ -107,7 +121,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         }
 
         $field = new xmldb_field('workflowid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'courseid');
-        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_lifecycle_workflow', array('id'));
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, ['workflowid'], 'tool_lifecycle_workflow', ['id']);
 
         // Conditionally create the field.
         if (!$dbman->field_exists($table, $field)) {
@@ -207,7 +221,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         // Define key workflowid_fk (foreign) to be added to tool_lifecycle_trigger.
         $table = new xmldb_table('tool_lifecycle_trigger');
-        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, array('workflowid'), 'tool_lifecycle_workflow', array('id'));
+        $key = new xmldb_key('workflowid_fk', XMLDB_KEY_FOREIGN, ['workflowid'], 'tool_lifecycle_workflow', ['id']);
 
         // Launch add key workflowid_fk.
         $dbman->add_key($table, $key);
@@ -262,13 +276,13 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         // Define key courseid_fk (foreign) to be dropped form tool_lifecycle_process.
         $table = new xmldb_table('tool_lifecycle_process');
-        $key = new xmldb_key('courseid_fk', XMLDB_KEY_FOREIGN, array('courseid'), 'course', array('id'));
+        $key = new xmldb_key('courseid_fk', XMLDB_KEY_FOREIGN, ['courseid'], 'course', ['id']);
 
         // Launch drop key courseid_fk.
         $dbman->drop_key($table, $key);
 
         // Define key courseid_fk (foreign-unique) to be added to tool_lifecycle_process.
-        $key = new xmldb_key('courseid_fk', XMLDB_KEY_FOREIGN_UNIQUE, array('courseid'), 'course', array('id'));
+        $key = new xmldb_key('courseid_fk', XMLDB_KEY_FOREIGN_UNIQUE, ['courseid'], 'course', ['id']);
 
         // Launch add key courseid_fk.
         $dbman->add_key($table, $key);
@@ -365,7 +379,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        $params = array($duration, $duration);
+        $params = [$duration, $duration];
 
         $DB->execute('UPDATE {tool_lifecycle_workflow} SET finishdelay = ?, rollbackdelay = ?', $params);
 
@@ -473,6 +487,15 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2021112300, 'tool', 'lifecycle');
+    }
+
+    if ($oldversion < 2024042300) {
+
+        tool_lifecycle_fix_workflow_sortindex();
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2024042300, 'tool', 'lifecycle');
+
     }
 
     return true;
