@@ -112,13 +112,10 @@ final class process_error_test extends \advanced_testcase {
         $record = reset($records);
 
         $this->assertEquals($this->course->id, $record->courseid);
-        if (version_compare(PHP_VERSION, '8.0', '<')) {
-            $this->assertStringContainsString("Trying to get property 'id' of non-object", $record->errormessage);
-        } else if (version_compare(PHP_VERSION, '8.3', '<')) {
-            $this->assertStringContainsString("Attempt to read property \"id\" on bool", $record->errormessage);
-        } else {
-            $this->assertStringContainsString("Attempt to read property \"id\" on false", $record->errormessage);
-        }
+        // We may not know the exact error message.
+        // For example, if there are other plugins that implement the pre_course_delete hook,
+        // We will get different error messages, when those plugin trying to access course modules.
+        $this->assertNotEmpty($record->errormessage);
         $this->assertEquals($process->id, $record->id);
     }
 
