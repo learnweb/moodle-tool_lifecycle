@@ -170,7 +170,7 @@ class interaction_manager {
         }
 
         if ($process->stepindex == 0) {
-            // TODO: Rethink behaviour for multiple triggers.
+            // Software enhancement: Rethink behaviour for multiple triggers.
             $trigger = trigger_manager::get_triggers_for_workflow($process->workflowid)[0];
             $triggerlib = lib_manager::get_trigger_lib($trigger->subpluginname);
             return $triggerlib->get_status_message();

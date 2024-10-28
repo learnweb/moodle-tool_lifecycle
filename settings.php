@@ -46,6 +46,18 @@ if ($hassiteconfig) {
         get_string('config_showcoursecounts', 'tool_lifecycle'),
         get_string('config_showcoursecounts_desc', 'tool_lifecycle'),
         1));
+    $settingenablehierachy = new admin_setting_configcheckbox('tool_lifecycle/enablecategoryhierachy',
+        get_string('config_enablecategoryhierachy', 'tool_lifecycle'),
+        get_string('config_enablecategoryhierachy_desc', 'tool_lifecycle'),
+        false);
+    $settings->add($settingenablehierachy);
+    $coursehierachysetting = new admin_setting_configtext('tool_lifecycle/coursecategorydepth',
+        get_string('config_coursecategorydepth', 'tool_lifecycle'),
+        get_string('config_coursecategorydepth_desc', 'tool_lifecycle'),
+        0, PARAM_INT);
+    $coursehierachysetting->add_dependent_on('tool_lifecycle/enablecategoryhierachy');
+    $settings->add($coursehierachysetting);
+    $settings->hide_if('tool_lifecycle/coursecategorydepth', 'tool_lifecycle/enablecategoryhierachy', 'notchecked');
 
     $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_workflow_drafts',
         get_string('workflow_drafts_header', 'tool_lifecycle'),

@@ -43,11 +43,25 @@ require_once($CFG->libdir . '/tablelib.php');
 abstract class interaction_table extends \table_sql {
 
     /**
+     * In case a specific course category should be shown, all course categories are fetched once ...
+     * ... to find the suitable category later.
+     * @var \stdClass
+     */
+    private $coursecategories;
+
+    /**
      * Constructor for interaction_table.
      * @param int $uniqueid Unique id of this table.
      */
     public function __construct($uniqueid) {
+        global $DB;
         parent::__construct($uniqueid);
+
+        if (get_config('tool_lifecycle', 'enablecategoryhierachy')) {
+            // We have to get the complete category tree.
+            $this->coursecategories = $DB->get_records_sql('SELECT id, name, depth, path, parent FROM {course_categories} ');
+        }
+
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
     }
 
@@ -105,6 +119,31 @@ abstract class interaction_table extends \table_sql {
         }
 
         return '';
+    }
+
+    /**
+     * Dependent on the setting either returns the closest category or the category that is on the specified depth,
+     * if the category depth is not reached the last category is returned.
+     * @param object $row Row data.
+     * @return string category name
+     * @throws \dml_exception
+     */
+    public function col_category($row): String {
+        $categorydepth = get_config('tool_lifecycle', 'enablecategoryhierachy');
+        if ($categorydepth == false) {
+            return $row->category;
+        } else {
+            $categorydepth = (int) get_config('tool_lifecycle', 'coursecategorydepth');
+            $categoryhierachy = explode('/', substr($row->categorypath, 1));
+            $categoryhierachy = array_map('intval', $categoryhierachy);
+            if (isset($categoryhierachy[$categorydepth])) {
+                $category = $this->coursecategories[$categoryhierachy[$categorydepth]];
+                return $category->name;
+            } else {
+                $category = $this->coursecategories[end($categoryhierachy)];
+                return $category->name;
+            }
+        }
     }
 
     /**
