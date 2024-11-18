@@ -30,6 +30,7 @@ $string['email_content_help'] = 'Stellen Sie die Vorlage für Emails ein. (in Kl
         . '<br>' . 'Nachname des Empfängers: ##lastname##'
         . '<br>' . 'Link zur Antwortseite: ##link##'
         . '<br>' . 'Betroffene Kurse: ##courses##'
+        . '<br>' . 'Kurznamen betroffener Kurse: ##shortcourses##'
         . '</p>';
 $string['email_content_html'] = 'HTML-Vorlage für Emails';
 $string['email_content_html_help'] = 'Stellen sie die HTML-Vorlage für Emails ein. (in HTML-Format; falls gesetzt, wird es an Stelle der Klartext-Vorlage benutzt!)' . '<p>' . 'Sie können die folgenden Platzhalter benutzen:'
@@ -45,6 +46,7 @@ $string['email_subject_help'] = 'Stellen Sie die Vorlage für den Emailbetreff e
         . '<br>' . 'Nachname des Empfängers: ##lastname##'
         . '<br>' . 'Link zur Antwortseite: ##link##'
         . '<br>' . 'Betroffene Kurse: ##courses##'
+        . '<br>' . 'Kurznamen betroffener Kurse: ##shortcourses-html##'
         . '</p>';
 $string['keep_course'] = 'Kurs behalten';
 $string['pluginname'] = 'Email-Schritt';
