@@ -118,6 +118,9 @@ class interaction_attention_table extends interaction_table {
         $step = step_manager::get_step_instance($row->stepinstanceid);
 
         $tools = interaction_manager::get_action_tools($step->subpluginname, $row->processid);
+        if (empty($tools)) {
+            return get_string('noactiontools', 'tool_lifecycle');
+        }
         foreach ($tools as $tool) {
             $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['alt']);
         }
