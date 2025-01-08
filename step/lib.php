@@ -135,6 +135,14 @@ abstract class libbase {
     }
 
     /**
+     * This method can be overriden, to add additional data validation to the instance form.
+     * @param array $error Array containing all errors.
+     * @param array $data Data passed from the moodle form to be validated
+     */
+    public function extend_add_instance_form_validation(&$error, $data) {
+    }
+
+    /**
      * This method can be overridden. It is called when a course and the
      * corresponding process get deleted.
      * @param process $process the process that was aborted.

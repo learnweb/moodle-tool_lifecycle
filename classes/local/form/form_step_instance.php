@@ -188,4 +188,28 @@ class form_step_instance extends \moodleform {
         }
     }
 
+    /**
+     * Validate the form.
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK (true allowed for backwards compatibility too).
+     * @throws \coding_exception
+     */
+    public function validation($data, $files) {
+        // Default form validation.
+        $error = parent::validation($data, $files);
+
+        // Required instance name for tool_lifecycle_step table.
+        if (empty($data['instancename'])) {
+            $error['instancename'] = get_string('required');
+        }
+
+        // Allow the subplugin to add its own validation.
+        $this->lib->extend_add_instance_form_validation($error, $data);
+
+        return $error;
+    }
+
 }
