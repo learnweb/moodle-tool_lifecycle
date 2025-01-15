@@ -21,6 +21,11 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\trigger_manager;
+
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
@@ -68,21 +73,16 @@ if ($hassiteconfig) {
         new moodle_url('/admin/tool/lifecycle/errors.php')));
 
     if ($ADMIN->fulltree) {
-        $triggers = core_component::get_plugin_list('lifecycletrigger');
-        foreach ($triggers as $trigger => $path) {
-            if (file_exists($settingsfile = $path . '/settings.php')) {
-                $settings->add(new admin_setting_heading('lifecycletriggersetting'.$trigger,
-                    get_string('trigger', 'tool_lifecycle') .
-                    ' - ' . get_string('pluginname', 'lifecycletrigger_' . $trigger), ''));
-                include($settingsfile);
-            }
+        $triggers = trigger_manager::get_trigger_types();
+        foreach ($triggers as $id => $trigger) {
+            $lib = lib_manager::get_trigger_lib($id);
+            $lib->get_plugin_settings();
         }
     }
 
-    $steps = core_component::get_plugin_list('lifecyclestep');
-    foreach ($steps as $step => $path) {
-        if (file_exists($settingsfile = $path . '/settings.php')) {
-            include($settingsfile);
-        }
+    $steps = step_manager::get_step_types();
+    foreach ($steps as $id => $step) {
+        $lib = lib_manager::get_step_lib($id);
+        $lib->get_plugin_settings();
     }
 }
