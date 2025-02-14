@@ -24,17 +24,17 @@
 
 use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\table\process_errors_table;
+use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-$PAGE->set_context(context_system::instance());
 require_login();
-require_capability('moodle/site:config', context_system::instance());
 
-admin_externalpage_setup('tool_lifecycle_process_errors');
-
-$PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/errors.php'));
+$syscontext = context_system::instance();
+$PAGE->set_url(new \moodle_url(urls::PROCESS_ERRORS));
+$PAGE->set_context($syscontext);
 
 // Action handling (delete, bulk-delete).
 $action = optional_param('action', null, PARAM_ALPHANUMEXT);
@@ -56,15 +56,22 @@ if ($action) {
     redirect($PAGE->url);
 }
 
-$PAGE->set_title(get_string('process_errors_header', 'tool_lifecycle'));
-$PAGE->set_heading(get_string('process_errors_header', 'tool_lifecycle'));
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
+
+$renderer = $PAGE->get_renderer('tool_lifecycle');
+
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('process_errors_header', 'tool_lifecycle');
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$id = optional_param('id', 'settings', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
 
 $table = new process_errors_table();
 $table->define_baseurl($PAGE->url);
 
 $PAGE->requires->js_call_amd('tool_lifecycle/tablebulkactions', 'init');
 
-echo $OUTPUT->header();
 $table->out(100, false);
 
 echo $OUTPUT->footer();

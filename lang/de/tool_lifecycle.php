@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life cycle langauge strings.
+ * Life cycle language strings.
  *
  * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
@@ -41,6 +41,8 @@ $string['adminsettings_edit_step_instance_heading'] = 'Schritt-Instanz für Work
 $string['adminsettings_edit_trigger_instance_heading'] = 'Trigger-Instanz für Workflow \'{$a}\'';
 $string['adminsettings_edit_workflow_definition_heading'] = 'Workflowdefinition';
 $string['adminsettings_heading'] = 'Workflow-Einstellungen';
+$string['adminsettings_nosteps'] = 'Keine zusätzlichen Schritt-Subplugins installiert';
+$string['adminsettings_notriggers'] = 'Keine zusätzlichen Trigger-Subplugins installiert';
 $string['adminsettings_workflow_definition_steps_heading'] = 'Workflowschritte';
 $string['backupcreated'] = 'Erstellt am';
 $string['backupworkflow'] = 'Workflow sichern';

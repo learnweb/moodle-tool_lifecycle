@@ -22,16 +22,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
+
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-$PAGE->set_context(context_system::instance());
-require_login(null, false);
-require_capability('moodle/site:config', context_system::instance());
+require_login();
 
-admin_externalpage_setup('tool_lifecycle_coursebackups');
-
-$PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/coursebackups.php'));
+$syscontext = context_system::instance();
+$PAGE->set_url(new \moodle_url(urls::COURSE_BACKUPS));
+$PAGE->set_context($syscontext);
 
 $mform = new \tool_lifecycle\local\form\form_courses_filter();
 
@@ -51,12 +52,16 @@ if ($mform->is_cancelled()) {
 
 $table = new tool_lifecycle\local\table\course_backups_table('tool_lifecycle_course_backups', $data);
 
-$PAGE->set_title(get_string('course_backups_list_header', 'tool_lifecycle'));
-$PAGE->set_heading(get_string('course_backups_list_header', 'tool_lifecycle'));
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
-echo $renderer->header();
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('course_backups_list_header', 'tool_lifecycle');
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$id = optional_param('id', 'settings', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
 
 echo '<br>';
 

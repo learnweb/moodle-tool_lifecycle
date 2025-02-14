@@ -166,27 +166,6 @@ class process_errors_table extends \table_sql {
     }
 
     /**
-     * Show custom nothing to display message.
-     * @return void
-     */
-    public function print_nothing_to_display() {
-        global $OUTPUT;
-
-        // Render the dynamic table header.
-        echo $this->get_dynamic_table_html_start();
-
-        // Render button to allow user to reset table preferences.
-        echo $this->render_reset_button();
-
-        $this->print_initials_bar();
-
-        echo $OUTPUT->heading(get_string('noprocesserrors', 'tool_lifecycle'));
-
-        // Render the dynamic table footer.
-        echo $this->get_dynamic_table_html_end();
-    }
-
-    /**
      * Hook that can be overridden in child classes to wrap a table in a form
      * for example. Called only when there is data to display and not
      * downloading.

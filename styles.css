@@ -125,3 +125,13 @@ span.tool_lifecycle-hint {
     top: 1em;
     right: 1em;
 }
+
+#page-admin-setting-tool_lifecycle #adminsettings h3 ul li.nav-item {
+    font-weight: normal;
+    font-size: medium;
+    line-height: 1.5;
+}
+
+#page-admin-setting-tool_lifecycle #adminsettings h3.main {
+    border-bottom: none;
+}

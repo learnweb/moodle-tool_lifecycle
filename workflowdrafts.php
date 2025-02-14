@@ -25,16 +25,16 @@
 use tool_lifecycle\action;
 use tool_lifecycle\local\table\workflow_definition_table;
 use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+
 require_login();
 
-global $OUTPUT, $PAGE, $DB;
-
-\tool_lifecycle\permission_and_navigation::setup_draft();
-
+$syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::WORKFLOW_DRAFTS));
+$PAGE->set_context($syscontext);
 
 $action = optional_param('action', null, PARAM_TEXT);
 if ($action) {
@@ -43,12 +43,17 @@ if ($action) {
     redirect($PAGE->url);
 }
 
-$PAGE->set_title(get_string('workflow_drafts_header', 'tool_lifecycle'));
-$PAGE->set_heading(get_string('workflow_drafts_header', 'tool_lifecycle'));
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
-echo $renderer->header();
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('workflow_drafts_header', 'tool_lifecycle');
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$id = optional_param('id', 'settings', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
+
 
 echo html_writer::link(new \moodle_url(urls::EDIT_WORKFLOW),
     get_string('add_workflow', 'tool_lifecycle'), ['class' => 'btn btn-primary mx-1']);
@@ -63,11 +68,5 @@ $table = new workflow_definition_table('tool_lifecycle_workflow_definitions');
 echo $OUTPUT->box_start("lifecycle-enable-overflow lifecycle-table");
 $table->out(10, false);
 echo $OUTPUT->box_end();
-
-echo \html_writer::link(new \moodle_url(urls::ACTIVE_WORKFLOWS),
-    get_string('active_workflows_list', 'tool_lifecycle'));
-echo '<br>';
-echo \html_writer::link(new \moodle_url(urls::DEACTIVATED_WORKFLOWS),
-    get_string('deactivated_workflows_list', 'tool_lifecycle'));
 
 echo $renderer->footer();

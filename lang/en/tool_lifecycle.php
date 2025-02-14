@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life cycle langauge strings.
+ * Life cycle language strings.
  *
  * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
@@ -41,6 +41,8 @@ $string['adminsettings_edit_step_instance_heading'] = 'Step instance for workflo
 $string['adminsettings_edit_trigger_instance_heading'] = 'Trigger for workflow \'{$a}\'';
 $string['adminsettings_edit_workflow_definition_heading'] = 'Workflow definition';
 $string['adminsettings_heading'] = 'Workflow settings';
+$string['adminsettings_nosteps'] = 'No additional step subplugins installed';
+$string['adminsettings_notriggers'] = 'No additional trigger subplugins installed';
 $string['adminsettings_workflow_definition_steps_heading'] = 'Workflow steps';
 $string['all_delays'] = 'All delays';
 $string['anonymous_user'] = 'Anonymous User';
@@ -74,6 +76,7 @@ $string['create_trigger'] = 'Create trigger';
 $string['create_workflow_from_existing'] = 'Copy new workflow from existing';
 $string['date'] = 'Due date';
 $string['deactivated'] = 'Deactivated';
+$string['deactivated_workflows_header'] = 'Deactivated workflows';
 $string['deactivated_workflows_list'] = 'List deactivated workflows';
 $string['deactivated_workflows_list_header'] = 'Deactivated workflows';
 $string['delayed_courses_header'] = 'Delayed courses';
@@ -208,7 +211,7 @@ $string['workflow_active'] = 'Active';
 $string['workflow_definition_heading'] = 'Workflow definitions';
 $string['workflow_delayforallworkflows'] = 'Delay for all workflows?';
 $string['workflow_delayforallworkflows_help'] = 'If ticked, the durations on top do not only delay the execution
-of this workflow for a course, but for all other workflows as well. Thus, until the time passes no process can be started
+of this workflow, but for all other workflows as well. Thus, until the time passes no process can be started
 for the respective course.';
 $string['workflow_displaytitle'] = 'Displayed workflow title';
 $string['workflow_displaytitle_help'] = 'This title is displayed to users when managing their courses.';

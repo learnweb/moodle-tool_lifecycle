@@ -24,15 +24,17 @@
 
 use tool_lifecycle\local\form\form_delays_filter;
 use tool_lifecycle\local\table\delayed_courses_table;
+use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-$PAGE->set_context(context_system::instance());
 require_login();
-require_capability('moodle/site:config', context_system::instance());
 
-admin_externalpage_setup('tool_lifecycle_delayed_courses');
+$syscontext = context_system::instance();
+$PAGE->set_url(new \moodle_url(urls::DELAYED_COURSES));
+$PAGE->set_context($syscontext);
 
 // Action handling (delete, bulk-delete).
 $action = optional_param('action', null, PARAM_ALPHANUMEXT);
@@ -118,10 +120,16 @@ if ($action) {
     redirect($PAGE->url);
 }
 
-$PAGE->set_url(new \moodle_url('/admin/tool/lifecycle/delayedcourses.php'));
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
 
-$PAGE->set_title(get_string('delayed_courses_header', 'tool_lifecycle'));
-$PAGE->set_heading(get_string('delayed_courses_header', 'tool_lifecycle'));
+$renderer = $PAGE->get_renderer('tool_lifecycle');
+
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('delayed_courses_header', 'tool_lifecycle');
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$id = optional_param('id', 'settings', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
 
 $mform = new form_delays_filter($PAGE->url);
 
@@ -142,7 +150,6 @@ if ($mform->is_cancelled()) {
 $table = new delayed_courses_table($data);
 $table->define_baseurl($PAGE->url);
 
-echo $OUTPUT->header();
 $mform->display();
 $table->out(100, false);
 

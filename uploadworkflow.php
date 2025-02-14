@@ -25,21 +25,19 @@
 use core\notification;
 use tool_lifecycle\local\backup\restore_lifecycle_workflow;
 use tool_lifecycle\local\form\form_upload_workflow;
-use tool_lifecycle\permission_and_navigation;
 use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+
 require_login();
-global $OUTPUT, $PAGE, $DB;
 
-permission_and_navigation::setup_draft();
-
+$syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::UPLOAD_WORKFLOW));
-$title = get_string('upload_workflow', 'tool_lifecycle');
-$PAGE->set_title($title);
-$PAGE->set_heading($title);
-$PAGE->navbar->add($title, $PAGE->url);
+$PAGE->set_context($syscontext);
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
 
 $form = new form_upload_workflow();
 if ($form->is_cancelled()) {
@@ -61,9 +59,13 @@ if ($data = $form->get_data()) {
         }
         $form = new form_upload_workflow(null, ['showforce' => true]);
 
-        /** @var \tool_lifecycle_renderer $renderer */
-        $renderer = $PAGE->get_renderer('tool_lifecycle');
-        $renderer->render_workflow_upload_form($form);
+        $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('upload_workflow', 'tool_lifecycle');
+        echo $renderer->header($heading);
+        $tabrow = tabs::get_tabrow();
+        $id = optional_param('id', 'settings', PARAM_TEXT);
+        $renderer->tabs($tabrow, $id);
+        $form->display();
+        echo $renderer->footer();
         die();
     } else {
         // Redirect to workflow page.
@@ -71,4 +73,10 @@ if ($data = $form->get_data()) {
     }
 }
 
-$renderer->render_workflow_upload_form($form);
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('upload_workflow', 'tool_lifecycle');
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$id = optional_param('id', 'settings', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
+$form->display();
+echo $renderer->footer();
