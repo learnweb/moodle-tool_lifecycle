@@ -53,8 +53,9 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
     /**
      * Write the tab row in page
      *
-     * @param $tabs the tabs
-     * @param $id  id of current page (can be empty)
+     * @param $tabs array the tabs
+     * @param $id  string id of current page (can be empty)
+     * @return void
      */
     public function tabs($tabs, $id) {
         echo $this->output->tabtree($tabs, $id);
