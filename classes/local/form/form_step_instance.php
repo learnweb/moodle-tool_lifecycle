@@ -108,7 +108,7 @@ class form_step_instance extends \moodleform {
         $mform->setType('action', PARAM_TEXT);
         $mform->setDefault('action', action::STEP_INSTANCE_FORM);
 
-        $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_lifecycle'));
+        $mform->addElement('header', 'step_settings_header', get_string('step_settings_header', 'tool_lifecycle'));
 
         $elementname = 'instancename';
         $mform->addElement('text', $elementname, get_string('step_instancename', 'tool_lifecycle'));
@@ -125,7 +125,7 @@ class form_step_instance extends \moodleform {
 
         // Insert the subplugin specific settings.
         if (!empty($this->lib->instance_settings())) {
-            $mform->addElement('header', 'step_settings_header', get_string('step_settings_header', 'tool_lifecycle'));
+            $mform->addElement('header', 'steptype_settings_header', get_string('steptype_settings_header', 'tool_lifecycle'));
             $this->lib->extend_add_instance_form_definition($mform);
         }
 

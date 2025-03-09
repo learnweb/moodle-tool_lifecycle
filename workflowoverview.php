@@ -24,6 +24,7 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+
 require_login();
 
 use tool_lifecycle\action;
@@ -33,30 +34,30 @@ use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\settings_type;
 use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
 
 global $OUTPUT, $PAGE, $DB;
 
+require_login();
+
 $workflowid = required_param('wf', PARAM_INT);
-
-$workflow = \tool_lifecycle\local\manager\workflow_manager::get_workflow($workflowid);
-\tool_lifecycle\permission_and_navigation::setup_workflow($workflow);
-
-$iseditable = workflow_manager::is_editable($workflow->id);
-
 $stepid = optional_param('step', null, PARAM_INT);
 
-$params = ['wf' => $workflow->id];
-$nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
+$workflow = \tool_lifecycle\local\manager\workflow_manager::get_workflow($workflowid);
+$iseditable = workflow_manager::is_editable($workflow->id);
 
+$params = ['wf' => $workflow->id];
 if ($stepid) {
     $params['step'] = $stepid;
 }
+$syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::WORKFLOW_DETAILS, $params));
+$PAGE->set_context($syscontext);
 $PAGE->set_title($workflow->title);
-$PAGE->set_heading($workflow->title);
+
+$nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
 
 $action = optional_param('action', null, PARAM_TEXT);
-
 if ($action) {
     step_manager::handle_action($action, optional_param('actionstep', null, PARAM_INT), $workflow->id);
     trigger_manager::handle_action($action, optional_param('actiontrigger', null, PARAM_INT), $workflow->id);
@@ -76,7 +77,17 @@ if ($action) {
     redirect($PAGE->url);
 }
 
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
+
 $renderer = $PAGE->get_renderer('tool_lifecycle');
+
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".
+    get_string('workflowoverview', 'tool_lifecycle').": ". $workflow->title;
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$id = optional_param('id', '', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
 
 $steps = \tool_lifecycle\local\manager\step_manager::get_step_instances($workflow->id);
 $triggers = \tool_lifecycle\local\manager\trigger_manager::get_triggers_for_workflow($workflow->id);
@@ -204,8 +215,6 @@ if ($showcoursecounts) {
     $data['coursesexcluded'] = $amounts['all']->excluded;
     $data['coursesetsize'] = $amounts['all']->coursesetsize;
 }
-
-echo $renderer->header();
 
 if (workflow_manager::is_editable($workflow->id)) {
     $addinstance = '';

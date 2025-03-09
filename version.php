@@ -18,14 +18,14 @@
  * Version details.
  *
  * @package    tool_lifecycle
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2025 Thomas Niedermaier Universität Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->version  = 2025020402;
+$plugin->version  = 2025030900;
 $plugin->component = 'tool_lifecycle';
 $plugin->requires = 2022112800; // Requires Moodle 4.1+.
 $plugin->release   = 'v4.5-r1';

@@ -113,7 +113,7 @@ class form_trigger_instance extends \moodleform {
         $mform->setType('action', PARAM_TEXT);
         $mform->setDefault('action', action::TRIGGER_INSTANCE_FORM);
 
-        $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_lifecycle'));
+        $mform->addElement('header', 'trigger_settings_header', get_string('trigger_settings_header', 'tool_lifecycle'));
 
         $elementname = 'instancename';
         $mform->addElement('text', $elementname, get_string('trigger_instancename', 'tool_lifecycle'));
@@ -131,7 +131,7 @@ class form_trigger_instance extends \moodleform {
 
         // Insert the subplugin specific settings.
         if (isset($this->lib) && !empty($this->lib->instance_settings())) {
-            $mform->addElement('header', 'trigger_settings_header', get_string('trigger_settings_header', 'tool_lifecycle'));
+            $mform->addElement('header', 'triggertype_settings_header', get_string('triggertype_settings_header', 'tool_lifecycle'));
             $this->lib->extend_add_instance_form_definition($mform);
         }
 

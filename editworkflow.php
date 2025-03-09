@@ -55,14 +55,6 @@ $PAGE->set_pagelayout('admin');
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".$title;
-echo $renderer->header($heading);
-$tabrow = tabs::get_tabrow();
-$id = optional_param('id', 'settings', PARAM_TEXT);
-$renderer->tabs($tabrow, $id);
-
-//$PAGE->set_title($title);
-//$PAGE->set_heading($title);
-//$PAGE->navbar->add($title, $PAGE->url);
 
 $form = new form_workflow_instance($PAGE->url, $workflow);
 if ($form->is_cancelled()) {
@@ -92,6 +84,10 @@ if ($data = $form->get_data()) {
     // New Workflow created, redirect to details page.
     redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]));
 }
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$id = optional_param('id', 'settings', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
 
 $form->display();
 

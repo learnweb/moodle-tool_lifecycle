@@ -39,15 +39,18 @@ $PAGE->set_context($syscontext);
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');
 
+$renderer = $PAGE->get_renderer('tool_lifecycle');
+
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('upload_workflow', 'tool_lifecycle');
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$renderer->tabs($tabrow, '');
+
 $form = new form_upload_workflow();
 if ($form->is_cancelled()) {
     // Cancelled, redirect back to workflow drafts.
     redirect(new moodle_url(urls::WORKFLOW_DRAFTS));
-}
-
-$renderer = $PAGE->get_renderer('tool_lifecycle');
-
-if ($data = $form->get_data()) {
+} else if ($data = $form->get_data()) {
     $xmldata = $form->get_file_content('backupfile');
     $restore = new restore_lifecycle_workflow($xmldata);
     $force = $data->force ?? false;
@@ -58,25 +61,11 @@ if ($data = $form->get_data()) {
             notification::add($error, notification::ERROR);
         }
         $form = new form_upload_workflow(null, ['showforce' => true]);
-
-        $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('upload_workflow', 'tool_lifecycle');
-        echo $renderer->header($heading);
-        $tabrow = tabs::get_tabrow();
-        $id = optional_param('id', 'settings', PARAM_TEXT);
-        $renderer->tabs($tabrow, $id);
-        $form->display();
-        echo $renderer->footer();
-        die();
     } else {
         // Redirect to workflow page.
         redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $restore->get_workflow()->id]));
     }
 }
 
-$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('upload_workflow', 'tool_lifecycle');
-echo $renderer->header($heading);
-$tabrow = tabs::get_tabrow();
-$id = optional_param('id', 'settings', PARAM_TEXT);
-$renderer->tabs($tabrow, $id);
 $form->display();
 echo $renderer->footer();

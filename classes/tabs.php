@@ -33,7 +33,7 @@ namespace tool_lifecycle;
 class tabs {
     public static function get_tabrow() {
 
-        $targeturl = new \moodle_url('/admin/settings.php', ['section' => 'tool_lifecycle', 'id' => 'settings']);
+        $targeturl = new \moodle_url('/admin/settings.php', ['section' => 'lifecycle']);
         $tabrow[] = new \tabobject('settings', $targeturl,
             get_string('general_config_header', 'tool_lifecycle'));
 

@@ -31,14 +31,21 @@ class admin_settings_builder {
      *
      * @var string
      */
-    private const ADMINTYPE = 'tool';
+    private const ADMINTYPE = 'tools';
+
+    /**
+     * The plugin type.
+     *
+     * @var string
+     */
+    private const PLUGINTYPE = 'tool';
 
     /**
      * The name of the plugin.
      *
      * @var string
      */
-    private const PLUGINNAME = self::ADMINTYPE.'_'.'lifecycle';
+    private const PLUGINNAME = self::PLUGINTYPE.'_'.'lifecycle';
 
     /**
      * Make this class not instantiable.
@@ -47,20 +54,19 @@ class admin_settings_builder {
     }
 
     /**
-     * Creates the settings for all subplugin instances and adds them to the admin settings page.
+     * Creates the settings for the lifecycle tool and adds them to the admin settings page.
      *
      * @return void
      */
     public static function create_settings(): void {
-        $subplugins = settings_api::get_subplugins();
 
         global $ADMIN;
         if (!$ADMIN->fulltree) {
-            self::create_settings_no_fulltree($subplugins);
+            self::create_settings_no_fulltree();
             return;
         }
 
-        self::create_settings_fulltree($subplugins);
+        self::create_settings_fulltree();
     }
 
     /**
@@ -71,7 +77,7 @@ class admin_settings_builder {
      *
      * @return void
      */
-    private static function create_settings_no_fulltree($subplugins): void {
+    private static function create_settings_no_fulltree(): void {
         self::add_admin_category();
         self::add_admin_settingpage(self::PLUGINNAME.'_subplugins', 'subplugins');
 
@@ -94,21 +100,22 @@ class admin_settings_builder {
      *
      * @return void
      */
-    private static function create_settings_fulltree($subplugins): void {
+    private static function create_settings_fulltree(): void {
         self::add_admin_category();
 
         foreach ($subplugins as $subplugin) {
-            $subpluginid = $subplugin->id;
-
+            if (file_exists($settingsfile = $subplugin->path . '/settings.php')) {
+                include($settingsfile);
+            }
             if (count($subplugins) <= 1) {
                 $settings = self::create_admin_settingpage(self::PLUGINNAME.'_configuration',
                     'configuration');
             } else {
-                $settings = self::create_admin_settingpage(self::PLUGINNAME.'_configuration_' . $subpluginid,
+                $settings = self::create_admin_settingpage(self::PLUGINNAME.'_configuration_' . $subplugin->id,
                     'configuration_subplugin', $subplugin->name);
             }
 
-            self::add_config_settings_fulltree($settings, $subpluginid);
+            self::add_config_settings_fulltree($settings, $subplugin->id);
 
             self::include_admin_settingpage($settings);
         }

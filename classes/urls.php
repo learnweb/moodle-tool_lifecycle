@@ -45,7 +45,7 @@ class urls {
     /** @var string Edits settings of triggers and steps */
     const EDIT_ELEMENT = '/admin/tool/lifecycle/editelement.php';
     /** @var string Edits settings of triggers and steps */
-    const CREATE_FROM_EXISTING = '/admin/tool/lifecycle/createworkflowfromexisting.php?id=workflowdrafts';
+    const CREATE_FROM_EXISTING = '/admin/tool/lifecycle/createworkflowfromexisting.php';
     /** @var string Lists active processes and finds courses */
     const ACTIVE_PROCESSES = '/admin/tool/lifecycle/activeprocesses.php';
     /** @var string Lists and search for delayed courses, deleting of delays */

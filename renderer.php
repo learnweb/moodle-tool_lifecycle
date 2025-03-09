@@ -51,18 +51,6 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Renders the workflow upload form including errors, which occured during upload.
-     * @param \tool_lifecycle\local\form\form_upload_workflow $form
-     * @throws coding_exception
-     */
-    public function render_workflow_upload_form($form) {
-        $this->header(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));
-        \tool_lifecycle\tabs::print_tabrow($renderer);
-        $form->display();
-        $this->footer();
-    }
-
-    /**
      * Write the tab row
      *
      * @param string $output HTML tab row.

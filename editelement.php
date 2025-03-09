@@ -32,6 +32,7 @@ use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\settings_type;
 use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
@@ -68,7 +69,6 @@ if ($elementid) {
 }
 
 $workflow = workflow_manager::get_workflow($workflowid);
-\tool_lifecycle\permission_and_navigation::setup_workflow($workflow);
 
 $params = [
     'type' => $type,
@@ -80,7 +80,10 @@ if ($elementid) {
     $params['wf'] = $workflow->id;
 }
 
+$syscontext = context_system::instance();
+$PAGE->set_context($syscontext);
 $PAGE->set_url(new moodle_url(urls::EDIT_ELEMENT, $params));
+$PAGE->set_title($workflow->title);
 
 if ($element) {
     $settings = settings_manager::get_settings($element->id, $type);
@@ -100,9 +103,11 @@ $title = get_string($titlestrid, 'tool_lifecycle');
 // Return to drafts, or to deactivated workflows if workflow was deactivated.
 $returnurl = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]);
 
-$PAGE->set_title($title);
-$PAGE->set_heading($title);
-$PAGE->navbar->add($title, $PAGE->url);
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
+$PAGE->navbar->add($workflow->title, $PAGE->url);
+
+$renderer = $PAGE->get_renderer('tool_lifecycle');
 
 if ($form->is_cancelled()) {
     // Cancelled, redirect back to workflow drafts.
@@ -143,15 +148,15 @@ if ($data = $form->get_data()) {
     redirect($returnurl);
 }
 
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".$workflow->title;
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$id = optional_param('id', '', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
+
 if (!workflow_manager::is_editable($workflow->id)) {
-    \core\notification::add(
-        get_string('active_workflow_not_changeable', 'tool_lifecycle'),
-        \core\notification::WARNING);
+    echo $OUTPUT->notification(get_string('active_workflow_not_changeable', 'tool_lifecycle'), 'warning');
 }
-
-$renderer = $PAGE->get_renderer('tool_lifecycle');
-
-echo $renderer->header();
 
 $form->display();
 

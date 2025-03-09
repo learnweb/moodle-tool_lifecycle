@@ -28,28 +28,34 @@ use tool_lifecycle\local\form\form_workflow_instance;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\table\workflow_definition_table;
 use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
-require_login();
 
 global $OUTPUT, $PAGE, $DB;
 
+require_login();
+
 $workflowid = optional_param('wf', null, PARAM_INT);
 
-\tool_lifecycle\permission_and_navigation::setup_draft();
-
-$title = get_string('create_workflow_from_existing', 'tool_lifecycle');
-
-$PAGE->set_title($title);
-$PAGE->set_heading($title);
-$PAGE->navbar->add($title, $PAGE->url);
+$syscontext = context_system::instance();
+$PAGE->set_context($syscontext);
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
+if ($workflowid) {
+    $PAGE->set_url(new \moodle_url(urls::CREATE_FROM_EXISTING), ['wf' => $workflowid]);
+} else {
+    $PAGE->set_url(new \moodle_url(urls::CREATE_FROM_EXISTING));
+}
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".
+    get_string('create_workflow_from_existing', 'tool_lifecycle');
+
 if ($workflowid) {
     $workflow = workflow_manager::get_workflow($workflowid);
-    $PAGE->set_url(new \moodle_url(urls::CREATE_FROM_EXISTING), ['wf' => $workflowid]);
     $workflow->title = get_string('workflow_duplicate_title', 'tool_lifecycle', $workflow->title);
     $form = new form_workflow_instance($PAGE->url, $workflow);
     if ($form->is_cancelled()) {
@@ -68,16 +74,16 @@ if ($workflowid) {
         // Workflow created, redirect to workflow detail page.
         redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $newworkflow->id]));
     }
-
-    echo $renderer->header();
+    echo $renderer->header($heading);
+    $tabrow = tabs::get_tabrow();
+    $renderer->tabs($tabrow, '');
     $form->display();
     echo $renderer->footer();
-
 } else {
-    $PAGE->set_url(new \moodle_url(urls::CREATE_FROM_EXISTING));
-
+    echo $renderer->header($heading);
+    $tabrow = tabs::get_tabrow();
+    $renderer->tabs($tabrow, '');
     $table = new \tool_lifecycle\local\table\select_workflow_table('tool_lifecycle-select-workflow');
-    echo $renderer->header();
     $table->out();
     echo $renderer->footer();
 }
