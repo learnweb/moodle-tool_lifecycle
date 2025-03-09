@@ -87,7 +87,7 @@ $string['draft'] = 'Entwurf';
 $string['duplicateworkflow'] = 'Workflow duplizieren';
 $string['edit_step'] = 'Step bearbeiten';
 $string['edit_trigger'] = 'Trigger bearbeiten';
-$string['editworkflow'] = 'Allgemeine Einstellungen bearbeiten';
+$string['editworkflow'] = 'Workflow bearbeiten';
 $string['error_wrong_trigger_selected'] = 'Sie haben einen nichtmanuellen Trigger ausgewählt.';
 $string['errorbackuppath'] = "Ein Fehler ist aufgetreten beim Versuchen das Backup Verzeichnis zu erstellen.
 Ihnen fehlen wahrscheinlich die Berechtigung dazu. Bitte überprüfen Sie den Pfad unter
@@ -211,3 +211,4 @@ $string['workflow_trigger'] = 'Trigger für den Workflow';
 $string['workflownotfound'] = 'Es konnte kein Workflow mit der ID {$a} gefunden werden!';
 $string['workflowoverview'] = 'Workflow ansehen';
 $string['workflowoverview_list_header'] = 'Details zu Workflows';
+$string['workflowsettings'] = 'Workflow Einstellungen';

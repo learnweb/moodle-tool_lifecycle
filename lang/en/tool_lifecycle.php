@@ -103,7 +103,7 @@ $string['draft'] = 'Draft';
 $string['duplicateworkflow'] = 'Duplicate workflow';
 $string['edit_step'] = 'Edit step';
 $string['edit_trigger'] = 'Edit trigger';
-$string['editworkflow'] = 'Edit general settings';
+$string['editworkflow'] = 'Edit workflow';
 $string['error_wrong_trigger_selected'] = 'You tried to request a non-manual trigger.';
 $string['errorbackuppath'] = "Error while trying to create the backup directory. You might be missing the permission to do so.
 Please check your path at Site administration/Plugins/Admin tools/Life Cycle/General & subplugins/backup_path.";
@@ -245,3 +245,4 @@ $string['workflow_was_not_imported'] = 'The workflow was not imported!';
 $string['workflownotfound'] = 'Workflow with id {$a} could not be found';
 $string['workflowoverview'] = 'View workflow';
 $string['workflowoverview_list_header'] = 'Details of Workflows';
+$string['workflowsettings'] = 'Workflow settings';

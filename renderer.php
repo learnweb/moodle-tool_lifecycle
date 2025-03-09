@@ -42,6 +42,7 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
      * Write the page header
      *
      * @param string $title optional page title.
+     * @throws \core\exception\coding_exception
      */
     public function header($title = null) {
         echo $this->output->header();
@@ -53,9 +54,8 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
     /**
      * Write the tab row in page
      *
-     * @param $tabs array the tabs
-     * @param $id  string id of current page (can be empty)
-     * @return void
+     * @param array $tabs the tabs
+     * @param string $id  ID of current page (can be empty)
      */
     public function tabs($tabs, $id) {
         echo $this->output->tabtree($tabs, $id);

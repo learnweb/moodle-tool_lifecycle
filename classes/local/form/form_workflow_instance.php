@@ -66,7 +66,7 @@ class form_workflow_instance extends \moodleform {
             $mform->setDefault($elementname, $this->workflow->id);
         }
 
-        $mform->addElement('header', 'general_settings_header', get_string('general_settings_header', 'tool_lifecycle'));
+        $mform->addElement('header', 'general_settings_header', get_string('workflowsettings', 'tool_lifecycle'));
 
         $elementname = 'title';
         $mform->addElement('text', $elementname, get_string('workflow_title', 'tool_lifecycle'));
