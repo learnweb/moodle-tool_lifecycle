@@ -52,31 +52,31 @@ class view_controller {
      * @throws \invalid_parameter_exception
      */
     public function handle_view($renderer, $filterdata) {
-        global $DB;
+        global $DB, $USER;
 
-        $courses = get_user_capability_course('tool/lifecycle:managecourses', null, false);
+        $coursesasmanager = get_user_capability_course('tool/lifecycle:managecourses', null, false);
+        $courseids1 = array_column($coursesasmanager, 'id');
+        $usercourses = enrol_get_users_courses($USER->id);
+        $courseids2 = array_column($usercourses, 'id');
+        $courses = array_intersect($courseids1, $courseids2);
         if (!$courses) {
             echo 'no courses';
             // TODO show error.
             return;
         }
 
-        $arrayofcourseids = [];
-        foreach ($courses as $course) {
-            $arrayofcourseids[$course->id] = $course->id;
-        }
-        $listofcourseids = implode(',', $arrayofcourseids);
-
-        $processes = $DB->get_recordset_sql("SELECT p.id as processid, c.id as courseid, c.fullname as coursefullname, " .
-        "c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname " .
+        [$insql, $inparams] = $DB->get_in_or_equal($courses);
+        $sql = "SELECT p.id as processid, c.id as courseid, c.fullname as coursefullname, " .
+            "c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname " .
             "FROM {tool_lifecycle_process} p join " .
             "{course} c on p.courseid = c.id join " .
             "{tool_lifecycle_step} s ".
             "on p.workflowid = s.workflowid AND p.stepindex = s.sortindex " .
-            "WHERE p.courseid IN (". $listofcourseids . ")");
+            "WHERE p.courseid $insql";
+        $processes = $DB->get_recordset_sql($sql, $inparams);
 
         $requiresinteraction = [];
-        $remainingcourses = $arrayofcourseids;
+        $remainingcourses = $inparams;
 
         foreach ($processes as $process) {
             $step = step_manager::get_step_instance($process->stepinstanceid);
