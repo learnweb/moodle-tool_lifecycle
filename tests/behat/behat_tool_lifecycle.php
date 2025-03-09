@@ -439,4 +439,13 @@ class behat_tool_lifecycle extends behat_base {
     public function i_am_on_workflowdrafts_page() {
         $this->execute('behat_general::i_visit', ['/admin/tool/lifecycle/workflowdrafts.php']);
     }
+
+    /**
+     * Open the activeworkflows page.
+     *
+     * @Given /^I am on activeworkflows page$/
+     */
+    public function i_am_on_activeworkflows_page() {
+        $this->execute('behat_general::i_visit', ['/admin/tool/lifecycle/activeworkflows.php']);
+    }
 }
