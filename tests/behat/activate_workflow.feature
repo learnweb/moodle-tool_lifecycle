@@ -4,7 +4,7 @@ Feature: Add a workflow definition activate it
 
   Scenario: Add a new workflow definition with steps and rearrange
     Given I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow drafts" in site administration
+    And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
@@ -24,12 +24,12 @@ Feature: Add a workflow definition activate it
     And I should see "startdatedelay"
     When I select "Email step" from the "tool_lifecycle-choose-step" singleselect
     And I set the following fields to these values:
-      | Instance name              | Email step                  |
-      | responsetimeout[number]    | 14                          |
-      | responsetimeout[timeunit]  | days                        |
-      | Subject template           | Subject                     |
-      | Content plain text template           | Content                     |
-      | Content HTML Template      | Content HTML                |
+      | Instance name               | Email step                  |
+      | responsetimeout[number]     | 14                          |
+      | responsetimeout[timeunit]   | days                        |
+      | Subject template            | Subject                     |
+      | Content plain text template | Content                     |
+      | Content HTML Template       | Content HTML                |
     And I press "Save changes"
     And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Create backup step"

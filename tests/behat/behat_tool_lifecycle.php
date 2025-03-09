@@ -431,4 +431,12 @@ class behat_tool_lifecycle extends behat_base {
         $this->getSession()->visit($this->locate_path('/admin/tool/lifecycle/view.php'));
     }
 
+    /**
+     * Open the workflowdrafts page.
+     *
+     * @Given /^I am on workflowdrafts page$/
+     */
+    public function i_am_on_workflowdrafts_page() {
+        $this->execute('behat_general::i_visit', ['/admin/tool/lifecycle/workflowdrafts.php']);
+    }
 }
