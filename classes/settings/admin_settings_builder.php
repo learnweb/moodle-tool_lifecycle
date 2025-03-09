@@ -16,8 +16,6 @@
 
 namespace tool_lifecycle\settings;
 
-use tool_lifecycle\local\settings_api;
-
 /**
  * Static admin setting builder class, which is used, to create and to add admin settings for tool_lifecycle.
  *

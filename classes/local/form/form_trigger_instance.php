@@ -131,7 +131,8 @@ class form_trigger_instance extends \moodleform {
 
         // Insert the subplugin specific settings.
         if (isset($this->lib) && !empty($this->lib->instance_settings())) {
-            $mform->addElement('header', 'triggertype_settings_header', get_string('triggertype_settings_header', 'tool_lifecycle'));
+            $mform->addElement('header', 'triggertype_settings_header',
+                get_string('triggertype_settings_header', 'tool_lifecycle'));
             $this->lib->extend_add_instance_form_definition($mform);
         }
 

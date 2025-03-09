@@ -56,7 +56,7 @@ if ($hassiteconfig) {
     } else {  // No fulltree, settings detail page.
         $tabrow = tabs::get_tabrow();
         $id = optional_param('id', 'settings', PARAM_TEXT);
-        $tabs = array($tabrow);
+        $tabs = [$tabrow];
         $output = print_tabs($tabs, $id, null, null, true);
 
         // Main config page.

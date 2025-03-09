@@ -20,17 +20,26 @@
  * @copyright  2025 Thomas Niedermaier Universität Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle;
 
+use core\exception\moodle_exception;
+
 /**
- * Get HTML of the tab row
+ * Class to generate a tab row for navigation within this plugin
  *
  * @package tool_lifecycle
  * @copyright  2025 Thomas Niedermaier Universität Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class tabs {
+    /**
+     * Generates a Moodle tabrow i.e. an array of tabs
+     *
+     * @return array
+     * @throws \coding_exception
+     * @throws moodle_exception
+     */
     public static function get_tabrow() {
 
         $targeturl = new \moodle_url('/admin/settings.php', ['section' => 'lifecycle']);
