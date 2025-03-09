@@ -12,7 +12,7 @@ Feature: Add a workflow definition activate it
     When I press "Save changes"
     Then I should see "Displayed to teachers as Teachers view on workflow"
     When I select "Start date delay trigger" from the "tool_lifecycle-choose-trigger" singleselect
-    Then I should see "Create trigger"
+    Then I should see "Settings of the trigger"
     And I should see "Specific settings of the trigger type"
     When I set the following fields to these values:
       | instancename     | delay trigger              |
