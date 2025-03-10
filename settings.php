@@ -30,28 +30,53 @@ use tool_lifecycle\tabs;
 // Check for the moodle/site:config permission.
 if ($hassiteconfig) {
 
-    $settings = new admin_settingpage('lifecycle', get_string('pluginname', 'tool_lifecycle'));
-    $ADMIN->add('tools', $settings);
-
     $triggers = core_component::get_plugin_list('lifecycletrigger');
     $steps = core_component::get_plugin_list('lifecyclestep');
 
     if (!$ADMIN->fulltree) {
-        // Include settings page of each trigger subplugin, if there is one.
+        $stepsortriggersettings = false;
+        // Check if there are trigger settings pages.
         if ($triggers) {
             foreach ($triggers as $trigger => $path) {
                 if (file_exists($settingsfile = $path . '/settings.php')) {
-                    include($settingsfile);
+                    $stepsortriggersettings = true;
+                    break;
                 }
             }
         }
-        // Include settings page of each step subplugin, if there is one.
-        if ($steps) {
+        // If no trigger settings pages check if there are step settings pages.
+        if (!$stepsortriggersettings && $steps) {
             foreach ($steps as $step => $path) {
                 if (file_exists($settingsfile = $path . '/settings.php')) {
-                    include($settingsfile);
+                    $stepsortriggersettings = true;
+                    break;
                 }
             }
+        }
+        if ($stepsortriggersettings) {
+            $settings->add(new admin_category('lifecycle',
+                get_string('pluginname', 'tool_lifecycle')
+            ));
+            $settings->add('lifecycle', admin_settingpage('lifecycle', get_string('general_config_header', 'tool_lifecycle')));
+            // Include settings page of each trigger subplugin, if there is one.
+            if ($triggers) {
+                foreach ($triggers as $trigger => $path) {
+                    if (file_exists($settingsfile = $path . '/settings.php')) {
+                        include($settingsfile);
+                    }
+                }
+            }
+            // Include settings page of each step subplugin, if there is one.
+            if ($steps) {
+                foreach ($steps as $step => $path) {
+                    if (file_exists($settingsfile = $path . '/settings.php')) {
+                        include($settingsfile);
+                    }
+                }
+            }
+        } else {
+            $settings = new admin_settingpage('lifecycle', get_string('pluginname', 'tool_lifecycle'));
+            $ADMIN->add('tools', $settings);
         }
     } else {  // No fulltree, settings detail page.
         $tabrow = tabs::get_tabrow();
@@ -60,6 +85,7 @@ if ($hassiteconfig) {
         $output = print_tabs($tabs, $id, null, null, true);
 
         // Main config page.
+        $settings = new admin_settingpage('lifecycle', get_string('pluginname', 'tool_lifecycle'));
         $settings->add(new admin_setting_heading('lifecycle_settings_heading',
             $output,  html_writer::span(get_string('general_settings_header', 'tool_lifecycle'), 'h3')));
         $settings->add(new admin_setting_configduration('tool_lifecycle/duration',
@@ -81,9 +107,6 @@ if ($hassiteconfig) {
             foreach ($triggers as $trigger => $path) {
                 $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
                     get_string('pluginname', 'lifecycletrigger_' . $trigger), ''));
-                if (file_exists($settingsfile = $path . '/settings.php')) {
-                    include($settingsfile);
-                }
             }
         } else {
             $settings->add(new admin_setting_heading('adminsettings_notriggers',
@@ -96,13 +119,11 @@ if ($hassiteconfig) {
             foreach ($steps as $step => $path) {
                 $settings->add(new admin_setting_description('lifecyclestepsetting_'.$step,
                     get_string('pluginname', 'lifecyclestep_' . $step), ''));
-                if (file_exists($settingsfile = $path . '/settings.php')) {
-                    include($settingsfile);
-                }
             }
         } else {
             $settings->add(new admin_setting_heading('adminsettings_nosteps',
                 get_string('adminsettings_nosteps', 'tool_lifecycle'), ''));
         }
+        $ADMIN->add('tools', $settings);
     }
 }
