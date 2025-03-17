@@ -60,10 +60,7 @@ class process {
     public $errortimecreated;
 
     /** @var string $errorhash process error hash */
-    public $errormessage;
-
-    /** @var int $waiting flag if process is waiting */
-    public $waiting;
+    public $errorhash;
 
     /**
      * Process constructor.
