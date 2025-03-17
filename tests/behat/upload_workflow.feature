@@ -6,6 +6,6 @@ Feature: Upload a workflow definition
     Given I log in as "admin"
     And I am on workflowdrafts page
     And I click on "Upload workflow" "link"
-    And I upload "admin/tool/lifecycle/tests/fixtures/simpleworkflow.xml" file to "backupfile" filemanager
+    And I upload "admin/tool/lifecycle/tests/fixtures/simpleworkflow.xml" file to "Upload workflow" filemanager
     And I press "Upload"
     Then I should see "A Workflow"
