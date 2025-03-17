@@ -257,6 +257,7 @@ class process_manager {
         global $DB;
 
         $procerror = new stdClass();
+        $procerror->id = $process->id;
         $procerror->courseid = $process->courseid;
         $procerror->workflowid = $process->workflowid;
         $procerror->stepindex = $process->stepindex;
