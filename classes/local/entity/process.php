@@ -50,18 +50,6 @@ class process {
     /** @var /timestamp $timestepchanged Date the process was moved to the current step instance */
     public $timestepchanged;
 
-    /** @var string $errormessage process error message */
-    public $errormessage;
-
-    /** @var string $errortrace process error trace message */
-    public $errortrace;
-
-    /** @var /timestamp $errortimecreated Date the process was marked as error */
-    public $errortimecreated;
-
-    /** @var string $errorhash process error hash */
-    public $errorhash;
-
     /**
      * Process constructor.
      * @param int $id Id of the process.
