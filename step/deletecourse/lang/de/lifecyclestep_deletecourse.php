@@ -23,6 +23,7 @@
  */
 
 $string['deletecourse_maximumdeletionspercron'] = 'Maximale Anzahl an Kurslöschungen per cron';
+$string['plugindescription'] = 'Initiiert das Löschen der getriggerten Kurse.';
 $string['pluginname'] = 'Kurslöschen-Schritt';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 

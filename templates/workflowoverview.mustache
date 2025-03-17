@@ -72,7 +72,7 @@
 }}
 <div class="d-flex" id="lifecycle-workflow-details">
     <div class="wf-wrapper">
-        <div class="bg-light d-inline-block p-3 position-relative" style="max-width: 800px;">
+        <div class="bg-light d-inline-block p-3 position-relative mb-2" style="max-width: 800px;">
             <a class="edit-pen" href="{{{editsettingslink}}}">{{#pix}} i/edit, core, {{/pix}}</a>
             <h4 class="pr-5">{{title}}</h4>
             <span>{{#str}}details:displaytitle, tool_lifecycle, {{displaytitle}}{{/str}}</span><br>
@@ -80,8 +80,8 @@
             <span>{{#str}}details:finishdelay, tool_lifecycle, {{finishdelay}}{{/str}}</span><br>
             <span>{{# delayglobally }}{{#str}}details:globaldelay_yes, tool_lifecycle{{/str}}{{/ delayglobally }}
                 {{^delayglobally}}{{#str}}details:globaldelay_no, tool_lifecycle{{/str}}{{/delayglobally}}</span>
+            <div class="mt-2">{{{addinstance}}}</div>
         </div>
-        <div class="mt-5 mb-3">{{{addinstance}}}</div>
         <div class="wf-trigger-block workflow-item">
             <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}} {{{triggerhelp}}}</h5>
             {{#showcoursecounts}}

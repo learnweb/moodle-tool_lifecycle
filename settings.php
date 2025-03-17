@@ -33,6 +33,11 @@ if ($hassiteconfig) {
     $triggers = core_component::get_plugin_list('lifecycletrigger');
     $steps = core_component::get_plugin_list('lifecyclestep');
 
+    $ADMIN->add('tools', new admin_category('lifecycle',
+        get_string('pluginname', 'tool_lifecycle')));
+    $settings = new admin_settingpage('lifecycle_settings',
+        get_string('general_config_header', 'tool_lifecycle'));
+
     if (!$ADMIN->fulltree) {
         $stepsortriggersettings = false;
         // Check if there are trigger settings pages.
@@ -44,7 +49,7 @@ if ($hassiteconfig) {
                 }
             }
         }
-        // If no trigger settings pages check if there are step settings pages.
+        // Check if there are step settings pages.
         if (!$stepsortriggersettings && $steps) {
             foreach ($steps as $step => $path) {
                 if (file_exists($settingsfile = $path . '/settings.php')) {
@@ -54,10 +59,6 @@ if ($hassiteconfig) {
             }
         }
         if ($stepsortriggersettings) {
-            $settings->add(new admin_category('lifecycle',
-                get_string('pluginname', 'tool_lifecycle')
-            ));
-            $settings->add('lifecycle', admin_settingpage('lifecycle', get_string('general_config_header', 'tool_lifecycle')));
             // Include settings page of each trigger subplugin, if there is one.
             if ($triggers) {
                 foreach ($triggers as $trigger => $path) {
@@ -74,9 +75,6 @@ if ($hassiteconfig) {
                     }
                 }
             }
-        } else {
-            $settings = new admin_settingpage('lifecycle', get_string('pluginname', 'tool_lifecycle'));
-            $ADMIN->add('tools', $settings);
         }
     } else {  // No fulltree, settings detail page.
         $tabrow = tabs::get_tabrow();
@@ -85,7 +83,6 @@ if ($hassiteconfig) {
         $output = print_tabs($tabs, $id, null, null, true);
 
         // Main config page.
-        $settings = new admin_settingpage('lifecycle', get_string('pluginname', 'tool_lifecycle'));
         $settings->add(new admin_setting_heading('lifecycle_settings_heading',
             $output,  html_writer::span(get_string('general_settings_header', 'tool_lifecycle'), 'h3')));
         $settings->add(new admin_setting_configduration('tool_lifecycle/duration',
@@ -106,7 +103,8 @@ if ($hassiteconfig) {
                 get_string('triggers_installed', 'tool_lifecycle'), ''));
             foreach ($triggers as $trigger => $path) {
                 $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
-                    get_string('pluginname', 'lifecycletrigger_' . $trigger), ''));
+                    get_string('pluginname', 'lifecycletrigger_' . $trigger),
+                    get_string('plugindescription', 'lifecycletrigger_' . $trigger)));
             }
         } else {
             $settings->add(new admin_setting_heading('adminsettings_notriggers',
@@ -118,12 +116,13 @@ if ($hassiteconfig) {
                 get_string('steps_installed', 'tool_lifecycle'), ''));
             foreach ($steps as $step => $path) {
                 $settings->add(new admin_setting_description('lifecyclestepsetting_'.$step,
-                    get_string('pluginname', 'lifecyclestep_' . $step), ''));
+                    get_string('pluginname', 'lifecyclestep_' . $step),
+                    get_string('plugindescription', 'lifecyclestep_' . $step)));
             }
         } else {
             $settings->add(new admin_setting_heading('adminsettings_nosteps',
                 get_string('adminsettings_nosteps', 'tool_lifecycle'), ''));
         }
-        $ADMIN->add('tools', $settings);
+        $ADMIN->add('lifecycle', $settings);
     }
 }

@@ -23,7 +23,8 @@
  */
 
 $string['delay'] = 'Zeit seit Kursstartdatum, bis ein Prozess gestartet wird';
-$string['delay_help'] = 'Der Trigger wird ausgeführt, falls die Zeit, die seit dem Start des Kurses vergangen ist, größer ist, als der angegebene Zeitraum.';
+$string['delay_help'] = 'Dieser Trigger wird ausgeführt, sobald die Zeit, die seit dem Start des Kurses vergangen ist, größer ist als der angegebene Zeitraum.';
+$string['plugindescription'] = 'Trigger des Lifecycle-Tools, der bestimmt, wieviel Zeit nach dem Startdatum des Kurses verstreichen muss ehe dieser Workflow startet.';
 $string['pluginname'] = 'Startdatumsabstand - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 

@@ -47,6 +47,7 @@ $string['email_subject_help'] = 'Stellen Sie die Vorlage für den Emailbetreff e
         . '<br>' . 'Betroffene Kurse: ##courses##'
         . '</p>';
 $string['keep_course'] = 'Kurs behalten';
+$string['plugindescription'] = 'In diesem Schritt werden Kursverantwortliche von der bevorstehenden Löschung eines getriggerten Kurses informiert.';
 $string['pluginname'] = 'Email-Schritt';
 $string['privacy:metadata:lifecyclestep_email:courseid'] = 'Die ID des Kurses, zu dem E-Mail-Benachrichtigungen versandt werden';
 $string['privacy:metadata:lifecyclestep_email:instanceid'] = 'Die ID der Schritt-Instanz, der E-Mails verschickt';

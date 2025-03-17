@@ -101,6 +101,8 @@ class form_trigger_instance extends \moodleform {
      * Defines forms elements
      */
     public function definition() {
+        global $OUTPUT;
+
         $mform = $this->_form;
 
         $mform->addElement('hidden', 'id'); // Save the record's id.

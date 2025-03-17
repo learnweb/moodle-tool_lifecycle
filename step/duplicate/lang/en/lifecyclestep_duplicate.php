@@ -26,10 +26,9 @@ $string['action_new_course_data'] = '{$a} supplied new course name';
 $string['duplicate:enterdata'] = 'Enter data for course duplication';
 $string['duplicate_course_header'] = 'Duplicate course';
 $string['duplicate_form'] = 'Enter data';
+$string['plugindescription'] = 'Duplicates each triggered course.';
 $string['pluginname'] = 'Duplicate step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
-
-
 $string['status_message_duplication'] = 'Duplicated course will be available shortly.';
 $string['status_message_form'] = 'Additional information required';
 

@@ -40,34 +40,90 @@ class tabs {
      * @throws \coding_exception
      * @throws moodle_exception
      */
-    public static function get_tabrow() {
+    public static function get_tabrow($activelink = false, $deactivatelink = false, $draftlink = false) {
+        global $DB;
 
-        $targeturl = new \moodle_url('/admin/settings.php', ['section' => 'lifecycle']);
+        $classnotnull = 'badge badge-primary badge-pill ml-1';
+        $classnull = 'badge badge-secondary badge-pill ml-1';
+
+        // Get number of drafts.
+        $sql = "select count(id)
+        from {tool_lifecycle_workflow}
+        where timeactive IS NULL AND timedeactive IS NULL";
+        $i = $DB->count_records_sql($sql);
+        $drafts = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
+
+        // Get number of active workflows.
+        $sql = "select count(id)
+        from {tool_lifecycle_workflow}
+        where timeactive IS NOT NULL";
+        $i = $DB->count_records_sql($sql);
+        $activewf = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
+
+        // Get number of deactivated workflows.
+        $sql = "select count(id)
+        from {tool_lifecycle_workflow}
+        where timeactive IS NULL AND timedeactive IS NOT NULL";
+        $i = $DB->count_records_sql($sql);
+        $deactivatedewf = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
+
+        // Get number of delayed courses.
+        $sql = "select count(id)
+        from {tool_lifecycle_delayed}";
+        $i = $DB->count_records_sql($sql);
+        $delayedcourses = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
+
+        // Get number of lifecycle course backups.
+        $sql = "select count(id)
+        from {tool_lifecycle_backups}";
+        $i = $DB->count_records_sql($sql);
+        $coursebackups = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
+
+        // Get number of stores lifecycle errors.
+        $sql = "select count(id)
+        from {tool_lifecycle_proc_error}";
+        $i = $DB->count_records_sql($sql);
+        $lcerrors = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
+
+        // General Settings and Subplugins.
+        $targeturl = new \moodle_url('/admin/category.php', ['category' => 'lifecycle']);
         $tabrow[] = new \tabobject('settings', $targeturl,
             get_string('general_config_header', 'tool_lifecycle'));
 
+        // Tab to the draft workflows page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/workflowdrafts.php', ['id' => 'workflowdrafts']);
         $tabrow[] = new \tabobject('workflowdrafts', $targeturl,
-            get_string('workflow_drafts_header', 'tool_lifecycle'));
+            get_string('workflow_drafts_header', 'tool_lifecycle').$drafts,
+            get_string('workflow_drafts_header', 'tool_lifecycle'), $draftlink);
 
+        // Tab to the active workflows page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/activeworkflows.php', ['id' => 'activeworkflows']);
         $tabrow[] = new \tabobject('activeworkflows', $targeturl,
-            get_string('active_workflows_header', 'tool_lifecycle'));
+            get_string('active_workflows_header', 'tool_lifecycle').$activewf,
+            get_string('active_workflows_header', 'tool_lifecycle'), $activelink);
 
+        // Tab to the deactivated workflows page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php', ['id' => 'deactivatedworkflows']);
         $tabrow[] = new \tabobject('deactivatedworkflows', $targeturl,
-            get_string('deactivated_workflows_header', 'tool_lifecycle'));
+            get_string('deactivated_workflows_header', 'tool_lifecycle').$deactivatedewf,
+            get_string('deactivated_workflows_header', 'tool_lifecycle'), $deactivatelink);
 
-        $targeturl = new \moodle_url('/admin/tool/lifecycle/coursebackups.php', ['id' => 'coursebackups']);
-        $tabrow[] = new \tabobject('coursebackups', $targeturl,
-            get_string('course_backups_list_header', 'tool_lifecycle'));
-
+        // Tab to the delayed courses list page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/delayedcourses.php', ['id' => 'delayedcourses']);
         $tabrow[] = new \tabobject('delayedcourses', $targeturl,
+            get_string('delayed_courses_header', 'tool_lifecycle').$delayedcourses,
             get_string('delayed_courses_header', 'tool_lifecycle'));
 
+        // Tab to the course backups list page.
+        $targeturl = new \moodle_url('/admin/tool/lifecycle/coursebackups.php', ['id' => 'coursebackups']);
+        $tabrow[] = new \tabobject('coursebackups', $targeturl,
+            get_string('course_backups_list_header', 'tool_lifecycle').$coursebackups,
+            get_string('course_backups_list_header', 'tool_lifecycle'));
+
+        // Tab to the lifecycle errors page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/errors.php', ['id' => 'errors']);
         $tabrow[] = new \tabobject('errors', $targeturl,
+            get_string('process_errors_header', 'tool_lifecycle').$lcerrors,
             get_string('process_errors_header', 'tool_lifecycle'));
 
         return $tabrow;

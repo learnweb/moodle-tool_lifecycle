@@ -45,6 +45,8 @@ $stepid = optional_param('step', null, PARAM_INT);
 
 $workflow = \tool_lifecycle\local\manager\workflow_manager::get_workflow($workflowid);
 $iseditable = workflow_manager::is_editable($workflow->id);
+$isactive = workflow_manager::is_active($workflow->id);
+$isdeactivated = workflow_manager::is_deactivated($workflow->id);
 
 $params = ['wf' => $workflow->id];
 if ($stepid) {
@@ -85,8 +87,22 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".
     get_string('workflowoverview', 'tool_lifecycle').": ". $workflow->title;
 echo $renderer->header($heading);
-$tabrow = tabs::get_tabrow();
-$id = optional_param('id', '', PARAM_TEXT);
+$activelink = false;
+$deactivatedlink = false;
+$draftlink = false;
+if ($isactive) {  // Active workflow.
+    $id = 'activeworkflows';
+    $activelink = true;
+} else {
+    if ($isdeactivated) { // Deactivated workflow.
+        $id = 'deactivatedworkflows';
+        $deactivatedlink = true;
+    } else { // Draft.
+        $id = 'workflowdrafts';
+        $draftlink = true;
+    }
+}
+$tabrow = tabs::get_tabrow($activelink, $deactivatedlink, $draftlink);
 $renderer->tabs($tabrow, $id);
 
 $steps = \tool_lifecycle\local\manager\step_manager::get_step_instances($workflow->id);
@@ -118,12 +134,12 @@ foreach ($triggers as $trigger) {
     // FUTURE: Nice to have Icon for each subplugin.
     $trigger = (object)(array) $trigger; // Cast to normal object to be able to set dynamic properties.
     $actionmenu = new action_menu([
-        new action_menu_link_secondary(
+        new action_menu_link_primary(
             new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::TRIGGER, 'elementid' => $trigger->id]),
             new pix_icon('i/edit', $str['edit']), $str['edit']),
     ]);
     if ($iseditable) {
-        $actionmenu->add(new action_menu_link_secondary(
+        $actionmenu->add(new action_menu_link_primary(
             new moodle_url($PAGE->url,
                 ['action' => action::TRIGGER_INSTANCE_DELETE, 'sesskey' => sesskey(), 'actiontrigger' => $trigger->id]),
             new pix_icon('t/delete', $str['delete']), $str['delete'])
@@ -229,8 +245,8 @@ if (workflow_manager::is_editable($workflow->id)) {
         }
         $selectabletriggers[$triggertype] = $triggername;
     }
-    $icondata = (new help_icon('overview:add_trigger', 'tool_lifecycle'))->export_for_template($OUTPUT);
-    $addinstance .= $OUTPUT->render_from_template('tool_lifecycle/warn_icon', $icondata);
+    // $icondata = (new help_icon('overview:add_trigger', 'tool_lifecycle'))->export_for_template($OUTPUT);
+    // $addinstance .= $OUTPUT->render_from_template('tool_lifecycle/warn_icon', $icondata);
 
     $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
         ['type' => settings_type::TRIGGER, 'wf' => $workflow->id]),

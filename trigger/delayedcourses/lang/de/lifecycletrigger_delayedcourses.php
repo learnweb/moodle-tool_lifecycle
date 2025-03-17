@@ -23,6 +23,7 @@
  */
 
 $string['delay'] = 'Dieser Trigger wird alle Kurse ausschließen, die durch Nutzerinteraktion verzögert wurden.';
+$string['plugindescription'] = 'Schließt Kurse von diesem Workflow aus, die durch Nutzeraktion verzögert wurden.';
 $string['pluginname'] = 'Verzögerte Kurse ausschließen - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 

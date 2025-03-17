@@ -25,7 +25,7 @@
 $string['dates'] = 'Dates at which the workflow should run.';
 $string['dates_help'] = 'Write one date per line with the format Day.Month<br><br>For example 04.08 for 4th of august. If you put in today\'s date, it will be triggered.';
 $string['dates_not_parseable'] = 'Dates must be of the format Day.Month';
+$string['plugindescription'] = 'Defines time slots at which this workflow should run.';
 $string['pluginname'] = 'Specific date trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
-
 $string['timelastrun'] = 'Date when the trigger last run.';

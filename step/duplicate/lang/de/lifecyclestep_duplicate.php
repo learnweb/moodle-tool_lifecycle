@@ -26,10 +26,9 @@ $string['action_new_course_data'] = '{$a} hat neuen Kursnamen eingegeben';
 $string['duplicate:enterdata'] = 'Daten für Kursduplikation eingeben';
 $string['duplicate_course_header'] = 'Kurs duplizieren';
 $string['duplicate_form'] = 'Daten eingeben';
+$string['plugindescription'] = 'In diesem Schritt wird jeder getriggerte Kurs dupliziert.';
 $string['pluginname'] = 'Kurs-Duplizieren-Schritt';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
-
-
 $string['status_message_duplication'] = 'Duplizierter Kurs wird bald verfügbar sein.';
 $string['status_message_form'] = 'Zusätzliche Informationen benötigt';
 

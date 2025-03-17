@@ -23,6 +23,7 @@
  */
 
 $string['delay'] = 'This module will exclude the site course from processing';
+$string['plugindescription'] = 'Excludes the site course from this workflow.';
 $string['pluginname'] = 'Exclude site course trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 

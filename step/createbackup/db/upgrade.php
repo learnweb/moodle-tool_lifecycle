@@ -53,4 +53,5 @@ function xmldb_lifecyclestep_createbackup_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019052900, 'lifecyclestep', 'createbackup');
     }
 
+    return true;
 }

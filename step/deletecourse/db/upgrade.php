@@ -57,4 +57,5 @@ function xmldb_lifecyclestep_deletecourse_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018122300, 'lifecyclestep', 'deletecourse');
     }
 
+    return true;
 }

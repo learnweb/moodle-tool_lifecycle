@@ -23,6 +23,7 @@
  */
 
 $string['delay'] = 'Dieser Trigger wird den Startseitenkurs ausschließen.';
+$string['plugindescription'] = 'Schließt den Startseitenkurs von diesen Workflow aus.';
 $string['pluginname'] = 'Startseitenkurs ausschließen - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 

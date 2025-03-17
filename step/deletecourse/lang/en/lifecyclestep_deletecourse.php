@@ -23,6 +23,7 @@
  */
 
 $string['deletecourse_maximumdeletionspercron'] = 'Maximum number of courses deleted per cron';
+$string['plugindescription'] = 'Initiates the deletion of the triggered courses.';
 $string['pluginname'] = 'Delete course step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 

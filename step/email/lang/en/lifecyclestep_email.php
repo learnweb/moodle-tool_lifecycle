@@ -47,6 +47,7 @@ $string['email_subject_help'] = 'Set the template for the subject of the email.'
         . '<br>' . 'Impacted courses: ##courses##'
         . '</p>';
 $string['keep_course'] = 'Keep course';
+$string['plugindescription'] = 'Informs course executives of the upcoming deletion of a triggered course.';
 $string['pluginname'] = 'Email step';
 $string['privacy:metadata:lifecyclestep_email:courseid'] = 'ID of the course, emails will be sent for';
 $string['privacy:metadata:lifecyclestep_email:instanceid'] = 'ID of the step instance sending emails';
