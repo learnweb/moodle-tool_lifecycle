@@ -245,8 +245,6 @@ if (workflow_manager::is_editable($workflow->id)) {
         }
         $selectabletriggers[$triggertype] = $triggername;
     }
-    // $icondata = (new help_icon('overview:add_trigger', 'tool_lifecycle'))->export_for_template($OUTPUT);
-    // $addinstance .= $OUTPUT->render_from_template('tool_lifecycle/warn_icon', $icondata);
 
     $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
         ['type' => settings_type::TRIGGER, 'wf' => $workflow->id]),
