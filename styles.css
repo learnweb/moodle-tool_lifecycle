@@ -135,3 +135,7 @@ span.tool_lifecycle-hint {
 #page-admin-setting-tool_lifecycle #adminsettings h3.main {
     border-bottom: none;
 }
+
+#lifecycle-workflow-details .dropdown-toggle::after {
+    content: none;
+}

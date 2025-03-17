@@ -134,12 +134,12 @@ foreach ($triggers as $trigger) {
     // FUTURE: Nice to have Icon for each subplugin.
     $trigger = (object)(array) $trigger; // Cast to normal object to be able to set dynamic properties.
     $actionmenu = new action_menu([
-        new action_menu_link_primary(
+        new action_menu_link_secondary(
             new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::TRIGGER, 'elementid' => $trigger->id]),
             new pix_icon('i/edit', $str['edit']), $str['edit']),
     ]);
     if ($iseditable) {
-        $actionmenu->add(new action_menu_link_primary(
+        $actionmenu->add(new action_menu_link_secondary(
             new moodle_url($PAGE->url,
                 ['action' => action::TRIGGER_INSTANCE_DELETE, 'sesskey' => sesskey(), 'actiontrigger' => $trigger->id]),
             new pix_icon('t/delete', $str['delete']), $str['delete'])
