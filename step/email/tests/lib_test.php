@@ -24,6 +24,8 @@ namespace lifecyclestep_email;
 
 use tool_lifecycle\step\email;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once(__DIR__ . '/../lib.php');
 
 /**
