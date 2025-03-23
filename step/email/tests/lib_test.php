@@ -24,6 +24,8 @@ namespace lifecyclestep_email;
 
 use tool_lifecycle\step\email;
 
+require_once(__DIR__ . '/../lib.php');
+
 /**
  * Unit tests for the lifecyclestep_email lib.php.
  *
