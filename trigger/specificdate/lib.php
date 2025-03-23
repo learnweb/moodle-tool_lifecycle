@@ -66,7 +66,7 @@ class specificdate extends base_automatic {
         $settings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
         $datesraw = $settings['dates'];
         $dates = $this->parse_dates($datesraw);
-        // Get timelastrunactive
+        // Get timelastrunactive.
         $timelastrunactive = $settings['timelastrunactive'];
         $lastrun = getdate($settings['timelastrun']);
         $current = time();
@@ -126,7 +126,7 @@ class specificdate extends base_automatic {
     public function instance_settings() {
         return [
             new instance_setting('dates', PARAM_TEXT),
-            // Add activate timelastrun
+            // Add activate timelastrun.
             new instance_setting('timelastrunactive', PARAM_INT),
             new instance_setting('timelastrun', PARAM_INT),
         ];
@@ -142,10 +142,9 @@ class specificdate extends base_automatic {
         $mform->addElement('textarea', 'dates', get_string('dates', 'lifecycletrigger_specificdate'));
         $mform->setType('dates', PARAM_TEXT);
         $mform->addHelpButton('dates', 'dates', 'lifecycletrigger_specificdate');
-        // Add activate timelastrun
+        // Add activate timelastrun.
         $mform->addElement('advcheckbox', 'timelastrunactive', get_string('timelastrunactive', 'lifecycletrigger_specificjku'));
         $mform->setDefault('timelastrunactive', 1);
-        //$mform->disabledIf('timelastrun', 'timelastrunactive');
         $mform->addElement('hidden', 'timelastrun');
         $mform->setDefault('timelastrun', 0);
         $mform->setType('timelastrun', PARAM_INT);

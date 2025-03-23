@@ -27,5 +27,5 @@ $string['dates_help'] = 'Write one date per line with the format Day.Month<br><b
 $string['dates_not_parseable'] = 'Dates must be of the format Day.Month';
 $string['pluginname'] = 'Specific date trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
-$string['timelastrunactive'] = 'Only once a day';
 $string['timelastrun'] = 'Date when the trigger last run.';
+$string['timelastrunactive'] = 'Only once a day';

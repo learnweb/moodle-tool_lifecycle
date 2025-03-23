@@ -65,8 +65,9 @@ class deletecourse extends libbase {
         }
         delete_course($course->id, true);
 
-        // Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue MDL-65228 (https://tracker.moodle.org/browse/MDL-65228)
-        if(is_object($CFG) && property_exists($CFG, "forced_plugin_settings") && is_array($CFG->forced_plugin_settings)
+        /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
+           MDL-65228 (https://tracker.moodle.org/browse/MDL-65228) */
+        if (is_object($CFG) && property_exists($CFG, "forced_plugin_settings") && is_array($CFG->forced_plugin_settings)
                 && array_key_exists("backup", $CFG->forced_plugin_settings) && !is_array($CFG->forced_plugin_settings["backup"])) {
             $CFG->forced_plugin_settings["backup"] = [];
         }
