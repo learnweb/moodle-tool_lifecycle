@@ -255,7 +255,12 @@ class process_manager {
     public static function insert_process_error(process $process, Exception $e) {
         global $DB;
 
-        $procerror = (object) clone $process;
+        $procerror = new stdClass();
+        $procerror->id = $process->id;
+        $procerror->courseid = $process->courseid;
+        $procerror->workflowid = $process->workflowid;
+        $procerror->stepindex = $process->stepindex;
+        $procerror->timestepchanged = $process->timestepchanged;
         $procerror->errormessage = get_class($e) . ': ' . $e->getMessage();
         $procerror->errortrace = $e->getTraceAsString();
         $procerror->errortimecreated = time();
@@ -264,7 +269,7 @@ class process_manager {
             $m .= $v['file'] . ':' . $v['line'] . '::';
         }
         $procerror->errorhash = md5($m);
-        $procerror->waiting = intval($procerror->waiting);
+        $procerror->waiting = intval($process->waiting);
 
         $DB->insert_record_raw('tool_lifecycle_proc_error', $procerror, false, false, true);
         $DB->delete_records('tool_lifecycle_process', ['id' => $process->id]);
