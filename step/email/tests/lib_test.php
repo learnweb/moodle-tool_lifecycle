@@ -22,6 +22,8 @@
  */
 namespace lifecyclestep_email;
 
+use tool_lifecycle\step\email;
+
 /**
  * Unit tests for the lifecyclestep_email lib.php.
  *
@@ -42,7 +44,7 @@ final class lib_test extends \advanced_testcase {
         $user1 = $this->getDataGenerator()->create_user(['firstname' => 'Jane', 'lastname' => 'Doe']);
         $course1 = $this->getDataGenerator()->create_course(['fullname' => 'Course 1', 'shortname' => 'C1']);
         $course2 = $this->getDataGenerator()->create_course(['fullname' => 'Course 2', 'shortname' => 'C2']);
-        $lib = new \tool_lifecycle\step\email();
+        $lib = new email();
         $callreplaceplaceholders = function($strings, $user, $stepid, $mailentries) {
             return $this->replace_placeholders($strings, $user, $stepid, $mailentries);
         };

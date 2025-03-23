@@ -25,6 +25,7 @@ namespace tool_lifecycle\local\manager;
 
 use core\event\course_deleted;
 use Exception;
+use stdClass;
 use tool_lifecycle\local\entity\process;
 use tool_lifecycle\event\process_proceeded;
 use tool_lifecycle\event\process_rollback;
