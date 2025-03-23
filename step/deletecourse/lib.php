@@ -57,11 +57,21 @@ class deletecourse extends libbase {
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
+        global $CFG;
+
         if (self::$numberofdeletions >= settings_manager::get_settings(
             $instanceid, settings_type::STEP)['maximumdeletionspercron']) {
             return step_response::waiting(); // Wait with further deletions til the next cron run.
         }
         delete_course($course->id, true);
+
+        /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
+           MDL-65228 (https://tracker.moodle.org/browse/MDL-65228) */
+        if (is_object($CFG) && property_exists($CFG, "forced_plugin_settings") && is_array($CFG->forced_plugin_settings)
+                && array_key_exists("backup", $CFG->forced_plugin_settings) && !is_array($CFG->forced_plugin_settings["backup"])) {
+            $CFG->forced_plugin_settings["backup"] = [];
+        }
+
         self::$numberofdeletions++;
         return step_response::proceed();
     }

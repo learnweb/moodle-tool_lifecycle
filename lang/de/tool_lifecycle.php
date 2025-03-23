@@ -53,6 +53,8 @@ $string['config_delay_duration_desc'] = 'Diese Einstellung definiert den Standar
  der Kurs wieder vom Workflow bearbeitet wird.';
 $string['config_enablecategoryhierachy'] = 'Kurskategorienhierarchie in der Interaktionstabelle spezifizieren';
 $string['config_enablecategoryhierachy_desc'] = 'Standardmäßig wird die direkt zugewiesene Kurskategorie angezeigt, wenn Lehrkräfte den Status ihrer Kurse in der view.php verwalten. Die Einstellung ermöglicht es, eine bestimmte Ebene des Kurskategorienbaums anzuzeigen.';
+$string['config_logreceivedmails'] = 'Zusätzliches Logging von E-mails zu Nutzern.';
+$string['config_logreceivedmails_desc'] = 'Das Schreiben in die Datenbank hat den Vorteil, dass es explizit nachgeguckt werden kann, allerdings verbraucht es Speicher.';
 $string['config_showcoursecounts'] = 'Zeige Anzahl der Kurse, die getriggert werden';
 $string['config_showcoursecounts_desc'] = 'Die Workflow-Konfigurationsseite zeigt normalerweise die Anzahl an Kursen, die durch
 die konfigurierten Trigger getriggert werden, was Performance-Probleme verursachen kann. Bei Performance-Problemen kann dies hiermit
@@ -115,6 +117,8 @@ $string['manual_trigger_process_existed'] = 'Es existiert bereits ein Workflow f
 $string['manual_trigger_success'] = 'Workflow erfolgreich gestartet.';
 $string['move_down'] = 'Nach unten bewegen';
 $string['move_up'] = 'Nach oben bewegen';
+$string['name_until_date'] = '"{$a->name}" bis {$a->date}';
+$string['noactiontools'] = 'Keine Aktionen verfügbar';
 $string['nocoursestodisplay'] = 'Es gibt derzeit keine Kurse, die Ihre Aufmerksamkeit erfordern!';
 $string['nointeractioninterface'] = 'Keine Interaktionsschnittstelle verfügbar!';
 $string['noprocesserrors'] = 'Es gibt keine fehlerhaften Prozesse, die behandelt werden müssen!';

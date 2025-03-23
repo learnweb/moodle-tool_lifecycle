@@ -27,5 +27,5 @@ $string['dates_help'] = 'Ein Datum pro Zeile in dem Format Tag.Monat<br><br>Zum 
 $string['dates_not_parseable'] = 'Daten müssen in dem Format Tag.Monat sein!';
 $string['pluginname'] = 'Bestimmtes Datum - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
-
 $string['timelastrun'] = 'Datum, an dem der Trigger zuletzt ausgeführt wurde.';
+$string['timelastrunactive'] = 'Nur einmal pro Tag';

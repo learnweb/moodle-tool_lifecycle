@@ -47,6 +47,7 @@ $string['anonymous_user'] = 'Anonymous User';
 $string['apply'] = 'Apply';
 $string['backupcreated'] = 'Created at';
 $string['backupworkflow'] = 'Backup workflow';
+$string['cachedef_application'] = 'Cache for course menu if there are workflows enabled.';
 $string['cachedef_mformdata'] = 'Caches the mform data.';
 $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not be triggered manually.';
 $string['config_backup_path'] = 'Path of the lifecycle backup folder';
@@ -60,6 +61,8 @@ in case one of its processes is rolled back or finishes.
 The delay duration determines how long a course will be excepted from being processed again in either of the cases.';
 $string['config_enablecategoryhierachy'] = 'Show a specified level of the course category hierarchy in the interaction table';
 $string['config_enablecategoryhierachy_desc'] = 'By default the directly assigned course category is shown when teachers manage the status of their courses on the view.php. The setting enables to show a specified level of the course category tree.';
+$string['config_logreceivedmails'] = 'Save sent mails to the database';
+$string['config_logreceivedmails_desc'] = 'Additionally writing to the database has the advantage that it can be looked up, however it consumes memory.';
 $string['config_showcoursecounts'] = 'Show amount of courses which will be triggered';
 $string['config_showcoursecounts_desc'] = 'The workflow overview page by default shows the amount of courses which will be
 triggered by the configured triggers which can be load heavy. Disable this option if you experience issues loading the workflow
@@ -133,6 +136,7 @@ $string['manual_trigger_success'] = 'Workflow started successfully.';
 $string['move_down'] = 'Move down';
 $string['move_up'] = 'Move up';
 $string['name_until_date'] = '"{$a->name}" until {$a->date}';
+$string['noactiontools'] = 'No tools available';
 $string['nocoursestodisplay'] = 'There are currently no courses which require your attention!';
 $string['nointeractioninterface'] = 'No interaction interface available!';
 $string['noprocesserrors'] = 'There are no process errors to handle!';

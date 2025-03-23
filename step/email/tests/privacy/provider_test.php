@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Unit tests for the lifecyclestep_email implementation of the privacy API.
  *
@@ -21,6 +22,7 @@
  * @author     Philipp Memmel
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace lifecyclestep_email\privacy;
 
 use context_course;
@@ -45,6 +47,20 @@ use tool_lifecycle\local\manager\workflow_manager;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class provider_test extends provider_testcase {
+
+    /** @var stdClass test user1 */
+    private $user1;
+    /** @var stdClass test user2 */
+    private $user2;
+    /** @var stdClass test user3 */
+    private $user3;
+
+    /** @var stdClass test course1 */
+    private $course1;
+    /** @var stdClass test course2 */
+    private $course2;
+    /** @var stdClass test course3 */
+    private $course3;
 
     /**
      * Basic setup for the provider tests.

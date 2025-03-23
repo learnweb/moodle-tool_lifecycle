@@ -123,10 +123,20 @@ class email extends libbase {
                 $subject = $parsedsettings['subject'];
                 $content = $parsedsettings['content'];
                 $contenthtml = $parsedsettings['contenthtml'];
-                // Software enhancement: use course info to parse content template!
                 $success = email_to_user($user, \core_user::get_noreply_user(), $subject, $content, $contenthtml);
                 if (!$success) {
                     mtrace("E-mail to user {$user->id} failed.");
+                }
+                $dblogging = get_config('tool_lifecycle', 'logreceivedmails');
+                if ($dblogging && $success) {
+                    // Insert user id and course id in table tool_lifecycle_user_notified.
+                    $record = new \stdClass();
+                    $record->userid = $user->id;
+                    $record->timemailsent = time();
+                    foreach ($mailentries as $entry) {
+                        $record->courseid = $entry->courseid;
+                        $DB->insert_record('lifecyclestep_email_notified', $record);
+                    }
                 }
                 $DB->delete_records('lifecyclestep_email',
                     ['instanceid' => $step->id, 'touser' => $user->id]);
