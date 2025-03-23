@@ -67,7 +67,7 @@ class specificdate extends base_automatic {
         $datesraw = $settings['dates'];
         $dates = $this->parse_dates($datesraw);
         // Get timelastrunactive.
-        $timelastrunactive = $settings['timelastrunactive'];
+        $timelastrunactive = $settings['timelastrunactive'] ?? false;
         $lastrun = getdate($settings['timelastrun']);
         $current = time();
         $today = getdate($current);
