@@ -119,7 +119,6 @@ class email extends libbase {
                         'touser' => $user->id, ]);
 
                 $parsedsettings = $this->replace_placeholders($settings, $user, $step->id, $mailentries);
-
                 $subject = $parsedsettings['subject'];
                 $content = $parsedsettings['content'];
                 $contenthtml = $parsedsettings['contenthtml'];
@@ -139,8 +138,7 @@ class email extends libbase {
                     }
                 }
                 $DB->delete_records('lifecyclestep_email',
-                    ['instanceid' => $step->id,
-                        'touser' => $user->id, ]);
+                    ['instanceid' => $step->id, 'touser' => $user->id]);
                 $transaction->allow_commit();
             }
         }
