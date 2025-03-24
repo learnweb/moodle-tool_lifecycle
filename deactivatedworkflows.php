@@ -24,18 +24,16 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
-require_login();
 
 use tool_lifecycle\local\table\deactivated_workflows_table;
 use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
 
-global $PAGE, $OUTPUT;
+require_login();
 
-\tool_lifecycle\permission_and_navigation::setup_deactived();
-
+$syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::DEACTIVATED_WORKFLOWS));
-$PAGE->set_title(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));
-$PAGE->set_heading(get_string('deactivated_workflows_list_header', 'tool_lifecycle'));
+$PAGE->set_context($syscontext);
 
 $workflowid = optional_param('workflowid', null, PARAM_INT);
 $action = optional_param('action', null, PARAM_TEXT);
@@ -43,22 +41,23 @@ if ($workflowid && $action) {
     \tool_lifecycle\local\manager\workflow_manager::handle_action($action, $workflowid);
 }
 
-$renderer = $PAGE->get_renderer('tool_lifecycle');
-
 $table = new deactivated_workflows_table('tool_lifecycle_deactivated_workflows');
 
-echo $renderer->header();
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
+
+$renderer = $PAGE->get_renderer('tool_lifecycle');
+
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('deactivated_workflows_header', 'tool_lifecycle');
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$id = optional_param('id', 'settings', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
 
 echo $OUTPUT->box_start("lifecycle-enable-overflow lifecycle-table");
 
 $table->out(50, false);
 
 echo $OUTPUT->box_end();
-
-echo \html_writer::link(new \moodle_url(urls::WORKFLOW_DRAFTS),
-    get_string('workflow_drafts_list', 'tool_lifecycle'));
-echo '<br>';
-echo \html_writer::link(new \moodle_url(urls::ACTIVE_WORKFLOWS),
-    get_string('active_workflows_list', 'tool_lifecycle'));
 
 echo $renderer->footer();

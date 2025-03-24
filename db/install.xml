@@ -33,8 +33,8 @@
     <TABLE NAME="tool_lifecycle_trigger" COMMENT="Trigger subplugins for the life cycle">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="instancename" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="instancename of the trigger"/>
-        <FIELD NAME="subpluginname" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
+        <FIELD NAME="instancename" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="instancename of the trigger"/>
+        <FIELD NAME="subpluginname" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
         <FIELD NAME="workflowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the workflow"/>
         <FIELD NAME="sortindex" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="Order in which the triggers are checked for the workflow."/>
       </FIELDS>
@@ -46,8 +46,8 @@
     <TABLE NAME="tool_lifecycle_step" COMMENT="Step subplugins for the life cycle">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="instancename" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="instancename of the step"/>
-        <FIELD NAME="subpluginname" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
+        <FIELD NAME="instancename" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="instancename of the step"/>
+        <FIELD NAME="subpluginname" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
         <FIELD NAME="workflowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the workflow"/>
         <FIELD NAME="sortindex" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="Order within the workflow in which the steps are executed"/>
       </FIELDS>

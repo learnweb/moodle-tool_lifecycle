@@ -498,5 +498,37 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
+    if ($oldversion < 2025031300.02) {
+
+        // Changing precision of field instancename on table tool_lifecycle_trigger to (100).
+        $table = new xmldb_table('tool_lifecycle_trigger');
+        $field = new xmldb_field('instancename', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'id');
+
+        // Launch change of precision for field instancename.
+        $dbman->change_field_precision($table, $field);
+
+        // Changing precision of field subpluginname on table tool_lifecycle_trigger to (100).
+        $field = new xmldb_field('subpluginname', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'id');
+
+        // Launch change of precision for field subpluginname.
+        $dbman->change_field_precision($table, $field);
+
+        // Changing precision of field subpluginname on table tool_lifecycle_step to (100).
+        $table = new xmldb_table('tool_lifecycle_step');
+        $field = new xmldb_field('subpluginname', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'id');
+
+        // Launch change of precision for field subpluginname.
+        $dbman->change_field_precision($table, $field);
+
+        // Changing precision of field instancename on table tool_lifecycle_step to (100).
+        $field = new xmldb_field('instancename', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'id');
+
+        // Launch change of precision for field instancename.
+        $dbman->change_field_precision($table, $field);
+
+        upgrade_plugin_savepoint(true, 2025031300.02, 'tool', 'lifecycle');
+
+    }
+
     return true;
 }

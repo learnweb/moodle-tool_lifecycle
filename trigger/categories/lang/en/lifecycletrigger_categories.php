@@ -26,5 +26,6 @@ $string['categories'] = 'Categories, for which the workflow should be triggered'
 $string['categories_do_not_exist'] = 'There are no categories with the following ids: {$a}.';
 $string['categories_noselection'] = 'Please choose at least one category.';
 $string['exclude'] = 'If ticked, the named categories are excluded from triggering instead.';
+$string['plugindescription'] = 'Selects all courses of a course category.';
 $string['pluginname'] = 'Categories trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';

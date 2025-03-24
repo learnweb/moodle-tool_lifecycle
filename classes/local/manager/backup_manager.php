@@ -68,8 +68,8 @@ class backup_manager {
         }
         // Perform Backup.
         $bc = new \backup_controller(\backup::TYPE_1COURSE, $courseid, \backup::FORMAT_MOODLE,
-            \backup::INTERACTIVE_NO, \backup::MODE_AUTOMATED, get_admin()->id);
-        $bc->execute_plan();  // Execute backup.
+            \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, get_admin()->id);
+        $bc->execute_plan(); // Execute backup.
         $results = $bc->get_results(); // Get the file information needed.
         /* @var $file \stored_file instance of the backup file*/
         $file = $results['backup_destination'];

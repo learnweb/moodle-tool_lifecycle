@@ -342,4 +342,22 @@ class trigger_manager extends subplugin_manager {
 
     }
 
+    /**
+     * Returns true if the trigger fires, i.e. returns a list of one or more courses to process upon.
+     * @param trigger_subplugin $trigger
+     * @return mixed $sql returns false if the trigger does not fire
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    public static function get_trigger_sqlresult($trigger) {
+
+        $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+        $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
+        if ($settings['exclude'] ?? false) {
+            [$sql, $params] = $lib->get_course_recordset_where_excluded($trigger->id);
+        } else {
+            [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
+        }
+        return $sql;
+    }
 }

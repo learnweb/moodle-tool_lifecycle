@@ -41,7 +41,7 @@ class form_upload_workflow extends \moodleform {
     public function definition() {
         $mform = $this->_form;
 
-        $mform->addElement('filepicker', 'backupfile', get_string('file'), null,
+        $mform->addElement('filepicker', 'backupfile', get_string('upload_workflow', 'tool_lifecycle'), null,
             ['accepted_types' => 'xml']);
 
         $showforce = isset($this->_customdata['showforce']) && $this->_customdata['showforce'];

@@ -24,7 +24,7 @@ Feature: Add a manual trigger and test view and actions as a teacher
     And I set the following system permissions of "Non-editing teacher" role:
       | capability | permission |
       | tool/lifecycle:managecourses | Allow |
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow drafts" in site administration
+    And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
@@ -52,7 +52,7 @@ Feature: Add a manual trigger and test view and actions as a teacher
   @javascript
   Scenario: Manually trigger backup and course deletion
     Given I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow drafts" in site administration
+    And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
@@ -88,6 +88,6 @@ Feature: Add a manual trigger and test view and actions as a teacher
     And I should see "Course 2"
     When I log out
     And I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Course backups" in site administration
+    And I am on coursebackups page
     Then I should see "Course 1"
     And I should not see "Course 2"

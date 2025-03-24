@@ -91,6 +91,43 @@ class categories extends base_automatic {
     }
 
     /**
+     * Return sql sniplet for excluding the courses belonging to specific categories and all their children
+     * because setting option "exclude" of the trigger is on.
+     * @param int $triggerid Id of the trigger.
+     * @return array A list containing the constructed sql fragment and an array of parameters.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    public function get_course_recordset_where_excluded($triggerid) {
+        global $DB, $CFG;
+        $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
+
+        $categories = explode(',', $categories);
+        // Use core_course_category for moodle 3.6 and higher.
+        if ($CFG->version >= 2018120300) {
+            $categoryobjects = \core_course_category::get_many($categories);
+        } else {
+            require_once($CFG->libdir . '/coursecatlib.php');
+            $categoryobjects = \coursecat::get_many($categories);
+        }
+        $allcategories = [];
+        foreach ($categories as $category) {
+            array_push($allcategories, $category);
+            if (!isset($categoryobjects[$category]) || !$categoryobjects[$category]) {
+                continue;
+            }
+            $children = $categoryobjects[$category]->get_all_children_ids();
+            $allcategories = array_merge($allcategories, $children);
+        }
+
+        list($insql, $inparams) = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED, 'param');
+
+        $where = "{course}.category {$insql}";
+
+        return [$where, $inparams];
+    }
+
+    /**
      * The return value should be equivalent with the name of the subplugin folder.
      * @return string technical name of the subplugin
      */

@@ -24,39 +24,54 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+
 require_login();
 
 use tool_lifecycle\action;
 use tool_lifecycle\local\manager\delayed_courses_manager;
+use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\settings_type;
 use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
 
 global $OUTPUT, $PAGE, $DB;
 
+require_login();
+
 $workflowid = required_param('wf', PARAM_INT);
+$stepid = optional_param('step', null, PARAM_INT);
+$triggerid = optional_param('trigger', null, PARAM_INT);
+$delayed = optional_param('delayed', null, PARAM_INT);
+$excluded = optional_param('excluded', null, PARAM_INT);
 
 $workflow = \tool_lifecycle\local\manager\workflow_manager::get_workflow($workflowid);
-\tool_lifecycle\permission_and_navigation::setup_workflow($workflow);
-
 $iseditable = workflow_manager::is_editable($workflow->id);
-
-$stepid = optional_param('step', null, PARAM_INT);
+$isactive = workflow_manager::is_active($workflow->id);
+$isdeactivated = workflow_manager::is_deactivated($workflow->id);
 
 $params = ['wf' => $workflow->id];
-$nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
-
 if ($stepid) {
     $params['step'] = $stepid;
+} else if ($triggerid) {
+    $params['trigger'] = $triggerid;
+} else if ($delayed) {
+    $params['delayed'] = $delayed;
+} else if ($excluded) {
+    $params['excluded'] = $excluded;
 }
+
+$syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::WORKFLOW_DETAILS, $params));
+$PAGE->set_context($syscontext);
 $PAGE->set_title($workflow->title);
-$PAGE->set_heading($workflow->title);
+
+$popuplink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
 
 $action = optional_param('action', null, PARAM_TEXT);
-
 if ($action) {
     step_manager::handle_action($action, optional_param('actionstep', null, PARAM_INT), $workflow->id);
     trigger_manager::handle_action($action, optional_param('actiontrigger', null, PARAM_INT), $workflow->id);
@@ -76,7 +91,31 @@ if ($action) {
     redirect($PAGE->url);
 }
 
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
+
 $renderer = $PAGE->get_renderer('tool_lifecycle');
+
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".
+    get_string('workflowoverview', 'tool_lifecycle').": ". $workflow->title;
+echo $renderer->header($heading);
+$activelink = false;
+$deactivatedlink = false;
+$draftlink = false;
+if ($isactive) {  // Active workflow.
+    $id = 'activeworkflows';
+    $activelink = true;
+} else {
+    if ($isdeactivated) { // Deactivated workflow.
+        $id = 'deactivatedworkflows';
+        $deactivatedlink = true;
+    } else { // Draft.
+        $id = 'workflowdrafts';
+        $draftlink = true;
+    }
+}
+$tabrow = tabs::get_tabrow($activelink, $deactivatedlink, $draftlink);
+$renderer->tabs($tabrow, $id);
 
 $steps = \tool_lifecycle\local\manager\step_manager::get_step_instances($workflow->id);
 $triggers = \tool_lifecycle\local\manager\trigger_manager::get_triggers_for_workflow($workflow->id);
@@ -90,10 +129,12 @@ $str = [
 
 $showcoursecounts = get_config('tool_lifecycle', 'showcoursecounts');
 if ($showcoursecounts) {
-    // On moodle instances with many courses the following call can be fatal, because each trigger
-    // check function will be called for every single course of the instance to determine how many
-    // courses will be triggered by the workflow/the specific trigger. This count is only being
-    // used to show the admin how many courses will be triggered, it has no functional aspect.
+    /*
+        On moodle instances with many courses the following call can be fatal, because each trigger
+        check function will be called for every single course of the instance to determine how many
+        courses will be triggered by the workflow/the specific trigger. This count is only being
+        used to show the admin how many courses will be triggered, it has no functional aspect.
+    */
     $amounts = (new \tool_lifecycle\processor())->get_count_of_courses_to_trigger_for_workflow($workflow->id);
     $displaytotaltriggered = !empty($triggers);
 }
@@ -119,12 +160,29 @@ foreach ($triggers as $trigger) {
         );
     }
     $trigger->actionmenu = $OUTPUT->render($actionmenu);
+    $trigger->automatic = !lib_manager::get_trigger_lib($trigger->subpluginname)->is_manual_trigger();
+    if ($trigger->automatic) {
+        $sqlresult = trigger_manager::get_trigger_sqlresult($trigger);
+        if ($sqlresult == "false") {
+            $trigger->sqlresult = "border-danger";
+        } else {
+            $sumtrigger = $amounts[$trigger->sortindex]->triggered - $amounts[$trigger->sortindex]->excluded -
+                $amounts[$trigger->sortindex]->delayed;
+            if ($sumtrigger > 0) {
+                $trigger->sqlresult = "border-success";
+            } else if ($sumtrigger == 0) {
+                $trigger->sqlresult = "border-secondary";
+            } else {
+                $trigger->sqlresult = "border-danger";
+            }
+        }
+    }
     if ($showcoursecounts) {
-        $trigger->automatic = $amounts[$trigger->sortindex]->automatic;
         $displaytotaltriggered &= $trigger->automatic;
         if ($trigger->automatic) {
-            $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
             $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
+            $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
+            $trigger->delayedcourses = $amounts[$trigger->sortindex]->delayed;
         }
     }
     $displaytriggers[] = $trigger;
@@ -170,8 +228,6 @@ foreach ($steps as $step) {
 
 $arrayofcourses = [];
 
-$url = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid]);
-
 $out = null;
 if ($stepid) {
     $step = step_manager::get_step_instance($stepid);
@@ -181,20 +237,50 @@ if ($stepid) {
     $table->out(20, false);
     $out = ob_get_contents();
     ob_end_clean();
+} else if ($triggerid) {
+    $trigger = trigger_manager::get_instance($triggerid);
+    $courseids = (new \tool_lifecycle\processor())->get_courses_to_trigger_for_trigger($trigger, $workflowid);
+    $table = new \tool_lifecycle\local\table\triggered_courses_table($trigger, 'triggered', $courseids);
+    ob_start();
+    $table->out(20, false);
+    $out = ob_get_contents();
+    ob_end_clean();
+} else if ($delayed) {
+    $trigger = trigger_manager::get_instance($delayed);
+    $courseids = (new \tool_lifecycle\processor())->get_courses_delayed_for_trigger($trigger, $workflowid);
+    $table = new \tool_lifecycle\local\table\triggered_courses_table($trigger, 'delayed', $courseids);
+    ob_start();
+    $table->out(20, false);
+    $out = ob_get_contents();
+    ob_end_clean();
+} else if ($excluded) {
+    $trigger = trigger_manager::get_instance($excluded);
+    $courseids = (new \tool_lifecycle\processor())->get_courses_to_exclude_for_trigger($trigger, $workflowid);
+    $table = new \tool_lifecycle\local\table\triggered_courses_table($trigger, 'exclude', $courseids);
+    ob_start();
+    $table->out(20, false);
+    $out = ob_get_contents();
+    ob_end_clean();
 }
 
+$nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid]);
+
 $data = [
+    'rollbackhelp' => $OUTPUT->help_icon('details:rollbackdelay', 'tool_lifecycle', null),
+    'finishhelp' => $OUTPUT->help_icon('details:finishdelay', 'tool_lifecycle', null),
     'triggerhelp' => $OUTPUT->help_icon('overview:trigger', 'tool_lifecycle', null),
+    'manualtriggerenvolvedhelp' => $OUTPUT->help_icon('manualtriggerenvolved', 'tool_lifecycle', null),
     'editsettingslink' => (new moodle_url(urls::EDIT_WORKFLOW, ['wf' => $workflow->id]))->out(false),
     'title' => $workflow->title,
-    'displaytitle' => $workflow->displaytitle,
     'rollbackdelay' => format_time($workflow->rollbackdelay),
     'finishdelay' => format_time($workflow->finishdelay),
     'delayglobally' => $workflow->delayforallworkflows,
     'trigger' => $displaytriggers,
+    'counttriggers' => count($displaytriggers),
     'showcoursecounts' => $showcoursecounts,
     'steps' => $displaysteps,
     'listofcourses' => $arrayofcourses,
+    'popuplink' => $popuplink,
     'nosteplink' => $nosteplink,
     'table' => $out,
 ];
@@ -202,26 +288,22 @@ if ($showcoursecounts) {
     $data['automatic'] = $displaytotaltriggered;
     $data['coursestriggered'] = $amounts['all']->triggered;
     $data['coursesexcluded'] = $amounts['all']->excluded;
+    $data['coursesdelayed'] = $amounts['all']->delayed;
     $data['coursesetsize'] = $amounts['all']->coursesetsize;
 }
-
-echo $renderer->header();
 
 if (workflow_manager::is_editable($workflow->id)) {
     $addinstance = '';
     $triggertypes = trigger_manager::get_chooseable_trigger_types();
-    $workflowtriggers = trigger_manager::get_triggers_for_workflow($workflow->id);
     $selectabletriggers = [];
     foreach ($triggertypes as $triggertype => $triggername) {
-        foreach ($workflowtriggers as $workflowtrigger) {
+        foreach ($triggers as $workflowtrigger) {
             if ($triggertype == $workflowtrigger->subpluginname) {
                 continue 2;
             }
         }
         $selectabletriggers[$triggertype] = $triggername;
     }
-    $icondata = (new help_icon('overview:add_trigger', 'tool_lifecycle'))->export_for_template($OUTPUT);
-    $addinstance .= $OUTPUT->render_from_template('tool_lifecycle/warn_icon', $icondata);
 
     $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
         ['type' => settings_type::TRIGGER, 'wf' => $workflow->id]),
@@ -234,6 +316,21 @@ if (workflow_manager::is_editable($workflow->id)) {
         ['type' => settings_type::STEP, 'wf' => $workflow->id]),
         'subplugin', $steps, '', ['' => get_string('add_new_step_instance', 'tool_lifecycle')],
         null, ['id' => 'tool_lifecycle-choose-step']);
+
+    if ($id == 'workflowdrafts') {
+        $addinstance .= '<span class="ml-2"></span>';
+        if (workflow_manager::is_valid($workflow->id)) {
+            $addinstance .= $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
+                ['action' => action::WORKFLOW_ACTIVATE,
+                    'sesskey' => sesskey(),
+                    'workflowid' => $workflow->id, ]),
+                get_string('activateworkflow', 'tool_lifecycle'));
+        } else {
+            $addinstance .= $OUTPUT->pix_icon('i/circleinfo', get_string('invalid_workflow_details', 'tool_lifecycle')) .
+                get_string('invalid_workflow', 'tool_lifecycle');
+        }
+    }
+
     $data['addinstance'] = $addinstance;
 }
 

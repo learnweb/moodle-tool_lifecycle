@@ -55,6 +55,9 @@ class courses_in_step_table extends \table_sql {
 
         $this->courseid = $courseid;
 
+        $this->caption = get_string('coursesinstep', 'tool_lifecycle', $step->instancename);
+        $this->captionattributes = ['class' => 'ml-2'];
+
         $this->define_baseurl($PAGE->url);
         $this->define_columns(['courseid', 'coursefullname', 'startdate', 'tools']);
         $this->define_headers([
@@ -126,7 +129,8 @@ class courses_in_step_table extends \table_sql {
      * @return string course link
      */
     public function col_coursefullname($row) {
-        $courselink = \html_writer::link(course_get_url($row->courseid), format_string($row->coursefullname));
+        $courselink = \html_writer::link(course_get_url($row->courseid),
+            format_string($row->coursefullname), ['target' => '_blank']);
         return $courselink . '<br><span class="secondary-info">' . $row->courseshortname . '</span>';
     }
 

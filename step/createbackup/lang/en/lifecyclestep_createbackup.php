@@ -23,6 +23,7 @@
  */
 
 $string['maximumbackupspercron'] = 'Maximum number of backups per cron';
+$string['plugindescription'] = 'Initiates a backup of the triggered courses.';
 $string['pluginname'] = 'Create backup step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 

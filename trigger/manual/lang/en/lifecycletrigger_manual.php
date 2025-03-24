@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['plugindescription'] = 'Entitles authorized not-admins to initiate this workflow.';
 $string['pluginname'] = 'Manual trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 $string['setting_capability'] = 'Capability';

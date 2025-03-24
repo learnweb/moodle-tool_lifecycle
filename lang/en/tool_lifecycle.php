@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life cycle langauge strings.
+ * Life cycle language strings.
  *
  * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
@@ -41,6 +41,8 @@ $string['adminsettings_edit_step_instance_heading'] = 'Step instance for workflo
 $string['adminsettings_edit_trigger_instance_heading'] = 'Trigger for workflow \'{$a}\'';
 $string['adminsettings_edit_workflow_definition_heading'] = 'Workflow definition';
 $string['adminsettings_heading'] = 'Workflow settings';
+$string['adminsettings_nosteps'] = 'No additional step subplugins installed';
+$string['adminsettings_notriggers'] = 'No additional trigger subplugins installed';
 $string['adminsettings_workflow_definition_steps_heading'] = 'Workflow steps';
 $string['all_delays'] = 'All delays';
 $string['anonymous_user'] = 'Anonymous User';
@@ -70,16 +72,26 @@ overview.';
 $string['course_backups_list_header'] = 'Course backups';
 $string['courseid'] = 'Course ID';
 $string['coursename'] = 'Course name';
-$string['courses_will_be_excluded'] = '{$a} Courses will be excluded';
+$string['courses_are_delayed'] = '{$a} delayed courses';
+$string['courses_are_delayed_total'] = '{$a} delayed courses in total';
+$string['courses_excluded'] = 'Courses excluded total: {$a}';
+$string['courses_size'] = 'Courses checked total: {$a}';
+$string['courses_triggered'] = 'Courses triggered total: {$a}';
+$string['courses_will_be_excluded'] = '{$a} courses will be excluded';
 $string['courses_will_be_excluded_total'] = '{$a} courses will be excluded in total';
-$string['courses_will_be_triggered'] = '{$a} Courses will be triggered';
+$string['courses_will_be_triggered'] = '{$a} courses will be triggered';
 $string['courses_will_be_triggered_total'] = '{$a} courses will be triggered in total';
+$string['coursesdelayed'] = 'Courses delayed of trigger \'{$a}\'';
+$string['coursesexcluded'] = 'Courses excluded by trigger \'{$a}\'';
+$string['coursesinstep'] = 'Courses in step \'{$a}\'';
+$string['coursestriggered'] = 'Courses triggered by trigger \'{$a}\'';
 $string['create_copy'] = 'Create copy';
 $string['create_step'] = 'Create step';
 $string['create_trigger'] = 'Create trigger';
 $string['create_workflow_from_existing'] = 'Copy new workflow from existing';
 $string['date'] = 'Due date';
 $string['deactivated'] = 'Deactivated';
+$string['deactivated_workflows_header'] = 'Deactivated workflows';
 $string['deactivated_workflows_list'] = 'List deactivated workflows';
 $string['deactivated_workflows_list_header'] = 'Deactivated workflows';
 $string['delayed_courses_header'] = 'Delayed courses';
@@ -94,11 +106,12 @@ $string['delete_all_delays'] = 'Delete all delays';
 $string['delete_delay'] = 'Delete delay';
 $string['deleteworkflow'] = 'Delete workflow';
 $string['deleteworkflow_confirm'] = 'The workflow is going to be deleted. This can\'t be undone. Are you sure?';
-$string['details:displaytitle'] = 'Displayed to teachers as <b>{$a}</b>.';
-$string['details:finishdelay'] = 'When a course has finished the workflow, it will be delayed for <b>{$a}</b>.';
-$string['details:globaldelay_no'] = 'These delays apply <b>only to this workflow</b>.';
-$string['details:globaldelay_yes'] = 'These delays apply <b>to all workflows</b>.';
-$string['details:rollbackdelay'] = 'When a course is rolled back, it will be delayed for <b>{$a}</b>.';
+$string['details:finishdelay'] = 'Finish delay';
+$string['details:finishdelay_help'] = 'When a course has finished the workflow, the time it will be delayed for.';
+$string['details:globaldelay_no'] = 'These delays apply only to this workflow.';
+$string['details:globaldelay_yes'] = 'These delays apply to all workflows.';
+$string['details:rollbackdelay'] = 'Rollback delay';
+$string['details:rollbackdelay_help'] = 'When a course is rolled back, the time it will be delayed for.';
 $string['disableworkflow'] = 'Disable workflow (processes keep running)';
 $string['disableworkflow_confirm'] = 'The workflow is going to be disabled. Are you sure?';
 $string['download'] = 'Download';
@@ -106,7 +119,7 @@ $string['draft'] = 'Draft';
 $string['duplicateworkflow'] = 'Duplicate workflow';
 $string['edit_step'] = 'Edit step';
 $string['edit_trigger'] = 'Edit trigger';
-$string['editworkflow'] = 'Edit general settings';
+$string['editworkflow'] = 'Edit workflow';
 $string['error_wrong_trigger_selected'] = 'You tried to request a non-manual trigger.';
 $string['errorbackuppath'] = "Error while trying to create the backup directory. You might be missing the permission to do so.
 Please check your path at Site administration/Plugins/Admin tools/Life Cycle/General & subplugins/backup_path.";
@@ -120,9 +133,9 @@ $string['general_settings_header'] = 'General settings';
 $string['globally'] = 'Global delays';
 $string['globally_until_date'] = 'Globally until {$a}';
 $string['interaction_success'] = 'Action successfully saved.';
-$string['invalid_workflow'] = 'Invalid workflow configuration';
-$string['invalid_workflow_cannot_be_activated'] = 'The workflow definition is invalid, thus it cannot be activated.';
-$string['invalid_workflow_details'] = 'Go to details view, to create a trigger for this workflow';
+$string['invalid_workflow'] = 'Workflow configuration not valid yet.';
+$string['invalid_workflow_cannot_be_activated'] = 'The workflow definition is not valid yet, thus it cannot be activated.';
+$string['invalid_workflow_details'] = 'Create at least one trigger for this workflow';
 $string['lastaction'] = 'Last action on';
 $string['lifecycle:managecourses'] = 'May manage courses in tool_lifecycle';
 $string['lifecycle_cleanup_task'] = 'Delete old delay entries for life cycle workflows';
@@ -133,6 +146,8 @@ $string['lifecycletrigger'] = 'Trigger';
 $string['managecourses_link'] = 'Manage courses';
 $string['manual_trigger_process_existed'] = 'A workflow for this course already exists.';
 $string['manual_trigger_success'] = 'Workflow started successfully.';
+$string['manualtriggerenvolved'] = 'Manual trigger envolved.';
+$string['manualtriggerenvolved_help'] = 'No courses will be triggered unless the workflow is started manually.';
 $string['move_down'] = 'Move down';
 $string['move_up'] = 'Move up';
 $string['name_until_date'] = '"{$a->name}" until {$a->date}';
@@ -183,12 +198,16 @@ $string['step_delete'] = 'Delete';
 $string['step_edit'] = 'Edit';
 $string['step_instancename'] = 'Instance name';
 $string['step_instancename_help'] = 'Step instance title (visible for admins only).';
-$string['step_settings_header'] = 'Specific settings of the step type';
+$string['step_settings_header'] = 'Settings of the step';
 $string['step_show'] = 'Show';
 $string['step_sortindex'] = 'Up/Down';
-$string['step_subpluginname'] = 'Subplugin name';
+$string['step_subpluginname'] = 'Step type';
 $string['step_subpluginname_help'] = 'Step subplugin/trigger title (visible for admins only).';
 $string['step_type'] = 'Type';
+$string['steps_installed'] = 'Installed Steps';
+$string['steptype_settings_header'] = 'Specific settings of the step type';
+$string['subplugins'] = 'Subplugins';
+$string['subpluginsdesc'] = 'Subplugins';
 $string['subplugintype_lifecyclestep'] = 'Step within a lifecycle process';
 $string['subplugintype_lifecyclestep_plural'] = 'Steps within a lifecycle process';
 $string['subplugintype_lifecycletrigger'] = 'Trigger for starting a lifecycle process';
@@ -202,11 +221,13 @@ $string['trigger_does_not_exist'] = 'The requested trigger could not be found.';
 $string['trigger_enabled'] = 'Enabled';
 $string['trigger_instancename'] = 'Instance name';
 $string['trigger_instancename_help'] = 'Trigger instance title (visible for admins only).';
-$string['trigger_settings_header'] = 'Specific settings of the trigger type';
+$string['trigger_settings_header'] = 'Settings of the trigger';
 $string['trigger_sortindex'] = 'Up/Down';
-$string['trigger_subpluginname'] = 'Subplugin name';
+$string['trigger_subpluginname'] = 'Trigger type';
 $string['trigger_subpluginname_help'] = 'Step subplugin/trigger title (visible for admins only).';
 $string['trigger_workflow'] = 'Workflow';
+$string['triggers_installed'] = 'Installed Triggers';
+$string['triggertype_settings_header'] = 'Specific settings of the trigger type';
 $string['upload_workflow'] = 'Upload workflow';
 $string['viewheading'] = 'Manage courses';
 $string['viewsteps'] = 'View workflow steps';
@@ -215,7 +236,7 @@ $string['workflow_active'] = 'Active';
 $string['workflow_definition_heading'] = 'Workflow definitions';
 $string['workflow_delayforallworkflows'] = 'Delay for all workflows?';
 $string['workflow_delayforallworkflows_help'] = 'If ticked, the durations on top do not only delay the execution
-of this workflow for a course, but for all other workflows as well. Thus, until the time passes no process can be started
+of this workflow, but for all other workflows as well. Thus, until the time passes no process can be started
 for the respective course.';
 $string['workflow_displaytitle'] = 'Displayed workflow title';
 $string['workflow_displaytitle_help'] = 'This title is displayed to users when managing their courses.';
@@ -243,3 +264,4 @@ $string['workflow_was_not_imported'] = 'The workflow was not imported!';
 $string['workflownotfound'] = 'Workflow with id {$a} could not be found';
 $string['workflowoverview'] = 'View workflow';
 $string['workflowoverview_list_header'] = 'Details of Workflows';
+$string['workflowsettings'] = 'Workflow settings';

@@ -98,9 +98,9 @@ span.tool_lifecycle-hint {
 }
 
 #lifecycle-workflow-details .courses-table {
-    flex: 40% 1 1;
+    flex: 45% 1 1;
     border: 1px solid #bbb;
-    border-right: none;
+    margin-right: 2em;
 }
 
 #lifecycle-workflow-details .bar {
@@ -124,4 +124,18 @@ span.tool_lifecycle-hint {
     position: absolute;
     top: 1em;
     right: 1em;
+}
+
+#page-admin-setting-tool_lifecycle #adminsettings h3 ul li.nav-item {
+    font-weight: normal;
+    font-size: medium;
+    line-height: 1.5;
+}
+
+#page-admin-setting-tool_lifecycle #adminsettings h3.main {
+    border-bottom: none;
+}
+
+#lifecycle-workflow-details .dropdown-toggle::after {
+    content: none;
 }

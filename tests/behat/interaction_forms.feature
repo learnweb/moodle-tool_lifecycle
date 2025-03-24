@@ -12,7 +12,7 @@ Feature: Add a workflow with a manual trigger and a duplicate step and test the 
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
     And I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow drafts" in site administration
+    And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |

@@ -129,6 +129,23 @@ class delayed_courses_manager {
     }
 
     /**
+     * Queries if a course was delayed for a given workflow.
+     * @param int $courseid id of the course
+     * @param int $workflowid id of the workflow
+     * @return null|int timestamp until when the course is delayed (null if no entry exists).
+     * @throws \dml_exception
+     */
+    public static function get_course_delayed_workflow($courseid, $workflowid) {
+        global $DB;
+        $record = $DB->get_record('tool_lifecycle_delayed_workf', ['courseid' => $courseid, 'workflowid' => $workflowid]);
+        if ($record) {
+            return $record->delayeduntil;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Build where sql for the processor to select only delayed courses.
      * @return array
      */

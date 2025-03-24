@@ -190,7 +190,7 @@ class email extends libbase {
             $coursesstrings[] = $course->fullname;
         }
         $patterns[] = '##courses##';
-        $replacements[] = join("\n", $coursesstrings);
+        $replacements[] = join("\r\n", $coursesstrings);
         $patterns[] = '##courses-html##';
         $replacements[] = join("<br>", $coursesstrings);
 
@@ -200,7 +200,7 @@ class email extends libbase {
             $coursesstrings[] = $course->shortname;
         }
         $patterns[] = '##shortcourses##';
-        $replacements[] = join("\n", $coursesstrings);
+        $replacements[] = join("\r\n", $coursesstrings);
         $patterns[] = '##shortcourses-html##';
         $replacements[] = join("<br>", $coursesstrings);
 

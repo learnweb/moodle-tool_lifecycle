@@ -7,7 +7,7 @@ Feature: Disable a workflow
       | fullname | shortname | category | startdate      |
       | Course 1 | C1        | 0        | ##4 days ago## |
     And I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow drafts" in site administration
+    And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
@@ -39,7 +39,7 @@ Feature: Disable a workflow
 
   Scenario: Disable an workflow, keep processes running, then abort all processes and delete workflow
     Given I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Active workflows" in site administration
+    And I am on activeworkflows page
     Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
     And I should see the tool "Disable workflow (processes keep running)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
     When I click on the tool "Disable workflow (processes keep running)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
@@ -56,7 +56,7 @@ Feature: Disable a workflow
 
   Scenario: Disable an workflow and kill processes (abort), then delete workflow
     Given I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Active workflows" in site administration
+    And I am on activeworkflows page
     Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
     And I should see the tool "Disable workflow (abort processes, maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
     When I click on the tool "Disable workflow (abort processes, maybe unsafe!)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
@@ -68,20 +68,20 @@ Feature: Disable a workflow
 
   Scenario: Disable an workflow then create (duplicate) a new one with the same configuration
     Given I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Active workflows" in site administration
+    And I am on activeworkflows page
     Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
     And I click on the tool "Disable workflow (processes keep running)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
-    When I click on "List workflow drafts" "link"
+    When I click on "Workflow drafts" "link"
     And I click on "Copy new workflow from existing" "link"
     And I click on the tool "Create copy" in the "My Workflow" row of the "tool_lifecycle-select-workflow" table
     And I press "Save changes"
     And I click on "Workflow drafts" "link"
     Then I should see the row "My Workflow" in the "tool_lifecycle_workflow_definitions" table
-    And I click on "List active workflows" "link"
+    And I click on "Active workflows" "link"
     And I should not see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-    And I click on "List workflow drafts" "link"
+    And I click on "Workflow drafts" "link"
     When I press "Activate"
     # Since no element is left, the table is not displayed anymore.
     And I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-    And I click on "List workflow drafts" "link"
+    And I click on "Workflow drafts" "link"
     Then I should not see the table "tool_lifecycle_workflow_definitions"

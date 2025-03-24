@@ -18,88 +18,127 @@
  * Settings page which gives an overview over running lifecycle processes.
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier Universität Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die;
 
+defined('MOODLE_INTERNAL') || die();
+
+use tool_lifecycle\tabs;
+
+// Check for the moodle/site:config permission.
 if ($hassiteconfig) {
 
-    $category = new admin_category('lifecycle_category',
-        get_string('pluginname', 'tool_lifecycle'));
-    $ADMIN->add('tools', $category);
-    $settings = new admin_settingpage('tool_lifecycle',
+    $triggers = core_component::get_plugin_list('lifecycletrigger');
+    $steps = core_component::get_plugin_list('lifecyclestep');
+
+    $ADMIN->add('tools', new admin_category('lifecycle',
+        get_string('pluginname', 'tool_lifecycle')));
+    $settings = new admin_settingpage('lifecycle_settings',
         get_string('general_config_header', 'tool_lifecycle'));
-    $ADMIN->add('lifecycle_category', $settings);
 
-    $settings->add(new admin_setting_configduration('tool_lifecycle/duration',
-        get_string('config_delay_duration', 'tool_lifecycle'),
-        get_string('config_delay_duration_desc', 'tool_lifecycle'),
-        183 * 24 * 60 * 60)); // Dafault value is 180 days.
-
-    $settings->add(new admin_setting_configdirectory('tool_lifecycle/backup_path',
-        get_string('config_backup_path', 'tool_lifecycle'),
-        get_string('config_backup_path_desc', 'tool_lifecycle'),
-        $CFG->dataroot . DIRECTORY_SEPARATOR . 'lifecycle_backups'));
-
-    $settings->add(new admin_setting_configcheckbox('tool_lifecycle/showcoursecounts',
-        get_string('config_showcoursecounts', 'tool_lifecycle'),
-        get_string('config_showcoursecounts_desc', 'tool_lifecycle'),
-        1));
-    $settingenablehierachy = new admin_setting_configcheckbox('tool_lifecycle/enablecategoryhierachy',
-        get_string('config_enablecategoryhierachy', 'tool_lifecycle'),
-        get_string('config_enablecategoryhierachy_desc', 'tool_lifecycle'),
-        false);
-    $settings->add($settingenablehierachy);
-    $coursehierachysetting = new admin_setting_configtext('tool_lifecycle/coursecategorydepth',
-        get_string('config_coursecategorydepth', 'tool_lifecycle'),
-        get_string('config_coursecategorydepth_desc', 'tool_lifecycle'),
-        0, PARAM_INT);
-    $coursehierachysetting->add_dependent_on('tool_lifecycle/enablecategoryhierachy');
-    $settings->add($coursehierachysetting);
-    $settings->hide_if('tool_lifecycle/coursecategorydepth', 'tool_lifecycle/enablecategoryhierachy', 'notchecked');
-
-    $settings->add(new admin_setting_configcheckbox('tool_lifecycle/logreceivedmails',
-        get_string('config_logreceivedmails', 'tool_lifecycle'),
-        get_string('config_logreceivedmails_desc', 'tool_lifecycle'),
-        0));
-
-    $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_workflow_drafts',
-        get_string('workflow_drafts_header', 'tool_lifecycle'),
-        new moodle_url(\tool_lifecycle\urls::WORKFLOW_DRAFTS)));
-
-    $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_active_workflows',
-        get_string('active_workflows_header', 'tool_lifecycle'),
-        new moodle_url(\tool_lifecycle\urls::ACTIVE_WORKFLOWS)));
-
-    $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_coursebackups',
-        get_string('course_backups_list_header', 'tool_lifecycle'),
-        new \moodle_url('/admin/tool/lifecycle/coursebackups.php')));
-
-    $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_delayed_courses',
-        get_string('delayed_courses_header', 'tool_lifecycle'),
-        new moodle_url('/admin/tool/lifecycle/delayedcourses.php')));
-
-    $ADMIN->add('lifecycle_category', new admin_externalpage('tool_lifecycle_process_errors',
-        get_string('process_errors_header', 'tool_lifecycle'),
-        new moodle_url('/admin/tool/lifecycle/errors.php')));
-
-    if ($ADMIN->fulltree) {
-        $triggers = core_component::get_plugin_list('lifecycletrigger');
-        foreach ($triggers as $trigger => $path) {
-            if (file_exists($settingsfile = $path . '/settings.php')) {
-                $settings->add(new admin_setting_heading('lifecycletriggersetting'.$trigger,
-                    get_string('trigger', 'tool_lifecycle') .
-                    ' - ' . get_string('pluginname', 'lifecycletrigger_' . $trigger), ''));
-                include($settingsfile);
+    if (!$ADMIN->fulltree) {
+        $stepsortriggersettings = false;
+        // Check if there are trigger settings pages.
+        if ($triggers) {
+            foreach ($triggers as $trigger => $path) {
+                if (file_exists($settingsfile = $path . '/settings.php')) {
+                    $stepsortriggersettings = true;
+                    break;
+                }
             }
         }
-    }
-
-    $steps = core_component::get_plugin_list('lifecyclestep');
-    foreach ($steps as $step => $path) {
-        if (file_exists($settingsfile = $path . '/settings.php')) {
-            include($settingsfile);
+        // Check if there are step settings pages.
+        if (!$stepsortriggersettings && $steps) {
+            foreach ($steps as $step => $path) {
+                if (file_exists($settingsfile = $path . '/settings.php')) {
+                    $stepsortriggersettings = true;
+                    break;
+                }
+            }
         }
+        if ($stepsortriggersettings) {
+            // Include settings page of each trigger subplugin, if there is one.
+            if ($triggers) {
+                foreach ($triggers as $trigger => $path) {
+                    if (file_exists($settingsfile = $path . '/settings.php')) {
+                        include($settingsfile);
+                    }
+                }
+            }
+            // Include settings page of each step subplugin, if there is one.
+            if ($steps) {
+                foreach ($steps as $step => $path) {
+                    if (file_exists($settingsfile = $path . '/settings.php')) {
+                        include($settingsfile);
+                    }
+                }
+            }
+        }
+    } else {  // No fulltree, settings detail page.
+        $tabrow = tabs::get_tabrow();
+        $id = optional_param('id', 'settings', PARAM_TEXT);
+        $tabs = [$tabrow];
+        $output = print_tabs($tabs, $id, null, null, true);
+
+        // Main config page.
+        $settings->add(new admin_setting_heading('lifecycle_settings_heading',
+            $output,  html_writer::span(get_string('general_settings_header', 'tool_lifecycle'), 'h3')));
+        $settings->add(new admin_setting_configduration('tool_lifecycle/duration',
+            get_string('config_delay_duration', 'tool_lifecycle'),
+            get_string('config_delay_duration_desc', 'tool_lifecycle'),
+            183 * 24 * 60 * 60)); // Dafault value is 180 days.
+        $settings->add(new admin_setting_configdirectory('tool_lifecycle/backup_path',
+            get_string('config_backup_path', 'tool_lifecycle'),
+            get_string('config_backup_path_desc', 'tool_lifecycle'),
+            $CFG->dataroot . DIRECTORY_SEPARATOR . 'lifecycle_backups'));
+        $settings->add(new admin_setting_configcheckbox('tool_lifecycle/showcoursecounts',
+            get_string('config_showcoursecounts', 'tool_lifecycle'),
+            get_string('config_showcoursecounts_desc', 'tool_lifecycle'),
+            1));
+        $settingenablehierachy = new admin_setting_configcheckbox('tool_lifecycle/enablecategoryhierachy',
+            get_string('config_enablecategoryhierachy', 'tool_lifecycle'),
+            get_string('config_enablecategoryhierachy_desc', 'tool_lifecycle'),
+            false);
+        $settings->add($settingenablehierachy);
+        $coursehierachysetting = new admin_setting_configtext('tool_lifecycle/coursecategorydepth',
+            get_string('config_coursecategorydepth', 'tool_lifecycle'),
+            get_string('config_coursecategorydepth_desc', 'tool_lifecycle'),
+            0, PARAM_INT);
+        $coursehierachysetting->add_dependent_on('tool_lifecycle/enablecategoryhierachy');
+        $settings->add($coursehierachysetting);
+        $settings->hide_if('tool_lifecycle/coursecategorydepth', 'tool_lifecycle/enablecategoryhierachy', 'notchecked');
+        $settings->add(new admin_setting_configcheckbox('tool_lifecycle/logreceivedmails',
+            get_string('config_logreceivedmails', 'tool_lifecycle'),
+            get_string('config_logreceivedmails_desc', 'tool_lifecycle'),
+            0));
+
+        if ($triggers) {
+            $settings->add(new admin_setting_heading('lifecycletriggerheader',
+                get_string('triggers_installed', 'tool_lifecycle'), ''));
+            foreach ($triggers as $trigger => $path) {
+                $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
+                    get_string('pluginname', 'lifecycletrigger_' . $trigger),
+                    get_string('plugindescription', 'lifecycletrigger_' . $trigger)));
+            }
+        } else {
+            $settings->add(new admin_setting_heading('adminsettings_notriggers',
+                get_string('adminsettings_notriggers', 'tool_lifecycle'), ''));
+        }
+
+        if ($steps) {
+            $settings->add(new admin_setting_heading('lifecyclestepheader',
+                get_string('steps_installed', 'tool_lifecycle'), ''));
+            foreach ($steps as $step => $path) {
+                $settings->add(new admin_setting_description('lifecyclestepsetting_'.$step,
+                    get_string('pluginname', 'lifecyclestep_' . $step),
+                    get_string('plugindescription', 'lifecyclestep_' . $step)));
+            }
+        } else {
+            $settings->add(new admin_setting_heading('adminsettings_nosteps',
+                get_string('adminsettings_nosteps', 'tool_lifecycle'), ''));
+        }
+        $ADMIN->add('lifecycle', $settings);
     }
 }

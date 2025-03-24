@@ -18,11 +18,12 @@
  * Life Cycle Create Backup Step
  *
  * @package lifecyclestep_createbackup
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2025 Thomas Niedermaier Universität Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2019052900;
+$plugin->version = 2025031300;
+$plugin->requires = 2024100700; // Requires Moodle 4.5+.
 $plugin->component = 'lifecyclestep_createbackup';

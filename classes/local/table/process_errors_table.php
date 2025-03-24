@@ -56,7 +56,7 @@ class process_errors_table extends \table_sql {
                 'rollback' => get_string('rollback', 'tool_lifecycle'),
         ];
 
-        $fields = 'c.fullname as course, w.title as workflow, s.instancename as step, pe.*';
+        $fields = 'c.id, c.fullname as course, w.title as workflow, s.instancename as step, pe.*';
 
         $from = '{tool_lifecycle_proc_error} pe ' .
             'JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id ' .
@@ -163,27 +163,6 @@ class process_errors_table extends \table_sql {
             return parent::show_hide_link($column, $index);
         }
         return '';
-    }
-
-    /**
-     * Show custom nothing to display message.
-     * @return void
-     */
-    public function print_nothing_to_display() {
-        global $OUTPUT;
-
-        // Render the dynamic table header.
-        echo $this->get_dynamic_table_html_start();
-
-        // Render button to allow user to reset table preferences.
-        echo $this->render_reset_button();
-
-        $this->print_initials_bar();
-
-        echo $OUTPUT->heading(get_string('noprocesserrors', 'tool_lifecycle'));
-
-        // Render the dynamic table footer.
-        echo $this->get_dynamic_table_html_end();
     }
 
     /**

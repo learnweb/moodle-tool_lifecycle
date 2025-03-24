@@ -33,7 +33,6 @@
       "triggerhelp": "<a></a>",
       "editsettingslink": "http://localhost/moodle400/admin/tool/lifecycle/editworkflow.php?wf=8",
       "title": "My Workflow Title",
-      "displaytitle": "My Workflow displaytitle",
       "rollbackdelay": "183 days",
       "finishdelay": "183 days",
       "delayglobally": "1",
@@ -66,22 +65,23 @@
         }
       ],
       "listofcourses": [],
+      "popuplink": "",
       "nosteplink": "",
       "table": null
     }
 }}
 <div class="d-flex" id="lifecycle-workflow-details">
     <div class="wf-wrapper">
-        <div class="bg-light d-inline-block p-3 position-relative" style="max-width: 800px;">
+        <div class="bg-light d-inline-block p-3 position-relative mb-2" style="max-width: 800px;">
             <a class="edit-pen" href="{{{editsettingslink}}}">{{#pix}} i/edit, core, {{/pix}}</a>
             <h4 class="pr-5">{{title}}</h4>
-            <span>{{#str}}details:displaytitle, tool_lifecycle, {{displaytitle}}{{/str}}</span><br>
-            <span>{{#str}}details:rollbackdelay, tool_lifecycle, {{rollbackdelay}}{{/str}}</span><br>
-            <span>{{#str}}details:finishdelay, tool_lifecycle, {{finishdelay}}{{/str}}</span><br>
+            <span>{{#str}} workflow_rollbackdelay, tool_lifecycle{{/str}}: <strong>{{rollbackdelay}}</strong> {{{rollbackhelp}}}</span><br>
+            <span>{{#str}} workflow_finishdelay, tool_lifecycle{{/str}}: <strong>{{finishdelay}}</strong> {{{finishhelp}}}</span><br>
             <span>{{# delayglobally }}{{#str}}details:globaldelay_yes, tool_lifecycle{{/str}}{{/ delayglobally }}
                 {{^delayglobally}}{{#str}}details:globaldelay_no, tool_lifecycle{{/str}}{{/delayglobally}}</span>
+            <div class="mt-2">{{{addinstance}}}</div>
         </div>
-        <div class="mt-5 mb-3">{{{addinstance}}}</div>
+        {{#counttriggers}}
         <div class="wf-trigger-block workflow-item">
             <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}} {{{triggerhelp}}}</h5>
             {{#showcoursecounts}}
@@ -89,15 +89,21 @@
                 <div class="mb-2 mx-2">
                     {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{coursestriggered}} {{/str}}<br>
                     {{#str}} courses_will_be_excluded_total, tool_lifecycle, {{coursesexcluded}} {{/str}}<br>
+                    {{#str}} courses_are_delayed_total, tool_lifecycle, {{coursesdelayed}} {{/str}}
+                </div>
+              {{/automatic}}
+              {{^automatic}}
+                <div class="mb-2 mx-2">
+                    {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} {{{manualtriggerenvolvedhelp}}}
                 </div>
               {{/automatic}}
             {{/showcoursecounts}}
             <div class="workflow wf-trigger-wrapper">
                 {{#trigger}}
-                    <div class="workflow-trigger">
+                    <div class="workflow-trigger {{sqlresult}}">
                         <div class="wf-header">
                             <div class="wf-header-text">
-                                <span>{{instancename}}</span><br>
+                                <span>{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
                                 <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
                             </div>
                             <div class="wf-actionmenu">
@@ -107,8 +113,36 @@
                         <div class="wf-content">
                           {{#showcoursecounts}}
                             {{#automatic}}
-                              <span>{{#str}} courses_will_be_triggered, tool_lifecycle, {{triggeredcourses}} {{/str}}</span><br>
-                              <span>{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}</span>
+                              {{#triggeredcourses}}
+                                  <a href="{{popuplink}}&trigger={{id}}">
+                                      <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, {{triggeredcourses}} {{/str}}">
+                                        {{triggeredcourses}}
+                                      </span>
+                                  </a>
+                              {{/triggeredcourses}}
+                              {{^triggeredcourses}}
+                                  <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, 0 {{/str}}">0</span>
+                              {{/triggeredcourses}}
+                              {{#excludedcourses}}
+                                  <a href="{{popuplink}}&excluded={{id}}" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}">
+                                    <span class="btn btn-outline-danger">
+                                      {{excludedcourses}}
+                                    </span>
+                                  </a>
+                              {{/excludedcourses}}
+                              {{^excludedcourses}}
+                                  <span class="btn btn-outline-danger" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, 0 {{/str}}">0</span>
+                              {{/excludedcourses}}
+                              {{#delayedcourses}}
+                                  <a href="{{popuplink}}&delayed={{id}}" data-toggle="tooltip" title="{{#str}} courses_are_delayed, tool_lifecycle, {{delayedcourses}} {{/str}}">
+                                    <span class="btn btn-outline-warning">
+                                      {{delayedcourses}}
+                                    </span>
+                                  </a>
+                              {{/delayedcourses}}
+                            {{/automatic}}
+                            {{^automatic}}
+                                <span class="font-weight-bold">-</span>
                             {{/automatic}}
                           {{/showcoursecounts}}
                         </div>
@@ -116,12 +150,13 @@
                 {{/trigger}}
             </div>
         </div>
+        {{/counttriggers}}
         {{#steps}}
             <div class="wf-arrow"></div>
             <div class="workflow-step workflow-item {{#selected}}wf-selected{{/selected}}">
                 <div class="wf-header">
                     <div class="wf-header-text">
-                        <span>{{instancename}}</span><br>
+                        <span>{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
                         <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
                     </div>
                     <div class="wf-actionmenu">
@@ -129,9 +164,14 @@
                     </div>
                 </div>
                 <div class="wf-content">
-                    <a href="{{nosteplink}}&step={{id}}">{{icon}}{{name}}
-                    {{#str}} courses {{/str}}: {{numberofcourses}}
-                    </a>
+                    {{#numberofcourses}}
+                        <a href="{{popuplink}}&step={{id}}">{{icon}}{{name}}
+                        {{#str}} courses {{/str}}: {{numberofcourses}}
+                        </a>
+                    {{/numberofcourses}}
+                    {{^numberofcourses}}
+                        {{#str}} courses {{/str}}: {{numberofcourses}}
+                    {{/numberofcourses}}
                 </div>
             </div>
         {{/steps}}

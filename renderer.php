@@ -42,6 +42,7 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
      * Write the page header
      *
      * @param string $title optional page title.
+     * @throws \core\exception\coding_exception
      */
     public function header($title = null) {
         echo $this->output->header();
@@ -51,14 +52,12 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Renders the workflow upload form including errors, which occured during upload.
-     * @param \tool_lifecycle\local\form\form_upload_workflow $form
-     * @throws coding_exception
+     * Write the tab row in page
+     *
+     * @param array $tabs the tabs
+     * @param string $id  ID of current page (can be empty)
      */
-    public function render_workflow_upload_form($form) {
-        $this->header(get_string('adminsettings_edit_workflow_definition_heading', 'tool_lifecycle'));
-        $form->display();
-        $this->footer();
+    public function tabs($tabs, $id) {
+        echo $this->output->tabtree($tabs, $id);
     }
-
 }

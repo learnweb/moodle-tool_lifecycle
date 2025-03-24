@@ -28,32 +28,33 @@ use tool_lifecycle\local\form\form_workflow_instance;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\table\workflow_definition_table;
 use tool_lifecycle\urls;
+use tool_lifecycle\tabs;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+
 require_login();
 
-global $OUTPUT, $PAGE, $DB;
+$syscontext = context_system::instance();
+$PAGE->set_context($syscontext);
 
 $workflowid = optional_param('wf', null, PARAM_INT);
-
 if ($workflowid) {
     $workflow = workflow_manager::get_workflow($workflowid);
-    \tool_lifecycle\permission_and_navigation::setup_workflow($workflow, false);
-
     $title = get_string('editworkflow', 'tool_lifecycle');
     $PAGE->set_url(new \moodle_url(urls::EDIT_WORKFLOW), ['wf' => $workflowid]);
 } else {
-    \tool_lifecycle\permission_and_navigation::setup_draft();
-
     $title = get_string('add_workflow', 'tool_lifecycle');
     $PAGE->set_url(new \moodle_url(urls::EDIT_WORKFLOW));
     $workflow = null;
 }
 
-$PAGE->set_title($title);
-$PAGE->set_heading($title);
-$PAGE->navbar->add($title, $PAGE->url);
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
+
+$renderer = $PAGE->get_renderer('tool_lifecycle');
+
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".$title;
 
 $form = new form_workflow_instance($PAGE->url, $workflow);
 if ($form->is_cancelled()) {
@@ -83,10 +84,10 @@ if ($data = $form->get_data()) {
     // New Workflow created, redirect to details page.
     redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]));
 }
-
-$renderer = $PAGE->get_renderer('tool_lifecycle');
-
-echo $renderer->header();
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$id = optional_param('id', 'settings', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
 
 $form->display();
 

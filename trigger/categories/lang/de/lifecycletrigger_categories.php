@@ -26,5 +26,6 @@ $string['categories'] = 'Kategorien, für die der Workflow ausgelöst werden sol
 $string['categories_do_not_exist'] = 'Es gibt keine Kurskategorien mit den folgenden IDs: {$a}.';
 $string['categories_noselection'] = 'Bitte wählen sie mindestens eine Kategorie aus.';
 $string['exclude'] = 'Falls ausgewählt, werden gerade die Kurse der angegebenen Kategorien nicht ausgelöst.';
+$string['plugindescription'] = 'Selektiert alle Kurse einer Kurskategorie.';
 $string['pluginname'] = 'Kategorie-Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';

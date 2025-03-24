@@ -24,7 +24,7 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
       | teacher1 | C2     | editingteacher |
       | teacher1 | C3     | editingteacher |
     And I log in as "admin"
-    And I navigate to "Plugins > Admin tools > Life Cycle > Workflow drafts" in site administration
+    And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                      | My Workflow                               |
