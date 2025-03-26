@@ -150,6 +150,29 @@ abstract class libbase {
     public function abort_course($process) {
     }
 
+    /**
+     * Define description of the step.
+     * Allow subplugins to have custom description.
+     *
+     * @return string description of the trigger.
+     */
+    public function get_plugin_description() {
+        return get_string("pluginname", "lifecyclestep_" . $this->get_subpluginname());
+    }
+
+    /**
+     * Returns the settings of the step.
+     *
+     * @return void
+     */
+    public function get_plugin_settings() {
+        $step = $this->get_subpluginname();
+        $file = __DIR__ . "/$step/settings.php";
+
+        if (file_exists($file)) {
+            include($file);
+        }
+    }
 
     /**
      * Ensure validity of settings upon backup restoration.
@@ -159,7 +182,6 @@ abstract class libbase {
     public function ensure_validity(array $settings): array {
         return [];
     }
-
 }
 
 /**
