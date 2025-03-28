@@ -143,7 +143,7 @@ class specificdate extends base_automatic {
         $mform->setType('dates', PARAM_TEXT);
         $mform->addHelpButton('dates', 'dates', 'lifecycletrigger_specificdate');
         // Add activate timelastrun.
-        $mform->addElement('advcheckbox', 'timelastrunactive', get_string('timelastrunactive', 'lifecycletrigger_specificjku'));
+        $mform->addElement('advcheckbox', 'timelastrunactive', get_string('timelastrunactive', 'lifecycletrigger_specificdate'));
         $mform->setDefault('timelastrunactive', 1);
         $mform->addElement('hidden', 'timelastrun');
         $mform->setDefault('timelastrun', 0);

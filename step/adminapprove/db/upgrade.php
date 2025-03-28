@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Update script for lifecyclestep_email plugin
+ * Update script for lifecyclestep_adminapprove plugin
  *
- * @package lifecyclestep_email
- * @copyright  2024 Nina Herrmann University of Münster
+ * @package lifecyclestep_adminapprove
+ * @copyright  2025 Thomas Niedermaier University of Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
- * Update script for lifecyclestep_email.
+ * Update script for lifecyclestep_adminapprove.
  * @param int $oldversion Version id of the previously installed version.
  * @return bool
  * @throws ddl_exception
@@ -33,31 +33,31 @@
  * @throws downgrade_exception
  * @throws upgrade_exception
  */
-function xmldb_lifecyclestep_email_upgrade($oldversion) {
+function xmldb_lifecyclestep_adminapprove_upgrade($oldversion) {
 
     global $DB;
     $dbman = $DB->get_manager();
     if ($oldversion < 2025032400) {
-        $table = new xmldb_table('lifecyclestep_email_notified');
 
-        // Adding fields to table lifecyclestep_email_notified.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('userid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('timemailsent', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        // Define table lifecyclestep_adminapprove to be created.
+        $table = new xmldb_table('lifecyclestep_adminapprove');
 
-        // Adding keys to table lifecyclestep_email_notified.
+        // Adding fields to table lifecyclestep_adminapprove.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('processid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('status', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0');
+
+        // Adding keys to table lifecyclestep_adminapprove.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-        $table->add_key('courseid_fk', XMLDB_KEY_FOREIGN, ['courseid'], 'course', ['id']);
-        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+        $table->add_key('processid_fk-u', XMLDB_KEY_FOREIGN_UNIQUE, ['processid'], 'tool_lifecycle_process', ['id']);
 
-        // Conditionally launch create table for lifecyclestep_email_notified.
+        // Conditionally launch create table for lifecyclestep_adminapprove.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
 
-        // Lifecycle savepoint reached.
-        upgrade_plugin_savepoint(true, 2025032400, 'lifecyclestep', 'email');
+        // Adminapprove savepoint reached.
+        upgrade_plugin_savepoint(true, 2025032400, 'lifecyclestep', 'adminapprove');
     }
     return true;
 }

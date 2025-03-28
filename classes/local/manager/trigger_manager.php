@@ -151,7 +151,6 @@ class trigger_manager extends subplugin_manager {
         $transaction->allow_commit();
     }
 
-
     /**
      * Returns the triggers instances for the workflow id.
      * @param int $workflowid Id of the workflow definition.

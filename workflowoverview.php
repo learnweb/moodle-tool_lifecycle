@@ -160,30 +160,27 @@ foreach ($triggers as $trigger) {
         );
     }
     $trigger->actionmenu = $OUTPUT->render($actionmenu);
-    $trigger->automatic = !lib_manager::get_trigger_lib($trigger->subpluginname)->is_manual_trigger();
-    if ($trigger->automatic) {
-        $sqlresult = trigger_manager::get_trigger_sqlresult($trigger);
-        if ($sqlresult == "false") {
-            $trigger->sqlresult = "border-danger";
-        } else {
-            $sumtrigger = $amounts[$trigger->sortindex]->triggered - $amounts[$trigger->sortindex]->excluded -
-                $amounts[$trigger->sortindex]->delayed;
-            if ($sumtrigger > 0) {
-                $trigger->sqlresult = "border-success";
-            } else if ($sumtrigger == 0) {
-                $trigger->sqlresult = "border-secondary";
-            } else {
-                $trigger->sqlresult = "border-danger";
-            }
-        }
-    }
     if ($showcoursecounts) {
-        $displaytotaltriggered &= $trigger->automatic;
-        if ($trigger->automatic) {
+        if ($trigger->automatic = $amounts[$trigger->sortindex]->automatic) {
+            $sqlresult = trigger_manager::get_trigger_sqlresult($trigger);
+            if ($sqlresult == "false") {
+                $trigger->classfires = "border-danger";
+            } else {
+                $sumtrigger = $amounts[$trigger->sortindex]->triggered - $amounts[$trigger->sortindex]->excluded -
+                    $amounts[$trigger->sortindex]->delayed;
+                if ($sumtrigger > 0) {
+                    $trigger->classfires = "border-success";
+                } else if ($sumtrigger == 0) {
+                    $trigger->classfires = "border-secondary";
+                } else {
+                    $trigger->classfires = "border-danger";
+                }
+            }
             $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
             $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
             $trigger->delayedcourses = $amounts[$trigger->sortindex]->delayed;
         }
+        $displaytotaltriggered &= $trigger->automatic;
     }
     $displaytriggers[] = $trigger;
 }
@@ -239,28 +236,31 @@ if ($stepid) {
     ob_end_clean();
 } else if ($triggerid) {
     $trigger = trigger_manager::get_instance($triggerid);
-    $courseids = (new \tool_lifecycle\processor())->get_courses_to_trigger_for_trigger($trigger, $workflowid);
-    $table = new \tool_lifecycle\local\table\triggered_courses_table($trigger, 'triggered', $courseids);
-    ob_start();
-    $table->out(20, false);
-    $out = ob_get_contents();
-    ob_end_clean();
+    if ($courseids = (new \tool_lifecycle\processor())->get_courses_to_trigger_for_trigger($trigger, $workflowid)) {
+        $table = new \tool_lifecycle\local\table\triggered_courses_table($trigger, 'triggered', $courseids);
+        ob_start();
+        $table->out(20, false);
+        $out = ob_get_contents();
+        ob_end_clean();
+    }
 } else if ($delayed) {
     $trigger = trigger_manager::get_instance($delayed);
-    $courseids = (new \tool_lifecycle\processor())->get_courses_delayed_for_trigger($trigger, $workflowid);
-    $table = new \tool_lifecycle\local\table\triggered_courses_table($trigger, 'delayed', $courseids);
-    ob_start();
-    $table->out(20, false);
-    $out = ob_get_contents();
-    ob_end_clean();
+    if ($courseids = (new \tool_lifecycle\processor())->get_courses_delayed_for_trigger($trigger, $workflowid)) {
+        $table = new \tool_lifecycle\local\table\triggered_courses_table($trigger, 'delayed', $courseids);
+        ob_start();
+        $table->out(20, false);
+        $out = ob_get_contents();
+        ob_end_clean();
+    }
 } else if ($excluded) {
     $trigger = trigger_manager::get_instance($excluded);
-    $courseids = (new \tool_lifecycle\processor())->get_courses_to_exclude_for_trigger($trigger, $workflowid);
-    $table = new \tool_lifecycle\local\table\triggered_courses_table($trigger, 'exclude', $courseids);
-    ob_start();
-    $table->out(20, false);
-    $out = ob_get_contents();
-    ob_end_clean();
+    if ($courseids = (new \tool_lifecycle\processor())->get_courses_to_exclude_for_trigger($trigger, $workflowid)) {
+        $table = new \tool_lifecycle\local\table\triggered_courses_table($trigger, 'exclude', $courseids);
+        ob_start();
+        $table->out(20, false);
+        $out = ob_get_contents();
+        ob_end_clean();
+    }
 }
 
 $nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid]);

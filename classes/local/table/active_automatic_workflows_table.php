@@ -50,12 +50,10 @@ class active_automatic_workflows_table extends active_workflows_table {
      */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
-        global $PAGE, $DB;
-        list($sqlwheremanual, $paramsmanual) = $DB->get_in_or_equal(false);
-        $sqlwhere = 'timeactive IS NOT NULL AND manual ' . $sqlwheremanual;
-        $params[1] = $paramsmanual[0];
+        global $PAGE;
+        $sqlwhere = 'timeactive IS NOT NULL AND (manual IS NULL OR manual = 0)';
         $this->set_sql("id, title, displaytitle, timeactive, sortindex", '{tool_lifecycle_workflow}',
-            $sqlwhere, $params);
+            $sqlwhere, []);
         $this->define_baseurl($PAGE->url);
         $this->pageable(false);
         $this->init();

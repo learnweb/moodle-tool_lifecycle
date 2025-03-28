@@ -194,7 +194,7 @@ class workflow_manager {
         $records = $DB->get_records_sql(
             'SELECT * FROM {tool_lifecycle_workflow}
                   WHERE timeactive IS NOT NULL AND
-                  manual = ? ORDER BY sortindex', [false]);
+                  manual IS NULL OR manual = 0 ORDER BY sortindex', []);
         $result = [];
         foreach ($records as $record) {
             $result[] = workflow::from_record($record);
@@ -261,9 +261,11 @@ class workflow_manager {
         $workflow = self::get_workflow($workflowid);
         if (!self::is_active($workflow->id)) {
             // Software enhancement: Rethink behaviour for multiple triggers.
-            $trigger = trigger_manager::get_triggers_for_workflow($workflowid)[0];
-            $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-            $workflow->manual = $lib->is_manual_trigger();
+            $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
+            foreach ($triggers as $trigger) {
+                $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+                $workflow->manual |= $lib->is_manual_trigger();
+            }
             $workflow->timeactive = time();
             if (!$workflow->manual) {
                 $workflow->sortindex = count(self::get_active_automatic_workflows()) + 1;

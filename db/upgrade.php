@@ -498,7 +498,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
-    if ($oldversion < 2025031300.02) {
+    if ($oldversion < 2025032400) {
 
         // Changing precision of field instancename on table tool_lifecycle_trigger to (100).
         $table = new xmldb_table('tool_lifecycle_trigger');
@@ -526,7 +526,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Launch change of precision for field instancename.
         $dbman->change_field_precision($table, $field);
 
-        upgrade_plugin_savepoint(true, 2025031300.02, 'tool', 'lifecycle');
+        upgrade_plugin_savepoint(true, 2025032400, 'tool', 'lifecycle');
 
     }
 

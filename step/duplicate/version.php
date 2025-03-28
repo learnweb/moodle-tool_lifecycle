@@ -24,6 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2025031300;
+$plugin->version = 2025032400;
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
 $plugin->component = 'lifecyclestep_duplicate';
