@@ -53,18 +53,18 @@ class categories extends base_automatic {
     }
 
     /**
-     * Return sql sniplet for including (or excluding) the courses belonging to specific categories
+     * Return sql snippet for including (or excluding) the courses belonging to specific categories
      * and all their children.
      * @param int $triggerid Id of the trigger.
+     * @param bool $exclude setting if trigger in fact excludes courses
      * @return array A list containing the constructed sql fragment and an array of parameters.
      * @throws \coding_exception
      * @throws \dml_exception
      */
     public function get_course_recordset_where($triggerid, $exclude = false) {
         global $DB, $CFG;
-        $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
-        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
 
+        $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
         $categories = explode(',', $categories);
         // Use core_course_category for moodle 3.6 and higher.
         if ($CFG->version >= 2018120300) {
@@ -83,7 +83,7 @@ class categories extends base_automatic {
             $allcategories = array_merge($allcategories, $children);
         }
 
-        list($insql, $inparams) = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED, 'param', !$exclude);
+        [$insql, $inparams] = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED, 'param', !$exclude);
 
         $where = "{course}.category {$insql}";
 

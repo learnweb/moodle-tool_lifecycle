@@ -48,6 +48,9 @@ class courses_in_step_table extends \table_sql {
      * Constructor for courses_in_step_table.
      * @param step_subplugin $step step to show courses of
      * @param int|null $courseid if supplied, courseid to focus on
+     * @param int $ncourses number of displayed courses
+     * @param string $filterdata optional term to filter table by course id or -name
+     * @throws \coding_exception
      */
     public function __construct($step, $courseid, $ncourses = 0, $filterdata = '') {
         parent::__construct('tool_lifecycle-courses-in-step');

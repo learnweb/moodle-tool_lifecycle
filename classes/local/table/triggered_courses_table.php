@@ -45,7 +45,8 @@ class triggered_courses_table extends \table_sql {
      * @param string $type of list: triggered, delayed, excluded
      * @param string $triggername optional, if type triggered
      * @param string $workflowname optional, if type delayed
-     * @param int $workflowid optional, if type delayed
+     * @param null $workflowid optional, if type delayed
+     * @param string $filterdata optional, term to filter the table by course id or -name
      * @throws \coding_exception
      * @throws \dml_exception
      */
