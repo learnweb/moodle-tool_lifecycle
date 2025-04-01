@@ -18,6 +18,7 @@
  * Renderer for life cycle
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,6 +27,7 @@
  * Renderer for life cycle
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

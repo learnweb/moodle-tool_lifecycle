@@ -18,24 +18,29 @@
  * Display the list of active processes
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\local\form\form_courses_filter;
+use tool_lifecycle\local\table\active_processes_table;
+use tool_lifecycle\tabs;
+use tool_lifecycle\urls;
+
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+
 require_login();
-\tool_lifecycle\permission_and_navigation::setup_active();
 
-$PAGE->set_url(new \moodle_url(\tool_lifecycle\urls::ACTIVE_PROCESSES));
+$syscontext = context_system::instance();
+$PAGE->set_url(new \moodle_url(urls::ACTIVE_PROCESSES));
+$PAGE->set_context($syscontext);
 
-$title = get_string('find_course_list_header', 'tool_lifecycle');
-$PAGE->set_title($title);
-$PAGE->set_heading($title);
-$PAGE->navbar->add($title, $PAGE->url);
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
 
-$renderer = $PAGE->get_renderer('tool_lifecycle');
-$mform = new \tool_lifecycle\local\form\form_courses_filter();
+$mform = new form_courses_filter();
 
 // Cache handling.
 $cachekey = 'activeprocesses_filter';
@@ -61,9 +66,17 @@ if ($mform->is_cancelled()) {
     }
 }
 
-$table = new tool_lifecycle\local\table\active_processes_table('tool_lifecycle_active_processes', $data);
+$renderer = $PAGE->get_renderer('tool_lifecycle');
 
-echo $renderer->header();
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('find_course_list_header', 'tool_lifecycle');
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow(true);
+$id = 'activeworkflows';
+$renderer->tabs($tabrow, $id);
+
+$renderer = $PAGE->get_renderer('tool_lifecycle');
+
+$table = new active_processes_table('tool_lifecycle_active_processes', $data);
 
 $mform->display();
 

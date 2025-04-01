@@ -68,5 +68,7 @@ class action {
     const WORKFLOW_ABORTDISABLE = 'workflow_instance_abortdisable';
     /** @var string Abort a workflow. */
     const WORKFLOW_ABORT = 'workflow_instance_abort';
+    /** @var string Delete in bulk operation. */
+    const BULK_DELETE = 'bulk-delete';
 
 }

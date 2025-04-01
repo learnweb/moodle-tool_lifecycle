@@ -15,63 +15,47 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display the list of all course backups
+ * Provides a confirmation form.
  *
  * @package tool_lifecycle
  * @copyright  2025 Thomas Niedermaier University Münster
- * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use tool_lifecycle\local\form\form_courses_filter;
+use tool_lifecycle\local\form\form_delete_delays;
 use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir . '/adminlib.php');
 
 require_login();
 
 $syscontext = context_system::instance();
-$PAGE->set_url(new \moodle_url(urls::COURSE_BACKUPS));
+$PAGE->set_url(new \moodle_url(urls::CONFIRMATION));
 $PAGE->set_context($syscontext);
-
-$mform = new form_courses_filter();
-
-// Cache handling.
-$cache = cache::make('tool_lifecycle', 'mformdata');
-if ($mform->is_cancelled()) {
-    $cache->delete('coursebackups_filter');
-    redirect($PAGE->url);
-} else if ($data = $mform->get_data()) {
-    $cache->set('coursebackups_filter', $data);
-} else {
-    $data = $cache->get('coursebackups_filter');
-    if ($data) {
-        $mform->set_data($data);
-    }
-}
-
-$table = new tool_lifecycle\local\table\course_backups_table('tool_lifecycle_course_backups', $data);
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
-$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('course_backups_list_header', 'tool_lifecycle');
-echo $renderer->header($heading);
-$tabrow = tabs::get_tabrow();
-$id = optional_param('id', 'settings', PARAM_TEXT);
-$renderer->tabs($tabrow, $id);
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('delayed_courses_header', 'tool_lifecycle');
 
-echo '<br>';
+$formurl = new \moodle_url(urls::CONFIRMATION, ['sesskey' => sesskey()]);
+$mform = new form_delete_delays($formurl);
 
-$mform->display();
+if ($mform->is_cancelled()) {
+    redirect(new \moodle_url(urls::DELAYED_COURSES));
+} else if ($data = $mform->get_data()) {
+    $url = new moodle_url(urls::DELAYED_COURSES, ['action' => $data->action, 'sesskey' => sesskey()]);
+    redirect($url);
+} else {
+    echo $renderer->header($heading);
+    $tabrow = tabs::get_tabrow();
+    $renderer->tabs($tabrow, 'delayedcourses');
 
-echo '<br>';
+    $mform->display();
 
-$table->out(50, false);
-echo $renderer->footer();
-
+    echo $renderer->footer();
+}
 

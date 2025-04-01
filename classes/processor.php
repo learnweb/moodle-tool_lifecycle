@@ -103,7 +103,7 @@ class processor {
                 try {
                     $course = get_course($process->courseid);
                 } catch (\dml_missing_record_exception $e) {
-                    mtrace("The course with id {$process->courseid} no longer exists. New stdClass with id property is created.");
+                    mtrace("The course with id $process->courseid no longer exists. New stdClass with id property is created.");
                     $course = new \stdClass();
                     $course->id = $process->courseid;
                 }
@@ -176,13 +176,11 @@ class processor {
             switch ($response) {
                 case step_interactive_response::still_processing():
                     return false;
-                    break;
                 case step_interactive_response::no_action():
                     break;
                 case step_interactive_response::proceed():
                     // In case of proceed, call recursively.
                     return $this->process_course_interactive($processid);
-                    break;
                 case step_interactive_response::rollback():
                     delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);
                     process_manager::rollback_process($process);
@@ -210,11 +208,7 @@ class processor {
         foreach ($triggers as $trigger) {
             $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
             $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
-            if ($settings['exclude'] ?? false) {
-                [$sql, $params] = $lib->get_course_recordset_where_excluded($trigger->id);
-            } else {
-                [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
-            }
+            [$sql, $params] = $lib->get_course_recordset_where($trigger->id, $settings['exclude'] ?? false);
             if (!empty($sql)) {
                 $where .= ' AND ' . $sql;
                 $whereparams = array_merge($whereparams, $params);
@@ -240,6 +234,8 @@ class processor {
      * Calculates triggered and excluded courses for every trigger of a workflow, and in total.
      * @param int $workflowid
      * @return array
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function get_count_of_courses_to_trigger_for_workflow($workflowid) {
         $countcourses = 0;
@@ -248,12 +244,6 @@ class processor {
         $countdelayed = 0;
 
         $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
-
-        // Exclude globally delayed courses, courses delayed for this workflow, and the site course.
-        $excludedglobal = delayed_courses_manager::get_globally_delayed_courses();
-        $excludedworkflow = delayed_courses_manager::get_delayed_courses_for_workflow($workflowid);
-        $exclude = array_merge($excludedglobal, $excludedworkflow);
-        $exclude[] = SITEID;
 
         $amounts = [];
         $autotriggers = [];
@@ -268,7 +258,6 @@ class processor {
                 $obj->automatic = true;
                 $obj->triggered = 0;
                 $obj->excluded = 0;
-                $obj->delayed = 0;
                 $autotriggers[] = $trigger;
             }
             $amounts[$trigger->sortindex] = $obj;
@@ -308,20 +297,15 @@ class processor {
                         }
                         $amounts[$trigger->sortindex]->excluded++;
                     } else {
-                        if ($coursedelayed) {
-                            if (!$action) {
-                                $action = true;
-                                $countdelayed++;
-                            }
-                            $amounts[$trigger->sortindex]->delayed++;
-                        } else {
-                            $amounts[$trigger->sortindex]->triggered++;
-                        }
+                        $amounts[$trigger->sortindex]->triggered++;
                     }
                 }
             }
             if (!$action) {
                 $counttriggered++;
+                if ($coursedelayed) {
+                    $countdelayed++;
+                }
             }
             $recordset->next();
         }
@@ -411,37 +395,17 @@ class processor {
     }
 
     /**
-     * Returns a list of delayed courses for a trigger of a workflow.
-     * @param trigger_subplugin $trigger
+     * Returns a list of delayed courses for a workflow.
      * @param int $workflowid
      * @return int[] $courseids
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function get_courses_delayed_for_trigger($trigger, $workflowid) {
+    public function get_courses_delayed_for_workflow($workflowid) {
 
-        $triggered = [];
+        // Get delayed courses for this workflow.
+        $courseids = delayed_courses_manager::get_delayed_courses_for_workflow($workflowid);
 
-        $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
-        $triggerexclude = $settings['exclude'] ?? false;
-
-        // Exclude globally delayed courses, courses delayed for this workflow, and the site course.
-        $excluded = delayed_courses_manager::get_globally_delayed_courses();
-        $excluded = array_merge($excluded, delayed_courses_manager::get_delayed_courses_for_workflow($workflowid));
-        $excluded[] = SITEID;
-
-        $recordset = $this->get_course_recordset([$trigger], []);
-        $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-        while ($recordset->valid()) {
-            $course = $recordset->current();
-            $response = $lib->check_course($course, $trigger->id);
-            if ($response == trigger_response::trigger() && !$triggerexclude) {
-                $triggered[] = $course->id;
-            }
-            $recordset->next();
-        }
-
-        $courseids = array_intersect($excluded, $triggered);
         return $courseids;
     }
 }

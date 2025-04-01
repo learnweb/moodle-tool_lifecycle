@@ -18,6 +18,7 @@
  * Displays form for creating or editing a new step or trigger.
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2022 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,14 +32,13 @@ use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\settings_type;
-use tool_lifecycle\urls;
 use tool_lifecycle\tabs;
+use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
-require_login();
 
-global $OUTPUT, $PAGE, $DB;
+require_login();
 
 $type = required_param('type', PARAM_ALPHA);
 $elementid = optional_param('elementid', null, PARAM_INT);
@@ -53,9 +53,9 @@ if ($type === settings_type::STEP) {
 
 if ($elementid) {
     if ($isstep) {
-        $element = \tool_lifecycle\local\manager\step_manager::get_step_instance($elementid);
+        $element = step_manager::get_step_instance($elementid);
     } else {
-        $element = \tool_lifecycle\local\manager\trigger_manager::get_instance($elementid);
+        $element = trigger_manager::get_instance($elementid);
     }
     if (!$element) {
         throw new coding_exception('Element with that ID and type does not exist!');

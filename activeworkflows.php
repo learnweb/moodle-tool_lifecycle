@@ -18,14 +18,16 @@
  * Displays the tables of active workflow definitions.
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2022 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\table\active_automatic_workflows_table;
 use tool_lifecycle\local\table\active_manual_workflows_table;
-use tool_lifecycle\urls;
 use tool_lifecycle\tabs;
+use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
@@ -39,7 +41,7 @@ $PAGE->set_context($syscontext);
 $action = optional_param('action', null, PARAM_TEXT);
 if ($action) {
     $wfid = required_param('workflowid', PARAM_INT);
-    \tool_lifecycle\local\manager\workflow_manager::handle_action($action, $wfid);
+    workflow_manager::handle_action($action, $wfid);
     redirect($PAGE->url);
 }
 
@@ -60,7 +62,7 @@ echo $renderer->render_from_template('tool_lifecycle/search_input', [
     'inputname' => 'search',
     'extraclasses' => 'mb-3',
     'inform' => false,
-    'searchstring' => 'Search for courses',
+    'searchstring' => get_string('searchcourses', 'tool_lifecycle'),
 ]);
 
 echo $OUTPUT->heading(get_string('active_automatic_workflows_heading', 'tool_lifecycle'));

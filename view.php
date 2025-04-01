@@ -18,9 +18,13 @@
  * Display the list of courses relevant for a specific user in a specific step instance.
  *
  * @package tool_lifecycle
+use tool_lifecycle\tabs;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use tool_lifecycle\local\form\form_courses_filter;
+use tool_lifecycle\view_controller;
 
 require_once(__DIR__ . '/../../../config.php');
 
@@ -44,7 +48,7 @@ $courseid = optional_param('courseid', null, PARAM_INT);
 $PAGE->set_title(get_string('viewheading', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('viewheading', 'tool_lifecycle'));
 
-$controller = new \tool_lifecycle\view_controller();
+$controller = new view_controller();
 
 if ($action !== null && $processid !== null && $stepid !== null) {
     require_sesskey();
@@ -60,7 +64,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
 
-$mform = new \tool_lifecycle\local\form\form_courses_filter();
+$mform = new form_courses_filter();
 
 // Cache handling.
 $cache = cache::make('tool_lifecycle', 'mformdata');

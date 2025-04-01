@@ -30,7 +30,6 @@ use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
-use tool_lifecycle\local\table\interaction_log_table;
 use tool_lifecycle\local\table\interaction_remaining_table;
 use tool_lifecycle\local\table\interaction_attention_table;;
 

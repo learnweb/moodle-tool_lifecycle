@@ -18,6 +18,7 @@
  * Displays all deactivated workflows
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2018 Yorick Reum, JMU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,9 +26,10 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\table\deactivated_workflows_table;
-use tool_lifecycle\urls;
 use tool_lifecycle\tabs;
+use tool_lifecycle\urls;
 
 require_login();
 
@@ -38,7 +40,7 @@ $PAGE->set_context($syscontext);
 $workflowid = optional_param('workflowid', null, PARAM_INT);
 $action = optional_param('action', null, PARAM_TEXT);
 if ($workflowid && $action) {
-    \tool_lifecycle\local\manager\workflow_manager::handle_action($action, $workflowid);
+    workflow_manager::handle_action($action, $workflowid);
 }
 
 $table = new deactivated_workflows_table('tool_lifecycle_deactivated_workflows');

@@ -49,13 +49,17 @@ class courses_in_step_table extends \table_sql {
      * @param step_subplugin $step step to show courses of
      * @param int|null $courseid if supplied, courseid to focus on
      */
-    public function __construct($step, $courseid) {
+    public function __construct($step, $courseid, $ncourses = 0, $filterdata = '') {
         parent::__construct('tool_lifecycle-courses-in-step');
         global $PAGE;
 
         $this->courseid = $courseid;
 
-        $this->caption = get_string('coursesinstep', 'tool_lifecycle', $step->instancename);
+        if (!$courseid ?? false && $ncourses > 0) {
+            $this->caption = get_string('coursesinstep', 'tool_lifecycle', $step->instancename)." ($ncourses)";
+        } else if ($courseid) {
+            $this->caption = get_string('coursesinstep', 'tool_lifecycle', $step->instancename)." (1)";
+        }
         $this->captionattributes = ['class' => 'ml-2'];
 
         $this->define_baseurl($PAGE->url);
@@ -69,12 +73,20 @@ class courses_in_step_table extends \table_sql {
 
         $fields = "p.id as processid, c.id as courseid, c.fullname as coursefullname, c.startdate, " .
             "c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname";
-        $from = "{tool_lifecycle_process} p join " .
-        "{course} c on p.courseid = c.id join " .
+        $from = "{tool_lifecycle_process} p inner join " .
+        "{course} c on p.courseid = c.id inner join " .
         "{tool_lifecycle_step} s ".
         "on p.workflowid = s.workflowid AND p.stepindex = s.sortindex ";
 
         $where = "p.stepindex = :stepindex AND p.workflowid = :wfid";
+
+        if ($filterdata) {
+            if (is_numeric($filterdata)) {
+                $where = " AND c.id = $filterdata ";
+            } else {
+                $where = $where . " AND ( c.fullname LIKE '%$filterdata%' OR c.shortname LIKE '%$filterdata%')";
+            }
+        }
 
         $this->column_nosort = ['status', 'tools'];
         $this->set_sql($fields, $from, $where, ['stepindex' => $step->sortindex, 'wfid' => $step->workflowid]);
@@ -91,9 +103,8 @@ class courses_in_step_table extends \table_sql {
         global $DB;
         $params = $this->sql->params;
         $params['courseid'] = $this->courseid;
-        $count = $DB->count_records_sql(
-            "SELECT COUNT (*) FROM {$this->sql->from} WHERE {$this->sql->where} AND c.id < :courseid",
-            $params);
+        $sql = "SELECT COUNT(*) FROM {$this->sql->from} WHERE {$this->sql->where} AND c.id < :courseid";
+        $count = $DB->count_records_sql($sql, $params);
         $this->set_page_number(intval(ceil(($count + 1) / $pagesize)));
     }
 
@@ -174,6 +185,8 @@ class courses_in_step_table extends \table_sql {
      * Prints a customized "nothing to display" message.
      */
     public function print_nothing_to_display() {
-        echo \html_writer::tag('h4', 'There are no courses in the selected step!', ['class' => 'm-2']);
+        global $OUTPUT;
+        echo \html_writer::div($OUTPUT->notification(get_string('nothingtodisplay', 'moodle'), 'info'),
+            'm-3');
     }
 }

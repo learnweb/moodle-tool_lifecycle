@@ -18,14 +18,15 @@
  * Display the delays of courses
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use tool_lifecycle\local\form\form_delays_filter;
 use tool_lifecycle\local\table\delayed_courses_table;
-use tool_lifecycle\urls;
 use tool_lifecycle\tabs;
+use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
@@ -59,7 +60,7 @@ if ($action) {
     } else if ($action == 'bulk-delete') {
         $workflow = optional_param('workflow', null, PARAM_ALPHANUM);
         $deleteglobal = true;
-        $deleteseperate = true;
+        $deleteseperate = false;
         $workflowfilterid = null;
         if ($workflow) {
             if ($workflow == 'global') {
@@ -89,15 +90,19 @@ if ($action) {
 
         $whereforcourse = implode(' AND ', $whereforcourse);
         if ($deleteglobal) {
-            $sql = 'DELETE FROM {tool_lifecycle_delayed} d ';
             if ($whereforcourse) {
-                $sql .= 'WHERE d.courseid IN ( ' .
+                $sql = 'DELETE FROM {tool_lifecycle_delayed} d WHERE d.courseid IN ( ' .
                             'SELECT c.id FROM {course} c ' .
                             'JOIN {course_categories} cat ON c.category = cat.id ' .
                             'WHERE ' . $whereforcourse .
                         ')';
+                $DB->execute($sql, $params);
+            } else {
+                $sql = 'DELETE FROM {tool_lifecycle_delayed}';
+                $DB->execute($sql, []);
+                $sql = 'DELETE FROM {tool_lifecycle_delayed_workf}';
+                $DB->execute($sql, []);
             }
-            $DB->execute($sql, $params);
         }
 
         if ($deleteseperate) {
@@ -147,20 +152,35 @@ if ($mform->is_cancelled()) {
     }
 }
 
+// Get number of delayed courses.
+$time = time();
+$sql = "select count(c.id) from {course} c LEFT JOIN
+        (SELECT dw.courseid, dw.workflowid, w.title as workflow, dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount
+         FROM ( SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount FROM {tool_lifecycle_delayed_workf} dw
+            JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id
+            WHERE dw.delayeduntil >= $time AND w.timeactive IS NOT NULL GROUP BY courseid ) maxtable JOIN
+             {tool_lifecycle_delayed_workf} dw ON maxtable.maxid = dw.id JOIN
+             {tool_lifecycle_workflow} w ON dw.workflowid = w.id ) wfdelay ON wfdelay.courseid = c.id LEFT JOIN
+            (SELECT * FROM {tool_lifecycle_delayed} d WHERE d.delayeduntil > $time ) d ON c.id = d.courseid JOIN
+            {course_categories} cat ON c.category = cat.id
+        where COALESCE(wfdelay.courseid, d.courseid) IS NOT NULL";
+$delayedcourses = $DB->count_records_sql($sql);
+
 $table = new delayed_courses_table($data);
 $table->define_baseurl($PAGE->url);
 
-$mform->display();
-$table->out(100, false);
-
-$params = ['sesskey' => sesskey(), 'action' => 'bulk-delete'];
-if ($data) {
-    $params = array_merge($params, (array) $data);
+if ($delayedcourses > 0) {
+    $mform->display();
+    $params = ['sesskey' => sesskey(), 'action' => 'bulk-delete'];
+    if ($data) {
+        $params = array_merge($params, (array) $data);
+    }
+    $button = new single_button(new moodle_url('confirmation.php'),
+        get_string('delete_all_delays', 'tool_lifecycle'));
+    echo $OUTPUT->render($button);
+    echo html_writer::div('', 'mb-2');
 }
 
-$button = new single_button(new moodle_url($PAGE->url, $params),
-        get_string('delete_all_delays', 'tool_lifecycle'));
+$table->out(100, false);
 
-echo "<br>";
-echo $OUTPUT->render($button);
 echo $OUTPUT->footer();

@@ -18,7 +18,7 @@
  * Version details.
  *
  * @package    tool_lifecycle
- * @copyright  2025 Thomas Niedermaier Universität Münster
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -41,13 +41,15 @@ class triggered_courses_table extends \table_sql {
 
     /**
      * Builds a table of courses.
-     * @param trigger $trigger trigger to show courses of, triggered or excluded courses
-     * @param string $type whether triggered or excluded courses are shown
-     * @param array $courseids
+     * @param array $courseids of the courses to list
+     * @param string $type of list: triggered, delayed, excluded
+     * @param string $triggername optional, if type triggered
+     * @param string $workflowname optional, if type delayed
+     * @param int $workflowid optional, if type delayed
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function __construct($trigger, $type, $courseids) {
+    public function __construct($courseids, $type, $triggername = '', $workflowname = '', $workflowid = null, $filterdata = '') {
         parent::__construct('tool_lifecycle-courses-in-trigger');
         global $DB, $PAGE;
 
@@ -57,24 +59,50 @@ class triggered_courses_table extends \table_sql {
 
         $this->define_baseurl($PAGE->url);
         if ($type == 'triggered') {
-            $this->caption = get_string('coursestriggered', 'tool_lifecycle', $trigger->instancename);
+            $this->caption = get_string('coursestriggered', 'tool_lifecycle', $triggername)." (".count($courseids).")";
         } else if ($type == 'delayed') {
-            $this->caption = get_string('coursesdelayed', 'tool_lifecycle', $trigger->instancename);
+            $this->caption = get_string('coursesdelayed', 'tool_lifecycle', $workflowname)." (".count($courseids).")";
         } else {
-            $this->caption = get_string('coursesexcluded', 'tool_lifecycle', $trigger->instancename);
+            $this->caption = get_string('coursesexcluded', 'tool_lifecycle', $triggername)." (".count($courseids).")";
         }
         $this->captionattributes = ['class' => 'ml-3'];
-        $this->define_columns(['courseid', 'coursefullname', 'coursecategory']);
-        $this->define_headers([
+        $columns = ['courseid', 'coursefullname', 'coursecategory'];
+        if ($type == 'delayed') {
+            $columns[] = 'delayeduntil';
+        }
+        $this->define_columns($columns);
+        $headers = [
             get_string('courseid', 'tool_lifecycle'),
             get_string('coursename', 'tool_lifecycle'),
             get_string('coursecategory', 'moodle'),
-        ]);
+        ];
+        if ($type == 'delayed') {
+            $headers[] = get_string('delayeduntil', 'tool_lifecycle');
+        }
+        $this->define_headers($headers);
 
         $fields = "c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, cc.name as coursecategory";
+        if ($type == 'delayed') {
+            $fields .= ", dwf.delayeduntil as delayeduntil";
+        }
         $from = "{course} c INNER JOIN {course_categories} cc ON c.category = cc.id";
+        if ($type == 'delayed') {
+            $from .= " INNER JOIN {tool_lifecycle_delayed_workf} dwf ON c.id = dwf.courseid";
+        }
         [$insql, $inparams] = $DB->get_in_or_equal($courseids);
         $where = "c.id ".$insql;
+        if ($type == 'delayed') {
+            $from .= " AND dwf.workflowid = $workflowid";
+        }
+
+        if ($filterdata) {
+            if (is_numeric($filterdata)) {
+                $where = " c.id = $filterdata ";
+            } else {
+                $where = $where . " AND ( c.fullname LIKE '%$filterdata%' OR c.shortname LIKE '%$filterdata%')";
+            }
+        }
+
         $this->set_sql($fields, $from, $where, $inparams);
         $this->set_sortdata([['sortby' => 'fullname', 'sortorder' => '1']]);
     }
@@ -91,9 +119,22 @@ class triggered_courses_table extends \table_sql {
     }
 
     /**
+     * Render delayeduntil column.
+     * @param object $row Row data.
+     * @return string date
+     * @throws \coding_exception
+     */
+    public function col_delayeduntil($row) {
+        $delayeduntil = userdate($row->delayeduntil, get_string('strftimedatetime', 'core_langconfig'));
+        return $delayeduntil;
+    }
+
+    /**
      * Prints a customized "nothing to display" message.
      */
     public function print_nothing_to_display() {
-        echo \html_writer::tag('h4', get_string('nothingtodisplay'), ['class' => 'm-2']);
+        global $OUTPUT;
+        echo \html_writer::div($OUTPUT->notification(get_string('nothingtodisplay', 'moodle'), 'info'),
+            'm-3');
     }
 }

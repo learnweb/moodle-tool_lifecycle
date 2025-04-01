@@ -18,6 +18,7 @@
  * Displays form for uploading a backed up workflow.
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2022 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,8 +26,8 @@
 use core\notification;
 use tool_lifecycle\local\backup\restore_lifecycle_workflow;
 use tool_lifecycle\local\form\form_upload_workflow;
-use tool_lifecycle\urls;
 use tool_lifecycle\tabs;
+use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
@@ -35,6 +36,7 @@ require_login();
 
 $syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::UPLOAD_WORKFLOW));
+
 $PAGE->set_context($syscontext);
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');

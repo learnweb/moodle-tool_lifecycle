@@ -87,9 +87,9 @@
             {{#showcoursecounts}}
               {{#automatic}}
                 <div class="mb-2 mx-2">
-                    {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{coursestriggered}} {{/str}}<br>
-                    {{#str}} courses_will_be_excluded_total, tool_lifecycle, {{coursesexcluded}} {{/str}}<br>
-                    {{#str}} courses_are_delayed_total, tool_lifecycle, {{coursesdelayed}} {{/str}}
+                    {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{{coursestriggered}}} {{/str}}<br>
+                    {{#str}} courses_will_be_excluded_total, tool_lifecycle, {{{coursesexcluded}}} {{/str}}<br>
+                    {{#str}} courses_are_delayed_total, tool_lifecycle, {{{coursesdelayed}}} {{/str}}
                 </div>
               {{/automatic}}
               {{^automatic}}
@@ -133,13 +133,6 @@
                               {{^excludedcourses}}
                                   <span class="btn btn-outline-danger" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, 0 {{/str}}">0</span>
                               {{/excludedcourses}}
-                              {{#delayedcourses}}
-                                  <a href="{{popuplink}}&delayed={{id}}" data-toggle="tooltip" title="{{#str}} courses_are_delayed, tool_lifecycle, {{delayedcourses}} {{/str}}">
-                                    <span class="btn btn-outline-warning">
-                                      {{delayedcourses}}
-                                    </span>
-                                  </a>
-                              {{/delayedcourses}}
                             {{/automatic}}
                             {{^automatic}}
                                 <span class="font-weight-bold">-</span>
@@ -181,6 +174,7 @@
         <div class="bar">
             <a class="close-button" href="{{nosteplink}}">×</a>
         </div>
+        {{{ search }}}
         {{{ table }}}
     </div>
 {{/table}}

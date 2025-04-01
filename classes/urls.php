@@ -54,5 +54,7 @@ class urls {
     const COURSE_BACKUPS = '/admin/tool/lifecycle/coursebackups.php?id=coursebackups';
     /** @var string Lists and process errors */
     const PROCESS_ERRORS = '/admin/tool/lifecycle/errors.php?id=errors';
+    /** @var string Confirmation page for bulk operations */
+    const CONFIRMATION = '/admin/tool/lifecycle/confirmation.php';
 
 }

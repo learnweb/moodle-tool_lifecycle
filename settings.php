@@ -18,7 +18,7 @@
  * Settings page which gives an overview over running lifecycle processes.
  *
  * @package tool_lifecycle
- * @copyright  2025 Thomas Niedermaier Universität Münster
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
