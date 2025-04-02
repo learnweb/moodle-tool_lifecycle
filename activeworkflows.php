@@ -43,7 +43,7 @@ if ($action) {
     $wfid = required_param('workflowid', PARAM_INT);
     workflow_manager::handle_action($action, $wfid);
     if (optional_param('backtooverview', 0, PARAM_BOOL)) {
-        redirect(new \moodle_url(urls::WORKFLOW_DETAILS, array('wf' => $wfid)));
+        redirect(new \moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $wfid]));
     } else {
         redirect($PAGE->url);
     }

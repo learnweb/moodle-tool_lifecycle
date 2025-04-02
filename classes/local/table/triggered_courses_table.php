@@ -100,7 +100,7 @@ class triggered_courses_table extends \table_sql {
         } else if ($type == 'used') {
             $from .= " LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid
                 LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid
-                LEFT JOIN {tool_lifecycle_workflow} wfp ON p.workflowid = wfp.id 
+                LEFT JOIN {tool_lifecycle_workflow} wfp ON p.workflowid = wfp.id
                 LEFT JOIN {tool_lifecycle_workflow} wfpe ON pe.workflowid = wfpe.id";
         }
         [$insql, $inparams] = $DB->get_in_or_equal($courseids);

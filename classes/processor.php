@@ -197,6 +197,7 @@ class processor {
      * Relevant means that there is currently no lifecycle process running for this course.
      * @param trigger_subplugin[] $triggers List of triggers, which will be asked for additional where requirements.
      * @param int[] $exclude List of course id, which should be excluded from execution.
+     * @param bool $includecourseswithprocess
      * @return \moodle_recordset with relevant courses.
      * @throws \coding_exception
      * @throws \dml_exception
