@@ -226,7 +226,7 @@ class process_manager {
 
     /**
      * Defines if a course is already part of a process.
-     * @param $courseid
+     * @param int $courseid
      * @return bool
      * @throws \dml_exception
      */
