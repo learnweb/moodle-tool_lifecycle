@@ -89,7 +89,12 @@
                 <div class="mb-2 mx-2">
                     {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{{coursestriggered}}} {{/str}}<br>
                     {{#str}} courses_will_be_excluded_total, tool_lifecycle, {{{coursesexcluded}}} {{/str}}<br>
-                    {{#str}} courses_are_delayed_total, tool_lifecycle, {{{coursesdelayed}}} {{/str}}
+                    {{#coursesdelayed}}
+                        {{#str}} courses_are_delayed_total, tool_lifecycle, {{{coursesdelayed}}} {{/str}}<br>
+                    {{/coursesdelayed}}
+                    {{#coursesused}}
+                        {{#str}} courses_are_used_total, tool_lifecycle, {{{coursesused}}} {{/str}}
+                    {{/coursesused}}
                 </div>
               {{/automatic}}
               {{^automatic}}

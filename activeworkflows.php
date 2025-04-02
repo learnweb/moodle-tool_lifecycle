@@ -42,7 +42,11 @@ $action = optional_param('action', null, PARAM_TEXT);
 if ($action) {
     $wfid = required_param('workflowid', PARAM_INT);
     workflow_manager::handle_action($action, $wfid);
-    redirect($PAGE->url);
+    if (optional_param('backtooverview', 0, PARAM_BOOL)) {
+        redirect(new \moodle_url(urls::WORKFLOW_DETAILS, array('wf' => $wfid)));
+    } else {
+        redirect($PAGE->url);
+    }
 }
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');

@@ -63,6 +63,8 @@ class triggered_courses_table extends \table_sql {
             $this->caption = get_string('coursestriggered', 'tool_lifecycle', $triggername)." (".count($courseids).")";
         } else if ($type == 'delayed') {
             $this->caption = get_string('coursesdelayed', 'tool_lifecycle', $workflowname)." (".count($courseids).")";
+        } else if ($type == 'used') {
+            $this->caption = get_string('coursesused', 'tool_lifecycle', $workflowname)." (".count($courseids).")";
         } else {
             $this->caption = get_string('coursesexcluded', 'tool_lifecycle', $triggername)." (".count($courseids).")";
         }
@@ -70,6 +72,8 @@ class triggered_courses_table extends \table_sql {
         $columns = ['courseid', 'coursefullname', 'coursecategory'];
         if ($type == 'delayed') {
             $columns[] = 'delayeduntil';
+        } else if ($type == 'used') {
+            $columns[] = 'otherworkflow';
         }
         $this->define_columns($columns);
         $headers = [
@@ -79,16 +83,25 @@ class triggered_courses_table extends \table_sql {
         ];
         if ($type == 'delayed') {
             $headers[] = get_string('delayeduntil', 'tool_lifecycle');
+        } else if ($type == 'used') {
+            $headers[] = get_string('workflow', 'tool_lifecycle');
         }
         $this->define_headers($headers);
 
         $fields = "c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, cc.name as coursecategory";
         if ($type == 'delayed') {
             $fields .= ", dwf.delayeduntil as delayeduntil";
+        } else if ($type == 'used') {
+            $fields .= ", COALESCE(wfp.title, wfpe.title) as otherworkflow";
         }
-        $from = "{course} c INNER JOIN {course_categories} cc ON c.category = cc.id";
+        $from = "{course} c INNER JOIN {course_categories} cc ON c.category = cc.id ";
         if ($type == 'delayed') {
-            $from .= " INNER JOIN {tool_lifecycle_delayed_workf} dwf ON c.id = dwf.courseid";
+            $from .= " INNER JOIN {tool_lifecycle_delayed_workf} dwf ON c.id = dwf.courseid ";
+        } else if ($type == 'used') {
+            $from .= " LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid
+                LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid
+                LEFT JOIN {tool_lifecycle_workflow} wfp ON p.workflowid = wfp.id 
+                LEFT JOIN {tool_lifecycle_workflow} wfpe ON pe.workflowid = wfpe.id";
         }
         [$insql, $inparams] = $DB->get_in_or_equal($courseids);
         $where = "c.id ".$insql;

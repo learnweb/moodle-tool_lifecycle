@@ -18,6 +18,7 @@
  * Manager for Trigger subplugins
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,7 +26,6 @@ namespace tool_lifecycle\local\manager;
 
 use tool_lifecycle\action;
 use tool_lifecycle\local\entity\trigger_subplugin;
-use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\settings_type;
 
 /**

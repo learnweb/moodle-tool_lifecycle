@@ -18,6 +18,7 @@
  * Offers functionality to trigger, process and finish lifecycle processes.
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -200,7 +201,7 @@ class processor {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function get_course_recordset($triggers, $exclude) {
+    public function get_course_recordset($triggers, $exclude, $includecourseswithprocess = false) {
         global $DB;
 
         $where = 'true';
@@ -221,12 +222,18 @@ class processor {
             $whereparams = array_merge($whereparams, $inparams);
         }
 
-        $sql = 'SELECT {course}.* from {course} '.
-            'left join {tool_lifecycle_process} '.
-            'ON {course}.id = {tool_lifecycle_process}.courseid '.
-            'LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid ' .
-            'WHERE {tool_lifecycle_process}.courseid is null AND ' .
-            'pe.courseid IS NULL AND '. $where;
+        if ($includecourseswithprocess) {
+            // Get also courses which are part of an existing process.
+            $sql = 'SELECT {course}.* from {course} WHERE ' . $where;
+        } else {
+            // Get only courses which are not part of an existing process.
+            $sql = 'SELECT {course}.* from {course} '.
+                'left join {tool_lifecycle_process} '.
+                'ON {course}.id = {tool_lifecycle_process}.courseid '.
+                'LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid ' .
+                'WHERE {tool_lifecycle_process}.courseid is null AND ' .
+                'pe.courseid IS NULL AND '. $where;
+        }
         return $DB->get_recordset_sql($sql, $whereparams);
     }
 
@@ -242,6 +249,7 @@ class processor {
         $counttriggered = 0;
         $countexcluded = 0;
         $countdelayed = 0;
+        $usedcourses = [];
 
         $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
 
@@ -263,57 +271,63 @@ class processor {
             $amounts[$trigger->sortindex] = $obj;
         }
 
-        $recordset = $this->get_course_recordset($autotriggers, []);
+        $recordset = $this->get_course_recordset($autotriggers, [], true);
 
         while ($recordset->valid()) {
             $course = $recordset->current();
             $delaytime = max(delayed_courses_manager::get_course_delayed($course->id) ?? 0,
                 delayed_courses_manager::get_course_delayed_workflow($course->id, $workflowid) ?? 0);
             $coursedelayed = $delaytime > time();
-            $countcourses++;
-            $action = false;
-            foreach ($autotriggers as $trigger) {
-                $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-                $response = $lib->check_course($course, $trigger->id);
-                if ($response == trigger_response::next()) {
-                    if (!$action) {
-                        $action = true;
+            if (process_manager::has_other_process($course->id)) {
+                $usedcourses[] = $course->id;
+                $recordset->next();
+            } else {
+                $countcourses++;
+                $action = false;
+                foreach ($autotriggers as $trigger) {
+                    $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+                    $response = $lib->check_course($course, $trigger->id);
+                    if ($response == trigger_response::next()) {
+                        if (!$action) {
+                            $action = true;
+                        }
+                        continue;
                     }
-                    continue;
-                }
-                if ($response == trigger_response::exclude()) {
-                    if (!$action) {
-                        $action = true;
-                        $countexcluded++;
-                    }
-                    $amounts[$trigger->sortindex]->excluded++;
-                    continue;
-                }
-                if ($response == trigger_response::trigger()) {
-                    if ($trigger->exclude) {
+                    if ($response == trigger_response::exclude()) {
                         if (!$action) {
                             $action = true;
                             $countexcluded++;
                         }
                         $amounts[$trigger->sortindex]->excluded++;
-                    } else {
-                        $amounts[$trigger->sortindex]->triggered++;
+                        continue;
+                    }
+                    if ($response == trigger_response::trigger()) {
+                        if ($trigger->exclude) {
+                            if (!$action) {
+                                $action = true;
+                                $countexcluded++;
+                            }
+                            $amounts[$trigger->sortindex]->excluded++;
+                        } else {
+                            $amounts[$trigger->sortindex]->triggered++;
+                        }
                     }
                 }
-            }
-            if (!$action) {
-                $counttriggered++;
-                if ($coursedelayed) {
-                    $countdelayed++;
+                if (!$action) {
+                    $counttriggered++;
+                    if ($coursedelayed) {
+                        $countdelayed++;
+                    }
                 }
+                $recordset->next();
             }
-            $recordset->next();
         }
 
         $all = new \stdClass();
         $all->excluded = $countexcluded;
         $all->triggered = $counttriggered;
         $all->delayed = $countdelayed;
+        $all->used = $usedcourses;
         $all->coursesetsize = $countcourses;
 
         $amounts['all'] = $all;
@@ -321,7 +335,7 @@ class processor {
     }
 
     /**
-     * Returns a list of triggered courses for a trigger of a workflow.
+     * Returns a list of triggered courses for a trigger of a workflow but delays and course 1 are not excluded.
      * @param trigger_subplugin $trigger
      * @param int $workflowid
      * @return int[] $courseids
@@ -332,15 +346,11 @@ class processor {
 
         $courseids = [];
 
+        // If it is a trigger which excludes courses return nothing and count the triggered courses to the excludes.
         $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
         if ($settings['exclude'] ?? false) {
             return [];
         }
-
-        // Exclude globally delayed courses, courses delayed for this workflow, and the site course.
-        $exclude = delayed_courses_manager::get_globally_delayed_courses();
-        $exclude = array_merge($exclude, delayed_courses_manager::get_delayed_courses_for_workflow($workflowid));
-        $exclude[] = SITEID;
 
         $recordset = $this->get_course_recordset([$trigger], []);
         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);

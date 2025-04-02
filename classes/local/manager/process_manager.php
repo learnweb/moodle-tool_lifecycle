@@ -225,6 +225,22 @@ class process_manager {
     }
 
     /**
+     * Defines if a course is already part of a process.
+     * @param $courseid
+     * @return bool
+     * @throws \dml_exception
+     */
+    public static function has_other_process($courseid) {
+        global $DB;
+        if ($DB->count_records('tool_lifecycle_process', ['courseid' => $courseid])) {
+            return true;
+        } else if ($DB->count_records('tool_lifecycle_proc_error', ['courseid' => $courseid])) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Callback for the course deletion observer.
      * @param course_deleted $event The course deletion event.
      * @throws \dml_exception

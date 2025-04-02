@@ -46,8 +46,9 @@ require_login();
 $workflowid = required_param('wf', PARAM_INT);
 $stepid = optional_param('step', null, PARAM_INT);
 $triggerid = optional_param('trigger', null, PARAM_INT);
-$delayed = optional_param('delayed', null, PARAM_INT);
 $excluded = optional_param('excluded', null, PARAM_INT);
+$delayed = optional_param('delayed', null, PARAM_INT);
+$used = optional_param('used', null, PARAM_INT);
 $search = optional_param('search', null, PARAM_RAW);
 
 $workflow = workflow_manager::get_workflow($workflowid);
@@ -252,17 +253,6 @@ if ($stepid) {
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'trigger', 'value' => $triggerid];
     }
-} else if ($delayed) {
-    $trigger = trigger_manager::get_instance($delayed);
-    if ($courseids = (new processor())->get_courses_delayed_for_workflow($workflowid)) {
-        $table = new triggered_courses_table( $courseids, 'delayed',
-            null, $workflow->title, $workflowid, $search);
-        ob_start();
-        $table->out(20, false);
-        $out = ob_get_contents();
-        ob_end_clean();
-        $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
-    }
 } else if ($excluded) {
     $trigger = trigger_manager::get_instance($excluded);
     if ($courseids = (new processor())->get_courses_to_exclude_for_trigger($trigger, $workflowid)) {
@@ -272,6 +262,26 @@ if ($stepid) {
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'excluded', 'value' => $excluded];
+    }
+} else if ($delayed) {
+    if ($courseids = (new processor())->get_courses_delayed_for_workflow($workflowid)) {
+        $table = new triggered_courses_table( $courseids, 'delayed',
+            null, $workflow->title, $workflowid, $search);
+        ob_start();
+        $table->out(20, false);
+        $out = ob_get_contents();
+        ob_end_clean();
+        $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
+    }
+} else if ($used) {
+    if ($courseids = $amounts['all']->used ?? null) {
+        $table = new triggered_courses_table( $courseids, 'used',
+            null, $workflow->title, $workflowid, $search);
+        ob_start();
+        $table->out(20, false);
+        $out = ob_get_contents();
+        ob_end_clean();
+        $hiddenfieldssearch[] = ['name' => 'used', 'value' => '1'];
     }
 }
 $searchhtml = '';
@@ -320,10 +330,15 @@ if ($showcoursecounts) {
     $delayed = $amounts['all']->delayed ?? 0;
     $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
     $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
-        ['class' => 'text-warning  font-weight-bold btn btn-outline-warning']) : 0;
+        ['class' => 'text-warning  btn btn-outline-warning']) : 0;
+    $used = count($amounts['all']->used) ?? 0;
+    $usedlink = new moodle_url($popuplink, ['used' => "1"]);
+    $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,
+        ['class' => 'btn btn-outline-secondary']) : 0;
     $data['coursestriggered'] = $triggeredhtml;
     $data['coursesexcluded'] = $excludedhtml;
     $data['coursesdelayed'] = $delayedhtml;
+    $data['coursesused'] = $usedhtml;
     $data['coursesetsize'] = $amounts['all']->coursesetsize;
 }
 
@@ -358,7 +373,9 @@ if (workflow_manager::is_editable($workflow->id)) {
             $addinstance .= $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
                 ['action' => action::WORKFLOW_ACTIVATE,
                     'sesskey' => sesskey(),
-                    'workflowid' => $workflow->id, ]),
+                    'workflowid' => $workflow->id,
+                    'backtooverview' => '1',
+                    ]),
                 get_string('activateworkflow', 'tool_lifecycle'));
         } else {
             $addinstance .= $OUTPUT->pix_icon('i/circleinfo', get_string('invalid_workflow_details', 'tool_lifecycle')) .

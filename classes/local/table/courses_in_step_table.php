@@ -18,6 +18,7 @@
  * Table listing all courses for a specific step.
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2022 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

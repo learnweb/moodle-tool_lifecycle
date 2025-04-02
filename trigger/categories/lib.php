@@ -23,11 +23,11 @@
  */
 namespace tool_lifecycle\trigger;
 
+use core_course_category;
 use coursecat;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\settings_type;
-use core_course_category;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');

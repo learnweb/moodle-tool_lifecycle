@@ -79,7 +79,7 @@ class delayed_courses_manager {
     }
 
     /**
-     * Get the delayes courses for specific workflow.
+     * Get the delayed courses for specific workflow.
      * @param int $workflowid Id of the workflow.
      * @return array
      * @throws \dml_exception
