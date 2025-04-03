@@ -32,19 +32,15 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class tool_lifecycle_trigger_semindependent_testcase extends \advanced_testcase {
+final class trigger_test extends \advanced_testcase {
 
     /**@var processor Instance of the lifecycle processor */
     private $processor;
 
-    /**
-     * @var \stdClass course with startdate in the past
-     */
+    /**@var \stdClass course with startdate in the past */
     private $semindependentcourse;
 
-    /**
-     * @var \stdClass course with startdate now
-     */
+    /**@var \stdClass course with startdate now */
     private $semcourse;
 
     /**
@@ -60,6 +56,7 @@ final class tool_lifecycle_trigger_semindependent_testcase extends \advanced_tes
 
     /**
      * Tests if trigger for inclusion of semester independent courses works as expected.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\semindependent
      */
     public function test_include_semester_independent(): void {
 
@@ -84,6 +81,7 @@ final class tool_lifecycle_trigger_semindependent_testcase extends \advanced_tes
 
     /**
      * Tests if trigger for exclusion of semester independent courses works as expected.
+     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\semindependent
      */
     public function test_exclude_semester_independent(): void {
 

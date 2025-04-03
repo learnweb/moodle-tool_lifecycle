@@ -33,7 +33,11 @@ class tool_lifecycle_trigger_semindependent_generator extends testing_module_gen
 
     /**
      * Creates a trigger semindependent for an artificial workflow without steps.
+     * @param bool $include
      * @return trigger_subplugin the semindependent trigger.
+     * @throws dml_exception
+     * @throws dml_transaction_exception
+     * @throws moodle_exception
      */
     public static function create_workflow_with_semindependent($include) {
         // Create Workflow.

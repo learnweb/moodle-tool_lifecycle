@@ -40,8 +40,8 @@ class semindependent extends base_automatic {
 
     /**
      * Checks the course and returns a repsonse, which tells if the course should be further processed.
-     * @param $course object to be processed.
-     * @param $triggerid int id of the trigger instance.
+     * @param object $course to be processed.
+     * @param int $triggerid id of the trigger instance.
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
