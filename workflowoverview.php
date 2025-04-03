@@ -28,6 +28,8 @@ require_once($CFG->libdir . '/adminlib.php');
 
 require_login();
 
+define('PAGESIZE', 20);
+
 use tool_lifecycle\action;
 use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\manager\process_manager;
@@ -238,7 +240,7 @@ if ($stepid) {
     $table = new courses_in_step_table($step,
         optional_param('courseid', null, PARAM_INT), $ncourses, $search);
     ob_start();
-    $table->out(20, false);
+    $table->out(PAGESIZE, false);
     $out = ob_get_contents();
     ob_end_clean();
     $hiddenfieldssearch[] = ['name' => 'step', 'value' => $stepid];
@@ -248,7 +250,7 @@ if ($stepid) {
         $table = new triggered_courses_table($courseids, 'triggered', $trigger->instancename,
             null, null, $search);
         ob_start();
-        $table->out(20, false);
+        $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'trigger', 'value' => $triggerid];
@@ -258,7 +260,7 @@ if ($stepid) {
     if ($courseids = (new processor())->get_courses_to_exclude_for_trigger($trigger, $workflowid)) {
         $table = new triggered_courses_table($courseids, 'exclude', $trigger->instancename, null, null, $search);
         ob_start();
-        $table->out(20, false);
+        $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'excluded', 'value' => $excluded];
@@ -268,7 +270,7 @@ if ($stepid) {
         $table = new triggered_courses_table( $courseids, 'delayed',
             null, $workflow->title, $workflowid, $search);
         ob_start();
-        $table->out(20, false);
+        $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
@@ -278,14 +280,14 @@ if ($stepid) {
         $table = new triggered_courses_table( $courseids, 'used',
             null, $workflow->title, $workflowid, $search);
         ob_start();
-        $table->out(20, false);
+        $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'used', 'value' => '1'];
     }
 }
 $searchhtml = '';
-if ($courseids || $ncourses) {
+if ((intval($courseids) + intval($ncourses)) > PAGESIZE ) {
     $searchhtml = $renderer->render_from_template('tool_lifecycle/search_input', [
         'action' => (new moodle_url(urls::WORKFLOW_DETAILS))->out(false),
         'uniqid' => 'tool_lifecycle-search-courses',
