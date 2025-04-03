@@ -44,6 +44,7 @@ final class trigger_test extends \advanced_testcase {
     private $semcourse;
 
     /**
+     * Setup function for the trigger test.
      * @return void
      */
     public function setUp(): void {
