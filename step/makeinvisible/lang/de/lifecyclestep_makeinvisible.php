@@ -22,6 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['plugindescription'] = 'Ein getriggerter Kurs wird vor den Teilnehmer:innen verborgen.';
+$string['plugindescription'] = 'Ein getriggerter Kurs wird vor den Teilnehmer:innen verborgen. - EXPERIMENTELL';
 $string['pluginname'] = 'Kurs verbergen - Schritt';
 $string['privacy:metadata'] = 'Speichert keine personenbezogenen Daten';

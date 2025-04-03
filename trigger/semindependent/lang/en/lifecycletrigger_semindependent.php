@@ -27,5 +27,5 @@ $string['include'] = 'Include semester independent';
 $string['include_help'] = 'If true, semester independent courses are triggered,
 otherwise they are excluded from being processed by the respective workflow.';
 $string['plugindescription'] = 'If activated, semester independent courses are triggered,
-otherwise they are excluded from being processed by the respective workflow.';
+otherwise they are excluded. - EXPERIMENTAL';
 $string['pluginname'] = 'Semester independent trigger';

@@ -24,6 +24,6 @@
  */
 
 $string['include'] = 'Inkludiere semesterunabhängige Kurse';
-$string['include_help'] = 'Wenn aktiviert werden semesterunabhängige Kurse eingeschlossen, wenn nicht aktiviert werden diese Kurse ausgeschlossen.';
-$string['plugindescription'] = 'Wenn aktiviert werden semesterunabhängige Kurse getriggert, wenn nicht aktiviert werden diese Kurse ausgeschlossen.';
+$string['include_help'] = 'Ist diese Option aktiviert werden semesterunabhängige Kurse eingeschlossen, wenn nicht werden diese Kurse ausgeschlossen.';
+$string['plugindescription'] = 'Mit aktivierter Option "Inkludiere.." werden semesterunabhängige Kurse getriggert, wenn nicht werden diese Kurse ausgeschlossen. - EXPERIMENTELL';
 $string['pluginname'] = 'Semesterunabhängige Kurse Trigger';
