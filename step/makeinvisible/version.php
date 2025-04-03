@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life Cycle Duplicate Step
+ * Life Cycle Make Invisible Step
  *
- * @package    lifecyclestep_duplicate
- * @copyright  2025 Thomas Niedermaier Universität Münster
+ * @package    lifecyclestep_makeinvisible
+ * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,6 +26,9 @@ defined('MOODLE_INTERNAL') || die;
 
 $plugin->version = 2025032400;
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
-$plugin->component = 'lifecyclestep_duplicate';
+$plugin->component = 'lifecyclestep_makeinvisible';
+$plugin->dependencies = array(
+    'tool_lifecycle' => 2025032400
+);
 $plugin->release   = 'v4.5-r1';
 $plugin->maturity = MATURITY_STABLE;

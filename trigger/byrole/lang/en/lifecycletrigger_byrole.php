@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life Cycle Duplicate Step
+ * Lang strings for site course trigger
  *
- * @package    lifecyclestep_duplicate
- * @copyright  2025 Thomas Niedermaier Universität Münster
+ * @package lifecycletrigger_byrole
+ * @copyright  2017 Tobias Reischmann WWU Nina Herrmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
-$plugin->version = 2025032400;
-$plugin->requires = 2024100700; // Requires Moodle 4.5+.
-$plugin->component = 'lifecyclestep_duplicate';
-$plugin->release   = 'v4.5-r1';
-$plugin->maturity = MATURITY_STABLE;
+$string['delay'] = 'Days of delay for triggering';
+$string['delay_help'] = 'Days a course has to remain without any responsible person until the course is finally triggered';
+$string['plugindescription'] = 'Triggers if a specified role is misssing in a course.';
+$string['pluginname'] = 'Delete courses by roles missing';
+$string['privacy:metadata'] = 'Does not store user specific data';
+$string['responsibleroles'] = 'Responsible Roles in courses';
+$string['responsibleroles_help'] = 'Select the roles that have to be presented within a course. If one of the roles is present the course is not triggered.';

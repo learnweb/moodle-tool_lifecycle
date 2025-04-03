@@ -1,0 +1,55 @@
+language: php
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+php:
+ - 7.2
+
+addons:
+  postgresql: "9.5"
+
+services:
+ - mysql
+
+matrix:
+  allow_failures:
+    - env: DB=pgsql MOODLE_BRANCH=master
+    - env: DB=mysqli MOODLE_BRANCH=master
+  fast_finish: true
+
+env:
+ global:
+  - IGNORE_PATHS=amd/build
+ matrix:
+  - DB=pgsql MOODLE_BRANCH=MOODLE_38_STABLE
+  - DB=pgsql MOODLE_BRANCH=master
+  - DB=mysqli MOODLE_BRANCH=MOODLE_38_STABLE
+  - DB=mysqli MOODLE_BRANCH=master
+
+before_install:
+  - phpenv config-rm xdebug.ini
+  - nvm install 8.9.4
+  - cd ../..
+  - composer selfupdate
+  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
+  - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
+
+install:
+  - moodle-plugin-ci add-plugin --branch master learnweb/moodle-tool_lifecycle
+  - moodle-plugin-ci install
+
+script:
+  - moodle-plugin-ci phplint
+  - moodle-plugin-ci phpcpd
+  - moodle-plugin-ci phpmd
+  - moodle-plugin-ci codechecker
+  - moodle-plugin-ci validate
+  - moodle-plugin-ci phpunit --coverage-clover
+  - moodle-plugin-ci behat
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

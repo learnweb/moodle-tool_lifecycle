@@ -28,3 +28,5 @@ defined('MOODLE_INTERNAL') || die;
 $plugin->version = 2025032400;
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
 $plugin->component = 'lifecycletrigger_delayedcourses';
+$plugin->release   = 'v4.5-r1';
+$plugin->maturity = MATURITY_STABLE;

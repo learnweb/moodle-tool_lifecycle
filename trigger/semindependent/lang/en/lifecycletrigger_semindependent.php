@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life Cycle Duplicate Step
+ * Lang strings for semester independent trigger
  *
- * @package    lifecyclestep_duplicate
- * @copyright  2025 Thomas Niedermaier Universität Münster
+ * @package lifecycletrigger
+ * @subpackage semindependent
+ * @copyright  2019 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
-$plugin->version = 2025032400;
-$plugin->requires = 2024100700; // Requires Moodle 4.5+.
-$plugin->component = 'lifecyclestep_duplicate';
-$plugin->release   = 'v4.5-r1';
-$plugin->maturity = MATURITY_STABLE;
+$string['include'] = 'Include semester independent';
+$string['include_help'] = 'If true, semester independent courses are triggered,
+otherwise they are excluded from being processed by the respective workflow.';
+$string['plugindescription'] = 'If activated, semester independent courses are triggered,
+otherwise they are excluded from being processed by the respective workflow.';
+$string['pluginname'] = 'Semester independent trigger';

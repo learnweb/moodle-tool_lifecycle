@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life Cycle Duplicate Step
+ * Lifecycle By Role Trigger
  *
- * @package    lifecyclestep_duplicate
- * @copyright  2025 Thomas Niedermaier Universität Münster
+ * @package    lifecycletrigger_byrole
+ * @copyright  2017 Tobias Reischmann WWU Nina Herrmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,6 +26,9 @@ defined('MOODLE_INTERNAL') || die;
 
 $plugin->version = 2025032400;
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
-$plugin->component = 'lifecyclestep_duplicate';
+$plugin->component = 'lifecycletrigger_byrole';
+$plugin->dependencies = [
+    'tool_lifecycle' => 2025032400,
+];
 $plugin->release   = 'v4.5-r1';
 $plugin->maturity = MATURITY_STABLE;
