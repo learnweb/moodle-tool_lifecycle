@@ -17,7 +17,7 @@
 /**
  * Life Cycle Semester independent Trigger
  *
- * @package lifecycletrigger
+ * @package lifecycletrigger_semindependent
  * @subpackage semindependent
  * @copyright  2019 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -28,8 +28,8 @@ defined('MOODLE_INTERNAL') || die;
 $plugin->version = 2025032400;
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
 $plugin->component = 'lifecycletrigger_semindependent';
-$plugin->dependencies = array(
-    'tool_lifecycle' => 2025032400
-);
+$plugin->dependencies = [
+    'tool_lifecycle' => 2025032400,
+];
 $plugin->release   = 'v4.5-r1';
 $plugin->maturity = MATURITY_STABLE;

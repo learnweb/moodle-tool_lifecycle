@@ -17,7 +17,7 @@
 /**
  * Lang strings for semester independent trigger
  *
- * @package lifecycletrigger
+ * @package lifecycletrigger_semindependent
  * @subpackage semindependent
  * @copyright  2019 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

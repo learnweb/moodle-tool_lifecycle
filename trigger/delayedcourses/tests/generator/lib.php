@@ -41,6 +41,8 @@ class tool_lifecycle_trigger_delayedcourses_generator extends testing_module_gen
     /**
      * Creates a trigger delayedcourses for an artificial workflow without steps.
      * @return trigger_subplugin the created delayedcourses trigger.
+     * @throws dml_exception
+     * @throws dml_transaction_exception
      */
     public static function create_trigger_with_workflow() {
         // Create Workflow.
@@ -62,6 +64,8 @@ class tool_lifecycle_trigger_delayedcourses_generator extends testing_module_gen
     /**
      * Creates a workflow, which delays only for upcomming processes of itself.
      * @return workflow.
+     * @throws dml_exception
+     * @throws dml_transaction_exception
      */
     public static function create_workflow() {
         // Create Workflow.
@@ -79,6 +83,8 @@ class tool_lifecycle_trigger_delayedcourses_generator extends testing_module_gen
     /**
      * Creates a workflow, which delays upcomming processes for all workflows.
      * @return workflow.
+     * @throws dml_exception
+     * @throws dml_transaction_exception
      */
     public static function create_workflow_delaying_for_all_workflows() {
         // Create Workflow.

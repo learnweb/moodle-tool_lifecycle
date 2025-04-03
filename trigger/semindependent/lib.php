@@ -18,8 +18,7 @@
  * Interface for the subplugintype trigger
  * It has to be implemented by all subplugins.
  *
- * @package lifecycletrigger
- * @subpackage semindependent
+ * @package lifecycletrigger_semindependent
  * @copyright  2019 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -50,6 +49,13 @@ class semindependent extends base_automatic {
         return trigger_response::trigger();
     }
 
+    /**
+     * Returns the sql where string and its parameters for including or excluding the semesterindependent courses
+     * @param int $triggerid
+     * @return array for the sql string and the parameters
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function get_course_recordset_where($triggerid) {
         $include = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['include'];
         if ($include) {
@@ -58,22 +64,32 @@ class semindependent extends base_automatic {
             $where = "{course}.startdate > :semindepdate";
         }
         // Date before which a course counts as semester independent. In this case the 1.1.2000.
-        $params = array(
-            "semindepdate" => 946688400,
-        );
-        return array($where, $params);
+        $params = ["semindepdate" => 946688400];
+        return [$where, $params];
     }
 
+    /**
+     * Function to retrieve the subplugin's name
+     * @return string name of the subplugin
+     */
     public function get_subpluginname() {
         return 'semindependent';
     }
 
+    /**
+     * Introduce the admin setting include for this subplugin.
+     * @return instance_setting[] include
+     */
     public function instance_settings() {
-        return array(
-            new instance_setting('include', PARAM_BOOL)
-        );
+        return [new instance_setting('include', PARAM_BOOL)];
     }
 
+    /**
+     * Adds a checkbox "include" to a moodle form
+     * @param object $mform
+     * @return void
+     * @throws \coding_exception
+     */
     public function extend_add_instance_form_definition($mform) {
         $mform->addElement('advcheckbox', 'include', get_string('include', 'lifecycletrigger_semindependent'));
         $mform->addHelpButton('include', 'include', 'lifecycletrigger_semindependent');

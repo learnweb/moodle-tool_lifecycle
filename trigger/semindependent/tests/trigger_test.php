@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tool_lifecycle\trigger;
+namespace lifecycletrigger_semindependent;
 
 use tool_lifecycle\processor;
 use tool_lifecycle_trigger_semindependent_generator as generator;
@@ -27,33 +27,41 @@ require_once(__DIR__ . '/generator/lib.php');
 /**
  * Trigger test for semester independent trigger.
  *
- * @package    lifecycletrigger
+ * @package    lifecycletrigger_semindependent
  * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_lifecycle_trigger_semindependent_testcase extends \advanced_testcase {
+final class tool_lifecycle_trigger_semindependent_testcase extends \advanced_testcase {
 
     /**@var processor Instance of the lifecycle processor */
     private $processor;
 
+    /**
+     * @var \stdClass course with startdate in the past
+     */
     private $semindependentcourse;
+
+    /**
+     * @var \stdClass course with startdate now
+     */
     private $semcourse;
 
-    public function setUp() {
+    /**
+     * @return void
+     */
+    public function setUp(): void {
         $this->resetAfterTest(true);
         $this->setAdminUser();
-
         $this->processor = new processor();
-
-        $this->semindependentcourse = $this->getDataGenerator()->create_course(array('startdate' => 915152400));
-        $this->semcourse = $this->getDataGenerator()->create_course(array('startdate' => time()));
+        $this->semindependentcourse = $this->getDataGenerator()->create_course(['startdate' => 915152400]);
+        $this->semcourse = $this->getDataGenerator()->create_course(['startdate' => time()]);
     }
 
     /**
      * Tests if trigger for inclusion of semester independent courses works as expected.
      */
-    public function test_include_semester_independent() {
+    public function test_include_semester_independent(): void {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(true);
 
@@ -77,7 +85,7 @@ class tool_lifecycle_trigger_semindependent_testcase extends \advanced_testcase 
     /**
      * Tests if trigger for exclusion of semester independent courses works as expected.
      */
-    public function test_exclude_semester_independent() {
+    public function test_exclude_semester_independent(): void {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(false);
 
