@@ -83,7 +83,7 @@ class delayed_courses_table extends \table_sql {
         } else {
             $fields .= 'null AS globaldelay, ';
         }
-        $fields .= 'COALESCE(wfdelay.`type`, d.`type`) as `type`';
+        $fields .= 'COALESCE(wfdelay."type", d."type") as "type"';
 
         $params = [];
         $where = ["TRUE"];
@@ -97,7 +97,7 @@ class delayed_courses_table extends \table_sql {
                     // For every course, add information about delays per workflow.
                     'LEFT JOIN (' .
                     'SELECT dw.courseid, dw.workflowid, w.title as workflow, ' .
-                    'dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount, dw.`type` as `type` ' .
+                    'dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount, dw."type" as "type" ' .
                     'FROM ( ' .
                     'SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount ' .
                     'FROM {tool_lifecycle_delayed_workf} dw ' .

@@ -56,7 +56,6 @@ class categories extends base_automatic {
      * Return sql snippet for including (or excluding) the courses belonging to specific categories
      * and all their children.
      * @param int $triggerid Id of the trigger.
-     * @param bool $exclude setting if trigger in fact excludes courses
      * @return array A list containing the constructed sql fragment and an array of parameters.
      * @throws \coding_exception
      * @throws \dml_exception

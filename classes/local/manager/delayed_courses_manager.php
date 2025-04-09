@@ -101,6 +101,7 @@ class delayed_courses_manager {
      * Creates an instance of a delayed course.
      * @param int $courseid id of the course
      * @param int $duration number of seconds
+     * @param int $type 1 for rollback, 2 for finish
      * @throws \dml_exception
      */
     public static function set_course_delayed($courseid, $duration, $type = 0) {
@@ -196,10 +197,10 @@ class delayed_courses_manager {
         $typehtml = "";
         if ($type == DELAYTYPE_ROLLBACK) {
             $typehtml = $OUTPUT->render(new \pix_icon('e/undo',
-                get_string('rolledback', 'tool_lifecycle'),'moodle',['class' => 'ml-1']));
+                get_string('rolledback', 'tool_lifecycle'), 'moodle', ['class' => 'ml-1']));
         } else if ($type == DELAYTYPE_FINISHED) {
             $typehtml = $OUTPUT->render(new \pix_icon('e/tick',
-                get_string('finished', 'tool_lifecycle'),'moodle',['class' => 'ml-1']));
+                get_string('finished', 'tool_lifecycle'), 'moodle', ['class' => 'ml-1']));
         }
         return $typehtml;
     }

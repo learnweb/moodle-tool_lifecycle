@@ -41,7 +41,7 @@ function xmldb_lifecycletrigger_semindependent_upgrade($oldversion) {
 
     global $DB;
 
-    if ($oldversion < 2025040602) {
+    if ($oldversion < 2025040600) {
 
         if ($instances = $DB->get_records('tool_lifecycle_trigger', ['subpluginname' => 'semindependent'])) {
             // For each existing semindependent instance.
@@ -52,7 +52,7 @@ function xmldb_lifecycletrigger_semindependent_upgrade($oldversion) {
                     // If include is 0 write an exclude setting of 1.
                     if ($setting->value == 0) {
                         settings_manager::save_setting($instance->id, settings_type::TRIGGER, 'semindependent', 'exclude', 1);
-                    } else { // If include setting is 1 write an exclude setting of 0
+                    } else { // If include setting is 1 write an exclude setting of 0.
                         settings_manager::save_setting($instance->id, settings_type::TRIGGER, 'semindependent', 'exclude', 0);
                     }
                 } else { // No include setting for existing semindependent instance - write exclude setting of 1.
@@ -60,7 +60,7 @@ function xmldb_lifecycletrigger_semindependent_upgrade($oldversion) {
                 }
             }
         }
-        upgrade_plugin_savepoint(true, 2025040602, 'lifecycletrigger', 'semindependent');
+        upgrade_plugin_savepoint(true, 2025040600, 'lifecycletrigger', 'semindependent');
 
     }
 

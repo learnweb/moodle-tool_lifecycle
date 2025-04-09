@@ -343,8 +343,8 @@ class processor {
 
     /**
      * Returns a list of triggered courses for a trigger of a workflow but delays and course 1 are not excluded.
-     * @param trigger_subplugin $trigger
-     * @param int $workflowid
+     * @param trigger_subplugin $triggerin the trigger who triggers the courses
+     * @param int $workflowid id of the current workflow
      * @return int[] $courseids
      * @throws \coding_exception
      * @throws \dml_exception
