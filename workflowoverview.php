@@ -74,26 +74,32 @@ $PAGE->set_url(new \moodle_url(urls::WORKFLOW_DETAILS, $params));
 $PAGE->set_context($syscontext);
 $PAGE->set_title($workflow->title);
 
-$popuplink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
+$popuplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]);
 
 $action = optional_param('action', null, PARAM_TEXT);
 if ($action) {
-    step_manager::handle_action($action, optional_param('actionstep', null, PARAM_INT), $workflow->id);
-    trigger_manager::handle_action($action, optional_param('actiontrigger', null, PARAM_INT), $workflow->id);
-    $processid = optional_param('processid', null, PARAM_INT);
-    if ($processid) {
-        $process = process_manager::get_process_by_id($processid);
-        if ($action === 'rollback') {
-            process_manager::rollback_process($process);
-            delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $workflow);
-        } else if ($action === 'proceed') {
-            process_manager::proceed_process($process);
-            delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, false, $workflow);
-        } else {
-            throw new coding_exception('processid was specified but action was neither "rollback" nor "proceed"!');
+    if ($action == 'deletedelay') {
+        $cid = required_param('cid', PARAM_INT);
+        $DB->delete_records('tool_lifecycle_delayed_workf', ['courseid' => $cid, 'workflowid' => $workflow->id]);
+
+    } else {
+        step_manager::handle_action($action, optional_param('actionstep', null, PARAM_INT), $workflow->id);
+        trigger_manager::handle_action($action, optional_param('actiontrigger', null, PARAM_INT), $workflow->id);
+        $processid = optional_param('processid', null, PARAM_INT);
+        if ($processid) {
+            $process = process_manager::get_process_by_id($processid);
+            if ($action === 'rollback') {
+                process_manager::rollback_process($process);
+                delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $workflow);
+            } else if ($action === 'proceed') {
+                process_manager::proceed_process($process);
+                delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, false, $workflow);
+            } else {
+                throw new coding_exception('processid was specified but action was neither "rollback" nor "proceed"!');
+            }
         }
+        redirect($PAGE->url);
     }
-    redirect($PAGE->url);
 }
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
@@ -110,13 +116,16 @@ $draftlink = false;
 if ($isactive) {  // Active workflow.
     $id = 'activeworkflows';
     $activelink = true;
+    $classdetails = "bg-primary text-white";
 } else {
     if ($isdeactivated) { // Deactivated workflow.
         $id = 'deactivatedworkflows';
         $deactivatedlink = true;
+        $classdetails = "bg-dark text-white";
     } else { // Draft.
         $id = 'workflowdrafts';
         $draftlink = true;
+        $classdetails = "bg-light";
     }
 }
 $tabrow = tabs::get_tabrow($activelink, $deactivatedlink, $draftlink);
@@ -170,6 +179,7 @@ foreach ($triggers as $trigger) {
             $sqlresult = trigger_manager::get_trigger_sqlresult($trigger);
             if ($sqlresult == "false") {
                 $trigger->classfires = "border-danger";
+                $trigger->additionalinfo = $amounts[$trigger->sortindex]->additionalinfo ?? "-";
             } else {
                 $sumtrigger = $amounts[$trigger->sortindex]->triggered - $amounts[$trigger->sortindex]->excluded;
                 if ($sumtrigger > 0) {
@@ -179,9 +189,9 @@ foreach ($triggers as $trigger) {
                 } else {
                     $trigger->classfires = "border-danger";
                 }
+                $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
+                $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
             }
-            $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
-            $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
         }
         $displaytotaltriggered &= $trigger->automatic;
     }
@@ -322,26 +332,30 @@ $data = [
     'table' => $out,
     'workflowid' => $workflowid,
     'search' => $searchhtml,
+    'classdetails' => $classdetails,
 ];
 if ($showcoursecounts) {
     $data['automatic'] = $displaytotaltriggered;
     $triggered = $amounts['all']->triggered ?? 0;
     $triggeredhtml = $triggered > 0 ? html_writer::span($triggered, 'text-success font-weight-bold') : 0;
-    $excluded = $amounts['all']->excluded;
-    $excludedhtml = $excluded > 0 ? html_writer::span($excluded, 'text-danger font-weight-bold') : 0;
-    $delayed = $amounts['all']->delayed ?? 0;
-    $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
-    $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
-        ['class' => 'text-warning  btn btn-outline-warning']) : 0;
-    $used = count($amounts['all']->used) ?? 0;
-    $usedlink = new moodle_url($popuplink, ['used' => "1"]);
-    $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,
-        ['class' => 'btn btn-outline-secondary']) : 0;
     $data['coursestriggered'] = $triggeredhtml;
-    $data['coursesexcluded'] = $excludedhtml;
-    $data['coursesdelayed'] = $delayedhtml;
-    $data['coursesused'] = $usedhtml;
-    $data['coursesetsize'] = $amounts['all']->coursesetsize;
+    if ($triggered) {
+        // Excluded removed from mustache at the moment.
+        $excluded = $amounts['all']->excluded;
+        $excludedhtml = $excluded > 0 ? html_writer::span($excluded, 'text-danger font-weight-bold') : 0;
+        $delayed = $amounts['all']->delayed ?? 0;
+        $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
+        $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
+            ['class' => 'text-warning  btn btn-outline-warning']) : 0;
+        $used = count($amounts['all']->used) ?? 0;
+        $usedlink = new moodle_url($popuplink, ['used' => "1"]);
+        $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,
+            ['class' => 'btn btn-outline-secondary']) : 0;
+        $data['coursesexcluded'] = $excludedhtml;
+        $data['coursesdelayed'] = $delayedhtml;
+        $data['coursesused'] = $usedhtml;
+        $data['coursesetsize'] = $amounts['all']->coursesetsize;
+    }
 }
 
 if (workflow_manager::is_editable($workflow->id)) {

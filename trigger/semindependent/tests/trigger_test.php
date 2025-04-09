@@ -61,7 +61,7 @@ final class trigger_test extends \advanced_testcase {
      */
     public function test_include_semester_independent(): void {
 
-        $this->triggerinstance = generator::create_workflow_with_semindependent(true);
+        $this->triggerinstance = generator::create_workflow_with_semindependent(false);
 
         $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
         $foundsem = false;
@@ -86,7 +86,7 @@ final class trigger_test extends \advanced_testcase {
      */
     public function test_exclude_semester_independent(): void {
 
-        $this->triggerinstance = generator::create_workflow_with_semindependent(false);
+        $this->triggerinstance = generator::create_workflow_with_semindependent(true);
 
         $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
         $foundsem = false;

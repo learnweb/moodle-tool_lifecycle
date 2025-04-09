@@ -72,7 +72,7 @@
 }}
 <div class="d-flex" id="lifecycle-workflow-details">
     <div class="wf-wrapper">
-        <div class="bg-light d-inline-block p-3 position-relative mb-2" style="max-width: 800px;">
+        <div class="{{classdetails}} rounded shadow d-inline-block p-3 position-relative mb-2" style="max-width: 800px;">
             <a class="edit-pen" href="{{{editsettingslink}}}">{{#pix}} i/edit, core, {{/pix}}</a>
             <h4 class="pr-5">{{title}}</h4>
             <span>{{#str}} workflow_rollbackdelay, tool_lifecycle{{/str}}: <strong>{{rollbackdelay}}</strong> {{{rollbackhelp}}}</span><br>
@@ -86,16 +86,15 @@
             <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}} {{{triggerhelp}}}</h5>
             {{#showcoursecounts}}
               {{#automatic}}
-                <div class="mb-2 mx-2">
-                    {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{{coursestriggered}}} {{/str}}<br>
-                    {{#str}} courses_will_be_excluded_total, tool_lifecycle, {{{coursesexcluded}}} {{/str}}<br>
-                    {{#coursesdelayed}}
-                        {{#str}} courses_are_delayed_total, tool_lifecycle, {{{coursesdelayed}}} {{/str}}<br>
-                    {{/coursesdelayed}}
-                    {{#coursesused}}
-                        {{#str}} courses_are_used_total, tool_lifecycle, {{{coursesused}}} {{/str}}
-                    {{/coursesused}}
-                </div>
+                  <div class="mb-2 mx-2">
+                      {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{{coursestriggered}}} {{/str}}<br>
+                      {{#coursesdelayed}}
+                          {{#str}} courses_are_delayed_total, tool_lifecycle, {{{coursesdelayed}}} {{/str}}<br>
+                      {{/coursesdelayed}}
+                      {{#coursesused}}
+                          {{#str}} courses_are_used_total, tool_lifecycle, {{{coursesused}}} {{/str}}
+                      {{/coursesused}}
+                  </div>
               {{/automatic}}
               {{^automatic}}
                 <div class="mb-2 mx-2">
@@ -118,26 +117,31 @@
                         <div class="wf-content">
                           {{#showcoursecounts}}
                             {{#automatic}}
-                              {{#triggeredcourses}}
-                                  <a href="{{popuplink}}&trigger={{id}}">
-                                      <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, {{triggeredcourses}} {{/str}}">
-                                        {{triggeredcourses}}
-                                      </span>
-                                  </a>
-                              {{/triggeredcourses}}
-                              {{^triggeredcourses}}
-                                  <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, 0 {{/str}}">0</span>
-                              {{/triggeredcourses}}
-                              {{#excludedcourses}}
-                                  <a href="{{popuplink}}&excluded={{id}}" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}">
-                                    <span class="btn btn-outline-danger">
-                                      {{excludedcourses}}
-                                    </span>
-                                  </a>
-                              {{/excludedcourses}}
-                              {{^excludedcourses}}
-                                  <span class="btn btn-outline-danger" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, 0 {{/str}}">0</span>
-                              {{/excludedcourses}}
+                                {{#additionalinfo}}
+                                    {{{additionalinfo}}}
+                                {{/additionalinfo}}
+                                {{^additionalinfo}}
+                                    {{#triggeredcourses}}
+                                        <a href="{{popuplink}}&trigger={{id}}">
+                                        <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, {{triggeredcourses}} {{/str}}">
+                                            {{triggeredcourses}}
+                                        </span>
+                                        </a>
+                                    {{/triggeredcourses}}
+                                    {{^triggeredcourses}}
+                                        <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, 0 {{/str}}">0</span>
+                                    {{/triggeredcourses}}
+                                    {{#excludedcourses}}
+                                        <a href="{{popuplink}}&excluded={{id}}" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}">
+                                        <span class="btn btn-outline-danger">
+                                            {{excludedcourses}}
+                                        </span>
+                                        </a>
+                                    {{/excludedcourses}}
+                                    {{^excludedcourses}}
+                                        <span class="btn btn-outline-danger" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, 0 {{/str}}">0</span>
+                                    {{/excludedcourses}}
+                                {{/additionalinfo}}
                             {{/automatic}}
                             {{^automatic}}
                                 <span class="font-weight-bold">-</span>

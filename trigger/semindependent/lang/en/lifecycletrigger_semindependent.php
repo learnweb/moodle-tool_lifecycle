@@ -18,14 +18,13 @@
  * Lang strings for semester independent trigger
  *
  * @package lifecycletrigger_semindependent
- * @subpackage semindependent
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2019 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['include'] = 'Include semester independent';
-$string['include_help'] = 'If true, semester independent courses are triggered,
-otherwise they are excluded from being processed by the respective workflow.';
-$string['plugindescription'] = 'If activated, semester independent courses are triggered,
-otherwise they are excluded. - EXPERIMENTAL';
+$string['exclude'] = 'Exclude semester independent';
+$string['exclude_help'] = 'If true, semester independent courses are excluded from workflow,
+otherwise they are included.';
+$string['plugindescription'] = 'Include or exclude courses that have no start date. - EXPERIMENTAL';
 $string['pluginname'] = 'Semester independent trigger';

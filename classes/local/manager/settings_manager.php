@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__.'/../../../lib.php');
 
 /**
- * Manager to retrive the local settings for each step subplugin.
+ * Manager to retrieve the local settings for each lifecycle subplugin.
  *
  * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
@@ -39,7 +39,7 @@ require_once(__DIR__.'/../../../lib.php');
 class settings_manager {
 
     /**
-     * Saves the local settings for a subplugin step instance.
+     * Saves the local settings for a lifecycle subplugin instance.
      * @param int $instanceid id of the subplugininstance.
      * @param 'step'|'trigger' $type type of the subplugin.
      * @param string $subpluginname name of the subplugin.
@@ -53,7 +53,7 @@ class settings_manager {
     }
 
     /**
-     * Saves the local settings for a subplugin step instance.
+     * Saves the local settings for a lifecycle subplugin instance.
      * @param int $instanceid id of the subplugininstance.
      * @param 'step'|'trigger' $type type of the subplugin.
      * @param string $subpluginname name of the subplugin.

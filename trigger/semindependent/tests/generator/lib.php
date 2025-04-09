@@ -26,6 +26,7 @@ use tool_lifecycle\settings_type;
  *
  * @package    lifecycletrigger_semindependent
  * @category   test
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2018 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -33,13 +34,13 @@ class tool_lifecycle_trigger_semindependent_generator extends testing_module_gen
 
     /**
      * Creates a trigger semindependent for an artificial workflow without steps.
-     * @param bool $include
+     * @param bool $exclude
      * @return trigger_subplugin the semindependent trigger.
      * @throws dml_exception
      * @throws dml_transaction_exception
      * @throws moodle_exception
      */
-    public static function create_workflow_with_semindependent($include) {
+    public static function create_workflow_with_semindependent($exclude) {
         // Create Workflow.
         $record = new stdClass();
         $record->id = null;
@@ -53,9 +54,9 @@ class tool_lifecycle_trigger_semindependent_generator extends testing_module_gen
         $record->workflowid = $workflow->id;
         $trigger = trigger_subplugin::from_record($record);
         trigger_manager::insert_or_update($trigger);
-        // Set include setting.
+        // Set exclude setting.
         $settings = new stdClass();
-        $settings->include = $include;
+        $settings->exclude = $exclude;
         settings_manager::save_settings($trigger->id, settings_type::TRIGGER, $trigger->subpluginname, $settings);
 
         return $trigger;

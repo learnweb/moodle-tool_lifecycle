@@ -25,6 +25,7 @@ namespace tool_lifecycle;
 /**
  * Constants for urls used within this plugin.
  * @package    tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2022 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -53,6 +54,8 @@ class urls {
     /** @var string Lists course backups */
     const COURSE_BACKUPS = '/admin/tool/lifecycle/coursebackups.php?id=coursebackups';
     /** @var string Lists and process errors */
+    const ADMIN_APPROVE = '/admin/tool/lifecycle/step/adminapprove/index.php?id=adminapprove';
+    /** @var string Confirmation page for bulk operations */
     const PROCESS_ERRORS = '/admin/tool/lifecycle/errors.php?id=errors';
     /** @var string Confirmation page for bulk operations */
     const CONFIRMATION = '/admin/tool/lifecycle/confirmation.php';

@@ -23,8 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
-use tool_lifecycle\local\entity\trigger_subplugin;
-use tool_lifecycle\local\entity\process;
+use tool_lifecycle\urls;;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -72,6 +71,7 @@ class triggered_courses_table extends \table_sql {
         $columns = ['courseid', 'coursefullname', 'coursecategory'];
         if ($type == 'delayed') {
             $columns[] = 'delayeduntil';
+            $columns[] = 'tools';
         } else if ($type == 'used') {
             $columns[] = 'otherworkflow';
         }
@@ -83,6 +83,7 @@ class triggered_courses_table extends \table_sql {
         ];
         if ($type == 'delayed') {
             $headers[] = get_string('delayeduntil', 'tool_lifecycle');
+            $headers[] = get_string('tools', 'tool_lifecycle');
         } else if ($type == 'used') {
             $headers[] = get_string('workflow', 'tool_lifecycle');
         }
@@ -90,11 +91,11 @@ class triggered_courses_table extends \table_sql {
 
         $fields = "c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, cc.name as coursecategory";
         if ($type == 'delayed') {
-            $fields .= ", dwf.delayeduntil as delayeduntil";
+            $fields .= ", dwf.delayeduntil as delayeduntil, dwf.workflowid";
         } else if ($type == 'used') {
             $fields .= ", COALESCE(wfp.title, wfpe.title) as otherworkflow";
         }
-        $from = "{course} c INNER JOIN {course_categories} cc ON c.category = cc.id ";
+        $from = "{course} c LEFT JOIN {course_categories} cc ON c.category = cc.id ";
         if ($type == 'delayed') {
             $from .= " INNER JOIN {tool_lifecycle_delayed_workf} dwf ON c.id = dwf.courseid ";
         } else if ($type == 'used') {
@@ -141,6 +142,29 @@ class triggered_courses_table extends \table_sql {
     public function col_delayeduntil($row) {
         $delayeduntil = userdate($row->delayeduntil, get_string('strftimedatetime', 'core_langconfig'));
         return $delayeduntil;
+    }
+
+    /**
+     * Render tools column.
+     *
+     * @param object $row Row data.
+     * @return string html of the delete button
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    public function col_tools($row) {
+        global $OUTPUT;
+
+        $params = [
+            'action' => 'deletedelay',
+            'cid' => $row->courseid,
+            'sesskey' => sesskey(),
+            'wf' => $row->workflowid,
+        ];
+
+        $button = new \single_button(new \moodle_url(urls::WORKFLOW_DETAILS, $params),
+            get_string('delete_delay', 'tool_lifecycle'));
+        return $OUTPUT->render($button);
     }
 
     /**

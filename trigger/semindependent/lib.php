@@ -19,6 +19,7 @@
  * It has to be implemented by all subplugins.
  *
  * @package lifecycletrigger_semindependent
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2019 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -57,11 +58,11 @@ class semindependent extends base_automatic {
      * @throws \dml_exception
      */
     public function get_course_recordset_where($triggerid) {
-        $include = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['include'];
-        if ($include) {
-            $where = "{course}.startdate <= :semindepdate";
-        } else {
+        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
+        if ($exclude) {
             $where = "{course}.startdate > :semindepdate";
+        } else {
+            $where = "{course}.startdate <= :semindepdate";
         }
         // Date before which a course counts as semester independent. In this case the 1.1.2000.
         $params = ["semindepdate" => 946688400];
@@ -77,11 +78,11 @@ class semindependent extends base_automatic {
     }
 
     /**
-     * Introduce the admin setting include for this subplugin.
-     * @return instance_setting[] include
+     * Introduce the admin setting exclude for this subplugin.
+     * @return instance_setting[] exclude
      */
     public function instance_settings() {
-        return [new instance_setting('include', PARAM_BOOL)];
+        return [new instance_setting('exclude', PARAM_BOOL)];
     }
 
     /**
@@ -91,8 +92,9 @@ class semindependent extends base_automatic {
      * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
-        $mform->addElement('advcheckbox', 'include', get_string('include', 'lifecycletrigger_semindependent'));
-        $mform->addHelpButton('include', 'include', 'lifecycletrigger_semindependent');
-        $mform->setType('include', PARAM_BOOL);
+        $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_semindependent'));
+        $mform->addHelpButton('exclude', 'exclude', 'lifecycletrigger_semindependent');
+        $mform->setType('exclude', PARAM_BOOL);
+        $mform->setDefault('exclude', true);
     }
 }

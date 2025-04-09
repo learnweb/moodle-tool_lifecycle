@@ -18,9 +18,13 @@
  * Life Cycle Admin Approve Step. Page for specific step.
  *
  * @package lifecyclestep_adminapprove
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use tool_lifecycle\tabs;
+use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
@@ -29,11 +33,16 @@ require_login(null, false);
 
 require_capability('moodle/site:config', context_system::instance());
 
-admin_externalpage_setup('lifecyclestep_adminapprove_manage');
-
 $action = optional_param('act', null, PARAM_ALPHA);
 $ids = optional_param_array('c', [], PARAM_INT);
 $stepid = required_param('stepid', PARAM_INT);
+
+$syscontext = context_system::instance();
+$PAGE->set_url(new \moodle_url("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid"));
+$PAGE->set_context($syscontext);
+$PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
+$PAGE->set_pagelayout('admin');
+
 
 $step = \tool_lifecycle\local\manager\step_manager::get_step_instance($stepid);
 if (!$step) {
@@ -46,22 +55,21 @@ if ($step->subpluginname !== 'adminapprove') {
 /**
  * Constant to roll back selected.
  */
+const ROLLBACK = 'rollback';
 /**
  * Constant to roll back all courses.
  */
+const ROLLBACK_ALL = 'rollbackall';
 /**
  * Constant to proceed selected.
  */
+const PROCEED = 'proceed';
 /**
  * Constant to proceed all courses.
  */
-const ROLLBACK = 'rollback', ROLLBACK_ALL = 'rollbackall', PROCEED = 'proceed', PROCEED_ALL = 'proceedall';
+const PROCEED_ALL = 'proceedall';
 
 $workflow = \tool_lifecycle\local\manager\workflow_manager::get_workflow($step->workflowid);
-
-$PAGE->set_context(context_system::instance());
-$PAGE->set_url(new \moodle_url("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid"));
-$PAGE->navbar->add($step->instancename, $PAGE->url);
 
 $mformdata = cache::make('lifecyclestep_adminapprove', 'mformdata');
 
@@ -95,7 +103,7 @@ if ($action) {
     require_sesskey();
 
     if (is_array($ids) && count($ids) > 0 && ($action == PROCEED || $action == ROLLBACK)) {
-        list($insql, $inparams) = $DB->get_in_or_equal($ids);
+        [$insql, $inparams] = $DB->get_in_or_equal($ids);
         $sql = 'UPDATE {lifecyclestep_adminapprove} ' .
                 'SET status = ' . ($action == PROCEED ? 1 : 2) . ' ' .
                 'WHERE id ' . $insql .
@@ -120,7 +128,7 @@ if ($action) {
 
         $ids = array_keys($DB->get_records_sql_menu($sql, $params));
         if (!empty($ids)) {
-            list($insql, $inparams) = $DB->get_in_or_equal($ids);
+            [$insql, $inparams] = $DB->get_in_or_equal($ids);
             $sql = 'UPDATE {lifecyclestep_adminapprove} ' .
                 'SET status = ' . ($action == PROCEED_ALL ? 1 : 2) . ' ' .
                 'WHERE status = 0 ' .
@@ -131,10 +139,14 @@ if ($action) {
     redirect($PAGE->url);
 }
 
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('manage-adminapprove', 'lifecyclestep_adminapprove') . ': ' .
-        $step->instancename);
-echo "<br>";
+$renderer = $PAGE->get_renderer('tool_lifecycle');
+
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('adminapprovals',
+        'lifecyclestep_adminapprove') . ': ' . get_string('step', 'tool_lifecycle') . ' ' . $step->instancename;
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow(true);
+$id = optional_param('id', 'adminapprove', PARAM_TEXT);
+$renderer->tabs($tabrow, $id);
 
 $hasrecords = $DB->record_exists_sql('SELECT a.id FROM {lifecyclestep_adminapprove} a ' .
         'JOIN {tool_lifecycle_process} p ON p.id = a.processid ' .

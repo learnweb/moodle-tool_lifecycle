@@ -23,9 +23,9 @@
  */
 
 $string['delay'] = 'Days of delay for triggering';
-$string['delay_help'] = 'Days a course has to remain without any responsible person until the course is finally triggered';
-$string['plugindescription'] = 'Triggers if a specified role is misssing in a course. - EXPERIMENTAL';
-$string['pluginname'] = 'Delete courses by roles missing';
+$string['delay_help'] = 'Days a course has to remain without the mandatory role until the course is finally triggered';
+$string['plugindescription'] = 'Triggers if a specified role is misssing in a course for a certain timespan. - EXPERIMENTAL';
+$string['pluginname'] = 'Trigger courses by roles missing';
 $string['privacy:metadata'] = 'Does not store user specific data';
 $string['responsibleroles'] = 'Responsible Roles in courses';
-$string['responsibleroles_help'] = 'Select the roles that have to be presented within a course. If one of the roles is present the course is not triggered.';
+$string['responsibleroles_help'] = 'Select the roles that have to be present in the course. If one of these roles is present the course is not triggered.';

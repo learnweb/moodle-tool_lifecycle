@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['adminapprovals'] = 'Admin Approvals';
 $string['amount_courses'] = 'Remaining waiting courses';
 $string['bulkactions'] = 'Bulk actions';
 $string['cachedef_mformdata'] = 'Caches the mform data';

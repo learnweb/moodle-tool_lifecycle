@@ -61,9 +61,10 @@ class categories extends base_automatic {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function get_course_recordset_where($triggerid, $exclude = false) {
+    public function get_course_recordset_where($triggerid) {
         global $DB, $CFG;
 
+        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
         $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
         $categories = explode(',', $categories);
         // Use core_course_category for moodle 3.6 and higher.

@@ -18,9 +18,11 @@
  * Manager for Life Cycle Processes
  *
  * @package tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier Universität Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace tool_lifecycle\local\manager;
 
 use core\event\course_deleted;
@@ -225,19 +227,35 @@ class process_manager {
     }
 
     /**
-     * Defines if a course is already part of a process.
+     * Defines if a course is already part of a(nother workflow's) process.
      * @param int $courseid
-     * @return bool
+     * @param int $workflowid
+     * @return int 0 no other process, 1 if process of same workflow, 2 if process of other workflow
      * @throws \dml_exception
      */
-    public static function has_other_process($courseid) {
+    public static function has_other_process($courseid, $workflowid) {
         global $DB;
-        if ($DB->count_records('tool_lifecycle_process', ['courseid' => $courseid])) {
-            return true;
-        } else if ($DB->count_records('tool_lifecycle_proc_error', ['courseid' => $courseid])) {
-            return true;
+
+        $ret = 0;
+        $records = $DB->get_records('tool_lifecycle_process', ['courseid' => $courseid], '', 'id, workflowid');
+        foreach ($records as $record) {
+            if ($record->workflowid != $workflowid) {
+                $ret = 2;
+                break;
+            }
+            $ret = 1;
         }
-        return false;
+        if ($ret != 2) {
+            $records = $DB->get_records('tool_lifecycle_proc_error', ['courseid' => $courseid], '', 'id, workflowid');
+            foreach ($records as $record) {
+                if ($record->workflowid != $workflowid) {
+                    $ret = 2;
+                    break;
+                }
+                $ret = 1;
+            }
+        }
+        return $ret;
     }
 
     /**
