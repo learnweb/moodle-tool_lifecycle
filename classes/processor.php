@@ -54,6 +54,7 @@ class processor {
     public function call_trigger() {
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
         $exclude = [];
+        $globallydelayedcourses = delayed_courses_manager::get_globally_delayed_courses();
 
         foreach ($activeworkflows as $workflow) {
             $countcourses = 0;
@@ -61,8 +62,18 @@ class processor {
             $countexcluded = 0;
             mtrace('Calling triggers for workflow "' . $workflow->title . '"');
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
-            $delayedcourses = delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id);
-            $recordset = $this->get_course_recordset($triggers, array_merge($exclude, $delayedcourses));
+            if ($workflow->includesitecourse) {
+                $sitecourse = [];
+            } else {
+                $sitecourse = [1];
+            }
+            if ($workflow->includedelayedcourses) {
+                $delayedcourses = [];
+            } else {
+                $delayedcourses = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
+                    $globallydelayedcourses);
+            }
+            $recordset = $this->get_course_recordset($triggers, array_merge($exclude, $delayedcourses, $sitecourse));
             while ($recordset->valid()) {
                 $course = $recordset->current();
                 $countcourses++;
@@ -218,6 +229,12 @@ class processor {
             }
         }
 
+        if (!empty($exclude)) {
+            list($insql, $inparams) = $DB->get_in_or_equal($exclude, SQL_PARAMS_NAMED);
+            $where .= " AND NOT {course}.id {$insql}";
+            $whereparams = array_merge($whereparams, $inparams);
+        }
+
         if ($includecourseswithprocess) {
             // Get also courses which are part of an existing process.
             $sql = 'SELECT {course}.* from {course} WHERE ' . $where;
@@ -240,14 +257,14 @@ class processor {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function get_count_of_courses_to_trigger_for_workflow($workflowid) {
+    public function get_count_of_courses_to_trigger_for_workflow($workflow) {
         $countcourses = 0;
         $counttriggered = 0;
         $countexcluded = 0;
         $countdelayed = 0;
         $usedcourses = [];
 
-        $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
+        $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
 
         $amounts = [];
         $autotriggers = [];
@@ -276,14 +293,28 @@ class processor {
             $amounts[$trigger->sortindex] = $obj;
         }
 
-        $recordset = $this->get_course_recordset($autotriggers, [], true);
+        $globallydelayedcourses = delayed_courses_manager::get_globally_delayed_courses();
+        if ($workflow->includesitecourse) {
+            $sitecourse = [];
+        } else {
+            $sitecourse = [1];
+        }
+        if ($workflow->includedelayedcourses) {
+            $delayedcourses = [];
+        } else {
+            $delayedcourses = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
+                $globallydelayedcourses);
+        }
+        $excludedcourses = array_merge($sitecourse, $delayedcourses);
+
+        $recordset = $this->get_course_recordset($autotriggers, $excludedcourses, true);
 
         while ($recordset->valid()) {
             $course = $recordset->current();
             $delaytime = max(delayed_courses_manager::get_course_delayed($course->id) ?? 0,
-                delayed_courses_manager::get_course_delayed_workflow($course->id, $workflowid) ?? 0);
+                delayed_courses_manager::get_course_delayed_workflow($course->id, $workflow->id) ?? 0);
             $coursedelayed = $delaytime > time();
-            if ($hasother = process_manager::has_other_process($course->id, $workflowid)) {
+            if ($hasother = process_manager::has_other_process($course->id, $workflow->id)) {
                 if ($hasother == OTHERWORKFLOW) {
                     $usedcourses[] = $course->id;
                 }

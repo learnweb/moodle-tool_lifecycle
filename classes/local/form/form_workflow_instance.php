@@ -112,6 +112,24 @@ class form_workflow_instance extends \moodleform {
             $mform->setDefault($elementname, $this->workflow->delayforallworkflows);
         }
 
+        $elementname = 'includedelayedcourses';
+        $mform->addElement('advcheckbox', $elementname, get_string($elementname, 'tool_lifecycle'),
+            null, null, array(0, 1));
+        $mform->addHelpButton($elementname, $elementname, 'tool_lifecycle');
+        $mform->setType($elementname, PARAM_INT);
+        if (isset($this->workflow)) {
+            $mform->setDefault($elementname, $this->workflow->includedelayedcourses);
+        }
+
+        $elementname = 'includesitecourse';
+        $mform->addElement('advcheckbox', $elementname, get_string($elementname, 'tool_lifecycle'),
+            null, null, array(0, 1));
+        $mform->addHelpButton($elementname, $elementname, 'tool_lifecycle');
+        $mform->setType($elementname, PARAM_INT);
+        if (isset($this->workflow)) {
+            $mform->setDefault($elementname, $this->workflow->includesitecourse);
+        }
+
         $this->add_action_buttons();
     }
 

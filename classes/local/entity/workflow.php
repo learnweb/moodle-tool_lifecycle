@@ -62,21 +62,29 @@ class workflow {
     /** @var bool $delayforallworkflows True if a delay counts for all workflows. */
     public $delayforallworkflows;
 
+    /** @var int $includedelayedcourses Are delayed courses supposed to be processed in this workflow. */
+    public $includedelayedcourses;
+
+    /** @var int $includesitecourse Is course 1 supposed to be processed in this workflow. */
+    public $includesitecourse;
+
     /**
      * Workflow constructor.
      * @param int $id Id of the workflow.
      * @param string $title Title of the workflow.
-     * @param /timestamp $timeactive Time the workflow was set active.
-     * @param /timestamp $timedeactive Time the workflow was deactivated.
+     * @param timestamp $timeactive Time the workflow was set active.
+     * @param timestamp $timedeactive Time the workflow was deactivated.
      * @param int $sortindex Sort index of all active workflows.
      * @param bool $manual True if workflow is manually triggered.
      * @param string $displaytitle Title that is displayed to users.
      * @param int $rollbackdelay The delay in case of rollback.
      * @param int $finishdelay The delay in case of finished course.
      * @param bool $delayforallworkflows True if a delay counts for all workflows.
+     * @param int $includedelayedcourses Are delayed courses supposed to be processed in this workflow.
+     * @param int $includesitecourse Is course 1 supposed to be processed in this workflow.
      */
     private function __construct($id, $title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
-                                 $rollbackdelay, $finishdelay, $delayforallworkflows) {
+                                 $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses, $includesitecourse) {
         $this->id = $id;
         $this->title = $title;
         $this->timeactive = $timeactive;
@@ -87,6 +95,8 @@ class workflow {
         $this->rollbackdelay = $rollbackdelay;
         $this->finishdelay = $finishdelay;
         $this->delayforallworkflows = $delayforallworkflows;
+        $this->includedelayedcourses = $includedelayedcourses;
+        $this->includesitecourse = $includesitecourse;
     }
 
     /**
@@ -148,8 +158,18 @@ class workflow {
             $delayforallworkflows = $record->delayforallworkflows;
         }
 
+        $includedelayedcourses = false;
+        if (object_property_exists($record, 'includedelayedcourses')) {
+            $includedelayedcourses = $record->includedelayedcourses;
+        }
+
+        $includesitecourse = false;
+        if (object_property_exists($record, 'includesitecourse')) {
+            $includesitecourse = $record->includesitecourse;
+        }
+
         $instance = new self($id, $record->title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
-                $rollbackdelay, $finishdelay, $delayforallworkflows);
+                $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses, $includesitecourse);
 
         return $instance;
     }

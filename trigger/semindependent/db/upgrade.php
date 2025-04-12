@@ -41,7 +41,7 @@ function xmldb_lifecycletrigger_semindependent_upgrade($oldversion) {
 
     global $DB;
 
-    if ($oldversion < 2025040600) {
+    if ($oldversion < 2025041003) {
 
         if ($instances = $DB->get_records('tool_lifecycle_trigger', ['subpluginname' => 'semindependent'])) {
             // For each existing semindependent instance.
@@ -60,7 +60,7 @@ function xmldb_lifecycletrigger_semindependent_upgrade($oldversion) {
                 }
             }
         }
-        upgrade_plugin_savepoint(true, 2025040600, 'lifecycletrigger', 'semindependent');
+        upgrade_plugin_savepoint(true, 2025041003, 'lifecycletrigger', 'semindependent');
 
     }
 

@@ -28,7 +28,6 @@ use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
-use tool_usertours\step;
 
 /**
  * Pluginfo for life cycle trigger
@@ -72,14 +71,13 @@ class lifecycletrigger extends base {
             trigger_manager::remove_all_instances($this->name);
         } else {
             $instances = trigger_manager::get_instances($this->name);
-            if (count($instances) != 1) {
-                throw new \moodle_exception('There should be exactly one workflow for the trigger ' . $this->name);
+            foreach ($instances as $instance) {
+                $workflow = workflow_manager::get_workflow($instance->workflowid);
+                if (step_manager::count_steps_of_workflow($workflow->id) > 0) {
+                    throw new \moodle_exception('There should be no steps for the workflow of the trigger ' . $this->name);
+                }
+                workflow_manager::remove($workflow->id);
             }
-            $workflow = workflow_manager::get_workflow(array_shift($instances)->workflowid);
-            if (step_manager::count_steps_of_workflow($workflow->id) > 0) {
-                throw new \moodle_exception('There should be no steps for the workflow of the trigger ' . $this->name);
-            }
-            workflow_manager::remove($workflow->id);
         }
         return true;
     }

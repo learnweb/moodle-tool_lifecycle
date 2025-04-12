@@ -73,6 +73,8 @@ if ($data = $form->get_data()) {
         $workflow->rollbackdelay = $data->rollbackdelay;
         $workflow->finishdelay = $data->finishdelay;
         $workflow->delayforallworkflows = property_exists($data, 'delayforallworkflows') ? $data->delayforallworkflows : 0;
+        $workflow->includedelayedcourses = $data->includedelayedcourses;
+        $workflow->includesitecourse = $data->includesitecourse;
         $newworkflow = false;
     } else {
         $workflow = workflow::from_record($data);

@@ -74,7 +74,9 @@
     <div class="wf-wrapper">
         <div class="{{classdetails}} rounded shadow d-inline-block p-3 position-relative mb-2" style="max-width: 800px;">
             <a class="edit-pen" href="{{{editsettingslink}}}">{{#pix}} i/edit, core, {{/pix}}</a>
-            <h4 class="pr-5">{{title}}</h4>
+            <h4 class="pr-5">{{title}}
+                {{#includedelayedcourses}}<sup><i class="fas fa-calendar-plus" style="font-size:14px;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup>{{/includedelayedcourses}}
+                {{#includesitecourse}}<sup><i class="fas fa-home" style="font-size:14px;" data-toggle="tooltip" title="{{#str}} includesitecourse, tool_lifecycle{{/str}}"></i></sup>{{/includesitecourse}}</h4>
             <span>{{#str}} workflow_rollbackdelay, tool_lifecycle{{/str}}: <strong>{{rollbackdelay}}</strong> {{{rollbackhelp}}}</span><br>
             <span>{{#str}} workflow_finishdelay, tool_lifecycle{{/str}}: <strong>{{finishdelay}}</strong> {{{finishhelp}}}</span><br>
             <span>{{# delayglobally }}{{#str}}details:globaldelay_yes, tool_lifecycle{{/str}}{{/ delayglobally }}

@@ -66,6 +66,8 @@ if ($workflowid) {
         $newworkflow->rollbackdelay = $data->rollbackdelay;
         $newworkflow->finishdelay = $data->finishdelay;
         $newworkflow->delayforallworkflows = $data->delayforallworkflows ?? 0;
+        $workflow->includedelayedcourses = $data->includedelayedcourses;
+        $workflow->includesitecourse = $data->includesitecourse;
         workflow_manager::insert_or_update($newworkflow);
 
         // Workflow created, redirect to workflow detail page.

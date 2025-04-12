@@ -22,16 +22,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use \tool_lifecycle\local\manager\workflow_manager;
+
 /**
  * Fix any gaps in the workflows sortindex.
  */
 function tool_lifecycle_fix_workflow_sortindex() {
-    $workflows = \tool_lifecycle\local\manager\workflow_manager::get_active_workflows();
+    $workflows = workflow_manager::get_active_workflows();
     for ($i = 1; $i <= count($workflows); $i++) {
         $workflow = $workflows[$i - 1];
         if ($workflow->sortindex != $i) {
             $workflow->sortindex = $i;
-            \tool_lifecycle\local\manager\workflow_manager::insert_or_update($workflow);
+            workflow_manager::insert_or_update($workflow);
         }
     }
 }
@@ -498,7 +500,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
-    if ($oldversion < 2025040600) {
+    if ($oldversion < 2025041003) {
 
         // Changing precision of field instancename on table tool_lifecycle_trigger to (100).
         $table = new xmldb_table('tool_lifecycle_trigger');
@@ -526,24 +528,74 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Launch change of precision for field instancename.
         $dbman->change_field_precision($table, $field);
 
-        // Define field type to be added to tool_lifecycle_delayed.
+        // Define field "type" to be added to tool_lifecycle_delayed.
         $table = new xmldb_table('tool_lifecycle_delayed');
         $field = new xmldb_field('type', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayeduntil');
 
-        // Conditionally launch add field type.
+        // Conditionally launch add field "type".
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        // Define field type to be added to tool_lifecycle_delayed_workf.
+        // Define field "type" to be added to tool_lifecycle_delayed_workf.
         $table = new xmldb_table('tool_lifecycle_delayed_workf');
 
-        // Conditionally launch add field type.
+        // Conditionally launch add field "type".
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        upgrade_plugin_savepoint(true, 2025040600, 'tool', 'lifecycle');
+        // Define field "includesitecourse" to be added to tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
+        $field = new xmldb_field('includesitecourse', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayforallworkflows');
+
+        // Conditionally launch add field "includesitecourse".
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field "includedelayedcourses" to be added to tool_lifecycle_workflow.
+        $field = new xmldb_field('includedelayedcourses', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayforallworkflows');
+
+        // Conditionally launch add field "includedelayedcourses".
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Remove sitecourse subplugin if there is one. Otherwise set all workflows to includesitecourse = 1.
+        $purgecaches = false;
+        $pluginmanager = core_plugin_manager::instance();
+        if ($plugininfo = $pluginmanager->get_plugin_info('lifecycletrigger_sitecourse')) {
+            $trace = new \null_progress_trace();
+            $plugininfo->uninstall($trace);
+            $pluginmanager->uninstall_plugin($plugininfo->component, $trace);
+            if ($pluginmanager->is_plugin_folder_removable($plugininfo->component)) {
+                $pluginmanager->remove_plugin_folder($plugininfo);
+            }
+            $purgecaches = true;
+        } else {
+            $DB->set_field('tool_lifecycle_workflow', 'includesitecourse', 1);
+        }
+
+        // Remove delayedcourses subplugin if there is one. Otherwise set all workflows to includedelayedcourses = 1.
+        $pluginmanager = core_plugin_manager::instance();
+        if ($plugininfo = $pluginmanager->get_plugin_info('lifecycletrigger_delayedcourses')) {
+            $trace = new \null_progress_trace();
+            $plugininfo->uninstall($trace);
+            $pluginmanager->uninstall_plugin($plugininfo->component, $trace);
+            if ($pluginmanager->is_plugin_folder_removable($plugininfo->component)) {
+                $pluginmanager->remove_plugin_folder($plugininfo);
+            }
+            $purgecaches = true;
+        } else {
+            $DB->set_field('tool_lifecycle_workflow', 'includedelayedcourses', 1);
+        }
+
+        if ($purgecaches) {
+            purge_all_caches();
+        }
+
+        upgrade_plugin_savepoint(true, 2025041003, 'tool', 'lifecycle');
 
     }
 

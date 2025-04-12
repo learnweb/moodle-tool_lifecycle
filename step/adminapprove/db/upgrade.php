@@ -37,7 +37,7 @@ function xmldb_lifecyclestep_adminapprove_upgrade($oldversion) {
 
     global $DB;
     $dbman = $DB->get_manager();
-    if ($oldversion < 2025040600) {
+    if ($oldversion < 2025041003) {
 
         // Define table lifecyclestep_adminapprove to be created.
         $table = new xmldb_table('lifecyclestep_adminapprove');
@@ -57,7 +57,7 @@ function xmldb_lifecyclestep_adminapprove_upgrade($oldversion) {
         }
 
         // Adminapprove savepoint reached.
-        upgrade_plugin_savepoint(true, 2025040600, 'lifecyclestep', 'adminapprove');
+        upgrade_plugin_savepoint(true, 2025041003, 'lifecyclestep', 'adminapprove');
     }
     return true;
 }

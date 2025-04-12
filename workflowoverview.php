@@ -149,7 +149,7 @@ if ($showcoursecounts) {
         courses will be triggered by the workflow/the specific trigger. This count is only being
         used to show the admin how many courses will be triggered, it has no functional aspect.
     */
-    $amounts = (new processor())->get_count_of_courses_to_trigger_for_workflow($workflow->id);
+    $amounts = (new processor())->get_count_of_courses_to_trigger_for_workflow($workflow);
     $displaytotaltriggered = !empty($triggers);
 }
 
@@ -333,6 +333,8 @@ $data = [
     'workflowid' => $workflowid,
     'search' => $searchhtml,
     'classdetails' => $classdetails,
+    'includedelayedcourses' => $workflow->includedelayedcourses,
+    'includesitecourse' => $workflow->includesitecourse,
 ];
 if ($showcoursecounts) {
     $data['automatic'] = $displaytotaltriggered;

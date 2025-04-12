@@ -24,11 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2025040600;
+$plugin->version = 2025041003;
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
 $plugin->component = 'lifecyclestep_makeinvisible';
 $plugin->dependencies = [
-    'tool_lifecycle' => 2025040600,
+    'tool_lifecycle' => 2025041003,
 ];
 $plugin->release   = 'v4.5-r1';
 $plugin->maturity = MATURITY_STABLE;

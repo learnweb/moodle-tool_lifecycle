@@ -230,8 +230,8 @@ class trigger_manager extends subplugin_manager {
     }
 
     /**
-     * Gets the list of step subplugins.
-     * @return array of step subplugins.
+     * Gets the list of trigger subplugins.
+     * @return array of trigger subplugins.
      * @throws \coding_exception
      */
     public static function get_trigger_types() {
