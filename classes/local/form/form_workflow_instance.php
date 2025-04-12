@@ -114,7 +114,7 @@ class form_workflow_instance extends \moodleform {
 
         $elementname = 'includedelayedcourses';
         $mform->addElement('advcheckbox', $elementname, get_string($elementname, 'tool_lifecycle'),
-            null, null, array(0, 1));
+            null, null, [0, 1]);
         $mform->addHelpButton($elementname, $elementname, 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
         if (isset($this->workflow)) {
@@ -123,7 +123,7 @@ class form_workflow_instance extends \moodleform {
 
         $elementname = 'includesitecourse';
         $mform->addElement('advcheckbox', $elementname, get_string($elementname, 'tool_lifecycle'),
-            null, null, array(0, 1));
+            null, null, [0, 1]);
         $mform->addHelpButton($elementname, $elementname, 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
         if (isset($this->workflow)) {

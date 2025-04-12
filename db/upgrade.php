@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use \tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 
 /**
  * Fix any gaps in the workflows sortindex.
@@ -500,7 +500,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
-    if ($oldversion < 2025041003) {
+    if ($oldversion < 2025041200) {
 
         // Changing precision of field instancename on table tool_lifecycle_trigger to (100).
         $table = new xmldb_table('tool_lifecycle_trigger');
@@ -568,8 +568,8 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         if ($plugininfo = $pluginmanager->get_plugin_info('lifecycletrigger_sitecourse')) {
             $trace = new \null_progress_trace();
             $plugininfo->uninstall($trace);
-            $pluginmanager->uninstall_plugin($plugininfo->component, $trace);
             if ($pluginmanager->is_plugin_folder_removable($plugininfo->component)) {
+                $pluginmanager->uninstall_plugin($plugininfo->component, $trace);
                 $pluginmanager->remove_plugin_folder($plugininfo);
             }
             $purgecaches = true;
@@ -582,8 +582,8 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         if ($plugininfo = $pluginmanager->get_plugin_info('lifecycletrigger_delayedcourses')) {
             $trace = new \null_progress_trace();
             $plugininfo->uninstall($trace);
-            $pluginmanager->uninstall_plugin($plugininfo->component, $trace);
             if ($pluginmanager->is_plugin_folder_removable($plugininfo->component)) {
+                $pluginmanager->uninstall_plugin($plugininfo->component, $trace);
                 $pluginmanager->remove_plugin_folder($plugininfo);
             }
             $purgecaches = true;
@@ -595,7 +595,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             purge_all_caches();
         }
 
-        upgrade_plugin_savepoint(true, 2025041003, 'tool', 'lifecycle');
+        upgrade_plugin_savepoint(true, 2025041200, 'tool', 'lifecycle');
 
     }
 

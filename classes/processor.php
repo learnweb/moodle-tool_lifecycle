@@ -252,7 +252,7 @@ class processor {
 
     /**
      * Calculates triggered and excluded courses for every trigger of a workflow, and in total.
-     * @param int $workflowid
+     * @param object $workflow
      * @return array
      * @throws \coding_exception
      * @throws \dml_exception
