@@ -41,7 +41,6 @@ Feature: Add a workflow definition activate it
     And I should see the tool "Backup workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I should see the tool "Delete workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I press "Activate"
-    And I click on "Active workflows" "link"
     When I click on the tool "View workflow steps" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
     Then I should see "Edit"
     And I should not see "Move up"

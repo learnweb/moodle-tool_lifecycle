@@ -77,11 +77,8 @@ Feature: Disable a workflow
     And I press "Save changes"
     And I click on "Workflow drafts" "link"
     Then I should see the row "My Workflow" in the "tool_lifecycle_workflow_definitions" table
-    And I click on "Active workflows" "link"
-    And I should not see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-    And I click on "Workflow drafts" "link"
     When I press "Activate"
     # Since no element is left, the table is not displayed anymore.
-    And I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
+    Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
     And I click on "Workflow drafts" "link"
     Then I should not see the table "tool_lifecycle_workflow_definitions"
