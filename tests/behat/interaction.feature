@@ -48,7 +48,7 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
     And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 2"
     And I press "Save changes"
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     And I press "Activate"
     And I log out
 

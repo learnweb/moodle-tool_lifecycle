@@ -112,49 +112,50 @@ class tabs {
         // General Settings and Subplugins.
         $targeturl = new \moodle_url('/admin/category.php', ['category' => 'lifecycle']);
         $tabrow[] = new \tabobject('settings', $targeturl,
-            get_string('general_config_header', 'tool_lifecycle'));
+            get_string('general_config_header', 'tool_lifecycle'),
+            get_string('general_config_header_title', 'tool_lifecycle'));
 
         // Tab to the draft workflows page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/workflowdrafts.php', ['id' => 'workflowdrafts']);
         $tabrow[] = new \tabobject('workflowdrafts', $targeturl,
             get_string('workflow_drafts_header', 'tool_lifecycle').$drafts,
-            get_string('workflow_drafts_header', 'tool_lifecycle'), $draftlink);
+            get_string('workflow_drafts_header_title', 'tool_lifecycle'), $draftlink);
 
         // Tab to the active workflows page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/activeworkflows.php', ['id' => 'activeworkflows']);
         $tabrow[] = new \tabobject('activeworkflows', $targeturl,
             get_string('active_workflows_header', 'tool_lifecycle').$activewf,
-            get_string('active_workflows_header', 'tool_lifecycle'), $activelink);
+            get_string('active_workflows_header_title', 'tool_lifecycle'), $activelink);
 
         // Tab to the deactivated workflows page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php', ['id' => 'deactivatedworkflows']);
         $tabrow[] = new \tabobject('deactivatedworkflows', $targeturl,
             get_string('deactivated_workflows_header', 'tool_lifecycle').$deactivatedewf,
-            get_string('deactivated_workflows_header', 'tool_lifecycle'), $deactivatelink);
+            get_string('deactivated_workflows_header_title', 'tool_lifecycle'), $deactivatelink);
 
         // Tab to the delayed courses list page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/delayedcourses.php', ['id' => 'delayedcourses']);
         $tabrow[] = new \tabobject('delayedcourses', $targeturl,
             get_string('delayed_courses_header', 'tool_lifecycle').$delayedcourses,
-            get_string('delayed_courses_header', 'tool_lifecycle'));
+            get_string('delayed_courses_header_title', 'tool_lifecycle'));
 
         // Tab to the admin approval list page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/step/adminapprove/index.php', ['id' => 'adminapprove']);
         $tabrow[] = new \tabobject('adminapprove', $targeturl,
-            get_string('adminapprovals', 'lifecyclestep_adminapprove').$adminapprovals,
-            get_string('adminapprovals', 'lifecyclestep_adminapprove'));
+            get_string('adminapprovals_header', 'tool_lifecycle').$adminapprovals,
+            get_string('adminapprovals_header_title', 'tool_lifecycle'));
 
         // Tab to the course backups list page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/coursebackups.php', ['id' => 'coursebackups']);
         $tabrow[] = new \tabobject('coursebackups', $targeturl,
             get_string('course_backups_list_header', 'tool_lifecycle').$coursebackups,
-            get_string('course_backups_list_header', 'tool_lifecycle'));
+            get_string('course_backups_list_header_title', 'tool_lifecycle'));
 
         // Tab to the lifecycle errors page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/errors.php', ['id' => 'errors']);
         $tabrow[] = new \tabobject('errors', $targeturl,
             get_string('process_errors_header', 'tool_lifecycle').$lcerrors,
-            get_string('process_errors_header', 'tool_lifecycle'));
+            get_string('process_errors_header_title', 'tool_lifecycle'));
 
         return $tabrow;
 

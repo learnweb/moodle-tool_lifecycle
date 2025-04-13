@@ -29,7 +29,7 @@ Feature: Add a workflow with a manual trigger and a duplicate step and test the 
     And I set the following fields to these values:
       | Instance name              | Duplicate step                  |
     And I press "Save changes"
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     And I press "Activate"
     And I log out
 

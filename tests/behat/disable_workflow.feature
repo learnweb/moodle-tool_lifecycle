@@ -31,7 +31,7 @@ Feature: Disable a workflow
     And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 1"
     And I press "Save changes"
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     And I press "Activate"
     When I wait "10" seconds
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
@@ -71,14 +71,14 @@ Feature: Disable a workflow
     And I am on activeworkflows page
     Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
     And I click on the tool "Disable workflow (processes keep running)" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
-    When I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     And I click on "Copy new workflow from existing" "link"
     And I click on the tool "Create copy" in the "My Workflow" row of the "tool_lifecycle-select-workflow" table
     And I press "Save changes"
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     Then I should see the row "My Workflow" in the "tool_lifecycle_workflow_definitions" table
     When I press "Activate"
     # Since no element is left, the table is not displayed anymore.
     Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-    And I click on "Workflow drafts" "link"
+    When I am on workflowdrafts page
     Then I should not see the table "tool_lifecycle_workflow_definitions"

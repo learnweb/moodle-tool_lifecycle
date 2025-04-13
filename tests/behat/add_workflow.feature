@@ -26,7 +26,7 @@ Feature: Add a workflow definition
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
     Then I should see "manual"
-    When I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     Then I should see "My Workflow"
 
   Scenario: Add a new workflow definition with steps

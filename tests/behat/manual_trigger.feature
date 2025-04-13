@@ -37,7 +37,7 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | Action name                | Delete course                             |
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     And I press "Activate"
     And I log out
     And I log in as "teacher1"
@@ -71,7 +71,7 @@ Feature: Add a manual trigger and test view and actions as a teacher
     And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 2"
     And I press "Save changes"
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     And I press "Activate"
     And I log out
     And I log in as "teacher1"

@@ -13,7 +13,7 @@ Feature: Add a workflow with an adminapprove step and test the status in the tea
       | teacher | C1     | editingteacher |
     And I log in as "admin"
     And I navigate to "Plugins > Admin tools > Life Cycle" in site administration
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                    | Admin Approve Step WF #1 |
@@ -30,7 +30,7 @@ Feature: Add a workflow with an adminapprove step and test the status in the tea
       | Instance name | Admin Approve Step #1 |
       | Status message | My status |
     And I press "Save changes"
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     And I press "Activate"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I log out

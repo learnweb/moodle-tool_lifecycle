@@ -36,7 +36,7 @@ Feature: Add a workflow definition activate it
     And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 2"
     And I press "Save changes"
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     Then I should see the tool "View workflow steps" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I should see the tool "Backup workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I should see the tool "Delete workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table

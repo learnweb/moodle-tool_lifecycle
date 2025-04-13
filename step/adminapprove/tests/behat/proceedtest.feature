@@ -10,7 +10,7 @@ Feature: Add a workflow with an adminapprove step and test it
       | Course 4 | C4        |
     And I log in as "admin"
     And I navigate to "Plugins > Admin tools > Life Cycle" in site administration
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
     And I set the following fields to these values:
       | Title                    | Admin Approve Step WF #1 |
@@ -30,12 +30,11 @@ Feature: Add a workflow with an adminapprove step and test it
     And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course #1"
     And I press "Save changes"
-    And I click on "Workflow drafts" "link"
+    And I am on workflowdrafts page
     And I press "Activate"
 
   Scenario: Test interaction of admin approve step
-    When I navigate to "Plugins > Admin tools > Life Cycle" in site administration
-    And I click on "Admin Approvals" "link"
+    When I am on adminapprove page
     Then I should see "There are currently no courses waiting for interaction in any Admin Approve step."
     When I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I reload the page

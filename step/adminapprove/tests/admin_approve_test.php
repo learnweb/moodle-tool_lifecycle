@@ -77,4 +77,5 @@ final class admin_approve_test extends \advanced_testcase {
         $this->assertCount(1, $sink->get_messages());
         $sink->close();
     }
+
 }
