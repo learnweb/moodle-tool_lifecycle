@@ -110,7 +110,7 @@ class tabs {
         $lcerrors = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
 
         // General Settings and Subplugins.
-        $targeturl = new \moodle_url('/admin/category.php', ['category' => 'lifecycle']);
+        $targeturl = new \moodle_url('/admin/settings.php', ['section' => 'lifecycle']);
         $tabrow[] = new \tabobject('settings', $targeturl,
             get_string('general_config_header', 'tool_lifecycle'),
             get_string('general_config_header_title', 'tool_lifecycle'));

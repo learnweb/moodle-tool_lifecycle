@@ -22,9 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use tool_lifecycle\local\manager\step_manager;
-use tool_lifecycle\local\manager\trigger_manager;
-use tool_lifecycle\local\manager\workflow_manager;
+use \tool_lifecycle\local\manager\workflow_manager;
 
 /**
  * Fix any gaps in the workflows sortindex.
@@ -569,16 +567,11 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         $pluginmanager = core_plugin_manager::instance();
         if ($plugininfo = $pluginmanager->get_plugin_info('lifecycletrigger_sitecourse')) {
             $trace = new \null_progress_trace();
-            $instances = trigger_manager::get_instances('lifecycletrigger_sitecourse');
-            foreach ($instances as $instance) {
-                $workflow = workflow_manager::get_workflow($instance->workflowid);
-                if (step_manager::count_steps_of_workflow($workflow->id) > 0) {
-                    throw new \moodle_exception('There should be no steps for the workflow of the trigger ' .
-                        'lifecycletrigger_sitecourse');
-                }
-                workflow_manager::remove($workflow->id);
+            $plugininfo->uninstall($trace);
+            if ($pluginmanager->is_plugin_folder_removable($plugininfo->component)) {
+                $pluginmanager->uninstall_plugin($plugininfo->component, $trace);
+                $pluginmanager->remove_plugin_folder($plugininfo);
             }
-            $pluginmanager->uninstall_plugin($plugininfo->component, $trace);
             $purgecaches = true;
         } else {
             $DB->set_field('tool_lifecycle_workflow', 'includesitecourse', 1);
@@ -588,16 +581,11 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         $pluginmanager = core_plugin_manager::instance();
         if ($plugininfo = $pluginmanager->get_plugin_info('lifecycletrigger_delayedcourses')) {
             $trace = new \null_progress_trace();
-            $instances = trigger_manager::get_instances('lifecycletrigger_delayedcourses');
-            foreach ($instances as $instance) {
-                $workflow = workflow_manager::get_workflow($instance->workflowid);
-                if (step_manager::count_steps_of_workflow($workflow->id) > 0) {
-                    throw new \moodle_exception('There should be no steps for the workflow of the trigger ' .
-                        'lifecycletrigger_delayedcourses');
-                }
-                workflow_manager::remove($workflow->id);
+            $plugininfo->uninstall($trace);
+            if ($pluginmanager->is_plugin_folder_removable($plugininfo->component)) {
+                $pluginmanager->uninstall_plugin($plugininfo->component, $trace);
+                $pluginmanager->remove_plugin_folder($plugininfo);
             }
-            $pluginmanager->uninstall_plugin($plugininfo->component, $trace);
             $purgecaches = true;
         } else {
             $DB->set_field('tool_lifecycle_workflow', 'includedelayedcourses', 1);
