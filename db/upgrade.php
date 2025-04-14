@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use \tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 
 /**
  * Fix any gaps in the workflows sortindex.
