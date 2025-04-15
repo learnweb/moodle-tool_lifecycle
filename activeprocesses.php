@@ -74,8 +74,6 @@ $tabrow = tabs::get_tabrow(true);
 $id = 'activeworkflows';
 $renderer->tabs($tabrow, $id);
 
-$renderer = $PAGE->get_renderer('tool_lifecycle');
-
 $table = new active_processes_table('tool_lifecycle_active_processes', $data);
 
 $mform->display();

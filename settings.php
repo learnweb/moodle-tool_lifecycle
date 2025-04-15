@@ -75,9 +75,19 @@ if ($hassiteconfig) {
         $settings->add(new admin_setting_heading('lifecycletriggerheader',
             get_string('triggers_installed', 'tool_lifecycle'), ''));
         foreach ($triggers as $trigger => $path) {
+            $uninstall = '';
+            if ($trigger == 'sitecourse') {
+                $link = \html_writer::link($CFG->wwwroot . '/admin/plugins.php?uninstall=lifecycletrigger_sitecourse',
+                    'Uninstall', ['target' => '_blank', 'class' => 'btn btn-primary']);
+                $uninstall = html_writer::span(' Depracated! Please '.$link, 'text-danger');
+            } else if ($trigger == 'delayedcourses') {
+                $link = \html_writer::link($CFG->wwwroot . '/admin/plugins.php?uninstall=lifecycletrigger_delayedcourses',
+                    'Uninstall', ['target' => '_blank', 'class' => 'btn btn-primary']);
+                $uninstall = html_writer::span(' Depracated! Please '.$link, 'text-danger');
+            }
             $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
                 get_string('pluginname', 'lifecycletrigger_' . $trigger),
-                get_string('plugindescription', 'lifecycletrigger_' . $trigger)));
+                get_string('plugindescription', 'lifecycletrigger_' . $trigger).$uninstall));
         }
     } else {
         $settings->add(new admin_setting_heading('adminsettings_notriggers',

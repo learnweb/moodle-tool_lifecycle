@@ -49,11 +49,14 @@ class lifecycletrigger extends base {
         if ($this->is_standard()) {
             return false;
         }
-        // Only allow uninstall, if no active workflow for the trigger is present.
-        $triggers = trigger_manager::get_instances($this->name);
-        foreach ($triggers as $trigger) {
-            if (workflow_manager::is_active($trigger->workflowid)) {
-                return false;
+        $lib = lib_manager::get_trigger_lib($this->name);
+        if ($lib->has_multiple_instances()) {
+            // Only allow uninstall, if no active workflow for the trigger is present.
+            $triggers = trigger_manager::get_instances($this->name);
+            foreach ($triggers as $trigger) {
+                if (workflow_manager::is_active($trigger->workflowid)) {
+                    return false;
+                }
             }
         }
         return true;
