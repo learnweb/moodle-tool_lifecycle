@@ -24,11 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2025041200;
+$plugin->version = 2025041400;
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
 $plugin->component = 'lifecycletrigger_byrole';
 $plugin->dependencies = [
-    'tool_lifecycle' => 2025041200,
+    'tool_lifecycle' => 2025041400,
 ];
 $plugin->release   = 'v4.5-r1';
 $plugin->maturity = MATURITY_STABLE;
