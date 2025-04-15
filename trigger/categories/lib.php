@@ -65,22 +65,25 @@ class categories extends base_automatic {
 
         $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
         $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
-        $categories = explode(',', $categories);
-        // Use core_course_category for moodle 3.6 and higher.
-        if ($CFG->version >= 2018120300) {
-            $categoryobjects = \core_course_category::get_many($categories);
-        } else {
-            require_once($CFG->libdir . '/coursecatlib.php');
-            $categoryobjects = \coursecat::get_many($categories);
-        }
-        $allcategories = [];
-        foreach ($categories as $category) {
-            array_push($allcategories, $category);
-            if (!isset($categoryobjects[$category]) || !$categoryobjects[$category]) {
-                continue;
+        if ($categories = explode(',', $categories)) {
+            // Use core_course_category for moodle 3.6 and higher.
+            if ($CFG->version >= 2018120300) {
+                $categoryobjects = \core_course_category::get_many($categories);
+            } else {
+                require_once($CFG->libdir . '/coursecatlib.php');
+                $categoryobjects = \coursecat::get_many($categories);
             }
-            $children = $categoryobjects[$category]->get_all_children_ids();
-            $allcategories = array_merge($allcategories, $children);
+            $allcategories = [];
+            foreach ($categories as $category) {
+                array_push($allcategories, $category);
+                if (!isset($categoryobjects[$category]) || !$categoryobjects[$category]) {
+                    continue;
+                }
+                $children = $categoryobjects[$category]->get_all_children_ids();
+                $allcategories = array_merge($allcategories, $children);
+            }
+        } else {
+            $allcategories = [0];
         }
 
         [$insql, $inparams] = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED, 'param', !$exclude);
