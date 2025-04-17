@@ -131,12 +131,8 @@ class delayed_courses_manager {
      */
     public static function get_course_delayed($courseid) {
         global $DB;
-        $record = $DB->get_record('tool_lifecycle_delayed', ['courseid' => $courseid]);
-        if ($record) {
-            return $record->delayeduntil;
-        } else {
-            return null;
-        }
+        $delayeduntil = $DB->get_field('tool_lifecycle_delayed', 'delayeduntil', ['courseid' => $courseid]);
+        return $delayeduntil ?? 0;
     }
 
     /**
@@ -148,12 +144,9 @@ class delayed_courses_manager {
      */
     public static function get_course_delayed_workflow($courseid, $workflowid) {
         global $DB;
-        $record = $DB->get_record('tool_lifecycle_delayed_workf', ['courseid' => $courseid, 'workflowid' => $workflowid]);
-        if ($record) {
-            return $record->delayeduntil;
-        } else {
-            return null;
-        }
+        $delayeduntil = $DB->get_field('tool_lifecycle_delayed_workf', 'delayeduntil',
+            ['courseid' => $courseid, 'workflowid' => $workflowid]);
+        return $delayeduntil ?? 0;
     }
 
     /**

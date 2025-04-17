@@ -236,24 +236,10 @@ class process_manager {
     public static function has_other_process($courseid, $workflowid) {
         global $DB;
 
-        $ret = 0;
-        $records = $DB->get_records('tool_lifecycle_process', ['courseid' => $courseid], '', 'id, workflowid');
-        foreach ($records as $record) {
-            if ($record->workflowid != $workflowid) {
-                $ret = 2;
-                break;
-            }
-            $ret = 1;
-        }
-        if ($ret != 2) {
-            $records = $DB->get_records('tool_lifecycle_proc_error', ['courseid' => $courseid], '', 'id, workflowid');
-            foreach ($records as $record) {
-                if ($record->workflowid != $workflowid) {
-                    $ret = 2;
-                    break;
-                }
-                $ret = 1;
-            }
+        if (!$ret = $DB->record_exists_select('tool_lifecycle_process',
+            "courseid = $courseid and workflowid <> $workflowid")) {
+            $ret = $DB->record_exists_select('tool_lifecycle_proc_error',
+                "courseid = $courseid and workflowid <> $workflowid");
         }
         return $ret;
     }

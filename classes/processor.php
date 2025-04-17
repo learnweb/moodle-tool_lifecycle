@@ -312,8 +312,8 @@ class processor {
 
         while ($recordset->valid()) {
             $course = $recordset->current();
-            $delaytime = max(delayed_courses_manager::get_course_delayed($course->id) ?? 0,
-                delayed_courses_manager::get_course_delayed_workflow($course->id, $workflow->id) ?? 0);
+            $delaytime = max(delayed_courses_manager::get_course_delayed($course->id),
+                delayed_courses_manager::get_course_delayed_workflow($course->id, $workflow->id));
             $coursedelayed = $delaytime > time();
             if ($hasother = process_manager::has_other_process($course->id, $workflow->id)) {
                 if ($hasother == OTHERWORKFLOW) {
