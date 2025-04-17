@@ -52,6 +52,7 @@ $excluded = optional_param('excluded', null, PARAM_INT);
 $delayed = optional_param('delayed', null, PARAM_INT);
 $used = optional_param('used', null, PARAM_INT);
 $search = optional_param('search', null, PARAM_RAW);
+$showdetails = optional_param('showdetails', 0,PARAM_INT);
 
 $workflow = workflow_manager::get_workflow($workflowid);
 $iseditable = workflow_manager::is_editable($workflow->id);
@@ -74,7 +75,12 @@ $PAGE->set_url(new \moodle_url(urls::WORKFLOW_DETAILS, $params));
 $PAGE->set_context($syscontext);
 $PAGE->set_title($workflow->title);
 
-$popuplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]);
+// Link to open the popup with the course list.
+$popuplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id, 'showdetails' => $showdetails]);
+// Link for loading the page with no popupwindow.
+$nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid, 'showdetails' => $showdetails]);
+// Link for changing the extended details view mode.
+$showdetailslink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
 
 $action = optional_param('action', null, PARAM_TEXT);
 if ($action) {
@@ -141,8 +147,7 @@ $str = [
     'move_down' => get_string('move_down', 'tool_lifecycle'),
 ];
 
-$showcoursecounts = get_config('tool_lifecycle', 'showcoursecounts');
-if ($showcoursecounts) {
+if ($showdetails) {
     /*
         On moodle instances with many courses the following call can be fatal, because each trigger
         check function will be called for every single course of the instance to determine how many
@@ -174,7 +179,7 @@ foreach ($triggers as $trigger) {
         );
     }
     $trigger->actionmenu = $OUTPUT->render($actionmenu);
-    if ($showcoursecounts) {
+    if ($showdetails) {
         if ($trigger->automatic = $amounts[$trigger->sortindex]->automatic) {
             $sqlresult = trigger_manager::get_trigger_sqlresult($trigger);
             if ($sqlresult == "false") {
@@ -310,8 +315,6 @@ if ((intval($courseids) + intval($ncourses)) > PAGESIZE ) {
     ]);
 }
 
-$nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid]);
-
 $data = [
     'rollbackhelp' => $OUTPUT->help_icon('details:rollbackdelay', 'tool_lifecycle', null),
     'finishhelp' => $OUTPUT->help_icon('details:finishdelay', 'tool_lifecycle', null),
@@ -324,7 +327,7 @@ $data = [
     'delayglobally' => $workflow->delayforallworkflows,
     'trigger' => $displaytriggers,
     'counttriggers' => count($displaytriggers),
-    'showcoursecounts' => $showcoursecounts,
+    'showcoursecounts' => $showdetails,
     'steps' => $displaysteps,
     'listofcourses' => $arrayofcourses,
     'popuplink' => $popuplink,
@@ -335,8 +338,11 @@ $data = [
     'classdetails' => $classdetails,
     'includedelayedcourses' => $workflow->includedelayedcourses,
     'includesitecourse' => $workflow->includesitecourse,
+    'showdetails' => $showdetails,
+    'showdetailslink' => $showdetailslink,
+    'isactive' => $isactive || $isdeactivated,
 ];
-if ($showcoursecounts) {
+if ($showdetails) {
     $data['automatic'] = $displaytotaltriggered;
     $triggered = $amounts['all']->triggered ?? 0;
     $triggeredhtml = $triggered > 0 ? html_writer::span($triggered, 'text-success font-weight-bold') : 0;

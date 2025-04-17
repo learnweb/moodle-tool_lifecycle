@@ -56,13 +56,13 @@ class delayed_courses_manager {
         }
         if ($becauserollback) {
             $duration = $workflow->rollbackdelay;
-            $type = DELAYTYPE_ROLLBACK;
+            $delaytype = DELAYTYPE_ROLLBACK;
         } else {
             $duration = $workflow->finishdelay;
-            $type = DELAYTYPE_FINISHED;
+            $delaytype = DELAYTYPE_FINISHED;
         }
         if ($workflow->delayforallworkflows) {
-            self::set_course_delayed($courseid, $duration, $type);
+            self::set_course_delayed($courseid, $duration, $delaytype);
         } else {
             $delayeduntil = time() + $duration;
             $record = $DB->get_record('tool_lifecycle_delayed_workf',
@@ -72,12 +72,12 @@ class delayed_courses_manager {
                 $record->courseid = $courseid;
                 $record->workflowid = $workflow->id;
                 $record->delayeduntil = $delayeduntil;
-                $record->type = $type;
+                $record->delaytype = $delaytype;
                 $DB->insert_record('tool_lifecycle_delayed_workf', $record);
             } else {
                 if ($record->delayeduntil < $delayeduntil) {
                     $record->delayeduntil = $delayeduntil;
-                    $record->type = $type;
+                    $record->delaytype = $delaytype;
                     $DB->update_record('tool_lifecycle_delayed_workf', $record);
                 }
             }
@@ -104,7 +104,7 @@ class delayed_courses_manager {
      * @param int $type 1 for rollback, 2 for finish
      * @throws \dml_exception
      */
-    public static function set_course_delayed($courseid, $duration, $type = 0) {
+    public static function set_course_delayed($courseid, $duration, $delaytype = 0) {
         global $DB;
         $delayeduntil = time() + $duration;
         $record = $DB->get_record('tool_lifecycle_delayed', ['courseid' => $courseid]);
@@ -112,12 +112,12 @@ class delayed_courses_manager {
             $record = new \stdClass();
             $record->courseid = $courseid;
             $record->delayeduntil = $delayeduntil;
-            $record->type = $type;
+            $record->delaytype = $delaytype;
             $DB->insert_record('tool_lifecycle_delayed', $record);
         } else {
             if ($record->delayeduntil < $delayeduntil) {
                 $record->delayeduntil = $delayeduntil;
-                $record->type = $type;
+                $record->delaytype = $delaytype;
                 $DB->update_record('tool_lifecycle_delayed', $record);
             }
         }
@@ -189,16 +189,16 @@ class delayed_courses_manager {
 
     /**
      * Returns output html whether delay is of type rollback or finished.
-     * @param int $type id of the delay type
+     * @param int $delaytype id of the delay type
      * @throws \dml_exception
      */
-    public static function delaytype_html($type) {
+    public static function delaytype_html($delaytype) {
         global $OUTPUT;
         $typehtml = "";
-        if ($type == DELAYTYPE_ROLLBACK) {
+        if ($delaytype == DELAYTYPE_ROLLBACK) {
             $typehtml = $OUTPUT->render(new \pix_icon('e/undo',
                 get_string('rolledback', 'tool_lifecycle'), 'moodle', ['class' => 'ml-1']));
-        } else if ($type == DELAYTYPE_FINISHED) {
+        } else if ($delaytype == DELAYTYPE_FINISHED) {
             $typehtml = $OUTPUT->render(new \pix_icon('e/tick',
                 get_string('finished', 'tool_lifecycle'), 'moodle', ['class' => 'ml-1']));
         }

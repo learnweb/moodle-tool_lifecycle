@@ -37,7 +37,7 @@ function xmldb_lifecyclestep_email_upgrade($oldversion) {
 
     global $DB;
     $dbman = $DB->get_manager();
-    if ($oldversion < 2025041400) {
+    if ($oldversion < 2025041600) {
         $table = new xmldb_table('lifecyclestep_email_notified');
 
         // Adding fields to table lifecyclestep_email_notified.
@@ -57,7 +57,7 @@ function xmldb_lifecyclestep_email_upgrade($oldversion) {
         }
 
         // Lifecycle savepoint reached.
-        upgrade_plugin_savepoint(true, 2025041400, 'lifecyclestep', 'email');
+        upgrade_plugin_savepoint(true, 2025041600, 'lifecyclestep', 'email');
     }
     return true;
 }

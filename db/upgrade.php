@@ -498,7 +498,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
-    if ($oldversion < 2025041400) {
+    if ($oldversion < 2025041600) {
 
         // Changing precision of field instancename on table tool_lifecycle_trigger to (100).
         $table = new xmldb_table('tool_lifecycle_trigger');
@@ -526,23 +526,34 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Launch change of precision for field instancename.
         $dbman->change_field_precision($table, $field);
 
-        // Define field "type" to be added to tool_lifecycle_delayed.
+        // Define field "delaytype" to be added to tool_lifecycle_delayed.
         $table = new xmldb_table('tool_lifecycle_delayed');
-        $field = new xmldb_field('type', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayeduntil');
+        $field = new xmldb_field('delaytype', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayeduntil');
+        $fieldoldname = new xmldb_field('type');
 
-        // Conditionally launch add field "type".
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
+        // Rename if field 'type' exists.
+        if ($dbman->field_exists($table, $fieldoldname)) {
+            $dbman->rename_field($table, $fieldoldname, 'delaytype');
+        } else {
+            // Conditionally add field "delaytype".
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
         }
 
-        // Define field "type" to be added to tool_lifecycle_delayed_workf.
+        // Define field "delaytype" to be added to tool_lifecycle_delayed_workf.
         $table = new xmldb_table('tool_lifecycle_delayed_workf');
 
-        // Conditionally launch add field "type".
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
+        // Rename if field 'type' is present.
+        if ($dbman->field_exists($table, $fieldoldname)) {
+            $dbman->rename_field($table, $fieldoldname, 'delaytype');
+        } else {
+            // Conditionally launch add field "delaytype".
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
         }
-
+        
         // Define field "includesitecourse" to be added to tool_lifecycle_workflow.
         $table = new xmldb_table('tool_lifecycle_workflow');
         $field = new xmldb_field('includesitecourse', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayforallworkflows');
@@ -560,7 +571,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        upgrade_plugin_savepoint(true, 2025041400, 'tool', 'lifecycle');
+        upgrade_plugin_savepoint(true, 2025041600, 'tool', 'lifecycle');
 
     }
 

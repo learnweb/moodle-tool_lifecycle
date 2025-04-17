@@ -83,7 +83,7 @@ class delayed_courses_table extends \table_sql {
         } else {
             $fields .= 'null AS globaldelay, ';
         }
-        $fields .= 'COALESCE(wfdelay."type", d."type") as "type"';
+        $fields .= 'COALESCE(wfdelay.delaytype, d.delaytype) as delaytype ';
 
         $params = [];
         $where = ["TRUE"];
@@ -97,7 +97,7 @@ class delayed_courses_table extends \table_sql {
                     // For every course, add information about delays per workflow.
                     'LEFT JOIN (' .
                     'SELECT dw.courseid, dw.workflowid, w.title as workflow, ' .
-                    'dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount, dw."type" as "type" ' .
+                    'dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount, dw.delaytype ' .
                     'FROM ( ' .
                     'SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount ' .
                     'FROM {tool_lifecycle_delayed_workf} dw ' .
@@ -171,7 +171,7 @@ class delayed_courses_table extends \table_sql {
         $url = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $row->workflowid]);
         if ($row->globaldelay >= time()) {
             if ($row->workflowcount == 1) {
-                $typehtml = delayed_courses_manager::delaytype_html($row->type);
+                $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
                 $text = get_string('delayed_globally_and_seperately_for_one', 'tool_lifecycle');
                 $html = html_writer::link($url, $text).$typehtml;
             } else if ($row->workflowcount > 1) {
@@ -180,7 +180,7 @@ class delayed_courses_table extends \table_sql {
             } else {
                 $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
                 $date = userdate($row->globaldelay, $dateformat);
-                $typehtml = delayed_courses_manager::delaytype_html($row->type);
+                $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
                 $text = get_string('delayed_globally', 'tool_lifecycle', $date);
                 $html = html_writer::link($url, $text).$typehtml;
             }
@@ -190,7 +190,7 @@ class delayed_courses_table extends \table_sql {
             } else if ($row->workflowcount == 1) {
                 $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
                 $date = userdate($row->workflowdelay, $dateformat);
-                $typehtml = delayed_courses_manager::delaytype_html($row->type);
+                $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
                 $text = get_string('delayed_for_workflow_until', 'tool_lifecycle',
                         ['name' => $row->workflow, 'date' => $date]);
                 $html = html_writer::link($url, $text).$typehtml;
@@ -218,13 +218,13 @@ class delayed_courses_table extends \table_sql {
         $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
         if ($row->globaldelay >= time()) {
             $date = userdate($row->globaldelay, $dateformat);
-            $typehtml = delayed_courses_manager::delaytype_html($row->type);
+            $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
             $text = get_string('globally_until_date', 'tool_lifecycle', $date);
             $html .= html_writer::link($url, $text).$typehtml."<br>";
         }
         if ($row->workflowcount == 1) {
             $date = userdate($row->workflowdelay, $dateformat);
-            $typehtml = delayed_courses_manager::delaytype_html($row->type);
+            $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
             $text = get_string('name_until_date', 'tool_lifecycle',
                     ['name' => $row->workflow, 'date' => $date]);
             $html .= html_writer::link($url, $text).$typehtml;
@@ -237,7 +237,7 @@ class delayed_courses_table extends \table_sql {
             $records = $DB->get_records_sql($sql, ['courseid' => $row->courseid]);
             foreach ($records as $record) {
                 $date = userdate($record->delayeduntil, $dateformat);
-                $typehtml = delayed_courses_manager::delaytype_html($row->type);
+                $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
                 $text = get_string('name_until_date', 'tool_lifecycle',
                         ['name' => $record->title, 'date' => $date]);
                 $url = new moodle_url($url, ['wf' => $record->workflowid]);

@@ -284,7 +284,8 @@ class processor {
                     $autotriggers[] = $trigger;
                 } else {
                     if (is_int($settings['timelastrun'])) {
-                        $obj->additionalinfo = get_string('lastrun', 'tool_lifecycle', userdate($settings['timelastrun']));
+                        $obj->additionalinfo = get_string('lastrun', 'tool_lifecycle',
+                            userdate($settings['timelastrun'], get_string('strftimedatetimeshort', 'langconfig')));
                     } else {
                         $obj->additionalinfo = '-';
                     }

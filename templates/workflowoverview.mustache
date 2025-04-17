@@ -73,7 +73,15 @@
 <div class="d-flex" id="lifecycle-workflow-details">
     <div class="wf-wrapper">
         <div class="{{classdetails}} rounded shadow d-inline-block p-3 position-relative mb-2" style="max-width: 800px;">
-            <a class="edit-pen" href="{{{editsettingslink}}}">{{#pix}} i/edit, core, {{/pix}}</a>
+            <span class="edit-pen">
+                <a href="{{{editsettingslink}}}" {{#isactive}}class="text-white"{{/isactive}}>{{#pix}} i/edit, core, {{/pix}}</a><br>
+                {{#showdetails}}
+                    <a href="{{showdetailslink}}&showdetails=0" data-toggle="tooltip" title="{{#str}} dontshowextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye {{#isactive}}text-white{{/isactive}}"></i></a>
+                {{/showdetails}}
+                {{^showdetails}}
+                    <a href="{{showdetailslink}}&showdetails=1" data-toggle="tooltip" title="{{#str}} showextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye-slash {{#isactive}}text-white{{/isactive}}"></i></a>
+                {{/showdetails}}
+            </span>
             <h4 class="pr-5">{{title}}
                 {{#includedelayedcourses}}<sup><i class="fas fa-calendar-plus" style="font-size:14px;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup>{{/includedelayedcourses}}
                 {{#includesitecourse}}<sup><i class="fas fa-home" style="font-size:14px;" data-toggle="tooltip" title="{{#str}} includesitecourse, tool_lifecycle{{/str}}"></i></sup>{{/includesitecourse}}</h4>
@@ -109,15 +117,15 @@
                     <div class="workflow-trigger {{classfires}}">
                         <div class="wf-header">
                             <div class="wf-header-text">
-                                <span>{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
+                                <span data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
                                 <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
                             </div>
                             <div class="wf-actionmenu">
                                 {{{ actionmenu }}}
                             </div>
                         </div>
+                        {{#showcoursecounts}}
                         <div class="wf-content">
-                          {{#showcoursecounts}}
                             {{#automatic}}
                                 {{#additionalinfo}}
                                     {{{additionalinfo}}}
@@ -148,8 +156,8 @@
                             {{^automatic}}
                                 <span class="font-weight-bold">-</span>
                             {{/automatic}}
-                          {{/showcoursecounts}}
                         </div>
+                        {{/showcoursecounts}}
                     </div>
                 {{/trigger}}
             </div>
@@ -160,7 +168,7 @@
             <div class="workflow-step workflow-item {{#selected}}wf-selected{{/selected}}">
                 <div class="wf-header">
                     <div class="wf-header-text">
-                        <span>{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
+                        <span data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
                         <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
                     </div>
                     <div class="wf-actionmenu">

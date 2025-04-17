@@ -24,7 +24,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="id of the course"/>
         <FIELD NAME="delayeduntil" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="The timestamp till when the course is delayed"/>
-        <FIELD NAME="type" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" DEFAULT="0" COMMENT="1 for rollback, 2 for finish"/>
+        <FIELD NAME="delaytype" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" DEFAULT="0" COMMENT="1 for rollback, 2 for finish"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -121,7 +121,7 @@
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="workflowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="delayeduntil" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="The timestamp till when the course is delayed with the workflow"/>
-        <FIELD NAME="type" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" DEFAULT="0" COMMENT="1 for rollback, 2 for finish"/>
+        <FIELD NAME="delaytype" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" DEFAULT="0" COMMENT="1 for rollback, 2 for finish"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

@@ -24,10 +24,10 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2025041400;
+$plugin->version = 2025041600;
 $plugin->component = 'lifecyclestep_adminapprove';
 $plugin->dependencies = [
-        'tool_lifecycle' => 2025041400,
+        'tool_lifecycle' => 2025041600,
 ];
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
 $plugin->release = 'v4.5-r1';
