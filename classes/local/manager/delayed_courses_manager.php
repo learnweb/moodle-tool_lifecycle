@@ -101,7 +101,7 @@ class delayed_courses_manager {
      * Creates an instance of a delayed course.
      * @param int $courseid id of the course
      * @param int $duration number of seconds
-     * @param int $type 1 for rollback, 2 for finish
+     * @param int $delaytype 1 for rollback, 2 for finish
      * @throws \dml_exception
      */
     public static function set_course_delayed($courseid, $duration, $delaytype = 0) {

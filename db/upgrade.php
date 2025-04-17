@@ -45,7 +45,7 @@ function tool_lifecycle_fix_workflow_sortindex() {
  * @param string $dir
  * @return void
  */
-function tool_lifecycle_upgrade_removeDir(string $dir): void {
+function tool_lifecycle_upgrade_removedir(string $dir): void {
     $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
     $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
     foreach($files as $file) {
@@ -594,11 +594,11 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         }
 
         if ($dir = core_component::get_plugin_directory('lifecycletrigger', 'sitecourse')) {
-            tool_lifecycle_upgrade_removeDir($dir);
+            tool_lifecycle_upgrade_removedir($dir);
         }
 
         if ($dir = core_component::get_plugin_directory('lifecycletrigger', 'delayedcourses')) {
-            tool_lifecycle_upgrade_removeDir($dir);
+            tool_lifecycle_upgrade_removedir($dir);
         }
 
         upgrade_plugin_savepoint(true, 2025041600, 'tool', 'lifecycle');

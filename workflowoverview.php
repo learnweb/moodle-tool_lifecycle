@@ -52,7 +52,7 @@ $excluded = optional_param('excluded', null, PARAM_INT);
 $delayed = optional_param('delayed', null, PARAM_INT);
 $used = optional_param('used', null, PARAM_INT);
 $search = optional_param('search', null, PARAM_RAW);
-$showdetails = optional_param('showdetails', 0,PARAM_INT);
+$showdetails = optional_param('showdetails', 0, PARAM_INT);
 
 $workflow = workflow_manager::get_workflow($workflowid);
 $iseditable = workflow_manager::is_editable($workflow->id);
