@@ -593,11 +593,11 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        if (1==2 && $dir = core_component::get_plugin_directory('lifecycletrigger', 'sitecourse')) {
+        if (1 == 2 && $dir = core_component::get_plugin_directory('lifecycletrigger', 'sitecourse')) {
             tool_lifecycle_upgrade_removedir($dir);
         }
 
-        if (1==2 && $dir = core_component::get_plugin_directory('lifecycletrigger', 'delayedcourses')) {
+        if (1 == 2 && $dir = core_component::get_plugin_directory('lifecycletrigger', 'delayedcourses')) {
             tool_lifecycle_upgrade_removedir($dir);
         }
 
