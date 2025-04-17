@@ -551,11 +551,11 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Define field "delaytype" to be added to tool_lifecycle_delayed.
         $table = new xmldb_table('tool_lifecycle_delayed');
         $field = new xmldb_field('delaytype', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayeduntil');
-        $fieldoldname = new xmldb_field('type');
+        $fieldold = new xmldb_field('type', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayeduntil');
 
         // Rename if field 'type' exists.
-        if ($dbman->field_exists($table, $fieldoldname)) {
-            $dbman->rename_field($table, $fieldoldname, 'delaytype');
+        if ($dbman->field_exists($table, $fieldold)) {
+            $dbman->rename_field($table, $fieldold, 'delaytype');
         } else {
             // Conditionally add field "delaytype".
             if (!$dbman->field_exists($table, $field)) {
@@ -567,10 +567,10 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         $table = new xmldb_table('tool_lifecycle_delayed_workf');
 
         // Rename if field 'type' is present.
-        if ($dbman->field_exists($table, $fieldoldname)) {
-            $dbman->rename_field($table, $fieldoldname, 'delaytype');
+        if ($dbman->field_exists($table, $fieldold)) {
+            $dbman->rename_field($table, $fieldold, 'delaytype');
         } else {
-            // Conditionally launch add field "delaytype".
+            // Conditionally add field "delaytype".
             if (!$dbman->field_exists($table, $field)) {
                 $dbman->add_field($table, $field);
             }
@@ -588,16 +588,16 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Define field "includedelayedcourses" to be added to tool_lifecycle_workflow.
         $field = new xmldb_field('includedelayedcourses', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayforallworkflows');
 
-        // Conditionally launch add field "includedelayedcourses".
+        // Conditionally add field "includedelayedcourses".
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        if ($dir = core_component::get_plugin_directory('lifecycletrigger', 'sitecourse')) {
+        if (1==2 && $dir = core_component::get_plugin_directory('lifecycletrigger', 'sitecourse')) {
             tool_lifecycle_upgrade_removedir($dir);
         }
 
-        if ($dir = core_component::get_plugin_directory('lifecycletrigger', 'delayedcourses')) {
+        if (1==2 && $dir = core_component::get_plugin_directory('lifecycletrigger', 'delayedcourses')) {
             tool_lifecycle_upgrade_removedir($dir);
         }
 
