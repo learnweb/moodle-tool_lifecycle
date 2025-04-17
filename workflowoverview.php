@@ -316,10 +316,6 @@ if ((intval($courseids) + intval($ncourses)) > PAGESIZE ) {
 }
 
 $data = [
-    'rollbackhelp' => $OUTPUT->help_icon('details:rollbackdelay', 'tool_lifecycle', null),
-    'finishhelp' => $OUTPUT->help_icon('details:finishdelay', 'tool_lifecycle', null),
-    'triggerhelp' => $OUTPUT->help_icon('overview:trigger', 'tool_lifecycle', null),
-    'manualtriggerenvolvedhelp' => $OUTPUT->help_icon('manualtriggerenvolved', 'tool_lifecycle', null),
     'editsettingslink' => (new moodle_url(urls::EDIT_WORKFLOW, ['wf' => $workflow->id]))->out(false),
     'title' => $workflow->title,
     'rollbackdelay' => format_time($workflow->rollbackdelay),

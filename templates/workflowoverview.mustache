@@ -83,17 +83,17 @@
                 {{/showdetails}}
             </span>
             <h4 class="pr-5">{{title}}
-                {{#includedelayedcourses}}<sup><i class="fas fa-calendar-plus" style="font-size:14px;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup>{{/includedelayedcourses}}
-                {{#includesitecourse}}<sup><i class="fas fa-home" style="font-size:14px;" data-toggle="tooltip" title="{{#str}} includesitecourse, tool_lifecycle{{/str}}"></i></sup>{{/includesitecourse}}</h4>
-            <span>{{#str}} workflow_rollbackdelay, tool_lifecycle{{/str}}: <strong>{{rollbackdelay}}</strong> {{{rollbackhelp}}}</span><br>
-            <span>{{#str}} workflow_finishdelay, tool_lifecycle{{/str}}: <strong>{{finishdelay}}</strong> {{{finishhelp}}}</span><br>
+                {{#includedelayedcourses}}<sup><i class="fas fa-calendar-plus" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup>{{/includedelayedcourses}}
+                {{#includesitecourse}}<sup><i class="fas fa-home" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includesitecourse, tool_lifecycle{{/str}}"></i></sup>{{/includesitecourse}}</h4>
+            <span>{{#str}} workflow_rollbackdelay, tool_lifecycle{{/str}}: <strong>{{rollbackdelay}}</strong> <span data-toggle="tooltip" title="{{#str}} details:rollbackdelay_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question {{#isactive}}text-white{{/isactive}}"></i></span></span><br>
+            <span>{{#str}} workflow_finishdelay, tool_lifecycle{{/str}}: <strong>{{finishdelay}}</strong> <span data-toggle="tooltip" title="{{#str}} details:finishdelay_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question {{#isactive}}text-white{{/isactive}}"></i></span></span><br>
             <span>{{# delayglobally }}{{#str}}details:globaldelay_yes, tool_lifecycle{{/str}}{{/ delayglobally }}
                 {{^delayglobally}}{{#str}}details:globaldelay_no, tool_lifecycle{{/str}}{{/delayglobally}}</span>
             <div class="mt-2">{{{addinstance}}}</div>
         </div>
         {{#counttriggers}}
         <div class="wf-trigger-block workflow-item">
-            <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}} {{{triggerhelp}}}</h5>
+            <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:trigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
             {{#showcoursecounts}}
               {{#automatic}}
                   <div class="mb-2 mx-2">
@@ -108,7 +108,7 @@
               {{/automatic}}
               {{^automatic}}
                 <div class="mb-2 mx-2">
-                    {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} {{{manualtriggerenvolvedhelp}}}
+                    {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <span data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span>
                 </div>
               {{/automatic}}
             {{/showcoursecounts}}

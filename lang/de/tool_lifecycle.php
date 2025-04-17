@@ -182,8 +182,10 @@ $string['notifyerrorsemailsubject'] = '{$a->amount} neue fehlerhafte tool_lifecy
 $string['overview:add_trigger'] = 'Trigger hinzufügen';
 $string['overview:add_trigger_help'] = 'Es kann nur eine Instanz jedes Triggertyps hinzugefügt werden.';
 $string['overview:trigger'] = 'Trigger';
-$string['overview:trigger_help'] = 'Ein Kurs fängt nur dann an, einen Workflow zu durchlaufen, wenn alle Trigger des Workflows dies übereinstimmend (UND-Verknüpfung) aussagen.<br><br>
-In den hier genannten Zahlen werden Kurse, die verzögert werden oder sich bereits in anderen Workflows befinden, nicht mitgezählt.<br>
+$string['overview:trigger_help'] = 'Ein Kurs fängt nur dann an, einen Workflow zu durchlaufen, wenn alle Trigger des Workflows dies übereinstimmend (UND-Verknüpfung) aussagen.
+
+In den hier genannten Zahlen werden Kurse, die verzögert werden oder sich bereits in anderen Workflows befinden, nicht mitgezählt.
+
 Trotzdem sind die Zahlen nur approximiert, da es sein könnte, dass die Kurse vor diesem einen anderen Workflow auslösen.';
 $string['pluginname'] = 'Kurs-Lebenszyklus';
 $string['plugintitle'] = 'Kurs-Lebenszyklus';
@@ -268,7 +270,7 @@ $string['workflow_drafts_list'] = 'Zeige Workflow-Entwürfe';
 $string['workflow_duplicate_title'] = '{$a} (Kopie)';
 $string['workflow_finishdelay'] = 'Kursauschluss bei Beendigung';
 $string['workflow_finishdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs
- gestartet werden kann, nachdem der Kurs einen Prozess dieses Workflows beendingt hat.';
+ gestartet werden kann, nachdem der Kurs einen Prozess dieses Workflows beendigt hat.';
 $string['workflow_is_running'] = 'Workflow läuft.';
 $string['workflow_not_removeable'] = 'Es ist nicht möglich, diese Workflow-Instanz zu entfernen. Vielleicht hat sie noch laufende Prozesse?';
 $string['workflow_processes'] = 'Aktive Prozesse';

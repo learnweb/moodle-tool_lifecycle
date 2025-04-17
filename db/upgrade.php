@@ -48,8 +48,8 @@ function tool_lifecycle_fix_workflow_sortindex() {
 function tool_lifecycle_upgrade_removedir(string $dir): void {
     $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
     $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-    foreach($files as $file) {
-        if ($file->isDir()){
+    foreach ($files as $file) {
+        if ($file->isDir()) {
             rmdir($file->getPathname());
         } else {
             unlink($file->getPathname());
@@ -575,7 +575,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
                 $dbman->add_field($table, $field);
             }
         }
-        
+
         // Define field "includesitecourse" to be added to tool_lifecycle_workflow.
         $table = new xmldb_table('tool_lifecycle_workflow');
         $field = new xmldb_field('includesitecourse', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayforallworkflows');
