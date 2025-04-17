@@ -22,6 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\trigger_manager;
+use tool_lifecycle\local\manager\workflow_manager;
+
 /**
  * Fix any gaps in the workflows sortindex.
  */
@@ -34,6 +38,24 @@ function tool_lifecycle_fix_workflow_sortindex() {
             workflow_manager::insert_or_update($workflow);
         }
     }
+}
+
+/**
+ * Removes a directory from filesystem
+ * @param string $dir
+ * @return void
+ */
+function tool_lifecycle_upgrade_removeDir(string $dir): void {
+    $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+    $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+    foreach($files as $file) {
+        if ($file->isDir()){
+            rmdir($file->getPathname());
+        } else {
+            unlink($file->getPathname());
+        }
+    }
+    rmdir($dir);
 }
 
 /**
@@ -259,13 +281,13 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
     }
 
     if ($oldversion < 2018022005) {
-        $workflows = \tool_lifecycle\local\manager\workflow_manager::get_active_workflows();
+        $workflows = workflow_manager::get_active_workflows();
         foreach ($workflows as $workflow) {
             if ($workflow->manual === null) {
-                $trigger = \tool_lifecycle\local\manager\trigger_manager::get_triggers_for_workflow($workflow->id)[0];
-                $lib = \tool_lifecycle\local\manager\lib_manager::get_trigger_lib($trigger->subpluginname);
+                $trigger = trigger_manager::get_triggers_for_workflow($workflow->id)[0];
+                $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
                 $workflow->manual = $lib->is_manual_trigger();
-                \tool_lifecycle\local\manager\workflow_manager::insert_or_update($workflow);
+                workflow_manager::insert_or_update($workflow);
             }
         }
         // Lifecycle savepoint reached.
@@ -569,6 +591,14 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Conditionally launch add field "includedelayedcourses".
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
+        }
+
+        if ($dir = core_component::get_plugin_directory('lifecycletrigger', 'sitecourse')) {
+            tool_lifecycle_upgrade_removeDir($dir);
+        }
+
+        if ($dir = core_component::get_plugin_directory('lifecycletrigger', 'delayedcourses')) {
+            tool_lifecycle_upgrade_removeDir($dir);
         }
 
         upgrade_plugin_savepoint(true, 2025041600, 'tool', 'lifecycle');

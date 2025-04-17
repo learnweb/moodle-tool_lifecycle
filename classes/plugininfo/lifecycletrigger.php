@@ -41,9 +41,10 @@ class lifecycletrigger extends base {
     /**
      * Should there be a way to uninstall the plugin via the administration UI.
      *
-     * By default uninstallation is not allowed, plugin developers must enable it explicitly!
+     * By default, uninstallation is not allowed. Plugin developers must enable it explicitly!
      *
      * @return bool
+     * @throws \dml_exception
      */
     public function is_uninstall_allowed() {
         if ($this->is_standard()) {
@@ -51,7 +52,7 @@ class lifecycletrigger extends base {
         }
         $lib = lib_manager::get_trigger_lib($this->name);
         if ($lib->has_multiple_instances()) {
-            // Only allow uninstall, if no active workflow for the trigger is present.
+            // Only allow to uninstall if no active workflow for the trigger is present.
             $triggers = trigger_manager::get_instances($this->name);
             foreach ($triggers as $trigger) {
                 if (workflow_manager::is_active($trigger->workflowid)) {
