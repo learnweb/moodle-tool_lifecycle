@@ -76,10 +76,10 @@
             <span class="edit-pen">
                 <a href="{{{editsettingslink}}}" {{#isactive}}class="text-white"{{/isactive}}>{{#pix}} i/edit, core, {{/pix}}</a><br>
                 {{#showdetails}}
-                    <a href="{{showdetailslink}}&showdetails=0" data-toggle="tooltip" title="{{#str}} dontshowextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye {{#isactive}}text-white{{/isactive}}"></i></a>
+                    <a href="{{{showdetailslink}}}&showdetails=0" data-toggle="tooltip" title="{{#str}} dontshowextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye {{#isactive}}text-white{{/isactive}}"></i></a>
                 {{/showdetails}}
                 {{^showdetails}}
-                    <a href="{{showdetailslink}}&showdetails=1" data-toggle="tooltip" title="{{#str}} showextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye-slash {{#isactive}}text-white{{/isactive}}"></i></a>
+                    <a href="{{{showdetailslink}}}&showdetails=1" data-toggle="tooltip" title="{{#str}} showextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye-slash {{#isactive}}text-white{{/isactive}}"></i></a>
                 {{/showdetails}}
             </span>
             <h4 class="pr-5">{{title}}
@@ -132,7 +132,7 @@
                                 {{/additionalinfo}}
                                 {{^additionalinfo}}
                                     {{#triggeredcourses}}
-                                        <a href="{{popuplink}}&trigger={{id}}">
+                                        <a href="{{{popuplink}}}&trigger={{id}}&showdetails={{showdetails}}">
                                         <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, {{triggeredcourses}} {{/str}}">
                                             {{triggeredcourses}}
                                         </span>
@@ -142,7 +142,7 @@
                                         <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, 0 {{/str}}">0</span>
                                     {{/triggeredcourses}}
                                     {{#excludedcourses}}
-                                        <a href="{{popuplink}}&excluded={{id}}" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}">
+                                        <a href="{{{popuplink}}}&excluded={{id}}&showdetails={{showdetails}}" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}">
                                         <span class="btn btn-outline-danger">
                                             {{excludedcourses}}
                                         </span>
@@ -177,7 +177,7 @@
                 </div>
                 <div class="wf-content">
                     {{#numberofcourses}}
-                        <a href="{{popuplink}}&step={{id}}">{{icon}}{{name}}
+                        <a href="{{{popuplink}}}&step={{id}}&showdetails={{showdetails}}">{{icon}}{{name}}
                         {{#str}} courses {{/str}}: {{numberofcourses}}
                         </a>
                     {{/numberofcourses}}
@@ -191,7 +191,7 @@
 {{# table }}
     <div class="courses-table">
         <div class="bar">
-            <a class="close-button" href="{{nosteplink}}">×</a>
+            <a class="close-button" href="{{{nosteplink}}}&showdetails={{showdetails}}">×</a>
         </div>
         {{{ search }}}
         {{{ table }}}

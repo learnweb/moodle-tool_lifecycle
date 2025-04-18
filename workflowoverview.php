@@ -76,9 +76,9 @@ $PAGE->set_context($syscontext);
 $PAGE->set_title($workflow->title);
 
 // Link to open the popup with the course list.
-$popuplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id, 'showdetails' => $showdetails]);
+$popuplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]);
 // Link for loading the page with no popupwindow.
-$nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid, 'showdetails' => $showdetails]);
+$nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid]);
 // Link for changing the extended details view mode.
 $showdetailslink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
 
@@ -243,12 +243,14 @@ foreach ($steps as $step) {
 
 $arrayofcourses = [];
 
+// Popup courses list.
 $out = null;
 $ncourses = 0;
 $courseids = [];
 $hiddenfieldssearch = [];
 $hiddenfieldssearch[] = ['name' => 'wf', 'value' => $workflowid];
-if ($stepid) {
+$hiddenfieldssearch[] = ['name' => 'showdetails', 'value' => $showdetails];
+if ($stepid) { // Display courses table with courses of this step.
     $step = step_manager::get_step_instance($stepid);
     $ncourses = $DB->count_records('tool_lifecycle_process',
         ['stepindex' => $step->sortindex, 'workflowid' => $workflowid]);
@@ -259,7 +261,7 @@ if ($stepid) {
     $out = ob_get_contents();
     ob_end_clean();
     $hiddenfieldssearch[] = ['name' => 'step', 'value' => $stepid];
-} else if ($triggerid) {
+} else if ($triggerid) { // Display courses table with triggered courses of this trigger.
     $trigger = trigger_manager::get_instance($triggerid);
     if ($courseids = (new processor())->get_courses_to_trigger_for_trigger($trigger, $workflowid)) {
         $table = new triggered_courses_table($courseids, 'triggered', $trigger->instancename,
@@ -270,7 +272,7 @@ if ($stepid) {
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'trigger', 'value' => $triggerid];
     }
-} else if ($excluded) {
+} else if ($excluded) { // Display courses table with excluded courses of this trigger.
     $trigger = trigger_manager::get_instance($excluded);
     if ($courseids = (new processor())->get_courses_to_exclude_for_trigger($trigger, $workflowid)) {
         $table = new triggered_courses_table($courseids, 'exclude', $trigger->instancename, null, null, $search);
@@ -280,7 +282,7 @@ if ($stepid) {
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'excluded', 'value' => $excluded];
     }
-} else if ($delayed) {
+} else if ($delayed) { // Display courses table with courses delayed for this workflow.
     if ($courseids = (new processor())->get_courses_delayed_for_workflow($workflowid)) {
         $table = new triggered_courses_table( $courseids, 'delayed',
             null, $workflow->title, $workflowid, $search);
@@ -290,7 +292,7 @@ if ($stepid) {
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
     }
-} else if ($used) {
+} else if ($used) { // Display courses triggered by this workflow but involved in other processes already.
     if ($courseids = $amounts['all']->used ?? null) {
         $table = new triggered_courses_table( $courseids, 'used',
             null, $workflow->title, $workflowid, $search);
@@ -301,6 +303,7 @@ if ($stepid) {
         $hiddenfieldssearch[] = ['name' => 'used', 'value' => '1'];
     }
 }
+// Search box for courses list.
 $searchhtml = '';
 if ((intval($courseids) + intval($ncourses)) > PAGESIZE ) {
     $searchhtml = $renderer->render_from_template('tool_lifecycle/search_input', [
@@ -339,18 +342,21 @@ $data = [
     'isactive' => $isactive || $isdeactivated,
 ];
 if ($showdetails) {
+    // The triggers total box.
     $data['automatic'] = $displaytotaltriggered;
     $triggered = $amounts['all']->triggered ?? 0;
     $triggeredhtml = $triggered > 0 ? html_writer::span($triggered, 'text-success font-weight-bold') : 0;
     $data['coursestriggered'] = $triggeredhtml;
     if ($triggered) {
-        // Excluded removed from mustache at the moment.
+        // 'Excluded' removed from mustache at the moment.
         $excluded = $amounts['all']->excluded;
         $excludedhtml = $excluded > 0 ? html_writer::span($excluded, 'text-danger font-weight-bold') : 0;
+        // Count delayed total, displayed in mustache only if there are any.
         $delayed = $amounts['all']->delayed ?? 0;
         $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
         $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
             ['class' => 'text-warning  btn btn-outline-warning']) : 0;
+        // Count used total, displayed in mustache only if there are any.
         $used = count($amounts['all']->used) ?? 0;
         $usedlink = new moodle_url($popuplink, ['used' => "1"]);
         $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,
@@ -362,6 +368,7 @@ if ($showdetails) {
     }
 }
 
+// Box to add triggers or steps to workflow by use of select fields.
 if (workflow_manager::is_editable($workflow->id)) {
     $addinstance = '';
     $triggertypes = trigger_manager::get_chooseable_trigger_types();

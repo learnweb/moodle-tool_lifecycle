@@ -126,7 +126,7 @@ class delayed_courses_manager {
     /**
      * Queries if a course was delayed.
      * @param int $courseid id of the course
-     * @return null|int timestamp until when the course is delayed (null if no entry exists).
+     * @return int timestamp until when the course is delayed (0 if no entry exists).
      * @throws \dml_exception
      */
     public static function get_course_delayed($courseid) {
@@ -139,7 +139,7 @@ class delayed_courses_manager {
      * Queries if a course was delayed for a given workflow.
      * @param int $courseid id of the course
      * @param int $workflowid id of the workflow
-     * @return null|int timestamp until when the course is delayed (null if no entry exists).
+     * @return int timestamp until when the course is delayed (0 if no entry exists).
      * @throws \dml_exception
      */
     public static function get_course_delayed_workflow($courseid, $workflowid) {

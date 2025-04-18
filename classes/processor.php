@@ -281,6 +281,7 @@ class processor {
                 $obj->excluded = 0;
                 // Only use triggers with true sql to display the real amounts for the others instead of 0.
                 if (trigger_manager::get_trigger_sqlresult($trigger) != "false") {
+                    $trigger->lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                     $autotriggers[] = $trigger;
                 } else {
                     if (is_int($settings['timelastrun'])) {
@@ -294,7 +295,6 @@ class processor {
             $amounts[$trigger->sortindex] = $obj;
         }
 
-        $globallydelayedcourses = delayed_courses_manager::get_globally_delayed_courses();
         if ($workflow->includesitecourse) {
             $sitecourse = [];
         } else {
@@ -304,7 +304,7 @@ class processor {
             $delayedcourses = [];
         } else {
             $delayedcourses = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
-                $globallydelayedcourses);
+                delayed_courses_manager::get_globally_delayed_courses());
         }
         $excludedcourses = array_merge($sitecourse, $delayedcourses);
 
@@ -312,38 +312,26 @@ class processor {
 
         while ($recordset->valid()) {
             $course = $recordset->current();
-            $delaytime = max(delayed_courses_manager::get_course_delayed($course->id),
-                delayed_courses_manager::get_course_delayed_workflow($course->id, $workflow->id));
-            $coursedelayed = $delaytime > time();
+            // If course is involved in another process it is not counted for this process.
             if ($hasother = process_manager::has_other_process($course->id, $workflow->id)) {
                 if ($hasother == OTHERWORKFLOW) {
                     $usedcourses[] = $course->id;
                 }
-                $recordset->next();
             } else {
                 $countcourses++;
-                $action = false;
+                $coursetriggered = true;
                 foreach ($autotriggers as $trigger) {
-                    $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-                    $response = $lib->check_course($course, $trigger->id);
-                    if ($response == trigger_response::next()) {
-                        if (!$action) {
-                            $action = true;
-                        }
-                        continue;
-                    }
+                    $response = $trigger->lib->check_course($course, $trigger->id);
                     if ($response == trigger_response::exclude()) {
-                        if (!$action) {
-                            $action = true;
+                        if ($coursetriggered) {
+                            $coursetriggered = false;
                             $countexcluded++;
                         }
                         $amounts[$trigger->sortindex]->excluded++;
-                        continue;
-                    }
-                    if ($response == trigger_response::trigger()) {
+                    } else if ($response == trigger_response::trigger()) {
                         if ($trigger->exclude) {
-                            if (!$action) {
-                                $action = true;
+                            if ($coursetriggered) {
+                                $coursetriggered = false;
                                 $countexcluded++;
                             }
                             $amounts[$trigger->sortindex]->excluded++;
@@ -351,16 +339,19 @@ class processor {
                             $amounts[$trigger->sortindex]->triggered++;
                         }
                     }
-                }
-                if (!$action) {
+                } // End foreach autotrigger.
+                if ($coursetriggered) { // That means the course is included.
                     $counttriggered++;
-                    if ($coursedelayed) {
+                    // Only count delays for triggered courses.
+                    $delaytime = max(delayed_courses_manager::get_course_delayed($course->id),
+                        delayed_courses_manager::get_course_delayed_workflow($course->id, $workflow->id));
+                    if ($delaytime > time()) {
                         $countdelayed++;
                     }
                 }
-                $recordset->next();
-            }
-        }
+            } // End else hasother.
+            $recordset->next();
+        } // End while recordset.
 
         $all = new \stdClass();
         $all->excluded = $countexcluded;
