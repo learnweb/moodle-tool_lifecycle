@@ -348,7 +348,7 @@ if ($showdetails) {
     $triggeredhtml = $triggered > 0 ? html_writer::span($triggered, 'text-success font-weight-bold') : 0;
     $data['coursestriggered'] = $triggeredhtml;
     if ($triggered) {
-        // 'Excluded' removed from mustache at the moment.
+        // Excluded: removed from mustache at the moment.
         $excluded = $amounts['all']->excluded;
         $excludedhtml = $excluded > 0 ? html_writer::span($excluded, 'text-danger font-weight-bold') : 0;
         // Count delayed total, displayed in mustache only if there are any.
