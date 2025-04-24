@@ -42,14 +42,13 @@ require_once(__DIR__ . '/../../lib.php');
 class specificdate extends base_automatic {
 
     /**
-     * Checks the course and returns a repsonse, which tells if the course should be further processed.
-     * @param object $course Course to be processed.
-     * @param int $triggerid Id of the trigger instance.
+     * Returns triggertype of trigger: trigger, triggertime or exclude.
+     * @param object $course DEPRECATED
+     * @param int $triggerid DEPRECATED
      * @return trigger_response
      */
-    public function check_course($course, $triggerid) {
-        // Everything is already in the sql statement.
-        return trigger_response::trigger();
+    public function check_course($course = null, $triggerid = null) {
+        return trigger_response::triggertime();
     }
 
     /**
@@ -90,6 +89,53 @@ class specificdate extends base_automatic {
     }
 
     /**
+     * Returns the next day at which the trigger should run.
+     * @param int $triggerid Id of the trigger.
+     * @return int $nextrun timestamp next run or 0.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     * @throws \Exception
+     */
+    public function get_next_run_time($triggerid) {
+        $settings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
+        $datesraw = $settings['dates'];
+        $dates = $this->parse_dates($datesraw);
+        // Get timelastrunactive.
+        $timelastrunactive = $settings['timelastrunactive'] ?? false;
+        $lastrun = getdate($settings['timelastrun']);
+        // Get current date.
+        $current = time();
+        $today = getdate($current);
+
+        $inhundredyears = mktime(0, 0, 0, 1, 1, $today['year']+100);
+        $nextrun = $inhundredyears;
+        foreach ($dates as $date) {
+            // Special case if the $date is today.
+            if ($date['mon'] == $today['mon'] && $date['day'] == $today['mday']) {
+                // If last run was today add one year.
+                if ($timelastrunactive && $lastrun['yday'] == $today['yday'] && $lastrun['year'] == $today['year']) {
+                    $nextrunoneyear = mktime(0, 0, 0, $today['mon'], $today['yday'], $today['year']+1);
+                    $nextrun = min($nextrunoneyear, $nextrun);
+                } else { // Should run today.
+                    $nextrun = $today;
+                }
+            } else {
+                $nextrundate = mktime(0, 0, 0, $date['mon'], $date['day'], $today['year']);
+                if ($nextrundate < $current) {
+                    $nextrundate = mktime(0, 0, 0, $date['mon'], $date['day'], $today['year']+1);
+                }
+                $nextrun = min($nextrundate, $nextrun);
+            }
+        }
+        if ($nextrun != $inhundredyears) {
+            return $nextrun;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * Parses the dates settings to actual date objects.
      * @param string $datesraw Raw data from the form representing dates.
      * @return array
@@ -101,7 +147,7 @@ class specificdate extends base_automatic {
         foreach ($dates as $date) {
             $dateparts = explode('.', $date);
             if (count($dateparts) !== 2) {
-                throw new \moodle_exception("Each date has to consist of two parts devided by point. We got: " . $date);
+                throw new \moodle_exception("Each date has to consist of two parts divided by point. We got: " . $date);
             }
             $result[] = [
                 'mon' => $dateparts[1],

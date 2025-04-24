@@ -41,7 +41,7 @@ class triggered_courses_table extends \table_sql {
     /**
      * Builds a table of courses.
      * @param array $courseids of the courses to list
-     * @param string $type of list: triggered, delayed, excluded
+     * @param string $type of list: triggered, triggeredworkflow, delayed, excluded
      * @param string $triggername optional, if type triggered
      * @param string $workflowname optional, if type delayed
      * @param null $workflowid optional, if type delayed
@@ -60,6 +60,8 @@ class triggered_courses_table extends \table_sql {
         $this->define_baseurl($PAGE->url);
         if ($type == 'triggered') {
             $this->caption = get_string('coursestriggered', 'tool_lifecycle', $triggername)." (".count($courseids).")";
+        } else if ($type == 'triggeredworkflow') {
+            $this->caption = get_string('coursestriggeredworkflow', 'tool_lifecycle', $workflowname)." (".count($courseids).")";
         } else if ($type == 'delayed') {
             $this->caption = get_string('coursesdelayed', 'tool_lifecycle', $workflowname)." (".count($courseids).")";
         } else if ($type == 'used') {

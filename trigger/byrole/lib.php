@@ -55,12 +55,12 @@ class byrole extends base_automatic {
     }
 
     /**
-     * Always triggers a course that got past the where clause.
-     * @param \stdClass $course
-     * @param int $triggerid id of the trigger instance
-     * @return trigger_response one of next() or trigger()
+     * Returns triggertype of trigger: trigger, triggertime or exclude.
+     * @param \stdClass $course DEPRECATED
+     * @param int $triggerid DEPRECATED
+     * @return trigger_response
      */
-    public function check_course($course, $triggerid) {
+    public function check_course($course = null, $triggerid = null) {
             return trigger_response::trigger();
     }
 

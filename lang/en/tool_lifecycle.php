@@ -86,10 +86,14 @@ $string['courses_will_be_excluded'] = '{$a} courses will be excluded';
 $string['courses_will_be_excluded_total'] = '{$a} courses will be excluded in total';
 $string['courses_will_be_triggered'] = '{$a} courses will be triggered';
 $string['courses_will_be_triggered_total'] = '{$a} courses will be triggered in total';
+$string['courses_will_be_triggered_total_without_amount'] = ' courses will be triggered in total';
 $string['coursesdelayed'] = 'Courses delayed for workflow \'{$a}\'';
+$string['courseselection_title'] = 'Course Selection';
+$string['courseselectionrun_title'] = 'Course Selection Run';
 $string['coursesexcluded'] = 'Courses excluded by trigger \'{$a}\'';
 $string['coursesinstep'] = 'Courses in step \'{$a}\'';
 $string['coursestriggered'] = 'Courses triggered by trigger \'{$a}\'';
+$string['coursestriggeredworkflow'] = 'Courses triggered for this workflow \'{$a}\'';
 $string['coursesused'] = 'Courses already used in a process for workflow \'{$a}\'';
 $string['create_copy'] = 'Create copy';
 $string['create_step'] = 'Create step';
@@ -169,6 +173,7 @@ $string['manualtriggerenvolved_help'] = 'No courses will be triggered unless the
 $string['move_down'] = 'Move down';
 $string['move_up'] = 'Move up';
 $string['name_until_date'] = '"{$a->name}" until {$a->date}';
+$string['nextrun'] = 'Next run: {$a}';
 $string['noactiontools'] = 'No tools available';
 $string['nocoursestodisplay'] = 'There are currently no courses which require your attention!';
 $string['nointeractioninterface'] = 'No interaction interface available!';
@@ -181,11 +186,10 @@ $string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} new tool_lifec
 $string['notifyerrorsemailsubject'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!';
 $string['overview:add_trigger'] = 'Add trigger';
 $string['overview:add_trigger_help'] = 'You can only add one instance of each trigger type.';
+$string['overview:timetrigger_help'] = 'When should the next course selection for this workflow takes place?';
 $string['overview:trigger'] = 'Trigger';
-$string['overview:trigger_help'] = 'A course will only trigger a workflow, if all triggers agree on it (AND operation).
-
-Courses which are delayed, or already in another workflow are not included in the displayed counts.
-
+$string['overview:trigger_help'] = 'The triggered courses would be added to the workflow process if the course selection would run now.
+A course will only trigger a workflow, if all triggers agree on it (AND operation). Courses which are delayed, or already in another workflow are not included in the displayed counts.
 Still, these numbers are only approximates, since it could be that a course is excluded by another workflow, or will trigger another workflow before this one.';
 $string['pluginname'] = 'Life Cycle';
 $string['plugintitle'] = 'Course Life Cycle';

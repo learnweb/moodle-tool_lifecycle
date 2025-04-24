@@ -32,7 +32,11 @@ span.tool_lifecycle-hint {
     text-align: center;
     border: 1px solid #aaa;
     border-radius: 8px;
-    min-width: 200px;
+    min-width: 220px;
+}
+
+#lifecycle-workflow-details .wf-trigger-block .workflow-item .nextrun {
+    min-width: 300px;
 }
 
 #lifecycle-workflow-details .workflow-item {
@@ -50,6 +54,10 @@ span.tool_lifecycle-hint {
     display: flex;
     padding: 8px 4px 8px 16px;
     align-items: center;
+}
+
+#lifecycle-workflow-details .wf-header.noshowcoursecounts {
+    border-bottom: none;
 }
 
 #lifecycle-workflow-details .wf-header-text {

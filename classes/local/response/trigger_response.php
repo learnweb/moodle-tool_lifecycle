@@ -38,6 +38,8 @@ class trigger_response {
     const EXCLUDE = 'exclude';
     /** @var string Trigger a process for this workflow if all other triggers of this workflow say the same. */
     const TRIGGER = 'trigger';
+    /** @var string This trigger determines when the trigger selection takes place. */
+    const TRIGGERTIME = 'triggertime';
 
     /** @var string Value of the response. */
     private $value;
@@ -75,6 +77,13 @@ class trigger_response {
         return new trigger_response(self::TRIGGER);
     }
 
+    /**
+     * Creates a TriggerResponse telling that the subplugin determines when the course selection takes place.
+     * @return trigger_response
+     */
+    public static function triggertime() {
+        return new trigger_response(self::TRIGGERTIME);
+    }
 
 
 }

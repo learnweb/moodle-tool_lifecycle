@@ -42,13 +42,12 @@ require_once(__DIR__ . '/../../lib.php');
 class categories extends base_automatic {
 
     /**
-     * Checks the course and returns a repsonse, which tells if the course should be further processed.
-     * @param object $course Course to be processed.
-     * @param int $triggerid Id of the trigger instance.
+     * Returns triggertype of trigger: trigger, triggertime or exclude.
+     * @param object $course DEPRECATED
+     * @param int $triggerid DEPRECATED
      * @return trigger_response
      */
-    public function check_course($course, $triggerid) {
-        // Every decision is already in the where statement.
+    public function check_course($course = null, $triggerid = null) {
         return trigger_response::trigger();
     }
 

@@ -52,7 +52,6 @@
       "automatic": 1,
       "coursestriggered": 0,
       "coursesexcluded": 0,
-      "coursesetsize": 0,
       "steps": [
         {
           "id": "2",
@@ -64,7 +63,6 @@
           "actionmenu": "<div></div>"
         }
       ],
-      "listofcourses": [],
       "popuplink": "",
       "nosteplink": "",
       "table": null
@@ -72,15 +70,16 @@
 }}
 <div class="d-flex" id="lifecycle-workflow-details">
     <div class="wf-wrapper">
+
         <div class="{{classdetails}} rounded shadow d-inline-block p-3 position-relative mb-2" style="max-width: 800px;">
             <span class="edit-pen">
                 <a href="{{{editsettingslink}}}" {{#isactive}}class="text-white"{{/isactive}}>{{#pix}} i/edit, core, {{/pix}}</a><br>
-                {{#showdetails}}
-                    <a href="{{{showdetailslink}}}&showdetails=0" data-toggle="tooltip" title="{{#str}} dontshowextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye {{#isactive}}text-white{{/isactive}}"></i></a>
-                {{/showdetails}}
-                {{^showdetails}}
-                    <a href="{{{showdetailslink}}}&showdetails=1" data-toggle="tooltip" title="{{#str}} showextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye-slash {{#isactive}}text-white{{/isactive}}"></i></a>
-                {{/showdetails}}
+                {{#showdetailsicon}}
+                    <a href="{{{showdetailslink}}}&showdetails={{workflowid}}" data-toggle="tooltip" title="{{#str}} showextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye-slash {{#isactive}}text-white{{/isactive}}"></i></a>
+                {{/showdetailsicon}}
+                {{^showdetailsicon}}
+                    <a href="{{{showdetailslink}}}&showdetails=-1" data-toggle="tooltip" title="{{#str}} dontshowextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye {{#isactive}}text-white{{/isactive}}"></i></a>
+                {{/showdetailsicon}}
             </span>
             <h4 class="pr-5">{{title}}
                 {{#includedelayedcourses}}<sup><i class="fas fa-calendar-plus" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup>{{/includedelayedcourses}}
@@ -91,13 +90,24 @@
                 {{^delayglobally}}{{#str}}details:globaldelay_no, tool_lifecycle{{/str}}{{/delayglobally}}</span>
             <div class="mt-2">{{{addinstance}}}</div>
         </div>
+
         {{#counttriggers}}
-        <div class="wf-trigger-block workflow-item">
-            <h5 class="my-2">{{#str}} trigger, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:trigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
+        <div class="wf-trigger-block workflow-item mt-2">
+            <h5 class="my-2">{{#str}} courseselection_title, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:trigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
             {{#showcoursecounts}}
               {{#automatic}}
                   <div class="mb-2 mx-2">
-                      {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{{coursestriggered}}} {{/str}}<br>
+                      {{#coursestriggeredcount}}
+                          <a href="{{{popuplink}}}&triggered=1&showdetails=1">
+                          <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered_total, tool_lifecycle, {{coursestriggeredcount}} {{/str}}">
+                              {{coursestriggeredcount}}
+                          </span>
+                          </a>
+                          {{#str}} courses_will_be_triggered_total_without_amount, tool_lifecycle {{/str}}<br>
+                      {{/coursestriggeredcount}}
+                      {{^coursestriggeredcount}}
+                          {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{{coursestriggered}}} {{/str}}<br>
+                      {{/coursestriggeredcount}}
                       {{#coursesdelayed}}
                           {{#str}} courses_are_delayed_total, tool_lifecycle, {{{coursesdelayed}}} {{/str}}<br>
                       {{/coursesdelayed}}
@@ -113,81 +123,34 @@
               {{/automatic}}
             {{/showcoursecounts}}
             <div class="workflow wf-trigger-wrapper">
-                {{#trigger}}
-                    <div class="workflow-trigger {{classfires}}">
-                        <div class="wf-header">
-                            <div class="wf-header-text">
-                                <span data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
-                                <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
-                            </div>
-                            <div class="wf-actionmenu">
-                                {{{ actionmenu }}}
-                            </div>
-                        </div>
-                        {{#showcoursecounts}}
-                        <div class="wf-content">
-                            {{#automatic}}
-                                {{#additionalinfo}}
-                                    {{{additionalinfo}}}
-                                {{/additionalinfo}}
-                                {{^additionalinfo}}
-                                    {{#triggeredcourses}}
-                                        <a href="{{{popuplink}}}&trigger={{id}}&showdetails={{showdetails}}">
-                                        <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, {{triggeredcourses}} {{/str}}">
-                                            {{triggeredcourses}}
-                                        </span>
-                                        </a>
-                                    {{/triggeredcourses}}
-                                    {{^triggeredcourses}}
-                                        <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, 0 {{/str}}">0</span>
-                                    {{/triggeredcourses}}
-                                    {{#excludedcourses}}
-                                        <a href="{{{popuplink}}}&excluded={{id}}&showdetails={{showdetails}}" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}">
-                                        <span class="btn btn-outline-danger">
-                                            {{excludedcourses}}
-                                        </span>
-                                        </a>
-                                    {{/excludedcourses}}
-                                    {{^excludedcourses}}
-                                        <span class="btn btn-outline-danger" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, 0 {{/str}}">0</span>
-                                    {{/excludedcourses}}
-                                {{/additionalinfo}}
-                            {{/automatic}}
-                            {{^automatic}}
-                                <span class="font-weight-bold">-</span>
-                            {{/automatic}}
-                        </div>
-                        {{/showcoursecounts}}
-                    </div>
-                {{/trigger}}
+
+                {{>tool_lifecycle/overview_trigger}}
+
             </div>
         </div>
         {{/counttriggers}}
-        {{#steps}}
-            <div class="wf-arrow"></div>
-            <div class="workflow-step workflow-item {{#selected}}wf-selected{{/selected}}">
-                <div class="wf-header">
-                    <div class="wf-header-text">
-                        <span data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
-                        <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
-                    </div>
-                    <div class="wf-actionmenu">
-                        {{{ actionmenu }}}
-                    </div>
-                </div>
-                <div class="wf-content">
-                    {{#numberofcourses}}
-                        <a href="{{{popuplink}}}&step={{id}}&showdetails={{showdetails}}">{{icon}}{{name}}
-                        {{#str}} courses {{/str}}: {{numberofcourses}}
-                        </a>
-                    {{/numberofcourses}}
-                    {{^numberofcourses}}
-                        {{#str}} courses {{/str}}: {{numberofcourses}}
-                    {{/numberofcourses}}
-                </div>
+
+        <div class="wf-arrow"></div>
+
+        <div class="wf-trigger-block workflow-item nextrun">
+            <h5 class="my-2">{{#str}} courseselectionrun_title, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:timetrigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
+            <div class="mb-2 mx-2">
+                {{#str}} nextrun, tool_lifecycle, {{{nextrun}}} {{/str}}<br>
+                <span class="text-muted">{{#str}} lastrun, tool_lifecycle, {{lastrun}} {{/str}}</span>
             </div>
-        {{/steps}}
+            {{#counttimetriggers}}
+                <div class="workflow wf-trigger-wrapper">
+
+                    {{>tool_lifecycle/overview_timetrigger}}
+
+                </div>
+            {{/counttimetriggers}}
+        </div>
+
+        {{>tool_lifecycle/overview_step}}
+
     </div>
+
 {{# table }}
     <div class="courses-table">
         <div class="bar">
@@ -197,4 +160,5 @@
         {{{ table }}}
     </div>
 {{/table}}
+
 </div>

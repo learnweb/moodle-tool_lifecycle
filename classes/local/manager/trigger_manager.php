@@ -351,8 +351,7 @@ class trigger_manager extends subplugin_manager {
     public static function get_trigger_sqlresult($trigger) {
 
         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-        $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
-        [$sql, $params] = $lib->get_course_recordset_where($trigger->id, $settings['exclude'] ?? false);
+        [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
         return $sql;
     }
 }

@@ -86,10 +86,14 @@ $string['courses_will_be_excluded'] = '{$a} Kurse werden ausgeschlossen';
 $string['courses_will_be_excluded_total'] = '{$a} Kurse werden insgesamt ausgeschlossen';
 $string['courses_will_be_triggered'] = '{$a} Kurse werden getriggert';
 $string['courses_will_be_triggered_total'] = '{$a} Kurse werden insgesamt getriggert';
+$string['courses_will_be_triggered_total_without_amount'] = ' Kurse werden insgesamt getriggert';
 $string['coursesdelayed'] = 'Verzögerte Kurse des Workflows \'{$a}\'';
+$string['courseselection_title'] = 'Kurs-Selektion';
+$string['courseselectionrun_title'] = 'Nächster Selektionslauf';
 $string['coursesexcluded'] = 'Ausgeschlossene Kurse für Trigger \'{$a}\'';
 $string['coursesinstep'] = 'Kurse im Schritt \'{$a}\'';
 $string['coursestriggered'] = 'Getriggerte Kurse für Trigger \'{$a}\'';
+$string['coursestriggeredworkflow'] = 'Getriggerte Kurse für diesen Workflow \'{$a}\'';
 $string['coursesused'] = 'Kurse schon in einem Prozess für Workflow \'{$a}\'';
 $string['create_copy'] = 'Kopie erstellen';
 $string['create_step'] = 'Step erstellen';
@@ -155,7 +159,7 @@ $string['invalid_workflow'] = 'Workflowkonfiguration noch nicht aktivierbar';
 $string['invalid_workflow_cannot_be_activated'] = 'Der Workflow kann noch nicht aktiviert werden, da die Workflowdefinition ungültig ist.';
 $string['invalid_workflow_details'] = 'Erstelle mindestens einen Trigger für diesen Workflow.';
 $string['lastaction'] = 'Letzte Aktion am';
-$string['lastrun'] = 'Letze Durchführung: {$a}';
+$string['lastrun'] = 'Letzte Durchführung: {$a}';
 $string['lifecycle:managecourses'] = 'Darf Kurse in tool_lifecycle verwalten.';
 $string['lifecycle_error_notify_task'] = 'Benachrichtigt die Administratoren bei Fehlern in tool_lifecycle-Prozessen.';
 $string['lifecycle_task'] = 'Führt den Lifecycle-Prozess aus.';
@@ -169,6 +173,7 @@ $string['manualtriggerenvolved_help'] = 'Kurse können erst getriggert werden we
 $string['move_down'] = 'Nach unten bewegen';
 $string['move_up'] = 'Nach oben bewegen';
 $string['name_until_date'] = '"{$a->name}" bis {$a->date}';
+$string['nextrun'] = 'Nächste Durchführung: {$a}';
 $string['noactiontools'] = 'Keine Aktionen verfügbar';
 $string['nocoursestodisplay'] = 'Es gibt derzeit keine Kurse, die Ihre Aufmerksamkeit erfordern!';
 $string['nointeractioninterface'] = 'Keine Interaktionsschnittstelle verfügbar!';
@@ -181,11 +186,11 @@ $string['notifyerrorsemailcontenthtml'] = '{$a->amount} neue fehlerhafte tool_li
 $string['notifyerrorsemailsubject'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!';
 $string['overview:add_trigger'] = 'Trigger hinzufügen';
 $string['overview:add_trigger_help'] = 'Es kann nur eine Instanz jedes Triggertyps hinzugefügt werden.';
+$string['overview:timetrigger_help'] = 'Wann sollte der Kursselektionsjob für diesen Workflow das nächste Mal laufen?';
 $string['overview:trigger'] = 'Trigger';
-$string['overview:trigger_help'] = 'Ein Kurs fängt nur dann an, einen Workflow zu durchlaufen, wenn alle Trigger des Workflows dies übereinstimmend (UND-Verknüpfung) aussagen.
-
+$string['overview:trigger_help'] = 'Die getriggerten Kurse würden der Verarbeitung dieses Worklows hinzugefügt werden wenn der Kursselektions-Lauf jetzt zur Durchführung käme.
+Ein Kurs fängt nur dann an, einen Workflow zu durchlaufen, wenn alle Trigger des Workflows dies übereinstimmend (UND-Verknüpfung) aussagen.
 In den hier genannten Zahlen werden Kurse, die verzögert werden oder sich bereits in anderen Workflows befinden, nicht mitgezählt.
-
 Trotzdem sind die Zahlen nur approximiert, da es sein könnte, dass die Kurse vor diesem einen anderen Workflow auslösen.';
 $string['pluginname'] = 'Kurs-Lebenszyklus';
 $string['plugintitle'] = 'Kurs-Lebenszyklus';
