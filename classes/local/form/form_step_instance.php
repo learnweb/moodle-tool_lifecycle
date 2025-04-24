@@ -115,6 +115,7 @@ class form_step_instance extends \moodleform {
         $mform->addHelpButton($elementname, 'step_instancename', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_TEXT);
         $mform->addRule($elementname, get_string('maximumchars', '', 100), 'maxlength', 100, 'client');
+        $mform->addRule($elementname, null, 'required');
 
         $elementname = 'subpluginnamestatic';
         $mform->addElement('static', $elementname, get_string('step_subpluginname', 'tool_lifecycle'));

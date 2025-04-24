@@ -134,10 +134,17 @@
 
         <div class="wf-trigger-block workflow-item nextrun">
             <h5 class="my-2">{{#str}} courseselectionrun_title, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:timetrigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
+            {{#automatic}}
             <div class="mb-2 mx-2">
                 {{#str}} nextrun, tool_lifecycle, {{{nextrun}}} {{/str}}<br>
                 <span class="text-muted">{{#str}} lastrun, tool_lifecycle, {{lastrun}} {{/str}}</span>
             </div>
+            {{/automatic}}
+            {{^automatic}}
+                <div class="mb-2 mx-2">
+                    {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <span data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span>
+                </div>
+            {{/automatic}}
             {{#counttimetriggers}}
                 <div class="workflow wf-trigger-wrapper">
 

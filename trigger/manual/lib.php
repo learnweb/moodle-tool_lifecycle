@@ -66,6 +66,8 @@ class manual extends base_manual {
         );
         $mform->addHelpButton($elementname, 'setting_icon', 'lifecycletrigger_manual');
         $mform->setType($elementname, PARAM_SAFEPATH);
+        $mform->addRule($elementname, null, 'required');
+        $mform->setDefault($elementname, get_string('setting_icon_default', 'lifecycletrigger_manual'));
 
         $elementname = 'displayname';
         $mform->addElement(
@@ -73,6 +75,8 @@ class manual extends base_manual {
         );
         $mform->addHelpButton($elementname, 'setting_displayname', 'lifecycletrigger_manual');
         $mform->setType($elementname, PARAM_TEXT);
+        $mform->addRule($elementname, null, 'required');
+        $mform->setDefault($elementname, get_string('setting_displayname_default', 'lifecycletrigger_manual'));
 
         $elementname = 'capability';
         $capabilities = get_all_capabilities();
@@ -86,23 +90,7 @@ class manual extends base_manual {
         );
         $mform->addHelpButton($elementname, 'setting_capability', 'lifecycletrigger_manual');
         $mform->setType($elementname, PARAM_CAPABILITY);
-    }
-
-    /**
-     * Make all fields required.
-     * @param array $error Array containing all errors.
-     * @param array $data Data passed from the moodle form to be validated.
-     * @return void the extended error array.
-     * @throws \coding_exception
-     */
-    public function extend_add_instance_form_validation(&$error, $data) {
-        parent::extend_add_instance_form_validation($error, $data);
-        $requiredsettings = $this->instance_settings();
-        foreach ($requiredsettings as $setting) {
-            if (!array_key_exists($setting->name, $data) || empty($data[$setting->name])) {
-                $error[$setting->name] = get_string('required');
-            }
-        }
+        $mform->addRule($elementname, null, 'required');
     }
 
 }

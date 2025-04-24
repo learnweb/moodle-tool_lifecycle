@@ -356,7 +356,7 @@ class processor {
             $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
             $trigger->exclude = $settings['exclude'] ?? false;
             $obj = new \stdClass();
-            $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+            $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
             if ($lib->is_manual_trigger()) {
                 $obj->automatic = false;
             } else {

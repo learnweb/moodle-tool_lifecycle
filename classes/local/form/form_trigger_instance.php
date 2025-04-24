@@ -122,6 +122,7 @@ class form_trigger_instance extends \moodleform {
         $mform->addHelpButton($elementname, 'trigger_instancename', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_TEXT);
         $mform->addRule($elementname, get_string('maximumchars', '', 100), 'maxlength', 100, 'client');
+        $mform->addRule($elementname, null, 'required');
 
         $elementname = 'subpluginnamestatic';
         $mform->addElement('static', $elementname,

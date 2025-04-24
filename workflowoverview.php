@@ -207,9 +207,6 @@ foreach ($triggers as $trigger) {
     // Mustache cannot handle arrays which have other keys therefore a new array is build.
     // FUTURE: Nice to have Icon for each subplugin.
     $trigger = (object)(array) $trigger; // Cast to normal object to be able to set dynamic properties.
-    $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-    $response = $lib->check_course();
-    $timetrigger = $response == trigger_response::triggertime();
     $actionmenu = new action_menu([
         new action_menu_link_secondary(
             new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::TRIGGER, 'elementid' => $trigger->id]),
@@ -223,6 +220,7 @@ foreach ($triggers as $trigger) {
         );
     }
     $trigger->actionmenu = $OUTPUT->render($actionmenu);
+    $response = $amounts[$trigger->sortindex]->response ?? '';
     if ($showdetails) {
         if ($trigger->automatic = $amounts[$trigger->sortindex]->automatic) {
             $sqlresult = trigger_manager::get_trigger_sqlresult($trigger);
@@ -230,7 +228,7 @@ foreach ($triggers as $trigger) {
                 $trigger->classfires = "border-danger";
                 $trigger->additionalinfo = $amounts[$trigger->sortindex]->additionalinfo ?? "-";
             } else {
-                if (!$timetrigger) {
+                if ($response != trigger_response::triggertime()) {
                     if ($amounts[$trigger->sortindex]->triggered) {
                         $trigger->classfires = "border-success";
                     } else if ($amounts[$trigger->sortindex]->excluded) {
@@ -243,7 +241,7 @@ foreach ($triggers as $trigger) {
         }
         $displaytotaltriggered &= $trigger->automatic;
     }
-    if ($timetrigger) {
+    if ($response == trigger_response::triggertime()) {
         $displaytimetriggers[] = $trigger;
         if (isset($amounts[$trigger->sortindex]->lastrun)) {
             $lastrun = $amounts[$trigger->sortindex]->lastrun;
