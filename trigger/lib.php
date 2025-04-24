@@ -143,7 +143,7 @@ abstract class base_automatic extends base {
      * @param int $triggerid DEPRECATED
      * @return trigger_response
      */
-    abstract public function check_course($course = null, $triggerid = null);
+    abstract public function check_course($course, $triggerid);
 
     /**
      * Defines if the trigger subplugin is started manually or automatically.

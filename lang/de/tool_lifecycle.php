@@ -99,6 +99,7 @@ $string['create_copy'] = 'Kopie erstellen';
 $string['create_step'] = 'Step erstellen';
 $string['create_trigger'] = 'Trigger erstellen';
 $string['create_workflow_from_existing'] = 'Kopie von bestehendem Workflow erstellen';
+$string['customfieldsemesterdescription'] = 'Löst Kurse gemäß dem benutzerdefinierten Kursfeld \'semester\' aus.';
 $string['date'] = 'Fällligkeitsdatum';
 $string['deactivated'] = 'Deaktiviert';
 $string['deactivated_workflows_header'] = 'Inaktive';

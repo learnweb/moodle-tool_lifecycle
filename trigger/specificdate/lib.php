@@ -47,7 +47,7 @@ class specificdate extends base_automatic {
      * @param int $triggerid DEPRECATED
      * @return trigger_response
      */
-    public function check_course($course = null, $triggerid = null) {
+    public function check_course($course, $triggerid) {
         return trigger_response::triggertime();
     }
 
