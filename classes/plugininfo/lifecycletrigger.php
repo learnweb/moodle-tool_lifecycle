@@ -50,13 +50,14 @@ class lifecycletrigger extends base {
         if ($this->is_standard()) {
             return false;
         }
-        $lib = lib_manager::get_trigger_lib($this->name);
-        if ($lib->has_multiple_instances()) {
-            // Only allow to uninstall if no active workflow for the trigger is present.
-            $triggers = trigger_manager::get_instances($this->name);
-            foreach ($triggers as $trigger) {
-                if (workflow_manager::is_active($trigger->workflowid)) {
-                    return false;
+        if ($lib = lib_manager::get_trigger_lib($this->name)) {
+            if ($lib->has_multiple_instances()) {
+                // Only allow to uninstall if no active workflow for the trigger is present.
+                $triggers = trigger_manager::get_instances($this->name);
+                foreach ($triggers as $trigger) {
+                    if (workflow_manager::is_active($trigger->workflowid)) {
+                        return false;
+                    }
                 }
             }
         }
@@ -70,17 +71,18 @@ class lifecycletrigger extends base {
      * @throws \moodle_exception
      */
     public function uninstall(\progress_trace $progress) {
-        $lib = lib_manager::get_trigger_lib($this->name);
-        if ($lib->has_multiple_instances()) {
-            trigger_manager::remove_all_instances($this->name);
-        } else {
-            $instances = trigger_manager::get_instances($this->name);
-            foreach ($instances as $instance) {
-                $workflow = workflow_manager::get_workflow($instance->workflowid);
-                if (step_manager::count_steps_of_workflow($workflow->id) > 0) {
-                    throw new \moodle_exception('There should be no steps for the workflow of the trigger ' . $this->name);
+        if ($lib = lib_manager::get_trigger_lib($this->name)) {
+            if ($lib->has_multiple_instances()) {
+                trigger_manager::remove_all_instances($this->name);
+            } else {
+                $instances = trigger_manager::get_instances($this->name);
+                foreach ($instances as $instance) {
+                    $workflow = workflow_manager::get_workflow($instance->workflowid);
+                    if (step_manager::count_steps_of_workflow($workflow->id) > 0) {
+                        throw new \moodle_exception('There should be no steps for the workflow of the trigger ' . $this->name);
+                    }
+                    workflow_manager::remove($workflow->id);
                 }
-                workflow_manager::remove($workflow->id);
             }
         }
         return true;
