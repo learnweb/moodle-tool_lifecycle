@@ -268,7 +268,7 @@ class processor {
             $where .= " AND NOT {course}.id {$insql}";
             $whereparams = array_merge($whereparams, $inparams);
         }
-        $sql = "SELECT COUNT(id) 
+        $sql = "SELECT COUNT(id)
                 FROM {course}
                 WHERE " . $where;
         return $DB->count_records_sql($sql, $whereparams);
@@ -278,7 +278,7 @@ class processor {
      * Returns a record set with all relevant courses for a trigger for counting.
      * Relevant means that there is currently no lifecycle process running for this course.
      * @param trigger_subplugin $trigger trigger, which will be asked for additional where requirements.
-     * @param int[] $exclude List of course id, which should be excluded from execution.
+     * @param object $workflow workflow instance.
      * @return \moodle_recordset with relevant courses.
      * @throws \coding_exception
      * @throws \dml_exception

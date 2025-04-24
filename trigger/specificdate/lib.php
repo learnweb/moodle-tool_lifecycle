@@ -108,14 +108,14 @@ class specificdate extends base_automatic {
         $current = time();
         $today = getdate($current);
 
-        $inhundredyears = mktime(0, 0, 0, 1, 1, $today['year']+100);
+        $inhundredyears = mktime(0, 0, 0, 1, 1, $today['year'] + 100);
         $nextrun = $inhundredyears;
         foreach ($dates as $date) {
             // Special case if the $date is today.
             if ($date['mon'] == $today['mon'] && $date['day'] == $today['mday']) {
                 // If last run was today add one year.
                 if ($timelastrunactive && $lastrun['yday'] == $today['yday'] && $lastrun['year'] == $today['year']) {
-                    $nextrunoneyear = mktime(0, 0, 0, $today['mon'], $today['yday'], $today['year']+1);
+                    $nextrunoneyear = mktime(0, 0, 0, $today['mon'], $today['yday'], $today['year'] + 1);
                     $nextrun = min($nextrunoneyear, $nextrun);
                 } else { // Should run today.
                     $nextrun = $today;
@@ -123,7 +123,7 @@ class specificdate extends base_automatic {
             } else {
                 $nextrundate = mktime(0, 0, 0, $date['mon'], $date['day'], $today['year']);
                 if ($nextrundate < $current) {
-                    $nextrundate = mktime(0, 0, 0, $date['mon'], $date['day'], $today['year']+1);
+                    $nextrundate = mktime(0, 0, 0, $date['mon'], $date['day'], $today['year'] + 1);
                 }
                 $nextrun = min($nextrundate, $nextrun);
             }

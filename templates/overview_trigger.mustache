@@ -15,11 +15,9 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template tool_lifecycle/search_input
+    @template tool_lifecycle/overview_trigger
 
-    Simple search input.
-
-    Directly copied from core/search_input, because we have to provide it for Moodle 3.9.
+    Trigger course selection presentation
 
     Example context (json):
     {
@@ -33,7 +31,7 @@
         "id": 1,
         "triggeredcourses": 5,
         "actionmenu": "actionmenu",
-        "popuplink": "admin/tool/lifecycle/workflowoverview.php?wf=1",
+        "popuplink": "admin/tool/lifecycle/workflowoverview.php?wf=1"
     }
 }}
 {{#trigger}}
