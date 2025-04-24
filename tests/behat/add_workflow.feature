@@ -16,9 +16,6 @@ Feature: Add a workflow definition
     Then I should see "Settings of the trigger"
     When I set the following fields to these values:
       | Instance name              | My Trigger                                |
-    And I press "Save changes"
-    # The manual trigger requires additional settings. For that reason the form reloads with some more fields.
-    Then I should see "Required"
     And I should see "Specific settings of the trigger type"
     When I set the following fields to these values:
       | Icon                       | t/delete                                  |
