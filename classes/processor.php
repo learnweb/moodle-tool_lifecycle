@@ -401,7 +401,7 @@ class processor {
             $course = $recordset->current();
             if ($course->hasprocess) {
                 if ($course->workflowid && ($course->workflowid != $workflow->id)) {
-                    $usedcourses++;
+                    $usedcourses[] = $course->id;
                 }
             } else if ($course->delay) {
                 $countdelayed++;

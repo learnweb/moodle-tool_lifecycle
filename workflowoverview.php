@@ -354,7 +354,7 @@ if ($stepid) { // Display courses table with courses of this step.
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
-        $hiddenfieldssearch[] = ['name' => 'used', 'value' => '1'];
+        $hiddenfieldssearch[] = ['name' => 'used', 'value' => $used];
     }
 }
 // Search box for courses list.
