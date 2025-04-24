@@ -41,24 +41,6 @@ function tool_lifecycle_fix_workflow_sortindex() {
 }
 
 /**
- * Removes a directory from filesystem
- * @param string $dir
- * @return void
- */
-function tool_lifecycle_upgrade_removedir(string $dir): void {
-    $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-    $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-    foreach ($files as $file) {
-        if ($file->isDir()) {
-            rmdir($file->getPathname());
-        } else {
-            unlink($file->getPathname());
-        }
-    }
-    rmdir($dir);
-}
-
-/**
  * Update script for tool_lifecycle.
  * @param int $oldversion Version id of the previously installed version.
  * @return bool
@@ -591,6 +573,15 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Conditionally add field "includedelayedcourses".
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
+        }
+
+        $triggers = trigger_manager::get_instances('lifecycletrigger_delayedcourses');
+        foreach ($triggers as $trigger) {
+            workflow_manager::remove($trigger->workflowid);
+        }
+        $triggers = trigger_manager::get_instances('lifecycletrigger_sitecourse');
+        foreach ($triggers as $trigger) {
+            workflow_manager::remove($trigger->workflowid);
         }
 
         upgrade_plugin_savepoint(true, 2025041600, 'tool', 'lifecycle');
