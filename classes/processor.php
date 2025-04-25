@@ -268,9 +268,13 @@ class processor {
             $where .= " AND NOT {course}.id {$insql}";
             $whereparams = array_merge($whereparams, $inparams);
         }
-        $sql = "SELECT COUNT(id)
-                FROM {course}
-                WHERE " . $where;
+        // Get only courses which are not part of an existing process.
+        $sql = 'SELECT COUNT({course}.id) from {course} '.
+            'LEFT JOIN {tool_lifecycle_process} '.
+            'ON {course}.id = {tool_lifecycle_process}.courseid '.
+            'LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid ' .
+            'WHERE {tool_lifecycle_process}.courseid is null AND ' .
+            'pe.courseid IS NULL AND '. $where;
         return $DB->count_records_sql($sql, $whereparams);
     }
 
@@ -415,7 +419,8 @@ class processor {
         $all = new \stdClass();
         $all->triggered = $counttriggered;
         $all->coursestriggered = $coursestriggered;
-        $all->delayed = $countdelayed;
+        $all->delayed = $countdelayed;  // Matters only if delayedcourses are included in workflow.
+        $all->delayedcourses = $delayedcourses; // Delayed courses for workflow and globally. Excluded per default.
         $all->used = $usedcourses;
         $all->nextrun = $nextrun;
         $amounts['all'] = $all;

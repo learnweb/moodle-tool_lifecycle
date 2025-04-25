@@ -408,12 +408,12 @@ if ($showdetails) {
     $data['coursestriggeredcount'] = $triggered;
     if ($triggered) {
         // Count delayed total, displayed in mustache only if there are any.
-        $delayed = $amounts['all']->delayed ?? 0;
+        $delayed = count($amounts['all']->delayedcourses);  // Matters only if delayedcourses are not included in workflow.
         $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
         $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
             ['class' => 'text-warning  btn btn-outline-warning']) : 0;
         $data['coursesdelayed'] = $delayedhtml;
-        // Count used total, displayed in mustache only if there are any.
+        // Count in other processes used courses total, displayed in mustache only if there are any.
         $used = count($amounts['all']->used) ?? 0;
         $usedlink = new moodle_url($popuplink, ['used' => "1"]);
         $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,

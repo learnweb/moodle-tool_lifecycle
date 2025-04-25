@@ -33,10 +33,12 @@ span.tool_lifecycle-hint {
     border: 1px solid #aaa;
     border-radius: 8px;
     min-width: 220px;
+    background-color: white;
 }
 
-#lifecycle-workflow-details .wf-trigger-block .workflow-item .nextrun {
-    min-width: 300px;
+#lifecycle-workflow-details .wf-trigger-block.workflow-item {
+    min-width: 260px;
+    background-color: #f4f0f0;
 }
 
 #lifecycle-workflow-details .workflow-item {
