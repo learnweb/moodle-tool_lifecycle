@@ -389,6 +389,7 @@ class workflow_manager {
      *
      * @param int $workflowid Id of the workflow.
      * @return bool true, if the definition is valid.
+     * @throws \dml_exception
      */
     public static function is_valid($workflowid) {
         $triggers = trigger_manager::get_triggers_for_workflow($workflowid);

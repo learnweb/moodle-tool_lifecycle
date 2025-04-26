@@ -91,10 +91,8 @@
             <span>{{#str}} workflow_finishdelay, tool_lifecycle{{/str}}: <strong>{{finishdelay}}</strong> <span data-toggle="tooltip" title="{{#str}} details:finishdelay_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question {{#isactive}}text-white{{/isactive}}"></i></span></span><br>
             <span>{{# delayglobally }}{{#str}}details:globaldelay_yes, tool_lifecycle{{/str}}{{/ delayglobally }}
                 {{^delayglobally}}{{#str}}details:globaldelay_no, tool_lifecycle{{/str}}{{/delayglobally}}</span>
-            {{#newworkflow}}
-                <br><span class="badge badge-info">{{#str}} addtriggernewworkflow, tool_lifecycle{{/str}}:</span><br>
-            {{/newworkflow}}
-            <div class="mt-2">{{{addinstance}}}</div>
+            {{! Add trigger and add step selection fields. }}
+            {{>tool_lifecycle/overview_addinstance}}
         </div>
 
         {{#counttriggers}}

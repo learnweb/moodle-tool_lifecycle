@@ -429,10 +429,13 @@ if ($showdetails) {
     }
 }
 
+$addtriggerselect = "";
+$addstepselect = "";
+$activate = "";
+$newworkflow = false;
 // Box to add triggers or steps to workflow by use of select fields.
 if (workflow_manager::is_editable($workflow->id)) {
-    $addinstance = '';
-    $newworkflow = false;
+    // Add trigger select field.
     $triggertypes = trigger_manager::get_chooseable_trigger_types();
     $selectabletriggers = [];
     foreach ($triggertypes as $triggertype => $triggername) {
@@ -454,24 +457,22 @@ if (workflow_manager::is_editable($workflow->id)) {
         }
         $selectabletriggers[$triggertype] = $triggername;
     }
-
-    $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
+    $addtriggerselect = $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
         ['type' => settings_type::TRIGGER, 'wf' => $workflow->id]),
         'subplugin', $selectabletriggers, '', ['' => get_string('add_new_trigger_instance', 'tool_lifecycle')],
         null, ['id' => 'tool_lifecycle-choose-trigger']);
 
+    // Add step selection field.
     if (!$newworkflow) { // At first select a course selection trigger, than you can select the first step.
-        $steps = step_manager::get_step_types();
-        $addinstance .= '<span class="ml-1"></span>';
-        $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
-            ['type' => settings_type::STEP, 'wf' => $workflow->id]),
-            'subplugin', $steps, '', ['' => get_string('add_new_step_instance', 'tool_lifecycle')],
-            null, ['id' => 'tool_lifecycle-choose-step']);
-
+        if ($steptypes = step_manager::get_step_types()) {
+            $addstepselect = $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
+                ['type' => settings_type::STEP, 'wf' => $workflow->id]),
+                'subplugin', $steptypes, '', ['' => get_string('add_new_step_instance', 'tool_lifecycle')],
+                null, ['id' => 'tool_lifecycle-choose-step']);
+        }
         if ($id == 'workflowdrafts') {
-            $addinstance .= '<span class="ml-2"></span>';
-            if (workflow_manager::is_valid($workflow->id)) {
-                $addinstance .= $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
+            if ($triggers && $steps) { // At least one trigger and one step is necessary to activate the draft workflow.
+                $activate = $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
                     [
                         'action' => action::WORKFLOW_ACTIVATE,
                         'sesskey' => sesskey(),
@@ -480,12 +481,14 @@ if (workflow_manager::is_editable($workflow->id)) {
                     ]),
                     get_string('activateworkflow', 'tool_lifecycle'));
             } else {
-                $addinstance .= $OUTPUT->pix_icon('i/circleinfo', get_string('invalid_workflow_details', 'tool_lifecycle')) .
-                    get_string('invalid_workflow', 'tool_lifecycle');
+                $activate = get_string('invalid_workflow', 'tool_lifecycle').
+                    $OUTPUT->pix_icon('i/circleinfo', get_string('invalid_workflow_details', 'tool_lifecycle'));
             }
         }
     }
-    $data['addinstance'] = $addinstance;
+    $data['addtriggerselect'] = $addtriggerselect;
+    $data['addstepselect'] = $addstepselect;
+    $data['activate'] = $activate;
     $data['newworkflow'] = $newworkflow;
 }
 
