@@ -244,8 +244,8 @@ class trigger_manager extends subplugin_manager {
     }
 
     /**
-     * Gets the list of step subplugins, which are not preset and can therefore be chosen from trigger form dropdown..
-     * @return array of step subplugins.
+     * Gets the list of trigger subplugins, which are not preset and can therefore be chosen from trigger form dropdown..
+     * @return array of trigger subplugins.
      * @throws \coding_exception
      */
     public static function get_chooseable_trigger_types() {

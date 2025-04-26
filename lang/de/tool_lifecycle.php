@@ -38,6 +38,7 @@ $string['active_workflows_list'] = 'Zeige aktive Workflows';
 $string['add_new_step_instance'] = 'Füge neue Schritt-Instanz hinzu...';
 $string['add_new_trigger_instance'] = 'Füge neue Trigger-Instanz...';
 $string['add_workflow'] = 'Neuen Workflow hinzufügen';
+$string['addtriggernewworkflow'] = 'Füge diesem neuen Workflow einen Kurs-Selektions-Trigger hinzu';
 $string['adminapprovals_header'] = 'Sysadmin';
 $string['adminapprovals_header_title'] = 'Liste der offenen Sysadmin-Bestätigungen';
 $string['adminsettings_edit_step_instance_heading'] = 'Schritt-Instanz für Workflow \'{$a}\'';

@@ -49,7 +49,7 @@
           "excludedcourses": 0
         }
       ],
-      "automatic": 1,
+      "displaytotaltriggered": 1,
       "coursestriggered": 0,
       "coursesexcluded": 0,
       "steps": [
@@ -65,7 +65,10 @@
       ],
       "popuplink": "",
       "nosteplink": "",
-      "table": null
+      "table": null,
+      "nextrun": "1.1.2300",
+      "lastrun": "1.1.2025",
+      "nomanualtriggerinvolved" = true
     }
 }}
 <div class="d-flex" id="lifecycle-workflow-details">
@@ -88,6 +91,9 @@
             <span>{{#str}} workflow_finishdelay, tool_lifecycle{{/str}}: <strong>{{finishdelay}}</strong> <span data-toggle="tooltip" title="{{#str}} details:finishdelay_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question {{#isactive}}text-white{{/isactive}}"></i></span></span><br>
             <span>{{# delayglobally }}{{#str}}details:globaldelay_yes, tool_lifecycle{{/str}}{{/ delayglobally }}
                 {{^delayglobally}}{{#str}}details:globaldelay_no, tool_lifecycle{{/str}}{{/delayglobally}}</span>
+            {{#newworkflow}}
+                <br><span class="badge badge-info">{{#str}} addtriggernewworkflow, tool_lifecycle{{/str}}:</span><br>
+            {{/newworkflow}}
             <div class="mt-2">{{{addinstance}}}</div>
         </div>
 
@@ -95,7 +101,7 @@
         <div class="wf-trigger-block workflow-item title mt-2">
             <h5 class="my-2">{{#str}} courseselection_title, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:trigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
             {{#showcoursecounts}}
-              {{#automatic}}
+              {{#displaytotaltriggered}}
                   <div class="mb-2 mx-2">
                       {{#coursestriggeredcount}}
                           <a href="{{{popuplink}}}&triggered=1&showdetails=1">
@@ -115,45 +121,48 @@
                           {{#str}} courses_are_used_total, tool_lifecycle, {{{coursesused}}} {{/str}}
                       {{/coursesused}}
                   </div>
-              {{/automatic}}
-              {{^automatic}}
+              {{/displaytotaltriggered}}
+              {{^displaytotaltriggered}}
                 <div class="mb-2 mx-2">
                     {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <span data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span>
                 </div>
-              {{/automatic}}
+              {{/displaytotaltriggered}}
             {{/showcoursecounts}}
             <div class="workflow wf-trigger-wrapper">
 
+                {{! Course selection triggers. }}
                 {{>tool_lifecycle/overview_trigger}}
 
             </div>
         </div>
-        {{/counttriggers}}
 
         <div class="wf-arrow"></div>
 
         <div class="wf-trigger-block workflow-item">
             <h5 class="my-2">{{#str}} courseselectionrun_title, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:timetrigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
-            {{#automatic}}
+            {{#nomanualtriggerinvolved}}
             <div class="mb-2 mx-2">
                 {{#str}} nextrun, tool_lifecycle, {{{nextrun}}} {{/str}}<br>
                 <span class="text-muted">{{#str}} lastrun, tool_lifecycle, {{lastrun}} {{/str}}</span>
             </div>
-            {{/automatic}}
-            {{^automatic}}
+            {{/nomanualtriggerinvolved}}
+            {{^nomanualtriggerinvolved}}
                 <div class="mb-2 mx-2">
                     {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <span data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span>
                 </div>
-            {{/automatic}}
+            {{/nomanualtriggerinvolved}}
             {{#counttimetriggers}}
                 <div class="workflow wf-trigger-wrapper">
 
+                    {{! Course selection run triggers. }}
                     {{>tool_lifecycle/overview_timetrigger}}
 
                 </div>
             {{/counttimetriggers}}
         </div>
+        {{/counttriggers}}
 
+        {{! Workflow Steps. }}
         {{>tool_lifecycle/overview_step}}
 
     </div>

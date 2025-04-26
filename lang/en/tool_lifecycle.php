@@ -38,6 +38,7 @@ $string['active_workflows_list'] = 'List active workflows';
 $string['add_new_step_instance'] = 'Add new step instance...';
 $string['add_new_trigger_instance'] = 'Add new trigger instance...';
 $string['add_workflow'] = 'Create new workflow';
+$string['addtriggernewworkflow'] = 'Add a course selection trigger to this new workflow';
 $string['adminapprovals_header'] = 'Approvals';
 $string['adminapprovals_header_title'] = 'List of pending administrator approvals';
 $string['adminsettings_edit_step_instance_heading'] = 'Step instance for workflow \'{$a}\'';

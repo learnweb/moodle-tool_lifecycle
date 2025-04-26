@@ -165,6 +165,7 @@ $str = [
 
 $nextrun = 0;
 $coursestriggered = [];
+$displaytotaltriggered = false;
 if ($showdetails) {
     /*
         On moodle instances with many courses the following call can be fatal, because each trigger
@@ -201,7 +202,7 @@ if (is_int($nextrunt) && $nextrun ?? false) { // Task nextrun and trigger nextru
 $displaytriggers = [];
 $displaytimetriggers = [];
 $displaysteps = [];
-
+$nomanualtriggerinvolved = true;
 foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
     // Mustache cannot handle arrays which have other keys therefore a new array is build.
@@ -220,9 +221,14 @@ foreach ($triggers as $trigger) {
         );
     }
     $trigger->actionmenu = $OUTPUT->render($actionmenu);
-    $response = $amounts[$trigger->sortindex]->response ?? '';
+    $response = null;
+    $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+    if ($trigger->automatic = !$lib->is_manual_trigger()) {
+        $response = $lib->check_course(null, null);
+    }
+    $nomanualtriggerinvolved &= $trigger->automatic;
     if ($showdetails) {
-        if ($trigger->automatic = $amounts[$trigger->sortindex]->automatic) {
+        if ($trigger->automatic) {
             $sqlresult = trigger_manager::get_trigger_sqlresult($trigger);
             if ($sqlresult == "false") {
                 $trigger->classfires = "border-danger";
@@ -398,10 +404,11 @@ $data = [
     'isactive' => $isactive || $isdeactivated,
     'nextrun' => $nextrun,
     'lastrun' => userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig')),
+    'nomanualtriggerinvolved' => $nomanualtriggerinvolved,
 ];
 if ($showdetails) {
     // The triggers total box.
-    $data['automatic'] = $displaytotaltriggered;
+    $data['displaytotaltriggered'] = $displaytotaltriggered;
     $triggered = $amounts['all']->triggered ?? 0;
     $triggeredhtml = $triggered > 0 ? html_writer::span($triggered, 'text-success font-weight-bold') : 0;
     $data['coursestriggered'] = $triggeredhtml;
@@ -425,13 +432,25 @@ if ($showdetails) {
 // Box to add triggers or steps to workflow by use of select fields.
 if (workflow_manager::is_editable($workflow->id)) {
     $addinstance = '';
+    $newworkflow = false;
     $triggertypes = trigger_manager::get_chooseable_trigger_types();
     $selectabletriggers = [];
     foreach ($triggertypes as $triggertype => $triggername) {
-        foreach ($triggers as $workflowtrigger) {
-            if ($triggertype == $workflowtrigger->subpluginname) {
-                continue 2;
+        if ($triggers) {
+            foreach ($triggers as $workflowtrigger) {
+                if ($triggertype == $workflowtrigger->subpluginname) {
+                    continue 2;
+                }
             }
+        } else {
+            // After workflow creation only provide course selection (and manual) triggers for the adding a trigger selection field.
+            $lib = lib_manager::get_trigger_lib($triggertype);
+            if (!$lib->is_manual_trigger()) {
+                if ($lib->check_course(null, null) == trigger_response::triggertime()) {
+                    continue;
+                }
+            }
+            $newworkflow = true;
         }
         $selectabletriggers[$triggertype] = $triggername;
     }
@@ -441,31 +460,33 @@ if (workflow_manager::is_editable($workflow->id)) {
         'subplugin', $selectabletriggers, '', ['' => get_string('add_new_trigger_instance', 'tool_lifecycle')],
         null, ['id' => 'tool_lifecycle-choose-trigger']);
 
-    $steps = step_manager::get_step_types();
-    $addinstance .= '<span class="ml-1"></span>';
-    $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
-        ['type' => settings_type::STEP, 'wf' => $workflow->id]),
-        'subplugin', $steps, '', ['' => get_string('add_new_step_instance', 'tool_lifecycle')],
-        null, ['id' => 'tool_lifecycle-choose-step']);
+    if (!$newworkflow) { // At first select a course selection trigger, than you can select the first step.
+        $steps = step_manager::get_step_types();
+        $addinstance .= '<span class="ml-1"></span>';
+        $addinstance .= $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
+            ['type' => settings_type::STEP, 'wf' => $workflow->id]),
+            'subplugin', $steps, '', ['' => get_string('add_new_step_instance', 'tool_lifecycle')],
+            null, ['id' => 'tool_lifecycle-choose-step']);
 
-    if ($id == 'workflowdrafts') {
-        $addinstance .= '<span class="ml-2"></span>';
-        if (workflow_manager::is_valid($workflow->id)) {
-            $addinstance .= $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
-                [
-                    'action' => action::WORKFLOW_ACTIVATE,
-                    'sesskey' => sesskey(),
-                    'workflowid' => $workflow->id,
-                    'backtooverview' => '1',
-                ]),
-                get_string('activateworkflow', 'tool_lifecycle'));
-        } else {
-            $addinstance .= $OUTPUT->pix_icon('i/circleinfo', get_string('invalid_workflow_details', 'tool_lifecycle')) .
-                get_string('invalid_workflow', 'tool_lifecycle');
+        if ($id == 'workflowdrafts') {
+            $addinstance .= '<span class="ml-2"></span>';
+            if (workflow_manager::is_valid($workflow->id)) {
+                $addinstance .= $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
+                    [
+                        'action' => action::WORKFLOW_ACTIVATE,
+                        'sesskey' => sesskey(),
+                        'workflowid' => $workflow->id,
+                        'backtooverview' => '1',
+                    ]),
+                    get_string('activateworkflow', 'tool_lifecycle'));
+            } else {
+                $addinstance .= $OUTPUT->pix_icon('i/circleinfo', get_string('invalid_workflow_details', 'tool_lifecycle')) .
+                    get_string('invalid_workflow', 'tool_lifecycle');
+            }
         }
     }
-
     $data['addinstance'] = $addinstance;
+    $data['newworkflow'] = $newworkflow;
 }
 
 echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);
