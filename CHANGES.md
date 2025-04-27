@@ -1,10 +1,10 @@
 CHANGELOG
 =========
 
-4.5.0 (2025-03-24)
+4.5.0 (2025-04-27)
 ------------------
-* [FEATURE] Add triggers byrole and semindependent and step makeinvisible as experimental 
-* [FEATURE] The step Adminapprove is now a fixed part of the lifecycle plugin
+* [FEATURE] Add triggers byrole and semindependent and step makeinvisible
+* [FEATURE] The step adminapprove is now a fixed part of the lifecycle plugin
 * [FEATURE] Workflowoverview: search field for course lists only in case of paging
 * [FEATURE] Workflowoverview: Display number and list of courses which are part of a process already
 * [FEATURE] Delayed courses page: confirmation needed when deleting all delays
