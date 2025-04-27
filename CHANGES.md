@@ -3,6 +3,16 @@ CHANGELOG
 
 4.5.0 (2025-04-27)
 ------------------
+* [FEATURE] Add customfielddelay trigger
+* [FEATURE] At least one trigger and one step necessary for activating a workflow
+* [FEATURE] After workflow creation you have to add course selection trigger at first
+* [FEATURE] Exclude processed courses from trigger counting
+* [FEATURE] Prepare for not included trigger customfieldsemester
+* [FEATURE] Workflowoverview: separate course selection and course selection run triggers
+* [FEATURE] Improve performance of processor
+* [FEATURE] Improve performance of get_count_of_courses_to_trigger_for_workflow
+* [FEATURE] Shorter tab texts and introduce tab titles
+* [FEATURE] Replace triggers sitecourse and delayedcourses by workflow instance options
 * [FEATURE] Add triggers byrole and semindependent and step makeinvisible
 * [FEATURE] The step adminapprove is now a fixed part of the lifecycle plugin
 * [FEATURE] Workflowoverview: search field for course lists only in case of paging
