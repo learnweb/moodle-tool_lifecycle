@@ -40,7 +40,7 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2020 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class trigger_test extends \advanced_testcase {
+final class trigger_test extends \advanced_testcase {
 
     /** @var $triggerinstance trigger_subplugin Instance of the trigger. */
     private $triggerinstance;
@@ -58,7 +58,7 @@ class trigger_test extends \advanced_testcase {
      * @return void
      * @throws \moodle_exception
      */
-    public function setUp() : void {
+    public function setUp(): void {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
@@ -82,7 +82,7 @@ class trigger_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function test_young_course() {
+    public function test_young_course(): void {
         $customfieldvalue = ['shortname' => 'test', 'value' => time() + 1000000];
         $course = $this->getDataGenerator()->create_course(['customfields' => [$customfieldvalue]]);
 
@@ -106,7 +106,7 @@ class trigger_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function test_young_course_with_second_customcourse_field() {
+    public function test_young_course_with_second_customcourse_field(): void {
 
         // Add additional course field.
         $customfield = ['shortname' => 'test2', 'name' => 'Custom field2', 'type' => 'date',
@@ -136,7 +136,7 @@ class trigger_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function test_old_course() {
+    public function test_old_course(): void {
 
         $customfieldvalue = ['shortname' => 'test', 'value' => time() - 1000000];
         $course = $this->getDataGenerator()->create_course(['customfields' => [$customfieldvalue]]);

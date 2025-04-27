@@ -56,17 +56,14 @@ class customfielddelay extends base_automatic {
         global $DB;
         $delay = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['delay'];
         $fieldname = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['customfield'];
-        if (!($field = $DB->get_record('customfield_field', array('shortname' => $fieldname, 'type' => 'date')))) {
+        if (!($field = $DB->get_record('customfield_field', ['shortname' => $fieldname, 'type' => 'date']))) {
             throw new \moodle_exception("missingfield");
         }
         $where = "{course}.id in (select cxt.instanceid from {context} cxt join {customfield_data} d " .
                     "ON d.contextid = cxt.id AND cxt.contextlevel=" . CONTEXT_COURSE . " " .
                     "WHERE d.fieldid = :customfieldid AND d.intvalue > 0 AND d.intvalue < :customfielddelay)";
-        $params = array(
-            "customfielddelay" => time() - $delay,
-            "customfieldid" => $field->id,
-        );
-        return array($where, $params);
+        $params = ["customfielddelay" => time() - $delay, "customfieldid" => $field->id];
+        return [$where, $params];
     }
 
     /**
@@ -82,10 +79,7 @@ class customfielddelay extends base_automatic {
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
-        return array(
-            new instance_setting('delay', PARAM_INT),
-            new instance_setting('customfield', PARAM_TEXT),
-        );
+        return [new instance_setting('delay', PARAM_INT), new instance_setting('customfield', PARAM_TEXT)];
     }
 
     /**
@@ -98,8 +92,8 @@ class customfielddelay extends base_automatic {
         global $DB;
         $mform->addElement('duration', 'delay', get_string('delay', 'lifecycletrigger_customfielddelay'));
         $mform->addHelpButton('delay', 'delay', 'lifecycletrigger_customfielddelay');
-        $fields = $DB->get_records('customfield_field', array('type' => 'date'));
-        $choices = array();
+        $fields = $DB->get_records('customfield_field', ['type' => 'date']);
+        $choices = [];
         foreach ($fields as $field) {
             $choices[$field->shortname] = $field->name;
         }
