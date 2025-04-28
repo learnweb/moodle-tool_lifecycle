@@ -133,7 +133,7 @@ if ($action) {
             }
         }
     }
-    redirect($PAGE->url, $msg, 3,notification::NOTIFY_SUCCESS);
+    redirect($PAGE->url, $msg, 3, notification::NOTIFY_SUCCESS);
 }
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');

@@ -1,8 +1,9 @@
 CHANGELOG
 =========
 
-4.5.0 (2025-04-27)
+4.5.0 (2025-04-28)
 ------------------
+* [FEATURE] Workflowoverview: Added possibility to select single courses for process
 * [FEATURE] Add customfielddelay trigger
 * [FEATURE] At least one trigger and one step necessary for activating a workflow
 * [FEATURE] After workflow creation you have to add course selection trigger at first

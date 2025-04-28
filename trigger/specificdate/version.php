@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2025042400;
+$plugin->version = 2025042800;
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
 $plugin->supported = [401, 405];
 $plugin->component = 'lifecycletrigger_specificdate';

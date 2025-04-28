@@ -502,7 +502,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
-    if ($oldversion < 2025042400) {
+    if ($oldversion < 2025042800) {
 
         // Changing precision of field instancename on table tool_lifecycle_trigger to (100).
         $table = new xmldb_table('tool_lifecycle_trigger');
@@ -575,16 +575,16 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        $triggers = trigger_manager::get_instances('lifecycletrigger_delayedcourses');
+        $triggers = trigger_manager::get_instances('delayedcourses');
         foreach ($triggers as $trigger) {
             workflow_manager::remove($trigger->workflowid);
         }
-        $triggers = trigger_manager::get_instances('lifecycletrigger_sitecourse');
+        $triggers = trigger_manager::get_instances('sitecourse');
         foreach ($triggers as $trigger) {
             workflow_manager::remove($trigger->workflowid);
         }
 
-        upgrade_plugin_savepoint(true, 2025042400, 'tool', 'lifecycle');
+        upgrade_plugin_savepoint(true, 2025042800, 'tool', 'lifecycle');
 
     }
 
