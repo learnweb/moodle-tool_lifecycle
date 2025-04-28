@@ -24,10 +24,10 @@
 namespace tool_lifecycle\local\manager;
 
 use tool_lifecycle\action;
-use tool_lifecycle\local\entity\trigger_subplugin;
-use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\local\backup\backup_lifecycle_workflow;
 use tool_lifecycle\local\data\manual_trigger_tool;
+use tool_lifecycle\local\entity\trigger_subplugin;
+use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\settings_type;
 
 /**
@@ -67,7 +67,7 @@ class workflow_manager {
      */
     public static function remove($workflowid, $hard = false) {
         global $DB;
-        if ($hard || self::is_removable($workflowid)) {
+        if ($hard || self::is_removable($workflowid) || self::is_deprecated($workflowid)) {
             $workflow = self::get_workflow($workflowid);
             self::remove_from_sortindex($workflow);
             trigger_manager::remove_instances_of_workflow($workflowid);
@@ -323,7 +323,7 @@ class workflow_manager {
         } else if ($action === action::WORKFLOW_DELETE) {
             // Check workflow wasn't already deleted, in case someone refreshes the page.
             if (self::get_workflow($workflowid) &&
-                self::is_removable($workflowid)) {
+                (self::is_removable($workflowid) || self::is_deprecated($workflowid))) {
                 self::remove($workflowid);
                 self::reset_has_workflow_cache();
             } else {
@@ -393,7 +393,8 @@ class workflow_manager {
      */
     public static function is_valid($workflowid) {
         $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
-        if (empty($triggers)) {
+        $steps = step_manager::count_steps_of_workflow($workflowid);
+        if (empty($triggers) || $steps == 0) {
             return false;
         }
         return true;
@@ -546,4 +547,22 @@ class workflow_manager {
         }
         return false;
     }
+
+    /**
+     * Checks if workflow is deprecated. Should be removed then.
+     *
+     * @param int $workflowid Id of the workflow.
+     * @return bool
+     */
+    public static function is_deprecated($workflowid) {
+        if ($triggers = trigger_manager::get_triggers_for_workflow($workflowid)) {
+            foreach ($triggers as $trigger) {
+                if (!lib_manager::get_trigger_lib($trigger->subpluginname)->has_multiple_instances()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

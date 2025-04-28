@@ -81,7 +81,7 @@ class workflow_definition_table extends workflow_table {
      * @throws \moodle_exception
      */
     public function col_timeactive($row) {
-        global $OUTPUT, $PAGE;
+        global $OUTPUT;
         if ($row->timeactive) {
             return userdate($row->timeactive, get_string('strftimedatetime'), 0);
         }
@@ -92,8 +92,8 @@ class workflow_definition_table extends workflow_table {
                     'workflowid' => $row->id, ]),
                 get_string('activateworkflow', 'tool_lifecycle'));
         } else {
-            return $OUTPUT->pix_icon('i/warning', get_string('invalid_workflow_details', 'tool_lifecycle')) .
-                get_string('invalid_workflow', 'tool_lifecycle');
+            return get_string('invalid_workflow', 'tool_lifecycle').
+                $OUTPUT->pix_icon('i/circleinfo', get_string('invalid_workflow_details', 'tool_lifecycle'));
         }
     }
 

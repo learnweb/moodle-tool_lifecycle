@@ -22,6 +22,8 @@
  */
 namespace tool_lifecycle\local\backup;
 
+require_once("$CFG->libdir/filelib.php");
+
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\entity\workflow;

@@ -88,6 +88,20 @@ abstract class active_workflows_table extends workflow_table {
             );
         }
 
+        // The check for is_deprecated is temporary to make deprecated sitecourse and coursedelayed trigger workflows removable.
+        if (workflow_manager::is_deprecated($row->id)) {
+            $alt = get_string('deleteworkflow', 'tool_lifecycle');
+            $icon = 't/delete';
+            $url = new \moodle_url(urls::ACTIVE_WORKFLOWS,
+                ['workflowid' => $row->id, 'action' => action::WORKFLOW_DELETE, 'sesskey' => sesskey()]);
+            $confirmaction = new \confirm_action(get_string('deleteworkflow_confirm', 'tool_lifecycle'));
+            $output .= $OUTPUT->action_icon($url,
+                new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
+                $confirmaction,
+                ['title' => $alt]
+            );
+        }
+
         return $output;
     }
 

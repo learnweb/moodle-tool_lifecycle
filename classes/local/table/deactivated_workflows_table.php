@@ -106,7 +106,8 @@ class deactivated_workflows_table extends workflow_table {
             );
         }
 
-        if (workflow_manager::is_removable($row->id)) {
+        // The check for is_deprecated is temporary to make deprecated sitecourse and coursedelayed trigger workflows removable.
+        if (workflow_manager::is_removable($row->id)  || workflow_manager::is_deprecated($row->id)) {
             $alt = get_string('deleteworkflow', 'tool_lifecycle');
             $icon = 't/delete';
             $url = new \moodle_url(urls::DEACTIVATED_WORKFLOWS,

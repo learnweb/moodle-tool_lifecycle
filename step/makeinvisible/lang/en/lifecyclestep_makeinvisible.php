@@ -22,6 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['plugindescription'] = 'Hides a course for participants - EXPERIMENTAL';
+$string['plugindescription'] = 'Hides a course for participants.';
 $string['pluginname'] = 'Make Course Invisible Step';
 $string['privacy:metadata'] = 'Does not store any data';

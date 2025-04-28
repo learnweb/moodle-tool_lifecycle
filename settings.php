@@ -31,16 +31,17 @@ use tool_lifecycle\tabs;
 if ($hassiteconfig) {
 
     $settings = new admin_settingpage('lifecycle',
-        get_string('pluginname', 'tool_lifecycle'));
+        get_string('pluginname', 'tool_lifecycle').' / '.
+        get_string('general_settings_header', 'tool_lifecycle'));
 
     $tabrow = tabs::get_tabrow();
     $id = optional_param('id', 'settings', PARAM_TEXT);
     $tabs = [$tabrow];
-    $output = print_tabs($tabs, $id, null, null, true);
+    $output_tabs = print_tabs($tabs, $id, null, null, true);
 
     // Main config page.
     $settings->add(new admin_setting_heading('lifecycle_settings_heading',
-        $output,  html_writer::span(get_string('general_settings_header', 'tool_lifecycle'), 'h3')));
+        '', $output_tabs));
     $settings->add(new admin_setting_configduration('tool_lifecycle/duration',
         get_string('config_delay_duration', 'tool_lifecycle'),
         get_string('config_delay_duration_desc', 'tool_lifecycle'),
@@ -75,17 +76,19 @@ if ($hassiteconfig) {
         $settings->add(new admin_setting_heading('lifecycletriggerheader',
             get_string('triggers_installed', 'tool_lifecycle'), ''));
         foreach ($triggers as $trigger => $path) {
+            $triggername = html_writer::span(get_string('pluginname', 'lifecycletrigger_' . $trigger),
+                "font-weight-bold");
             $uninstall = '';
             if ($trigger == 'sitecourse' || $trigger == 'delayedcourses') {
                 $uninstall = html_writer::span(' Depracated. Will be removed with version 5.0.', 'text-danger');
             }
             if ($trigger == 'customfieldsemester') {
                 $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
-                    get_string('pluginname', 'lifecycletrigger_' . $trigger),
+                    $triggername,
                     get_string('customfieldsemesterdescription', 'tool_lifecycle')));
             } else {
                 $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
-                    get_string('pluginname', 'lifecycletrigger_' . $trigger),
+                    $triggername,
                     get_string('plugindescription', 'lifecycletrigger_' . $trigger).$uninstall));
             }
         }
@@ -99,14 +102,17 @@ if ($hassiteconfig) {
         $settings->add(new admin_setting_heading('lifecyclestepheader',
             get_string('steps_installed', 'tool_lifecycle'), ''));
         foreach ($steps as $step => $path) {
+            $stepname = html_writer::span(get_string('pluginname', 'lifecyclestep_' . $step),
+                "font-weight-bold");
             $settings->add(new admin_setting_description('lifecyclestepsetting_'.$step,
-                get_string('pluginname', 'lifecyclestep_' . $step),
+                $stepname,
                 get_string('plugindescription', 'lifecyclestep_' . $step)));
         }
     } else {
         $settings->add(new admin_setting_heading('adminsettings_nosteps',
             get_string('adminsettings_nosteps', 'tool_lifecycle'), ''));
     }
+    $settings->add(new admin_setting_description('spacer', "", "&nbsp;"));
 
     $ADMIN->add('tools', $settings);
 }

@@ -471,7 +471,7 @@ if (workflow_manager::is_editable($workflow->id)) {
                 null, ['id' => 'tool_lifecycle-choose-step']);
         }
         if ($id == 'workflowdrafts') {
-            if ($triggers && $steps) { // At least one trigger and one step is necessary to activate the draft workflow.
+            if (workflow_manager::is_valid($workflow->id)) { // At least one trigger and one step is necessary to activate the draft workflow.
                 $activate = $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
                     [
                         'action' => action::WORKFLOW_ACTIVATE,

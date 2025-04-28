@@ -24,7 +24,7 @@
 
 $string['delay'] = 'Days of delay for triggering';
 $string['delay_help'] = 'Days a course has to remain without the mandatory role until the course is finally triggered';
-$string['plugindescription'] = 'Triggers if a specified role is misssing in a course for a certain timespan. - EXPERIMENTAL';
+$string['plugindescription'] = 'Triggers if a specified role is misssing in a course for a certain timespan.';
 $string['pluginname'] = 'Trigger courses by roles missing';
 $string['privacy:metadata'] = 'Does not store user specific data';
 $string['responsibleroles'] = 'Responsible Roles in courses';
