@@ -37,11 +37,11 @@ if ($hassiteconfig) {
     $tabrow = tabs::get_tabrow();
     $id = optional_param('id', 'settings', PARAM_TEXT);
     $tabs = [$tabrow];
-    $output_tabs = print_tabs($tabs, $id, null, null, true);
+    $tabsoutput = print_tabs($tabs, $id, null, null, true);
 
     // Main config page.
     $settings->add(new admin_setting_heading('lifecycle_settings_heading',
-        '', $output_tabs));
+        '', $tabsoutput));
     $settings->add(new admin_setting_configduration('tool_lifecycle/duration',
         get_string('config_delay_duration', 'tool_lifecycle'),
         get_string('config_delay_duration_desc', 'tool_lifecycle'),

@@ -22,6 +22,7 @@
  */
 namespace tool_lifecycle\local\backup;
 
+require_once(__DIR__ . '/../../../config.php');
 require_once("$CFG->libdir/filelib.php");
 
 use tool_lifecycle\local\entity\step_subplugin;
