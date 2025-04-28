@@ -25,6 +25,8 @@ namespace tool_lifecycle\local\backup;
 require_once(__DIR__ . '/../../../config.php');
 require_once("$CFG->libdir/filelib.php");
 
+require_login();
+
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\entity\workflow;
@@ -35,7 +37,7 @@ use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\settings_type;
 
 /**
- * Class to backup a workflow.
+ * Class to back up a workflow.
  * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

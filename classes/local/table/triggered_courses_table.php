@@ -38,6 +38,12 @@ require_once($CFG->libdir . '/tablelib.php');
  */
 class triggered_courses_table extends \table_sql {
 
+    /** @var string $type of the courses list */
+    private $type;
+
+    /** @var int $workflowid Id of the workflow */
+    private $workflowid;
+
     /**
      * Builds a table of courses.
      * @param array $courseids of the courses to list
@@ -60,6 +66,8 @@ class triggered_courses_table extends \table_sql {
         $this->define_baseurl($PAGE->url);
         if ($type == 'triggered') {
             $this->caption = get_string('coursestriggered', 'tool_lifecycle', $triggername)." (".count($courseids).")";
+            $this->type = $type;
+            $this->workflowid = $workflowid;
         } else if ($type == 'triggeredworkflow') {
             $this->caption = get_string('coursestriggeredworkflow', 'tool_lifecycle', $workflowname)." (".count($courseids).")";
         } else if ($type == 'delayed') {
@@ -71,7 +79,9 @@ class triggered_courses_table extends \table_sql {
         }
         $this->captionattributes = ['class' => 'ml-3'];
         $columns = ['courseid', 'coursefullname', 'coursecategory'];
-        if ($type == 'delayed') {
+        if ($type == 'triggered') {
+            $columns[] = 'tools';
+        } else if ($type == 'delayed') {
             $columns[] = 'delayeduntil';
             $columns[] = 'tools';
         } else if ($type == 'used') {
@@ -83,7 +93,9 @@ class triggered_courses_table extends \table_sql {
             get_string('coursename', 'tool_lifecycle'),
             get_string('coursecategory', 'moodle'),
         ];
-        if ($type == 'delayed') {
+        if ($type == 'triggered') {
+            $headers[] = get_string('tools', 'tool_lifecycle');
+        } else if ($type == 'delayed') {
             $headers[] = get_string('delayeduntil', 'tool_lifecycle');
             $headers[] = get_string('tools', 'tool_lifecycle');
         } else if ($type == 'used') {
@@ -155,17 +167,28 @@ class triggered_courses_table extends \table_sql {
      * @throws \moodle_exception
      */
     public function col_tools($row) {
-        global $OUTPUT;
+        global $OUTPUT, $PAGE;
 
-        $params = [
-            'action' => 'deletedelay',
-            'cid' => $row->courseid,
-            'sesskey' => sesskey(),
-            'wf' => $row->workflowid,
-        ];
-
-        $button = new \single_button(new \moodle_url(urls::WORKFLOW_DETAILS, $params),
-            get_string('delete_delay', 'tool_lifecycle'));
+        if ($this->type == 'delayed') {
+            $params = [
+                'action' => 'deletedelay',
+                'cid' => $row->courseid,
+                'sesskey' => sesskey(),
+                'wf' => $row->workflowid,
+            ];
+            $button = new \single_button(new \moodle_url(urls::WORKFLOW_DETAILS, $params),
+                get_string('delete_delay', 'tool_lifecycle'));
+        } else if ($this->type == 'triggered') {
+            $params = [
+                'action' => 'select',
+                'cid' => $row->courseid,
+                'sesskey' => sesskey(),
+                'wf' => $this->workflowid,
+            ];
+            $button = new \single_button(new \moodle_url($PAGE->url, $params),
+                get_string('select')
+            );
+        }
         return $OUTPUT->render($button);
     }
 

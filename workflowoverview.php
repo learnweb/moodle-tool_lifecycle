@@ -30,8 +30,10 @@ require_login();
 
 define('PAGESIZE', 20);
 
+use core\output\notification;
 use core\task\manager;
 use tool_lifecycle\action;
+use tool_lifecycle\event\process_triggered;
 use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\process_manager;
@@ -101,9 +103,17 @@ $showdetailslink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
 
 $action = optional_param('action', null, PARAM_TEXT);
 if ($action) {
-    if ($action == 'deletedelay') {
+    if ($action == 'select') {
+        $cid = required_param('cid', PARAM_INT);
+        $process = process_manager::create_process($cid, $workflow->id);
+        process_triggered::event_from_process($process)->trigger();
+        process_manager::proceed_process($process);
+        delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, false, $workflow);
+        $msg = get_string('courseselected', 'tool_lifecycle');
+    } else if ($action == 'deletedelay') {
         $cid = required_param('cid', PARAM_INT);
         $DB->delete_records('tool_lifecycle_delayed_workf', ['courseid' => $cid, 'workflowid' => $workflow->id]);
+        $msg = get_string('delaydeleted', 'tool_lifecycle');
     } else {
         step_manager::handle_action($action, optional_param('actionstep', null, PARAM_INT), $workflow->id);
         trigger_manager::handle_action($action, optional_param('actiontrigger', null, PARAM_INT), $workflow->id);
@@ -113,15 +123,17 @@ if ($action) {
             if ($action === 'rollback') {
                 process_manager::rollback_process($process);
                 delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $workflow);
+                $msg = get_string('courserollbacked', 'tool_lifecycle');
             } else if ($action === 'proceed') {
                 process_manager::proceed_process($process);
                 delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, false, $workflow);
+                $msg = get_string('courseproceeded', 'tool_lifecycle');
             } else {
                 throw new coding_exception('processid was specified but action was neither "rollback" nor "proceed"!');
             }
         }
-        redirect($PAGE->url);
     }
+    redirect($PAGE->url, $msg, 3,notification::NOTIFY_SUCCESS);
 }
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
@@ -317,7 +329,7 @@ if ($stepid) { // Display courses table with courses of this step.
     $trigger = trigger_manager::get_instance($triggerid);
     if ($courseids = (new processor())->get_triggercourses($trigger, $workflow)) {
         $table = new triggered_courses_table($courseids, 'triggered', $trigger->instancename,
-            null, null, $search);
+            null, $workflow->id, $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();

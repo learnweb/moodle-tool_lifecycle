@@ -25,9 +25,6 @@
 namespace tool_lifecycle\local\table;
 
 use tool_lifecycle\local\entity\step_subplugin;
-use tool_lifecycle\local\manager\interaction_manager;
-use tool_lifecycle\local\manager\lib_manager;
-use tool_lifecycle\local\manager\step_manager;
 
 defined('MOODLE_INTERNAL') || die;
 

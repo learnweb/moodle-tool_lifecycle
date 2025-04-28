@@ -54,7 +54,6 @@ class processor {
      */
     public function call_trigger() {
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
-        $exclude = [];
         $globallydelayedcourses = delayed_courses_manager::get_globally_delayed_courses();
 
         foreach ($activeworkflows as $workflow) {
@@ -72,7 +71,7 @@ class processor {
                 $delayedcourses = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
                     $globallydelayedcourses);
             }
-            $recordset = $this->get_course_recordset($triggers, array_merge($exclude, $delayedcourses, $sitecourse));
+            $recordset = $this->get_course_recordset($triggers, array_merge($delayedcourses, $sitecourse));
             while ($recordset->valid()) {
                 $course = $recordset->current();
                 $countcourses++;
