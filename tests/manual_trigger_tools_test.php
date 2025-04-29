@@ -72,14 +72,16 @@ final class manual_trigger_tools_test extends \advanced_testcase {
         $triggersettings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
         $this->workflow1 = $generator->create_manual_workflow($triggersettings);
+        $generator->create_step("instance1", "createbackup", $this->workflow1->id);
 
         $triggersettings = new \stdClass();
         $triggersettings->icon = self::MANUAL_TRIGGER2_ICON;
         $triggersettings->displayname = self::MANUAL_TRIGGER2_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER2_CAPABILITY;
         $this->workflow2 = $generator->create_manual_workflow($triggersettings);
+        $generator->create_step("instance1", "createbackup", $this->workflow2->id);
 
-        // We do not need a sesskey check in theses tests.
+        // We do not need a sesskey check in these tests.
         $USER->ignoresesskey = true;
     }
 

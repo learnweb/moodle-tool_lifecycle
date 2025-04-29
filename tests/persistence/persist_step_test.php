@@ -70,11 +70,11 @@ final class persist_step_test extends \advanced_testcase {
             $this->workflow->id);
         $this->assertNotEmpty($step->id);
         $this->assertEquals($this->workflow->id, $step->workflowid);
-        $this->assertEquals(1, $step->sortindex);
+        $this->assertEquals(2, $step->sortindex);
     }
 
     /**
-     * Test that sortindizes are created correclty when creating multiple steps.
+     * Test that sort indices are created correctly when creating multiple steps.
      * @covers \tool_lifecycle\local\manager\step_manager
      */
     public function test_add_multiple_steps(): void {
@@ -90,9 +90,9 @@ final class persist_step_test extends \advanced_testcase {
             'instance3',
             'subpluginname',
             $this->workflow->id);
-        $this->assertEquals(1, $step1->sortindex);
-        $this->assertEquals(2, $step2->sortindex);
-        $this->assertEquals(3, $step3->sortindex);
+        $this->assertEquals(2, $step1->sortindex);
+        $this->assertEquals(3, $step2->sortindex);
+        $this->assertEquals(4, $step3->sortindex);
     }
 
     /**
@@ -118,14 +118,14 @@ final class persist_step_test extends \advanced_testcase {
         $step2 = step_manager::get_step_instance($step2->id);
         $step3 = step_manager::get_step_instance($step3->id);
         $this->assertNull($step1);
-        $this->assertEquals(1, $step2->sortindex);
-        $this->assertEquals(2, $step3->sortindex);
+        $this->assertEquals(2, $step2->sortindex);
+        $this->assertEquals(3, $step3->sortindex);
         // Delete third step.
         step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step3->id, $this->workflow->id);
         $step3 = step_manager::get_step_instance($step3->id);
         $step2 = step_manager::get_step_instance($step2->id);
         $this->assertNull($step3);
-        $this->assertEquals(1, $step2->sortindex);
+        $this->assertEquals(2, $step2->sortindex);
     }
 
     /**
@@ -154,8 +154,8 @@ final class persist_step_test extends \advanced_testcase {
         $step2 = step_manager::get_step_instance($step2->id);
         $step3 = step_manager::get_step_instance($step3->id);
         $this->assertNull($step1);
-        $this->assertEquals(1, $step2->sortindex);
-        $this->assertEquals(2, $step3->sortindex);
+        $this->assertEquals(2, $step2->sortindex);
+        $this->assertEquals(3, $step3->sortindex);
     }
 
 }

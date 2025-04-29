@@ -22,10 +22,9 @@
  */
 namespace tool_lifecycle\local\backup;
 
-require_once(__DIR__ . '/../../../config.php');
-require_once("$CFG->libdir/filelib.php");
+defined('MOODLE_INTERNAL') || die();
 
-require_login();
+require_once("$CFG->libdir/filelib.php");
 
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\entity\trigger_subplugin;

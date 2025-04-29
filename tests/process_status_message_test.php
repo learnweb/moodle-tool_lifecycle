@@ -56,7 +56,7 @@ final class process_status_message_test extends \advanced_testcase {
     public function setUp(): void {
         global $USER;
 
-        // We do not need a sesskey check in theses tests.
+        // We do not need a sesskey check in these tests.
         $USER->ignoresesskey = true;
 
         $this->resetAfterTest(false);
@@ -66,10 +66,10 @@ final class process_status_message_test extends \advanced_testcase {
         $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $settings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
         $this->workflow = $this->generator->create_manual_workflow($settings);
-        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow->id);
-
         $this->generator->create_step("instance1", "createbackup", $this->workflow->id);
         $this->generator->create_step("instance2", "email", $this->workflow->id);
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow->id);
+
     }
 
     /**

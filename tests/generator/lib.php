@@ -79,7 +79,7 @@ class tool_lifecycle_generator extends testing_module_generator {
      * @throws coding_exception
      * @throws moodle_exception
      */
-    public static function create_workflow($triggernames = ['startdatedelay'], $stepnames = []) {
+    public static function create_workflow($triggernames = ['startdatedelay'], $stepnames = ['createbackup']) {
         // Create Workflow.
         $record = new stdClass();
         $record->id = null;
@@ -101,15 +101,15 @@ class tool_lifecycle_generator extends testing_module_generator {
                 throw new coding_exception("You can use only those triggernames,".
                     "which are defined as defaults in this generator.");
             }
-            $step = self::create_trigger($subpluginname, $subpluginname, $workflow->id);
-            settings_manager::save_settings($step->id, settings_type::TRIGGER, $subpluginname,
+            $trigger = self::create_trigger($subpluginname, $subpluginname, $workflow->id);
+            settings_manager::save_settings($trigger->id, settings_type::TRIGGER, $subpluginname,
                 self::$defaulttrigger[$subpluginname]);
         }
         return $workflow;
     }
 
     /**
-     * Creates an artificial workflow without steps, which is triggered manually.
+     * Creates an artificial workflow which is triggered manually.
      * @param \stdClass $triggersettings settings of the manual trigger
      * @return workflow
      * @throws moodle_exception

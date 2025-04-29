@@ -102,6 +102,7 @@ $nosteplink = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid]);
 $showdetailslink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
 
 $action = optional_param('action', null, PARAM_TEXT);
+$msg = "";
 if ($action) {
     if ($action == 'select') {
         $cid = required_param('cid', PARAM_INT);
@@ -133,7 +134,7 @@ if ($action) {
             }
         }
     }
-    redirect($PAGE->url, $msg, 3, notification::NOTIFY_SUCCESS);
+    redirect($PAGE->url, $msg, null, notification::NOTIFY_SUCCESS);
 }
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');

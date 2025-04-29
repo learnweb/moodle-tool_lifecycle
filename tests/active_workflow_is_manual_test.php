@@ -68,12 +68,14 @@ final class active_workflow_is_manual_test extends \advanced_testcase {
         $settings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $settings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
         $this->manualworkflow = $generator->create_manual_workflow($settings);
+        $generator->create_step("instance1", "createbackup", $this->manualworkflow->id);
         $this->automaticworkflow = $generator->create_workflow();
+        $generator->create_step("instance1", "createbackup", $this->automaticworkflow->id);
 
         $this->assertNull($this->manualworkflow->manual);
         $this->assertNull($this->automaticworkflow->manual);
 
-        // We do not need a sesskey check in theses tests.
+        // We do not need a sesskey check in these tests.
         $USER->ignoresesskey = true;
     }
 

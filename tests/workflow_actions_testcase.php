@@ -53,7 +53,7 @@ abstract class workflow_actions_testcase extends \advanced_testcase {
      */
     public function setUp(): void {
         global $USER;
-        // We do not need a sesskey check in theses tests.
+        // We do not need a sesskey check in these tests.
         $USER->ignoresesskey = true;
 
         $this->resetAfterTest(true);
