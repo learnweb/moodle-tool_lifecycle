@@ -71,6 +71,9 @@
                                 <span class="btn btn-outline-secondary" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, 0 {{/str}}">0</span>
                             {{/excludedcourses}}
                         {{/triggeredcourses}}
+                        {{#alreadyin}}
+                            <span class="btn btn-outline-secondary btn-sm" data-toggle="tooltip" title="{{#str}} courses_are_alreadyin, tool_lifecycle, {{alreadyin}} {{/str}}">{{alreadyin}}</span>
+                        {{/alreadyin}}
                     {{/additionalinfo}}
                 {{/automatic}}
                 {{^automatic}}

@@ -258,23 +258,30 @@ class processor {
         global $DB;
 
         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+        // Get SQL for this trigger.
         [$sql, $whereparams] = $lib->get_course_recordset_where($trigger->id);
+        // We just want the triggered courses here, no matter of including or excluding.
         if (!empty($sql)) {
-            $where = str_replace("NOT", "", $sql);
+            $where = str_replace(" NOT ", "", $sql);
         }
+        // Exclude courses in steps of this wf, delayed courses and sitecourse according to the workflow settings.
         if (!empty($exclude)) {
             [$insql, $inparams] = $DB->get_in_or_equal($exclude, SQL_PARAMS_NAMED);
             $where .= " AND NOT {course}.id {$insql}";
             $whereparams = array_merge($whereparams, $inparams);
         }
-        // Get only courses which are not part of an existing process.
-        $sql = 'SELECT COUNT({course}.id) from {course} '.
+        // Now get the amount of courses triggered by this trigger.
+        $sql = 'SELECT COUNT({course}.id) from {course} '. $where;
+        $triggercourses = $DB->get_records_sql($sql, $whereparams);
+        $sql = 'SELECT {course}.id from {course} '.
             'LEFT JOIN {tool_lifecycle_process} '.
             'ON {course}.id = {tool_lifecycle_process}.courseid '.
             'LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid ' .
             'WHERE {tool_lifecycle_process}.courseid is null AND ' .
             'pe.courseid IS NULL AND '. $where;
-        return $DB->count_records_sql($sql, $whereparams);
+        $newcourses = $DB->get_records_sql($sql, $whereparams);
+
+        return [$triggercourses, $newcourses];
     }
 
     /**
@@ -289,6 +296,7 @@ class processor {
     public function get_triggercourses($trigger, $workflow) {
         global $DB;
 
+        // Exclude delayed courses and sitecourse according to the workflow settings.
         $sitecourse = $workflow->includesitecourse ? [] : [1];
         if ($workflow->includedelayedcourses) {
             $delayedcourses = [];
@@ -296,27 +304,29 @@ class processor {
             $delayedcourses = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
                 delayed_courses_manager::get_globally_delayed_courses());
         }
-        $sql = "SELECT {course}.id from {course}
-            LEFT JOIN {tool_lifecycle_process}
-            ON {course}.id = {tool_lifecycle_process}.courseid
-            LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
-            WHERE {tool_lifecycle_process}.workflowid = $workflow->id OR pe.workflowid = $workflow->id";
-        $stepcourses = $DB->get_fieldset_sql($sql);
+        // Exclude courses in steps of this workflow.
+        $sqlstepcourses = "SELECT {course}.id from {course}
+                LEFT JOIN {tool_lifecycle_process}
+                ON {course}.id = {tool_lifecycle_process}.courseid
+                LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
+                WHERE {tool_lifecycle_process}.workflowid = $workflow->id OR pe.workflowid = $workflow->id";
+        $stepcourses = $DB->get_fieldset_sql($sqlstepcourses);
         $excludedcourses = array_merge($sitecourse, $delayedcourses, $stepcourses);
 
         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+        // Get SQL for this trigger.
         [$sql, $whereparams] = $lib->get_course_recordset_where($trigger->id);
+        // We just want the triggered courses here, no matter of including or excluding.
         if (!empty($sql)) {
-            $where = str_replace("NOT", "", $sql);
+            $where = str_replace(" NOT ", "", $sql);
         }
         if (!empty($excludedcourses)) {
             [$insql, $inparams] = $DB->get_in_or_equal($excludedcourses, SQL_PARAMS_NAMED);
             $where .= " AND NOT {course}.id {$insql}";
             $whereparams = array_merge($whereparams, $inparams);
         }
-        $sql = "SELECT {course}.id
-                FROM {course}
-                WHERE " . $where;
+        // Now get the list of course IDs triggered by this trigger.
+        $sql = "SELECT {course}.id FROM {course} WHERE " . $where;
         return $DB->get_fieldset_sql($sql, $whereparams);
     }
 
@@ -335,6 +345,7 @@ class processor {
         $countdelayed = 0;
         $usedcourses = [];
 
+        // Exclude delayed courses and sitecourse according to the workflow settings.
         $sitecourse = $workflow->includesitecourse ? [] : [1];
         if ($workflow->includedelayedcourses) {
             $delayedcourses = [];
@@ -342,11 +353,13 @@ class processor {
             $delayedcourses = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
                 delayed_courses_manager::get_globally_delayed_courses());
         }
+        // Exclude courses in steps of this workflow.
         $sqlstepcourses = "SELECT {course}.id from {course}
-                LEFT JOIN {tool_lifecycle_process}
-                ON {course}.id = {tool_lifecycle_process}.courseid
-                LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
-                WHERE {tool_lifecycle_process}.workflowid = $workflow->id OR pe.workflowid = $workflow->id";
+            LEFT JOIN {tool_lifecycle_process}
+            ON {course}.id = {tool_lifecycle_process}.courseid
+            LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
+            WHERE ({tool_lifecycle_process}.courseid IS NOT NULL AND {tool_lifecycle_process}.workflowid = $workflow->id)
+            OR (pe.courseid IS NOT NULL AND pe.workflowid = $workflow->id)";
         $stepcourses = $DB->get_fieldset_sql($sqlstepcourses);
         $excludedcourses = array_merge($sitecourse, $delayedcourses, $stepcourses);
 
@@ -372,16 +385,18 @@ class processor {
                 if ($obj->sql != "false") {
                     if ($obj->response == trigger_response::exclude()) {
                         // Get courses excluded amount.
-                        $courses = $this->get_triggercourses_forcounting($trigger, $excludedcourses);
-                        $obj->excluded = $courses;
+                        [$triggercourses, $newcourses] = $this->get_triggercourses_forcounting($trigger, $excludedcourses);
+                        $obj->excluded = $triggercourses;
+                        $obj->alreadyin = $triggercourses-$newcourses;
                     } else if ($obj->response == trigger_response::trigger()) {
                         // Get courses triggered amount.
-                        $courses = $this->get_triggercourses_forcounting($trigger, $excludedcourses);
+                        [$triggercourses, $newcourses] = $this->get_triggercourses_forcounting($trigger, $excludedcourses);
                         if ($trigger->exclude) {
-                            $obj->excluded = $courses;
+                            $obj->excluded = $triggercourses;
                         } else {
-                            $obj->triggered = $courses;
+                            $obj->triggered = $triggercourses;
                         }
+                        $obj->alreadyin = $triggercourses-$newcourses;
                     }
                     $autotriggers[] = $trigger;
                 } else if ($obj->response == trigger_response::triggertime()) {
@@ -418,7 +433,7 @@ class processor {
         $all = new \stdClass();
         $all->triggered = $counttriggered;
         $all->coursestriggered = $coursestriggered;
-        $all->delayed = $countdelayed;  // Matters only if delayedcourses are included in workflow.
+        $all->delayed = $countdelayed;  // Matters only if delayed courses are included in workflow.
         $all->delayedcourses = $delayedcourses; // Delayed courses for workflow and globally. Excluded per default.
         $all->used = $usedcourses;
         $all->nextrun = $nextrun;

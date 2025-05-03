@@ -50,10 +50,6 @@ if ($hassiteconfig) {
         get_string('config_backup_path', 'tool_lifecycle'),
         get_string('config_backup_path_desc', 'tool_lifecycle'),
         $CFG->dataroot . DIRECTORY_SEPARATOR . 'lifecycle_backups'));
-    $settings->add(new admin_setting_configcheckbox('tool_lifecycle/showcoursecounts',
-        get_string('config_showcoursecounts', 'tool_lifecycle'),
-        get_string('config_showcoursecounts_desc', 'tool_lifecycle'),
-        1));
     $settingenablehierachy = new admin_setting_configcheckbox('tool_lifecycle/enablecategoryhierachy',
         get_string('config_enablecategoryhierachy', 'tool_lifecycle'),
         get_string('config_enablecategoryhierachy_desc', 'tool_lifecycle'),

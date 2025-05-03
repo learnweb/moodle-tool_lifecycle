@@ -79,6 +79,7 @@ $string['courseid'] = 'Course ID';
 $string['coursename'] = 'Course name';
 $string['courseproceeded'] = 'One course has been proceeded.';
 $string['courserolledback'] = 'One course has been rolled back.';
+$string['courses_are_alreadyin'] = '{$a} courses are already part of this process';
 $string['courses_are_delayed'] = '{$a} delayed courses';
 $string['courses_are_delayed_total'] = '{$a} delayed courses in total';
 $string['courses_are_used_total'] = '{$a} courses are already used by a process';

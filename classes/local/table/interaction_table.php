@@ -83,7 +83,7 @@ abstract class interaction_table extends \table_sql {
     /**
      * Render startdate column.
      * @param object $row Row data.
-     * @return string human readable date
+     * @return string human-readable date
      * @throws \coding_exception
      */
     public function col_startdate($row) {

@@ -181,10 +181,9 @@ $coursestriggered = [];
 $displaytotaltriggered = false;
 if ($showdetails) {
     /*
-        On moodle instances with many courses the following call can be fatal, because each trigger
-        check function will be called for every single course of the instance to determine how many
-        courses will be triggered by the workflow/the specific trigger. This count is only being
-        used to show the admin how many courses will be triggered, it has no functional aspect.
+     * Preview of what courses would be triggered if the course selection would run now.
+     * For each trigger the amount of the select statement without the courses already in this process will be count.
+     * The amount of courses already in the process is shown as well.
     */
     $amounts = (new processor())->get_count_of_courses_to_trigger_for_workflow($workflow);
     $coursestriggered = $amounts['all']->coursestriggered;
@@ -255,6 +254,7 @@ foreach ($triggers as $trigger) {
                     }
                     $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
                     $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
+                    $trigger->alreadyin = $amounts[$trigger->sortindex]->alreadyin;
                 }
             }
         }

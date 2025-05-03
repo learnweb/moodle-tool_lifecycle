@@ -568,7 +568,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         }
 
         // Define field "includedelayedcourses" to be added to tool_lifecycle_workflow.
-        $field = new xmldb_field('includedelayedcourses', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayforallworkflows');
+        $field = new xmldb_field('includedelayedcourses', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'includesitecourse');
 
         // Conditionally add field "includedelayedcourses".
         if (!$dbman->field_exists($table, $field)) {

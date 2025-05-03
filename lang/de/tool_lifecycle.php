@@ -79,6 +79,7 @@ $string['courseid'] = 'Kurs-ID';
 $string['coursename'] = 'Kursname';
 $string['courseproceeded'] = 'Ein Kurs wurde dem nächsten Verarbeitungsschritt zugeführt.';
 $string['courserolledback'] = 'Ein Kurs wurde zurückgesetzt.';
+$string['courses_are_alreadyin'] = '{$a} Kurse befinden sich schon in diesem Prozess';
 $string['courses_are_delayed'] = '{$a} Kurse sind verzögert';
 $string['courses_are_delayed_total'] = '{$a} Kurse sind insgesamt verzögert';
 $string['courses_are_used_total'] = '{$a} Kurse befinden sich schon in einem Prozess';
