@@ -261,7 +261,7 @@ class processor {
         // Get SQL for this trigger.
         [$sql, $whereparams] = $lib->get_course_recordset_where($trigger->id);
         // We just want the triggered courses here, no matter of including or excluding.
-        $where = str_replace(" NOT ", "", $sql);
+        $where = str_replace(" NOT ", " ", $sql);
         // Exclude courses in steps of this wf, delayed courses and sitecourse according to the workflow settings.
         if (!empty($exclude)) {
             [$insql, $inparams] = $DB->get_in_or_equal($exclude, SQL_PARAMS_NAMED);
@@ -317,7 +317,7 @@ class processor {
         // Get SQL for this trigger.
         [$sql, $whereparams] = $lib->get_course_recordset_where($trigger->id);
         // We just want the triggered courses here, no matter of including or excluding.
-        $where = str_replace(" NOT ", "", $sql);
+        $where = str_replace(" NOT ", " ", $sql);
         if (!empty($excludedcourses)) {
             [$insql, $inparams] = $DB->get_in_or_equal($excludedcourses, SQL_PARAMS_NAMED);
             $where .= " AND NOT {course}.id {$insql}";
