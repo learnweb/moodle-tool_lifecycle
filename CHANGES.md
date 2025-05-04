@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-4.5.0 (2025-04-28)
+4.5.0 (2025-05-04)
 ------------------
 * [FEATURE] Workflowoverview: Added possibility to select single courses for process
 * [FEATURE] Add customfielddelay trigger

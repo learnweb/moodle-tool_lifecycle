@@ -502,7 +502,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
-    if ($oldversion < 2025042800) {
+    if ($oldversion < 2025050400) {
 
         // Changing precision of field instancename on table tool_lifecycle_trigger to (100).
         $table = new xmldb_table('tool_lifecycle_trigger');
@@ -584,7 +584,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             workflow_manager::remove($trigger->workflowid);
         }
 
-        upgrade_plugin_savepoint(true, 2025042800, 'tool', 'lifecycle');
+        upgrade_plugin_savepoint(true, 2025050400, 'tool', 'lifecycle');
 
     }
 
