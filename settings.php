@@ -30,9 +30,7 @@ use tool_lifecycle\tabs;
 // Check for the moodle/site:config permission.
 if ($hassiteconfig) {
 
-    $settings = new admin_settingpage('lifecycle',
-        get_string('pluginname', 'tool_lifecycle').' / '.
-        get_string('general_settings_header', 'tool_lifecycle'));
+    $settings = new admin_settingpage('lifecycle', get_string('pluginname', 'tool_lifecycle'));
 
     $tabrow = tabs::get_tabrow();
     $id = optional_param('id', 'settings', PARAM_TEXT);

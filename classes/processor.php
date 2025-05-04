@@ -271,12 +271,13 @@ class processor {
         // Now get the amount of courses triggered by this trigger.
         $sql = 'SELECT {course}.id from {course} WHERE '. $where;
         $triggercourses = $DB->get_records_sql($sql, $whereparams);
-        $sql = 'SELECT {course}.id from {course} '.
-            'LEFT JOIN {tool_lifecycle_process} '.
-            'ON {course}.id = {tool_lifecycle_process}.courseid '.
-            'LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid ' .
-            'WHERE {tool_lifecycle_process}.courseid is null AND ' .
-            'pe.courseid IS NULL AND '. $where;
+        $sql .= " AND {course}.id NOT IN (".
+            "SELECT {course}.id from {course}
+                LEFT JOIN {tool_lifecycle_process}
+                ON {course}.id = {tool_lifecycle_process}.courseid
+                LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
+                WHERE ({tool_lifecycle_process}.courseid IS NOT NULL AND {tool_lifecycle_process}.workflowid = $trigger->workflowid)
+                OR (pe.courseid IS NOT NULL AND pe.workflowid = $trigger->workflowid))";
         $newcourses = $DB->get_records_sql($sql, $whereparams);
 
         return [count($triggercourses), count($newcourses)];
@@ -339,7 +340,6 @@ class processor {
 
         $counttriggered = 0;
         $coursestriggered = [];
-        $countdelayed = 0;
         $usedcourses = [];
 
         // Exclude delayed courses and sitecourse according to the workflow settings.
@@ -410,8 +410,9 @@ class processor {
             LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
             WHERE ({tool_lifecycle_process}.courseid IS NOT NULL AND {tool_lifecycle_process}.workflowid = $workflow->id)
             OR (pe.courseid IS NOT NULL AND pe.workflowid = $workflow->id)";
-        $excludedcourses = $DB->get_fieldset_sql($sqlstepcourses);
+        $excludedcourses = array_merge($DB->get_fieldset_sql($sqlstepcourses), $sitecourse);
 
+        $delayedcourses = []; // Only delayed courses of selected courses are of interest here.
         $recordset = $this->get_course_recordset($autotriggers, $excludedcourses, true);
         while ($recordset->valid()) {
             $course = $recordset->current();
@@ -420,7 +421,7 @@ class processor {
                     $usedcourses[] = $course->id;
                 }
             } else if ($course->delay) {
-                $countdelayed++;
+                $delayedcourses[] = $course->id;
             } else {
                 $counttriggered++;
                 $coursestriggered[] = $course->id;
@@ -431,7 +432,6 @@ class processor {
         $all = new \stdClass();
         $all->triggered = $counttriggered;
         $all->coursestriggered = $coursestriggered;
-        $all->delayed = $countdelayed;  // Matters only if delayed courses are included in workflow.
         $all->delayedcourses = $delayedcourses; // Delayed courses for workflow and globally. Excluded per default.
         $all->used = $usedcourses;
         $all->nextrun = $nextrun;
@@ -439,19 +439,4 @@ class processor {
         return $amounts;
     }
 
-    /**
-     * Returns a list of delayed courses for a workflow.
-     * @param int $workflowid
-     * @return int[] $courseids
-     * @throws \coding_exception
-     * @throws \dml_exception
-     */
-    public function get_courses_delayed_for_workflow($workflowid) {
-
-        // Get delayed courses for this workflow.
-        $courseids = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflowid),
-            delayed_courses_manager::get_globally_delayed_courses());
-
-        return $courseids;
-    }
 }

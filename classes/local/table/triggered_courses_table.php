@@ -23,6 +23,8 @@
  */
 namespace tool_lifecycle\local\table;
 
+use tool_lifecycle\local\manager\delayed_courses_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\urls;;
 
 defined('MOODLE_INTERNAL') || die;
@@ -44,6 +46,9 @@ class triggered_courses_table extends \table_sql {
     /** @var int $workflowid Id of the workflow */
     private $workflowid;
 
+    /** @var bool $selectable Is workflow a draft */
+    private $selectable = false;
+
     /**
      * Builds a table of courses.
      * @param array $courseids of the courses to list
@@ -64,14 +69,17 @@ class triggered_courses_table extends \table_sql {
         }
 
         $this->define_baseurl($PAGE->url);
+        $this->type = $type;
         if ($type == 'triggered') {
             $this->caption = get_string('coursestriggered', 'tool_lifecycle', $triggername)." (".count($courseids).")";
-            $this->type = $type;
             $this->workflowid = $workflowid;
         } else if ($type == 'triggeredworkflow') {
             $this->caption = get_string('coursestriggeredworkflow', 'tool_lifecycle', $workflowname)." (".count($courseids).")";
+            $this->selectable = workflow_manager::is_active($workflowid);
+            $this->workflowid = $workflowid;
         } else if ($type == 'delayed') {
             $this->caption = get_string('coursesdelayed', 'tool_lifecycle', $workflowname)." (".count($courseids).")";
+            $this->workflowid = $workflowid;
         } else if ($type == 'used') {
             $this->caption = get_string('coursesused', 'tool_lifecycle', $workflowname)." (".count($courseids).")";
         } else {
@@ -79,7 +87,7 @@ class triggered_courses_table extends \table_sql {
         }
         $this->captionattributes = ['class' => 'ml-3'];
         $columns = ['courseid', 'coursefullname', 'coursecategory'];
-        if ($type == 'triggered') {
+        if ($type == 'triggeredworkflow' && $this->selectable) {
             $columns[] = 'tools';
         } else if ($type == 'delayed') {
             $columns[] = 'delayeduntil';
@@ -93,7 +101,7 @@ class triggered_courses_table extends \table_sql {
             get_string('coursename', 'tool_lifecycle'),
             get_string('coursecategory', 'moodle'),
         ];
-        if ($type == 'triggered') {
+        if ($type == 'triggeredworkflow' && $this->selectable) {
             $headers[] = get_string('tools', 'tool_lifecycle');
         } else if ($type == 'delayed') {
             $headers[] = get_string('delayeduntil', 'tool_lifecycle');
@@ -104,15 +112,11 @@ class triggered_courses_table extends \table_sql {
         $this->define_headers($headers);
 
         $fields = "c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, cc.name as coursecategory";
-        if ($type == 'delayed') {
-            $fields .= ", dwf.delayeduntil as delayeduntil, dwf.workflowid";
-        } else if ($type == 'used') {
+        if ($type == 'used') {
             $fields .= ", COALESCE(wfp.title, wfpe.title) as otherworkflow";
         }
         $from = "{course} c LEFT JOIN {course_categories} cc ON c.category = cc.id ";
-        if ($type == 'delayed') {
-            $from .= " INNER JOIN {tool_lifecycle_delayed_workf} dwf ON c.id = dwf.courseid ";
-        } else if ($type == 'used') {
+        if ($type == 'used') {
             $from .= " LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid
                 LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid
                 LEFT JOIN {tool_lifecycle_workflow} wfp ON p.workflowid = wfp.id
@@ -120,9 +124,6 @@ class triggered_courses_table extends \table_sql {
         }
         [$insql, $inparams] = $DB->get_in_or_equal($courseids);
         $where = "c.id ".$insql;
-        if ($type == 'delayed') {
-            $from .= " AND dwf.workflowid = $workflowid";
-        }
 
         if ($filterdata) {
             if (is_numeric($filterdata)) {
@@ -154,8 +155,10 @@ class triggered_courses_table extends \table_sql {
      * @throws \coding_exception
      */
     public function col_delayeduntil($row) {
-        $delayeduntil = userdate($row->delayeduntil, get_string('strftimedatetime', 'core_langconfig'));
-        return $delayeduntil;
+        if ($delay = delayed_courses_manager::get_course_delayed($row->courseid)) {
+            return userdate($delay, get_string('strftimedatetime', 'core_langconfig'));
+        }
+        return "-";
     }
 
     /**
@@ -169,27 +172,30 @@ class triggered_courses_table extends \table_sql {
     public function col_tools($row) {
         global $OUTPUT, $PAGE;
 
+        $button = "";
         if ($this->type == 'delayed') {
             $params = [
                 'action' => 'deletedelay',
                 'cid' => $row->courseid,
                 'sesskey' => sesskey(),
-                'wf' => $row->workflowid,
+                'wf' => $this->workflowid,
             ];
             $button = new \single_button(new \moodle_url(urls::WORKFLOW_DETAILS, $params),
                 get_string('delete_delay', 'tool_lifecycle'));
-        } else if ($this->type == 'triggered') {
+        } else if ($this->type == 'triggeredworkflow' && $this->selectable) {
             $params = [
                 'action' => 'select',
                 'cid' => $row->courseid,
                 'sesskey' => sesskey(),
                 'wf' => $this->workflowid,
             ];
-            $button = new \single_button(new \moodle_url($PAGE->url, $params),
-                get_string('select')
-            );
+            $button = new \single_button(new \moodle_url($PAGE->url, $params), get_string('select'));
         }
-        return $OUTPUT->render($button);
+        if ($button) {
+            return $OUTPUT->render($button);
+        } else {
+            return '';
+        }
     }
 
     /**

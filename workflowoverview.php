@@ -113,7 +113,8 @@ if ($action) {
         $msg = get_string('courseselected', 'tool_lifecycle');
     } else if ($action == 'deletedelay') {
         $cid = required_param('cid', PARAM_INT);
-        $DB->delete_records('tool_lifecycle_delayed_workf', ['courseid' => $cid, 'workflowid' => $workflow->id]);
+        $DB->delete_records('tool_lifecycle_delayed_workf', ['courseid' => $cid]);
+        delayed_courses_manager::remove_delay_entry($cid);
         $msg = get_string('delaydeleted', 'tool_lifecycle');
     } else {
         step_manager::handle_action($action, optional_param('actionstep', null, PARAM_INT), $workflow->id);
@@ -124,7 +125,7 @@ if ($action) {
             if ($action === 'rollback') {
                 process_manager::rollback_process($process);
                 delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $workflow);
-                $msg = get_string('courserollbacked', 'tool_lifecycle');
+                $msg = get_string('courserolledback', 'tool_lifecycle');
             } else if ($action === 'proceed') {
                 process_manager::proceed_process($process);
                 delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, false, $workflow);
@@ -178,6 +179,7 @@ $str = [
 
 $nextrun = 0;
 $coursestriggered = [];
+$coursesdelayed = [];
 $displaytotaltriggered = false;
 if ($showdetails) {
     /*
@@ -187,6 +189,7 @@ if ($showdetails) {
     */
     $amounts = (new processor())->get_count_of_courses_to_trigger_for_workflow($workflow);
     $coursestriggered = $amounts['all']->coursestriggered;
+    $coursesdelayed = $amounts['all']->delayedcourses;
     $nextrun = $amounts['all']->nextrun;
     $displaytotaltriggered = !empty($triggers);
 }
@@ -339,7 +342,7 @@ if ($stepid) { // Display courses table with courses of this step.
     }
 } else if ($triggered) { // Display courses table with triggered courses of this workflow.
     $table = new triggered_courses_table($coursestriggered, 'triggeredworkflow', null,
-        $workflow->title, null, $search);
+        $workflow->title, $workflow->id, $search);
     ob_start();
     $table->out(PAGESIZE, false);
     $out = ob_get_contents();
@@ -356,15 +359,13 @@ if ($stepid) { // Display courses table with courses of this step.
         $hiddenfieldssearch[] = ['name' => 'excluded', 'value' => $excluded];
     }
 } else if ($delayed) { // Display courses table with courses delayed for this workflow.
-    if ($courseids = (new processor())->get_courses_delayed_for_workflow($workflowid)) {
-        $table = new triggered_courses_table( $courseids, 'delayed',
-            null, $workflow->title, $workflowid, $search);
-        ob_start();
-        $table->out(PAGESIZE, false);
-        $out = ob_get_contents();
-        ob_end_clean();
-        $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
-    }
+    $table = new triggered_courses_table( $coursesdelayed, 'delayed',
+        null, $workflow->title, $workflowid, $search);
+    ob_start();
+    $table->out(PAGESIZE, false);
+    $out = ob_get_contents();
+    ob_end_clean();
+    $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
 } else if ($used) { // Display courses triggered by this workflow but involved in other processes already.
     if ($courseids = $amounts['all']->used ?? null) {
         $table = new triggered_courses_table( $courseids, 'used',
@@ -428,16 +429,16 @@ if ($showdetails) {
     $data['coursestriggeredcount'] = $triggered;
     if ($triggered) {
         // Count delayed total, displayed in mustache only if there are any.
-        $delayed = count($amounts['all']->delayedcourses);  // Matters only if delayedcourses are not included in workflow.
+        $delayed = count($amounts['all']->delayedcourses);  // Matters only if delayed courses are not included in workflow.
         $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
         $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
-            ['class' => 'text-warning  btn btn-outline-warning']) : 0;
+            ['class' => 'btn btn-outline-secondary mt-1']) : 0;
         $data['coursesdelayed'] = $delayedhtml;
         // Count in other processes used courses total, displayed in mustache only if there are any.
         $used = count($amounts['all']->used) ?? 0;
         $usedlink = new moodle_url($popuplink, ['used' => "1"]);
         $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,
-            ['class' => 'btn btn-outline-secondary']) : 0;
+            ['class' => 'btn btn-outline-secondary mt-1']) : 0;
         $data['coursesused'] = $usedhtml;
     }
 }

@@ -100,24 +100,24 @@
             <h5 class="my-2">{{#str}} courseselection_title, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:trigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
             {{#showcoursecounts}}
               {{#displaytotaltriggered}}
-                  <div class="mb-2 mx-2">
+                  <div class="mb-2 mx-2 text-left">
                       {{#coursestriggeredcount}}
                           <a href="{{{popuplink}}}&triggered=1&showdetails=1">
-                          <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered_total, tool_lifecycle, {{coursestriggeredcount}} {{/str}}">
-                              {{coursestriggeredcount}}
-                          </span>
+                              <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered_total, tool_lifecycle, {{coursestriggeredcount}} {{/str}}">
+                                  {{coursestriggeredcount}}
+                              </span>
                           </a>
                           {{#str}} courses_will_be_triggered_total_without_amount, tool_lifecycle {{/str}}<br>
                       {{/coursestriggeredcount}}
                       {{^coursestriggeredcount}}
                           {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{{coursestriggered}}} {{/str}}<br>
                       {{/coursestriggeredcount}}
-                      {{#coursesdelayed}}
-                          {{#str}} courses_are_delayed_total, tool_lifecycle, {{{coursesdelayed}}} {{/str}}<br>
-                      {{/coursesdelayed}}
                       {{#coursesused}}
-                          {{#str}} courses_are_used_total, tool_lifecycle, {{{coursesused}}} {{/str}}
+                          {{#str}} courses_are_used_total, tool_lifecycle, {{{coursesused}}} {{/str}}<br>
                       {{/coursesused}}
+                      {{#coursesdelayed}}
+                          {{#str}} courses_are_delayed, tool_lifecycle, {{{coursesdelayed}}} {{/str}}
+                      {{/coursesdelayed}}
                   </div>
               {{/displaytotaltriggered}}
               {{^displaytotaltriggered}}
