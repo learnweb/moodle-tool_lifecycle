@@ -313,22 +313,22 @@ foreach ($steps as $step) {
 
 // Popup courses list.
 $out = null;
-$ncourses = 0;
-$courseids = [];
+$tablecoursesamount = 0;
 $hiddenfieldssearch = [];
 $hiddenfieldssearch[] = ['name' => 'wf', 'value' => $workflowid];
 $hiddenfieldssearch[] = ['name' => 'showdetails', 'value' => $showdetails];
 if ($stepid) { // Display courses table with courses of this step.
     $step = step_manager::get_step_instance($stepid);
-    $ncourses = $DB->count_records('tool_lifecycle_process',
+    $courseids = $DB->count_records('tool_lifecycle_process',
         ['stepindex' => $step->sortindex, 'workflowid' => $workflowid]);
     $table = new courses_in_step_table($step,
-        optional_param('courseid', null, PARAM_INT), $ncourses, $search);
+        optional_param('courseid', null, PARAM_INT), $courseids, $search);
     ob_start();
     $table->out(PAGESIZE, false);
     $out = ob_get_contents();
     ob_end_clean();
     $hiddenfieldssearch[] = ['name' => 'step', 'value' => $stepid];
+    $tablecoursesamount = count($courseids);
 } else if ($triggerid) { // Display courses table with triggered courses of this trigger.
     $trigger = trigger_manager::get_instance($triggerid);
     if ($courseids = (new processor())->get_triggercourses($trigger, $workflow)) {
@@ -339,6 +339,7 @@ if ($stepid) { // Display courses table with courses of this step.
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'trigger', 'value' => $triggerid];
+        $tablecoursesamount = count($courseids);
     }
 } else if ($triggered) { // Display courses table with triggered courses of this workflow.
     $table = new triggered_courses_table($coursestriggered, 'triggeredworkflow', null,
@@ -348,6 +349,7 @@ if ($stepid) { // Display courses table with courses of this step.
     $out = ob_get_contents();
     ob_end_clean();
     $hiddenfieldssearch[] = ['name' => 'triggered', 'value' => $triggered];
+    $tablecoursesamount = count($coursestriggered);
 } else if ($excluded) { // Display courses table with excluded courses of this trigger.
     $trigger = trigger_manager::get_instance($excluded);
     if ($courseids = (new processor())->get_triggercourses($trigger, $workflow)) {
@@ -357,6 +359,7 @@ if ($stepid) { // Display courses table with courses of this step.
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'excluded', 'value' => $excluded];
+        $tablecoursesamount = count($courseids);
     }
 } else if ($delayed) { // Display courses table with courses delayed for this workflow.
     $table = new triggered_courses_table( $coursesdelayed, 'delayed',
@@ -366,6 +369,7 @@ if ($stepid) { // Display courses table with courses of this step.
     $out = ob_get_contents();
     ob_end_clean();
     $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
+    $tablecoursesamount = count($coursesdelayed);
 } else if ($used) { // Display courses triggered by this workflow but involved in other processes already.
     if ($courseids = $amounts['all']->used ?? null) {
         $table = new triggered_courses_table( $courseids, 'used',
@@ -375,11 +379,12 @@ if ($stepid) { // Display courses table with courses of this step.
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'used', 'value' => $used];
+        $tablecoursesamount = count($courseids);
     }
 }
 // Search box for courses list.
 $searchhtml = '';
-if ((intval($courseids) + intval($ncourses)) > PAGESIZE ) {
+if ($tablecoursesamount > PAGESIZE ) {
     $searchhtml = $renderer->render_from_template('tool_lifecycle/search_input', [
         'action' => (new moodle_url(urls::WORKFLOW_DETAILS))->out(false),
         'uniqid' => 'tool_lifecycle-search-courses',
