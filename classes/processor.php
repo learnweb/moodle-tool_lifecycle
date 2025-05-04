@@ -376,7 +376,7 @@ class processor {
                         // Get courses excluded amount.
                         [$triggercourses, $newcourses] = $this->get_triggercourses_forcounting($trigger, $excludedcourses);
                         $obj->excluded = $triggercourses;
-                        $obj->alreadyin = $triggercourses-$newcourses;
+                        $obj->alreadyin = $triggercourses - $newcourses;
                     } else if ($obj->response == trigger_response::trigger()) {
                         // Get courses triggered amount.
                         [$triggercourses, $newcourses] = $this->get_triggercourses_forcounting($trigger, $excludedcourses);
@@ -385,7 +385,7 @@ class processor {
                         } else {
                             $obj->triggered = $triggercourses;
                         }
-                        $obj->alreadyin = $triggercourses-$newcourses;
+                        $obj->alreadyin = $triggercourses - $newcourses;
                     }
                     $autotriggers[] = $trigger;
                 } else if ($obj->response == trigger_response::triggertime()) {

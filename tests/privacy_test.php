@@ -78,6 +78,8 @@ final class privacy_test extends provider_testcase {
     public function setUp(): void {
         global $USER;
 
+        parent::setUp();
+
         // We do not need a sesskey check in theses tests.
         $USER->ignoresesskey = true;
         $this->resetAfterTest();

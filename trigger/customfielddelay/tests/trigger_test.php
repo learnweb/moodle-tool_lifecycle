@@ -59,6 +59,7 @@ final class trigger_test extends \advanced_testcase {
      * @throws \moodle_exception
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest(true);
         $this->setAdminUser();
 

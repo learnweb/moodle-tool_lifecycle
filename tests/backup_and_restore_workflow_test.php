@@ -58,6 +58,7 @@ final class backup_and_restore_workflow_test extends \advanced_testcase {
      * @throws \coding_exception
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
         $this->workflow = $generator->create_workflow(['startdatedelay', 'categories'], ['email', 'createbackup', 'deletecourse']);

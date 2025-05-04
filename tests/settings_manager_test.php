@@ -58,6 +58,7 @@ final class settings_manager_test extends \advanced_testcase {
      * @throws \coding_exception
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest(false);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 

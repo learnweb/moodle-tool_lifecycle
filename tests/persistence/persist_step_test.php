@@ -53,6 +53,7 @@ final class persist_step_test extends \advanced_testcase {
      * @throws moodle_exception
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest(true);
         $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 

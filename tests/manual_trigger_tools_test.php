@@ -64,6 +64,7 @@ final class manual_trigger_tools_test extends \advanced_testcase {
      */
     public function setUp(): void {
         global $USER;
+        parent::setUp();
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 

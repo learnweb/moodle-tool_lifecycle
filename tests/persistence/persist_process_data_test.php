@@ -56,6 +56,7 @@ final class persist_process_data_test extends \advanced_testcase {
      * @throws dml_exception
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
 

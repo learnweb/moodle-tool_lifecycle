@@ -49,6 +49,7 @@ final class trigger_test extends \advanced_testcase {
     private $processor;
 
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest(true);
         $this->setAdminUser();
 

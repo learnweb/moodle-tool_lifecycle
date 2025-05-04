@@ -56,6 +56,8 @@ final class process_status_message_test extends \advanced_testcase {
     public function setUp(): void {
         global $USER;
 
+        parent::setUp();
+
         // We do not need a sesskey check in these tests.
         $USER->ignoresesskey = true;
 

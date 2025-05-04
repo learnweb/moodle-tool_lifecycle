@@ -50,6 +50,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
     protected function setUp(): void {
         // Recommended in Moodle docs to always include CFG.
         global $CFG;
+        parent::setUp();
         $this->resetAfterTest(true);
 
         $this->processor = new processor();

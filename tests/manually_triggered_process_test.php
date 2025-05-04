@@ -69,6 +69,8 @@ final class manually_triggered_process_test extends \advanced_testcase {
     public function setUp(): void {
         global $USER;
 
+        parent::setUp();
+
         // We do not need a sesskey check in theses tests.
         $USER->ignoresesskey = true;
 

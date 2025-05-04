@@ -43,6 +43,7 @@ final class backup_manager_test extends \advanced_testcase {
      * Setup the testcase.
      */
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest(false);
         $this->course = $this->getDataGenerator()->create_course();
     }

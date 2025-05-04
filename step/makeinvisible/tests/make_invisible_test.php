@@ -41,6 +41,9 @@ final class make_invisible_test extends \advanced_testcase {
      */
     public function setUp(): void {
         global $USER;
+
+        parent::setUp();
+
         $this->resetAfterTest(true);
 
         // We do not need a sesskey check in theses tests.
