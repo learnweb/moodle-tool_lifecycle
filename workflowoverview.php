@@ -328,7 +328,7 @@ if ($stepid) { // Display courses table with courses of this step.
     $out = ob_get_contents();
     ob_end_clean();
     $hiddenfieldssearch[] = ['name' => 'step', 'value' => $stepid];
-    $tablecoursesamount = count($courseids);
+    $tablecoursesamount = $courseids;
 } else if ($triggerid) { // Display courses table with triggered courses of this trigger.
     $trigger = trigger_manager::get_instance($triggerid);
     if ($courseids = (new processor())->get_triggercourses($trigger, $workflow)) {
