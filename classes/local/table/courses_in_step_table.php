@@ -42,6 +42,9 @@ class courses_in_step_table extends \table_sql {
     /** @var int|null if set, it is the courseid to focus on. */
     private $courseid;
 
+    /** @var string search string to filter courses list */
+    private $search = "";
+
     /**
      * Constructor for courses_in_step_table.
      * @param step_subplugin $step step to show courses of
@@ -87,6 +90,7 @@ class courses_in_step_table extends \table_sql {
             } else {
                 $where = $where . " AND ( c.fullname LIKE '%$filterdata%' OR c.shortname LIKE '%$filterdata%')";
             }
+            $this->search = $filterdata;
         }
 
         $this->column_nosort = ['status', 'tools'];
@@ -172,12 +176,12 @@ class courses_in_step_table extends \table_sql {
         global $OUTPUT, $PAGE;
         $output = '';
         $output .= $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            ['action' => 'rollback', 'processid' => $row->processid, 'sesskey' => sesskey()]),
-            get_string('rollback', 'tool_lifecycle')
+            ['action' => 'rollback', 'processid' => $row->processid, 'sesskey' => sesskey(), 'search' => $this->search]),
+            get_string('rollback', 'tool_lifecycle'), 'post', 'secondary', ['class' => 'mr-1']
         );
         $output .= $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            ['action' => 'proceed', 'processid' => $row->processid, 'sesskey' => sesskey()]),
-            get_string('proceed', 'tool_lifecycle')
+            ['action' => 'proceed', 'processid' => $row->processid, 'sesskey' => sesskey(), 'search' => $this->search]),
+            get_string('proceed', 'tool_lifecycle'), 'post', 'secondary', ['class' => 'mt-1']
         );
         return $output;
     }

@@ -88,6 +88,9 @@ if ($stepid) {
 } else if ($excluded) {
     $params['excluded'] = $excluded;
 }
+if ($search) {
+    $params['search'] = $search;
+}
 
 $syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::WORKFLOW_DETAILS, $params));
@@ -177,7 +180,7 @@ $str = [
     'move_down' => get_string('move_down', 'tool_lifecycle'),
 ];
 
-$nextrun = 0;
+$nextrun = false;
 $coursestriggered = [];
 $coursesdelayed = [];
 $displaytotaltriggered = false;
@@ -190,7 +193,7 @@ if ($showdetails) {
     $amounts = (new processor())->get_count_of_courses_to_trigger_for_workflow($workflow);
     $coursestriggered = $amounts['all']->coursestriggered;
     $coursesdelayed = $amounts['all']->delayedcourses;
-    $nextrun = $amounts['all']->nextrun;
+    $nextrun = $amounts['all']->nextrun == 0 ? false : $amounts['all']->nextrun;
     $displaytotaltriggered = !empty($triggers);
 }
 
@@ -204,9 +207,9 @@ if (!$task->is_component_enabled() && !$task->get_run_if_component_disabled()) {
 } else if ($nextrunt < time()) {
     $nextrunt = get_string('asap', 'tool_task');
 }
-if (is_int($nextrunt) && $nextrun ?? false) { // Task nextrun and trigger nextrun are valid times: take the minimum.
+if (is_int($nextrunt) && is_int($nextrun)) { // Task nextrun and trigger nextrun are valid times: take the minimum.
     $nextrun = userdate(min($nextrunt, $nextrun), get_string('strftimedatetimeshort', 'langconfig'));
-} else if (!is_int($nextrunt) && $nextrun ?? false) { // Only trigger nextrun is valid time.
+} else if (!is_int($nextrunt) && is_int($nextrun)) { // Only trigger nextrun is valid time.
     $nextrun = userdate($nextrun, get_string('strftimedatetimeshort', 'langconfig'));
 } else if (is_int($nextrunt)) { // Only task next run is valid time.
     $nextrun = userdate($nextrunt, get_string('strftimedatetimeshort', 'langconfig'));
@@ -480,7 +483,6 @@ if (workflow_manager::is_editable($workflow->id)) {
         ['type' => settings_type::TRIGGER, 'wf' => $workflow->id]),
         'subplugin', $selectabletriggers, '', ['' => get_string('add_new_trigger_instance', 'tool_lifecycle')],
         null, ['id' => 'tool_lifecycle-choose-trigger']);
-
     // Add step selection field.
     if (!$newworkflow) { // At first select a course selection trigger, than you can select the first step.
         if ($steptypes = step_manager::get_step_types()) {
