@@ -78,12 +78,16 @@ class delayed_courses_table extends \table_sql {
             $fields .= 'null as workflowid, null as workflow, null AS workflowdelay, null AS workflowcount, ';
         }
 
-        if ($selectglobaldelays) {
+        if ($selectglobaldelays && !$selectseperatedelays) { // Only globaldelays.
             $fields .= 'd.delayeduntil AS globaldelay, ';
-        } else {
-            $fields .= 'null AS globaldelay, ';
+            $fields .= 'd.delaytype as delaytype ';
+        } else if (!$selectglobaldelays) { // Only workflowdelays.
+            $fields .= 'null AS globaldelay, wfdelay.workflowdelay, ';
+            $fields .= 'wfdelay.delaytype as delaytype ';
+        } else { // Both.
+            $fields .= 'd.delayeduntil AS globaldelay, wfdelay.workflowdelay, ';
+            $fields .= 'COALESCE(d.delaytype, wfdelay.delaytype) as delaytype ';
         }
-        $fields .= 'COALESCE(wfdelay.delaytype, d.delaytype) as delaytype ';
 
         $params = [];
         $where = ["TRUE"];
@@ -97,7 +101,7 @@ class delayed_courses_table extends \table_sql {
                     // For every course, add information about delays per workflow.
                     'LEFT JOIN (' .
                     'SELECT dw.courseid, dw.workflowid, w.title as workflow, ' .
-                    'dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount, dw.delaytype ' .
+                    'dw.delayeduntil as workflowdelay, maxtable.wfcount as workflowcount, dw.delaytype ' .
                     'FROM ( ' .
                     'SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount ' .
                     'FROM {tool_lifecycle_delayed_workf} dw ' .
@@ -111,7 +115,7 @@ class delayed_courses_table extends \table_sql {
                 $params['workflowid'] = $workflowfilterid;
             }
 
-            $from .= 'GROUP BY courseid ' .
+            $from .= ' GROUP BY courseid ' .
                     ') maxtable ' .
                     'JOIN {tool_lifecycle_delayed_workf} dw ON maxtable.maxid = dw.id ' .
                     'JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id ' .
@@ -152,7 +156,6 @@ class delayed_courses_table extends \table_sql {
                 get_string('coursename', 'tool_lifecycle'),
                 get_string('category'),
                 get_string('delays', 'tool_lifecycle'),
-                get_string('type', 'tool_lifecycle'),
                 get_string('tools', 'tool_lifecycle'),
         ]);
     }
