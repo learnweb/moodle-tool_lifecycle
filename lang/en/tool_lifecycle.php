@@ -188,7 +188,9 @@ $string['noprocesserrors'] = 'There are no process errors to handle!';
 $string['noprocessfound'] = 'A process with the given processid could not be found!';
 $string['noremainingcoursestodisplay'] = 'There are currently no remaining courses!';
 $string['nostepfound'] = 'A step with the given stepid could not be found!';
-$string['notifyerrorsemailcontent'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!' . "\n" . 'Please review them at {$a->url}.';
+$string['notifyerrorsemailcontent'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!
+
+Please review them at {$a->url}.';
 $string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!<br>Please review them at the <a href="{$a->url}">error handling overview</a>.';
 $string['notifyerrorsemailsubject'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!';
 $string['overview:add_trigger'] = 'Add trigger';

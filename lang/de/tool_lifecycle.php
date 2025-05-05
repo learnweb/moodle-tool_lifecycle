@@ -187,7 +187,9 @@ $string['noprocesserrors'] = 'Es gibt keine fehlerhaften Prozesse, die behandelt
 $string['noprocessfound'] = 'Es konnte kein Prozess mit der gegebenen Prozessid gefunden werden!';
 $string['noremainingcoursestodisplay'] = 'Es gibt derzeit keine verbleibenden Kurse!';
 $string['nostepfound'] = 'Es konnte kein Schritt mit der gegebenen Schritt-ID gefunden werden!';
-$string['notifyerrorsemailcontent'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!' . "\n" . 'Bitte besuchen Sie {$a->url}.';
+$string['notifyerrorsemailcontent'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!
+
+Bitte besuchen Sie {$a->url}.';
 $string['notifyerrorsemailcontenthtml'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!<br>Bitte besuchen Sie <a href="{$a->url}">die Übersichtsseite</a>.';
 $string['notifyerrorsemailsubject'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!';
 $string['overview:add_trigger'] = 'Trigger hinzufügen';
