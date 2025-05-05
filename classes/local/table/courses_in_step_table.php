@@ -174,14 +174,19 @@ class courses_in_step_table extends \table_sql {
      */
     public function col_tools($row) {
         global $OUTPUT, $PAGE;
-        $output = '';
-        $output .= $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            ['action' => 'rollback', 'processid' => $row->processid, 'sesskey' => sesskey(), 'search' => $this->search]),
-            get_string('rollback', 'tool_lifecycle'), 'post', 'secondary', ['class' => 'mr-1']
+        $output = $OUTPUT->single_button(
+            new \moodle_url($PAGE->url, ['action' => 'rollback', 'processid' => $row->processid,
+                'sesskey' => sesskey(), 'search' => $this->search]),
+            get_string('rollback', 'tool_lifecycle'),
+            'post',
+            ['class' => 'mr-1']
         );
-        $output .= $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            ['action' => 'proceed', 'processid' => $row->processid, 'sesskey' => sesskey(), 'search' => $this->search]),
-            get_string('proceed', 'tool_lifecycle'), 'post', 'secondary', ['class' => 'mt-1']
+        $output .= $OUTPUT->single_button(
+            new \moodle_url($PAGE->url, ['action' => 'proceed', 'processid' => $row->processid,
+                'sesskey' => sesskey(), 'search' => $this->search]),
+            get_string('proceed', 'tool_lifecycle'),
+            'post',
+            ['class' => 'mt-1']
         );
         return $output;
     }
