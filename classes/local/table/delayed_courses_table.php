@@ -23,7 +23,6 @@
  */
 namespace tool_lifecycle\local\table;
 
-use core\output\html_writer;
 use moodle_url;
 use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\urls;
@@ -176,7 +175,7 @@ class delayed_courses_table extends \table_sql {
             if ($row->workflowcount == 1) {
                 $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
                 $text = get_string('delayed_globally_and_seperately_for_one', 'tool_lifecycle');
-                $html = html_writer::link($url, $text).$typehtml;
+                $html = \html_writer::link($url, $text).$typehtml;
             } else if ($row->workflowcount > 1) {
                 $text = $this->get_worklows_multiple($row, $url);
                 $html = $text;
@@ -185,7 +184,7 @@ class delayed_courses_table extends \table_sql {
                 $date = userdate($row->globaldelay, $dateformat);
                 $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
                 $text = get_string('delayed_globally', 'tool_lifecycle', $date);
-                $html = html_writer::link($url, $text).$typehtml;
+                $html = \html_writer::link($url, $text).$typehtml;
             }
         } else {
             if ($row->workflowcount <= 0) {
@@ -196,7 +195,7 @@ class delayed_courses_table extends \table_sql {
                 $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
                 $text = get_string('delayed_for_workflow_until', 'tool_lifecycle',
                         ['name' => $row->workflow, 'date' => $date]);
-                $html = html_writer::link($url, $text).$typehtml;
+                $html = \html_writer::link($url, $text).$typehtml;
             } else {
                 $text = $this->get_worklows_multiple($row, $url);
                 $html = $text;
@@ -223,14 +222,14 @@ class delayed_courses_table extends \table_sql {
             $date = userdate($row->globaldelay, $dateformat);
             $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
             $text = get_string('globally_until_date', 'tool_lifecycle', $date);
-            $html .= html_writer::link($url, $text).$typehtml."<br>";
+            $html .= \html_writer::link($url, $text).$typehtml."<br>";
         }
         if ($row->workflowcount == 1) {
             $date = userdate($row->workflowdelay, $dateformat);
             $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
             $text = get_string('name_until_date', 'tool_lifecycle',
                     ['name' => $row->workflow, 'date' => $date]);
-            $html .= html_writer::link($url, $text).$typehtml;
+            $html .= \html_writer::link($url, $text).$typehtml;
         } else if ($row->workflowcount > 1) {
             $sql = 'SELECT dw.id, dw.delayeduntil, w.title, w.id as workflowid
                     FROM {tool_lifecycle_delayed_workf} dw
@@ -244,7 +243,7 @@ class delayed_courses_table extends \table_sql {
                 $text = get_string('name_until_date', 'tool_lifecycle',
                         ['name' => $record->title, 'date' => $date]);
                 $url = new moodle_url($url, ['wf' => $record->workflowid]);
-                $html .= html_writer::link($url, $text).$typehtml."<br>";
+                $html .= \html_writer::link($url, $text).$typehtml."<br>";
             }
         }
         return $html;
