@@ -81,9 +81,14 @@ if ($hassiteconfig) {
                     $triggername,
                     get_string('customfieldsemesterdescription', 'tool_lifecycle')));
             } else {
+                try {
+                    $plugindescription = get_string('plugindescription', 'lifecycletrigger_' . $trigger);
+                } catch (Exception $e) {
+                    $plugindescription = "";
+                }
                 $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
                     $triggername,
-                    get_string('plugindescription', 'lifecycletrigger_' . $trigger).$uninstall));
+                    $plugindescription.$uninstall));
             }
         }
     } else {
@@ -98,9 +103,14 @@ if ($hassiteconfig) {
         foreach ($steps as $step => $path) {
             $stepname = html_writer::span(get_string('pluginname', 'lifecyclestep_' . $step),
                 "font-weight-bold");
+            try {
+                $plugindescription = get_string('plugindescription', 'lifecyclestep_' . $step);
+            } catch (Exception $e) {
+                $plugindescription = "";
+            }
             $settings->add(new admin_setting_description('lifecyclestepsetting_'.$step,
                 $stepname,
-                get_string('plugindescription', 'lifecyclestep_' . $step)));
+                $plugindescription));
         }
     } else {
         $settings->add(new admin_setting_heading('adminsettings_nosteps',
