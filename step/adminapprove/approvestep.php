@@ -106,7 +106,7 @@ if ($action) {
         [$insql, $inparams] = $DB->get_in_or_equal($ids);
         $sql = 'UPDATE {lifecyclestep_adminapprove} ' .
                 'SET status = ' . ($action == PROCEED ? 1 : 2) . ' ' .
-                'WHERE id ' . $insql .
+                'WHERE id ' . $insql . ' ' .
                 'AND status = 0';
         $DB->execute($sql, $inparams);
     } else if ($action == PROCEED_ALL || $action == ROLLBACK_ALL) {
