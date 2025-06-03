@@ -89,7 +89,7 @@ class processor {
     public function process_courses() {
         foreach (process_manager::get_processes() as $process) {
             $workflow = workflow_manager::get_workflow($process->workflowid);
-            while (true) {
+            while ($workflow) {
 
                 try {
                     $course = get_course($process->courseid);

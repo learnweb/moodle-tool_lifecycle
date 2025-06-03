@@ -53,6 +53,9 @@ class delayed_courses_manager {
             $workflow = $workfloworid;
         } else {
             $workflow = workflow_manager::get_workflow($workfloworid);
+            if ($workflow === null) {
+                throw new \moodle_exception('Set course delayed: no workflow found. '. var_dump($workfloworid));
+            }
         }
         if ($becauserollback) {
             $duration = $workflow->rollbackdelay;
