@@ -44,9 +44,6 @@ $PAGE->set_pagelayout('admin');
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('upload_workflow', 'tool_lifecycle');
-echo $renderer->header($heading);
-$tabrow = tabs::get_tabrow();
-$renderer->tabs($tabrow, '');
 
 $form = new form_upload_workflow();
 if ($form->is_cancelled()) {
@@ -68,6 +65,9 @@ if ($form->is_cancelled()) {
         redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $restore->get_workflow()->id]));
     }
 }
+echo $renderer->header($heading);
+$tabrow = tabs::get_tabrow();
+$renderer->tabs($tabrow, '');
 
 $form->display();
 echo $renderer->footer();
