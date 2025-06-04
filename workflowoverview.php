@@ -260,6 +260,7 @@ foreach ($triggers as $trigger) {
                     }
                     $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
                     $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
+                    $trigger->delayedcourses = $amounts[$trigger->sortindex]->delayed;
                     $trigger->alreadyin = $amounts[$trigger->sortindex]->alreadyin;
                 }
             }
