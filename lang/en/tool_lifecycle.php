@@ -147,7 +147,7 @@ $string['errorbackuppath'] = 'Error while trying to create the backup directory.
 Please check your path at Site administration/Plugins/Admin tools/Life Cycle/General & subplugins/backup_path.';
 $string['errornobackup'] = 'No backup was created at the specified directory, reasons unknown.';
 $string['find_course_list_header'] = 'Find courses';
-$string['finished'] = 'Finished';
+$string['finished'] = 'Proceeded/Finished';
 $string['followedby_none'] = 'None';
 $string['force_import'] = 'Try ignoring errors and import the workflow anyway. Use this at your own risk!';
 $string['forselected'] = 'For all selected processes';
