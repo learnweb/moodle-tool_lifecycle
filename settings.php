@@ -76,20 +76,15 @@ if ($hassiteconfig) {
             if ($trigger == 'sitecourse' || $trigger == 'delayedcourses') {
                 $uninstall = html_writer::span(' Depracated. Will be removed with version 5.0.', 'text-danger');
             }
-            if ($trigger == 'customfieldsemester') {
-                $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
-                    $triggername,
-                    get_string('customfieldsemesterdescription', 'tool_lifecycle')));
-            } else {
-                try {
-                    $plugindescription = get_string('plugindescription', 'lifecycletrigger_' . $trigger);
-                } catch (Exception $e) {
-                    $plugindescription = "";
-                }
-                $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
-                    $triggername,
-                    $plugindescription.$uninstall));
+            try {
+                $plugindescription = get_string('plugindescription', 'lifecycletrigger_' . $trigger);
+            } catch (Exception $e) {
+                $plugindescription = "";
             }
+            $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
+                $triggername,
+                $plugindescription.$uninstall
+            ));
         }
     } else {
         $settings->add(new admin_setting_heading('adminsettings_notriggers',

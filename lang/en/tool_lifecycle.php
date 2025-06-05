@@ -104,7 +104,6 @@ $string['create_copy'] = 'Create copy';
 $string['create_step'] = 'Create step';
 $string['create_trigger'] = 'Create trigger';
 $string['create_workflow_from_existing'] = 'Copy new workflow from existing';
-$string['customfieldsemesterdescription'] = 'Trigger courses by the course custom field \'semester\'';
 $string['date'] = 'Due date';
 $string['deactivated'] = 'Deactivated';
 $string['deactivated_workflows_header'] = 'Deactivated';
