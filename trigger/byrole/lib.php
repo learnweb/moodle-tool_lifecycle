@@ -100,9 +100,11 @@ class byrole extends base_automatic {
 
         list($insql, $inparams) = $DB->get_in_or_equal($this->get_roles($triggerid), SQL_PARAMS_NAMED);
 
+        $invert = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['invert'] && true;
+
         $sql = "SELECT c.id
             FROM {course} c
-            WHERE c.id NOT IN (
+            WHERE c.id " . ($invert ? "" : "NOT") . " IN (
             SELECT e.courseid FROM {context} coursectx
               JOIN {enrol} e ON coursectx.contextlevel = 50 AND e.courseid = coursectx.instanceid AND e.status = 0
               JOIN {user_enrolments} ue ON e.id = ue.enrolid AND ue.status = 0
@@ -159,6 +161,7 @@ class byrole extends base_automatic {
     public function instance_settings() {
         return [
             new instance_setting('roles', PARAM_SEQUENCE),
+            new instance_setting('invert', PARAM_BOOL),
             new instance_setting('delay', PARAM_INT),
         ];
     }
@@ -187,6 +190,9 @@ class byrole extends base_automatic {
         $mform->addHelpButton('roles', 'responsibleroles', 'lifecycletrigger_byrole');
         $mform->setType('roles', PARAM_SEQUENCE);
         $mform->addRule('roles', 'Test', 'required');
+
+        $mform->addElement('advcheckbox', 'invert', get_string('invert', 'lifecycletrigger_byrole'), get_string('invert_help', 'lifecycletrigger_byrole'));
+        $mform->setType('invert', PARAM_BOOL);
 
         $elementname = 'delay';
         $mform->addElement('duration', $elementname, get_string('delay', 'lifecycletrigger_byrole'));
