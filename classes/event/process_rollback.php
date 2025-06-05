@@ -45,7 +45,7 @@ use tool_lifecycle\local\entity\process;
 class process_rollback extends \core\event\base {
 
     /**
-     * Creates an process_rollabck event from a process.
+     * Creates an process_rollback event from a process.
      *
      * @param process $process
      * @return process_rollback

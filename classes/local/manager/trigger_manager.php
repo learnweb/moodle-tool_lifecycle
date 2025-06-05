@@ -262,7 +262,7 @@ class trigger_manager extends subplugin_manager {
 
 
     /**
-     * Handles an action for a workflow step.
+     * Handles an action for a workflow trigger.
      * @param string $action action to be executed
      * @param int $subpluginid id of the trigger instance
      * @param int $workflowid id of the workflow

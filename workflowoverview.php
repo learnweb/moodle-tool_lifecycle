@@ -120,8 +120,12 @@ if ($action) {
         delayed_courses_manager::remove_delay_entry($cid);
         $msg = get_string('delaydeleted', 'tool_lifecycle');
     } else {
-        step_manager::handle_action($action, optional_param('actionstep', null, PARAM_INT), $workflow->id);
-        trigger_manager::handle_action($action, optional_param('actiontrigger', null, PARAM_INT), $workflow->id);
+        if ($actionstep = optional_param('actionstep', null, PARAM_INT)) {
+            step_manager::handle_action($action, $actionstep, $workflow->id);
+        }
+        if ($actiontrigger = optional_param('actiontrigger', null, PARAM_INT)) {
+            trigger_manager::handle_action($action, $actiontrigger, $workflow->id);
+        }
         $processid = optional_param('processid', null, PARAM_INT);
         if ($processid) {
             $process = process_manager::get_process_by_id($processid);

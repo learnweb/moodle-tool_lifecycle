@@ -44,7 +44,12 @@ class tabs {
      * @throws \dml_exception
      * @throws moodle_exception
      */
-    public static function get_tabrow($activelink = false, $deactivatelink = false, $draftlink = false) {
+    public static function get_tabrow(
+        $activelink = false,
+        $deactivatelink = false,
+        $draftlink = false,
+        $approvelink = false
+    ) {
         global $DB;
 
         $classnotnull = 'badge badge-primary badge-pill ml-1';
@@ -143,7 +148,7 @@ class tabs {
         $targeturl = new \moodle_url('/admin/tool/lifecycle/step/adminapprove/index.php', ['id' => 'adminapprove']);
         $tabrow[] = new \tabobject('adminapprove', $targeturl,
             get_string('adminapprovals_header', 'tool_lifecycle').$adminapprovals,
-            get_string('adminapprovals_header_title', 'tool_lifecycle'));
+            get_string('adminapprovals_header_title', 'tool_lifecycle'), $approvelink);
 
         // Tab to the course backups list page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/coursebackups.php', ['id' => 'coursebackups']);
