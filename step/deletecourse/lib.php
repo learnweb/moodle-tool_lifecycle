@@ -44,7 +44,7 @@ class deletecourse extends libbase {
     private static $numberofdeletions = 0;
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
@@ -59,11 +59,16 @@ class deletecourse extends libbase {
     public function process_course($processid, $instanceid, $course) {
         global $CFG;
 
+        if ($course->id == 1) {
+            return step_response::rollback();
+        }
+
         if (self::$numberofdeletions >= settings_manager::get_settings(
             $instanceid, settings_type::STEP)['maximumdeletionspercron']) {
             return step_response::waiting(); // Wait with further deletions til the next cron run.
         }
-        delete_course($course->id, true);
+
+        delete_course($course->id);
 
         /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
            MDL-65228 (https://tracker.moodle.org/browse/MDL-65228) */
@@ -77,7 +82,7 @@ class deletecourse extends libbase {
     }
 
     /**
-     * Processes the course in status waiting and returns a repsonse.
+     * Processes the course in status waiting and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
@@ -86,6 +91,8 @@ class deletecourse extends libbase {
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
      * @return step_response
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function process_waiting_course($processid, $instanceid, $course) {
         return $this->process_course($processid, $instanceid, $course);
