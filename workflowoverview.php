@@ -230,6 +230,8 @@ if (is_int($nextrunout)) {
 }
 
 $nomanualtriggerinvolved = true;
+$displaytriggers = [];
+$displaytimetriggers = [];
 foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
     // Mustache cannot handle arrays which have other keys therefore a new array is build.
@@ -286,6 +288,7 @@ foreach ($triggers as $trigger) {
     }
 }
 
+$displaysteps = [];
 foreach ($steps as $step) {
     $step = (object)(array) $step; // Cast to normal object to be able to set dynamic properties.
     $ncourses = $DB->count_records('tool_lifecycle_process',
