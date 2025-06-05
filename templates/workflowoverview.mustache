@@ -97,7 +97,16 @@
 
         {{#counttriggers}}
         <div class="wf-trigger-block workflow-item title mt-2">
-            <h5 class="my-2">{{#str}} courseselection_title, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:trigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
+            <h5 class="my-2">{{#str}} courseselection_title, tool_lifecycle{{/str}}
+                <span data-toggle="tooltip" title="{{#str}} overview:trigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i>
+                    {{#showdetailsicon}}
+                        <a href="{{{showdetailslink}}}&showdetails={{workflowid}}" data-toggle="tooltip" title="{{#str}} showextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye-slash"></i></a>
+                    {{/showdetailsicon}}
+                    {{^showdetailsicon}}
+                        <a href="{{{showdetailslink}}}&showdetails=-1" data-toggle="tooltip" title="{{#str}} dontshowextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye"></i></a>
+                    {{/showdetailsicon}}
+                </span>
+            </h5>
             {{#showcoursecounts}}
               {{#displaytotaltriggered}}
                   <div class="mb-2 mx-2 text-left">
