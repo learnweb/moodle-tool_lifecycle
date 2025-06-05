@@ -90,6 +90,12 @@ class process_manager {
      */
     public static function get_processes() {
         global $DB;
+        // Delete processes of already removed courses.
+        $DB->delete_records_select(
+            'tool_lifecycle_process',
+            "courseid not in (SELECT id FROM {course}) ",
+            []
+        );
         $records = $DB->get_records('tool_lifecycle_process');
         $processes = [];
         foreach ($records as $record) {
