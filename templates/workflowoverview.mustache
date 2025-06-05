@@ -76,13 +76,7 @@
 
         <div class="{{classdetails}} rounded shadow d-inline-block p-3 position-relative mb-2" style="max-width: 800px;">
             <span class="edit-pen">
-                <a href="{{{editsettingslink}}}" {{#isactive}}class="text-white"{{/isactive}}>{{#pix}} i/edit, core, {{/pix}}</a><br>
-                {{#showdetailsicon}}
-                    <a href="{{{showdetailslink}}}&showdetails={{workflowid}}" data-toggle="tooltip" title="{{#str}} showextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye-slash {{#isactive}}text-white{{/isactive}}"></i></a>
-                {{/showdetailsicon}}
-                {{^showdetailsicon}}
-                    <a href="{{{showdetailslink}}}&showdetails=-1" data-toggle="tooltip" title="{{#str}} dontshowextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye {{#isactive}}text-white{{/isactive}}"></i></a>
-                {{/showdetailsicon}}
+                <a href="{{{editsettingslink}}}" {{#isactive}}class="text-white"{{/isactive}}>{{#pix}} i/edit, core, {{/pix}}</a>
             </span>
             <h4 class="pr-5">{{title}}
                 {{#includedelayedcourses}}<sup><i class="fas fa-calendar-plus" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup>{{/includedelayedcourses}}
