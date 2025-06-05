@@ -191,7 +191,8 @@ class byrole extends base_automatic {
         $mform->setType('roles', PARAM_SEQUENCE);
         $mform->addRule('roles', 'Test', 'required');
 
-        $mform->addElement('advcheckbox', 'invert', get_string('invert', 'lifecycletrigger_byrole'), get_string('invert_help', 'lifecycletrigger_byrole'));
+        $mform->addElement('advcheckbox', 'invert', get_string('invert', 'lifecycletrigger_byrole'),
+            get_string('invert_help', 'lifecycletrigger_byrole'));
         $mform->setType('invert', PARAM_BOOL);
 
         $elementname = 'delay';
