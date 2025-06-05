@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Offers the possibility to add or modify a step instance.
+ * Offers the possibility to add or modify a trigger instance.
  *
  * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
@@ -35,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Provides a form to modify a step instance
+ * Provides a form to modify a trigger instance
  * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

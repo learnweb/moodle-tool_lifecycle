@@ -238,7 +238,17 @@ class trigger_manager extends subplugin_manager {
         $subplugins = \core_component::get_plugin_list('lifecycletrigger');
         $result = [];
         foreach (array_keys($subplugins) as $plugin) {
-            $result[$plugin] = get_string('pluginname', 'lifecycletrigger_' . $plugin);
+            if ($plugin == 'customfieldsemester') { // List only if plugin customfield_semester is installed.
+                $customfields = \core_component::get_plugin_list('customfield');
+                foreach (array_keys($customfields) as $field) {
+                    if ($field == 'semester') {
+                        $result[$plugin] = get_string('pluginname', 'lifecycletrigger_' . $plugin);
+                        break;
+                    }
+                }
+            } else {
+                $result[$plugin] = get_string('pluginname', 'lifecycletrigger_' . $plugin);
+            }
         }
         return $result;
     }
