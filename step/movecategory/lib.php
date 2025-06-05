@@ -33,10 +33,13 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
+/**
+ * Class for processing courses.
+ */
 class movecategory extends libbase {
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
@@ -56,7 +59,7 @@ class movecategory extends libbase {
         )['categorytomoveto'];
 
         $success = move_courses(
-            array($course->id), $categoryid
+            [$course->id], $categoryid
         );
 
         if ($success) {
@@ -67,27 +70,43 @@ class movecategory extends libbase {
 
     }
 
+    /**
+     * Settings for the movecategory step
+     *
+     * @return instance_setting[] categorymoveto
+     */
     public function instance_settings() {
-        return array(
+        return [
             new instance_setting('categorytomoveto', PARAM_INT),
-        );
+        ];
     }
 
+    /**
+     * Form elements for the instance.
+     *
+     * @param \MoodleQuickForm $mform
+     * @return void
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function extend_add_instance_form_definition($mform) {
-        global $DB;
 
         $elementname = 'categorytomoveto';
-        $categories = $DB->get_records('course_categories');
 
-
-        //Fetch a complete list of courses and let it be shown in a flat hierachical view with all parent branches
+        // Fetch a complete list of courses and let it be shown in a flat hierarchical view with all parent branches.
         $displaylist = \core_course_category::make_categories_list('moodle/course:changecategory');
 
-        $mform->addElement('autocomplete', $elementname, get_string('categorytomoveto', 'lifecyclestep_movecategory'), $displaylist);
+        $mform->addElement('autocomplete', $elementname,
+            get_string('categorytomoveto', 'lifecyclestep_movecategory'), $displaylist);
         $mform->addHelpButton($elementname, 'categorytomoveto', 'lifecyclestep_movecategory');
         $mform->setType($elementname, PARAM_INT);
     }
 
+    /**
+     * Function to return subpluginname
+     *
+     * @return string subpluginname
+     */
     public function get_subpluginname() {
         return 'movecategory';
     }
