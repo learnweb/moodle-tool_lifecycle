@@ -204,26 +204,31 @@ if ($showdetails) {
 $task = manager::get_scheduled_task('tool_lifecycle\task\lifecycle_task');
 $lastrun = $task->get_last_run_time();
 $nextrunt = $task->get_next_run_time();
+$nextrunout = "";
 if (!$task->is_component_enabled() && !$task->get_run_if_component_disabled()) {
     $nextrunt = get_string('plugindisabled', 'tool_task');
 } else if ($task->get_disabled()) {
     $nextrunt = get_string('taskdisabled', 'tool_task');
-} else if ($nextrunt < time()) {
+} else if (is_int($nextrunt) && $nextrunt < time()) {
     $nextrunt = get_string('asap', 'tool_task');
 }
 if (is_int($nextrunt) && is_int($nextrun)) { // Task nextrun and trigger nextrun are valid times: take the minimum.
-    $nextrun = userdate(min($nextrunt, $nextrun), get_string('strftimedatetimeshort', 'langconfig'));
+    $nextrunout = min($nextrunt, $nextrun);
 } else if (!is_int($nextrunt) && is_int($nextrun)) { // Only trigger nextrun is valid time.
-    $nextrun = userdate($nextrun, get_string('strftimedatetimeshort', 'langconfig'));
+    $nextrun = $nextrun;
 } else if (is_int($nextrunt)) { // Only task next run is valid time.
-    $nextrun = userdate($nextrunt, get_string('strftimedatetimeshort', 'langconfig'));
+    $nextrunout = $nextrunt;
 } else { // There is no valid next run time. Print the task message.
-    $nextrun = $nextrunt;
+    $nextrunout = $nextrunt;
+}
+if (is_int($nextrunout)) {
+    if ($nextrunout) {
+        $nextrunout = userdate($nextrunout, get_string('strftimedatetimeshort', 'langconfig'));
+    } else {
+        $nextrunout = get_string('statusunknown');
+    }
 }
 
-$displaytriggers = [];
-$displaytimetriggers = [];
-$displaysteps = [];
 $nomanualtriggerinvolved = true;
 foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
@@ -429,7 +434,7 @@ $data = [
     'showdetailslink' => $showdetailslink,
     'showdetailsicon' => $showdetails == 0,
     'isactive' => $isactive || $isdeactivated,
-    'nextrun' => $nextrun,
+    'nextrun' => $nextrunout,
     'lastrun' => userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig')),
     'nomanualtriggerinvolved' => $nomanualtriggerinvolved,
 ];
