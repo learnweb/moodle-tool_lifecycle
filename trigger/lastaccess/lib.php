@@ -51,6 +51,8 @@ class lastaccess extends base_automatic {
     }
 
     /**
+     * Instance setting delay.
+     *
      * @return instance_setting[]
      */
     public function instance_settings() {
@@ -64,21 +66,20 @@ class lastaccess extends base_automatic {
      * meaning timestamp of the last access / interaction with this course is older than delay
      * (only counting interactions of users who are enrolled in the course)
      *
-     * *
      * @param $triggerid int id of the trigger instance.
-     * @return array
+     * @return string[]
      * @throws \coding_exception
      * @throws \dml_exception
      */
     public function get_course_recordset_where($triggerid) {
         global $DB;
 
-        $sql = "SELECT la.courseid 
-        FROM mdl_user_enrolments AS ue 
-        JOIN mdl_enrol AS e ON (ue.enrolid = e.id) 
-        JOIN mdl_user_lastaccess AS la ON (ue.userid = la.userid) 
-        WHERE e.courseid = la.courseid 
-        GROUP BY la.courseid 
+        $sql = "SELECT la.courseid
+        FROM mdl_user_enrolments AS ue
+        JOIN mdl_enrol AS e ON (ue.enrolid = e.id)
+        JOIN mdl_user_lastaccess AS la ON (ue.userid = la.userid)
+        WHERE e.courseid = la.courseid
+        GROUP BY la.courseid
         HAVING MAX(la.timeaccess) < :lastaccessthreshold";
 
         $delay = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['delay'];
@@ -111,6 +112,8 @@ class lastaccess extends base_automatic {
     }
 
     /**
+     * Extend add instance form
+     *
      * @param \MoodleQuickForm $mform
      * @param array $settings
      * @return void
@@ -125,6 +128,8 @@ class lastaccess extends base_automatic {
     }
 
     /**
+     * Return subplugin name
+     *
      * @return string
      */
     public function get_subpluginname() {
