@@ -66,7 +66,7 @@ class lastaccess extends base_automatic {
      * meaning timestamp of the last access / interaction with this course is older than delay
      * (only counting interactions of users who are enrolled in the course)
      *
-     * @param $triggerid int id of the trigger instance.
+     * @param int $triggerid  id of the trigger instance.
      * @return string[]
      * @throws \coding_exception
      * @throws \dml_exception
