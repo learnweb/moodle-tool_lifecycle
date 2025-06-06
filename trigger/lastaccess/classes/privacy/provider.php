@@ -14,16 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Lang strings for movecategory step
- *
- * @package lifecyclestep_movecategory
- * @copyright  2019 Yorick Reum JMU
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace lifecycletrigger_lastaccess\privacy;
 
-$string['categorytomoveto'] = 'Target Category';
-$string['categorytomoveto_help'] = 'Set the category which you want to move the courses to.';
-$string['plugindescription'] = 'Moves all triggered courses to a defined course category. ';
-$string['pluginname'] = 'Move Category Step';
-$string['privacy:metadata'] = 'The lifecyclestep_movecategory plugin does not store any personal data.';
+use core_privacy\local\metadata\null_provider;
+
+/**
+ * Privacy subsystem implementation for lifecycletrigger_lastaccess.
+ *
+ * @package     lifecycletrigger_lastaccess
+ * @copyright   2023 Justus Dieckmann WWU Münster
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class provider implements null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return string
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}

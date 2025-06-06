@@ -15,18 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for start date delay trigger
+ * Lang strings for last access trigger
  *
- * @package    lifecycletrigger_customfielddelay
- * @copyright  2025 Thomas Niedermaier University Münster
- * @copyright  2020 Tobias Reischmann WWU
+ * @package lifecycletrigger_lastaccess
+ * @copyright  2019 Yorick Reum JMU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['customfield'] = 'Ein nutzerdefiniertes Kursfeld vom Typ Datum';
-$string['customfield_help'] = 'Der Trigger prüft den Wert dieses nutzerdefinierten Kursfeldes vom Typ Datum.';
-$string['delay'] = 'Zeitraum nach dem Datum des nutzerdefinierten Kursfeldes';
-$string['delay_help'] = 'Der Prozess startet sobald der angegebene Zeitraum nach dem nutzerdefinierten Kursfeld-Datum abgelaufen ist.';
-$string['plugindescription'] = 'Der Trigger löst aus sobald der angegebene Zeitraum nach dem nutzerdefinierten Kursfeld-Datum abgelaufen ist.';
-$string['pluginname'] = 'Nutzerdefiniertes Kursfeld Typ Datum - Trigger';
+$string['delay'] = 'Zeitraum nach dem letzten Zugriff auf den Kurs';
+$string['delay_help'] = 'Bezeichnet den Zeitraum nach dem letzten Zugriff auf den Kurs durch eingeschriebene Benutzer:innen, nachdem der Prozess starten soll.';
+$string['plugindescription'] = 'Löst aus, wenn ein zu spezifizierender Zeitraum nach dem letzten Zugriff auf den Kurs abgelaufen ist.';
+$string['pluginname'] = 'Letzter Zugriff - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';

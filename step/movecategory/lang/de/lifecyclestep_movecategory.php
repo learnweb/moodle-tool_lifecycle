@@ -26,3 +26,4 @@ $string['categorytomoveto'] = 'Zielkursbereich';
 $string['categorytomoveto_help'] = 'Bestimme den Kursbereich, in den die Kurse verschoben werden sollen.';
 $string['plugindescription'] = 'Verschiebt die ausgewählten Kurse in einen (anderen) Kursbereich.';
 $string['pluginname'] = 'Kurs verschieben - Schritt';
+$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';

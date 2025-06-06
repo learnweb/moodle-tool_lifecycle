@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for movecategory step
+ * Lang strings for last access trigger
  *
- * @package lifecyclestep_movecategory
+ * @package lifecycletrigger_lastaccess
  * @copyright  2019 Yorick Reum JMU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['categorytomoveto'] = 'Target Category';
-$string['categorytomoveto_help'] = 'Set the category which you want to move the courses to.';
-$string['plugindescription'] = 'Moves all triggered courses to a defined course category. ';
-$string['pluginname'] = 'Move Category Step';
-$string['privacy:metadata'] = 'The lifecyclestep_movecategory plugin does not store any personal data.';
+$string['delay'] = 'Delay from last access of course until starting a process';
+$string['delay_help'] = 'Delay from last access of course (only regarding enrolled users) until starting a process.';
+$string['plugindescription'] = 'Triggers when a specifiable period after the last access of course is over.';
+$string['pluginname'] = 'Last access trigger';
+$string['privacy:metadata'] = 'The lifecycletrigger_lastaccess plugin does not store any personal data.';
