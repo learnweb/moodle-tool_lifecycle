@@ -175,7 +175,7 @@ $tabparams = new stdClass();
 $tabparams->activelink = true;
 $tabparams->deactivatedlink = true;
 $tabparams->draftlink = true;
-$tabparams->wfid = $workflowid->id;
+$tabparams->wfid = $workflow->id;
 $tabrow = tabs::get_tabrow($tabparams);
 $renderer->tabs($tabrow, $id);
 $wffilterchoicelist = new core\output\choicelist();
