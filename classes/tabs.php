@@ -36,10 +36,7 @@ class tabs {
     /**
      * Generates a Moodle tabrow i.e. an array of tabs
      *
-     * @param bool $activelink display active workflows tab as link
-     * @param bool $deactivatelink display deactivated workflows tab as link
-     * @param bool $draftlink display draft workflows tab as link
-     * @param bool $approvelink display approvals tab as link
+     * @param object $params
      * @return array of tabobjects
      * @throws \coding_exception
      * @throws \dml_exception

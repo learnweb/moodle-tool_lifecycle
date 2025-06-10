@@ -57,7 +57,9 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
      * Write the tab row in page
      *
      * @param array $tabs the tabs
-     * @param string $id  ID of current page (can be empty)
+     * @param string $id ID of current page (can be empty)
+     * @param object $wf current workflow object, optional
+     * @throws coding_exception
      */
     public function tabs($tabs, $id, $wf = null) {
         $wffilterchoicelist = new core\output\choicelist();
