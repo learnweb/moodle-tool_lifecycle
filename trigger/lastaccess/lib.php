@@ -93,8 +93,13 @@ class lastaccess extends base_automatic {
 
         $courseids = array_column($records, 'courseid');
 
-        [$insql, $inparams] = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED);
-        $where = "{course}.id {$insql}";
+        if ($courseids) {
+            [$insql, $inparams] = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED);
+            $where = "{course}.id {$insql}";
+        } else {
+            $inparams = [];
+            $where = "";
+        }
         return [$where, $inparams];
     }
 
