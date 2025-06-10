@@ -58,17 +58,9 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
      *
      * @param array $tabs the tabs
      * @param string $id ID of current page (can be empty)
-     * @param object $wf current workflow object, optional
      * @throws coding_exception
      */
-    public function tabs($tabs, $id, $wf = null) {
-        $wffilterchoicelist = new core\output\choicelist();
-        $wffilterchoicelist->add_option("0", get_string('all'));
-        if ($wf !== null) {
-            $wffilterchoicelist->add_option($wf->id, $wf->name);
-            $wffilterchoicelist->set_selected_value($wf->id);
-        }
-
+    public function tabs($tabs, $id) {
         echo $this->output->tabtree($tabs, $id);
     }
 }

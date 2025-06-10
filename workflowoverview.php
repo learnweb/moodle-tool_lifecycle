@@ -177,7 +177,12 @@ $tabparams->deactivatedlink = true;
 $tabparams->draftlink = true;
 $tabparams->wfid = $workflowid->id;
 $tabrow = tabs::get_tabrow($tabparams);
-$renderer->tabs($tabrow, $id, $workflow);
+$renderer->tabs($tabrow, $id);
+$wffilterchoicelist = new core\output\choicelist();
+$wffilterchoicelist->add_option("0", get_string('all'));
+$wffilterchoicelist->add_option($workflow->id, $workflow->title);
+$wffilterchoicelist->set_selected_value($workflow->id);
+echo $renderer->render($wffilterchoicelist);
 
 $steps = step_manager::get_step_instances($workflow->id);
 $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
