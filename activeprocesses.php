@@ -70,7 +70,9 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('find_course_list_header', 'tool_lifecycle');
 echo $renderer->header($heading);
-$tabrow = tabs::get_tabrow(true);
+$tabparams = new stdClass();
+$tabparams->activelink = true;
+$tabrow = tabs::get_tabrow($tabparams);
 $id = 'activeworkflows';
 $renderer->tabs($tabrow, $id);
 

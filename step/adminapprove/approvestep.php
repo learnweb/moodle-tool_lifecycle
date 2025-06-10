@@ -144,7 +144,9 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('adminapprovals',
         'lifecyclestep_adminapprove') . ': ' . get_string('step', 'tool_lifecycle') . ' ' . $step->instancename;
 echo $renderer->header($heading);
-$tabrow = tabs::get_tabrow(false, false, false, true);
+$tabparams = new stdClass();
+$tabparams->approvelink = true;
+$tabrow = tabs::get_tabrow($tabparams);
 $id = optional_param('id', 'adminapprove', PARAM_TEXT);
 $renderer->tabs($tabrow, $id);
 

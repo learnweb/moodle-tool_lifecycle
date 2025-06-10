@@ -45,13 +45,14 @@ class tabs {
      * @throws \dml_exception
      * @throws moodle_exception
      */
-    public static function get_tabrow(
-        $activelink = false,
-        $deactivatelink = false,
-        $draftlink = false,
-        $approvelink = false
-    ) {
+    public static function get_tabrow($params = null) {
         global $DB;
+
+        $activelink = isset($params->activelink);
+        $deactivatelink = isset($params->deactivatelink);
+        $draftlink = isset($params->draftlink);
+        $approvelink = isset($params->approvelink);
+        $wfid = isset($params->wfid);
 
         $classnotnull = 'badge badge-primary badge-pill ml-1';
         $classnull = 'badge badge-secondary badge-pill ml-1';

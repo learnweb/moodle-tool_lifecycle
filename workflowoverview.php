@@ -171,8 +171,13 @@ if ($isactive) {  // Active workflow.
         $classdetails = "bg-light";
     }
 }
-$tabrow = tabs::get_tabrow($activelink, $deactivatedlink, $draftlink);
-$renderer->tabs($tabrow, $id);
+$tabparams = new stdClass();
+$tabparams->activelink = true;
+$tabparams->deactivatedlink = true;
+$tabparams->draftlink = true;
+$tabparams->wfid = $workflowid->id;
+$tabrow = tabs::get_tabrow($tabparams);
+$renderer->tabs($tabrow, $id, $workflow);
 
 $steps = step_manager::get_step_instances($workflow->id);
 $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
