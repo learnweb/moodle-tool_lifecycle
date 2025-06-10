@@ -98,7 +98,7 @@ class lastaccess extends base_automatic {
             $where = "{course}.id {$insql}";
         } else {
             $inparams = [];
-            $where = "";
+            $where = "true";
         }
         return [$where, $inparams];
     }
