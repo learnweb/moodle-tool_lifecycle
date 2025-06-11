@@ -58,7 +58,6 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
      *
      * @param array $tabs the tabs
      * @param string $id ID of current page (can be empty)
-     * @throws coding_exception
      */
     public function tabs($tabs, $id) {
         echo $this->output->tabtree($tabs, $id);

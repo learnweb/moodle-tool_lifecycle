@@ -33,8 +33,10 @@ require_once($CFG->libdir . '/adminlib.php');
 
 require_login();
 
+$wfid = optional_param('wfid', 0, PARAM_INT);
+
 $syscontext = context_system::instance();
-$PAGE->set_url(new \moodle_url(urls::DELAYED_COURSES));
+$PAGE->set_url(new \moodle_url(urls::DELAYED_COURSES, ['wfid' => $wfid]));
 $PAGE->set_context($syscontext);
 
 // Action handling (delete, bulk-delete).
@@ -132,7 +134,9 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('delayed_courses_header', 'tool_lifecycle');
 echo $renderer->header($heading);
-$tabrow = tabs::get_tabrow();
+$tabparams = new stdClass();
+$tabparams->wfid = $wfid;
+$tabrow = tabs::get_tabrow($tabparams);
 $id = optional_param('id', 'settings', PARAM_TEXT);
 $renderer->tabs($tabrow, $id);
 

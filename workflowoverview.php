@@ -178,11 +178,7 @@ $tabparams->draftlink = true;
 $tabparams->wfid = $workflow->id;
 $tabrow = tabs::get_tabrow($tabparams);
 $renderer->tabs($tabrow, $id);
-$wffilterchoicelist = new core\output\choicelist();
-$wffilterchoicelist->add_option("0", get_string('all'));
-$wffilterchoicelist->add_option($workflow->id, $workflow->title);
-$wffilterchoicelist->set_selected_value($workflow->id);
-echo $renderer->render($wffilterchoicelist);
+echo html_writer::tag('div', get_string('filter') . ': ' . $workflow->title);
 
 $steps = step_manager::get_step_instances($workflow->id);
 $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
@@ -219,19 +215,19 @@ if (!$task->is_component_enabled() && !$task->get_run_if_component_disabled()) {
     $nextrunt = get_string('plugindisabled', 'tool_task');
 } else if ($task->get_disabled()) {
     $nextrunt = get_string('taskdisabled', 'tool_task');
-} else if (is_int($nextrunt) && $nextrunt < time()) {
+} else if (is_numeric($nextrunt) && $nextrunt < time()) {
     $nextrunt = get_string('asap', 'tool_task');
 }
-if (is_int($nextrunt) && is_int($nextrun)) { // Task nextrun and trigger nextrun are valid times: take the minimum.
+if (is_numeric($nextrunt) && is_numeric($nextrun)) { // Task nextrun and trigger nextrun are valid times: take the minimum.
     $nextrunout = min($nextrunt, $nextrun);
-} else if (!is_int($nextrunt) && is_int($nextrun)) { // Only trigger nextrun is valid time.
+} else if (!is_numeric($nextrunt) && is_numeric($nextrun)) { // Only trigger nextrun is valid time.
     $nextrun = $nextrun;
-} else if (is_int($nextrunt)) { // Only task next run is valid time.
+} else if (is_numeric($nextrunt)) { // Only task next run is valid time.
     $nextrunout = $nextrunt;
 } else { // There is no valid next run time. Print the task message.
     $nextrunout = $nextrunt;
 }
-if (is_int($nextrunout)) {
+if (is_numeric($nextrunout)) {
     if ($nextrunout) {
         $nextrunout = userdate($nextrunout, get_string('strftimedatetimeshort', 'langconfig'));
     } else {
