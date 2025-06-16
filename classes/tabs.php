@@ -90,7 +90,8 @@ class tabs {
             $i = count(delayed_courses_manager::get_delayed_courses_for_workflow($wfid));
         } else {
             $sql = "select count(c.id) from {course} c LEFT JOIN
-                    (SELECT dw.courseid, dw.workflowid, w.title as workflow, dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount
+                    (SELECT dw.courseid, dw.workflowid, w.title as workflow,
+                            dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount
                     FROM (SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount FROM {tool_lifecycle_delayed_workf} dw
                         JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id
                         WHERE dw.delayeduntil >= $time AND w.timeactive IS NOT NULL GROUP BY courseid) maxtable JOIN

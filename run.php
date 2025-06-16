@@ -24,7 +24,7 @@
 
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\step_manager;
-use \tool_lifecycle\processor;
+use tool_lifecycle\processor;
 
 require_once(__DIR__ . '/../../../config.php');
 
