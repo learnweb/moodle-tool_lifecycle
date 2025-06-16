@@ -88,8 +88,7 @@ class processor {
      */
     public function process_courses() {
         foreach (process_manager::get_processes() as $process) {
-            $workflow = workflow_manager::get_workflow($process->workflowid);
-            while ($workflow) {
+            while ($process->workflowid) {
 
                 try {
                     $course = get_course($process->courseid);
@@ -102,7 +101,8 @@ class processor {
                 if ($process->stepindex == 0) {
                     if (!process_manager::proceed_process($process)) {
                         // Happens for a workflow with no step.
-                        delayed_courses_manager::set_course_delayed_for_workflow($course->id, false, $workflow);
+                        delayed_courses_manager::set_course_delayed_for_workflow($course->id, false,
+                            $process->workflowid);
                         break;
                     }
                 }
@@ -125,11 +125,13 @@ class processor {
                     break;
                 } else if ($result == step_response::proceed()) {
                     if (!process_manager::proceed_process($process)) {
-                        delayed_courses_manager::set_course_delayed_for_workflow($course->id, false, $workflow);
+                        delayed_courses_manager::set_course_delayed_for_workflow($course->id, false,
+                            $process->workflowid);
                         break;
                     }
                 } else if ($result == step_response::rollback()) {
-                    delayed_courses_manager::set_course_delayed_for_workflow($course->id, true, $workflow);
+                    delayed_courses_manager::set_course_delayed_for_workflow($course->id, true,
+                        $process->workflowid);
                     process_manager::rollback_process($process);
                     break;
                 } else {
