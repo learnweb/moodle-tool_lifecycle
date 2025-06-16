@@ -396,10 +396,10 @@ class processor {
                         [$triggercourses, $newcourses, $delayed] = $this->get_triggercourses_forcounting($trigger, $excludedcourses,
                             $delayedcourses);
                         if ($trigger->exclude) {
-                            $obj->excluded = $triggercourses;
+                            $obj->excluded = $newcourses;
                             $obj->delayed = $delayed;
                         } else {
-                            $obj->triggered = $triggercourses;
+                            $obj->triggered = $newcourses;
                             $obj->delayed = $delayed;
                         }
                         $obj->alreadyin = $triggercourses - $newcourses;
