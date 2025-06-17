@@ -23,6 +23,8 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core\exception\coding_exception;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
@@ -44,6 +46,7 @@ class process_errors_table extends \table_sql {
     /**
      * Constructor for process_errors_table.
      *
+     * @param object $filterdata the previously submitted filter data
      * @throws \coding_exception
      */
     public function __construct($filterdata) {
