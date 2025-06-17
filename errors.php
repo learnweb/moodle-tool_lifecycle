@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\local\form\form_errors_filter;
 use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\table\process_errors_table;
 use tool_lifecycle\tabs;
@@ -60,6 +61,27 @@ if ($action) {
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');
 
+// Get selected filter form options if there are any.
+$workflow = optional_param('workflow', 0, PARAM_INT);
+$course = optional_param('course', 0, PARAM_INT);
+$step = optional_param('step', 0, PARAM_INT);
+// Load filter form.
+$mform = new form_errors_filter($PAGE->url, ['workflow' => $workflow, 'course' => $course, 'step' => $step]);
+
+// Cache handling.
+$cache = cache::make('tool_lifecycle', 'mformdata');
+if ($mform->is_cancelled()) {
+    $cache->delete('errors_filter');
+    redirect($PAGE->url);
+} else if ($data = $mform->get_data()) {
+    $cache->set('errors_filter', $data);
+} else {
+    $data = $cache->get('errors_filter');
+    if ($data) {
+        $mform->set_data($data);
+    }
+}
+
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('process_errors_header', 'tool_lifecycle');
@@ -68,10 +90,21 @@ $tabrow = tabs::get_tabrow();
 $id = optional_param('id', 'settings', PARAM_TEXT);
 $renderer->tabs($tabrow, $id);
 
-$table = new process_errors_table();
+// Get number of process errors.
+$sql = "select count(c.id) from {tool_lifecycle_proc_error} pe
+    JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id
+    JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex
+    LEFT JOIN {course} c ON pe.courseid = c.id";
+$errors = $DB->count_records_sql($sql);
+
+$table = new process_errors_table($data);
 $table->define_baseurl($PAGE->url);
 
 $PAGE->requires->js_call_amd('tool_lifecycle/tablebulkactions', 'init');
+
+if ($errors > 0) {
+    $mform->display();
+}
 
 $table->out(100, false);
 

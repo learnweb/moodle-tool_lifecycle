@@ -175,7 +175,6 @@ $tabparams = new stdClass();
 $tabparams->activelink = true;
 $tabparams->deactivatedlink = true;
 $tabparams->draftlink = true;
-$tabparams->wfid = $workflow->id;
 $tabrow = tabs::get_tabrow($tabparams);
 $renderer->tabs($tabrow, $id);
 echo html_writer::tag('div', get_string('filter') . ': ' . $workflow->title);

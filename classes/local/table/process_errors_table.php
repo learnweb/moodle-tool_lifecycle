@@ -42,11 +42,11 @@ class process_errors_table extends \table_sql {
     private $strings;
 
     /**
-     * Constructor for delayed_courses_table.
+     * Constructor for process_errors_table.
      *
      * @throws \coding_exception
      */
-    public function __construct() {
+    public function __construct($filterdata) {
         global $OUTPUT;
 
         parent::__construct('tool_lifecycle-process_errors');
@@ -62,8 +62,24 @@ class process_errors_table extends \table_sql {
             'JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id ' .
             'JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex ' .
             'LEFT JOIN {course} c ON pe.courseid = c.id ';
-
-        $this->set_sql($fields, $from, 'TRUE');
+        $where = 'TRUE';
+        $params = [];
+        $workflow = $filterdata->workflow ?? null;
+        if ($workflow) {
+            $where .= ' AND w.id = :workflow';
+            $params['workflow'] = $workflow;
+        }
+        $step = $filterdata->step ?? null;
+        if ($step) {
+            $where .= ' AND s.id = :step';
+            $params['step'] = $step;
+        }
+        $course = $filterdata->course ?? null;
+        if ($course) {
+            $where .= ' AND c.id = :course';
+            $params['course'] = $course;
+        }
+        $this->set_sql($fields, $from, $where, $params);
         $this->column_nosort = ['select', 'tools'];
         $this->define_columns(['select', 'workflow', 'step', 'courseid', 'course', 'error', 'tools']);
         $this->define_headers([
@@ -170,9 +186,9 @@ class process_errors_table extends \table_sql {
      * for example. Called only when there is data to display and not
      * downloading.
      */
-    public function wrap_html_finish() {
+    public function wrap_html_start() {
         global $OUTPUT;
-        parent::wrap_html_finish();
+        parent::wrap_html_start();
         echo "<br>";
 
         $actionmenu = new \action_menu();

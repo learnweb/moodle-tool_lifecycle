@@ -44,20 +44,18 @@ class tabs {
      * @throws \dml_exception
      * @throws moodle_exception
      */
-    public static function get_tabrow($params = new stdClass()) {
+    public static function get_tabrow($params = null) {
         global $DB;
 
-        $activelink = isset($params->activelink);
-        $deactivatelink = isset($params->deactivatelink);
-        $draftlink = isset($params->draftlink);
-        $approvelink = isset($params->approvelink);
-        $wfid = 0;
-        $wfarr = [];
-        if (isset($params->wfid)) {
-            if ($params->wfid) {
-                $wfid = $params->wfid;
-                $wfarr[] = ['wfid' => $params->wfid];
-            }
+        $activelink = false;
+        $deactivatelink = false;
+        $draftlink = false;
+        $approvelink = false;
+        if ($params !== null) {
+            $activelink = isset($params->activelink);
+            $deactivatelink = isset($params->deactivatelink);
+            $draftlink = isset($params->draftlink);
+            $approvelink = isset($params->approvelink);
         }
 
         $classnotnull = 'badge badge-primary badge-pill ml-1';
@@ -86,22 +84,18 @@ class tabs {
 
         $time = time();
         // Get number of delayed courses.
-        if ($wfid) {
-            $i = count(delayed_courses_manager::get_delayed_courses_for_workflow($wfid));
-        } else {
-            $sql = "select count(c.id) from {course} c LEFT JOIN
-                    (SELECT dw.courseid, dw.workflowid, w.title as workflow,
-                            dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount
-                    FROM (SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount FROM {tool_lifecycle_delayed_workf} dw
-                        JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id
-                        WHERE dw.delayeduntil >= $time AND w.timeactive IS NOT NULL GROUP BY courseid) maxtable JOIN
-                        {tool_lifecycle_delayed_workf} dw ON maxtable.maxid = dw.id JOIN
-                        {tool_lifecycle_workflow} w ON dw.workflowid = w.id ) wfdelay ON wfdelay.courseid = c.id LEFT JOIN
-                        (SELECT * FROM {tool_lifecycle_delayed} d WHERE d.delayeduntil > $time ) d ON c.id = d.courseid JOIN
-                        {course_categories} cat ON c.category = cat.id
-                        where COALESCE(wfdelay.courseid, d.courseid) IS NOT NULL";
-            $i = $DB->count_records_sql($sql);
-        }
+        $sql = "select count(c.id) from {course} c LEFT JOIN
+                (SELECT dw.courseid, dw.workflowid, w.title as workflow,
+                        dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount
+                FROM (SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount FROM {tool_lifecycle_delayed_workf} dw
+                    JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id
+                    WHERE dw.delayeduntil >= $time AND w.timeactive IS NOT NULL GROUP BY courseid) maxtable JOIN
+                    {tool_lifecycle_delayed_workf} dw ON maxtable.maxid = dw.id JOIN
+                    {tool_lifecycle_workflow} w ON dw.workflowid = w.id ) wfdelay ON wfdelay.courseid = c.id LEFT JOIN
+                    (SELECT * FROM {tool_lifecycle_delayed} d WHERE d.delayeduntil > $time ) d ON c.id = d.courseid JOIN
+                    {course_categories} cat ON c.category = cat.id
+                    where COALESCE(wfdelay.courseid, d.courseid) IS NOT NULL";
+        $i = $DB->count_records_sql($sql);
         $delayedcourses = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
 
         // Get number of outstanding admin approvals.
@@ -152,8 +146,7 @@ class tabs {
             get_string('deactivated_workflows_header_title', 'tool_lifecycle'), $deactivatelink);
 
         // Tab to the delayed courses list page.
-        $targeturl = new \moodle_url('/admin/tool/lifecycle/delayedcourses.php',
-            array_merge(['id' => 'delayedcourses'], $wfarr));
+        $targeturl = new \moodle_url('/admin/tool/lifecycle/delayedcourses.php', ['id' => 'delayedcourses']);
         $tabrow[] = new \tabobject('delayedcourses', $targeturl,
             get_string('delayed_courses_header', 'tool_lifecycle').$delayedcourses,
             get_string('delayed_courses_header_title', 'tool_lifecycle'));

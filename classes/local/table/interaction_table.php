@@ -138,10 +138,10 @@ abstract class interaction_table extends \table_sql {
             $categoryhierachy = array_map('intval', $categoryhierachy);
             if (isset($categoryhierachy[$categorydepth])) {
                 $category = $this->coursecategories[$categoryhierachy[$categorydepth]];
-                return $category->name;
+                return $category->name.'111';
             } else {
                 $category = $this->coursecategories[end($categoryhierachy)];
-                return $category->name;
+                return $category->name.'222'.$row->categorypath;
             }
         }
     }
