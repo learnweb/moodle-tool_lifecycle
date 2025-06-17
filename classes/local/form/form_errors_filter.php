@@ -47,8 +47,7 @@ class form_errors_filter extends \moodleform {
         $mform = $this->_form;
 
         $workflow = $this->_customdata['workflow'];
-        $course = $this->_customdata['course'];
-        $step = $this->_customdata['step'];
+        $addbuttons = false;
 
         // Get distinct workflows with process errors and populate workflow filter with them.
         $sql = "select DISTINCT(wf.id), wf.title from {tool_lifecycle_workflow} wf where wf.id in
@@ -56,12 +55,14 @@ class form_errors_filter extends \moodleform {
                 JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id
                 JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex
                 LEFT JOIN {course} c ON pe.courseid = c.id)";
-        $workflows = $DB->get_records_sql($sql);
-        $workflowoptions[''] = get_string('choose').'...';
-        foreach ($workflows as $wf) {
-            $workflowoptions[$wf->id] = $wf->title;
+        if ($workflows = $DB->get_records_sql($sql)) {
+            $workflowoptions[''] = get_string('choose').'...';
+            foreach ($workflows as $wf) {
+                $workflowoptions[$wf->id] = $wf->title;
+            }
+            $mform->addElement('select', 'workflow', get_string('workflow', 'tool_lifecycle'), $workflowoptions);
+            $addbuttons = true;
         }
-        $mform->addElement('select', 'workflow', get_string('workflow', 'tool_lifecycle'), $workflowoptions);
 
         // Get distinct workflow steps with process errors and populate step filter with them.
         // If workflow filter is active use it here as well.
@@ -74,12 +75,14 @@ class form_errors_filter extends \moodleform {
             $sql .= " and pe.workflowid = :workflow";
             $params["workflow"] = $workflow;
         }
-        $steps = $DB->get_records_sql($sql, $params);
-        $stepsoptions[''] = get_string('choose').'...';
-        foreach ($steps as $step) {
-            $stepsoptions[$step->id] = $step->instancename;
+        if ($steps = $DB->get_records_sql($sql, $params)) {
+            $stepsoptions[''] = get_string('choose').'...';
+            foreach ($steps as $step) {
+                $stepsoptions[$step->id] = $step->instancename;
+            }
+            $mform->addElement('select', 'step', get_string('step', 'tool_lifecycle'), $stepsoptions);
+            $addbuttons = true;
         }
-        $mform->addElement('select', 'step', get_string('step', 'tool_lifecycle'), $stepsoptions);
 
         // Get distinct courses with process errors and populate courses filter with them.
         // If workflow filter is active use it here as well.
@@ -92,14 +95,18 @@ class form_errors_filter extends \moodleform {
             $sql .= " and pe.workflowid = :workflow";
             $params["workflow"] = $workflow;
         }
-        $courses = $DB->get_records_sql($sql, $params);
-        $coursesoptions[''] = get_string('choose').'...';
-        foreach ($courses as $course) {
-            $coursesoptions[$course->id] = $course->fullname;
+        if ($courses = $DB->get_records_sql($sql, $params)) {
+            $coursesoptions[''] = get_string('choose').'...';
+            foreach ($courses as $course) {
+                $coursesoptions[$course->id] = $course->fullname;
+            }
+            $mform->addElement('select', 'course', get_string('course'), $coursesoptions);
+            $addbuttons = true;
         }
-        $mform->addElement('select', 'course', get_string('course'), $coursesoptions);
 
-        $this->add_action_buttons(true, get_string('apply', 'tool_lifecycle'));
+        if ($addbuttons) {
+            $this->add_action_buttons(true, get_string('apply', 'tool_lifecycle'));
+        }
     }
 
 }
