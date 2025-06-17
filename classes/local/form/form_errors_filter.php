@@ -51,10 +51,11 @@ class form_errors_filter extends \moodleform {
         $step = $this->_customdata['step'];
 
         // Get distinct workflows with process errors and populate workflow filter with them.
-        $sql = "select DISTINCT(wf.id), wf.title from {tool_lifecycle_workflow} wf where wf.id in (select w.id from {tool_lifecycle_proc_error} pe
-            JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id
-            JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex
-            LEFT JOIN {course} c ON pe.courseid = c.id)";
+        $sql = "select DISTINCT(wf.id), wf.title from {tool_lifecycle_workflow} wf where wf.id in
+            (select w.id from {tool_lifecycle_proc_error} pe
+                JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id
+                JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex
+                LEFT JOIN {course} c ON pe.courseid = c.id)";
         $workflows = $DB->get_records_sql($sql);
         $workflowoptions[''] = get_string('choose').'...';
         foreach ($workflows as $wf) {
