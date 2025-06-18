@@ -177,7 +177,6 @@ $tabparams->deactivatedlink = true;
 $tabparams->draftlink = true;
 $tabrow = tabs::get_tabrow($tabparams);
 $renderer->tabs($tabrow, $id);
-echo html_writer::tag('div', get_string('filter') . ': ' . $workflow->title);
 
 $steps = step_manager::get_step_instances($workflow->id);
 $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);

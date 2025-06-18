@@ -396,13 +396,14 @@ class processor {
                         [$triggercourses, $newcourses, $delayed] = $this->get_triggercourses_forcounting($trigger, $excludedcourses,
                             $delayedcourses);
                         if ($trigger->exclude) {
-                            $obj->excluded = $newcourses;
+                            $obj->excluded = $triggercourses;
                             $obj->delayed = $delayed;
+                            $obj->alreadyin = 0;
                         } else {
                             $obj->triggered = $newcourses;
                             $obj->delayed = $delayed;
+                            $obj->alreadyin = $triggercourses - $newcourses;
                         }
-                        $obj->alreadyin = $triggercourses - $newcourses;
                     }
                     $autotriggers[] = $trigger;
                 } else if ($obj->response == trigger_response::triggertime()) {
