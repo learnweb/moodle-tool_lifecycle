@@ -47,10 +47,11 @@ class manual extends base_manual {
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
-        return [new instance_setting('icon',  PARAM_SAFEPATH),
+        return [
+            new instance_setting('icon',  PARAM_SAFEPATH),
             new instance_setting('displayname',  PARAM_TEXT),
             new instance_setting('capability',  PARAM_CAPABILITY),
-            ];
+        ];
     }
 
     /**

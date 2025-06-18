@@ -172,7 +172,6 @@ class specificdate extends base_automatic {
     public function instance_settings() {
         return [
             new instance_setting('dates', PARAM_TEXT),
-            // Add activate timelastrun.
             new instance_setting('timelastrunactive', PARAM_INT),
             new instance_setting('timelastrun', PARAM_INT),
         ];

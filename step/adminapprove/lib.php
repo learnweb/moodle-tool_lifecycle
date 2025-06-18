@@ -137,7 +137,7 @@ class adminapprove extends libbase {
      */
     public function instance_settings() {
         return [
-            new instance_setting('statusmessage', PARAM_TEXT),
+            new instance_setting('statusmessage', PARAM_TEXT, true),
         ];
     }
 

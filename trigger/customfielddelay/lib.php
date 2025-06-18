@@ -79,7 +79,10 @@ class customfielddelay extends base_automatic {
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
-        return [new instance_setting('delay', PARAM_INT), new instance_setting('customfield', PARAM_TEXT)];
+        return [
+            new instance_setting('delay', PARAM_INT),
+            new instance_setting('customfield', PARAM_TEXT),
+        ];
     }
 
     /**
