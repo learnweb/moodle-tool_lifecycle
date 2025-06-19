@@ -31,11 +31,12 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
-global $CFG;
-
+/**
+ * Class for processing courses.
+ */
 class pushbackuptask extends libbase {
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
@@ -49,7 +50,7 @@ class pushbackuptask extends libbase {
      */
     public function process_course($processid, $instanceid, $course) {
         $asynctask = new course_backup_task();
-        $asynctask->set_custom_data(array('courseid' => $course->id));
+        $asynctask->set_custom_data(['courseid' => $course->id]);
         \core\task\manager::queue_adhoc_task($asynctask);
         return step_response::proceed();
     }

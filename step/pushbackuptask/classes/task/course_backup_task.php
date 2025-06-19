@@ -24,10 +24,11 @@
 
 namespace lifecyclestep_pushbackuptask\task;
 
-defined('MOODLE_INTERNAL') || die();
-
 use tool_lifecycle\local\manager\backup_manager;
 
+/**
+ * Task for adhoc backups of courses.
+ */
 class course_backup_task extends \core\task\adhoc_task {
 
     /**
@@ -45,7 +46,7 @@ class course_backup_task extends \core\task\adhoc_task {
         $courseid = $this->get_custom_data()->courseid;
 
         try {
-            $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+            $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
         } catch (\moodle_exception $e) {
             mtrace('Invalid course id: ' . $courseid . ', task aborted.');
             return;
