@@ -101,7 +101,7 @@ final class backup_and_restore_workflow_test extends \advanced_testcase {
         }
         $this->assertNotNull($newworkflow);
 
-        foreach (['title', 'displaytitle', 'manual'] as $property) {
+        foreach (['title', 'displaytitle', 'manually'] as $property) {
             $this->assertEquals($this->workflow->$property, $newworkflow->$property);
         }
         foreach (['timeactive', 'timedeactive', 'sortindex'] as $property) {
