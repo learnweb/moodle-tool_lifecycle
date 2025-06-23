@@ -20,7 +20,7 @@ To be adaptable to the needs of different institutions the plugin provides two s
 
 ## Subplugins
 Requirements that are specific to your institution can be added through additional subplugins.
-A list of all subplugins and more information can be found in the [Wiki](https://github.com/learnweb/moodle-tool_lifecycle/wiki/List-of-Additional-Subplugins) ([subpluginslist](https://github.com/learnweb/moodle-tool_lifecycle/wiki/List-of-Additional-Subplugins)).
+A list of all subplugins and more information can be found in the [Wiki](https://github.com/learnweb/moodle-tool_lifecycle/wiki) ([subpluginslist](https://github.com/learnweb/moodle-tool_lifecycle/wiki/List-of-Installed-Subplugins)).
 It provides instructions for administrators as well as for developers to implement their own requirements into subplugins.
 
 Installation
@@ -30,10 +30,6 @@ Obtain this plugin from https://moodle.org/plugins/view/tool_lifecycle.
 
 Moodle version
 ==============
-The plugin is continously tested with all moodle versions, which are security supported by the moodle headquarter.
+The plugin is continuously tested with all moodle versions, which are security supported by the moodle headquarter.
 Therefore, Travis uses the most current release to build a test instance and run the behat and unit tests on them.
 In addition to all stable branches the version is tested against the master branch to support early adopters.
-
-Changelog
-=========
-The changes for every release are listed here: https://github.com/learnweb/moodle-tool_lifecycle/wiki/Change-log.

@@ -47,8 +47,8 @@ class workflow {
     /** @var int $sortindex Sort index of all active workflows. */
     public $sortindex;
 
-    /** @var bool|null $manual True if workflow is manually triggered. */
-    public $manual;
+    /** @var bool|null $manually True if workflow is manually triggered. */
+    public $manually;
 
     /** @var string $displaytitle Title that is displayed to users. */
     public $displaytitle;
@@ -90,7 +90,7 @@ class workflow {
         $this->timeactive = $timeactive;
         $this->timedeactive = $timedeactive;
         $this->sortindex = $sortindex;
-        $this->manual = $manual;
+        $this->manually = $manual;
         $this->displaytitle = $displaytitle;
         $this->rollbackdelay = $rollbackdelay;
         $this->finishdelay = $finishdelay;
@@ -129,10 +129,10 @@ class workflow {
         }
 
         $manual = null;
-        if (object_property_exists($record, 'manual')) {
-            if ($record->manual == 1) {
+        if (object_property_exists($record, 'manually')) {
+            if ($record->manually == 1) {
                 $manual = true;
-            } else if ($record->manual == 0) {
+            } else if ($record->manually == 0) {
                 $manual = false;
             }
         }

@@ -1,6 +1,29 @@
 CHANGELOG
 =========
 
+4.5.4 (2025-06-23)
+------------------
+* [FEATURE] No php notice if string plugindescription is missing
+* [FIXED] Fix adminapprove sql error single approve
+* [FIXED] catch/prevent missing workflow error
+* [FIXED] Fix uploadworkflow wrong redirect
+* [FEATURE] Workflowoverview: show also delayed trigger courses but only when still in delay
+* [FEATURE] Shift showdetails icon to block trigger
+* [FEATURE] activestep.php: make approval tab an active link
+* [FEATURE] Exclude trigger customfieldsemester from git
+* [FIXED] mtrace processes without workflow and delete processes of removed courses
+* [FEATURE] Remove customfield_semester dependency
+* [FIXED] Improve display of next run time
+* [FEATURE] Trigger byrole: introduce invert function
+* [FEATURE] Prevent deleting course 1
+* [FEATURE] Add step movecategory
+* [FEATURE] Add trigger lastaccess
+* [FIXED] Fix lastaccess error when no courses found
+* [FEATURE] Add filter form to procerror page
+* [FEATURE] Categories trigger: instance settings should not be editable
+* [FEATURE] Shift subplugins list to own page
+* [FIXED] DB field 'manual' now reserved word in mysql version 8.4, change to 'manually'
+
 4.5.0 (2025-05-04)
 ------------------
 * [FEATURE] Workflowoverview: Added possibility to select single courses for process

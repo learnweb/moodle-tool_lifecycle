@@ -194,7 +194,7 @@ class workflow_manager {
         $records = $DB->get_records_sql(
             'SELECT * FROM {tool_lifecycle_workflow}
                   WHERE timeactive IS NOT NULL AND
-                  (manual IS NULL OR manual = 0) ORDER BY sortindex', []);
+                  (manually IS NULL OR manually = 0) ORDER BY sortindex', []);
         $result = [];
         foreach ($records as $record) {
             $result[] = workflow::from_record($record);
@@ -211,7 +211,7 @@ class workflow_manager {
     public static function get_active_manual_workflow_triggers() {
         global $DB;
         $sql = 'SELECT t.* FROM {tool_lifecycle_workflow} w JOIN {tool_lifecycle_trigger} t ON t.workflowid = w.id' .
-            ' WHERE w.timeactive IS NOT NULL AND w.manual = ?';
+            ' WHERE w.timeactive IS NOT NULL AND w.manually = ?';
         $records = $DB->get_records_sql($sql, [true]);
         $result = [];
         foreach ($records as $record) {
@@ -264,10 +264,10 @@ class workflow_manager {
             $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
             foreach ($triggers as $trigger) {
                 $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-                $workflow->manual |= $lib->is_manual_trigger();
+                $workflow->manually |= $lib->is_manual_trigger();
             }
             $workflow->timeactive = time();
-            if (!$workflow->manual) {
+            if (!$workflow->manually) {
                 $workflow->sortindex = count(self::get_active_automatic_workflows()) + 1;
             }
             self::insert_or_update($workflow);

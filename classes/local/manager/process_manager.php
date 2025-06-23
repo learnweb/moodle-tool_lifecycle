@@ -77,7 +77,7 @@ class process_manager {
         }
         $workflow = workflow_manager::get_workflow($trigger->workflowid);
         if (!$workflow || !workflow_manager::is_active($workflow->id) || !workflow_manager::is_valid($workflow->id) ||
-                $workflow->manual !== true) {
+                $workflow->manually !== true) {
             throw new \moodle_exception('cannot_trigger_workflow_manually', 'tool_lifecycle');
         }
         return self::create_process($courseid, $workflow->id);

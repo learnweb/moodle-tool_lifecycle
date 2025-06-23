@@ -75,8 +75,8 @@ final class active_workflow_is_manual_test extends \advanced_testcase {
         $this->automaticworkflow = $generator->create_workflow();
         $generator->create_step("instance1", "createbackup", $this->automaticworkflow->id);
 
-        $this->assertNull($this->manualworkflow->manual);
-        $this->assertNull($this->automaticworkflow->manual);
+        $this->assertNull($this->manualworkflow->manually);
+        $this->assertNull($this->automaticworkflow->manually);
 
         // We do not need a sesskey check in these tests.
         $USER->ignoresesskey = true;
@@ -94,7 +94,7 @@ final class active_workflow_is_manual_test extends \advanced_testcase {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->manualworkflow->id);
         $reloadworkflow = workflow_manager::get_workflow($this->manualworkflow->id);
         $this->assertTrue(workflow_manager::is_active($this->manualworkflow->id));
-        $this->assertTrue($reloadworkflow->manual);
+        $this->assertTrue($reloadworkflow->manually);
     }
 
     /**
@@ -109,6 +109,6 @@ final class active_workflow_is_manual_test extends \advanced_testcase {
         workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->automaticworkflow->id);
         $reloadworkflow = workflow_manager::get_workflow($this->automaticworkflow->id);
         $this->assertTrue(workflow_manager::is_active($this->automaticworkflow->id));
-        $this->assertEquals(false, $reloadworkflow->manual);
+        $this->assertEquals(false, $reloadworkflow->manually);
     }
 }
