@@ -59,5 +59,7 @@ class urls {
     const PROCESS_ERRORS = '/admin/tool/lifecycle/errors.php?id=errors';
     /** @var string Confirmation page for bulk operations */
     const CONFIRMATION = '/admin/tool/lifecycle/confirmation.php';
+    /** @var string subplugins page for a list of installed subplugins */
+    const SUBPLUGINS = '/admin/tool/lifecycle/subplugins.php?id=subplugins';
 
 }

@@ -23,6 +23,6 @@
  */
 
 $string['plugindescription'] = 'Enforces the backup of scheduled courses immediately by using adhoc tasks.';
-$string['pluginname'] = 'Adhoc course backup Step';
+$string['pluginname'] = 'Create Adhoc Backup Step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 

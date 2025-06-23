@@ -23,5 +23,5 @@
  */
 
 $string['plugindescription'] = 'Ermöglicht augenblickliche Sicherungen von Kursen durch die Verwendung von ad hoc-Tasks.';
-$string['pluginname'] = 'Ad hoc Kurssicherungs-Schritt';
+$string['pluginname'] = 'Kurssicherungs-Adhoc-Schritt';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten..';

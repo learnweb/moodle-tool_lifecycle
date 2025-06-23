@@ -121,11 +121,17 @@ class tabs {
         $i = $DB->count_records_sql($sql);
         $lcerrors = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
 
-        // General Settings and Subplugins.
+        // General Settings.
         $targeturl = new \moodle_url('/admin/settings.php', ['section' => 'lifecycle']);
         $tabrow[] = new \tabobject('settings', $targeturl,
             get_string('general_config_header', 'tool_lifecycle'),
             get_string('general_config_header_title', 'tool_lifecycle'));
+
+        // Subplugins.
+        $targeturl = new \moodle_url('/admin/tool/lifecycle/subplugins.php', ['id' => 'subplugins']);
+        $tabrow[] = new \tabobject('subplugins', $targeturl,
+            get_string('subplugins', 'tool_lifecycle'),
+            get_string('subpluginsdesc', 'tool_lifecycle'));
 
         // Tab to the draft workflows page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/workflowdrafts.php', ['id' => 'workflowdrafts']);

@@ -23,6 +23,7 @@
  */
 
 use tool_lifecycle\tabs;
+use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
@@ -30,7 +31,7 @@ require_once($CFG->libdir . '/adminlib.php');
 require_login();
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_url(new \moodle_url("/admin/tool/lifecycle/step/adminapprove/index.php"));
+$PAGE->set_url(new \moodle_url(urls::SUBPLUGINS));
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');
