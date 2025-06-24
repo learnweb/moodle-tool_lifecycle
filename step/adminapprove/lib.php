@@ -47,7 +47,7 @@ class adminapprove extends libbase {
      * Process a single course.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param int $course to be processed.
      * @return step_response
      */
     public function process_course($processid, $instanceid, $course) {
@@ -85,7 +85,7 @@ class adminapprove extends libbase {
      * Process a course which is waiting.
      * @param int $processid
      * @param int $instanceid
-     * @param stdClass $course
+     * @param int $course
      * @return step_response
      * @throws \dml_exception
      */

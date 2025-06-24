@@ -57,7 +57,7 @@ class createbackup extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param int $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
@@ -67,7 +67,7 @@ class createbackup extends libbase {
                 $instanceid, settings_type::STEP)['maximumbackupspercron']) {
             return step_response::waiting(); // Wait with further backups til the next cron run.
         }
-        if (backup_manager::create_course_backup($course->id)) {
+        if (backup_manager::create_course_backup($course)) {
             self::$numberofbackups++;
             return step_response::proceed();
         }
@@ -78,7 +78,7 @@ class createbackup extends libbase {
      * Simply call the process_course since it handles everything necessary for this plugin.
      * @param int $processid
      * @param int $instanceid
-     * @param mixed $course
+     * @param int $course
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception

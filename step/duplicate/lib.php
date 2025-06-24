@@ -61,6 +61,7 @@ class duplicate extends libbase {
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
+        $course = get_course($course);
         $fullname = process_data_manager::get_process_data($processid, $instanceid, self::PROC_DATA_COURSEFULLNAME);
         $shortname = process_data_manager::get_process_data($processid, $instanceid, self::PROC_DATA_COURSESHORTNAME);
         if (!empty($fullname) && !empty($shortname)) {
@@ -91,7 +92,7 @@ class duplicate extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param int $course to be processed.
      * @return step_response
      * @throws \dml_exception
      */

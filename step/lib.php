@@ -61,7 +61,7 @@ abstract class libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param int $course to be processed.
      * @return step_response
      */
     public function process_waiting_course($processid, $instanceid, $course) {

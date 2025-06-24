@@ -43,14 +43,14 @@ class pushbackuptask extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param int $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
         $asynctask = new course_backup_task();
-        $asynctask->set_custom_data(['courseid' => $course->id]);
+        $asynctask->set_custom_data(['courseid' => $course]);
         \core\task\manager::queue_adhoc_task($asynctask);
         return step_response::proceed();
     }
@@ -59,7 +59,7 @@ class pushbackuptask extends libbase {
      * Simply call the process_course since it handles everything necessary for this plugin.
      * @param int $processid
      * @param int $instanceid
-     * @param mixed $course
+     * @param int $course
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception

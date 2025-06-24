@@ -51,7 +51,7 @@ class deletecourse extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param int $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
@@ -59,7 +59,7 @@ class deletecourse extends libbase {
     public function process_course($processid, $instanceid, $course) {
         global $CFG;
 
-        if ($course->id == 1) {
+        if ($course == 1) {
             return step_response::rollback();
         }
 
@@ -68,7 +68,7 @@ class deletecourse extends libbase {
             return step_response::waiting(); // Wait with further deletions til the next cron run.
         }
 
-        delete_course($course->id);
+        delete_course($course);
 
         /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
            MDL-65228 (https://tracker.moodle.org/browse/MDL-65228) */
@@ -89,7 +89,7 @@ class deletecourse extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param int $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
