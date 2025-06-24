@@ -41,7 +41,7 @@ defined('MOODLE_INTERNAL') || die();
 abstract class libbase {
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
@@ -54,7 +54,7 @@ abstract class libbase {
     abstract public function process_course($processid, $instanceid, $course);
 
     /**
-     * Processes the course in status waiting and returns a repsonse.
+     * Processes the course in status waiting and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.

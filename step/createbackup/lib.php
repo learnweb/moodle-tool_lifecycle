@@ -50,7 +50,7 @@ class createbackup extends libbase {
     private static $numberofbackups = 0;
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.

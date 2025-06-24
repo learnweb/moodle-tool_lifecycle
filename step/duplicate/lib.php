@@ -49,7 +49,7 @@ class duplicate extends libbase {
     const PROC_DATA_COURSESHORTNAME = 'shortname';
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
@@ -84,7 +84,7 @@ class duplicate extends libbase {
     }
 
     /**
-     * Processes the course in status waiting and returns a repsonse.
+     * Processes the course in status waiting and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.

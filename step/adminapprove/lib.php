@@ -44,7 +44,7 @@ class adminapprove extends libbase {
     private static $newcourses = 0;
 
     /**
-     * Provess a single course.
+     * Process a single course.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
      * @param mixed $course to be processed.
