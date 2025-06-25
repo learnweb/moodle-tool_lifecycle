@@ -79,7 +79,7 @@ $string['courseid'] = 'Course ID';
 $string['coursename'] = 'Course name';
 $string['courseproceeded'] = 'One course has been proceeded.';
 $string['courserolledback'] = 'One course has been rolled back.';
-$string['courses_are_alreadyin'] = '{$a} courses are already part of this process';
+$string['courses_are_alreadyin'] = '{$a} courses are already part of this process or of the process errors';
 $string['courses_are_delayed'] = '{$a} delayed courses';
 $string['courses_are_delayed_total'] = '{$a} delayed courses in total';
 $string['courses_are_used_total'] = '{$a} courses in another process';
@@ -288,6 +288,7 @@ this value describes the time until a process for this combination of course and
 $string['workflow_is_running'] = 'Workflow is running.';
 $string['workflow_not_removeable'] = 'It is not possible to remove this workflow instance. Maybe it still has running processes?';
 $string['workflow_processes'] = 'Active processes';
+$string['workflow_processesanderrors'] = 'Active workflow processes and process errors';
 $string['workflow_rollbackdelay'] = 'Delay in case of rollback';
 $string['workflow_rollbackdelay_help'] = 'If a course was rolled back within a process instance of this workflow,
 this value describes the time until a process for this combination of course and workflow can be started again.';

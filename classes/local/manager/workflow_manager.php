@@ -491,6 +491,7 @@ class workflow_manager {
      *
      * @param int $workflowid Id of the workflow.
      * @return bool
+     * @throws \dml_exception
      */
     public static function is_disableable($workflowid) {
         $trigger = trigger_manager::get_triggers_for_workflow($workflowid);

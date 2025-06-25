@@ -31,6 +31,7 @@ require_login();
 define('PAGESIZE', 20);
 
 use core\output\notification;
+use core\output\single_button;
 use core\task\manager;
 use tool_lifecycle\action;
 use tool_lifecycle\event\process_triggered;
@@ -56,6 +57,7 @@ $triggerid = optional_param('trigger', null, PARAM_INT);
 $triggered = optional_param('triggered', null, PARAM_INT);
 $excluded = optional_param('excluded', null, PARAM_INT);
 $delayed = optional_param('delayed', null, PARAM_INT);
+$processes = optional_param('processes', null, PARAM_INT);
 $used = optional_param('used', null, PARAM_INT);
 $search = optional_param('search', null, PARAM_RAW);
 $showdetails = optional_param('showdetails', 0, PARAM_INT);
@@ -87,6 +89,8 @@ if ($stepid) {
     $params['delayed'] = $delayed;
 } else if ($excluded) {
     $params['excluded'] = $excluded;
+} else if ($processes) {
+    $params['processes'] = $processes;
 }
 if ($search) {
     $params['search'] = $search;
@@ -153,28 +157,23 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".
     get_string('workflowoverview', 'tool_lifecycle').": ". $workflow->title;
 echo $renderer->header($heading);
-$activelink = false;
-$deactivatedlink = false;
-$draftlink = false;
+
+$tabparams = new stdClass();
 if ($isactive) {  // Active workflow.
     $id = 'activeworkflows';
-    $activelink = true;
+    $tabparams->activelink = true;
     $classdetails = "bg-primary text-white";
 } else {
     if ($isdeactivated) { // Deactivated workflow.
         $id = 'deactivatedworkflows';
-        $deactivatedlink = true;
+        $tabparams->deactivatedlink = true;
         $classdetails = "bg-dark text-white";
     } else { // Draft.
         $id = 'workflowdrafts';
-        $draftlink = true;
+        $tabparams->draftlink = true;
         $classdetails = "bg-light";
     }
 }
-$tabparams = new stdClass();
-$tabparams->activelink = true;
-$tabparams->deactivatedlink = true;
-$tabparams->draftlink = true;
 $tabrow = tabs::get_tabrow($tabparams);
 $renderer->tabs($tabrow, $id);
 
@@ -390,6 +389,15 @@ if ($stepid) { // Display courses table with courses of this step.
     ob_end_clean();
     $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
     $tablecoursesamount = count($coursesdelayed);
+} else if ($processes) { // Display courses table with courses in a process or in state process error for this workflow.
+    $table = new processes_courses_table( $coursesdelayed, 'delayed',
+        null, $workflow->title, $workflowid, $search);
+    ob_start();
+    $table->out(PAGESIZE, false);
+    $out = ob_get_contents();
+    ob_end_clean();
+    $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
+    $tablecoursesamount = count($coursesdelayed);
 } else if ($used) { // Display courses triggered by this workflow but involved in other processes already.
     if ($courseids = $amounts['all']->used ?? null) {
         $table = new triggered_courses_table( $courseids, 'used',
@@ -415,6 +423,42 @@ if ($tablecoursesamount > PAGESIZE ) {
         'query' => $search,
         'hiddenfields' => $hiddenfieldssearch,
     ]);
+}
+$disableworkflowlink = "";
+$abortdisableworkflowlink = "";
+if ($isactive) {
+    // Disable workflow link.
+    $alt = get_string('disableworkflow', 'tool_lifecycle');
+    $icon = 't/disable';
+    $url = new \moodle_url(urls::DEACTIVATED_WORKFLOWS,
+        ['workflowid' => $workflow->id, 'action' => action::WORKFLOW_DISABLE, 'sesskey' => sesskey()]);
+    $confirmaction = new \confirm_action(get_string('disableworkflow_confirm', 'tool_lifecycle'));
+    $disableworkflowlink = $OUTPUT->action_icon($url,
+        new \pix_icon($icon, $alt, 'tool_lifecycle', ['title' => $alt, 'class' => 'text-white']),
+        $confirmaction,
+        ['title' => $alt]
+    );
+    $disableworkflowlink = "<br>".$disableworkflowlink;
+    // Abort workflow link.
+    $alt = get_string('abortdisableworkflow', 'tool_lifecycle');
+    $icon = 't/stop';
+    $url = new \moodle_url(urls::DEACTIVATED_WORKFLOWS,
+        ['workflowid' => $workflow->id, 'action' => action::WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()]);
+    $confirmaction = new \confirm_action(get_string('abortdisableworkflow_confirm', 'tool_lifecycle'));
+    $abortdisableworkflowlink = $OUTPUT->action_icon($url,
+        new \pix_icon($icon, $alt, 'moodle', ['title' => $alt, 'class' => 'text-white']),
+        $confirmaction,
+        ['title' => $alt]
+    );
+    $abortdisableworkflowlink = "<br>".$abortdisableworkflowlink;
+    // Workflow processes and process errors link.
+    $ldata = new \stdClass();
+    $ldata->alt = get_string('workflow_processesanderrors', 'tool_lifecycle');
+    $ldata->url = new moodle_url($popuplink, ['processes' => $workflowid, 'showdetails' => $showdetails]);
+    $ldata->processes = process_manager::count_processes_by_workflow($workflow->id) +
+        process_manager::count_process_errors_by_workflow($workflow->id);
+    $workflowprocesseslink = $OUTPUT->render_from_template('tool_lifecycle/overview_processeslink', $ldata);;
+    $workflowprocesseslink = "<br>".$workflowprocesseslink;
 }
 
 $data = [
@@ -444,6 +488,9 @@ $data = [
     'nextrun' => $nextrunout,
     'lastrun' => userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig')),
     'nomanualtriggerinvolved' => $nomanualtriggerinvolved,
+    'disableworkflowlink' => $disableworkflowlink,
+    'abortdisableworkflowlink' => $abortdisableworkflowlink,
+    'workflowprocesseslink'  => $workflowprocesseslink,
 ];
 if ($showdetails) {
     // The triggers total box.
@@ -529,6 +576,16 @@ if (workflow_manager::is_editable($workflow->id)) {
     $data['addstepselect'] = $addstepselect;
     $data['activate'] = $activate;
     $data['newworkflow'] = $newworkflow;
+} else if ($isdeactivated) {
+    $activate = $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
+        [
+            'action' => action::WORKFLOW_ACTIVATE,
+            'sesskey' => sesskey(),
+            'workflowid' => $workflow->id,
+            'backtooverview' => '1',
+        ]),
+        get_string('activateworkflow', 'tool_lifecycle'));
+    $data['activatebutton'] = $activate;
 }
 
 echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);

@@ -48,14 +48,22 @@ class tabs {
         global $DB;
 
         $activelink = false;
-        $deactivatelink = false;
+        $deactivatedlink = false;
         $draftlink = false;
         $approvelink = false;
         if ($params !== null) {
-            $activelink = isset($params->activelink);
-            $deactivatelink = isset($params->deactivatelink);
-            $draftlink = isset($params->draftlink);
-            $approvelink = isset($params->approvelink);
+            if (isset($params->activelink)) {
+                $activelink = true;
+            }
+            if (isset($params->deactivatedlink)) {
+                $deactivatedlink = true;
+            }
+            if (isset($params->draftlink)) {
+                $draftlink = true;
+            }
+            if (isset($params->approvelink)) {
+                $approvelink = true;
+            }
         }
 
         $classnotnull = 'badge badge-primary badge-pill ml-1';
@@ -80,7 +88,7 @@ class tabs {
         from {tool_lifecycle_workflow}
         where timeactive IS NULL AND timedeactive IS NOT NULL";
         $i = $DB->count_records_sql($sql);
-        $deactivatedewf = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
+        $deactivatedwf = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
 
         $time = time();
         // Get number of delayed courses.
@@ -148,8 +156,8 @@ class tabs {
         // Tab to the deactivated workflows page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php', ['id' => 'deactivatedworkflows']);
         $tabrow[] = new \tabobject('deactivatedworkflows', $targeturl,
-            get_string('deactivated_workflows_header', 'tool_lifecycle').$deactivatedewf,
-            get_string('deactivated_workflows_header_title', 'tool_lifecycle'), $deactivatelink);
+            get_string('deactivated_workflows_header', 'tool_lifecycle').$deactivatedwf,
+            get_string('deactivated_workflows_header_title', 'tool_lifecycle'), $deactivatedlink);
 
         // Tab to the delayed courses list page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/delayedcourses.php', ['id' => 'delayedcourses']);

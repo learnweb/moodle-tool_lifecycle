@@ -74,9 +74,12 @@
 <div class="d-flex" id="lifecycle-workflow-details">
     <div class="wf-wrapper">
 
-        <div class="{{classdetails}} rounded shadow d-inline-block p-3 position-relative mb-2">
+        <div class="{{classdetails}} rounded shadow d-inline-block p-3 position-relative mb-2" style="min-width: 400px;">
             <span class="edit-pen">
                 <a href="{{{editsettingslink}}}" {{#isactive}}class="text-white"{{/isactive}}>{{#pix}} i/edit, core, {{/pix}}</a>
+                {{{disableworkflowlink}}}
+                {{{abortdisableworkflowlink}}}
+                {{{workflowprocesseslink}}}
             </span>
             <h4 class="pr-5">{{title}}
                 {{#includedelayedcourses}}<sup><i class="fas fa-calendar-plus" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup>{{/includedelayedcourses}}
@@ -87,6 +90,8 @@
                 {{^delayglobally}}{{#str}}details:globaldelay_no, tool_lifecycle{{/str}}{{/delayglobally}}</span>
             {{! Add trigger and add step selection fields. }}
             {{>tool_lifecycle/overview_addinstance}}
+            {{! If deactivated workflow display activate button. }}
+            {{{activatebutton}}}
         </div>
 
         {{#counttriggers}}

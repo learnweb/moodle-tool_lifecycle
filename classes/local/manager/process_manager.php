@@ -132,6 +132,17 @@ class process_manager {
     }
 
     /**
+     * Counts all process errors for the given workflow id.
+     * @param int $workflowid id of the workflow
+     * @return int number of process errors.
+     * @throws \dml_exception
+     */
+    public static function count_process_errors_by_workflow($workflowid) {
+        global $DB;
+        return $DB->count_records('tool_lifecycle_proc_error', ['workflowid' => $workflowid]);
+    }
+
+    /**
      * Returns all processes for given workflow id
      * @param int $workflowid id of the workflow
      * @return array of proccesses initiated by specifed workflow id
@@ -326,6 +337,8 @@ class process_manager {
      * Rolls back a process from procerror table
      * @param int $processid the processid
      * @return void
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function rollback_process_after_error(int $processid) {
         global $DB;

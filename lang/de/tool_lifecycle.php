@@ -79,7 +79,7 @@ $string['courseid'] = 'Kurs-ID';
 $string['coursename'] = 'Kursname';
 $string['courseproceeded'] = 'Ein Kurs wurde dem nächsten Verarbeitungsschritt zugeführt.';
 $string['courserolledback'] = 'Ein Kurs wurde zurückgesetzt.';
-$string['courses_are_alreadyin'] = '{$a} Kurse befinden sich schon in diesem Prozess';
+$string['courses_are_alreadyin'] = '{$a} Kurse befinden sich schon in diesem Prozess oder bei seinen Prozessfehlern.';
 $string['courses_are_delayed'] = '{$a} Kurse sind verzögert';
 $string['courses_are_used_total'] = '{$a} Kurse bereits in anderem Prozess';
 $string['courses_excluded'] = 'Kurse insgesamt ausgeschlossen: {$a}';
@@ -287,6 +287,7 @@ $string['workflow_finishdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wie
 $string['workflow_is_running'] = 'Workflow läuft.';
 $string['workflow_not_removeable'] = 'Es ist nicht möglich, diese Workflow-Instanz zu entfernen. Vielleicht hat sie noch laufende Prozesse?';
 $string['workflow_processes'] = 'Aktive Prozesse';
+$string['workflow_processesanderrors'] = 'Aktive Prozesse und Prozessfehler des Workflows';
 $string['workflow_rollbackdelay'] = 'Kursauschluss beim Zurücksetzen';
 $string['workflow_rollbackdelay_help'] = 'Dieser Wert beschreibt die Zeit, bis wieder ein Prozess für diesen Workflow und einen Kurs
  gestartet werden kann, nachdem der Kurs innerhalb eines Prozesses dieses Workflows zurückgesetzt wurde.';

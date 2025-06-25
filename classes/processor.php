@@ -248,7 +248,8 @@ class processor {
      * @param trigger_subplugin $trigger trigger, which will be asked for additional where requirements.
      * @param int[] $excluded List of course id, which should be excluded from counting.
      * @param int[] $delayed List of course ids of delayed courses (globally and for workflow).
-     * @return int[] amount of triggered courses and amount which courses of them would be added and which courses are delayed.
+     * @return int[] $triggered, $new, $delayed Triggered courses and amount which courses of them would
+     * be added and which courses are delayed.
      * @throws \coding_exception
      * @throws \dml_exception
      */
@@ -277,7 +278,7 @@ class processor {
         $sql = 'SELECT count({course}.id) from {course} WHERE '. $where;
         $triggercourses = $DB->count_records_sql($sql, $whereparams);
 
-        // Only get courses which are not part of this workflow yet.
+        // Only get courses which are not part of this workflow yet. Exclude processes and proc_errors of this wf.
         $sql .= " AND {course}.id NOT IN (".
             "SELECT {course}.id from {course}
                 LEFT JOIN {tool_lifecycle_process}

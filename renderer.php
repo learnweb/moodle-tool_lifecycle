@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\output\single_button;
+
 /**
  * Renderer for life cycle
  *
@@ -62,4 +64,5 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
     public function tabs($tabs, $id) {
         echo $this->output->tabtree($tabs, $id);
     }
+
 }
