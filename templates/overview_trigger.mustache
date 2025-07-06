@@ -30,6 +30,7 @@
         "showdetails": 1,
         "id": 1,
         "triggeredcourses": 5,
+        "tooltip": " 5 courses will be triggered",
         "actionmenu": "actionmenu",
         "popuplink": "admin/tool/lifecycle/workflowoverview.php?wf=1"
     }
@@ -54,29 +55,18 @@
                     {{^additionalinfo}}
                         {{#triggeredcourses}}
                             <a href="{{{popuplink}}}&trigger={{id}}&showdetails={{showdetails}}">
-                            <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, {{triggeredcourses}} {{/str}}">
+                            <span class="btn btn-outline-success" data-toggle="tooltip" title="{{tooltip}}">
                                 {{triggeredcourses}}
                             </span>
                             </a>
                         {{/triggeredcourses}}
-                        {{^triggeredcourses}}
-                            {{#excludedcourses}}
-                                <a href="{{{popuplink}}}&excluded={{id}}&showdetails={{showdetails}}" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}">
-                                <span class="btn btn-outline-danger">
-                                    {{excludedcourses}}
-                                </span>
-                                </a>
-                            {{/excludedcourses}}
-                            {{^excludedcourses}}
-                                <span class="btn btn-outline-secondary" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, 0 {{/str}}">0</span>
-                            {{/excludedcourses}}
-                        {{/triggeredcourses}}
-                        {{#delayedcourses}}
-                            <span class="btn btn-outline-info btn-sm" data-toggle="tooltip" title="{{#str}} courses_are_delayed, tool_lifecycle, {{delayedcourses}} {{/str}}">{{delayedcourses}}</span>
-                        {{/delayedcourses}}
-                        {{#alreadyin}}
-                            <span class="btn btn-outline-secondary btn-sm" data-toggle="tooltip" title="{{#str}} courses_are_alreadyin, tool_lifecycle, {{alreadyin}} {{/str}}">{{alreadyin}}</span>
-                        {{/alreadyin}}
+                        {{#excludedcourses}}
+                            <a href="{{{popuplink}}}&excluded={{id}}&showdetails={{showdetails}}" data-toggle="tooltip" title="{{tooltip}}">
+                            <span class="btn btn-outline-danger">
+                                {{excludedcourses}}
+                            </span>
+                            </a>
+                        {{/excludedcourses}}
                     {{/additionalinfo}}
                 {{/automatic}}
                 {{^automatic}}

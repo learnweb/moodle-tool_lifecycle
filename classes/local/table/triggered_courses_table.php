@@ -25,7 +25,7 @@ namespace tool_lifecycle\local\table;
 
 use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\manager\workflow_manager;
-use tool_lifecycle\urls;;
+use tool_lifecycle\urls;
 
 defined('MOODLE_INTERNAL') || die;
 

@@ -150,12 +150,13 @@ class delayed_courses_table extends \table_sql {
 
         $this->set_sql($fields, $from, $where, $params);
         $this->column_nosort = ['workflow', 'tools'];
-        $this->define_columns(['coursefullname', 'category', 'workflow', 'tools']);
+        $this->define_columns(['courseid', 'coursefullname', 'category', 'workflow', 'tools']);
         $this->define_headers([
-                get_string('coursename', 'tool_lifecycle'),
-                get_string('category'),
-                get_string('delays', 'tool_lifecycle'),
-                get_string('tools', 'tool_lifecycle'),
+            get_string('courseid', 'tool_lifecycle'),
+            get_string('coursename', 'tool_lifecycle'),
+            get_string('category'),
+            get_string('delays', 'tool_lifecycle'),
+            get_string('tools', 'tool_lifecycle'),
         ]);
     }
 

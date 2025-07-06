@@ -118,7 +118,10 @@
                           {{#str}} courses_will_be_triggered_total_without_amount, tool_lifecycle {{/str}}<br>
                       {{/coursestriggeredcount}}
                       {{^coursestriggeredcount}}
-                          {{#str}} courses_will_be_triggered_total, tool_lifecycle, {{{coursestriggered}}} {{/str}}<br>
+                          <span class="btn btn-outline-secondary">
+                              {{coursestriggeredcount}}
+                          </span>
+                          {{#str}} courses_will_be_triggered_total_without_amount, tool_lifecycle {{/str}}<br>
                       {{/coursestriggeredcount}}
                       {{#coursesused}}
                           {{#str}} courses_are_used_total, tool_lifecycle, {{{coursesused}}} {{/str}}<br>

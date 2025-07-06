@@ -43,6 +43,7 @@ use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\local\table\courses_in_step_table;
+use tool_lifecycle\local\table\process_courses_table;
 use tool_lifecycle\local\table\triggered_courses_table;
 use tool_lifecycle\processor;
 use tool_lifecycle\settings_type;
@@ -272,10 +273,23 @@ foreach ($triggers as $trigger) {
                     } else if ($amounts[$trigger->sortindex]->excluded) {
                         $trigger->classfires = "border-danger";
                     }
-                    $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
-                    $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
-                    $trigger->delayedcourses = $amounts[$trigger->sortindex]->delayed;
-                    $trigger->alreadyin = $amounts[$trigger->sortindex]->alreadyin;
+                    $trigger->tooltip = "";
+                    if ($trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded) {
+                        $trigger->tooltip = get_string('courses_will_be_excluded',
+                            'tool_lifecycle', $trigger->excludedcourses);
+                    } else {
+                        $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
+                        $trigger->tooltip = get_string('courses_will_be_triggered',
+                            'tool_lifecycle', $trigger->triggeredcourses);
+                        if ($trigger->delayedcourses = $amounts[$trigger->sortindex]->delayed) {
+                            $trigger->tooltip .= get_string('courses_candidates_delayed',
+                                'tool_lifecycle', $trigger->delayedcourses);
+                        }
+                        if ($trigger->alreadyin = $amounts[$trigger->sortindex]->alreadyin) {
+                            $trigger->tooltip .= get_string('courses_candidates_alreadyin',
+                                'tool_lifecycle', $trigger->alreadyin);
+                        }
+                    }
                 }
             }
         }
@@ -390,14 +404,16 @@ if ($stepid) { // Display courses table with courses of this step.
     $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
     $tablecoursesamount = count($coursesdelayed);
 } else if ($processes) { // Display courses table with courses in a process or in state process error for this workflow.
-    $table = new processes_courses_table( $coursesdelayed, 'delayed',
-        null, $workflow->title, $workflowid, $search);
+    $coursesinprocess = $DB->get_fieldset('tool_lifecycle_process', 'courseid', ['workflowid' => $workflow->id]);
+    $coursesprocesserrors = $DB->get_fieldset('tool_lifecycle_proc_error', 'courseid', ['workflowid' => $workflow->id]);
+    $coursesprocess = array_merge($coursesinprocess, $coursesprocesserrors);
+    $table = new process_courses_table($coursesprocess, $workflow->title, $workflow->id, $search);
     ob_start();
     $table->out(PAGESIZE, false);
     $out = ob_get_contents();
     ob_end_clean();
-    $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
-    $tablecoursesamount = count($coursesdelayed);
+    $hiddenfieldssearch[] = ['name' => 'processes', 'value' => $processes];
+    $tablecoursesamount = count($coursesprocess);
 } else if ($used) { // Display courses triggered by this workflow but involved in other processes already.
     if ($courseids = $amounts['all']->used ?? null) {
         $table = new triggered_courses_table( $courseids, 'used',
@@ -426,6 +442,7 @@ if ($tablecoursesamount > PAGESIZE ) {
 }
 $disableworkflowlink = "";
 $abortdisableworkflowlink = "";
+$workflowprocesseslink = "";
 if ($isactive) {
     // Disable workflow link.
     $alt = get_string('disableworkflow', 'tool_lifecycle');
@@ -495,24 +512,22 @@ $data = [
 if ($showdetails) {
     // The triggers total box.
     $data['displaytotaltriggered'] = $displaytotaltriggered;
-    $triggered = $amounts['all']->triggered ?? 0;
+    $triggered = count($amounts['all']->coursestriggered) ?? 0;
     $triggeredhtml = $triggered > 0 ? html_writer::span($triggered, 'text-success font-weight-bold') : 0;
     $data['coursestriggered'] = $triggeredhtml;
     $data['coursestriggeredcount'] = $triggered;
-    if ($triggered) {
-        // Count delayed total, displayed in mustache only if there are any.
-        $delayed = count($amounts['all']->delayedcourses);  // Matters only if delayed courses are not included in workflow.
-        $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
-        $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
-            ['class' => 'btn btn-outline-secondary mt-1']) : 0;
-        $data['coursesdelayed'] = $delayedhtml;
-        // Count in other processes used courses total, displayed in mustache only if there are any.
-        $used = count($amounts['all']->used) ?? 0;
-        $usedlink = new moodle_url($popuplink, ['used' => "1"]);
-        $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,
-            ['class' => 'btn btn-outline-secondary mt-1']) : 0;
-        $data['coursesused'] = $usedhtml;
-    }
+    // Count delayed total, displayed in mustache only if there are any.
+    $delayed = count($amounts['all']->delayedcourses);  // Matters only if delayed courses are not included in workflow.
+    $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
+    $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
+        ['class' => 'btn btn-outline-secondary mt-1']) : 0;
+    $data['coursesdelayed'] = $delayedhtml;
+    // Count in other processes used courses total, displayed in mustache only if there are any.
+    $used = count($amounts['all']->used) ?? 0;
+    $usedlink = new moodle_url($popuplink, ['used' => "1"]);
+    $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,
+        ['class' => 'btn btn-outline-secondary mt-1']) : 0;
+    $data['coursesused'] = $usedhtml;
 }
 
 $addtriggerselect = "";

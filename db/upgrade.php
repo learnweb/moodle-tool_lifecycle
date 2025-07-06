@@ -595,7 +595,9 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         $field = new xmldb_field('manual', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'sortindex');
 
         // Launch rename field key.
-        $dbman->rename_field($table, $field, 'manually');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'manually');
+        }
 
         // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2025050404, 'tool', 'lifecycle');
