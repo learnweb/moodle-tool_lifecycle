@@ -267,14 +267,7 @@ class processor {
         // Now get the amount of courses triggered by this trigger.
         $sql = 'SELECT {course}.id from {course} WHERE '. $where;
         $triggercoursesall = $DB->get_fieldset_sql($sql, $whereparams);
-        echo \html_writer::div("triggercoursesall:");
-        foreach($triggercoursesall as $t) {
-            echo \html_writer::div($t);
-        }
-        echo \html_writer::div("delayed:");
-        foreach($delayed as $t) {
-            echo \html_writer::div($t);
-        }
+
         // Get delayed courses which would be triggered by this trigger.
         $delayedcourses = count(array_intersect($triggercoursesall, $delayed));
 
@@ -283,19 +276,8 @@ class processor {
             [$insql, $inparams] = $DB->get_in_or_equal($excluded, SQL_PARAMS_NAMED);
             $where .= " AND NOT {course}.id {$insql}";
             $whereparams = array_merge($whereparams, $inparams);
-            echo \html_writer::div("excluded:");
-            foreach($excluded as $t) {
-                echo \html_writer::div($t);
-            }
         }
         $sql = 'SELECT count({course}.id) from {course} WHERE '. $where;
-        $sqldeb = 'SELECT {course}.id from {course} WHERE '. $where;
-        $triggercoursesrs = $DB->get_fieldset_sql($sqldeb, $whereparams);
-        echo \html_writer::div("triggercoursesrs:");
-        foreach($triggercoursesrs as $t) {
-            echo \html_writer::div($t);
-        }
-        echo \html_writer::div($sqldeb);
         $triggercourses = $DB->count_records_sql($sql, $whereparams);
 
         // Only get courses which are not part of this workflow yet. Exclude processes and proc_errors of this wf.
@@ -306,19 +288,6 @@ class processor {
                     WHERE (p.courseid IS NOT NULL AND p.workflowid = $trigger->workflowid)
                     OR (pe.courseid IS NOT NULL AND pe.workflowid = $trigger->workflowid)
                 )";
-        $sqldeb .= " AND {course}.id NOT IN (
-                    SELECT {course}.id from {course}
-                    LEFT JOIN {tool_lifecycle_process} p ON {course}.id = p.courseid
-                    LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
-                    WHERE (p.courseid IS NOT NULL AND p.workflowid = $trigger->workflowid)
-                    OR (pe.courseid IS NOT NULL AND pe.workflowid = $trigger->workflowid)
-                )";
-        $newcoursesrs = $DB->get_fieldset_sql($sqldeb, $whereparams);
-        echo \html_writer::div("newcoursesrs:");
-        foreach($newcoursesrs as $t) {
-            echo \html_writer::div($t);
-        }
-        echo \html_writer::div($sqldeb);
         $newcourses = $DB->count_records_sql($sql, $whereparams);
 
         return [$triggercourses, $newcourses, $delayedcourses];
@@ -457,27 +426,19 @@ class processor {
             WHERE ({tool_lifecycle_process}.courseid IS NOT NULL AND {tool_lifecycle_process}.workflowid = $workflow->id)
             OR (pe.courseid IS NOT NULL AND pe.workflowid = $workflow->id)";
         $excludedcourses = array_merge($DB->get_fieldset_sql($sqlstepcourses), $sitecourse);
-        echo \html_writer::div("excluded for workflow:");
-        foreach($excludedcourses as $t) {
-            echo \html_writer::div($t);
-        }
 
         $delayedcourses = []; // Only delayed courses of selected courses are of interest here.
         $recordset = $this->get_course_recordset($autotriggers, $excludedcourses, true);
         while ($recordset->valid()) {
             $course = $recordset->current();
-            echo \html_writer::div("courseid: ".$course->id);
             if ($course->hasprocess) {
                 if ($course->workflowid && ($course->workflowid != $workflow->id)) {
                     $usedcourses[] = $course->id;
-                    echo \html_writer::div("used other wfid: ".$course->workflowid);
                 }
             } else if ($course->delay && $course->delay > time()) {
                 $delayedcourses[] = $course->id;
-                echo \html_writer::div("delayed: ".$course->delay);
             } else {
                 $coursestriggered[] = $course->id;
-                echo \html_writer::div("triggered: ".$course->id);
             }
             $recordset->next();
         }
