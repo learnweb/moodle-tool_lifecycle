@@ -38,6 +38,7 @@ use tool_lifecycle\event\process_triggered;
 use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\process_manager;
+use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
@@ -267,6 +268,8 @@ foreach ($triggers as $trigger) {
                 $trigger->classfires = "border-danger";
                 $trigger->additionalinfo = $amounts[$trigger->sortindex]->additionalinfo ?? "-";
             } else {
+                $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
+                $trigger->exclude = $settings['exclude'] ?? false;
                 if ($response != trigger_response::triggertime()) {
                     if ($amounts[$trigger->sortindex]->triggered) {
                         $trigger->classfires = "border-success";

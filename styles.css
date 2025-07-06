@@ -32,7 +32,7 @@ span.tool_lifecycle-hint {
     text-align: center;
     border: 1px solid #aaa;
     border-radius: 8px;
-    min-width: 220px;
+    min-width: 260px;
     background-color: white;
 }
 
@@ -47,6 +47,7 @@ span.tool_lifecycle-hint {
 
 #lifecycle-workflow-details .workflow-trigger {
     max-width: 300px;
+    min-width: 260px;
     margin: 8px;
 }
 

@@ -67,6 +67,13 @@
                             </span>
                             </a>
                         {{/excludedcourses}}
+                        {{^excludedcourses}}
+                            {{#exclude}}
+                                <span class="btn btn-outline-danger">
+                                    0
+                                </span>
+                            {{/exclude}}
+                        {{/excludedcourses}}
                     {{/additionalinfo}}
                 {{/automatic}}
                 {{^automatic}}
