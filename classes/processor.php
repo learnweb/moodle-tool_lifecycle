@@ -195,26 +195,31 @@ class processor {
     public function get_course_recordset($triggers, $exclude, $forcounting = false) {
         global $DB;
 
-        $where = 'true';
+        // Mike
+        $where = [];
         $whereparams = [];
+        //$chunks = array_chunk($whereparams, 65535, true);
+        $recordsets = [];
         foreach ($triggers as $trigger) {
             $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
             [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
             if (!empty($sql)) {
-                $where .= ' AND ' . $sql;
-                $whereparams = array_merge($whereparams, $params);
+                $where[] = 'true AND ' . $sql;
+                $whereparams[] = $params;
             }
         }
 
         if (!empty($exclude)) {
             [$insql, $inparams] = $DB->get_in_or_equal($exclude, SQL_PARAMS_NAMED);
-            $where .= " AND NOT {course}.id {$insql}";
-            $whereparams = array_merge($whereparams, $inparams);
+            $where[] = "true AND NOT {course}.id {$insql}";
+            $whereparams[] = $inparams;
         }
 
         if ($forcounting) {
-            // Get course hasotherprocess and delay with the sql.
-            $sql = "SELECT {course}.id,
+            foreach ($where as $key => $where_tmp) {
+                $whereparams_tmp = $whereparams[$key];
+                // Get course hasotherprocess and delay with the sql.
+                $sql = "SELECT {course}.id,
                     COALESCE(p.courseid, pe.courseid, 0) as hasprocess,
                     CASE
                         WHEN COALESCE(p.workflowid, 0) > COALESCE(pe.workflowid, 0) THEN p.workflowid
@@ -232,17 +237,32 @@ class processor {
                     LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
                     LEFT JOIN {tool_lifecycle_delayed} d ON {course}.id = d.courseid
                     LEFT JOIN {tool_lifecycle_delayed_workf} dw ON {course}.id = dw.courseid
-                    WHERE " . $where;
+                    WHERE " . $where_tmp;
+                $recordsets[] = $DB->get_recordset_sql($sql, $whereparams_tmp);
+            }
+
+            //use tool_lifecycle\local\intersectedRecordset;
+            $recordsets = new \tool_lifecycle\local\intersectedRecordset($recordsets);
+            mtrace('Intersected record sets (for counting): '.count($recordsets));
         } else {
-            // Get only courses which are not part of an existing process.
-            $sql = 'SELECT {course}.id from {course} '.
-                'LEFT JOIN {tool_lifecycle_process} '.
-                'ON {course}.id = {tool_lifecycle_process}.courseid '.
-                'LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid ' .
-                'WHERE {tool_lifecycle_process}.courseid is null AND ' .
-                'pe.courseid IS NULL AND '. $where;
+            foreach ($where as $key => $where_tmp) {
+                $whereparams_tmp = $whereparams[$key];
+                // Get only courses which are not part of an existing process.
+                $sql = 'SELECT {course}.id from {course} '.
+                    'LEFT JOIN {tool_lifecycle_process} '.
+                    'ON {course}.id = {tool_lifecycle_process}.courseid '.
+                    'LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid ' .
+                    'WHERE {tool_lifecycle_process}.courseid is null AND ' .
+                    'pe.courseid IS NULL AND '. $where_tmp;
+                $recordsets[] = $DB->get_recordset_sql($sql, $whereparams_tmp);
+            }
+
+            //use tool_lifecycle\local\intersectedRecordset;
+            $recordsets = new \tool_lifecycle\local\intersectedRecordset($recordsets);
+            mtrace('Intersected record sets: '.count($recordsets));
         }
-        return $DB->get_recordset_sql($sql, $whereparams);
+
+        return $recordsets;
     }
 
     /**
@@ -435,6 +455,8 @@ class processor {
         $all->delayedcourses = $delayedcourses; // Delayed courses for workflow and globally. Excluded per default.
         $all->used = $usedcourses;
         $all->nextrun = $nextrun;
+        // Mike
+        mtrace('Courses triggered by workflow: '.count($all->triggered));
         $amounts['all'] = $all;
         return $amounts;
     }
