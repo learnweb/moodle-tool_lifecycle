@@ -24,6 +24,7 @@
 
 namespace tool_lifecycle\event;
 
+use context_course;
 use moodle_url;
 use tool_lifecycle\local\entity\process;
 
@@ -55,7 +56,7 @@ class process_rollback extends \core\event\base {
     public static function event_from_process($process) {
         $data = [
                 'courseid' => $process->courseid,
-                'context' => $process->context,
+                'context' => $process->context ?? context_course::instance($process->courseid),
                 'other' => [
                         'processid' => $process->id,
                         'workflowid' => $process->workflowid,

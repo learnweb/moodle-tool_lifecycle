@@ -594,6 +594,7 @@ if (workflow_manager::is_editable($workflow->id)) {
     $data['addstepselect'] = $addstepselect;
     $data['activate'] = $activate;
     $data['newworkflow'] = $newworkflow;
+    $data['activatebutton'] = "";
 } else if ($isdeactivated) {
     $activate = $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
         [
