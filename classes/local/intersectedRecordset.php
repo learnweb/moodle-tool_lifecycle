@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 class intersectedRecordset implements \Iterator, \Countable {
     private $records = [];
     private $position = 0;
+    private $wasFilled = false;
 
     /**
      * Constructor: Inits class & intersects passed recordsets.
@@ -51,32 +52,36 @@ class intersectedRecordset implements \Iterator, \Countable {
      * @param string $key
      */
     public function add($recordset, string $key = 'id'): void {
+        // Add new records to array with key
         $newRecords = [];
-        foreach($recordset as $record) { $newRecords[] = $record; }
+        foreach($recordset as $record) {
+            if(isset($record->$key)) { $newRecords[$record->$key] = $record; }
+        }
         //$recordset->close();
 
-        $newRecordsByKey = [];
-        foreach($newRecords as $record) {
-            if(isset($record->$key)) { $newRecordsByKey[$record->$key] = $record; }
-        }
-
-        if(empty($this->records)) {
-            $this->records = array_values($newRecordsByKey);
+        // Store new records without key, if no records were stored & return
+        if(empty($this->records) && !$this->wasFilled) {
+            $this->records = array_values($newRecords);
+            $this->wasFilled = true;
 
             return;
         }
 
-        $existingRecordsByKey = [];
+        // Add existing records to array with key
+        $existingRecords = [];
         foreach($this->records as $record) {
-            if(isset($record->$key)) { $existingRecordsByKey[$record->$key] = $record; }
+            if(isset($record->$key)) { $existingRecords[$record->$key] = $record; }
         }
 
-        $intersectionKeys = array_intersect_key($existingRecordsByKey, $newRecordsByKey);
-
+        // Intersect existing & new records by keys
+        $intersectionKeys = array_intersect_key($existingRecords, $newRecords);
+        // Clear existing records
         $this->records = [];
+        // Store intersected records by keys
         foreach($intersectionKeys as $keyValue => $record) {
-            $this->records[] = $existingRecordsByKey[$keyValue];
+            $this->records[] = $existingRecords[$keyValue];
         }
+        //mtrace('Add - Intersected record sets: '.count($this->records));
     }
 
     /**

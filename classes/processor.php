@@ -243,7 +243,7 @@ class processor {
 
             //use tool_lifecycle\local\intersectedRecordset;
             $recordsets = new \tool_lifecycle\local\intersectedRecordset($recordsets);
-            mtrace('Intersected record sets (for counting): '.count($recordsets));
+            //mtrace('Intersected record sets (for counting): '.count($recordsets));
         } else {
             foreach ($where as $key => $where_tmp) {
                 $whereparams_tmp = $whereparams[$key];
@@ -259,7 +259,7 @@ class processor {
 
             //use tool_lifecycle\local\intersectedRecordset;
             $recordsets = new \tool_lifecycle\local\intersectedRecordset($recordsets);
-            mtrace('Intersected record sets: '.count($recordsets));
+            //mtrace('Intersected record sets: '.count($recordsets));
         }
 
         return $recordsets;
