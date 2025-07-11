@@ -182,6 +182,9 @@ if ($delayedcourses > 0) {
     $button = new single_button(new moodle_url('confirmation.php'),
         get_string('delete_all_delays', 'tool_lifecycle'));
     echo $OUTPUT->render($button);
+    $classnotnull = 'badge badge-primary badge-pill ml-1';
+    $classnull = 'badge badge-secondary badge-pill ml-1';
+    echo \html_writer::span($delayedcourses, $delayedcourses > 0 ? $classnotnull : $classnull);
     echo html_writer::div('', 'mb-2');
 }
 
