@@ -368,7 +368,7 @@ class processor {
         foreach ($triggers as $trigger) {
             $trigger = (object)(array) $trigger; // Cast to normal object to be able to set dynamic properties.
             $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
-            $trigger->exclude = $settings['exclude'] ?? false;
+            $trigger->exclude = $settings['exclude'] ?? ($settings['invert'] ?? false);
             $obj = new \stdClass();
             $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
             if ($lib->is_manual_trigger()) {
