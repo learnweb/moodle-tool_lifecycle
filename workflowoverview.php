@@ -277,7 +277,8 @@ foreach ($triggers as $trigger) {
                         $trigger->classfires = "border-danger";
                     }
                     $trigger->tooltip = "";
-                    if ($trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded || $trigger->exclude) {
+                    if (isset($amounts[$trigger->sortindex]->excluded)) {
+                        $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
                         $trigger->tooltip = get_string('courses_will_be_excluded',
                             'tool_lifecycle', $trigger->excludedcourses);
                     } else {
