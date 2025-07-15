@@ -277,7 +277,7 @@ foreach ($triggers as $trigger) {
                         $trigger->classfires = "border-danger";
                     }
                     $trigger->tooltip = "";
-                    if (isset($amounts[$trigger->sortindex]->excluded)) {
+                    if ($amounts[$trigger->sortindex]->excluded !== false) {
                         $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
                         $trigger->tooltip = get_string('courses_will_be_excluded',
                             'tool_lifecycle', $trigger->excludedcourses);
@@ -482,6 +482,9 @@ if ($isactive) {
     $workflowprocesseslink = "<br>".$workflowprocesseslink;
 }
 
+if (!($isactive || $isdeactivated)) {
+    $lastrun = 0;
+}
 $data = [
     'editsettingslink' => (new moodle_url(urls::EDIT_WORKFLOW, ['wf' => $workflow->id]))->out(false),
     'title' => $workflow->title,
@@ -507,7 +510,8 @@ $data = [
     'showdetailsicon' => $showdetails == 0,
     'isactive' => $isactive || $isdeactivated,
     'nextrun' => $nextrunout,
-    'lastrun' => userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig')),
+    'lastrun' => $lastrun ?
+        userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig')) : '-',
     'nomanualtriggerinvolved' => $nomanualtriggerinvolved,
     'disableworkflowlink' => $disableworkflowlink,
     'abortdisableworkflowlink' => $abortdisableworkflowlink,

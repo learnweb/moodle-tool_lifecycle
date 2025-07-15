@@ -60,6 +60,15 @@
                             </span>
                             </a>
                         {{/triggeredcourses}}
+                        {{^triggeredcourses}}
+                            {{^excludedcourses}}
+                                {{^exclude}}
+                                    <span class="btn btn-outline-success">
+                                    0
+                                </span>
+                                {{/exclude}}
+                            {{/excludedcourses}}
+                        {{/triggeredcourses}}
                         {{#excludedcourses}}
                             <a href="{{{popuplink}}}&excluded={{id}}&showdetails={{showdetails}}" data-toggle="tooltip" title="{{tooltip}}">
                             <span class="btn btn-outline-danger">
