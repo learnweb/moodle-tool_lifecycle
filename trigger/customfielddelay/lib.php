@@ -57,7 +57,8 @@ class customfielddelay extends base_automatic {
         $delay = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['delay'];
         $fieldname = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['customfield'];
         if (!($field = $DB->get_record('customfield_field', ['shortname' => $fieldname, 'type' => 'date']))) {
-            throw new \moodle_exception("missingfield");
+            throw new \moodle_exception('missingfield',
+                'lifecycletrigger_customfielddelay', '', $fieldname);
         }
         $where = "{course}.id in (select cxt.instanceid from {context} cxt join {customfield_data} d " .
                     "ON d.contextid = cxt.id AND cxt.contextlevel=" . CONTEXT_COURSE . " " .
