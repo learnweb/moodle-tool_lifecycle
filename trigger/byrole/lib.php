@@ -100,7 +100,11 @@ class byrole extends base_automatic {
 
         list($insql, $inparams) = $DB->get_in_or_equal($this->get_roles($triggerid), SQL_PARAMS_NAMED);
 
-        $invert = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['invert'] && true;
+        if (isset(settings_manager::get_settings($triggerid, settings_type::TRIGGER)['invert'])) {
+            $invert = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['invert'] && true;
+        } else {
+            $invert = false;
+        }
 
         $sql = "SELECT c.id
             FROM {course} c
