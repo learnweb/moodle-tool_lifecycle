@@ -45,8 +45,8 @@ class process_courses_table extends \table_sql {
     /**
      * Builds a table of courses.
      * @param array $courseids of the courses to list
-     * @param string $workflowname optional, if type delayed
-     * @param null $workflowid optional, if type delayed
+     * @param string $workflowname
+     * @param null $workflowid
      * @param string $filterdata optional, term to filter the table by course id or -name
      * @throws \coding_exception
      * @throws \dml_exception
@@ -96,7 +96,6 @@ class process_courses_table extends \table_sql {
         }
 
         $this->set_sql($fields, $from, $where, $inparams);
-        $this->set_sortdata([['sortby' => 'fullname', 'sortorder' => '1']]);
     }
 
     /**
