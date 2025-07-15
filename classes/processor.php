@@ -376,7 +376,6 @@ class processor {
             } else {
                 $obj->automatic = true;
                 $obj->triggered = 0;
-                $obj->excluded = 0;
                 // Only use triggers with true sql to display the real amounts for the others (instead of always 0).
                 $obj->sql = trigger_manager::get_trigger_sqlresult($trigger);
                 $obj->response = $lib->check_course(null, null);
