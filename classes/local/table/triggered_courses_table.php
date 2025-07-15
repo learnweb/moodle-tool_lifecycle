@@ -134,7 +134,6 @@ class triggered_courses_table extends \table_sql {
         }
 
         $this->set_sql($fields, $from, $where, $inparams);
- //       $this->set_sortdata([['sortby' => 'fullname', 'sortorder' => '1']]);
     }
 
     /**
