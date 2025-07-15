@@ -27,6 +27,7 @@ $string['customfield'] = 'Ein nutzerdefiniertes Kursfeld vom Typ Datum';
 $string['customfield_help'] = 'Der Trigger prüft den Wert dieses nutzerdefinierten Kursfeldes vom Typ Datum.';
 $string['delay'] = 'Zeitraum nach dem Datum des nutzerdefinierten Kursfeldes';
 $string['delay_help'] = 'Der Prozess startet sobald der angegebene Zeitraum nach dem nutzerdefinierten Kursfeld-Datum abgelaufen ist.';
+$string['missingfield'] = 'Nutzerdefiniertes Kursfeld "{$a}" vom Typ Datum ist in diesem Moodle nicht vorhanden und muss zuerst angelegt werden.';
 $string['plugindescription'] = 'Der Trigger löst aus sobald der angegebene Zeitraum nach dem nutzerdefinierten Kursfeld-Datum abgelaufen ist.';
 $string['pluginname'] = 'Nutzerdefiniertes Kursfeld Typ Datum - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
