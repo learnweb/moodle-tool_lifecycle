@@ -65,7 +65,7 @@ class process_manager {
 
     /**
      * Creates a process based on a manual trigger.
-     * @param int $courseid Id of the course to be triggerd.
+     * @param int $courseid Id of the course to be triggered.
      * @param int $triggerid Id of the triggering trigger.
      * @return process the triggered process instance.
      * @throws \moodle_exception for invalid workflow definition or missing trigger.

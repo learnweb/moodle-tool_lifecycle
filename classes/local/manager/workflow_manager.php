@@ -132,7 +132,7 @@ class workflow_manager {
     }
 
     /**
-     * Returns a workflow instance if one with the is is available.
+     * Returns a workflow instance if one with the id is available.
      *
      * @param int $workflowid id of the workflow
      * @return workflow|null

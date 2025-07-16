@@ -89,8 +89,8 @@ class processor {
     public function process_courses() {
         // For each process in process table.
         foreach (process_manager::get_processes() as $process) {
-            // Process only if the process has workflow id.
-            while ($process->workflowid) {
+            // Process only if the process has a valid workflow id.
+            if (is_int($process->workflowid)) {
                 // New workflows with lifecycle version 4.4 and beneath did not have to have a step.
                 if ($process->stepindex == 0) {
                     if (!process_manager::proceed_process($process)) {
