@@ -60,6 +60,16 @@ class processor {
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
         $exclude = [];
 
+        if (!defined('BEHAT_SITE_RUNNING')) {
+            if ($run) {
+                echo \html_writer::div(get_string ('active_workflows_header_title', 'tool_lifecycle').
+                    ": ".count($activeworkflows));
+            } else {
+                mtrace(get_string ('active_workflows_header_title', 'tool_lifecycle').
+                    ": ".count($activeworkflows));
+            }
+        }
+
         foreach ($activeworkflows as $workflow) {
             $countcourses = 0;
             $counttriggered = 0;
