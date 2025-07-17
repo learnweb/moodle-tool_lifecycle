@@ -53,6 +53,7 @@ class processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
+
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
         $exclude = [];
 
@@ -63,7 +64,7 @@ class processor {
 
             if (!defined('BEHAT_SITE_RUNNING')) {
                 if (isloggedin()) {
-                    \html_writer::div('Calling triggers for workflow "' . $workflow->title . '"');
+                    echo \html_writer::div('Calling triggers for workflow "' . $workflow->title . '"');
                 } else {
                     mtrace('Calling triggers for workflow "' . $workflow->title . '"');
                 }
@@ -105,9 +106,9 @@ class processor {
             }
             if (!defined('BEHAT_SITE_RUNNING')) {
                 if (isloggedin()) {
-                    \html_writer::div("   $countcourses courses processed.");
-                    \html_writer::div("   $counttriggered courses triggered.");
-                    \html_writer::div("   $countexcluded courses excluded.");
+                    echo \html_writer::div("   $countcourses courses processed.");
+                    echo \html_writer::div("   $counttriggered courses triggered.");
+                    echo \html_writer::div("   $countexcluded courses excluded.");
                 } else {
                     mtrace("   $countcourses courses processed.");
                     mtrace("   $counttriggered courses triggered.");
