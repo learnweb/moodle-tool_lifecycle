@@ -64,7 +64,7 @@ class email extends libbase {
         foreach ($userstobeinformed as $user) {
             $record = new \stdClass();
             $record->touser = $user->id;
-            $record->courseid = $course;
+            $record->courseid = $course->id;
             $record->instanceid = $instanceid;
             $DB->insert_record('lifecyclestep_email', $record);
         }
