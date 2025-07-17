@@ -87,31 +87,34 @@ class processor {
      * Calls the process_course() method of each step submodule currently responsible for a given course.
      */
     public function process_courses() {
-        // For each process in process table.
         foreach (process_manager::get_processes() as $process) {
-            // Process only if the process has a valid workflow id.
-            if (is_int($process->workflowid)) {
-                // New workflows with lifecycle version 4.4 and beneath did not have to have a step.
+            $workflow = workflow_manager::get_workflow($process->workflowid);
+            while (true) {
+
+                try {
+                    $course = get_course($process->courseid);
+                } catch (\dml_missing_record_exception $e) {
+                    // Course no longer exists!
+                    break;
+                }
+
                 if ($process->stepindex == 0) {
                     if (!process_manager::proceed_process($process)) {
                         // Happens for a workflow with no step.
-                        delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, false,
-                            $process->workflowid);
+                        delayed_courses_manager::set_course_delayed_for_workflow($course->id, false, $workflow);
                         break;
                     }
                 }
-                // Get current step of process and its step lib.
+
                 $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
                 $lib = lib_manager::get_step_lib($step->subpluginname);
-                // Process course.
                 try {
                     if ($process->waiting) {
-                        $result = $lib->process_waiting_course($process->id, $step->id, $process->courseid);
+                        $result = $lib->process_waiting_course($process->id, $step->id, $course);
                     } else {
-                        $result = $lib->process_course($process->id, $step->id, $process->courseid);
+                        $result = $lib->process_course($process->id, $step->id, $course);
                     }
                 } catch (\Exception $e) {
-                    unset($process->context);
                     process_manager::insert_process_error($process, $e);
                     break;
                 }
@@ -120,13 +123,11 @@ class processor {
                     break;
                 } else if ($result == step_response::proceed()) {
                     if (!process_manager::proceed_process($process)) {
-                        delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, false,
-                            $process->workflowid);
+                        delayed_courses_manager::set_course_delayed_for_workflow($course->id, false, $workflow);
                         break;
                     }
                 } else if ($result == step_response::rollback()) {
-                    delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true,
-                        $process->workflowid);
+                    delayed_courses_manager::set_course_delayed_for_workflow($course->id, true, $workflow);
                     process_manager::rollback_process($process);
                     break;
                 } else {
