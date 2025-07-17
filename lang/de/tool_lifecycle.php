@@ -227,6 +227,7 @@ $string['restore_trigger_does_not_exist'] = 'Der Trigger {$a} ist nicht installi
 $string['restore_workflow_not_found'] = 'Falsches Format der Sicherungsdatei. Der Workflow konnte nicht gefunden werden.';
 $string['rollback'] = 'Zurücksetzung';
 $string['rolledback'] = 'Zurückgesetzt';
+$string['run'] = 'Ausführen';
 $string['runtask'] = 'Führe Lifecycle System-Task aus';
 $string['searchcourses'] = 'Kurs-Suche';
 $string['see_in_workflow'] = 'In Workflow ansehen';
