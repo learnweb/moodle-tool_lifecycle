@@ -60,7 +60,14 @@ class processor {
             $countcourses = 0;
             $counttriggered = 0;
             $countexcluded = 0;
-            mtrace('Calling triggers for workflow "' . $workflow->title . '"');
+
+            if (!defined('BEHAT_SITE_RUNNING')) {
+                if (isloggedin()) {
+                    \html_writer::div('Calling triggers for workflow "' . $workflow->title . '"');
+                } else {
+                    mtrace('Calling triggers for workflow "' . $workflow->title . '"');
+                }
+            }
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
             if (!$workflow->includesitecourse) {
                 $exclude[] = 1;
@@ -96,9 +103,17 @@ class processor {
                 $counttriggered++;
                 $recordset->next();
             }
-            mtrace("   $countcourses courses processed.");
-            mtrace("   $counttriggered courses triggered.");
-            mtrace("   $countexcluded courses excluded.");
+            if (!defined('BEHAT_SITE_RUNNING')) {
+                if (isloggedin()) {
+                    \html_writer::div("   $countcourses courses processed.");
+                    \html_writer::div("   $counttriggered courses triggered.");
+                    \html_writer::div("   $countexcluded courses excluded.");
+                } else {
+                    mtrace("   $countcourses courses processed.");
+                    mtrace("   $counttriggered courses triggered.");
+                    mtrace("   $countexcluded courses excluded.");
+                }
+            }
         }
     }
 
