@@ -51,7 +51,7 @@ class deletecourse extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param int $course to be processed.
+     * @param object $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
@@ -59,7 +59,7 @@ class deletecourse extends libbase {
     public function process_course($processid, $instanceid, $course) {
         global $CFG;
 
-        if ($course == 1) {
+        if ($course->id == 1) {
             return step_response::rollback();
         }
 
