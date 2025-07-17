@@ -151,7 +151,13 @@
             <h5 class="my-2">{{#str}} courseselectionrun_title, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:timetrigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
             {{#nomanualtriggerinvolved}}
             <div class="mb-2 mx-2">
-                {{#str}} nextrun, tool_lifecycle, {{{nextrun}}} {{/str}}<br>
+                {{#str}} nextrun, tool_lifecycle, {{{nextrun}}} {{/str}}
+                <a href="{{{runlink}}}">
+                              <span class="" data-toggle="tooltip" title="{{#str}} runtask, tool_lifecycle {{/str}}">
+                                  {{#str}} run {{/str}}
+                              </span>
+                </a>
+                <br>
                 <span class="text-muted">{{#str}} lastrun, tool_lifecycle, {{lastrun}} {{/str}}</span>
             </div>
             {{/nomanualtriggerinvolved}}

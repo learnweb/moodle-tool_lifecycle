@@ -61,5 +61,7 @@ class urls {
     const CONFIRMATION = '/admin/tool/lifecycle/confirmation.php';
     /** @var string subplugins page for a list of installed subplugins */
     const SUBPLUGINS = '/admin/tool/lifecycle/subplugins.php?id=subplugins';
+    /** @var string run page for execute the scheduled lifecycle task ad hoc */
+    const RUN = '/admin/tool/lifecycle/run.php?id=run';
 
 }
