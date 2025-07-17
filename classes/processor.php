@@ -22,9 +22,11 @@
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+// phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
+
 namespace tool_lifecycle;
 
-use core\task\manager;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\event\process_triggered;
 use tool_lifecycle\local\manager\process_manager;
