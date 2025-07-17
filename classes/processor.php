@@ -54,32 +54,51 @@ class processor {
      */
     public function call_trigger() {
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
-        $globallydelayedcourses = delayed_courses_manager::get_globally_delayed_courses();
+        $exclude = [];
 
         foreach ($activeworkflows as $workflow) {
             $countcourses = 0;
+            $counttriggered = 0;
+            $countexcluded = 0;
             mtrace('Calling triggers for workflow "' . $workflow->title . '"');
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
-            if ($workflow->includesitecourse) {
-                $sitecourse = [];
-            } else {
-                $sitecourse = [1];
+            if (!$workflow->includesitecourse) {
+                $exclude[] = 1;
             }
-            if ($workflow->includedelayedcourses) {
-                $delayedcourses = [];
-            } else {
-                $delayedcourses = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
-                    $globallydelayedcourses);
+            if (!$workflow->includedelayedcourses) {
+                $exclude = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
+                    $exclude);
             }
-            $recordset = $this->get_course_recordset($triggers, array_merge($delayedcourses, $sitecourse));
+            $recordset = $this->get_course_recordset($triggers, $exclude);
             while ($recordset->valid()) {
                 $course = $recordset->current();
                 $countcourses++;
+                foreach ($triggers as $trigger) {
+                    $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+                    $response = $lib->check_course($course, $trigger->id);
+                    if ($response == trigger_response::next()) {
+                        $recordset->next();
+                        continue 2;
+                    }
+                    if ($response == trigger_response::exclude()) {
+                        array_push($exclude, $course->id);
+                        $countexcluded++;
+                        $recordset->next();
+                        continue 2;
+                    }
+                    if ($response == trigger_response::trigger()) {
+                        continue;
+                    }
+                }
+                // If all trigger instances agree, that they want to trigger a process, we do so.
                 $process = process_manager::create_process($course->id, $workflow->id);
                 process_triggered::event_from_process($process)->trigger();
+                $counttriggered++;
                 $recordset->next();
             }
             mtrace("   $countcourses courses processed.");
+            mtrace("   $counttriggered courses triggered.");
+            mtrace("   $countexcluded courses excluded.");
         }
     }
 
@@ -299,7 +318,7 @@ class processor {
      * Relevant means that there is currently no lifecycle process running for this course.
      * @param trigger_subplugin $trigger trigger, which will be asked for additional where requirements.
      * @param object $workflow workflow instance.
-     * @return \moodle_recordset with relevant courses.
+     * @return array with relevant courses.
      * @throws \coding_exception
      * @throws \dml_exception
      */
