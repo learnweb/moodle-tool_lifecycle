@@ -51,14 +51,14 @@ class email extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param int $course to be processed.
+     * @param object $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
         global $DB;
-        $coursecontext = \context_course::instance($course);
+        $coursecontext = \context_course::instance($course->id);
         $userstobeinformed = get_enrolled_users($coursecontext, 'lifecyclestep/email:preventdeletion', 0,
             'u.id', null, null, null, true);
         foreach ($userstobeinformed as $user) {
@@ -79,7 +79,7 @@ class email extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param int $course to be processed.
+     * @param object $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
