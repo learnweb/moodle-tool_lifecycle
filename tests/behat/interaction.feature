@@ -62,7 +62,11 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
     Then I should see "Course 1" in the "tool_lifecycle_remaining" "table"
     And I should see "Course 2" in the "tool_lifecycle_remaining" "table"
     And I should see "Course 3" in the "tool_lifecycle_remaining" "table"
+    And I log out
+    And I log in as "admin"
     When I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I log out
+    And I log in as "teacher1"
     And I am on lifecycle view
     Then I should see "Course 1" in the "tool_lifecycle_remaining" "table"
     And I should see "Course 2" in the "tool_lifecycle_interaction" "table"
@@ -76,7 +80,11 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
     And I should see "Course 2" in the "tool_lifecycle_remaining" "table"
     And I should see "Course 3" in the "tool_lifecycle_interaction" "table"
     When I wait "10" seconds
-    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I log out
+    And I log in as "admin"
+    When I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I log out
+    And I log in as "teacher1"
     And I am on lifecycle view
     Then I should see "Course 1" in the "tool_lifecycle_remaining" "table"
     And I should see "Course 2" in the "tool_lifecycle_remaining" "table"
