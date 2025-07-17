@@ -67,9 +67,11 @@ class processor {
 
             if (!defined('BEHAT_SITE_RUNNING')) {
                 if ($run) {
-                    echo \html_writer::div('Calling triggers for workflow "' . $workflow->title . '"');
+                    echo \html_writer::div('Calling triggers for workflow "' . $workflow->title . '" '.
+                        userdate(time(), get_string('strftimedatetime')));
                 } else {
-                    mtrace('Calling triggers for workflow "' . $workflow->title . '"');
+                    mtrace('Calling triggers for workflow "' . $workflow->title . '" '.
+                        userdate(time(), get_string('strftimedatetime')));
                 }
             }
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
