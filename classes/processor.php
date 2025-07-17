@@ -53,9 +53,9 @@ class processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
-        global $PAGE;
+        global $FULLSCRIPT;
 
-        $run = isset($PAGE->url) && strpos($PAGE->url, 'run.php') !== false;
+        $run = str_contains($FULLSCRIPT, 'run.php');
 
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
         $exclude = [];
