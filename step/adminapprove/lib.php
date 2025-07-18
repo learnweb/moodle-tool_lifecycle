@@ -47,7 +47,7 @@ class adminapprove extends libbase {
      * Process a single course.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param int $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      */
     public function process_course($processid, $instanceid, $course) {

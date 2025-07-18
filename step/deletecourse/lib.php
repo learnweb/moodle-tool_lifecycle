@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\step;
 
+use stdClass;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\settings_type;
@@ -51,7 +52,7 @@ class deletecourse extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param object $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
@@ -89,7 +90,7 @@ class deletecourse extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param int $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception

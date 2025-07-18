@@ -24,6 +24,7 @@
  */
 namespace tool_lifecycle\step;
 
+use stdClass;
 use tool_lifecycle\local\entity\process;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\response\step_response;
@@ -48,7 +49,7 @@ abstract class libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      */
     abstract public function process_course($processid, $instanceid, $course);
@@ -61,7 +62,7 @@ abstract class libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param int $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      */
     public function process_waiting_course($processid, $instanceid, $course) {

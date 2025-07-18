@@ -25,6 +25,7 @@
 namespace tool_lifecycle\step;
 
 use lifecyclestep_pushbackuptask\task\course_backup_task;
+use stdClass;
 use tool_lifecycle\local\response\step_response;
 
 defined('MOODLE_INTERNAL') || die();
@@ -43,14 +44,12 @@ class pushbackuptask extends libbase {
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param int $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
-     * @throws \coding_exception
-     * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
         $asynctask = new course_backup_task();
-        $asynctask->set_custom_data(['courseid' => $course]);
+        $asynctask->set_custom_data(['courseid' => $course->id]);
         \core\task\manager::queue_adhoc_task($asynctask);
         return step_response::proceed();
     }
@@ -59,7 +58,7 @@ class pushbackuptask extends libbase {
      * Simply call the process_course since it handles everything necessary for this plugin.
      * @param int $processid
      * @param int $instanceid
-     * @param int $course
+     * @param stdClass $course
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
