@@ -117,8 +117,7 @@ final class process_error_test extends \advanced_testcase {
         } else if (version_compare(PHP_VERSION, '8.3', '<')) {
             $this->assertStringContainsString("Attempt to read property \"id\" on bool", $record->errormessage);
         } else {
-            $this->assertStringContainsString("Object of class stdClass could not be converted to int",
-                $record->errormessage);
+            $this->assertStringContainsString("Attempt to read property \"id\" on false", $record->errormessage);
         }
         $this->assertEquals($process->id, $record->id);
     }
