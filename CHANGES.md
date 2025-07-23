@@ -1,6 +1,26 @@
 CHANGELOG
 =========
 
+
+4.5.5 (2025-07-24)
+------------------
+* [FEATURE] Display trigger countings partial as tooltip; show courses already part of the workflow process or the process errors
+* [FEATURE] workflowoverview: show also 0 courses in exclude trigger. Make instancenames in supplugin form of active workflows static
+* [FIXED] proceed, rollback event: take course context when context is missing
+* [FIXED] Fix trigger customfielddelay's missing field error message
+* [FEATURE] Delete all delays: show amount of delays that would be deleted next to button
+* [FEATURE] workflowoverview: exclude trigger: show excluded 0 as well
+* [FIXED] prozessor.php: restore version 4.5 of function process_courses
+* [FIXED] prozessor.php: restore version 4.5 of function call_trigger
+* [FEATURE] workflowoverview: place new link to run lifecycle task in timetrigger row
+* [FIXED] Fix step email context course id
+* [FIXED] call_trigger: mtrace only when called by cron
+* [FIXED] Fix behat test interaction.feature
+* [FIXED] Step libs' function process_course error: make sure course is of type stdClass
+* [FIXED] Fix unit test process_error_test
+* [FEATURE] Add additional jobs to run in ci-file
+* [FIXED] Fixed error occurring when renaming field manual to manually during the upgrade
+
 4.5.4 (2025-06-23)
 ------------------
 * [FEATURE] No php notice if string plugindescription is missing
