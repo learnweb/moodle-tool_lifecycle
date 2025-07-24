@@ -22,7 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\local\entity\process;
 use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 
@@ -55,22 +57,6 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     global $DB;
     $dbman = $DB->get_manager();
-    $writesavepoint = false;
-
-    if ($oldversion < 2025050404) {
-
-        // Define field manual to be renamed to manually in table tool_lifecycle_workflow.
-        $table = new xmldb_table('tool_lifecycle_workflow');
-        $field = new xmldb_field('manual', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'sortindex');
-
-        // Rename field manual to manually.
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->rename_field($table, $field, 'manually');
-        }
-
-        // Lifecycle savepoint reached.
-        $writesavepoint = true;
-    }
 
     if ($oldversion < 2017081101) {
 
@@ -471,8 +457,8 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
                 "WHERE c.id IS NULL";
         $processes = $DB->get_records_sql($sql);
         foreach ($processes as $procrecord) {
-            $process = \tool_lifecycle\local\entity\process::from_record($procrecord);
-            \tool_lifecycle\local\manager\process_manager::abort_process($process);
+            $process = process::from_record($procrecord);
+            process_manager::abort_process($process);
         }
 
         upgrade_plugin_savepoint(true, 2020091800, 'tool', 'lifecycle');
@@ -519,6 +505,15 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
     }
 
     if ($oldversion < 2025050400) {
+
+        // Define field manual to be renamed to manually in table tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
+        $field = new xmldb_field('manual', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'sortindex');
+
+        // Rename field manual to manually.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'manually');
+        }
 
         // Changing precision of field instancename on table tool_lifecycle_trigger to (100).
         $table = new xmldb_table('tool_lifecycle_trigger');
@@ -604,7 +599,15 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
-    if ($writesavepoint) {
+    if ($oldversion < 2025050404) {
+        // Define field manual to be renamed to manually in table tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
+        $field = new xmldb_field('manual', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'sortindex');
+
+        // Rename field manual to manually.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'manually');
+        }
         upgrade_plugin_savepoint(true, 2025050404, 'tool', 'lifecycle');
     }
 
