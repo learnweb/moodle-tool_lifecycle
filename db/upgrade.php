@@ -504,7 +504,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
-    if ($oldversion < 2025050400) {
+    if ($oldversion < 2025050404) {
 
         // Define field manual to be renamed to manually in table tool_lifecycle_workflow.
         $table = new xmldb_table('tool_lifecycle_workflow');
@@ -595,20 +595,8 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             workflow_manager::remove($trigger->workflowid);
         }
 
-        upgrade_plugin_savepoint(true, 2025050400, 'tool', 'lifecycle');
-
-    }
-
-    if ($oldversion < 2025050404) {
-        // Define field manual to be renamed to manually in table tool_lifecycle_workflow.
-        $table = new xmldb_table('tool_lifecycle_workflow');
-        $field = new xmldb_field('manual', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'sortindex');
-
-        // Rename field manual to manually.
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->rename_field($table, $field, 'manually');
-        }
         upgrade_plugin_savepoint(true, 2025050404, 'tool', 'lifecycle');
+
     }
 
     return true;
