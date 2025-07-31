@@ -201,7 +201,6 @@ class process_manager {
      */
     public static function rollback_process($process) {
         process_rollback::event_from_process($process)->trigger();
-        unset($process->context);
         for ($i = $process->stepindex; $i >= 1; $i--) {
             $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $i);
             $lib = lib_manager::get_step_lib($step->subpluginname);
@@ -224,7 +223,7 @@ class process_manager {
     private static function remove_process($process) {
         global $DB;
         $DB->delete_records('tool_lifecycle_procdata', ['processid' => $process->id]);
-        $DB->delete_records('tool_lifecycle_process', (array) $process);
+        $DB->delete_records('tool_lifecycle_process', ['id' => $process->id]);
     }
 
     /**
