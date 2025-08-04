@@ -38,7 +38,7 @@ use tool_lifecycle\urls;
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-require_login();
+require_admin();
 
 $type = required_param('type', PARAM_ALPHA);
 $elementid = optional_param('elementid', null, PARAM_INT);
