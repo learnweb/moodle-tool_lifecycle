@@ -1,3 +1,4 @@
 # Used for simulating cron during development
 development.php
 /.idea/
+/trigger/customfieldsemester/
