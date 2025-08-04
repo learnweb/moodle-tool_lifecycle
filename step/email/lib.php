@@ -155,7 +155,7 @@ class email extends libbase {
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    private function replace_placeholders($strings, $user, $stepid, $mailentries) {
+    public function replace_placeholders($strings, $user, $stepid, $mailentries) {
         global $CFG;
 
         $patterns = [];

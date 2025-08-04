@@ -41,8 +41,8 @@ class semindependent extends base_automatic {
 
     /**
      * Returns triggertype of trigger: trigger, triggertime or exclude.
-     * @param object $course DEPRECATED
-     * @param int $triggerid DEPRECATED
+     * @param object $course
+     * @param int $triggerid
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {

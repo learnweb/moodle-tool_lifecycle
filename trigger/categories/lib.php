@@ -43,8 +43,8 @@ class categories extends base_automatic {
 
     /**
      * Returns triggertype of trigger: trigger, triggertime or exclude.
-     * @param object $course DEPRECATED
-     * @param int $triggerid DEPRECATED
+     * @param object $course
+     * @param int $triggerid
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
@@ -137,6 +137,7 @@ class categories extends base_automatic {
      * Ensure validity of settings upon backup restoration.
      * @param array $settings
      * @return array List of errors with settings. If empty, the given settings are valid.
+     * @throws \coding_exception
      */
     public function ensure_validity(array $settings): array {
         $missingcategories = [];

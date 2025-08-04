@@ -139,11 +139,19 @@ abstract class base_automatic extends base {
 
     /**
      * Returns triggertype of trigger: trigger, triggertime or exclude.
-     * @param int $course DEPRECATED
-     * @param int $triggerid DEPRECATED
+     * @param \stdClass $course
+     * @param int $triggerid
      * @return trigger_response
      */
     abstract public function check_course($course, $triggerid);
+
+    /**
+     * Returns whether the lib function check_course contains particular selection code per course or not.
+     * @return bool
+     */
+    public function check_course_code() {
+        return false;
+    }
 
     /**
      * Defines if the trigger subplugin is started manually or automatically.

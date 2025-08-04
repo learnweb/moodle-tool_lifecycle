@@ -298,17 +298,13 @@ class processor {
      * @param trigger_subplugin $trigger trigger, which will be asked for additional where requirements.
      * @param int[] $excluded List of course id, which should be excluded from counting.
      * @param int[] $delayed List of course ids of delayed courses (globally and for workflow).
-     * @return int[] $triggered, $new, $delayed Triggered courses and amount which courses of them would
-     * be added and which courses are delayed.
+     * @return int[] $triggered, $new, $delayed Triggered courses, amount which courses of them would
+     * be added, which courses are delayed.
      * @throws \coding_exception
      * @throws \dml_exception
      */
     public function get_triggercourses_forcounting($trigger, $excluded, $delayed) {
         global $DB;
-
-        $triggercourses = 0;
-        $delayedcourses = 0;
-        $newcourses = 0;
 
         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
         // Get SQL for this trigger.
@@ -317,7 +313,7 @@ class processor {
         // We just want the triggered courses here, no matter of including or excluding.
         $where = str_replace(" NOT ", " ", $sql);
 
-        // Now get the amount of courses triggered by this trigger.
+        // Now get all the courses triggered by this trigger.
         $sql = 'SELECT {course}.id from {course} WHERE '. $where;
         $triggercoursesall = $DB->get_fieldset_sql($sql, $whereparams);
 
