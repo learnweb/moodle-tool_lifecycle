@@ -28,6 +28,7 @@ require_once(__DIR__ . '/../../../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 require_login();
+require_capability('moodle/site:config', context_system::instance());
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url(new \moodle_url("/admin/tool/lifecycle/step/adminapprove/index.php"));

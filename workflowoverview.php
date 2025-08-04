@@ -49,6 +49,7 @@ use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
 require_login();
+require_capability('moodle/site:config', context_system::instance());
 
 $workflowid = required_param('wf', PARAM_INT);
 $stepid = optional_param('step', null, PARAM_INT);

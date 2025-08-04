@@ -32,6 +32,7 @@ use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
 require_login();
+require_capability('moodle/site:config', context_system::instance());
 
 $syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::DEACTIVATED_WORKFLOWS));
