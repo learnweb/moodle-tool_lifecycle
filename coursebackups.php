@@ -30,7 +30,7 @@ use tool_lifecycle\urls;
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-require_login();
+require_admin();
 
 $syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::COURSE_BACKUPS));

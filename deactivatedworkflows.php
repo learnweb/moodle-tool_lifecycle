@@ -31,7 +31,7 @@ use tool_lifecycle\local\table\deactivated_workflows_table;
 use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
-require_login();
+require_admin();
 
 $syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::DEACTIVATED_WORKFLOWS));
