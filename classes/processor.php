@@ -317,7 +317,7 @@ class processor {
         $sql = 'SELECT {course}.id from {course} WHERE '. $where;
         $triggercoursesall = $DB->get_fieldset_sql($sql, $whereparams);
 
-        // Get delayed courses which would be triggered by this trigger.
+        // Get amount of delayed courses which would be triggered by this trigger.
         $delayedcourses = count(array_intersect($triggercoursesall, $delayed));
 
         // Exclude delayed courses and sitecourse according to the workflow settings.
@@ -340,6 +340,52 @@ class processor {
         $newcourses = $DB->count_records_sql($sql, $whereparams);
 
         return [$triggercourses, $newcourses, $delayedcourses];
+    }
+
+
+    /**
+     * Also returns the amount of courses for a trigger for counting. BUT the trigger lib function check_courses is used
+     * to select a course for triggering/excluding.
+     * Relevant means that there is currently no lifecycle process running for this course.
+     * @param trigger_subplugin $trigger trigger, which will be asked for additional where requirements.
+     * @param int[] $excluded List of course id, which should be excluded from counting.
+     * @param int[] $delayed List of course ids of delayed courses (globally and for workflow).
+     * @return int[] $triggered, $new, $delayed Triggered courses, amount which courses of them would
+     * be added, which courses are delayed.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    public function get_triggercourses_forcounting_check_course($trigger, $excluded, $delayed) {
+        global $DB;
+
+        $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+
+        $triggercoursesall = [];
+        $recordset = $this->get_course_recordset([$trigger], [], true);
+        while ($recordset->valid()) {
+            $course = $recordset->current();
+            $response = $lib->check_course($course, $trigger->id);
+            if ($response !== trigger_response::next()) {
+                $triggercoursesall[] = $course->id;
+            }
+            $recordset->next();
+        }
+
+        // Get delayed courses which would be triggered by this trigger.
+        $delayedcourses = array_intersect($triggercoursesall, $delayed);
+
+        $triggercourses = array_diff($triggercoursesall, $excluded);
+
+        // Only get courses which are not part of this workflow yet. Exclude processes and proc_errors of this wf.
+        $sql = "SELECT {course}.id from {course}
+                    LEFT JOIN {tool_lifecycle_process} p ON {course}.id = p.courseid
+                    LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
+                    WHERE (p.courseid IS NOT NULL AND p.workflowid = $trigger->workflowid)
+                    OR (pe.courseid IS NOT NULL AND pe.workflowid = $trigger->workflowid)";
+        $stepcourses = $DB->get_fieldset_sql($sql, []);
+        $newcourses = array_diff($triggercourses, $stepcourses);
+
+        return [count($triggercourses), count($newcourses), count($delayedcourses)];
     }
 
     /**
@@ -384,7 +430,22 @@ class processor {
         }
         // Now get the list of course IDs triggered by this trigger.
         $sql = "SELECT {course}.id FROM {course} WHERE " . $where;
-        return $DB->get_fieldset_sql($sql, $whereparams);
+        $triggercourses = $DB->get_fieldset_sql($sql, $whereparams);
+        // If trigger lib has check_course code go and check every course individually.
+        if ($lib->check_course_code()) {
+            $triggercourseschecked = [];
+            $recordset = $this->get_course_recordset([$trigger], [], true);
+            while ($recordset->valid()) {
+                $course = $recordset->current();
+                $response = $lib->check_course($course, $trigger->id);
+                if ($response !== trigger_response::next()) {
+                    $triggercourseschecked[] = $course->id;
+                }
+                $recordset->next();
+            }
+            $triggercourses = array_intersect($triggercourseschecked, $triggercourses);
+        }
+        return $triggercourses;
     }
 
     /**
@@ -434,8 +495,13 @@ class processor {
                     // Triggercourses: Courses in current selection without defined excluded courses.
                     // Newcourses: Triggercourses which are not already in workflow (process or process error).
                     // Delayed: Courses in current selection, which are delayed.
-                    [$triggercourses, $newcourses, $delayed] = $this->get_triggercourses_forcounting($trigger, $excludedcourses,
-                        $delayedcourses);
+                    if ($lib->check_course_code()) {
+                        [$triggercourses, $newcourses, $delayed] = $this->get_triggercourses_forcounting_check_course(
+                            $trigger, $excludedcourses, $delayedcourses);
+                    } else {
+                        [$triggercourses, $newcourses, $delayed] = $this->get_triggercourses_forcounting(
+                            $trigger, $excludedcourses, $delayedcourses);
+                    }
                     if ($obj->response == trigger_response::exclude()) {
                         $obj->excluded = $newcourses;
                         $obj->delayed = $delayed;

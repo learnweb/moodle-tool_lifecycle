@@ -258,6 +258,7 @@ foreach ($triggers as $trigger) {
     $response = null;
     $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
     if ($trigger->automatic = !$lib->is_manual_trigger()) {
+        // We need the response type only.
         $response = $lib->check_course(null, null);
     }
     $nomanualtriggerinvolved &= $trigger->automatic;
@@ -559,6 +560,7 @@ if (workflow_manager::is_editable($workflow->id)) {
             // After workflow creation only provide course selection (and manual) triggers for the adding a trigger selection field.
             $lib = lib_manager::get_trigger_lib($triggertype);
             if (!$lib->is_manual_trigger()) {
+                // Function check_course: We need the response type only.
                 if ($lib->check_course(null, null) == trigger_response::triggertime()) {
                     continue;
                 }
