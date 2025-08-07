@@ -72,35 +72,22 @@ class lastaccess extends base_automatic {
      * @throws \dml_exception
      */
     public function get_course_recordset_where($triggerid) {
-        global $DB;
 
-        $sql = "SELECT la.courseid
-        FROM mdl_user_enrolments AS ue
-        JOIN mdl_enrol AS e ON (ue.enrolid = e.id)
-        JOIN mdl_user_lastaccess AS la ON (ue.userid = la.userid)
-        WHERE e.courseid = la.courseid
-        GROUP BY la.courseid
-        HAVING MAX(la.timeaccess) < :lastaccessthreshold";
+        $where = '{course}.id IN
+            (SELECT la.courseid
+                FROM mdl_user_enrolments AS ue
+                JOIN mdl_enrol AS e ON (ue.enrolid = e.id)
+                JOIN mdl_user_lastaccess AS la ON (ue.userid = la.userid)
+                WHERE e.courseid = la.courseid
+                GROUP BY la.courseid
+                HAVING MAX(la.timeaccess) < :lastaccessthreshold
+            )';
 
         $delay = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['delay'];
         $now = time();
+        $params = ["lastaccessthreshold" => $now - $delay];
 
-        try {
-            $records = $DB->get_records_sql($sql, ["lastaccessthreshold" => $now - $delay]);
-        } catch (\dml_exception $e) {
-            $records = [];
-        }
-
-        $courseids = array_column($records, 'courseid');
-
-        if ($courseids) {
-            [$insql, $inparams] = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED);
-            $where = "{course}.id {$insql}";
-        } else {
-            $inparams = [];
-            $where = "true";
-        }
-        return [$where, $inparams];
+        return [$where, $params];
     }
 
     /**
