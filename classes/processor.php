@@ -477,12 +477,14 @@ class processor {
         $amounts = [];
         $autotriggers = [];
         $nextrun = 0;
+        $checkcoursecode = false;
         foreach ($triggers as $trigger) {
             $trigger = (object)(array) $trigger; // Cast to normal object to be able to set dynamic properties.
             $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
             $trigger->exclude = $settings['exclude'] ?? false;
             $obj = new \stdClass();
             $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+            $checkcoursecode = $lib->check_course_code();
             if ($lib->is_manual_trigger()) {
                 $obj->automatic = false;
             } else {
@@ -491,6 +493,7 @@ class processor {
                 $obj->excluded = false;
                 // Only use triggers with true sql to display the real amounts for the others (instead of always 0).
                 $obj->sql = trigger_manager::get_trigger_sqlresult($trigger);
+                // We only need the trigger response here.
                 $obj->response = $lib->check_course(null, null);
                 if ($obj->sql != "false") {
                     // Get courses amount.
@@ -535,27 +538,53 @@ class processor {
             $amounts[$trigger->sortindex] = $obj;
         }
 
-        // Exclude courses in steps of this workflow.
-        $sqlstepcourses = "SELECT {course}.id from {course}
-            LEFT JOIN {tool_lifecycle_process}
-            ON {course}.id = {tool_lifecycle_process}.courseid
-            LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
-            WHERE ({tool_lifecycle_process}.courseid IS NOT NULL AND {tool_lifecycle_process}.workflowid = $workflow->id)
-            OR (pe.courseid IS NOT NULL AND pe.workflowid = $workflow->id)";
-        $excludedcourses = array_merge($DB->get_fieldset_sql($sqlstepcourses), $sitecourse);
+        $recordset = $this->get_course_recordset($autotriggers, $sitecourse, true);
 
         $delayedcourses = []; // Only delayed courses of selected courses are of interest here.
-        $recordset = $this->get_course_recordset($autotriggers, $excludedcourses, true);
         while ($recordset->valid()) {
             $course = $recordset->current();
-            if ($course->hasprocess) {
-                if ($course->workflowid && ($course->workflowid != $workflow->id)) {
-                    $usedcourses[] = $course->id;
+            if ($checkcoursecode) {
+                $action = false;
+                foreach ($autotriggers as $trigger) {
+                    $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+                    $response = $lib->check_course($course, $trigger->id);
+                    if ($response == trigger_response::next()) {
+                        if (!$action) {
+                            $action = true;
+                        }
+                        continue;
+                    }
+                    if ($response == trigger_response::exclude()) {
+                        if (!$action) {
+                            $action = true;
+                        }
+                        continue;
+                    }
+                    if ($response == trigger_response::trigger()) {
+                        continue;
+                    }
                 }
-            } else if ($course->delay && $course->delay > time()) {
-                $delayedcourses[] = $course->id;
+                if (!$action) {
+                    if ($course->hasprocess) {
+                        if ($course->workflowid && ($course->workflowid != $workflow->id)) {
+                            $usedcourses[] = $course->id;
+                        }
+                    } else if ($course->delay && $course->delay > time()) {
+                        $delayedcourses[] = $course->id;
+                    } else {
+                        $coursestriggered[] = $course->id;
+                    }
+                }
             } else {
-                $coursestriggered[] = $course->id;
+                if ($course->hasprocess) {
+                    if ($course->workflowid && ($course->workflowid != $workflow->id)) {
+                        $usedcourses[] = $course->id;
+                    }
+                } else if ($course->delay && $course->delay > time()) {
+                    $delayedcourses[] = $course->id;
+                } else {
+                    $coursestriggered[] = $course->id;
+                }
             }
             $recordset->next();
         }
