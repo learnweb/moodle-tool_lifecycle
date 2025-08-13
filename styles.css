@@ -111,12 +111,14 @@ span.tool_lifecycle-hint {
 #lifecycle-workflow-details .courses-table {
     flex: 45% 1 1;
     border: 1px solid #bbb;
-    margin-right: 2em;
+    border-radius: 8px;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
 #lifecycle-workflow-details .bar {
-    border: 1px solid #dee2e6;
-    border-right: none;
+    border: 1px none #dee2e6;
+    border-bottom-style: solid;
 }
 
 #lifecycle-workflow-details .close-button {

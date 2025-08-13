@@ -382,7 +382,7 @@ if ($stepid) { // Display courses table with courses of this step.
 } else if ($excluded) { // Display courses table with excluded courses of this trigger.
     $trigger = trigger_manager::get_instance($excluded);
     if ($amounts[$trigger->sortindex]->excluded ?? false) {
-        $table = new triggered_courses_table_trigger($trigger, 'exclude', $search);
+        $table = new triggered_courses_table_trigger($trigger, 'excluded', $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
