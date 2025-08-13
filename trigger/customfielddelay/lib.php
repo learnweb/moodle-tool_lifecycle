@@ -16,6 +16,7 @@
 
 namespace tool_lifecycle\trigger;
 
+use moodle_url;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\settings_type;
@@ -94,15 +95,25 @@ class customfielddelay extends base_automatic {
      */
     public function extend_add_instance_form_definition($mform) {
         global $DB;
-        $mform->addElement('duration', 'delay', get_string('delay', 'lifecycletrigger_customfielddelay'));
+        $mform->addElement('duration', 'delay',
+            get_string('delay', 'lifecycletrigger_customfielddelay'));
         $mform->addHelpButton('delay', 'delay', 'lifecycletrigger_customfielddelay');
         $fields = $DB->get_records('customfield_field', ['type' => 'date']);
         $choices = [];
         foreach ($fields as $field) {
             $choices[$field->shortname] = $field->name;
         }
-        $mform->addElement('select', 'customfield', get_string('customfield', 'lifecycletrigger_customfielddelay'), $choices);
-        $mform->addHelpButton('customfield', 'customfield', 'lifecycletrigger_customfielddelay');
+        if ($choices) {
+            $mform->addElement('select', 'customfield',
+                get_string('customfield', 'lifecycletrigger_customfielddelay'), $choices);
+            $mform->addHelpButton('customfield', 'customfield',
+                'lifecycletrigger_customfielddelay');
+        } else {
+            $mform->addElement('static', 'nocustomfields',
+                get_string('nocustomfields_warning', 'lifecycletrigger_customfielddelay'),
+                    \html_writer::link(new moodle_url('/course/customfield.php'),
+                        get_string('nocustomfields_link', 'lifecycletrigger_customfielddelay')));
+        }
     }
 
     /**
