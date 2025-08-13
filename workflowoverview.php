@@ -45,7 +45,8 @@ use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\local\table\courses_in_step_table;
 use tool_lifecycle\local\table\process_courses_table;
-use tool_lifecycle\local\table\triggered_courses_table;
+use tool_lifecycle\local\table\triggered_courses_table_trigger;
+use tool_lifecycle\local\table\triggered_courses_table_workflow;
 use tool_lifecycle\processor;
 use tool_lifecycle\settings_type;
 use tool_lifecycle\tabs;
@@ -369,68 +370,72 @@ if ($stepid) { // Display courses table with courses of this step.
     $tablecoursesamount = $courseids;
 } else if ($triggerid) { // Display courses table with triggered courses of this trigger.
     $trigger = trigger_manager::get_instance($triggerid);
-    if ($courseids = (new processor())->get_triggercourses($trigger, $workflow)) {
-        $table = new triggered_courses_table($courseids, 'triggered', $trigger->instancename,
-            null, $workflow->id, $search);
+    if ($amounts[$trigger->sortindex]->triggered ?? false) {
+        $table = new triggered_courses_table_trigger($trigger, 'triggerid', $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'trigger', 'value' => $triggerid];
-        $tablecoursesamount = count($courseids);
+        $tablecoursesamount = $amounts[$trigger->sortindex]->triggered;
     }
-} else if ($triggered) { // Display courses table with triggered courses of this workflow.
-    $table = new triggered_courses_table($coursestriggered, 'triggeredworkflow', null,
-        $workflow->title, $workflow->id, $search);
-    ob_start();
-    $table->out(PAGESIZE, false);
-    $out = ob_get_contents();
-    ob_end_clean();
-    $hiddenfieldssearch[] = ['name' => 'triggered', 'value' => $triggered];
-    $tablecoursesamount = count($coursestriggered);
 } else if ($excluded) { // Display courses table with excluded courses of this trigger.
     $trigger = trigger_manager::get_instance($excluded);
-    if ($courseids = (new processor())->get_triggercourses($trigger, $workflow)) {
-        $table = new triggered_courses_table($courseids, 'exclude', $trigger->instancename, null, null, $search);
+    if ($amounts[$trigger->sortindex]->excluded ?? false) {
+        $table = new triggered_courses_table_trigger($trigger, 'exclude', $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'excluded', 'value' => $excluded];
-        $tablecoursesamount = count($courseids);
+        $tablecoursesamount = $amounts[$trigger->sortindex]->excluded;
     }
+} else if ($triggered) { // Display courses table with triggered courses of this workflow.
+    if ($coursestriggered ?? false) {
+        $table = new triggered_courses_table_workflow($coursestriggered, $workflow,
+            'triggeredworkflow', $search);
+        ob_start();
+        $table->out(PAGESIZE, false);
+        $out = ob_get_contents();
+        ob_end_clean();
+        $hiddenfieldssearch[] = ['name' => 'triggered', 'value' => $triggered];
+        $tablecoursesamount = $coursestriggered;
+    }
+
 } else if ($delayed) { // Display courses table with courses delayed for this workflow.
-    $table = new triggered_courses_table( $coursesdelayed, 'delayed',
-        null, $workflow->title, $workflowid, $search);
-    ob_start();
-    $table->out(PAGESIZE, false);
-    $out = ob_get_contents();
-    ob_end_clean();
-    $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
-    $tablecoursesamount = count($coursesdelayed);
-} else if ($processes) { // Display courses table with courses in a process or in state process error for this workflow.
-    $coursesinprocess = $DB->get_fieldset('tool_lifecycle_process', 'courseid', ['workflowid' => $workflow->id]);
-    $coursesprocesserrors = $DB->get_fieldset('tool_lifecycle_proc_error', 'courseid', ['workflowid' => $workflow->id]);
-    $coursesprocess = array_merge($coursesinprocess, $coursesprocesserrors);
-    $table = new process_courses_table($coursesprocess, $workflow->title, $workflow->id, $search);
-    ob_start();
-    $table->out(PAGESIZE, false);
-    $out = ob_get_contents();
-    ob_end_clean();
-    $hiddenfieldssearch[] = ['name' => 'processes', 'value' => $processes];
-    $tablecoursesamount = count($coursesprocess);
+    if ($coursesdelayed ?? false) {
+        $table = new triggered_courses_table_workflow($coursesdelayed, $workflow, 'delayed', $search);
+        ob_start();
+        $table->out(PAGESIZE, false);
+        $out = ob_get_contents();
+        ob_end_clean();
+        $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
+        $tablecoursesamount = $coursesdelayed;
+    }
 } else if ($used) { // Display courses triggered by this workflow but involved in other processes already.
-    if ($courseids = $amounts['all']->used ?? null) {
-        $table = new triggered_courses_table( $courseids, 'used',
-            null, $workflow->title, $workflowid, $search);
+    if ($amounts['all']->used ?? null) {
+        $table = new triggered_courses_table_workflow($amounts['all']->used, $workflow, 'used', $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'used', 'value' => $used];
-        $tablecoursesamount = count($courseids);
+        $tablecoursesamount = $amounts['all']->used;
+    }
+} else if ($processes) { // Display courses table with courses in a process or in state process error for this workflow.
+    $coursesinprocess = $DB->get_fieldset('tool_lifecycle_process', 'courseid', ['workflowid' => $workflow->id]);
+    $coursesprocesserrors = $DB->get_fieldset('tool_lifecycle_proc_error', 'courseid', ['workflowid' => $workflow->id]);
+    if ($coursesprocess = array_merge($coursesinprocess, $coursesprocesserrors)) {
+        $table = new process_courses_table_workflow(count($coursesprocess), $workflow, 'processes', $search);
+        ob_start();
+        $table->out(PAGESIZE, false);
+        $out = ob_get_contents();
+        ob_end_clean();
+        $hiddenfieldssearch[] = ['name' => 'processes', 'value' => $processes];
+        $tablecoursesamount = count($coursesprocess);
     }
 }
+
 // Search box for courses list.
 $searchhtml = '';
 if ($tablecoursesamount > PAGESIZE ) {
@@ -474,13 +479,16 @@ if ($isactive) {
     );
     $abortdisableworkflowlink = "<br>".$abortdisableworkflowlink;
     // Workflow processes and process errors link.
-    $ldata = new \stdClass();
-    $ldata->alt = get_string('workflow_processesanderrors', 'tool_lifecycle');
-    $ldata->url = new moodle_url($popuplink, ['processes' => $workflowid, 'showdetails' => $showdetails]);
-    $ldata->processes = process_manager::count_processes_by_workflow($workflow->id) +
-        process_manager::count_process_errors_by_workflow($workflow->id);
-    $workflowprocesseslink = $OUTPUT->render_from_template('tool_lifecycle/overview_processeslink', $ldata);;
-    $workflowprocesseslink = "<br>".$workflowprocesseslink;
+    if ($coursesinprocess = process_manager::count_processes_by_workflow($workflow->id) +
+        process_manager::count_process_errors_by_workflow($workflow->id)) {
+        $ldata = new \stdClass();
+        $ldata->alt = get_string('workflow_processesanderrors', 'tool_lifecycle');
+        $ldata->url = new moodle_url($popuplink, ['processes' => $workflowid, 'showdetails' => $showdetails]);
+        $ldata->processes = process_manager::count_processes_by_workflow($workflow->id) +
+            process_manager::count_process_errors_by_workflow($workflow->id);
+        $workflowprocesseslink = $OUTPUT->render_from_template('tool_lifecycle/overview_processeslink', $ldata);;
+        $workflowprocesseslink = "<br>".$workflowprocesseslink;
+    }
 }
 
 if (!($isactive || $isdeactivated)) {
@@ -522,18 +530,18 @@ $data = [
 if ($showdetails) {
     // The triggers total box.
     $data['displaytotaltriggered'] = $displaytotaltriggered;
-    $triggered = count($amounts['all']->coursestriggered) ?? 0;
+    $triggered = $amounts['all']->coursestriggered ?? 0;
     $triggeredhtml = $triggered > 0 ? html_writer::span($triggered, 'text-success font-weight-bold') : 0;
     $data['coursestriggered'] = $triggeredhtml;
     $data['coursestriggeredcount'] = $triggered;
     // Count delayed total, displayed in mustache only if there are any.
-    $delayed = count($amounts['all']->delayedcourses);  // Matters only if delayed courses are not included in workflow.
+    $delayed = $amounts['all']->delayedcourses ?? 0;  // Matters only if delayed courses are not included in workflow.
     $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
     $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
         ['class' => 'btn btn-outline-secondary mt-1']) : 0;
     $data['coursesdelayed'] = $delayedhtml;
     // Count in other processes used courses total, displayed in mustache only if there are any.
-    $used = count($amounts['all']->used) ?? 0;
+    $used = $amounts['all']->used ?? 0;
     $usedlink = new moodle_url($popuplink, ['used' => "1"]);
     $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,
         ['class' => 'btn btn-outline-secondary mt-1']) : 0;

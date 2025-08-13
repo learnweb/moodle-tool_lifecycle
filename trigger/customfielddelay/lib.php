@@ -60,7 +60,7 @@ class customfielddelay extends base_automatic {
             throw new \moodle_exception('missingfield',
                 'lifecycletrigger_customfielddelay', '', $fieldname);
         }
-        $where = "{course}.id in (select cxt.instanceid from {context} cxt join {customfield_data} d " .
+        $where = "c.id in (select cxt.instanceid from {context} cxt join {customfield_data} d " .
                     "ON d.contextid = cxt.id AND cxt.contextlevel=" . CONTEXT_COURSE . " " .
                     "WHERE d.fieldid = :customfieldid AND d.intvalue > 0 AND d.intvalue < :customfielddelay)";
         $params = ["customfielddelay" => time() - $delay, "customfieldid" => $field->id];

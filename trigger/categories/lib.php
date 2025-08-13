@@ -87,7 +87,7 @@ class categories extends base_automatic {
 
         [$insql, $inparams] = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED, 'param', !$exclude);
 
-        $where = "{course}.category {$insql}";
+        $where = "c.category {$insql}";
 
         return [$where, $inparams];
     }

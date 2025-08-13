@@ -49,7 +49,7 @@ class byrole extends base_automatic {
         $delay = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['delay'];
         $maxtime = time() - $delay;
 
-        $sql = "{course}.id in (SELECT DISTINCT courseid
+        $sql = "c.id in (SELECT DISTINCT courseid
               FROM {lifecycletrigger_byrole} WHERE triggerid = $triggerid AND timecreated < $maxtime)";
         return [$sql, []];
     }
