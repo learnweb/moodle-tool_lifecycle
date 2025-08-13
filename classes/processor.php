@@ -313,11 +313,11 @@ class processor {
     }
 
     /**
-     * Returns the amount of courses for a trigger for counting.
+     * Returns the number of courses for a trigger for counting.
      * Relevant means that there is currently no lifecycle process running for this course.
      * @param trigger_subplugin $trigger trigger, which will be asked for additional where requirements.
-     * @param int[] $excluded List of course id, which should be excluded from counting.
-     * @param int[] $delayed List of course ids of delayed courses (globally and for workflow).
+     * @param int[] $excluded List of course IDs, which should be excluded from counting.
+     * @param int[] $delayed List of course IDs of delayed courses (globally and for workflow).
      * @return int[] $triggered, $new, $delayed Triggered courses, amount which courses of them would
      * be added, which courses are delayed.
      * @throws \coding_exception

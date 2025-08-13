@@ -75,9 +75,9 @@ class lastaccess extends base_automatic {
 
         $where = '{course}.id IN
             (SELECT la.courseid
-                FROM mdl_user_enrolments AS ue
-                JOIN mdl_enrol AS e ON (ue.enrolid = e.id)
-                JOIN mdl_user_lastaccess AS la ON (ue.userid = la.userid)
+                FROM {user_enrolments} AS ue
+                JOIN {enrol} AS e ON (ue.enrolid = e.id)
+                JOIN {user_lastaccess} AS la ON (ue.userid = la.userid)
                 WHERE e.courseid = la.courseid
                 GROUP BY la.courseid
                 HAVING MAX(la.timeaccess) < :lastaccessthreshold
