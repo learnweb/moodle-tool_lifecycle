@@ -89,7 +89,6 @@ abstract class base {
     public function extend_add_instance_form_validation(&$error, $data) {
     }
 
-
     /**
      * If true, the trigger can be used to manually define workflows, based on an instance of this trigger.
      * This has to be combined with installing the workflow in db/install.php of the trigger plugin.
@@ -158,6 +157,14 @@ abstract class base_automatic extends base {
      * @return bool
      */
     public function is_manual_trigger() {
+        return false;
+    }
+
+    /**
+     * Specifies if this trigger can be used more than once in a single workflow.
+     * @return bool
+     */
+    public function multiple_use() {
         return false;
     }
 

@@ -341,27 +341,43 @@ class trigger_manager extends subplugin_manager {
         $triggers = self::get_triggers_for_workflow($oldworkflowid);
         foreach ($triggers as $trigger) {
             $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
-
             $trigger->id = null;
             $trigger->workflowid = $newworkflowid;
             self::insert_or_update($trigger);
-
             settings_manager::save_settings($trigger->id, settings_type::TRIGGER, $trigger->subpluginname, $settings);
         }
 
     }
 
     /**
-     * Returns true if the trigger fires, i.e. returns a list of one or more courses to process upon.
+     * Returns the sql where clause of the trigger.
      * @param trigger_subplugin $trigger
-     * @return mixed $sql returns false if the trigger does not fire
+     * @return string where clause of this trigger
      * @throws \coding_exception
-     * @throws \dml_exception
      */
     public static function get_trigger_sqlresult($trigger) {
-
         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
         [$sql, ] = $lib->get_course_recordset_where($trigger->id);
         return $sql;
+    }
+
+    /**
+     * Returns if this triggertype is allowed to create more than one instance for a workflow.
+     * @param string $subpluginname of the trigger
+     * @return bool
+     * @throws \coding_exception
+     */
+    public static function trigger_multipleuse($subpluginname) {
+        $lib = lib_manager::get_trigger_lib($subpluginname);
+        if (!$lib->is_manual_trigger()) {
+            $lib = lib_manager::get_automatic_trigger_lib($subpluginname);
+            if ($lib->multiple_use()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

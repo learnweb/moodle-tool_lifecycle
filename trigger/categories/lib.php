@@ -155,4 +155,12 @@ class categories extends base_automatic {
         }
     }
 
+    /**
+     * Specifies if this trigger can be used more than once in a single workflow.
+     * @return bool
+     */
+    public function multiple_use() {
+        return true;
+    }
+
 }

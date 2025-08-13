@@ -561,7 +561,15 @@ if (workflow_manager::is_editable($workflow->id)) {
         if ($triggers) {
             foreach ($triggers as $workflowtrigger) {
                 if ($triggertype == $workflowtrigger->subpluginname) {
-                    continue 2;
+                    $lib = lib_manager::get_trigger_lib($triggertype);
+                    if (!$lib->is_manual_trigger()) {
+                        $lib = lib_manager::get_automatic_trigger_lib($triggertype);
+                        if (!$lib->multiple_use()) {
+                            continue 2;
+                        }
+                    } else {
+                        continue 2;
+                    }
                 }
             }
         } else {

@@ -134,7 +134,9 @@ if ($data = $form->get_data()) {
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
             foreach ($triggers as $trigger) {
                 if ($trigger->subpluginname == $data->subpluginname) {
-                    throw new coding_exception('Only one instance of each trigger type allowed!');
+                    if (!trigger_manager::trigger_multipleuse($trigger->subpluginname)) {
+                        throw new coding_exception('Only one instance of each trigger type allowed!');
+                    }
                 }
             }
             $element = trigger_subplugin::from_record($data);
