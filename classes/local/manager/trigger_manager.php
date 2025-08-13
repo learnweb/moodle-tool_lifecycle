@@ -362,7 +362,7 @@ class trigger_manager extends subplugin_manager {
     }
 
     /**
-     * Returns if this triggertype is allowed to create more than one instance for a workflow.
+     * Returns whether this triggertype is allowed to create more than one instance for a workflow.
      * @param string $subpluginname of the trigger
      * @return bool
      * @throws \coding_exception
