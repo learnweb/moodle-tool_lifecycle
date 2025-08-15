@@ -571,8 +571,8 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         // Define field "includesitecourse" to be added to tool_lifecycle_workflow.
         $table = new xmldb_table('tool_lifecycle_workflow');
-        $field = new xmldb_field('includesitecourse', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayforallworkflows');
 
+        $field = new xmldb_field('includesitecourse', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'delayforallworkflows');
         // Conditionally launch add field "includesitecourse".
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
@@ -580,8 +580,14 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         // Define field "includedelayedcourses" to be added to tool_lifecycle_workflow.
         $field = new xmldb_field('includedelayedcourses', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'includesitecourse');
-
         // Conditionally add field "includedelayedcourses".
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field "andor" to be added to tool_lifecycle_workflow.
+        $field = new xmldb_field('andor', XMLDB_TYPE_INTEGER, '1', null, null, null, '0', 'includedelayedcourses');
+        // Conditionally add field "andor".
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }

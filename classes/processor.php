@@ -29,6 +29,7 @@ namespace tool_lifecycle;
 
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\event\process_triggered;
+use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\step_manager;
@@ -39,8 +40,6 @@ use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\response\step_interactive_response;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\local\response\trigger_response;
-
-define("OTHERWORKFLOW", 2);
 
 /**
  * Offers functionality to trigger, process and finish lifecycle processes.
@@ -245,29 +244,30 @@ class processor {
      * @throws \dml_exception
      */
     public function get_course_recordset($triggers, $exclude, $forcounting = false) {
-        global $DB;
+        global $DB, $SESSION;
 
-        $where = 'true';
         $whereparams = [];
         $workflowid = false;
         foreach ($triggers as $trigger) {
-            $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-            [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
-            $sql = str_replace("{course}", "c", $sql);
-            if (!empty($sql)) {
-                $where .= ' AND ' . $sql;
-                $whereparams = array_merge($whereparams, $params);
-            }
             if (!$workflowid) {
                 $workflowid = $trigger->workflowid;
+                $workflow = workflow_manager::get_workflow($trigger->workflowid);
+                $andor = $workflow->andor == 0 ? 'AND' : 'OR';
+                $where = $andor == 'AND' ? 'true ' : 'false ';
+            }
+            $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+            [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
+            $sql = preg_replace("/{course}/", "c", $sql, 1);
+            if (!empty($sql)) {
+                $where .= " $andor " . $sql;
+                $whereparams = array_merge($whereparams, $params);
             }
         }
 
         if ($forcounting) {
             if ($exclude) {
-                $workflow = workflow_manager::get_workflow($workflowid);
                 if (!$workflow->includesitecourse) {
-                    $where .= " AND c.id <> 1 ";
+                    $where = "($where) AND c.id <> 1 ";
                 }
             }
             // Get course hasprocess and delay with the sql.
@@ -291,12 +291,11 @@ class processor {
                     WHERE " . $where;
         } else {
             if ($exclude) {
-                $workflow = workflow_manager::get_workflow($workflowid);
                 if (!$workflow->includesitecourse) {
-                    $where .= " AND c.id <> 1 ";
+                    $where = "($where) AND c.id <> 1 ";
                 }
                 if (!$workflow->includedelayedcourses) {
-                    $where .= " AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf} WHERE delayeduntil > :time1
+                    $where = "($where) AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf} WHERE delayeduntil > :time1
                     AND workflowid = :workflowid) 
                     AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
                     $inparams = ['time1' => time(),'time2' => time(), 'workflowid' => $workflowid];
@@ -309,6 +308,11 @@ class processor {
                     LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid
                     WHERE p.courseid is null AND pe.courseid IS NULL AND " . $where;
         }
+        $debugsql = $sql;
+        foreach ($whereparams as $key => $value) {
+            $debugsql = str_replace(":".$key, $value, $debugsql);
+        }
+        $SESSION->debugtriggersql = $debugsql;
         return $DB->get_recordset_sql($sql, $whereparams);
     }
 

@@ -141,11 +141,9 @@ class triggered_courses_table_workflow extends \table_sql {
         }
 
         $where = 'true';
-        if (!$workflow->includesitecourse) {
-            $where .= " AND c.id <> 1 ";
-        }
         $inparams = [];
         $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+        $andor = $workflow->andor ? 'AND' : 'OR';
         foreach ($triggers as $trigger) {
             $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
             if ($lib->is_manual_trigger()) {
@@ -155,19 +153,22 @@ class triggered_courses_table_workflow extends \table_sql {
                     $this->checkcoursecode = $lib->check_course_code();
                 }
                 [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
-                $sql = str_replace("{course}", "c", $sql);
+                $sql = preg_replace("/{course}/", "c", $sql, 1);
                 if (!empty($sql)) {
-                    $where .= ' AND ' . $sql;
+                    $where .= " $andor " . $sql;
                     $inparams = array_merge($inparams, $params);
                 }
             }
         }
 
+        if (!$workflow->includesitecourse) {
+            $where = "($where) AND c.id <> 1 ";
+        }
         if ($filterdata) {
             if (is_numeric($filterdata)) {
-                $where .= " AND c.id = $filterdata ";
+                $where = "($where) AND c.id = $filterdata ";
             } else {
-                $where .= " AND ( c.fullname LIKE '%$filterdata%' OR c.shortname LIKE '%$filterdata%')";
+                $where = "($where) AND (c.fullname LIKE '%$filterdata%' OR c.shortname LIKE '%$filterdata%')";
             }
         }
 

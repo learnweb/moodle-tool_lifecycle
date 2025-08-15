@@ -64,6 +64,8 @@ $processes = optional_param('processes', null, PARAM_INT);
 $used = optional_param('used', null, PARAM_INT);
 $search = optional_param('search', null, PARAM_RAW);
 $showdetails = optional_param('showdetails', 0, PARAM_INT);
+$showsql = optional_param('showsql', 0, PARAM_INT);
+$debugtriggersql = "";
 if ($showdetails == 0) {
     if (isset($SESSION->showdetails)) {
         if ($SESSION->showdetails == $workflowid) {
@@ -72,8 +74,12 @@ if ($showdetails == 0) {
     }
 } else if ($showdetails == -1) {
     $SESSION->showdetails = $showdetails = 0;
+    $SESSION->debugtriggersql = $debugtriggersql = '';
 } else {
     $SESSION->showdetails = $workflowid;
+    if (isset($SESSION->debugtriggersql)) {
+        $debugtriggersql = $SESSION->debugtriggersql;
+    }
 }
 
 $workflow = workflow_manager::get_workflow($workflowid);
@@ -401,7 +407,6 @@ if ($stepid) { // Display courses table with courses of this step.
         $hiddenfieldssearch[] = ['name' => 'triggered', 'value' => $triggered];
         $tablecoursesamount = $coursestriggered;
     }
-
 } else if ($delayed) { // Display courses table with courses delayed for this workflow.
     if ($coursesdelayed ?? false) {
         $table = new triggered_courses_table_workflow($coursesdelayed, $workflow, 'delayed', $search);
@@ -434,9 +439,14 @@ if ($stepid) { // Display courses table with courses of this step.
         $hiddenfieldssearch[] = ['name' => 'processes', 'value' => $processes];
         $tablecoursesamount = count($coursesprocess);
     }
+} else if ($showsql && $debugtriggersql) { // Display a sql statement stored in session.
+    $out = \html_writer::div(
+        str_replace("}", "", str_replace("{", $CFG->prefix, $debugtriggersql)),
+        "p-3"
+    );
 }
 
-// Search box for courses list.
+// Search box for the course list.
 $searchhtml = '';
 if ($tablecoursesamount > PAGESIZE ) {
     $searchhtml = $renderer->render_from_template('tool_lifecycle/search_input', [
@@ -526,6 +536,7 @@ $data = [
     'abortdisableworkflowlink' => $abortdisableworkflowlink,
     'workflowprocesseslink'  => $workflowprocesseslink,
     'runlink' => new \moodle_url(urls::RUN),
+    'debugtriggersql' => $debugtriggersql,
 ];
 if ($showdetails) {
     // The triggers total box.

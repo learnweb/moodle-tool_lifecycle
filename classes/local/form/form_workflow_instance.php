@@ -130,6 +130,20 @@ class form_workflow_instance extends \moodleform {
             $mform->setDefault($elementname, $this->workflow->includesitecourse);
         }
 
+        $elementname = 'andor';
+        $groupelements = array(
+            $mform->createElement('radio', $elementname, '', 'AND', '0'),
+            $mform->createElement('radio', $elementname, '', 'OR', '1')
+        );
+        $mform->addElement('group', 'andorgroup', get_string('andor', 'tool_lifecycle'), $groupelements, null, true);
+        $mform->addHelpButton('andorgroup', 'andor', 'tool_lifecycle');
+        $mform->setType($elementname, PARAM_INT);
+        if (isset($this->workflow)) {
+            $mform->setDefault("andorgroup[$elementname]", $this->workflow->andor);
+        } else {
+            $mform->setDefault("andorgroup[$elementname]", '0');
+        }
+
         $this->add_action_buttons();
     }
 
