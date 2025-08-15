@@ -112,10 +112,10 @@ class triggered_courses_table_trigger extends \table_sql {
 
         if (!$workflow->includedelayedcourses && $excludedcourses) {
             $where .= " AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf} WHERE delayeduntil > :time1
-                    AND workflowid = :workflowid) 
+                    AND workflowid = :workflowid)
                     AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
             $whereparams = array_merge($whereparams,
-                ['time1' => time(),'time2' => time(), 'workflowid' => $workflow->id]);
+                ['time1' => time(), 'time2' => time(), 'workflowid' => $workflow->id]);
         }
 
         if ($filterdata) {

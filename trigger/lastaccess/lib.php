@@ -73,11 +73,11 @@ class lastaccess extends base_automatic {
      */
     public function get_course_recordset_where($triggerid) {
 
-        $where = '{course}.id IN
+        $where = 'c.id IN
             (SELECT la.courseid
-                FROM {user_enrolments} AS ue
-                JOIN {enrol} AS e ON (ue.enrolid = e.id)
-                JOIN {user_lastaccess} AS la ON (ue.userid = la.userid)
+                FROM {user_enrolments} ue
+                JOIN {enrol} e ON ue.enrolid = e.id
+                JOIN {user_lastaccess} la ON ue.userid = la.userid
                 WHERE e.courseid = la.courseid
                 GROUP BY la.courseid
                 HAVING MAX(la.timeaccess) < :lastaccessthreshold

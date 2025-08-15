@@ -295,10 +295,10 @@ class processor {
                     $where = "($where) AND c.id <> 1 ";
                 }
                 if (!$workflow->includedelayedcourses) {
-                    $where = "($where) AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf} WHERE delayeduntil > :time1
-                    AND workflowid = :workflowid) 
+                    $where = "($where) AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf}
+                    WHERE delayeduntil > :time1 AND workflowid = :workflowid)
                     AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
-                    $inparams = ['time1' => time(),'time2' => time(), 'workflowid' => $workflowid];
+                    $inparams = ['time1' => time(), 'time2' => time(), 'workflowid' => $workflowid];
                     $whereparams = array_merge($whereparams, $inparams);
                 }
             }
@@ -352,10 +352,10 @@ class processor {
                 $where .= " AND c.id <> 1 ";
             }
             if (!$workflow->includedelayedcourses) {
-                $where .= " AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf} WHERE delayeduntil > :time1
-                    AND workflowid = :workflowid) 
-                    AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
-                $inparams = ['time1' => time(),'time2' => time(), 'workflowid' => $workflow->id];
+                $where .= " AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf}
+                WHERE delayeduntil > :time1 AND workflowid = :workflowid)
+                AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
+                $inparams = ['time1' => time(), 'time2' => time(), 'workflowid' => $workflow->id];
             }
             $whereparams = array_merge($whereparams, $inparams);
         }
