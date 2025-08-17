@@ -318,11 +318,13 @@ class process_manager {
      * Proceed process from procerror back into the process board.
      * @param int $processid the processid
      * @return void
+     * @throws \dml_exception
      */
     public static function proceed_process_after_error(int $processid) {
         global $DB;
+
         $process = $DB->get_record('tool_lifecycle_proc_error', ['id' => $processid]);
-        // Unset process error entries.
+        // Unset process error only entries.
         unset($process->errormessage);
         unset($process->errortrace);
         unset($process->errorhash);
@@ -343,7 +345,7 @@ class process_manager {
         global $DB;
 
         $process = $DB->get_record('tool_lifecycle_proc_error', ['id' => $processid]);
-        // Unset process error entries.
+        // Unset process error only entries.
         unset($process->errormessage);
         unset($process->errortrace);
         unset($process->errorhash);
