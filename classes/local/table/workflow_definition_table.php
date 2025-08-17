@@ -122,8 +122,8 @@ class workflow_definition_table extends workflow_table {
 
         if (!isset($lib) || $lib->has_multiple_instances()) {
             $action = action::WORKFLOW_BACKUP;
-            $alt = get_string('backupworkflow', 'tool_lifecycle');
-            $icon = 't/backup';
+            $alt = get_string('downloadworkflow', 'tool_lifecycle');
+            $icon = 't/download';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
             if (!workflow_manager::is_active($row->id)) {

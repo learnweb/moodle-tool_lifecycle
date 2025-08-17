@@ -62,7 +62,7 @@ abstract class active_workflows_table extends workflow_table {
 
         if (workflow_manager::is_disableable($row->id)) {
             $action = action::WORKFLOW_BACKUP;
-            $alt = get_string('backupworkflow', 'tool_lifecycle');
+            $alt = get_string('downloadworkflow', 'tool_lifecycle');
             $icon = 't/backup';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
