@@ -154,9 +154,6 @@ class restore_lifecycle_workflow {
                     $this->settings[] = $setting;
             }
         }
-//        foreach ($this->settings as $setting) {
-//            mtrace(\html_writer::div($setting->name.": ".$setting->value.": ".$setting->type.": ".$setting->pluginid));
-//        }
     }
 
     /**
