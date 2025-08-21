@@ -552,6 +552,7 @@ $data = [
     'disableworkflowlink' => $disableworkflowlink,
     'abortdisableworkflowlink' => $abortdisableworkflowlink,
     'workflowprocesseslink'  => $workflowprocesseslink,
+    'runnable' => $isactive,
     'runlink' => new \moodle_url(urls::RUN),
 ];
 if ($showdetails) {

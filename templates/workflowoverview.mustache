@@ -152,12 +152,14 @@
             {{#nomanualtriggerinvolved}}
             <div class="mb-2 mx-2">
                 {{#str}} nextrun, tool_lifecycle, {{{nextrun}}} {{/str}}
+                {{#runnable}}
                 <a href="{{{runlink}}}">
                   <span class="" data-toggle="tooltip" title="{{#str}} runtask, tool_lifecycle {{/str}}">
                       {{#str}} run, tool_lifecycle {{/str}}
                   </span>
                 </a>
                 <br>
+                {{/runnable}}
                 <span class="text-muted">{{#str}} lastrun, tool_lifecycle, {{lastrun}} {{/str}}</span>
             </div>
             {{/nomanualtriggerinvolved}}
