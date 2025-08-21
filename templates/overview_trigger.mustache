@@ -39,7 +39,7 @@
     <div class="workflow-trigger {{classfires}}">
         <div class="wf-header {{^showcoursecounts}}noshowcoursecounts{{/showcoursecounts}}">
             <div class="wf-header-text">
-                <span data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
+                <span data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 50, {{instancename}} {{/shortentext}}</span><br>
                 <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
             </div>
             <div class="wf-actionmenu">
@@ -63,7 +63,7 @@
                         {{^triggeredcourses}}
                             {{^excludedcourses}}
                                 {{^exclude}}
-                                    <span class="btn btn-outline-success">
+                                    <span  data-toggle="tooltip" title="{{tooltip}}" class="btn btn-outline-success">
                                     0
                                 </span>
                                 {{/exclude}}
@@ -78,7 +78,7 @@
                         {{/excludedcourses}}
                         {{^excludedcourses}}
                             {{#exclude}}
-                                <span class="btn btn-outline-danger">
+                                <span data-toggle="tooltip" title="{{tooltip}}" class="btn btn-outline-danger">
                                     0
                                 </span>
                             {{/exclude}}

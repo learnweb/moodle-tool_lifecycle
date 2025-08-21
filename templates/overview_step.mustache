@@ -39,7 +39,13 @@
     <div class="workflow-step workflow-item {{#selected}}wf-selected{{/selected}}">
         <div class="wf-header">
             <div class="wf-header-text">
-                <span data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
+                <span data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 50, {{instancename}} {{/shortentext}}</span>
+                {{#rollbacktosortindex}}
+                    <span data-toggle="tooltip" title="{{#str}} rollbacktotitle, tool_lifecycle, {{rollbacktosortindexname}} {{/str}}" class="badge badge-secondary ml-1">
+                        {{rollbacktosortindex}}
+                    </span>
+                {{/rollbacktosortindex}}
+                <br>
                 <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
             </div>
             <div class="wf-actionmenu">
@@ -49,7 +55,7 @@
         <div class="wf-content">
             {{#numberofcourses}}
                 <a href="{{{popuplink}}}&step={{id}}&showdetails={{showdetails}}">
-                {{#str}} courses {{/str}}: {{numberofcourses}}
+                    {{#str}} courses {{/str}}: {{numberofcourses}}
                 </a>
             {{/numberofcourses}}
             {{^numberofcourses}}

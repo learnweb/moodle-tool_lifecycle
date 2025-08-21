@@ -69,7 +69,7 @@ class triggered_courses_table_workflow extends \table_sql {
      */
     public function __construct($courses, $workflow, $type, $filterdata = '') {
         parent::__construct('tool_lifecycle-courses-in-trigger');
-        global $PAGE;
+        global $PAGE, $SESSION;
 
         $this->define_baseurl($PAGE->url);
         $this->type = $type;
@@ -86,7 +86,11 @@ class triggered_courses_table_workflow extends \table_sql {
         } else if ($type == 'used') {
             $this->caption = get_string('coursesused', 'tool_lifecycle', $a);
         }
+        $this->caption .= "&nbsp;&nbsp;&nbsp;".\html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
+                ["wf" => $workflow->id, "showsql" => "1", "showtablesql" => "1", "showdetails" => "1"]),
+                "&nbsp;&nbsp;&nbsp;", ["class" => "text-muted fs-6 text-decoration-none"]);
         $this->captionattributes = ['class' => 'ml-3'];
+
         $columns = ['courseid', 'coursefullname', 'coursecategory'];
         if ($type == 'triggeredworkflow' && $this->selectable) {
             $columns[] = 'tools';
@@ -143,7 +147,7 @@ class triggered_courses_table_workflow extends \table_sql {
         $where = 'true';
         $inparams = [];
         $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
-        $andor = $workflow->andor ? 'AND' : 'OR';
+        $andor = ($workflow->andor ?? 0) == 0 ? 'AND' : 'OR';
         foreach ($triggers as $trigger) {
             $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
             if ($lib->is_manual_trigger()) {
@@ -171,6 +175,12 @@ class triggered_courses_table_workflow extends \table_sql {
                 $where = "($where) AND (c.fullname LIKE '%$filterdata%' OR c.shortname LIKE '%$filterdata%')";
             }
         }
+
+        $debugsql = $fields.$from.$where;
+        foreach ($inparams as $key => $value) {
+            $debugsql = str_replace(":".$key, $value, $debugsql);
+        }
+        $SESSION->debugtablesql = $debugsql;
 
         $this->set_sql($fields, $from, $where, $inparams);
     }

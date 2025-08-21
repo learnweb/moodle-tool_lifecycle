@@ -32,6 +32,9 @@ namespace tool_lifecycle\local\entity;
  */
 class step_subplugin extends subplugin {
 
+    /** @var int $rollbacktosortindex the stepindex of the step to which the current step has to be rolled back */
+    public $rollbacktosortindex;
+
     /**
      * Creates a subplugin from a db record.
      * @param object $record Data object.
@@ -54,6 +57,9 @@ class step_subplugin extends subplugin {
         $instance = new self($record->instancename, $record->subpluginname, $record->workflowid, $id);
         if (object_property_exists($record, 'sortindex') ) {
                 $instance->sortindex = $record->sortindex;
+        }
+        if (object_property_exists($record, 'rollbacktosortindex') ) {
+            $instance->rollbacktosortindex = $record->rollbacktosortindex;
         }
 
         return $instance;

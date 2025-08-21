@@ -196,12 +196,13 @@ class process_manager {
     /**
      * Currently only removes the current process.
      * @param process $process process the rollback should be triggered for.
+     * @param int $tosortindex to which step the process has to rollback.
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public static function rollback_process($process) {
+    public static function rollback_process($process, $tosortindex = 0) {
         process_rollback::event_from_process($process)->trigger();
-        for ($i = $process->stepindex; $i >= 1; $i--) {
+        for ($i = $process->stepindex; $i > $tosortindex; $i--) {
             $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $i);
             $lib = lib_manager::get_step_lib($step->subpluginname);
             try {
@@ -212,7 +213,9 @@ class process_manager {
             }
             $lib->rollback_course($process->id, $step->id, $course);
         }
-        self::remove_process($process);
+        if ($tosortindex == 0) {
+            self::remove_process($process);
+        }
     }
 
     /**
@@ -355,6 +358,7 @@ class process_manager {
         $DB->delete_records('tool_lifecycle_proc_error', ['id' => $process->id]);
 
         delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);
-        self::rollback_process($process);
+        $rollbacksortindex = process_rollback::get_rollbacksortindex($process->workflowid, $process->stepindex);
+        self::rollback_process($process, $rollbacksortindex);
     }
 }

@@ -51,6 +51,7 @@
         <FIELD NAME="subpluginname" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
         <FIELD NAME="workflowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the workflow"/>
         <FIELD NAME="sortindex" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="Order within the workflow in which the steps are executed"/>
+        <FIELD NAME="rollbacktosortindex" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" COMMENT="To which step a rollback should return"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

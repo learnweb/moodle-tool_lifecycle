@@ -120,6 +120,9 @@ if ($data = $form->get_data()) {
             if (isset($data->instancename)) {
                 $element->instancename = $data->instancename;
             }
+            if (isset($data->rollbacktosortindex)) {
+                $element->rollbacktosortindex = $data->rollbacktosortindex;
+            }
         } else {
             $element = step_subplugin::from_record($data);
         }

@@ -34,6 +34,7 @@ use core\output\notification;
 use core\output\single_button;
 use core\task\manager;
 use tool_lifecycle\action;
+use tool_lifecycle\event\process_rollback;
 use tool_lifecycle\event\process_triggered;
 use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\manager\lib_manager;
@@ -65,7 +66,9 @@ $used = optional_param('used', null, PARAM_INT);
 $search = optional_param('search', null, PARAM_RAW);
 $showdetails = optional_param('showdetails', 0, PARAM_INT);
 $showsql = optional_param('showsql', 0, PARAM_INT);
+$showtablesql = optional_param('showtablesql', 0, PARAM_INT);
 $debugtriggersql = "";
+$debugtablesql = "";
 if ($showdetails == 0) {
     if (isset($SESSION->showdetails)) {
         if ($SESSION->showdetails == $workflowid) {
@@ -75,9 +78,12 @@ if ($showdetails == 0) {
 } else if ($showdetails == -1) {
     $SESSION->showdetails = $showdetails = 0;
     $SESSION->debugtriggersql = $debugtriggersql = '';
+    $SESSION->debugtablesql = $debugtablesql = '';
 } else {
     $SESSION->showdetails = $workflowid;
-    if (isset($SESSION->debugtriggersql)) {
+    if ($showtablesql && isset($SESSION->debugtablesql)) {
+        $debugtablesql = $SESSION->debugtablesql;
+    } else if ($showsql && isset($SESSION->debugtriggersql)) {
         $debugtriggersql = $SESSION->debugtriggersql;
     }
 }
@@ -143,7 +149,8 @@ if ($action) {
         if ($processid) {
             $process = process_manager::get_process_by_id($processid);
             if ($action === 'rollback') {
-                process_manager::rollback_process($process);
+                $rollbacksortindex = process_rollback::get_rollbacksortindex($process->workflowid, $process->stepindex);
+                process_manager::rollback_process($process, $rollbacksortindex);
                 delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $workflow);
                 $msg = get_string('courserolledback', 'tool_lifecycle');
             } else if ($action === 'proceed') {
@@ -353,6 +360,10 @@ foreach ($steps as $step) {
         }
     }
     $step->actionmenu = $OUTPUT->render($actionmenu);
+    if ($step->rollbacktosortindex) {
+        $steptorollback = step_manager::get_step_instance_by_workflow_index($workflowid, $step->rollbacktosortindex);
+        $step->rollbacktosortindexname = $steptorollback->instancename;
+    }
     $displaysteps[] = $step;
 }
 
@@ -377,7 +388,8 @@ if ($stepid) { // Display courses table with courses of this step.
 } else if ($triggerid) { // Display courses table with triggered courses of this trigger.
     $trigger = trigger_manager::get_instance($triggerid);
     if ($amounts[$trigger->sortindex]->triggered ?? false) {
-        $table = new triggered_courses_table_trigger($trigger, 'triggerid', $search);
+        $table = new triggered_courses_table_trigger($amounts[$trigger->sortindex]->triggered,
+            $trigger, 'triggerid', $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
@@ -388,7 +400,8 @@ if ($stepid) { // Display courses table with courses of this step.
 } else if ($excluded) { // Display courses table with excluded courses of this trigger.
     $trigger = trigger_manager::get_instance($excluded);
     if ($amounts[$trigger->sortindex]->excluded ?? false) {
-        $table = new triggered_courses_table_trigger($trigger, 'excluded', $search);
+        $table = new triggered_courses_table_trigger($amounts[$trigger->sortindex]->excluded,
+            $trigger, 'excluded', $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
@@ -439,10 +452,14 @@ if ($stepid) { // Display courses table with courses of this step.
         $hiddenfieldssearch[] = ['name' => 'processes', 'value' => $processes];
         $tablecoursesamount = count($coursesprocess);
     }
-} else if ($showsql && $debugtriggersql) { // Display a sql statement stored in session.
+} else if ($showsql && $debugtriggersql) { // Display the trigger sql statement stored in session.
     $out = \html_writer::div(
         str_replace("}", "", str_replace("{", $CFG->prefix, $debugtriggersql)),
         "p-3"
+    );
+} else if ($showsql && $debugtablesql) { // Display the table sql statement stored in session.
+    $out .= \html_writer::div(
+        str_replace("}", "", str_replace("{", $CFG->prefix, $debugtablesql)), "p-3"
     );
 }
 
@@ -536,7 +553,6 @@ $data = [
     'abortdisableworkflowlink' => $abortdisableworkflowlink,
     'workflowprocesseslink'  => $workflowprocesseslink,
     'runlink' => new \moodle_url(urls::RUN),
-    'debugtriggersql' => $debugtriggersql,
 ];
 if ($showdetails) {
     // The triggers total box.

@@ -143,4 +143,19 @@ class process_rollback extends \core\event\base {
         // No backup and restore.
         return false;
     }
+
+    /**
+     * Gives back the stepindex of the step to which the current step has to be rolled back, if any.
+     * @param int $workflowid workflow ID
+     * @param int $stepindex sort order of the step to be rolled back
+     * @return bool
+     * @throws \dml_exception
+     */
+    public static function get_rollbacksortindex($workflowid, $stepindex) {
+        global $DB;
+
+        $rollbacksortindex = $DB->get_field('tool_lifecycle_step',
+            'rollbacksortindex', ['workflowid' => $workflowid, 'stepindex' => $stepindex]);
+        return $rollbacksortindex ?? false;
+    }
 }

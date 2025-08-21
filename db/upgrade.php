@@ -601,6 +601,14 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             workflow_manager::remove($trigger->workflowid);
         }
 
+        $table = new xmldb_table('tool_lifecycle_step');
+        $field = new xmldb_field('rollbacktosortindex', XMLDB_TYPE_INTEGER, '5', null, null, null, null, 'delaytype');
+
+        // Conditionally create the field.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
         upgrade_plugin_savepoint(true, 2025050404, 'tool', 'lifecycle');
 
     }
