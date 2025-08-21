@@ -15,20 +15,19 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template tool_lifecycle/overview_addinstance
+    @template tool_lifecycle/overview_processlink
 
     Add trigger and add step select fields
 
     Example context (json):
     {
-        "addtriggerselect": "Add trigger select",
-        "addstepselect": "Add step select",
-        "activate": "Activate Button",
-        "newworkflow": true
+        "url": admin/tool/lifecycle/workflowoverview.php?wf=1&processes=4&showdetails=1",
+        "alt": "Active workflow processes and process errors",
+        "processes": "4"
     }
 }}
 <a href="{{{url}}}">
-  <span class="badge badge-light badge-pill text-primary" data-toggle="tooltip" title="{{alt}}">
+    <a href="#" class="badge badge-light badge-pill text-primary" data-toggle="tooltip" title="{{alt}}">
       {{processes}}
-  </span>
+  </a>
 </a>

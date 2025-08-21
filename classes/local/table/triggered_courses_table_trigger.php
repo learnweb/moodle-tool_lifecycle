@@ -132,7 +132,7 @@ class triggered_courses_table_trigger extends \table_sql {
         if (!$workflow->includesitecourse) {
             $where .= " AND c.id <> 1 ";
         }
-        if (($workflow->includedelayedcourses ?? "0") != "1") {
+        if (1==2 && ($workflow->includedelayedcourses ?? "0") != "1") {
             $where .= " AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf} WHERE delayeduntil > :time1
                     AND workflowid = :workflowid)
                     AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";

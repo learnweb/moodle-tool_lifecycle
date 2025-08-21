@@ -82,10 +82,10 @@
                 {{{workflowprocesseslink}}}
             </span>
             <h4 class="pr-5">{{title}}
-                {{#includedelayedcourses}}<sup><i class="fas fa-calendar-plus" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup>{{/includedelayedcourses}}
-                {{#includesitecourse}}<sup><i class="fas fa-home" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includesitecourse, tool_lifecycle{{/str}}"></i></sup>{{/includesitecourse}}</h4>
-            <span>{{#str}} workflow_rollbackdelay, tool_lifecycle{{/str}}: <strong>{{rollbackdelay}}</strong> <span data-toggle="tooltip" title="{{#str}} details:rollbackdelay_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question {{#isactive}}text-white{{/isactive}}"></i></span></span><br>
-            <span>{{#str}} workflow_finishdelay, tool_lifecycle{{/str}}: <strong>{{finishdelay}}</strong> <span data-toggle="tooltip" title="{{#str}} details:finishdelay_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question {{#isactive}}text-white{{/isactive}}"></i></span></span><br>
+                {{#includedelayedcourses}}<a href="#"><sup><i class="fas fa-calendar-plus" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup></a>{{/includedelayedcourses}}
+                {{#includesitecourse}}<a href="#"><sup><i class="fas fa-home" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includesitecourse, tool_lifecycle{{/str}}"></i></sup></a>{{/includesitecourse}}</h4>
+            <span>{{#str}} workflow_rollbackdelay, tool_lifecycle{{/str}}: <strong>{{rollbackdelay}}</strong> <a href="#" data-toggle="tooltip" title="{{#str}} details:rollbackdelay_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question {{#isactive}}text-white{{/isactive}}"></i></a></span><br>
+            <span>{{#str}} workflow_finishdelay, tool_lifecycle{{/str}}: <strong>{{finishdelay}}</strong> <a href="#" data-toggle="tooltip" title="{{#str}} details:finishdelay_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question {{#isactive}}text-white{{/isactive}}"></i></a></span><br>
             <span>{{# delayglobally }}{{#str}}details:globaldelay_yes, tool_lifecycle{{/str}}{{/ delayglobally }}
                 {{^delayglobally}}{{#str}}details:globaldelay_no, tool_lifecycle{{/str}}{{/delayglobally}}</span>
             {{! Add trigger and add step selection fields. }}
@@ -97,7 +97,7 @@
         {{#counttriggers}}
         <div class="wf-trigger-block workflow-item title mt-2">
             <h5 class="my-2">{{#str}} courseselection_title, tool_lifecycle{{/str}}
-                <span data-toggle="tooltip" title="{{#str}} overview:trigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span>
+                <a href="#" data-toggle="tooltip" title="{{#str}} overview:trigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></a>
                     {{#showdetailsicon}}
                         <a href="{{{showdetailslink}}}&showdetails={{workflowid}}" data-toggle="tooltip" title="{{#str}} showextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye-slash"></i></a>
                     {{/showdetailsicon}}
@@ -133,7 +133,7 @@
               {{/displaytotaltriggered}}
               {{^displaytotaltriggered}}
                 <div class="mb-2 mx-2">
-                    {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <span data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span>
+                    {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <a href="#" data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></a>
                 </div>
               {{/displaytotaltriggered}}
             {{/showcoursecounts}}
@@ -148,14 +148,14 @@
         <div class="wf-arrow"></div>
 
         <div class="wf-trigger-block workflow-item">
-            <h5 class="my-2">{{#str}} courseselectionrun_title, tool_lifecycle{{/str}} <span data-toggle="tooltip" title="{{#str}} overview:timetrigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span></h5>
+            <h5 class="my-2">{{#str}} courseselectionrun_title, tool_lifecycle{{/str}} <a href="#" data-toggle="tooltip" title="{{#str}} overview:timetrigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></a></h5>
             {{#nomanualtriggerinvolved}}
             <div class="mb-2 mx-2">
                 {{#str}} nextrun, tool_lifecycle, {{{nextrun}}} {{/str}}
                 <a href="{{{runlink}}}">
-                              <span class="" data-toggle="tooltip" title="{{#str}} runtask, tool_lifecycle {{/str}}">
-                                  {{#str}} run, tool_lifecycle {{/str}}
-                              </span>
+                  <span class="" data-toggle="tooltip" title="{{#str}} runtask, tool_lifecycle {{/str}}">
+                      {{#str}} run, tool_lifecycle {{/str}}
+                  </span>
                 </a>
                 <br>
                 <span class="text-muted">{{#str}} lastrun, tool_lifecycle, {{lastrun}} {{/str}}</span>
@@ -163,7 +163,7 @@
             {{/nomanualtriggerinvolved}}
             {{^nomanualtriggerinvolved}}
                 <div class="mb-2 mx-2">
-                    {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <span data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></span>
+                    {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <a href="#" data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></a>
                 </div>
             {{/nomanualtriggerinvolved}}
             {{#counttimetriggers}}

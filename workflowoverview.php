@@ -441,16 +441,16 @@ if ($stepid) { // Display courses table with courses of this step.
         $tablecoursesamount = $amounts['all']->used;
     }
 } else if ($processes) { // Display courses table with courses in a process or in state process error for this workflow.
-    $coursesinprocess = $DB->get_fieldset('tool_lifecycle_process', 'courseid', ['workflowid' => $workflow->id]);
-    $coursesprocesserrors = $DB->get_fieldset('tool_lifecycle_proc_error', 'courseid', ['workflowid' => $workflow->id]);
-    if ($coursesprocess = array_merge($coursesinprocess, $coursesprocesserrors)) {
-        $table = new process_courses_table_workflow(count($coursesprocess), $workflow, 'processes', $search);
+    $coursesinprocess = process_manager::count_processes_by_workflow($workflow->id) +
+        process_manager::count_process_errors_by_workflow($workflow->id);
+    if ($coursesinprocess) {
+        $table = new triggered_courses_table_workflow($coursesinprocess, $workflow, 'processes', $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'processes', 'value' => $processes];
-        $tablecoursesamount = count($coursesprocess);
+        $tablecoursesamount = $coursesinprocess;
     }
 } else if ($showsql && $debugtriggersql) { // Display the trigger sql statement stored in session.
     $out = \html_writer::div(
@@ -631,8 +631,8 @@ if (workflow_manager::is_editable($workflow->id)) {
                     ]),
                     get_string('activateworkflow', 'tool_lifecycle'));
             } else {
-                $activate = get_string('invalid_workflow', 'tool_lifecycle').
-                    $OUTPUT->pix_icon('i/circleinfo', get_string('invalid_workflow_details', 'tool_lifecycle'));
+                $activate = get_string('invalid_workflow', 'tool_lifecycle').html_writer::link("#",
+                        $OUTPUT->pix_icon('i/circleinfo', get_string('invalid_workflow_details', 'tool_lifecycle')));
             }
         }
     }

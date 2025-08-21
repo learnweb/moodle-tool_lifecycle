@@ -39,7 +39,7 @@
     <div class="workflow-trigger {{classfires}}">
         <div class="wf-header {{^showcoursecounts}}noshowcoursecounts{{/showcoursecounts}}">
             <div class="wf-header-text">
-                <span data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 50, {{instancename}} {{/shortentext}}</span><br>
+                <a href="#" data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 50, {{instancename}} {{/shortentext}}</a><br>
                 <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
             </div>
             <div class="wf-actionmenu">
@@ -55,32 +55,26 @@
                     {{^additionalinfo}}
                         {{#triggeredcourses}}
                             <a href="{{{popuplink}}}&trigger={{id}}&showdetails={{showdetails}}">
-                            <span class="btn btn-outline-success" data-toggle="tooltip" title="{{tooltip}}">
-                                {{triggeredcourses}}
-                            </span>
+                                <span class="btn btn-outline-success" data-toggle="tooltip" title="{{tooltip}}">
+                                    {{triggeredcourses}}
+                                </span>
                             </a>
                         {{/triggeredcourses}}
                         {{^triggeredcourses}}
                             {{^excludedcourses}}
                                 {{^exclude}}
-                                    <span  data-toggle="tooltip" title="{{tooltip}}" class="btn btn-outline-success">
-                                    0
-                                </span>
+                                    <a href="#" data-toggle="tooltip" title="{{tooltip}}" class="btn btn-outline-success">0</a>
                                 {{/exclude}}
                             {{/excludedcourses}}
                         {{/triggeredcourses}}
                         {{#excludedcourses}}
                             <a href="{{{popuplink}}}&excluded={{id}}&showdetails={{showdetails}}" data-toggle="tooltip" title="{{tooltip}}">
-                            <span class="btn btn-outline-danger">
-                                {{excludedcourses}}
-                            </span>
+                                <span class="btn btn-outline-danger">{{excludedcourses}}</span>
                             </a>
                         {{/excludedcourses}}
                         {{^excludedcourses}}
                             {{#exclude}}
-                                <span data-toggle="tooltip" title="{{tooltip}}" class="btn btn-outline-danger">
-                                    0
-                                </span>
+                                <a href="#" data-toggle="tooltip" title="{{tooltip}}" class="btn btn-outline-danger">0</a>
                             {{/exclude}}
                         {{/excludedcourses}}
                     {{/additionalinfo}}

@@ -102,6 +102,7 @@ $string['coursesinstep'] = 'Kurse im Schritt \'{$a}\'';
 $string['coursestriggered'] = 'Getriggerte Kurse für Trigger \'{$a->title}\' ({$a->courses})';
 $string['coursestriggeredworkflow'] = 'Getriggerte Kurse für diesen Workflow \'{$a->title}\' ({$a->courses})';
 $string['coursesused'] = 'Kurse schon in einem anderen Prozess für Workflow \'{$a->title}\' ({$a->courses})';
+$string['coursesinprocess'] = 'Kurse schon in einem Prozess des Workflows \'{$a->title}\' ({$a->courses})';
 $string['create_copy'] = 'Kopie erstellen';
 $string['create_step'] = 'Step erstellen';
 $string['create_trigger'] = 'Trigger erstellen';

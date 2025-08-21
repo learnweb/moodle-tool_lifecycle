@@ -46,7 +46,7 @@ require_once($CFG->libdir . '/tablelib.php');
  */
 class triggered_courses_table_workflow extends \table_sql {
 
-    /** @var string $type of the courses list: triggeredworkflow, delayed or used */
+    /** @var string $type of the courses list: triggeredworkflow, delayed, used, processes */
     private $type;
 
     /** @var int $workflowid Id of the workflow */
@@ -62,7 +62,7 @@ class triggered_courses_table_workflow extends \table_sql {
      * Builds a table of courses.
      * @param int $courses number of courses to list
      * @param workflow $workflow of which the courses are listed
-     * @param string $type of list: triggeredworkflow, delayed, used
+     * @param string $type of list: triggeredworkflow, delayed, used, processes
      * @param string $filterdata optional, term to filter the table by course id or -name
      * @throws \coding_exception
      * @throws \dml_exception
@@ -85,6 +85,8 @@ class triggered_courses_table_workflow extends \table_sql {
             $this->caption = get_string('coursesdelayed', 'tool_lifecycle', $a);
         } else if ($type == 'used') {
             $this->caption = get_string('coursesused', 'tool_lifecycle', $a);
+        } else if ($type == 'processes') {
+            $this->caption = get_string('coursesinprocess', 'tool_lifecycle', $a);
         }
         $this->caption .= "&nbsp;&nbsp;&nbsp;".\html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
                 ["wf" => $workflow->id, "showsql" => "1", "showtablesql" => "1", "showdetails" => "1"]),
@@ -146,21 +148,28 @@ class triggered_courses_table_workflow extends \table_sql {
 
         $where = 'true';
         $inparams = [];
-        $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
-        $andor = ($workflow->andor ?? 0) == 0 ? 'AND' : 'OR';
-        foreach ($triggers as $trigger) {
-            $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-            if ($lib->is_manual_trigger()) {
-                continue;
-            } else {
-                if (!$this->checkcoursecode) {
-                    $this->checkcoursecode = $lib->check_course_code();
-                }
-                [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
-                $sql = preg_replace("/{course}/", "c", $sql, 1);
-                if (!empty($sql)) {
-                    $where .= " $andor " . $sql;
-                    $inparams = array_merge($inparams, $params);
+        if ($type == 'processes') {
+//            $where .= " AND c.id IN (SELECT courseid FROM {tool_lifecycle_process} WHERE workflowid = :pworkflowid1 UNION
+//             SELECT courseid FROM {tool_lifecycle_proc_error} WHERE workflowid = :pworkflowid2)";
+            $where .= " AND (p.id IS NOT NULL OR pe.id IS NOT NULL) ";
+            $inparams = array_merge($inparams, ['pworkflowid1' => $workflow->id, 'pworkflowid2' => $workflow->id]);
+        } else {
+            $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+            $andor = ($workflow->andor ?? 0) == 0 ? 'AND' : 'OR';
+            foreach ($triggers as $trigger) {
+                $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+                if ($lib->is_manual_trigger()) {
+                    continue;
+                } else {
+                    if (!$this->checkcoursecode) {
+                        $this->checkcoursecode = $lib->check_course_code();
+                    }
+                    [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
+                    $sql = preg_replace("/{course}/", "c", $sql, 1);
+                    if (!empty($sql)) {
+                        $where .= " $andor " . $sql;
+                        $inparams = array_merge($inparams, $params);
+                    }
                 }
             }
         }
@@ -168,6 +177,7 @@ class triggered_courses_table_workflow extends \table_sql {
         if (!$workflow->includesitecourse) {
             $where = "($where) AND c.id <> 1 ";
         }
+
         if ($filterdata) {
             if (is_numeric($filterdata)) {
                 $where = "($where) AND c.id = $filterdata ";
@@ -176,7 +186,7 @@ class triggered_courses_table_workflow extends \table_sql {
             }
         }
 
-        $debugsql = $fields.$from.$where;
+        $debugsql = "SELECT ".$fields." FROM ".$from." WHERE ".$where;
         foreach ($inparams as $key => $value) {
             $debugsql = str_replace(":".$key, $value, $debugsql);
         }
@@ -234,44 +244,26 @@ class triggered_courses_table_workflow extends \table_sql {
                         continue;
                     }
                 }
-                if (!$action) {
-                    if ($row->hasprocess) {
-                        if ($this->workflowid && ($row->workflowid != $this->workflowid)) {
-                            if ($this->type == 'used') {
-                                $formattedrow = $this->format_row($row);
-                                $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-                            }
-                        }
-                    } else if ($row->delay && $row->delay > time()) {
-                        if ($this->type == 'delayed') {
-                            $formattedrow = $this->format_row($row);
-                            $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-                        }
-                    } else {
-                        if ($this->type == 'triggeredworkflow') {
-                            $formattedrow = $this->format_row($row);
-                            $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-                        }
+                if ($action) {
+                    continue;
+                }
+            }
+            if ($row->hasprocess) {
+                if ($row->workflowid) {
+                    if ( ($row->workflowid != $this->workflowid && $this->type == 'used') OR $this->type == 'processes' ) {
+                        $formattedrow = $this->format_row($row);
+                        $this->add_data_keyed($formattedrow, $this->get_row_class($row));
                     }
                 }
+            } else if ($row->delay && $row->delay > time()) {
+                if ($this->type == 'delayed') {
+                    $formattedrow = $this->format_row($row);
+                    $this->add_data_keyed($formattedrow, $this->get_row_class($row));
+                }
             } else {
-                if ($row->hasprocess) {
-                    if ($row->workflowid && ($row->workflowid != $this->workflowid)) {
-                        if ($this->type == 'used') {
-                            $formattedrow = $this->format_row($row);
-                            $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-                        }
-                    }
-                } else if ($row->delay && $row->delay > time()) {
-                    if ($this->type == 'delayed') {
-                        $formattedrow = $this->format_row($row);
-                        $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-                    }
-                } else {
-                    if ($this->type == 'triggeredworkflow') {
-                        $formattedrow = $this->format_row($row);
-                        $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-                    }
+                if ($this->type == 'triggeredworkflow') {
+                    $formattedrow = $this->format_row($row);
+                    $this->add_data_keyed($formattedrow, $this->get_row_class($row));
                 }
             }
         }
@@ -345,5 +337,8 @@ class triggered_courses_table_workflow extends \table_sql {
         global $OUTPUT;
         echo \html_writer::div($OUTPUT->notification(get_string('nothingtodisplay', 'moodle'), 'info'),
             'm-3');
+        echo \html_writer::div("&nbsp;&nbsp;&nbsp;".\html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
+                ["wf" => $this->workflowid, "showsql" => "1", "showtablesql" => "1", "showdetails" => "1"]),
+                "&nbsp;&nbsp;&nbsp;", ["class" => "text-muted fs-6 text-decoration-none"]));
     }
 }

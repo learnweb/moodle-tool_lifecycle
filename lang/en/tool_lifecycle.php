@@ -103,6 +103,7 @@ $string['coursesinstep'] = 'Courses in step \'{$a}\'';
 $string['coursestriggered'] = 'Courses triggered by trigger \'{$a->title}\' ({$a->courses})';
 $string['coursestriggeredworkflow'] = 'Courses triggered for this workflow \'{$a->title}\' ({$a->courses})';
 $string['coursesused'] = 'Courses already used in another process for workflow \'{$a->title}\' ({$a->courses})';
+$string['coursesinprocess'] = 'Courses already in a process of the workflow \'{$a->title}\' ({$a->courses})';
 $string['create_copy'] = 'Create copy';
 $string['create_step'] = 'Create step';
 $string['create_trigger'] = 'Create trigger';
