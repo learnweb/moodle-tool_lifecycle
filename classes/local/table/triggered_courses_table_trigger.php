@@ -59,6 +59,7 @@ class triggered_courses_table_trigger extends \table_sql {
 
     /**
      * Builds a table of courses.
+     * @param int $numbercourses number of courses listed here
      * @param trigger_subplugin $trigger of which the courses are listed
      * @param string $type of list: triggered or excluded
      * @param string $filterdata optional, term to filter the table by course id or -name
@@ -131,13 +132,6 @@ class triggered_courses_table_trigger extends \table_sql {
 
         if (!$workflow->includesitecourse) {
             $where .= " AND c.id <> 1 ";
-        }
-        if (1==2 && ($workflow->includedelayedcourses ?? "0") != "1") {
-            $where .= " AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf} WHERE delayeduntil > :time1
-                    AND workflowid = :workflowid)
-                    AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
-            $whereparams = array_merge($whereparams,
-                ['time1' => time(), 'time2' => time(), 'workflowid' => $workflow->id]);
         }
 
         if ($filterdata) {

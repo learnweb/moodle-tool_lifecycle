@@ -149,8 +149,8 @@ class triggered_courses_table_workflow extends \table_sql {
         $where = 'true';
         $inparams = [];
         if ($type == 'processes') {
-//            $where .= " AND c.id IN (SELECT courseid FROM {tool_lifecycle_process} WHERE workflowid = :pworkflowid1 UNION
-//             SELECT courseid FROM {tool_lifecycle_proc_error} WHERE workflowid = :pworkflowid2)";
+            $where .= " AND c.id IN (SELECT courseid FROM {tool_lifecycle_process} WHERE workflowid = :pworkflowid1 UNION
+                SELECT courseid FROM {tool_lifecycle_proc_error} WHERE workflowid = :pworkflowid2)";
             $where .= " AND (p.id IS NOT NULL OR pe.id IS NOT NULL) ";
             $inparams = array_merge($inparams, ['pworkflowid1' => $workflow->id, 'pworkflowid2' => $workflow->id]);
         } else {
@@ -250,7 +250,7 @@ class triggered_courses_table_workflow extends \table_sql {
             }
             if ($row->hasprocess) {
                 if ($row->workflowid) {
-                    if ( ($row->workflowid != $this->workflowid && $this->type == 'used') OR $this->type == 'processes' ) {
+                    if ( ($row->workflowid != $this->workflowid && $this->type == 'used') || $this->type == 'processes' ) {
                         $formattedrow = $this->format_row($row);
                         $this->add_data_keyed($formattedrow, $this->get_row_class($row));
                     }
