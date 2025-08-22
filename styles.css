@@ -152,3 +152,7 @@ span.tool_lifecycle-hint {
 #lifecycle-workflow-details .dropdown-toggle::after {
     content: none;
 }
+
+#lifecycle-workflow-details .wf-wrapper a:hover {
+    text-decoration: none;
+}

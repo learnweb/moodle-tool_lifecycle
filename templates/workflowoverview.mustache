@@ -82,8 +82,8 @@
                 {{{workflowprocesseslink}}}
             </span>
             <h4 class="pr-5">{{title}}
-                {{#includedelayedcourses}}<a href="#"><sup><i class="fas fa-calendar-plus" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup></a>{{/includedelayedcourses}}
-                {{#includesitecourse}}<a href="#"><sup><i class="fas fa-home" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includesitecourse, tool_lifecycle{{/str}}"></i></sup></a>{{/includesitecourse}}</h4>
+                {{#includedelayedcourses}}<a href="#"><sup><i class="fas fa-calendar-plus mr-1 {{#isactive}}text-white{{/isactive}}" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includedelayedcourses, tool_lifecycle{{/str}}"></i></sup></a>{{/includedelayedcourses}}
+                {{#includesitecourse}}<a href="#"><sup><i class="fas fa-home mr-1 {{#isactive}}text-white{{/isactive}}" style="font-size:0.7em;" data-toggle="tooltip" title="{{#str}} includesitecourse, tool_lifecycle{{/str}}"></i></sup></a>{{/includesitecourse}}</h4>
             <span>{{#str}} workflow_rollbackdelay, tool_lifecycle{{/str}}: <strong>{{rollbackdelay}}</strong> <a href="#" data-toggle="tooltip" title="{{#str}} details:rollbackdelay_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question {{#isactive}}text-white{{/isactive}}"></i></a></span><br>
             <span>{{#str}} workflow_finishdelay, tool_lifecycle{{/str}}: <strong>{{finishdelay}}</strong> <a href="#" data-toggle="tooltip" title="{{#str}} details:finishdelay_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question {{#isactive}}text-white{{/isactive}}"></i></a></span><br>
             <span>{{# delayglobally }}{{#str}}details:globaldelay_yes, tool_lifecycle{{/str}}{{/ delayglobally }}

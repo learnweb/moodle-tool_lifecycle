@@ -364,8 +364,8 @@ class processor {
                 WHERE delayeduntil > :time1 AND workflowid = :workflowid)
                 AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
                 $inparams = ['time1' => time(), 'time2' => time(), 'workflowid' => $workflow->id];
+                $whereparams = array_merge($whereparams, $inparams);
             }
-            $whereparams = array_merge($whereparams, $inparams);
         }
         $sql = 'SELECT count(c.id) from {course} c WHERE '. $where;
         $triggercourses = $DB->count_records_sql($sql, $whereparams);
@@ -513,11 +513,14 @@ class processor {
                     $autotriggers[] = $trigger;
                 } else if ($obj->response == trigger_response::triggertime()) {
                     if ($nextrun = $lib->get_next_run_time($trigger->id)) {
-                        $obj->lastrun = $settings['timelastrun'];
-                        $obj->additionalinfo = get_string('lastrun', 'tool_lifecycle',
-                            userdate($settings['timelastrun'], get_string('strftimedatetimeshort', 'langconfig')));
+                        if ($obj->lastrun = $settings['timelastrun'] ?? 0) {
+                            $obj->additionalinfo = get_string('lastrun', 'tool_lifecycle',
+                                userdate($settings['timelastrun'], get_string('strftimedatetimeshort', 'langconfig')));
+                        } else {
+                            $obj->additionalinfo = "--";
+                        }
                     } else {
-                        $obj->additionalinfo = '-';
+                        $obj->additionalinfo = "--";
                     }
                     $obj->sql = "---";
                     $autotriggers[] = $trigger;

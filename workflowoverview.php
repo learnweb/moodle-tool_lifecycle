@@ -316,8 +316,10 @@ foreach ($triggers as $trigger) {
     }
     if ($response == trigger_response::triggertime()) {
         $displaytimetriggers[] = $trigger;
-        if (isset($amounts[$trigger->sortindex]->lastrun)) {
+        if (isset($amounts[$trigger->sortindex]->lastrun) && $amounts[$trigger->sortindex]->lastrun) {
             $lastrun = $amounts[$trigger->sortindex]->lastrun;
+        } else {
+            $lastrun = 0;
         }
     } else {
         $displaytriggers[] = $trigger;
@@ -546,8 +548,8 @@ $data = [
     'showdetailsicon' => $showdetails == 0,
     'isactive' => $isactive || $isdeactivated,
     'nextrun' => $nextrunout,
-    'lastrun' => $lastrun ?
-        userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig')) : '-',
+    'lastrun' => $lastrun != 0 ?
+        userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig')) : '--',
     'nomanualtriggerinvolved' => $nomanualtriggerinvolved,
     'disableworkflowlink' => $disableworkflowlink,
     'abortdisableworkflowlink' => $abortdisableworkflowlink,
