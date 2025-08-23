@@ -364,7 +364,7 @@ class behat_tool_lifecycle extends behat_base {
     public function the_step_should_be_at_the_position($stepname, $position) {
         $xpathelement = "(//*[@id='lifecycle-workflow-details']" .
             "//*[contains(concat(' ', normalize-space(@class), ' '), ' workflow-step ')])[$position]" .
-            "//span[contains(text(),'$stepname')]";
+            "//a[contains(text(),'$stepname')]";
 
         try {
             $this->find('xpath', $xpathelement);
@@ -387,7 +387,7 @@ class behat_tool_lifecycle extends behat_base {
     public function i_click_on_in_the_step($linktext, $stepname) {
         $xpathelement = "//*[@id='lifecycle-workflow-details']" .
             "//*[contains(concat(' ', normalize-space(@class), ' '), ' workflow-step ') and " .
-            "descendant::span[contains(text(),'$stepname')]]";
+            "descendant::a[contains(text(),'$stepname')]]";
         try {
             $this->find('xpath', $xpathelement);
         } catch (ElementNotFoundException $e) {
@@ -411,7 +411,7 @@ class behat_tool_lifecycle extends behat_base {
     public function i_click_on_in_the_trigger($linktext, $triggername) {
         $xpathelement = "//*[@id='lifecycle-workflow-details']" .
             "//*[contains(concat(' ', normalize-space(@class), ' '), ' workflow-trigger ') and " .
-            "descendant::span[contains(text(),'$triggername')]]";
+            "descendant::a[contains(text(),'$triggername')]]";
         try {
             $this->find('xpath', $xpathelement);
         } catch (ElementNotFoundException $e) {

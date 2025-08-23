@@ -86,8 +86,7 @@ class interaction_manager {
                 break;
             case step_interactive_response::rollback():
                 delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);
-                $rollbacksortindex = process_rollback::get_rollbacksortindex($process->workflowid, $process->stepindex);
-                process_manager::rollback_process($process, $rollbacksortindex);
+                process_manager::rollback_process($process);
                 break;
         }
         return true;

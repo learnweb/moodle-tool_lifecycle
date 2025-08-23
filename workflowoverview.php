@@ -149,8 +149,7 @@ if ($action) {
         if ($processid) {
             $process = process_manager::get_process_by_id($processid);
             if ($action === 'rollback') {
-                $rollbacksortindex = process_rollback::get_rollbacksortindex($process->workflowid, $process->stepindex);
-                process_manager::rollback_process($process, $rollbacksortindex);
+                process_manager::rollback_process($process);
                 delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $workflow);
                 $msg = get_string('courserolledback', 'tool_lifecycle');
             } else if ($action === 'proceed') {

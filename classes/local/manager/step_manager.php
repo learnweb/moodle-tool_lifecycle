@@ -169,8 +169,8 @@ class step_manager extends subplugin_manager {
             return;
         }
         // Prevent reducing step sortindex under the step's target rollback sortindex, if any.
-        if ($step->rollbacksortindex) {
-            if (!$up && $step->sortindex == $step->rollbacksortindex + 1) {
+        if ($step->rollbacktosortindex) {
+            if (!$up && $step->sortindex == $step->rollbacktosortindex + 1) {
                 return;
             }
 

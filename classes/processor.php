@@ -182,9 +182,7 @@ class processor {
                 } else if ($result == step_response::rollback()) {
                     delayed_courses_manager::set_course_delayed_for_workflow($course->id,
                         true, $process->workflowid);
-                    $rollbacksortindex = process_rollback::get_rollbacksortindex($process->workflowid,
-                        $process->stepindex);
-                    process_manager::rollback_process($process, $rollbacksortindex);
+                    process_manager::rollback_process($process);
                     break;
                 } else {
                     throw new \moodle_exception('Return code \''. var_dump($result) . '\' is not allowed!');
@@ -228,8 +226,7 @@ class processor {
                     return $this->process_course_interactive($processid);
                 case step_interactive_response::rollback():
                     delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);
-                    $rollbacksortindex = process_rollback::get_rollbacksortindex($process->workflowid, $process->stepindex);
-                    process_manager::rollback_process($process, $rollbacksortindex);
+                    process_manager::rollback_process($process);
                     break;
             }
             return true;

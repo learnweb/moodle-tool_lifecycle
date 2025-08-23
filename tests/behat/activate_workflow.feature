@@ -38,7 +38,7 @@ Feature: Add a workflow definition activate it
     And I press "Save changes"
     And I am on workflowdrafts page
     Then I should see the tool "View workflow steps" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
-    And I should see the tool "Backup workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
+    And I should see the tool "Download workflow definition" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I should see the tool "Delete workflow" in the "My Workflow" row of the "tool_lifecycle_workflow_definitions" table
     And I press "Activate"
     When I click on the tool "View workflow steps" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
