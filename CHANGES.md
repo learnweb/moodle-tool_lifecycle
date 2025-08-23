@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+4.5.6 (2025-08-23)
+------------------
+* [FEATURE] New lib function multiple_use() makes a trigger type choosable for a single workflow n-times
+* [FEATURE] Introduce step option to define individual target step in case of rollback (issue #213)
+* [FEATURE] Trigger selection sql: conjunction(AND) and disjunction(OR) now possible (workflow option)
+* [FEATURE] Refactor last access trigger: no single course ids in sql (issue #243)
+* [FEATURE] Subplugins both ways of describing following MDL-83705 (issue #249)
+* [FEATURE] Introduce new lib function check_course_code to force using function check_course for every course candidate (issue #243)
+* [FIXED] Workflows with triggers which have more than 65.535 paramaters throw an error (issue #243)
 
 4.5.5 (2025-07-24)
 ------------------
