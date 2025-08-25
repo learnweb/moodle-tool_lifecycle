@@ -167,13 +167,14 @@ if ($hasrecords) {
     $table->out(100, false);
     if ($table->totalrows) {
         echo get_string('bulkactions') . ':<br>';
+        echo html_writer::start_div('singlebutton');
         echo html_writer::tag('button', get_string('rollbackselected', 'lifecyclestep_adminapprove'),
                 ['type' => 'submit', 'name' => 'act', 'value' => ROLLBACK, 'class' => 'btn btn-secondary']);
         echo html_writer::end_div();
         echo html_writer::start_div('singlebutton');
         echo html_writer::tag('button', get_string('proceedselected', 'lifecyclestep_adminapprove'),
             ['type' => 'submit', 'name' => 'act', 'value' => PROCEED, 'class' => 'btn btn-primary']);
-        echo html_writer::end_div() . html_writer::start_div('singlebutton');
+        echo html_writer::end_div();
     }
     echo '</form>';
 
