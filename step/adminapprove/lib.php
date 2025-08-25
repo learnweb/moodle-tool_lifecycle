@@ -49,6 +49,7 @@ class adminapprove extends libbase {
      * @param int $instanceid of the step instance.
      * @param stdClass $course to be processed.
      * @return step_response
+     * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
         global $DB;
