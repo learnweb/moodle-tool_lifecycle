@@ -153,14 +153,14 @@ class decision_table extends \table_sql {
      */
     public function col_tools($row) {
         $output = \html_writer::start_div('singlebutton mr-1');
-        $output .= \html_writer::tag('button', get_string('proceed', 'lifecyclestep_adminapprove'),
-                ['class' => 'btn btn-secondary adminapprove-action', 'data-action' => 'proceed', 'data-content' => $row->id,
-                        'type' => 'button']);
+        $output .= \html_writer::tag('button', get_string('rollback', 'lifecyclestep_adminapprove'),
+            ['class' => 'btn btn-secondary adminapprove-action', 'data-action' => 'rollback', 'data-content' => $row->id,
+                'type' => 'button']);
         $output .= \html_writer::end_div();
         $output .= \html_writer::start_div('singlebutton mr-1 ml-0 mt-1');
-        $output .= \html_writer::tag('button', get_string('rollback', 'lifecyclestep_adminapprove'),
-                ['class' => 'btn btn-secondary adminapprove-action', 'data-action' => 'rollback', 'data-content' => $row->id,
-                        'type' => 'button']);
+        $output .= \html_writer::tag('button', get_string('proceed', 'lifecyclestep_adminapprove'),
+            ['class' => 'btn btn-primary adminapprove-action', 'data-action' => 'proceed', 'data-content' => $row->id,
+                'type' => 'button']);
         $output .= \html_writer::end_div();
         return $output;
     }
