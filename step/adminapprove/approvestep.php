@@ -167,23 +167,22 @@ if ($hasrecords) {
     $table->out(100, false);
     if ($table->totalrows) {
         echo get_string('bulkactions') . ':<br>';
-        echo html_writer::start_div('singlebutton');
-        echo html_writer::tag('button', get_string('proceedselected', 'lifecyclestep_adminapprove'),
-                ['type' => 'submit', 'name' => 'act', 'value' => PROCEED, 'class' => 'btn btn-secondary']);
-        echo html_writer::end_div() . html_writer::start_div('singlebutton');
         echo html_writer::tag('button', get_string('rollbackselected', 'lifecyclestep_adminapprove'),
                 ['type' => 'submit', 'name' => 'act', 'value' => ROLLBACK, 'class' => 'btn btn-secondary']);
         echo html_writer::end_div();
+        echo html_writer::start_div('singlebutton');
+        echo html_writer::tag('button', get_string('proceedselected', 'lifecyclestep_adminapprove'),
+            ['type' => 'submit', 'name' => 'act', 'value' => PROCEED, 'class' => 'btn btn-primary']);
+        echo html_writer::end_div() . html_writer::start_div('singlebutton');
     }
     echo '</form>';
 
     echo '<div class="mt-2">';
-    $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED_ALL]),
-            get_string(PROCEED_ALL, 'lifecyclestep_adminapprove'));
-    echo $OUTPUT->render($button);
-
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK_ALL]),
             get_string(ROLLBACK_ALL, 'lifecyclestep_adminapprove'));
+    echo $OUTPUT->render($button);
+    $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED_ALL]),
+        get_string(PROCEED_ALL, 'lifecyclestep_adminapprove'), 'post', \single_button::BUTTON_PRIMARY);
     echo $OUTPUT->render($button);
     echo '</div>';
     $PAGE->requires->js_call_amd('lifecyclestep_adminapprove/init', 'init', [sesskey(), $PAGE->url->out()]);
