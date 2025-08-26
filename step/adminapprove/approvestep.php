@@ -183,7 +183,7 @@ if ($hasrecords) {
             get_string(ROLLBACK_ALL, 'lifecyclestep_adminapprove'));
     echo $OUTPUT->render($button);
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED_ALL]),
-        get_string(PROCEED_ALL, 'lifecyclestep_adminapprove'), 'post', \single_button::BUTTON_PRIMARY);
+        get_string(PROCEED_ALL, 'lifecyclestep_adminapprove'), 'post', 'primary');
     echo $OUTPUT->render($button);
     echo '</div>';
     $PAGE->requires->js_call_amd('lifecyclestep_adminapprove/init', 'init', [sesskey(), $PAGE->url->out()]);

@@ -112,6 +112,8 @@ final class process_error_test extends \advanced_testcase {
         $record = reset($records);
 
         $this->assertEquals($this->course->id, $record->courseid);
+        $this->assertEquals($process->workflowid, $record->workflowid);
+        $this->assertEquals(1, $record->stepindex);
         if (version_compare(PHP_VERSION, '8.0', '<')) {
             $this->assertStringContainsString("Trying to get property 'id' of non-object", $record->errormessage);
         } else if (version_compare(PHP_VERSION, '8.3', '<')) {
@@ -119,7 +121,6 @@ final class process_error_test extends \advanced_testcase {
         } else {
             $this->assertStringContainsString("Attempt to read property \"id\" on false", $record->errormessage);
         }
-        $this->assertEquals($process->id, $record->id);
     }
 
 }
