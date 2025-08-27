@@ -151,6 +151,7 @@ $string['errorbackuppath'] = "Ein Fehler ist aufgetreten beim Versuchen das Back
 Ihnen fehlen wahrscheinlich die Berechtigung dazu. Bitte überprüfen Sie den Pfad unter
 Seitenadministration/Plugins/Dienstprogramme/Kurs-Lebenszyklus/Allgemein & Subplugins.";
 $string['errornobackup'] = "Es wurde kein Backup in dem angegebenen Pfad erstellt.";
+$string['errortime'] = 'Fehler-Zeitpunkt';
 $string['find_course_list_header'] = 'Kurse finden';
 $string['finished'] = 'Fortgeführt/Beendet';
 $string['followedby_none'] = 'Keine';

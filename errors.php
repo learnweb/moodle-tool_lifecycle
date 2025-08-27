@@ -92,8 +92,8 @@ $renderer->tabs($tabrow, $id);
 
 // Get number of process errors.
 $sql = "select count(c.id) from {tool_lifecycle_proc_error} pe
-    JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id
-    JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex
+    LEFT JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id
+    LEFT JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex
     LEFT JOIN {course} c ON pe.courseid = c.id";
 $errors = $DB->count_records_sql($sql);
 

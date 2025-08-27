@@ -73,6 +73,7 @@ class workflow_manager {
             trigger_manager::remove_instances_of_workflow($workflowid);
             step_manager::remove_instances_of_workflow($workflowid);
             $DB->delete_records('tool_lifecycle_workflow', ['id' => $workflowid]);
+            $DB->delete_records('tool_lifecycle_proc_error', ['workflowid' => $workflowid]);
         }
     }
 

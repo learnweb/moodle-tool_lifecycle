@@ -62,8 +62,8 @@ class process_errors_table extends \table_sql {
         $fields = 'c.id, c.fullname as course, w.title as workflow, s.instancename as step, pe.*';
 
         $from = '{tool_lifecycle_proc_error} pe ' .
-            'JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id ' .
-            'JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex ' .
+            'LEFT JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id ' .
+            'LEFT JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex ' .
             'LEFT JOIN {course} c ON pe.courseid = c.id ';
         $where = 'TRUE';
         $params = [];
@@ -84,7 +84,7 @@ class process_errors_table extends \table_sql {
         }
         $this->set_sql($fields, $from, $where, $params);
         $this->column_nosort = ['select', 'tools'];
-        $this->define_columns(['select', 'workflow', 'step', 'courseid', 'course', 'error', 'tools']);
+        $this->define_columns(['select', 'workflow', 'step', 'courseid', 'course', 'errortime', 'error', 'tools']);
         $this->define_headers([
                 $OUTPUT->render(new \core\output\checkbox_toggleall('procerrors-table', true, [
                         'id' => 'select-all-procerrors',
@@ -98,6 +98,7 @@ class process_errors_table extends \table_sql {
                 get_string('step', 'tool_lifecycle'),
                 get_string('courseid', 'tool_lifecycle'),
                 get_string('course'),
+                get_string('errortime', 'tool_lifecycle'),
                 get_string('error'),
                 get_string('tools', 'tool_lifecycle'),
         ]);
@@ -117,6 +118,19 @@ class process_errors_table extends \table_sql {
                 "</summary><code>" .
                 nl2br(htmlentities($row->errortrace, ENT_COMPAT)) .
                 "</code></details>";
+    }
+
+    /**
+     * Render time of error.
+     *
+     * @param object $row Row data.
+     * @return string errortime cell
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    public function col_errortime($row) {
+        return userdate($row->errortimecreated,
+            get_string('strftimedatetimeshortaccurate', 'core_langconfig'));
     }
 
     /**
