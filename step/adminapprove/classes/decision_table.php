@@ -35,17 +35,6 @@ require_once($CFG->libdir . '/tablelib.php');
 class decision_table extends \table_sql {
 
     /**
-     * @var coursecategory
-     */
-    private $category;
-
-    /**
-     * @var string pattern for the coursename.
-     */
-    private $coursename;
-
-
-    /**
      * Constructs the table.
      * @param int $stepid
      * @param int $courseid
@@ -55,8 +44,6 @@ class decision_table extends \table_sql {
      */
     public function __construct($stepid, $courseid, $category, $coursename) {
         parent::__construct('lifecyclestep_adminapprove-decisiontable');
-        $this->category = $category;
-        $this->coursename = $coursename;
         $this->define_baseurl("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid");
         $this->define_columns(['checkbox', 'courseid', 'course', 'category', 'startdate', 'tools']);
         $this->define_headers(
@@ -90,9 +77,17 @@ class decision_table extends \table_sql {
             $where .= "AND c.fullname LIKE :cname ";
             $params['cname'] = '%' . $DB->sql_like_escape($coursename) . '%';
         }
+
         $this->set_sql($fields, $from, $where, $params);
     }
 
+
+    /**
+     * This function is not part of the public api.
+     */
+    public function print_row($row, $classname = '') {
+        echo $this->get_row_html($row, $classname);
+    }
 
     /**
      * Column of checkboxes.

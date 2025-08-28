@@ -51,7 +51,7 @@ class workflow_definition_table extends workflow_table {
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         global $PAGE;
-        $this->set_sql("id, title, timeactive, displaytitle",
+        $this->set_sql("id, title, displaytitle",
             '{tool_lifecycle_workflow}',
             "timeactive IS NULL AND timedeactive IS NULL");
         $this->define_baseurl($PAGE->url);
@@ -63,10 +63,11 @@ class workflow_definition_table extends workflow_table {
      * Initialize the table.
      */
     public function init() {
-        $this->define_columns(['title', 'timeactive', 'tools']);
+        $this->define_columns(['title', 'trigger', 'activate', 'tools']);
         $this->define_headers([
             get_string('workflow_title', 'tool_lifecycle'),
-            get_string('workflow_timeactive', 'tool_lifecycle'),
+            get_string('trigger', 'tool_lifecycle'),
+            get_string('activateworkflow', 'tool_lifecycle'),
             get_string('workflow_tools', 'tool_lifecycle'),
             ]);
         $this->sortable(false, 'title');
@@ -80,11 +81,8 @@ class workflow_definition_table extends workflow_table {
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function col_timeactive($row) {
+    public function col_activate($row) {
         global $OUTPUT;
-        if ($row->timeactive) {
-            return userdate($row->timeactive, get_string('strftimedatetime'), 0);
-        }
         if (workflow_manager::is_valid($row->id)) {
             return $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
                 ['action' => action::WORKFLOW_ACTIVATE,

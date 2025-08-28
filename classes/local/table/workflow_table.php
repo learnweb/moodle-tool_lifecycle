@@ -98,6 +98,7 @@ abstract class workflow_table extends \table_sql {
      * @return string instancename of the trigger
      */
     public function col_trigger($row) {
+        $triggerstring = "--";
         $triggers = trigger_manager::get_triggers_for_workflow($row->id);
         if ($triggers) {
             $triggerstring = $triggers[0]->instancename;

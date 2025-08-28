@@ -23,6 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use lifecyclestep_adminapprove\course_filter_form;
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
@@ -44,7 +47,7 @@ $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');
 
 
-$step = \tool_lifecycle\local\manager\step_manager::get_step_instance($stepid);
+$step = step_manager::get_step_instance($stepid);
 if (!$step) {
     throw new moodle_exception('Stepid does not correspond to any step.');
 }
@@ -69,11 +72,11 @@ const PROCEED = 'proceed';
  */
 const PROCEED_ALL = 'proceedall';
 
-$workflow = \tool_lifecycle\local\manager\workflow_manager::get_workflow($step->workflowid);
+$workflow = workflow_manager::get_workflow($step->workflowid);
 
 $mformdata = cache::make('lifecyclestep_adminapprove', 'mformdata');
 
-$mform = new \lifecyclestep_adminapprove\course_filter_form($PAGE->url->out());
+$mform = new course_filter_form($PAGE->url->out());
 if ($mform->is_cancelled()) {
     $mformdata->delete('data');
     redirect($PAGE->url);
@@ -160,33 +163,31 @@ if ($hasrecords) {
 
     echo get_string('courses_waiting', 'lifecyclestep_adminapprove',
             ['step' => $step->instancename, 'workflow' => $workflow->title]);
-    echo "<br><br>";
-    echo '<form action="" method="post"><input type="hidden" name="sesskey" value="' . sesskey() . '">';
 
-    $table = new lifecyclestep_adminapprove\decision_table($stepid, $courseid, $category, $coursename);
-    $table->out(100, false);
-    if ($table->totalrows) {
-        echo get_string('bulkactions') . ':<br>';
-        echo html_writer::start_div('singlebutton');
-        echo html_writer::tag('button', get_string('rollbackselected', 'lifecyclestep_adminapprove'),
-                ['type' => 'submit', 'name' => 'act', 'value' => ROLLBACK, 'class' => 'btn btn-secondary']);
-        echo html_writer::end_div();
-        echo html_writer::start_div('singlebutton');
-        echo html_writer::tag('button', get_string('proceedselected', 'lifecyclestep_adminapprove'),
-            ['type' => 'submit', 'name' => 'act', 'value' => PROCEED, 'class' => 'btn btn-primary']);
-        echo html_writer::end_div();
-    }
-    echo '</form>';
-
-    echo '<div class="mt-2">';
+    echo '<div class="mt-2 mb-2">';
+    echo \html_writer::div('0', 'totalrows badge badge-primary badge-pill mr-2',
+        ['id' => 'adminapprove_totalrows']);
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK_ALL]),
-            get_string(ROLLBACK_ALL, 'lifecyclestep_adminapprove'));
+        get_string(ROLLBACK_ALL, 'lifecyclestep_adminapprove'));
     echo $OUTPUT->render($button);
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED_ALL]),
         get_string(PROCEED_ALL, 'lifecyclestep_adminapprove'), 'post', 'primary');
     echo $OUTPUT->render($button);
+    $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK]),
+        get_string('rollbackselected', 'lifecyclestep_adminapprove'), 'post', 'secondary');
+    echo $OUTPUT->render($button);
+    $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED]),
+        get_string('proceedselected', 'lifecyclestep_adminapprove'), 'post', 'primary');
+    echo $OUTPUT->render($button);
     echo '</div>';
-    $PAGE->requires->js_call_amd('lifecyclestep_adminapprove/init', 'init', [sesskey(), $PAGE->url->out()]);
+
+    echo '<form action="" method="post"><input type="hidden" name="sesskey" value="' . sesskey() . '">';
+    $table = new lifecyclestep_adminapprove\decision_table($stepid, $courseid, $category, $coursename);
+    $table->out(100, false);
+    echo '</form>';
+
+    $PAGE->requires->js_call_amd('lifecyclestep_adminapprove/init', 'init',
+        [sesskey(), $PAGE->url->out(), $table->totalrows]);
 } else {
     echo get_string('no_courses_waiting', 'lifecyclestep_adminapprove',
             ['step' => $step->instancename, 'workflow' => $workflow->title]);

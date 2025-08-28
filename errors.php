@@ -52,10 +52,12 @@ if ($action) {
         foreach ($ids as $id) {
             process_manager::rollback_process_after_error($id);
         }
-    } else {
-        throw new coding_exception("action must be either 'proceed' or 'rollback'");
+    } else if ($action == 'delete') {
+        foreach ($ids as $id) {
+            $DB->delete_records('tool_lifecycle_proc_error', ['id' => $id]);
+        }
     }
-    redirect($PAGE->url);
+    redirect($PAGE->url, get_string('deleteprocesserrormsg', 'tool_lifecycle'), 3);
 }
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
