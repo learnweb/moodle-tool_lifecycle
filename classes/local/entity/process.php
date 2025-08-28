@@ -104,7 +104,14 @@ class process {
             $stepindex = 0;
         }
 
-        $context = \context_course::instance($record->courseid);
+        // IT.Serv start: add try/catch to prevent error when course is already deleted.
+        try {
+            $context = \context_course::instance($record->courseid);
+        } catch (\Exception $e) {
+            $context = false;
+        }
+        // IT.Serv end: add try/catch to prevent error when course is already deleted.
+
         $instance = new self($record->id,
                 $record->workflowid,
                 $record->courseid,
