@@ -325,7 +325,7 @@ class triggered_courses_table_workflow extends \table_sql {
             $button = new \single_button(new \moodle_url($PAGE->url, $params), get_string('select'));
             return $OUTPUT->render($button);
         } else if ($this->type == 'processes') {
-            if ($row->errorid){
+            if ($row->errorid) {
                 $params = [
                     'workflow' => $this->workflowid,
                     'course' => $row->courseid,

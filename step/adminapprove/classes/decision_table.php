@@ -81,14 +81,6 @@ class decision_table extends \table_sql {
         $this->set_sql($fields, $from, $where, $params);
     }
 
-
-    /**
-     * This function is not part of the public api.
-     */
-    public function print_row($row, $classname = '') {
-        echo $this->get_row_html($row, $classname);
-    }
-
     /**
      * Column of checkboxes.
      * @param object $row
