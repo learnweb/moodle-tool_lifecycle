@@ -165,6 +165,9 @@ abstract class workflow_table extends \table_sql {
 
     /**
      * This function is not part of the public api.
+     * @param array $row Row date
+     * @param string $classname classes to add
+     * @return string HTML code for the row passed.
      */
     public function print_row($row, $classname = '') {
         echo $this->get_row_html($row, $classname);
