@@ -1,4 +1,4 @@
-> **Note:** Please fill out all required sections and remove irrelevant ones.
+> **Note:** Please fill out all relevant sections and remove irrelevant ones.
 ### 🔀 Purpose of this PR:
 
 - [ ] Fixes a bug
