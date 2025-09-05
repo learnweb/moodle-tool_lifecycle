@@ -60,7 +60,6 @@ class processor {
         $run = str_contains($FULLSCRIPT, 'run.php');
 
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
-        $exclude = [];
 
         if (!defined('BEHAT_SITE_RUNNING')) {
             if ($run) {
@@ -76,6 +75,7 @@ class processor {
             $countcourses = 0;
             $counttriggered = 0;
             $countexcluded = 0;
+            $exclude = [];
 
             if (!defined('BEHAT_SITE_RUNNING')) {
                 if ($run) {
@@ -139,6 +139,19 @@ class processor {
      * Calls the process_course() method of each step submodule currently responsible for a given course.
      */
     public function process_courses() {
+        global $FULLSCRIPT;
+
+        $run = str_contains($FULLSCRIPT, 'run.php');
+        if (!defined('BEHAT_SITE_RUNNING')) {
+            if ($run) {
+                echo \html_writer::div(get_string ('lifecycle_task', 'tool_lifecycle'));
+            } else {
+                mtrace(get_string ('lifecycle_task', 'tool_lifecycle'));
+            }
+        }
+        $coursesprocessed = 0;
+        $coursesprocesserrors = 0;
+
         foreach (process_manager::get_processes() as $process) {
             while (true) {
 
@@ -166,8 +179,10 @@ class processor {
                     } else {
                         $result = $lib->process_course($process->id, $step->id, $course);
                     }
+                    $coursesprocessed++;
                 } catch (\Exception $e) {
                     process_manager::insert_process_error($process, $e);
+                    $coursesprocesserrors++;
                     break;
                 }
                 if ($result == step_response::waiting()) {
@@ -187,6 +202,15 @@ class processor {
                 } else {
                     throw new \moodle_exception('Return code \''. var_dump($result) . '\' is not allowed!');
                 }
+            }
+        }
+        if (!defined('BEHAT_SITE_RUNNING')) {
+            if ($run) {
+                echo \html_writer::div("   $coursesprocessed courses processed.");
+                echo \html_writer::div("   $coursesprocesserrors ".get_string('errors', 'search').".");
+            } else {
+                mtrace("   $coursesprocessed courses processed.");
+                mtrace("   $coursesprocesserrors ".get_string('errors', 'search').".");
             }
         }
 
