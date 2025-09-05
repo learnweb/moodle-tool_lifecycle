@@ -255,9 +255,11 @@ foreach ($triggers as $trigger) {
     // Mustache cannot handle arrays which have other keys therefore a new array is build.
     // FUTURE: Nice to have Icon for each subplugin.
     $trigger = (object)(array) $trigger; // Cast to normal object to be able to set dynamic properties.
+    $editlink = new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::TRIGGER, 'elementid' => $trigger->id]);
+    $trigger->editlink = $editlink->out();
     $actionmenu = new action_menu([
         new action_menu_link_secondary(
-            new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::TRIGGER, 'elementid' => $trigger->id]),
+            $editlink,
             new pix_icon('i/edit', $str['edit']), $str['edit']),
     ]);
     if ($iseditable) {
@@ -334,9 +336,11 @@ foreach ($steps as $step) {
     if ($step->id == $stepid) {
         $step->selected = true;
     }
+    $editlink = new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::STEP, 'elementid' => $step->id]);
+    $step->editlink = $editlink->out();
     $actionmenu = new action_menu([
         new action_menu_link_secondary(
-            new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::STEP, 'elementid' => $step->id]),
+            $editlink,
             new pix_icon('i/edit', $str['edit']), $str['edit']),
     ]);
     if ($iseditable) {

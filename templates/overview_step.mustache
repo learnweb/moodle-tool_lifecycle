@@ -39,7 +39,7 @@
     <div class="workflow-step workflow-item {{#selected}}wf-selected{{/selected}}">
         <div class="wf-header">
             <div class="wf-header-text">
-                <a href="#" data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 50, {{instancename}} {{/shortentext}}</a>
+                <a href="{{{editlink}}}" data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 50, {{instancename}} {{/shortentext}}</a>
                 {{#rollbacktosortindex}}
                     <a href="#" data-toggle="tooltip" title="{{#str}} rollbacktotitle, tool_lifecycle, {{rollbacktosortindexname}} {{/str}}" class="badge badge-secondary ml-1">
                         {{rollbacktosortindex}}

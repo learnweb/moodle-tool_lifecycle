@@ -55,9 +55,10 @@ class processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
-        global $FULLSCRIPT;
+        global $FULLSCRIPT, $CFG;
 
         $run = str_contains($FULLSCRIPT, 'run.php');
+        $debug = $run && $CFG->debugdeveloper;
 
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
 
@@ -102,12 +103,18 @@ class processor {
                     $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                     $response = $lib->check_course($course, $trigger->id);
                     if ($response == trigger_response::next()) {
+                        if ($debug) {
+                            echo \html_writer::div("Course next: $course->id");
+                        }
                         $recordset->next();
                         continue 2;
                     }
                     if ($response == trigger_response::exclude()) {
                         array_push($exclude, $course->id);
                         $countexcluded++;
+                        if ($debug) {
+                            echo \html_writer::div("Course exclude: $course->id");
+                        }
                         $recordset->next();
                         continue 2;
                     }
@@ -119,6 +126,9 @@ class processor {
                 $process = process_manager::create_process($course->id, $workflow->id);
                 process_triggered::event_from_process($process)->trigger();
                 $counttriggered++;
+                if ($debug) {
+                    echo \html_writer::div("Course triggered: $course->id");
+                }
                 $recordset->next();
             }
             if (!defined('BEHAT_SITE_RUNNING')) {
@@ -139,9 +149,10 @@ class processor {
      * Calls the process_course() method of each step submodule currently responsible for a given course.
      */
     public function process_courses() {
-        global $FULLSCRIPT;
+        global $FULLSCRIPT, $CFG;
 
         $run = str_contains($FULLSCRIPT, 'run.php');
+        $debug = $run && $CFG->debugdeveloper;
         if (!defined('BEHAT_SITE_RUNNING')) {
             if ($run) {
                 echo \html_writer::div(get_string ('lifecycle_task', 'tool_lifecycle'));
@@ -187,17 +198,26 @@ class processor {
                 }
                 if ($result == step_response::waiting()) {
                     process_manager::set_process_waiting($process);
+                    if ($debug) {
+                        echo \html_writer::div("Course processed: $course->id - Result: Waiting");
+                    }
                     break;
                 } else if ($result == step_response::proceed()) {
                     if (!process_manager::proceed_process($process)) {
                         delayed_courses_manager::set_course_delayed_for_workflow($course->id,
                             false, $process->workflowid);
-                        break;
                     }
+                    if ($debug) {
+                        echo \html_writer::div("Course processed: $course->id - Result: Proceed");
+                    }
+                    break;
                 } else if ($result == step_response::rollback()) {
                     delayed_courses_manager::set_course_delayed_for_workflow($course->id,
                         true, $process->workflowid);
                     process_manager::rollback_process($process);
+                    if ($debug) {
+                        echo \html_writer::div("Course processed: $course->id - Result: Rollback");
+                    }
                     break;
                 } else {
                     throw new \moodle_exception('Return code \''. var_dump($result) . '\' is not allowed!');
