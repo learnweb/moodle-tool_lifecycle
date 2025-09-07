@@ -58,7 +58,7 @@ class processor {
         global $FULLSCRIPT, $CFG;
 
         $run = str_contains($FULLSCRIPT, 'run.php');
-        $debug = $run && $CFG->debugdeveloper;
+        $debug = $run && $CFG->debugdeveloper && !defined('BEHAT_SITE_RUNNING');
 
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
 
@@ -152,7 +152,8 @@ class processor {
         global $FULLSCRIPT, $CFG;
 
         $run = str_contains($FULLSCRIPT, 'run.php');
-        $debug = $run && $CFG->debugdeveloper;
+        $debug = $run && $CFG->debugdeveloper && !defined('BEHAT_SITE_RUNNING');
+
         if (!defined('BEHAT_SITE_RUNNING')) {
             if ($run) {
                 echo \html_writer::div(get_string ('lifecycle_task', 'tool_lifecycle'));

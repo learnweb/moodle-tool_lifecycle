@@ -154,7 +154,7 @@ class categories extends base_automatic {
             $categorieshtml = "";
             foreach ($categories as $key => $value) {
                 if (in_array($key, $triggercategories)) {
-                    $categorieshtml .= \html_writer::div($value, "badge badge-secondary mr-1");
+                    $categorieshtml .= \html_writer::div($value, "badge text-bg-secondary mr-1");
                 }
             }
             $mform->insertElementBefore($mform->createElement(

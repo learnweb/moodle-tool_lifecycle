@@ -131,19 +131,20 @@ abstract class interaction_table extends \table_sql {
     public function col_category($row): String {
         $categorydepth = get_config('tool_lifecycle', 'enablecategoryhierachy');
         if ($categorydepth == false) {
-            return $row->category;
+            $categoryname = $row->category;
         } else {
             $categorydepth = (int) get_config('tool_lifecycle', 'coursecategorydepth');
             $categoryhierachy = explode('/', substr($row->categorypath, 1));
             $categoryhierachy = array_map('intval', $categoryhierachy);
             if (isset($categoryhierachy[$categorydepth])) {
                 $category = $this->coursecategories[$categoryhierachy[$categorydepth]];
-                return $category->name.'111';
+                $categoryname = $category->name;
             } else {
                 $category = $this->coursecategories[end($categoryhierachy)];
-                return $category->name.'222'.$row->categorypath;
+                $categoryname = $category->name;
             }
         }
+        return \html_writer::div($categoryname, "badge text-bg-secondary");
     }
 
     /**
