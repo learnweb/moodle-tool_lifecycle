@@ -198,7 +198,6 @@ class processor {
         // Mike
         $where = [];
         $whereparams = [];
-        //$chunks = array_chunk($whereparams, 65535, true);
         $recordsets = [];
         foreach ($triggers as $trigger) {
             $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
@@ -214,6 +213,55 @@ class processor {
             $where[] = "true AND NOT {course}.id {$insql}";
             $whereparams[] = $inparams;
         }
+
+        $maxparams = 65535;
+        //$maxparams = 4;
+        mtrace('');
+        mtrace('Start - MAX params: '.$maxparams.', where parts: '.count($where)/*.' '.print_r($where, true)*/.' & params '.count($whereparams)/*.' '.print_r($whereparams, true)*/);
+        foreach($whereparams as $key => $whereparam) {
+            if(count($whereparam) > $maxparams) {
+                mtrace('More than '.$maxparams.' params with key '.$key.': '.count($whereparam));
+                // Get where part of params array
+                $wherepart = $where[$key];
+                // Get first & last param
+                $first = ':'.array_key_first($whereparam);
+                $last = ':'.array_key_last($whereparam);
+                mtrace('   1. Get first param '.$first.' & last param '.$last);
+                // Get where part before first param & after last param (to re-create where part)
+                $position = strpos($wherepart, $first);
+                $before = substr($wherepart, 0, $position);
+                $position = strpos($wherepart, $last);
+                $after = substr($wherepart, $position + strlen($last));
+                mtrace('   2. Re-create where part: '.$before.' <enter-params> '.$after);
+                // Remove original where part & params
+                //unset($where[$key]);
+                //unset($whereparams[$key]);
+                $where[$key] = [];
+                $whereparams[$key] = [];
+                mtrace('   3. Remove where part & params with key: '.$key);
+                // Chunk params
+                $whereparam_chunks = array_chunk($whereparam, $maxparams, true);
+                mtrace('   4. Chunk params: '.count($whereparam_chunks)/*.print_r($whereparam_chunks, true))*/.' ('.count($whereparam).'/'.$maxparams.')');
+                // For each chunk of params
+                $counter = 0;
+                foreach($whereparam_chunks as $whereparam_chunk) {
+                    $counter++;
+                    // Create param string of chunk params
+                    $whereparam_chunk_string = implode(',', array_map(function($value) { return ':' . $value; }, array_keys($whereparam_chunk)));
+                    // Re-create where part for chunk
+                    $where_chunk = $before.$whereparam_chunk_string.$after;
+                    mtrace('   5.'.$counter.' Add chunk query: '.$where_chunk.' & params: '.count($whereparam_chunk)/*.print_r($whereparam_chunk, true)*/);
+                    // Add where part & params of chunk
+                    if(count($where) && count($whereparams)) {
+                        $where[$key][] = $where_chunk;
+                        $whereparams[$key][] = $whereparam_chunk;
+                    } else { mtrace('ERROR: Amount of where parts & params are not the same!'); }
+                }
+            }
+        }
+        mtrace('End - MAX params: '.$maxparams.', where parts: '.count($where)/*.' '.print_r($where, true)*/.' & params '.count($whereparams)/*.' '.print_r($whereparams, true)*/);
+        mtrace('');
+        //die();
 
         if ($forcounting) {
             foreach ($where as $key => $where_tmp) {
@@ -237,8 +285,21 @@ class processor {
                     LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid
                     LEFT JOIN {tool_lifecycle_delayed} d ON {course}.id = d.courseid
                     LEFT JOIN {tool_lifecycle_delayed_workf} dw ON {course}.id = dw.courseid
-                    WHERE " . $where_tmp;
-                $recordsets[] = $DB->get_recordset_sql($sql, $whereparams_tmp);
+                    WHERE ";
+
+                if(is_array($where_tmp)) {
+                    //mtrace('Chunked recordset: '.count($where_tmp)/*.' '.print_r($where_tmp, true)*/.', params: '.count($whereparams_tmp)/*.' '.print_r($whereparams_tmp, true)*/);
+                    $tmp = [];
+                    foreach($where_tmp as $chunk_key => $chunk_where_tmp) {
+                        $sql_tmp = $sql.$chunk_where_tmp;
+                        $tmp[] = $DB->get_recordset_sql($sql_tmp, $whereparams_tmp[$chunk_key]);
+                    }
+                    $recordsets[] = $tmp;
+                } else {
+                    //mtrace('Nomrmal recordset: '.$where_tmp.', params: '.count($whereparams_tmp)/*.' '.print_r($whereparams_tmp, true)*/);
+                    $sql_tmp = $sql.$where_tmp;
+                    $recordsets[] = $DB->get_recordset_sql($sql_tmp, $whereparams_tmp);
+                }
             }
 
             //use tool_lifecycle\local\intersectedRecordset;
@@ -249,18 +310,36 @@ class processor {
                 $whereparams_tmp = $whereparams[$key];
                 // Get only courses which are not part of an existing process.
                 $sql = 'SELECT {course}.id from {course} '.
-                    'LEFT JOIN {tool_lifecycle_process} '.
-                    'ON {course}.id = {tool_lifecycle_process}.courseid '.
-                    'LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid ' .
-                    'WHERE {tool_lifecycle_process}.courseid is null AND ' .
-                    'pe.courseid IS NULL AND '. $where_tmp;
-                $recordsets[] = $DB->get_recordset_sql($sql, $whereparams_tmp);
+                        'LEFT JOIN {tool_lifecycle_process} '.
+                        'ON {course}.id = {tool_lifecycle_process}.courseid '.
+                        'LEFT JOIN {tool_lifecycle_proc_error} pe ON {course}.id = pe.courseid ' .
+                        'WHERE {tool_lifecycle_process}.courseid is null AND ' .
+                        'pe.courseid IS NULL AND ';
+
+                if(is_array($where_tmp)) {
+                    //mtrace('Chunked recordset: '.count($where_tmp)/*.' '.print_r($where_tmp, true)*/.', params: '.count($whereparams_tmp)/*.' '.print_r($whereparams_tmp, true)*/);
+                    $tmp = [];
+                    foreach($where_tmp as $chunk_key => $chunk_where_tmp) {
+                        $sql_tmp = $sql.$chunk_where_tmp;
+                        $tmp[] = $DB->get_recordset_sql($sql_tmp, $whereparams_tmp[$chunk_key]);
+                    }
+                    $recordsets[] = $tmp;
+                } else {
+                    //mtrace('Nomrmal recordset: '.$where_tmp.', params: '.count($whereparams_tmp)/*.' '.print_r($whereparams_tmp, true)*/);
+                    $sql_tmp = $sql.$where_tmp;
+                    $recordsets[] = $DB->get_recordset_sql($sql_tmp, $whereparams_tmp);
+                }
             }
 
             //use tool_lifecycle\local\intersectedRecordset;
             $recordsets = new \tool_lifecycle\local\intersectedRecordset($recordsets);
             //mtrace('Intersected record sets: '.count($recordsets));
         }
+
+        mtrace('');
+        mtrace('FINAL recordsets: '.$recordsets->count()/*.' '.print_r($recordsets, true)*/);
+        mtrace('');
+        //die();
 
         return $recordsets;
     }

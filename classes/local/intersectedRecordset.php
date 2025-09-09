@@ -40,7 +40,27 @@ class intersectedRecordset implements \Iterator, \Countable {
     public function __construct($recordsets = null, string $key = 'id') {
         if($recordsets !== null) {
             if(is_array($recordsets)) {
-                foreach($recordsets as $recordset) { $this->add($recordset, $key); }
+                // For multiple recordsets
+                foreach($recordsets as $recordset) {
+                    // If recordset is a chunked recordset
+                    if(is_array($recordset)) {
+                        mtrace('Chunked recordset');
+                        // Create new array for chunked recordset
+                        $chunkedRecords = [];
+                        // For each chunked recordset
+                        foreach($recordset as $chunk_recordset) {
+                            // For each record in chunked recordset
+                            foreach($chunk_recordset as $record) {
+                                if(isset($record->$key)) { $chunkedRecords[$record->$key] = $record; }
+                            }
+                        }
+                        // Add all records of chunked recordsets
+                        $this->add($chunkedRecords, $key);
+                    } else {
+                        mtrace('Normal recordset');
+                        $this->add($recordset, $key);
+                    }
+                }
             } else { $this->add($recordsets, $key); }
         }
     }
@@ -57,6 +77,7 @@ class intersectedRecordset implements \Iterator, \Countable {
         foreach($recordset as $record) {
             if(isset($record->$key)) { $newRecords[$record->$key] = $record; }
         }
+        mtrace('     Found '.count($newRecords).' records in recordset');
         //$recordset->close();
 
         // Store new records without key, if no records were stored & return
