@@ -68,7 +68,7 @@ final class trigger_test extends \advanced_testcase {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(false);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $foundsem = false;
         $foundsemindep = false;
         foreach ($recordset as $element) {
@@ -93,7 +93,7 @@ final class trigger_test extends \advanced_testcase {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(true);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $foundsem = false;
         $foundsemindep = false;
         foreach ($recordset as $element) {

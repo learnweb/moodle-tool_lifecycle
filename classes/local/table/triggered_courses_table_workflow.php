@@ -141,7 +141,7 @@ class triggered_courses_table_workflow extends \table_sql {
                     LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid
                     LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid
                     LEFT JOIN {tool_lifecycle_delayed} d ON c.id = d.courseid
-                    LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid ";
+                    LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid AND dw.workflowid = $workflow->id ";
         if ($type == 'used') {
             $from .= " LEFT JOIN {tool_lifecycle_workflow} wfp ON p.workflowid = wfp.id
                        LEFT JOIN {tool_lifecycle_workflow} wfpe ON pe.workflowid = wfpe.id";

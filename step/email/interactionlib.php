@@ -58,8 +58,8 @@ class interactionemail extends interactionlibbase {
     }
 
     /**
-     * Returns an array of interaction tools to be displayed to be displayed on the view.php
-     * Every entry is itself an array which consist of three elements:
+     * Returns an array of interaction tools to be displayed on view.php
+     * Every entry is itself an array that consists of two elements:
      *  'action' => an action string, which is later passed to handle_action
      *  'alt' => a string text of the button
      * @param process $process process the action tools are requested for
@@ -90,10 +90,10 @@ class interactionemail extends interactionlibbase {
      * @param step_subplugin $step instance of the step the process is currently in.
      * @param string $action action string
      * @return step_interactive_response defines if the step still wants to process this course
-     *      - proceed: the step has finished and respective controller class can take over.
+     *      - proceed: the step has finished and the respective controller class can take over.
      *      - stillprocessing: the step still wants to process the course and is responsible for rendering the site.
      *      - noaction: the action is not defined for the step.
-     *      - rollback: the step has finished and respective controller class should rollback the process.
+     *      - rollback: the step has finished and the respective controller class should rollback the process.
      */
     public function handle_interaction($process, $step, $action = 'default') {
         if ($action == self::ACTION_KEEP) {

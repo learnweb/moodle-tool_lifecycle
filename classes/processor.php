@@ -95,7 +95,7 @@ class processor {
                 $exclude = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
                     delayed_courses_manager::get_globally_delayed_courses(), $exclude);
             }
-            $recordset = $this->get_course_recordset($triggers, $exclude);
+            $recordset = $this->get_course_recordset($triggers, (bool)$exclude);
             while ($recordset->valid()) {
                 $course = $recordset->current();
                 $countcourses++;
@@ -283,15 +283,16 @@ class processor {
      * Returns a record set with all relevant courses for a list of automatic triggers.
      * Relevant means that there is currently no lifecycle process running for this course.
      * @param trigger_subplugin[] $triggers List of triggers, which will be asked for additional where requirements.
-     * @param int[] $exclude List of course id, which should be excluded from execution.
+     * @param bool $exclude Are the site course and/or the delayed courses to be excluded or not.
      * @param bool $forcounting
      * @return \moodle_recordset with relevant courses.
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function get_course_recordset($triggers, $exclude, $forcounting = false) {
+    public function get_course_recordset($triggers, $exclude = false, $forcounting = false) {
         global $DB, $SESSION;
 
+        $where = " TRUE ";
         $whereparams = [];
         $workflowid = false;
         foreach ($triggers as $trigger) {
@@ -311,10 +312,8 @@ class processor {
         }
 
         if ($forcounting) {
-            if ($exclude) {
-                if (!$workflow->includesitecourse) {
-                    $where = "($where) AND c.id <> 1 ";
-                }
+            if ($exclude) { // We include delayed courses here anyway, so we only take the site course into account.
+                $where = "($where) AND c.id <> 1 ";
             }
             // Get course hasprocess and delay with the sql.
             $sql = "SELECT c.id,
@@ -333,8 +332,11 @@ class processor {
                     LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid
                     LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid
                     LEFT JOIN {tool_lifecycle_delayed} d ON c.id = d.courseid
-                    LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid
-                    WHERE " . $where;
+                    LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid ";
+            if ($workflowid) {
+                $sql .= " AND dw.workflowid = $workflowid ";
+            }
+            $sql .= " WHERE $where ";
         } else {
             if ($exclude) {
                 if (!$workflow->includesitecourse) {
@@ -446,16 +448,16 @@ class processor {
         if ($excluded) {
             $workflow = workflow_manager::get_workflow($trigger->workflowid);
             // Exclude delayed courses and sitecourse according to the workflow settings.
-            $sitecourse = $workflow->includesitecourse ? [] : [1];
+            $excludesitecourse = $workflow->includesitecourse ? [] : [1];
             if (!$workflow->includedelayedcourses) {
                 $delayedcourses = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
                     delayed_courses_manager::get_globally_delayed_courses());
             }
-            $excludedcourses = array_merge($sitecourse, $delayedcourses);
+            $excludedcourses = array_merge($excludesitecourse, $delayedcourses);
         }
 
         $triggercoursesall = [];
-        $recordset = $this->get_course_recordset([$trigger], $excludedcourses, true);
+        $recordset = $this->get_course_recordset([$trigger], (bool)$excludesitecourse, true);
         while ($recordset->valid()) {
             $course = $recordset->current();
             $response = $lib->check_course($course, $trigger->id);
@@ -492,14 +494,14 @@ class processor {
     public function get_count_of_courses_to_trigger_for_workflow($workflow) {
 
         // Exclude delayed courses and sitecourse according to the workflow settings.
-        $sitecourse = $workflow->includesitecourse ? [] : [1];
+        $excludesitecourse = $workflow->includesitecourse ? [] : [1];
         if ($workflow->includedelayedcourses) {
             $delayedcourses = [];
         } else {
             $delayedcourses = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
                 delayed_courses_manager::get_globally_delayed_courses());
         }
-        $excludedcourses = array_merge($sitecourse, $delayedcourses);
+        $excludedcourses = array_merge($excludesitecourse, $delayedcourses);
 
         $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
         $amounts = [];
@@ -513,12 +515,12 @@ class processor {
             $trigger->exclude = $settings['exclude'] ?? false;
             $obj = new \stdClass();
             $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-            if (!$checkcoursecode) {
-                $checkcoursecode = $lib->check_course_code();
-            }
             if ($lib->is_manual_trigger()) {
                 $obj->automatic = false;
             } else {
+                if (!$checkcoursecode) {
+                    $checkcoursecode = $lib->check_course_code();
+                }
                 $obj->automatic = true;
                 $obj->triggered = 0;
                 $obj->excluded = false;
@@ -572,7 +574,7 @@ class processor {
             $amounts[$trigger->sortindex] = $obj;
         }
 
-        $recordset = $this->get_course_recordset($autotriggers, $excludedcourses, true);
+        $recordset = $this->get_course_recordset($autotriggers, (bool)$excludesitecourse, true);
 
         $coursestriggered = 0;
         $usedcourses = 0;
