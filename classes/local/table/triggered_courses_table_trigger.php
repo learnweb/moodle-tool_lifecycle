@@ -129,7 +129,7 @@ class triggered_courses_table_trigger extends \table_sql {
                     LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid
                     LEFT JOIN {tool_lifecycle_delayed} d ON c.id = d.courseid
                     LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid 
-                    AND dw.workflowid = $workflow->id ";
+                    AND dw.workflowid = $workflow->id";
 
         if (!$workflow->includesitecourse) {
             $where .= " AND c.id <> 1 ";
