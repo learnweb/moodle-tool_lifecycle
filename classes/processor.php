@@ -215,9 +215,9 @@ class processor {
         }
 
         $maxparams = 65535;
-        //$maxparams = 4;
+        //$maxparams = 1000;
         mtrace('');
-        mtrace('Start - MAX params: '.$maxparams.', where parts: '.count($where)/*.' '.print_r($where, true)*/.' & params '.count($whereparams)/*.' '.print_r($whereparams, true)*/);
+        mtrace('Start - MAX params: '.$maxparams.', trigger where parts: '.count($where)/*.' '.print_r($where, true)*/.' & params: '.count($whereparams)/*.' '.print_r($whereparams, true)*/);
         foreach($whereparams as $key => $whereparam) {
             if(count($whereparam) > $maxparams) {
                 mtrace('More than '.$maxparams.' params with key '.$key.': '.count($whereparam));
@@ -250,7 +250,8 @@ class processor {
                     $whereparam_chunk_string = implode(',', array_map(function($value) { return ':' . $value; }, array_keys($whereparam_chunk)));
                     // Re-create where part for chunk
                     $where_chunk = $before.$whereparam_chunk_string.$after;
-                    mtrace('   5.'.$counter.' Add chunk query: '.$where_chunk.' & params: '.count($whereparam_chunk)/*.print_r($whereparam_chunk, true)*/);
+                    if(count($whereparam_chunks) > 10 && $counter == 10 ) { mtrace('   ...'); }
+                    if($counter < 5 || $counter >= (count($whereparam_chunks) - 5)) { mtrace('   5.'.$counter.' Add chunk query: '.(strlen($where_chunk) > 150 ? substr($where_chunk, 0, 150) . '...' : $where_chunk).' & params: '.count($whereparam_chunk)/*.print_r($whereparam_chunk, true)*/); }
                     // Add where part & params of chunk
                     if(count($where) && count($whereparams)) {
                         $where[$key][] = $where_chunk;
@@ -259,7 +260,7 @@ class processor {
                 }
             }
         }
-        mtrace('End - MAX params: '.$maxparams.', where parts: '.count($where)/*.' '.print_r($where, true)*/.' & params '.count($whereparams)/*.' '.print_r($whereparams, true)*/);
+        mtrace('End - MAX params: '.$maxparams.', trigger where parts: '.count($where)/*.' '.print_r($where, true)*/.' & params '.count($whereparams)/*.' '.print_r($whereparams, true)*/);
         mtrace('');
         //die();
 
