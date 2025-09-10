@@ -75,16 +75,16 @@ class view_controller {
         $processes = $DB->get_recordset_sql($sql, $inparams);
 
         $requiresinteraction = [];
-        $remainingcourses = [];
+        $remainingcourses = $inparams;
 
         foreach ($processes as $process) {
             $step = step_manager::get_step_instance($process->stepinstanceid);
             $capability = interaction_manager::get_relevant_capability($step->subpluginname);
+
             if ($capability && has_capability($capability, \context_course::instance($process->courseid), null, false) &&
                 !empty(interaction_manager::get_action_tools($step->subpluginname, $process->processid))) {
                 $requiresinteraction[] = $process->courseid;
-            } else {
-                $remainingcourses[] = $process->courseid;
+                unset($remainingcourses[$process->courseid]);
             }
         }
 
