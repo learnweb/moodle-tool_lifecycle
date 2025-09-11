@@ -80,16 +80,17 @@ class process {
     /**
      * Creates a Life Cycle Process from a db record.
      * @param object $record Data object.
+     * @param bool $coursedeleted If course is deleted no context can be fetched
      * @return process
      */
-    public static function from_record($record) {
+    public static function from_record($record, $coursedeleted = false) {
         if (!object_property_exists($record, 'id')) {
             return null;
         }
         if (!object_property_exists($record, 'workflowid')) {
             return null;
         }
-        if (!object_property_exists($record, 'courseid')) {
+        if (!object_property_exists($record, 'courseid') || !is_numeric($record->courseid)) {
             return null;
         }
         if (object_property_exists($record, 'waiting') && $record->waiting) {
@@ -104,7 +105,11 @@ class process {
             $stepindex = 0;
         }
 
-        $context = \context_course::instance($record->courseid);
+        if (!$coursedeleted) {
+            $context = \context_course::instance($record->courseid);
+        } else {
+            $context = "";
+        }
         $instance = new self($record->id,
                 $record->workflowid,
                 $record->courseid,

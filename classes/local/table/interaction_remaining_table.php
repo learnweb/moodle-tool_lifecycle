@@ -124,10 +124,10 @@ class interaction_remaining_table extends interaction_table {
         global $PAGE, $OUTPUT;
 
         if ($row->processid !== null) {
-            return '';
+            return '--';
         }
         if (empty($this->availabletools)) {
-            return get_string('noactiontools', 'tool_lifecycle');
+            return "--";
         }
         $actions = [];
         foreach ($this->availabletools as $tool) {

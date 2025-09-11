@@ -159,6 +159,22 @@ class process_manager {
     }
 
     /**
+     * Returns all processes of a deleted course
+     * @param int $courseid id of the course
+     * @return array of proccesses
+     * @throws \dml_exception
+     */
+    public static function get_processes_of_deleted_course($courseid) {
+        global $DB;
+        $records = $DB->get_records('tool_lifecycle_process', ['courseid' => $courseid]);
+        $processes = [];
+        foreach ($records as $record) {
+            $processes[] = process::from_record($record, true);
+        }
+        return $processes;
+    }
+
+    /**
      * Proceeds the process to the next step.
      * @param process $process
      * @return true, if followed by another step; otherwise false.
@@ -242,8 +258,7 @@ class process_manager {
      */
     public static function get_process_by_course_id($courseid) {
         global $DB;
-        $record = $DB->get_record('tool_lifecycle_process', ['courseid' => $courseid]);
-        if ($record) {
+        if ($record = $DB->get_record('tool_lifecycle_process', ['courseid' => $courseid])) {
             return process::from_record($record);
         } else {
             return null;
@@ -274,9 +289,11 @@ class process_manager {
      * @throws \dml_exception
      */
     public static function course_deletion_observed($event) {
-        $process = self::get_process_by_course_id($event->get_data()['courseid']);
-        if ($process) {
-            self::abort_process($process);
+        if (is_numeric($courseid = $event->get_data()['courseid'])) {
+            $processes = self::get_processes_of_deleted_course($courseid);
+            foreach ($processes as $process) {
+                self::abort_process($process);
+            }
         }
     }
 

@@ -84,9 +84,9 @@ class view_controller {
             if ($capability && has_capability($capability, \context_course::instance($process->courseid), null, false) &&
                 !empty(interaction_manager::get_action_tools($step->subpluginname, $process->processid))) {
                 $requiresinteraction[] = $process->courseid;
-                unset($remainingcourses[$process->courseid]);
             }
         }
+        $remainingcourses = array_diff($remainingcourses, $requiresinteraction);
 
         echo $renderer->heading(get_string('tablecoursesrequiringattention', 'tool_lifecycle'), 3);
         $table1 = new interaction_attention_table('tool_lifecycle_interaction', $requiresinteraction, $filterdata);
