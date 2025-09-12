@@ -52,9 +52,6 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
                 " WHERE timeactive IS NOT NULL");
         $cache->set('workflowactive', $wfexists);
     }
-    if (!$wfexists) {
-        return null;
-    }
 
     $url = new moodle_url('/admin/tool/lifecycle/view.php', [
         'contextid' => $context->id,
