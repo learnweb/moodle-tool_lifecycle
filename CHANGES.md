@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+Further information to the changes can be found here: https://github.com/learnweb/moodle-tool_lifecycle/wiki/Changes-of-version-4.5.4-and-4.5.5
+and here: https://github.com/learnweb/moodle-tool_lifecycle/wiki/Changes-of-version-4.5-in-detail
+
 4.5.5 (2025-09-14)
 ------------------
 * [FIXED] Workflowoverview Course selection: show run-link only when workflow is active
