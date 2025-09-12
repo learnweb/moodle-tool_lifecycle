@@ -1,30 +1,32 @@
 CHANGELOG
 =========
 
-4.5.6 (2025-08-23)
+4.5.5 (2025-09-14)
 ------------------
+* [FIXED] Workflowoverview Course selection: show run-link only when workflow is active
+* [FEATURE] Display error time in errors table
+* [FEATURE] Provide possibility to delete invalid/outdated process error entries
+* [FEATURE] Lifecycle Task: trace course processing as well, Trigger categories: improve cat listing in frozen edit form
+* [FIXED] Fix missing course error when aborting processes after course deletion
 * [FEATURE] New lib function multiple_use() makes a trigger type choosable for a single workflow n-times
-* [FEATURE] Introduce step option to define individual target step in case of rollback (issue #213)
-* [FEATURE] Trigger selection sql: conjunction(AND) and disjunction(OR) now possible (workflow option)
+* [FEATURE] Introduce a step option to define an individual target step in case of rollback (issue #213)
+* [FEATURE] EXPERIMENTAL: Trigger selection sql - conjunction(AND) and disjunction(OR) now possible (workflow option)
 * [FEATURE] Refactor last access trigger: no single course ids in sql (issue #243)
 * [FEATURE] Subplugins both ways of describing following MDL-83705 (issue #249)
 * [FEATURE] Introduce new lib function check_course_code to force using function check_course for every course candidate (issue #243)
 * [FIXED] Workflows with triggers which have more than 65.535 paramaters throw an error (issue #243)
-
-4.5.5 (2025-07-24)
-------------------
-* [FEATURE] Display trigger countings partial as tooltip; show courses already part of the workflow process or the process errors
-* [FEATURE] workflowoverview: show also 0 courses in exclude trigger. Make instancenames in supplugin form of active workflows static
+* [FEATURE] Display trigger counting partial as tooltip; show courses already part of the workflow process or the process errors
+* [FEATURE] Workflowoverview: show also '0' courses in exclude trigger. Make instancenames in supplugin form of active workflows static
 * [FIXED] proceed, rollback event: take course context when context is missing
 * [FIXED] Fix trigger customfielddelay's missing field error message
 * [FEATURE] Delete all delays: show amount of delays that would be deleted next to button
-* [FEATURE] workflowoverview: exclude trigger: show excluded 0 as well
+* [FEATURE] Workflowoverview: exclude trigger: show excluded 0 as well
 * [FIXED] prozessor.php: restore version 4.5 of function process_courses
 * [FIXED] prozessor.php: restore version 4.5 of function call_trigger
-* [FEATURE] workflowoverview: place new link to run lifecycle task in timetrigger row
-* [FIXED] Fix step email context course id
+* [FEATURE] Workflowoverview: place new link to run lifecycle task in timetrigger row
+* [FIXED] Fix step email context course id error
 * [FIXED] call_trigger: mtrace only when called by cron
-* [FIXED] Fix behat test interaction.feature
+* [FIXED] Fix behat tests interaction.feature and manual_trigger.feature
 * [FIXED] Step libs' function process_course error: make sure course is of type stdClass
 * [FIXED] Fix unit test process_error_test
 * [FEATURE] Add additional jobs to run in ci-file
