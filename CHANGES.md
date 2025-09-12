@@ -6,6 +6,7 @@ and here: https://github.com/learnweb/moodle-tool_lifecycle/wiki/Changes-of-vers
 
 4.5.5 (2025-09-14)
 ------------------
+* [FIXED] Fix unit test PR #230
 * [FIXED] Workflowoverview Course selection: show run-link only when workflow is active
 * [FEATURE] Display error time in errors table
 * [FEATURE] Provide possibility to delete invalid/outdated process error entries
