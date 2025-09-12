@@ -85,7 +85,14 @@ Feature: Add a manual trigger and test view and actions as a teacher
     And I should see "Course 2"
     And I should not see the tool "Delete course" in the "Course 1" row of the "tool_lifecycle_remaining" table
     And I should see the tool "Delete course" in the "Course 2" row of the "tool_lifecycle_remaining" table
-    When I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    When I log out
+    And I log in as "admin"
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I wait "20" seconds
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I wait "20" seconds
+    And I log out
+    And I log in as "teacher1"
     And I am on lifecycle view
     Then I should not see "Course 1"
     And I should see "Course 2"

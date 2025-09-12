@@ -83,8 +83,6 @@ Feature: Add a workflow with an email step and test the interaction as a teacher
     And I log out
     And I log in as "admin"
     When I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "10" seconds
-    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I log out
     And I wait "10" seconds
     And I log in as "teacher1"
