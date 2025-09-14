@@ -6,6 +6,7 @@ and here: https://github.com/learnweb/moodle-tool_lifecycle/wiki/Changes-of-vers
 
 4.5.5 (2025-09-14)
 ------------------
+* [FEATURE] A lack of capability is now the only reason not to render the manage courses sec nav link issue #198
 * [FIXED] Fix unit test PR #230
 * [FIXED] Workflowoverview Course selection: show run-link only when workflow is active
 * [FEATURE] Display error time in errors table
