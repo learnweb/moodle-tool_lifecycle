@@ -45,7 +45,6 @@ use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\local\table\courses_in_step_table;
-use tool_lifecycle\local\table\process_courses_table;
 use tool_lifecycle\local\table\triggered_courses_table_trigger;
 use tool_lifecycle\local\table\triggered_courses_table_workflow;
 use tool_lifecycle\processor;
