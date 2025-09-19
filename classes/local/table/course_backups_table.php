@@ -23,6 +23,8 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
