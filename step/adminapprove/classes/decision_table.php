@@ -24,6 +24,8 @@
 
 namespace lifecyclestep_adminapprove;
 
+use core_date;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -124,9 +126,12 @@ class decision_table extends \table_sql {
      * @return string human readable date
      */
     public function col_startdate($row) {
+        global $USER;
+
         if ($row->startdate) {
             $dateformat = get_string('strftimedate', 'langconfig');
-            return userdate($row->startdate, $dateformat);
+            return userdate($row->startdate, $dateformat,
+                core_date::get_user_timezone($USER));
         } else {
             return "-";
         }

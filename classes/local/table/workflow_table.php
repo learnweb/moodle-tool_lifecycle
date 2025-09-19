@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
 use html_writer;
 use tool_lifecycle\action;
 use tool_lifecycle\local\manager\process_manager;
@@ -69,9 +70,10 @@ abstract class workflow_table extends \table_sql {
      * @throws \moodle_exception
      */
     public function col_timeactive($row) {
-        global $OUTPUT, $PAGE;
+        global $OUTPUT, $PAGE, $USER;
         if ($row->timeactive) {
-            return userdate($row->timeactive, get_string('strftimedatetime'), 0);
+            return userdate($row->timeactive, get_string('strftimedatetime'),
+                core_date::get_user_timezone($USER));
         }
         return $OUTPUT->single_button(new \moodle_url($PAGE->url,
             ['action' => action::WORKFLOW_ACTIVATE,
@@ -87,8 +89,10 @@ abstract class workflow_table extends \table_sql {
      * @throws \coding_exception
      */
     public function col_timedeactive($row) {
+        global $USER;
         if ($row->timedeactive) {
-            return userdate($row->timedeactive, get_string('strftimedatetime'), 0);
+            return userdate($row->timedeactive, get_string('strftimedatetime'),
+                core_date::get_user_timezone($USER));
         }
         return get_string('workflow_active', 'tool_lifecycle');
     }

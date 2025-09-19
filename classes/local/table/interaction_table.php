@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\manager\interaction_manager;
 use tool_lifecycle\local\manager\process_manager;
@@ -87,9 +88,11 @@ abstract class interaction_table extends \table_sql {
      * @throws \coding_exception
      */
     public function col_startdate($row) {
+        global $USER;
+
         if ($row->startdate) {
             $dateformat = get_string('strftimedate', 'langconfig');
-            return userdate($row->startdate, $dateformat);
+            return userdate($row->startdate, $dateformat, core_date::get_user_timezone($USER));
         } else {
             return "-";
         }

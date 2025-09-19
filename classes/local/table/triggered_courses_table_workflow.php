@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\local\manager\delayed_courses_manager;
@@ -288,8 +289,10 @@ class triggered_courses_table_workflow extends \table_sql {
      * @throws \coding_exception
      */
     public function col_delayeduntil($row) {
+        global $USER;
         if ($delay = delayed_courses_manager::get_course_delayed($row->courseid)) {
-            return userdate($delay, get_string('strftimedatetime', 'core_langconfig'));
+            return userdate($delay, get_string('strftimedatetime', 'core_langconfig'),
+                core_date::get_user_timezone($USER));
         }
         return "-";
     }

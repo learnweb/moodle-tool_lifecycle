@@ -27,6 +27,7 @@
 
 namespace tool_lifecycle;
 
+use core_date;
 use tool_lifecycle\event\process_rollback;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\event\process_triggered;
@@ -55,7 +56,7 @@ class processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
-        global $FULLSCRIPT, $CFG;
+        global $FULLSCRIPT, $CFG, $USER;
 
         $run = str_contains($FULLSCRIPT, 'run.php');
         $debug = $run && $CFG->debugdeveloper && !defined('BEHAT_SITE_RUNNING');
@@ -81,10 +82,12 @@ class processor {
             if (!defined('BEHAT_SITE_RUNNING')) {
                 if ($run) {
                     echo \html_writer::div('Calling triggers for workflow "' . $workflow->title . '" '.
-                        userdate(time(), get_string('strftimedatetimeaccurate')));
+                        userdate(time(), get_string('strftimedatetimeaccurate'),
+                            core_date::get_user_timezone($USER)));
                 } else {
                     mtrace('Calling triggers for workflow "' . $workflow->title . '" '.
-                        userdate(time(), get_string('strftimedatetimeaccurate')));
+                        userdate(time(), get_string('strftimedatetimeaccurate'),
+                            core_date::get_user_timezone($USER)));
                 }
             }
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
@@ -492,6 +495,7 @@ class processor {
      * @throws \dml_exception
      */
     public function get_count_of_courses_to_trigger_for_workflow($workflow) {
+        global $USER;
 
         // Exclude delayed courses and sitecourse according to the workflow settings.
         $excludesitecourse = $workflow->includesitecourse ? [] : [1];
@@ -560,7 +564,8 @@ class processor {
                     if ($nextrun = $lib->get_next_run_time($trigger->id)) {
                         if ($obj->lastrun = $settings['timelastrun'] ?? 0) {
                             $obj->additionalinfo = get_string('lastrun', 'tool_lifecycle',
-                                userdate($settings['timelastrun'], get_string('strftimedatetimeshort', 'langconfig')));
+                                userdate($settings['timelastrun'], get_string('strftimedatetimeshort', 'langconfig'),
+                                    core_date::get_user_timezone($USER)));
                         } else {
                             $obj->additionalinfo = "--";
                         }

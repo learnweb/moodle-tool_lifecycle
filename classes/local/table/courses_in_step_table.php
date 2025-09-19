@@ -157,9 +157,12 @@ class courses_in_step_table extends \table_sql {
      * @throws \coding_exception
      */
     public function col_startdate($row) {
+        global $USER;
+
         if ($row->startdate) {
             $dateformat = get_string('strftimedate', 'langconfig');
-            return userdate($row->startdate, $dateformat);
+            return userdate($row->startdate, $dateformat,
+                core_date::get_user_timezone($USER));
         } else {
             return "-";
         }

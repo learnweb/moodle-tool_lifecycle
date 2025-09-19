@@ -24,6 +24,7 @@
 namespace tool_lifecycle\local\table;
 
 use core\exception\coding_exception;
+use core_date;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -133,8 +134,11 @@ class process_errors_table extends \table_sql {
      * @throws \moodle_exception
      */
     public function col_errortime($row) {
+        global $USER;
+
         return userdate($row->errortimecreated,
-            get_string('strftimedatetimeshortaccurate', 'core_langconfig'));
+            get_string('strftimedatetimeshortaccurate', 'core_langconfig'),
+            core_date::get_user_timezone($USER));
     }
 
     /**

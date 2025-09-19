@@ -240,7 +240,8 @@ if (is_numeric($nextrunt) && is_numeric($nextrun)) { // Task nextrun and trigger
 }
 if (is_numeric($nextrunout)) {
     if ($nextrunout) {
-        $nextrunout = userdate($nextrunout, get_string('strftimedatetimeshort', 'langconfig'));
+        $nextrunout = userdate($nextrunout, get_string('strftimedatetimeshort', 'langconfig'),
+            core_date::get_user_timezone($USER));
     } else {
         $nextrunout = get_string('statusunknown');
     }
@@ -551,7 +552,8 @@ $data = [
     'isactive' => $isactive || $isdeactivated,
     'nextrun' => $nextrunout,
     'lastrun' => $lastrun != 0 ?
-        userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig')) : '--',
+        userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig'),
+            core_date::get_user_timezone($USER)) : '--',
     'nomanualtriggerinvolved' => $nomanualtriggerinvolved,
     'disableworkflowlink' => $disableworkflowlink,
     'abortdisableworkflowlink' => $abortdisableworkflowlink,

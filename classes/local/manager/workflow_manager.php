@@ -267,7 +267,7 @@ class workflow_manager {
                 $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
                 $workflow->manually |= $lib->is_manual_trigger();
             }
-            $workflow->timeactive = time();
+            $workflow->timeactive = (new \DateTime())->getTimestamp();
             $workflow->timedeactive = null;
             if (!$workflow->manually) {
                 $workflow->sortindex = count(self::get_active_automatic_workflows()) + 1;
