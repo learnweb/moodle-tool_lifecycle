@@ -1,11 +1,12 @@
 CHANGELOG
 =========
 
-Further information to the changes can be found here: https://github.com/learnweb/moodle-tool_lifecycle/wiki/Changes-of-version-4.5.4-and-4.5.5
+Further information to the latest changes can be found here: https://github.com/learnweb/moodle-tool_lifecycle/wiki/Changes-of-version-4.5.4-and-4.5.5
 and here: https://github.com/learnweb/moodle-tool_lifecycle/wiki/Changes-of-version-4.5-in-detail
 
-4.5.5 (2025-09-14)
+4.5.5 (2025-09-28)
 ------------------
+* [FIXED] Display time as usertime, not UTC (Issue #188)
 * [FEATURE] A lack of capability is now the only reason not to render the manage courses sec nav link issue #198
 * [FIXED] Fix unit test PR #230
 * [FIXED] Workflowoverview Course selection: show run-link only when workflow is active

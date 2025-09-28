@@ -156,14 +156,14 @@ class process_errors_table extends \table_sql {
         if ($row->workflowid && $row->stepid ?? false) {
             $actionmenu->add_primary_action(
                 new \action_menu_link_primary(
-                    new \moodle_url('', ['action' => 'proceed', 'id[]' => $row->id, 'sesskey' => sesskey()]),
+                    new \moodle_url('', ['action' => 'proceed', 'id[]' => $row->errorid, 'sesskey' => sesskey()]),
                     new \pix_icon('e/tick', $this->strings['proceed']),
                     $this->strings['proceed']
                 )
             );
             $actionmenu->add_primary_action(
                 new \action_menu_link_primary(
-                    new \moodle_url('', ['action' => 'rollback', 'id[]' => $row->id, 'sesskey' => sesskey()]),
+                    new \moodle_url('', ['action' => 'rollback', 'id[]' => $row->errorid, 'sesskey' => sesskey()]),
                     new \pix_icon('e/undo', $this->strings['rollback']),
                     $this->strings['rollback']
                 )

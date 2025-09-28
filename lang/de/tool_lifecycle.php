@@ -82,7 +82,7 @@ $string['courseproceeded'] = 'Ein Kurs wurde dem nächsten Verarbeitungsschritt 
 $string['courserolledback'] = 'Ein Kurs wurde zurückgesetzt.';
 $string['courses_are_alreadyin'] = '{$a} Kurse befinden sich schon in einem Prozess oder in der Prozessfehlerliste.';
 $string['courses_are_delayed'] = '{$a} Kurse sind verzögert';
-$string['courses_are_used_total'] = '{$a} Kurse bereits in anderem Prozess';
+$string['courses_are_used_total'] = '{$a} Kurse werden bereits in einem anderen Workflow verarbeitet';
 $string['courses_candidates_alreadyin'] = ', weitere {$a} Kandidaten sind bereits in einem Prozess oder in der Prozessfehlerliste.';
 $string['courses_candidates_delayed'] = ', weitere {$a} Kandidaten sind verzögert';
 $string['courses_excluded'] = 'Kurse insgesamt ausgeschlossen: {$a}';
@@ -204,10 +204,11 @@ $string['overview:add_trigger'] = 'Trigger hinzufügen';
 $string['overview:add_trigger_help'] = 'Es kann nur eine Instanz jedes Triggertyps hinzugefügt werden.';
 $string['overview:timetrigger_help'] = 'Wann sollte der Kursselektionsjob für diesen Workflow das nächste Mal laufen?';
 $string['overview:trigger'] = 'Trigger';
-$string['overview:trigger_help'] = 'Die getriggerten Kurse würden der Verarbeitung dieses Worklows hinzugefügt werden wenn der Kursselektions-Lauf jetzt zur Durchführung käme.
-Ein Kurs fängt nur dann an, einen Workflow zu durchlaufen, wenn alle Trigger des Workflows dies übereinstimmend (UND-Verknüpfung) aussagen.
-In den hier genannten Zahlen werden Kurse, die verzögert werden oder sich bereits in anderen Workflows befinden, nicht mitgezählt.
-Trotzdem sind die Zahlen nur approximiert, da es sein könnte, dass die Kurse vor diesem einen anderen Workflow auslösen.';
+$string['overview:trigger_help'] = 'Die getriggerten Kurse würden der Verarbeitung dieses Workflows hinzugefügt werden wenn der Kursselektions-Lauf jetzt durchgeführt würde.
+Ein Kurs wird je nach Workflow-Konfiguration der Verarbeitung zugeführt wenn alle Trigger feuern (AND) oder wenn er zumindest von einem Trigger inkludiert wird (OR).
+Trotzdem sind die Zahlen nur Näherungswerte, da der Kurs z.Bsp. schon von einem höher gereihten Workflow exkludiert oder verarbeitet werden könnte.';
+$string['overview:trigger_info'] = 'Hier wird die Anzahl der Kurse ausgewiesen, die durch den Trigger ausgelöst würden, abzüglich der Kurse, die vom Workflow schon verarbeitet werden oder - je nach Workflow-Einstellung - verzögert sind.
+Beim Mouseover sehen Sie nähere Informationen zum aktuellen Stand des Triggers.';
 $string['pluginname'] = 'Kurs-Lebenszyklus';
 $string['plugintitle'] = 'Kurs-Lebenszyklus';
 $string['privacy:metadata:tool_lifecycle_action_log'] = 'Ein Log von Aktionen des Kursmanagers.';

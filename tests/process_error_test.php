@@ -56,7 +56,7 @@ final class process_error_test extends \advanced_testcase {
     private $course;
 
     /**
-     * Setup the testcase.
+     * Set up the testcase.
      * @throws \coding_exception
      * @throws \moodle_exception
      */
@@ -65,7 +65,7 @@ final class process_error_test extends \advanced_testcase {
 
         parent::setUp();
 
-        // We do not need a sesskey check in theses tests.
+        // We do not need a sesskey check in these tests.
         $USER->ignoresesskey = true;
 
         $this->resetAfterTest(true);

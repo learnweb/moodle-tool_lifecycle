@@ -340,7 +340,7 @@ class process_manager {
     }
 
     /**
-     * Return process from procerror back into the process board.
+     * Return process from process-error-table back into the process board.
      * @param int $processid the processid
      * @return void
      * @throws \dml_exception
@@ -361,7 +361,7 @@ class process_manager {
     }
 
     /**
-     * Rolls back a process from procerror table
+     * Roll back a process from procoss-error-table to process-table while setting the rollback delay
      * @param int $processid the processid
      * @return void
      * @throws \coding_exception
@@ -371,13 +371,14 @@ class process_manager {
         global $DB;
 
         $process = $DB->get_record('tool_lifecycle_proc_error', ['id' => $processid]);
-        // Unset process error only entries.
+        // Unset process-error-only entries.
+        unset($process->id);
         unset($process->errormessage);
         unset($process->errortrace);
         unset($process->errorhash);
         unset($process->errortimecreated);
 
-        $DB->insert_record_raw('tool_lifecycle_process', $process, false, false, true);
+        $DB->insert_record('tool_lifecycle_process', $process, false);
         $DB->delete_records('tool_lifecycle_proc_error', ['id' => $process->id]);
 
         delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);

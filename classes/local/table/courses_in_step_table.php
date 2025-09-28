@@ -24,6 +24,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
 use tool_lifecycle\local\entity\step_subplugin;
 
 defined('MOODLE_INTERNAL') || die;

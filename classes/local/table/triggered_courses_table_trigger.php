@@ -180,7 +180,7 @@ class triggered_courses_table_trigger extends \table_sql {
             if ($row->hasprocess) {
                 continue;
             }
-            if ($row->delay && $row->delay > time()) {
+            if ($row->delay && $row->delay > time() &&  !$this->triggerexclude) {
                 continue;
             } else {
                 if ($this->type == 'triggerid') {
@@ -189,7 +189,8 @@ class triggered_courses_table_trigger extends \table_sql {
                         $this->add_data_keyed($formattedrow, $this->get_row_class($row));
                     }
                 } else if ($this->type == 'excluded') {
-                    if ($response == trigger_response::exclude() || $this->triggerexclude) {
+                    if ($response == trigger_response::exclude() ||
+                        ($response == trigger_response::trigger() && $this->triggerexclude)) {
                         $formattedrow = $this->format_row($row);
                         $this->add_data_keyed($formattedrow, $this->get_row_class($row));
                     }

@@ -294,7 +294,7 @@ foreach ($triggers as $trigger) {
                     }
                     $trigger->tooltip = "";
                     if ($amounts[$trigger->sortindex]->excluded !== false) {
-                        $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded;
+                        $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded ?? 0;
                         $trigger->tooltip = get_string('courses_will_be_excluded',
                             'tool_lifecycle', $trigger->excludedcourses);
                     } else {

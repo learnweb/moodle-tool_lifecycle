@@ -252,7 +252,9 @@ class triggered_courses_table_workflow extends \table_sql {
             }
             if ($row->hasprocess) {
                 if ($row->workflowid) {
-                    if ( ($row->workflowid != $this->workflowid && $this->type == 'used') || $this->type == 'processes' ) {
+                    if ( ($row->workflowid != $this->workflowid && $this->type == 'used')
+                        || $this->type == 'processes'
+                        || $this->type == 'delayed' ) {
                         $formattedrow = $this->format_row($row);
                         $this->add_data_keyed($formattedrow, $this->get_row_class($row));
                     }

@@ -108,26 +108,34 @@
             </h5>
             {{#showcoursecounts}}
               {{#displaytotaltriggered}}
-                  <div class="mb-2 mx-2">
+                  <div class="mb-2 mx-2 text-left">
                       {{#coursestriggeredcount}}
-                          <a href="{{{popuplink}}}&triggered=1&showdetails=1">
-                              <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered_total, tool_lifecycle, {{coursestriggeredcount}} {{/str}}">
-                                  {{coursestriggeredcount}}
-                              </span>
-                          </a>
-                          {{#str}} courses_will_be_triggered_total_without_amount, tool_lifecycle {{/str}}<br>
+                          <div>
+                              <a href="{{{popuplink}}}&triggered=1&showdetails=1">
+                                  <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered_total, tool_lifecycle, {{coursestriggeredcount}} {{/str}}">
+                                      {{coursestriggeredcount}}
+                                  </span>
+                              </a>
+                              {{#str}} courses_will_be_triggered_total_without_amount, tool_lifecycle {{/str}}
+                          </div>
                       {{/coursestriggeredcount}}
                       {{^coursestriggeredcount}}
-                          <span class="btn btn-outline-secondary">
-                              {{coursestriggeredcount}}
-                          </span>
-                          {{#str}} courses_will_be_triggered_total_without_amount, tool_lifecycle {{/str}}<br>
+                          <div>
+                              <span class="btn btn-outline-secondary">
+                                  {{coursestriggeredcount}}
+                              </span>
+                            {{#str}} courses_will_be_triggered_total_without_amount, tool_lifecycle {{/str}}
+                          </div>
                       {{/coursestriggeredcount}}
                       {{#coursesused}}
-                          {{#str}} courses_are_used_total, tool_lifecycle, {{{coursesused}}} {{/str}}<br>
+                          <div>
+                              {{#str}} courses_are_used_total, tool_lifecycle, {{{coursesused}}} {{/str}}<br>
+                          </div>
                       {{/coursesused}}
                       {{#coursesdelayed}}
-                          {{#str}} courses_are_delayed, tool_lifecycle, {{{coursesdelayed}}} {{/str}}
+                          <div>
+                              {{#str}} courses_are_delayed, tool_lifecycle, {{{coursesdelayed}}} {{/str}}
+                          </div>
                       {{/coursesdelayed}}
                   </div>
               {{/displaytotaltriggered}}

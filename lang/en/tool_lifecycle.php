@@ -83,7 +83,7 @@ $string['courserolledback'] = 'One course has been rolled back.';
 $string['courses_are_alreadyin'] = '{$a} courses are already part of a process or of the process errors list';
 $string['courses_are_delayed'] = '{$a} delayed courses';
 $string['courses_are_delayed_total'] = '{$a} delayed courses in total';
-$string['courses_are_used_total'] = '{$a} courses in another process';
+$string['courses_are_used_total'] = '{$a} courses already processed by another workflow';
 $string['courses_candidates_alreadyin'] = ', another {$a} candidates are already part of a process or of the process errors list';
 $string['courses_candidates_delayed'] = ', another {$a} candidates are delayed';
 $string['courses_excluded'] = 'Courses excluded total: {$a}';
@@ -206,8 +206,10 @@ $string['overview:add_trigger_help'] = 'You can only add one instance of each tr
 $string['overview:timetrigger_help'] = 'When should the next course selection for this workflow takes place?';
 $string['overview:trigger'] = 'Trigger';
 $string['overview:trigger_help'] = 'The triggered courses would be added to the workflow process if the course selection would run now.
-A course will only trigger a workflow, if all triggers agree on it (AND operation). Courses which are delayed, or already in another workflow are not included in the displayed counts.
+According to your workflow configuration courses will be triggered if all triggered agree on it (AND) or if at least one trigger agrees (OR).
 Still, these numbers are only approximates, since it could be that a course is excluded by another workflow, or will trigger another workflow before this one.';
+$string['overview:trigger_info'] = 'The number of courses which would be triggered by this trigger and are not already processed by this workflow and - regarding to the workflow configuration - are not delayed.
+See the tooltip for more details.';
 $string['pluginname'] = 'Life Cycle';
 $string['plugintitle'] = 'Course Life Cycle';
 $string['privacy:metadata:tool_lifecycle_action_log'] = 'A log of actions done by course managers.';

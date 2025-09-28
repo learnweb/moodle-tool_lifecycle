@@ -504,7 +504,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
-    if ($oldversion < 2025050404) {
+    if ($oldversion < 2025050405) {
 
         // Define field manual to be renamed to manually in table tool_lifecycle_workflow.
         $table = new xmldb_table('tool_lifecycle_workflow');
@@ -609,7 +609,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        upgrade_plugin_savepoint(true, 2025050404, 'tool', 'lifecycle');
+        upgrade_plugin_savepoint(true, 2025050405, 'tool', 'lifecycle');
 
     }
 
