@@ -315,7 +315,8 @@ class processor {
         }
 
         if ($forcounting) {
-            if ($nositecourse) { //We include delayed courses here anyway, so we only take the site course into account.
+            // We include delayed courses here anyway, so we only take the site course into account.
+            if ($nositecourse) {
                 $where = "($where) AND c.id <> 1 ";
             }
             // Get course hasprocess and delay with the sql.
