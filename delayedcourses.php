@@ -190,4 +190,8 @@ if ($delayedcourses > 0) {
 
 $table->out(100, false);
 
+if ($table->totalrows) {
+    echo \html_writer::div($table->totalrows." ".get_string('courses'), 'mt-3');
+}
+
 echo $OUTPUT->footer();

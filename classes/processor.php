@@ -125,7 +125,7 @@ class processor {
                         continue;
                     }
                 }
-                // If all trigger instances agree, that they want to trigger a process, we do so.
+                // If all trigger instances agree that they want to trigger a process we do so.
                 $process = process_manager::create_process($course->id, $workflow->id);
                 process_triggered::event_from_process($process)->trigger();
                 $counttriggered++;
@@ -297,10 +297,9 @@ class processor {
 
         $where = " TRUE ";
         $whereparams = [];
-        $workflowid = false;
+        $workflow = false;
         foreach ($triggers as $trigger) {
-            if (!$workflowid) {
-                $workflowid = $trigger->workflowid;
+            if (!$workflow) {
                 $workflow = workflow_manager::get_workflow($trigger->workflowid);
                 $andor = ($workflow->andor ?? 0) == 0 ? 'AND' : 'OR';
                 $where = $andor == 'AND' ? 'true ' : 'false ';
@@ -322,35 +321,33 @@ class processor {
             // Get course hasprocess and delay with the sql.
             $sql = "SELECT c.id,
                     COALESCE(p.courseid, pe.courseid, 0) as hasprocess,
-                    CASE
-                        WHEN COALESCE(p.workflowid, 0) > COALESCE(pe.workflowid, 0) THEN p.workflowid
-                        WHEN COALESCE(p.workflowid, 0) < COALESCE(pe.workflowid, 0) THEN pe.workflowid
-                        ELSE 0
-                    END as workflowid,
+                    COALESCE(po.workflowid, peo.workflowid, 0) as hasotherwfprocess,
                     CASE
                         WHEN COALESCE(d.delayeduntil, 0) > COALESCE(dw.delayeduntil, 0) THEN d.delayeduntil
                         WHEN COALESCE(d.delayeduntil, 0) < COALESCE(dw.delayeduntil, 0) THEN dw.delayeduntil
                         ELSE 0
-                    END as delay
+                    END as delaycourse
                     FROM {course} c
-                    LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid
-                    LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid
+                    LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid AND p.workflowid = $workflow->id
+                    LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid AND pe.workflowid = $workflow->id
+                    LEFT JOIN {tool_lifecycle_process} po ON c.id = po.courseid AND po.workflowid <> $workflow->id
+                    LEFT JOIN {tool_lifecycle_proc_error} peo ON c.id = peo.courseid AND peo.workflowid <> $workflow->id
                     LEFT JOIN {tool_lifecycle_delayed} d ON c.id = d.courseid
-                    LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid ";
-            if ($workflowid) {
-                $sql .= " AND dw.workflowid = $workflowid ";
-            }
+                    LEFT JOIN {tool_lifecycle_delayed_workf} dw ON
+                        c.id = dw.courseid AND dw.workflowid = $workflow->id";
             $sql .= " WHERE $where ";
         } else {
-            if (!$workflow->includesitecourse) {
-                $where = "($where) AND c.id <> 1 ";
-            }
-            if (!$workflow->includedelayedcourses) {
-                $where = "($where) AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf}
+            if ($workflow) {
+                if (!$workflow->includesitecourse) {
+                    $where = "($where) AND c.id <> 1 ";
+                }
+                if (!$workflow->includedelayedcourses) {
+                    $where = "($where) AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf}
                 WHERE delayeduntil > :time1 AND workflowid = :workflowid)
                 AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
-                $inparams = ['time1' => time(), 'time2' => time(), 'workflowid' => $workflowid];
-                $whereparams = array_merge($whereparams, $inparams);
+                    $inparams = ['time1' => time(), 'time2' => time(), 'workflowid' => $workflow->id];
+                    $whereparams = array_merge($whereparams, $inparams);
+                }
             }
             // Get only courses which are not part of an existing process.
             $sql = "SELECT c.id from {course} c
@@ -571,7 +568,8 @@ class processor {
         $recordset = $this->get_course_recordset($autotriggers, !$workflow->includesitecourse, true);
 
         $coursestriggered = 0;
-        $usedcourses = 0;
+        $hasprocess = 0;
+        $hasotherwfprocess = 0;
         $coursesdelayed = 0; // Only delayed courses of selected courses are of interest here.
         while ($recordset->valid()) {
             $course = $recordset->current();
@@ -598,13 +596,16 @@ class processor {
                 }
                 if (!$action) {
                     if ($course->hasprocess) {
-                        if ($course->workflowid && ($course->workflowid != $workflow->id)) {
-                            $usedcourses++;
-                        }
-                        if ($course->delay && $course->delay > time()) {
+                        $hasprocess++;
+                        if ($course->delaycourse && $course->delaycourse > time()) {
                             $coursesdelayed++;
                         }
-                    } else if ($course->delay && $course->delay > time()) {
+                    } else if ($course->hasotherwfprocess) {
+                        $hasotherwfprocess++;
+                        if ($course->delaycourse && $course->delaycourse > time()) {
+                            $coursesdelayed++;
+                        }
+                    } else if ($course->delaycourse && $course->delaycourse > time()) {
                         $coursesdelayed++;
                     } else {
                         $coursestriggered++;
@@ -612,13 +613,16 @@ class processor {
                 }
             } else {
                 if ($course->hasprocess) {
-                    if ($course->workflowid && ($course->workflowid != $workflow->id)) {
-                        $usedcourses++;
-                    }
-                    if ($course->delay && $course->delay > time()) {
+                    $hasprocess++;
+                    if ($course->delaycourse && $course->delaycourse > time()) {
                         $coursesdelayed++;
                     }
-                } else if ($course->delay && $course->delay > time()) {
+                } else if ($course->hasotherwfprocess) {
+                    $hasotherwfprocess++;
+                    if ($course->delaycourse && $course->delaycourse > time()) {
+                        $coursesdelayed++;
+                    }
+                } else if ($course->delaycourse && $course->delaycourse > time()) {
                     $coursesdelayed++;
                 } else {
                     $coursestriggered++;
@@ -630,7 +634,8 @@ class processor {
         $all = new \stdClass();
         $all->coursestriggered = $coursestriggered;
         $all->delayedcourses = $coursesdelayed; // Delayed courses for workflow and globally. Excluded per default.
-        $all->used = $usedcourses;
+        $all->used = $hasprocess;
+        $all->hasotherwf = $hasotherwfprocess;
         $all->nextrun = $nextrun;
         $amounts['all'] = $all;
         return $amounts;

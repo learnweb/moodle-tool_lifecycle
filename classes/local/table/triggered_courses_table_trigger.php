@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core\exception\moodle_exception;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\settings_manager;
@@ -57,12 +58,21 @@ class triggered_courses_table_trigger extends \table_sql {
     /** @var int $triggerexclude if a trigger has setting exclude activated */
     private $triggerexclude;
 
+    /** @var int $otherwf to count the number of courses in another workflow */
+    public $otherwf = 0;
+
+    /** @var int $delayed to count the number of courses that are delayed */
+    public $delayed = 0;
+
+    /** @var int $tablerows number of table rows effectively written */
+    public $tablerows = 0;
+
     /**
      * Builds a table of courses.
      * @param int $numbercourses number of courses listed here
      * @param trigger_subplugin $trigger of which the courses are listed
      * @param string $type of list: triggered or excluded
-     * @param string $filterdata optional, term to filter the table by course id or -name
+     * @param string $filterdata optional, term to filter the table by course id or course name
      * @throws \coding_exception
      * @throws \dml_exception
      */
@@ -82,23 +92,20 @@ class triggered_courses_table_trigger extends \table_sql {
         $this->define_baseurl($PAGE->url);
         $a = new \stdClass();
         $a->title = $trigger->instancename;
-        $a->courses = $numbercourses;
         if ($type == 'triggerid') {
             $this->caption = get_string('coursestriggered', 'tool_lifecycle', $a);
         } else if ($type == 'excluded') {
             $this->caption = get_string('coursesexcluded', 'tool_lifecycle', $a);
         }
         $this->captionattributes = ['class' => 'ml-3'];
-        $this->caption .= "&nbsp;&nbsp;&nbsp;".\html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
-                ["wf" => $workflow->id, "showsql" => "1", "showtablesql" => "1", "showdetails" => "1"]),
-                "&nbsp;&nbsp;&nbsp;", ["class" => "text-muted fs-6 text-decoration-none"]);
 
-        $columns = ['courseid', 'coursefullname', 'coursecategory'];
+        $columns = ['courseid', 'coursefullname', 'coursecategory', 'status'];
         $this->define_columns($columns);
         $headers = [
             get_string('courseid', 'tool_lifecycle'),
             get_string('coursename', 'tool_lifecycle'),
             get_string('coursecategory', 'moodle'),
+            get_string('status', 'moodle'),
         ];
         $this->define_headers($headers);
 
@@ -113,33 +120,31 @@ class triggered_courses_table_trigger extends \table_sql {
                     c.shortname as courseshortname,
                     cc.name as coursecategory,
                     COALESCE(p.courseid, pe.courseid, 0) as hasprocess,
-                    CASE
-                        WHEN COALESCE(p.workflowid, 0) > COALESCE(pe.workflowid, 0) THEN p.workflowid
-                        WHEN COALESCE(p.workflowid, 0) < COALESCE(pe.workflowid, 0) THEN pe.workflowid
-                        ELSE 0
-                    END as workflowid,
+                    COALESCE(po.workflowid, peo.workflowid, 0) as hasotherwfprocess,
                     CASE
                         WHEN COALESCE(d.delayeduntil, 0) > COALESCE(dw.delayeduntil, 0) THEN d.delayeduntil
                         WHEN COALESCE(d.delayeduntil, 0) < COALESCE(dw.delayeduntil, 0) THEN dw.delayeduntil
                         ELSE 0
-                    END as delay ";
-
+                    END as delaycourse ";
         $from = " {course} c LEFT JOIN {course_categories} cc ON c.category = cc.id
-                    LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid
-                    LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid
+                    LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid AND p.workflowid = $workflow->id
+                    LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid AND pe.workflowid = $workflow->id
+                    LEFT JOIN {tool_lifecycle_process} po ON c.id = po.courseid AND po.workflowid <> $workflow->id
+                    LEFT JOIN {tool_lifecycle_proc_error} peo ON c.id = peo.courseid AND peo.workflowid <> $workflow->id
                     LEFT JOIN {tool_lifecycle_delayed} d ON c.id = d.courseid
                     LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid
                     AND dw.workflowid = $workflow->id ";
 
+        $where .= " AND p.courseid IS NULL AND pe.courseid IS NULL ";
         if (!$workflow->includesitecourse) {
             $where .= " AND c.id <> 1 ";
         }
 
         if ($filterdata) {
             if (is_numeric($filterdata)) {
-                $where .= " AND {course}.id = $filterdata ";
+                $where .= " AND c.id = $filterdata ";
             } else {
-                $where .= " AND ( {course}.fullname LIKE '%$filterdata%' OR {course}.shortname LIKE '%$filterdata%')";
+                $where .= " AND ( c.fullname LIKE '%$filterdata%' OR c.shortname LIKE '%$filterdata%')";
             }
         }
 
@@ -161,6 +166,7 @@ class triggered_courses_table_trigger extends \table_sql {
      * table.
      *
      * After calling this function, don't forget to call close_recordset.
+     * @throws \dml_exception
      */
     public function build_table() {
 
@@ -170,32 +176,26 @@ class triggered_courses_table_trigger extends \table_sql {
 
         $trigger = trigger_manager::get_instance($this->triggerid);
         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-
         foreach ($this->rawdata as $row) {
+            if ($row->hasotherwfprocess) {
+                $this->otherwf++;
+            }
+            if ($row->delaycourse && $row->delaycourse > time() && !$this->triggerexclude) {
+                $this->delayed++;
+            }
             $response = $lib->check_course($row->courseid, $this->triggerid);
-
             if (!($response == trigger_response::exclude() || $response == trigger_response::trigger())) {
                 continue;
             }
-            if ($row->hasprocess) {
+            if ($this->type == 'triggerid' && !$response == trigger_response::trigger()) {
+                continue;
+            } else if ($this->type == 'excluded' &&
+                (!$response == trigger_response::exclude() || !($response == trigger_response::trigger() && $this->triggerexclude))) {
                 continue;
             }
-            if ($row->delay && $row->delay > time() &&  !$this->triggerexclude) {
-                continue;
-            } else {
-                if ($this->type == 'triggerid') {
-                    if ($response == trigger_response::trigger()) {
-                        $formattedrow = $this->format_row($row);
-                        $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-                    }
-                } else if ($this->type == 'excluded') {
-                    if ($response == trigger_response::exclude() ||
-                        ($response == trigger_response::trigger() && $this->triggerexclude)) {
-                        $formattedrow = $this->format_row($row);
-                        $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-                    }
-                }
-            }
+            $formattedrow = $this->format_row($row);
+            $this->add_data_keyed($formattedrow, $this->get_row_class($row));
+            $this->tablerows++;
         }
     }
 
@@ -208,6 +208,26 @@ class triggered_courses_table_trigger extends \table_sql {
         $courselink = \html_writer::link(course_get_url($row->courseid),
             format_string($row->coursefullname), ['target' => '_blank']);
         return $courselink . '<br><span class="secondary-info">' . $row->courseshortname . '</span>';
+    }
+
+    /**
+     * Render trigger status of the course (triggered, already in process, other process, delayed).
+     * @param object $row Row data.
+     * @return string status
+     * @throws \coding_exception
+     */
+    public function col_status($row) {
+        $out = "";
+        if ($row->hasotherwfprocess) {
+            $out .= \html_writer::div(get_string('alreadyinprocessotherworkflow', 'tool_lifecycle'), 'text-warning');
+        }
+        if ($row->delaycourse && $row->delaycourse > time() && !$this->triggerexclude) {
+            $out .= \html_writer::div(get_string('delayed', 'tool_lifecycle'), 'text-info');
+        }
+        if ($out == "") {
+            $out .= \html_writer::div(get_string('ok'), 'text-success');
+        }
+        return $out;
     }
 
     /**
