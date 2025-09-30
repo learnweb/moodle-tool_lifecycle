@@ -151,8 +151,8 @@ class triggered_courses_table_workflow extends \table_sql {
             } else if ($type == 'used') {
                 $where .= " AND (po.workflowid IS NOT NULL OR peo.workflowid IS NOT NULL)";
             } else if ($type == 'triggeredworkflow') {
-                $where .= " AND p.courseid IS NULL AND pe.courseid IS NULL 
-                            AND po.workflowid IS NULL AND peo.workflowid IS NULL 
+                $where .= " AND p.courseid IS NULL AND pe.courseid IS NULL
+                            AND po.workflowid IS NULL AND peo.workflowid IS NULL
                             AND COALESCE(d.delayeduntil, 0) < :time1 AND COALESCE(dw.delayeduntil, 0) < :time2 ";
                 $inparams = array_merge($inparams, ['time1' => time(), 'time2' => time()]);
             }

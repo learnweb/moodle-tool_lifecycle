@@ -190,7 +190,8 @@ class triggered_courses_table_trigger extends \table_sql {
             if ($this->type == 'triggerid' && !$response == trigger_response::trigger()) {
                 continue;
             } else if ($this->type == 'excluded' &&
-                (!$response == trigger_response::exclude() || !($response == trigger_response::trigger() && $this->triggerexclude))) {
+                (!$response == trigger_response::exclude() ||
+                    !($response == trigger_response::trigger() && $this->triggerexclude))) {
                 continue;
             }
             $formattedrow = $this->format_row($row);
