@@ -39,8 +39,7 @@ require_once(__DIR__ . '/../lib.php');
  */
 class lastaccess extends base_automatic {
     /**
-     * Checks the course and returns a response, which tells if the course should be further processed.
-     *
+     * If check_course_code() returns true, code to check the given course is placed here
      * @param \stdClass $course
      * @param int $triggerid
      * @return trigger_response

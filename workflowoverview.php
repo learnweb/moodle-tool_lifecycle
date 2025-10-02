@@ -274,7 +274,7 @@ foreach ($triggers as $trigger) {
     $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
     if ($trigger->automatic = !$lib->is_manual_trigger()) {
         // We need the response type only.
-        $response = $lib->check_course(null, null);
+        $response = $lib->default_response();
     }
     $nomanualtriggerinvolved &= $trigger->automatic;
     if ($showdetails) {
@@ -393,8 +393,7 @@ if ($stepid) { // Display courses table with courses of this step.
 } else if ($triggerid) { // Display courses table with triggered courses of this trigger.
     $trigger = trigger_manager::get_instance($triggerid);
     if ($amounts[$trigger->sortindex]->triggered ?? false) {
-        $table = new triggered_courses_table_trigger($amounts[$trigger->sortindex]->triggered,
-            $trigger, 'triggerid', $search);
+        $table = new triggered_courses_table_trigger($trigger, 'triggerid', $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
@@ -415,8 +414,7 @@ if ($stepid) { // Display courses table with courses of this step.
 } else if ($excluded) { // Display courses table with excluded courses of this trigger.
     $trigger = trigger_manager::get_instance($excluded);
     if ($amounts[$trigger->sortindex]->excluded ?? false) {
-        $table = new triggered_courses_table_trigger($amounts[$trigger->sortindex]->excluded,
-            $trigger, 'excluded', $search);
+        $table = new triggered_courses_table_trigger($trigger, 'excluded', $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
@@ -633,7 +631,7 @@ if (workflow_manager::is_editable($workflow->id)) {
             $lib = lib_manager::get_trigger_lib($triggertype);
             if (!$lib->is_manual_trigger()) {
                 // Function check_course: We need the response type only.
-                if ($lib->check_course(null, null) == trigger_response::triggertime()) {
+                if ($lib->default_response() == trigger_response::triggertime()) {
                     continue;
                 }
             }

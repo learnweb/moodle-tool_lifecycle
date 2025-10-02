@@ -157,6 +157,7 @@ Ihnen fehlen wahrscheinlich die Berechtigung dazu. Bitte überprüfen Sie den Pf
 Seitenadministration/Plugins/Dienstprogramme/Kurs-Lebenszyklus/Allgemein & Subplugins.";
 $string['errornobackup'] = "Es wurde kein Backup in dem angegebenen Pfad erstellt.";
 $string['errortime'] = 'Fehler-Zeitpunkt';
+$string['excludedbycoursecode'] = 'Durch den check-course Code ausgeschlossen';
 $string['find_course_list_header'] = 'Kurse finden';
 $string['finished'] = 'Fortgeführt/Beendet';
 $string['followedby_none'] = 'Keine';

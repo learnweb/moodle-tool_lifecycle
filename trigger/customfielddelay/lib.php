@@ -35,14 +35,29 @@ require_once(__DIR__ . '/../../lib.php');
 class customfielddelay extends base_automatic {
 
     /**
-     * Checks the course and returns a response, which tells if the course should be further processed.
+     * If check_course_code() returns true, code to check the given course is placed here
      * @param object $course
      * @param int $triggerid
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
-        // Everything is already in the sql statement.
-        return trigger_response::trigger();
+        if ($course && $triggerid) {
+            if ($course->id % 2 == 1) {
+                return trigger_response::trigger();
+            } else {
+                return trigger_response::exclude();
+            }
+        } else {
+            return trigger_response::trigger();
+        }
+    }
+
+    /**
+     * Returns whether the lib function check_course contains particular selection code per course or not.
+     * @return bool
+     */
+    public function check_course_code() {
+        return true;
     }
 
     /**

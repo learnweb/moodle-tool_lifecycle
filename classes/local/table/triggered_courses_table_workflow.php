@@ -25,6 +25,7 @@ namespace tool_lifecycle\local\table;
 
 use core\exception\moodle_exception;
 use core_date;
+use stdClass;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\local\manager\delayed_courses_manager;
@@ -224,12 +225,14 @@ class triggered_courses_table_workflow extends \table_sql {
                 }
             }
         }
+        $course = new stdClass();
         foreach ($this->rawdata as $row) {
             if ($this->type == 'triggeredworkflow') {
                 if ($this->checkcoursecode) {
                     foreach ($autotriggers as $trigger) {
                         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-                        $response = $lib->check_course($row->id, $trigger->id);
+                        $course->id = $row->courseid;
+                        $response = $lib->check_course($course, $trigger->id);
                         if ($response == trigger_response::next()) {
                             continue 2;
                         }

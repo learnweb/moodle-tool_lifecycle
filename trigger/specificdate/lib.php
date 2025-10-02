@@ -42,12 +42,20 @@ require_once(__DIR__ . '/../../lib.php');
 class specificdate extends base_automatic {
 
     /**
-     * Returns triggertype of trigger: trigger, triggertime or exclude.
+     * If check_course_code() returns true, code to check the given course is placed here
      * @param object $course
      * @param int $triggerid
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
+        return trigger_response::triggertime();
+    }
+
+    /**
+     * Returns the default response of this trigger.
+     * @return trigger_response
+     */
+    public function default_response() {
         return trigger_response::triggertime();
     }
 

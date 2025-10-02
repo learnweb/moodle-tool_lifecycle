@@ -24,6 +24,7 @@
 namespace tool_lifecycle\local\table;
 
 use core\exception\moodle_exception;
+use stdClass;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\settings_manager;
@@ -69,14 +70,13 @@ class triggered_courses_table_trigger extends \table_sql {
 
     /**
      * Builds a table of courses.
-     * @param int $numbercourses number of courses listed here
      * @param trigger_subplugin $trigger of which the courses are listed
      * @param string $type of list: triggered or excluded
      * @param string $filterdata optional, term to filter the table by course id or course name
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function __construct($numbercourses, $trigger, $type, $filterdata = '') {
+    public function __construct($trigger, $type, $filterdata = '') {
         parent::__construct('tool_lifecycle-courses-in-trigger');
         global $PAGE, $SESSION;
 
@@ -176,6 +176,8 @@ class triggered_courses_table_trigger extends \table_sql {
 
         $trigger = trigger_manager::get_instance($this->triggerid);
         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+        $response = $lib->default_response();
+        $course = new stdClass();
         foreach ($this->rawdata as $row) {
             if ($row->hasotherwfprocess) {
                 $this->otherwf++;
@@ -183,7 +185,10 @@ class triggered_courses_table_trigger extends \table_sql {
             if ($row->delaycourse && $row->delaycourse > time() && !$this->triggerexclude) {
                 $this->delayed++;
             }
-            $response = $lib->check_course($row->courseid, $this->triggerid);
+            if ($lib->check_course_code()) {
+                $course->id = $row->courseid;
+                $response = $lib->check_course($course, $this->triggerid);
+            }
             if (!($response == trigger_response::exclude() || $response == trigger_response::trigger())) {
                 continue;
             }
@@ -194,6 +199,7 @@ class triggered_courses_table_trigger extends \table_sql {
                     !($response == trigger_response::trigger() && $this->triggerexclude))) {
                 continue;
             }
+            $row->status = $response;
             $formattedrow = $this->format_row($row);
             $this->add_data_keyed($formattedrow, $this->get_row_class($row));
             $this->tablerows++;
@@ -212,7 +218,7 @@ class triggered_courses_table_trigger extends \table_sql {
     }
 
     /**
-     * Render trigger status of the course (triggered, already in process, other process, delayed).
+     * Render trigger status of the course (triggered, already in process, another process, delayed).
      * @param object $row Row data.
      * @return string status
      * @throws \coding_exception
@@ -220,10 +226,15 @@ class triggered_courses_table_trigger extends \table_sql {
     public function col_status($row) {
         $out = "";
         if ($row->hasotherwfprocess) {
-            $out .= \html_writer::div(get_string('alreadyinprocessotherworkflow', 'tool_lifecycle'), 'text-warning');
+            $out .= \html_writer::div(get_string('alreadyinprocessotherworkflow', 'tool_lifecycle'),
+                'text-warning');
         }
         if ($row->delaycourse && $row->delaycourse > time() && !$this->triggerexclude) {
             $out .= \html_writer::div(get_string('delayed', 'tool_lifecycle'), 'text-info');
+        }
+        if ($row->status && !($row->status == trigger_response::trigger())) {
+            $out .= \html_writer::div(get_string('excludedbycoursecode', 'tool_lifecycle'),
+                'text-warning');
         }
         if ($out == "") {
             $out .= \html_writer::div(get_string('ok'), 'text-success');

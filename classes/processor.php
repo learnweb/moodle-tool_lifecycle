@@ -58,11 +58,14 @@ class processor {
     public function call_trigger() {
         global $FULLSCRIPT, $CFG, $USER;
 
-        $run = str_contains($FULLSCRIPT, 'run.php');
+        $run = str_contains($FULLSCRIPT, 'run.php'); // Called by run-command of workflowoverview?
+        // Debug mode if admin setting debug is active and function is not called within a behat test.
         $debug = $run && $CFG->debugdeveloper && !defined('BEHAT_SITE_RUNNING');
 
+        // Only active workflows that are not manual workflows.
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
 
+        // Print debug message if this is not a behat test.
         if (!defined('BEHAT_SITE_RUNNING')) {
             if ($run) {
                 echo \html_writer::div(get_string ('active_workflows_header_title', 'tool_lifecycle').
@@ -73,12 +76,14 @@ class processor {
             }
         }
 
+        // Walk through the active workflows.
         foreach ($activeworkflows as $workflow) {
             $countcourses = 0;
             $counttriggered = 0;
             $countexcluded = 0;
             $exclude = [];
 
+            // Print debug message if this is not a behat test.
             if (!defined('BEHAT_SITE_RUNNING')) {
                 if ($run) {
                     echo \html_writer::div('Calling triggers for workflow "' . $workflow->title . '" '.
@@ -90,6 +95,8 @@ class processor {
                             core_date::get_user_timezone($USER)));
                 }
             }
+
+            // Get workflow triggers and settings.
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
             if (!$workflow->includesitecourse) {
                 $exclude[] = 1;
@@ -98,10 +105,13 @@ class processor {
                 $exclude = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
                     delayed_courses_manager::get_globally_delayed_courses(), $exclude);
             }
+            // Get recordset of triggered courses.
             $recordset = $this->get_course_recordset($triggers, !$workflow->includesitecourse);
+            // Walk through the course list.
             while ($recordset->valid()) {
                 $course = $recordset->current();
                 $countcourses++;
+                // Check trigger by trigger if the course is to be triggered or not.
                 foreach ($triggers as $trigger) {
                     $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                     $response = $lib->check_course($course, $trigger->id);
@@ -134,6 +144,7 @@ class processor {
                 }
                 $recordset->next();
             }
+            // Final debug messages if this is not a behat test.
             if (!defined('BEHAT_SITE_RUNNING')) {
                 if ($run) {
                     echo \html_writer::div("   $countcourses courses processed.");
@@ -458,9 +469,12 @@ class processor {
 
         $triggercoursesall = [];
         $recordset = $this->get_course_recordset([$trigger], !$workflow->includesitecourse, true);
+        $response = $lib->default_response();
         while ($recordset->valid()) {
             $course = $recordset->current();
-            $response = $lib->check_course($course, $trigger->id);
+            if ($lib->check_course_code()) {
+                $response = $lib->check_course($course, $trigger->id);
+            }
             if ($response !== trigger_response::next()) {
                 $triggercoursesall[] = $course->id;
             }
@@ -518,7 +532,7 @@ class processor {
                 // Only use triggers with true sql to display the real amounts for the others (instead of always 0).
                 $obj->sql = trigger_manager::get_trigger_sqlresult($trigger);
                 // We only need the trigger response here.
-                $obj->response = $lib->check_course(null, null);
+                $obj->response = $lib->default_response();
                 if ($obj->sql != "false") {
                     // Get courses amounts.
                     // Triggercourses: Courses in current selection without defined excluded courses.
@@ -565,36 +579,57 @@ class processor {
             $amounts[$trigger->sortindex] = $obj;
         }
 
-        $recordset = $this->get_course_recordset($autotriggers, !$workflow->includesitecourse, true);
+        $recordset = false;
+        if ($autotriggers) {
+            $recordset = $this->get_course_recordset($autotriggers, !$workflow->includesitecourse, true);
+        }
 
         $coursestriggered = 0;
-        $hasprocess = 0;
-        $hasotherwfprocess = 0;
         $coursesdelayed = 0; // Only delayed courses of selected courses are of interest here.
-        while ($recordset->valid()) {
-            $course = $recordset->current();
-            if ($checkcoursecode) {
-                $action = false;
-                foreach ($autotriggers as $trigger) {
-                    $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-                    $response = $lib->check_course($course, $trigger->id);
-                    if ($response == trigger_response::next()) {
-                        if (!$action) {
-                            $action = true;
+        $hasprocess = 0;  // Number of courses that already have a process in this workflow.
+        $hasotherwfprocess = 0;  // Number of courses that have a process in another workflow.
+        if ($recordset) {
+            while ($recordset->valid()) {
+                $course = $recordset->current();
+                if ($checkcoursecode) {
+                    $action = false;
+                    foreach ($autotriggers as $trigger) {
+                        $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+                        $response = $lib->check_course($course, $trigger->id);
+                        if ($response == trigger_response::next()) {
+                            if (!$action) {
+                                $action = true;
+                            }
+                            continue;
                         }
-                        continue;
-                    }
-                    if ($response == trigger_response::exclude()) {
-                        if (!$action) {
-                            $action = true;
+                        if ($response == trigger_response::exclude()) {
+                            if (!$action) {
+                                $action = true;
+                            }
+                            continue;
                         }
-                        continue;
+                        if ($response == trigger_response::trigger()) {
+                            continue;
+                        }
                     }
-                    if ($response == trigger_response::trigger()) {
-                        continue;
+                    if (!$action) {
+                        if ($course->hasprocess) {
+                            $hasprocess++;
+                            if ($course->delaycourse && $course->delaycourse > time()) {
+                                $coursesdelayed++;
+                            }
+                        } else if ($course->hasotherwfprocess) {
+                            $hasotherwfprocess++;
+                            if ($course->delaycourse && $course->delaycourse > time()) {
+                                $coursesdelayed++;
+                            }
+                        } else if ($course->delaycourse && $course->delaycourse > time()) {
+                            $coursesdelayed++;
+                        } else {
+                            $coursestriggered++;
+                        }
                     }
-                }
-                if (!$action) {
+                } else {
                     if ($course->hasprocess) {
                         $hasprocess++;
                         if ($course->delaycourse && $course->delaycourse > time()) {
@@ -611,24 +646,8 @@ class processor {
                         $coursestriggered++;
                     }
                 }
-            } else {
-                if ($course->hasprocess) {
-                    $hasprocess++;
-                    if ($course->delaycourse && $course->delaycourse > time()) {
-                        $coursesdelayed++;
-                    }
-                } else if ($course->hasotherwfprocess) {
-                    $hasotherwfprocess++;
-                    if ($course->delaycourse && $course->delaycourse > time()) {
-                        $coursesdelayed++;
-                    }
-                } else if ($course->delaycourse && $course->delaycourse > time()) {
-                    $coursesdelayed++;
-                } else {
-                    $coursestriggered++;
-                }
+                $recordset->next();
             }
-            $recordset->next();
         }
 
         $all = new \stdClass();

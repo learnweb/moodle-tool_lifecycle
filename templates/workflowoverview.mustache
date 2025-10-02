@@ -158,24 +158,27 @@
         <div class="wf-trigger-block workflow-item">
             <h5 class="my-2">{{#str}} courseselectionrun_title, tool_lifecycle{{/str}} <a href="#" data-toggle="tooltip" title="{{#str}} overview:timetrigger_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></a></h5>
             {{#nomanualtriggerinvolved}}
-            <div class="mb-2 mx-2">
+            <div class="mx-2">
                 {{#str}} nextrun, tool_lifecycle, {{{nextrun}}} {{/str}}
-                {{#runnable}}
-                <a href="{{{runlink}}}">
-                  <span class="" data-toggle="tooltip" title="{{#str}} runtask, tool_lifecycle {{/str}}">
-                      {{#str}} run, tool_lifecycle {{/str}}
-                  </span>
-                </a>
                 <br>
-                {{/runnable}}
                 <span class="text-muted">{{#str}} lastrun, tool_lifecycle, {{lastrun}} {{/str}}</span>
             </div>
             {{/nomanualtriggerinvolved}}
             {{^nomanualtriggerinvolved}}
-                <div class="mb-2 mx-2">
+                <div class="mx-2">
                     {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <a href="#" data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></a>
                 </div>
             {{/nomanualtriggerinvolved}}
+            {{#runnable}}
+                <div class="mb-2">
+                    <a href="{{{runlink}}}">
+                      <span data-toggle="tooltip" title="{{#str}} runtask, tool_lifecycle {{/str}}">
+                          {{#str}} run, tool_lifecycle {{/str}}
+                      </span>
+                    </a>
+                </div>
+            {{/runnable}}
+
             {{#counttimetriggers}}
                 <div class="workflow wf-trigger-wrapper">
 

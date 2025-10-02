@@ -55,7 +55,7 @@ class byrole extends base_automatic {
     }
 
     /**
-     * Returns triggertype of trigger: trigger, triggertime or exclude.
+     * If check_course_code() returns true, code to check the given course is placed here
      * @param \stdClass $course
      * @param int $triggerid
      * @return trigger_response

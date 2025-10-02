@@ -157,6 +157,7 @@ $string['errorbackuppath'] = 'Error while trying to create the backup directory.
 Please check your path at Site administration/Plugins/Admin tools/Life Cycle/General & subplugins/backup_path.';
 $string['errornobackup'] = 'No backup was created at the specified directory, reasons unknown.';
 $string['errortime'] = 'Time of Error';
+$string['excludedbycoursecode'] = 'Not triggered because of the check-course code';
 $string['find_course_list_header'] = 'Find courses';
 $string['finished'] = 'Proceeded/Finished';
 $string['followedby_none'] = 'None';

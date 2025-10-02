@@ -179,7 +179,7 @@ if ($delayedcourses > 0) {
     if ($data) {
         $params = array_merge($params, (array) $data);
     }
-    $button = new single_button(new moodle_url('confirmation.php'),
+    $button = new single_button(new moodle_url('confirmation.php', $params),
         get_string('delete_all_delays', 'tool_lifecycle'));
     echo $OUTPUT->render($button);
     $classnotnull = 'badge badge-primary badge-pill ml-1';
