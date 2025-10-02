@@ -41,15 +41,7 @@ class customfielddelay extends base_automatic {
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
-        if ($course && $triggerid) {
-            if ($course->id % 2 == 1) {
-                return trigger_response::trigger();
-            } else {
-                return trigger_response::exclude();
-            }
-        } else {
-            return trigger_response::trigger();
-        }
+        return trigger_response::trigger();
     }
 
     /**
@@ -57,7 +49,7 @@ class customfielddelay extends base_automatic {
      * @return bool
      */
     public function check_course_code() {
-        return true;
+        return false;
     }
 
     /**
