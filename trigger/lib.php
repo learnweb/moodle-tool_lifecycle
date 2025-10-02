@@ -156,9 +156,9 @@ abstract class base_automatic extends base {
      * Returns the default response of this trigger.
      * @return trigger_response
      */
-   public function default_response() {
-       return trigger_response::trigger();
-   }
+    public function default_response() {
+        return trigger_response::trigger();
+    }
 
     /**
      * Defines if the trigger subplugin is started manually or automatically.
