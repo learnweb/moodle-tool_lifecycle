@@ -30,6 +30,7 @@
         "showdetails": 1,
         "id": 1,
         "triggeredcourses": 5,
+        "tooltip": " 5 courses will be triggered",
         "actionmenu": "actionmenu",
         "popuplink": "admin/tool/lifecycle/workflowoverview.php?wf=1"
     }
@@ -38,7 +39,7 @@
     <div class="workflow-trigger {{classfires}}">
         <div class="wf-header {{^showcoursecounts}}noshowcoursecounts{{/showcoursecounts}}">
             <div class="wf-header-text">
-                <span data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 25, {{instancename}} {{/shortentext}}</span><br>
+                <a href="{{{editlink}}}" data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 50, {{instancename}} {{/shortentext}}</a><br>
                 <span class="text-muted" style="font-size: 0.9em">{{subpluginname}}</span>
             </div>
             <div class="wf-actionmenu">
@@ -54,26 +55,29 @@
                     {{^additionalinfo}}
                         {{#triggeredcourses}}
                             <a href="{{{popuplink}}}&trigger={{id}}&showdetails={{showdetails}}">
-                            <span class="btn btn-outline-success" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, {{triggeredcourses}} {{/str}}">
-                                {{triggeredcourses}}
-                            </span>
+                                <span class="btn btn-outline-success" data-toggle="tooltip" title="{{tooltip}}">
+                                    {{triggeredcourses}}
+                                </span>
                             </a>
                         {{/triggeredcourses}}
                         {{^triggeredcourses}}
-                            {{#excludedcourses}}
-                                <a href="{{{popuplink}}}&excluded={{id}}&showdetails={{showdetails}}" data-toggle="tooltip" title="{{#str}} courses_will_be_excluded, tool_lifecycle, {{excludedcourses}} {{/str}}">
-                                <span class="btn btn-outline-danger">
-                                    {{excludedcourses}}
-                                </span>
-                                </a>
-                            {{/excludedcourses}}
                             {{^excludedcourses}}
-                                <span class="btn btn-outline-secondary" data-toggle="tooltip" title="{{#str}} courses_will_be_triggered, tool_lifecycle, 0 {{/str}}">0</span>
+                                {{^exclude}}
+                                    <a href="#" data-toggle="tooltip" title="{{tooltip}}" class="btn btn-outline-success">0</a>
+                                {{/exclude}}
                             {{/excludedcourses}}
                         {{/triggeredcourses}}
-                        {{#alreadyin}}
-                            <span class="btn btn-outline-secondary btn-sm" data-toggle="tooltip" title="{{#str}} courses_are_alreadyin, tool_lifecycle, {{alreadyin}} {{/str}}">{{alreadyin}}</span>
-                        {{/alreadyin}}
+                        {{#excludedcourses}}
+                            <a href="{{{popuplink}}}&excluded={{id}}&showdetails={{showdetails}}" data-toggle="tooltip" title="{{tooltip}}">
+                                <span class="btn btn-outline-danger">- {{excludedcourses}}</span>
+                            </a>
+                        {{/excludedcourses}}
+                        {{^excludedcourses}}
+                            {{#exclude}}
+                                <a href="#" data-toggle="tooltip" title="{{tooltip}}" class="btn btn-outline-danger">0</a>
+                            {{/exclude}}
+                        {{/excludedcourses}}
+                        <a href="#" data-toggle="tooltip" title="{{#str}} overview:trigger_info, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></a>
                     {{/additionalinfo}}
                 {{/automatic}}
                 {{^automatic}}

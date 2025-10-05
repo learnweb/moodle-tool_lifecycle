@@ -32,8 +32,7 @@ use tool_lifecycle\urls;
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-require_login();
-require_capability('moodle/site:config', context_system::instance());
+require_admin();
 
 $syscontext = context_system::instance();
 $PAGE->set_context($syscontext);
@@ -76,6 +75,7 @@ if ($data = $form->get_data()) {
         $workflow->delayforallworkflows = property_exists($data, 'delayforallworkflows') ? $data->delayforallworkflows : 0;
         $workflow->includedelayedcourses = $data->includedelayedcourses;
         $workflow->includesitecourse = $data->includesitecourse;
+        $workflow->andor = $data->andorgroup['andor'];
         $newworkflow = false;
     } else {
         $workflow = workflow::from_record($data);

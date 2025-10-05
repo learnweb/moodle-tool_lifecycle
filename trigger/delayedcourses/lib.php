@@ -39,12 +39,20 @@ class delayedcourses extends base_automatic {
 
 
     /**
-     * Returns triggertype of trigger: trigger, triggertime or exclude.
-     * @param object $course DEPRECATED.
-     * @param int $triggerid DEPRECATED
+     * If check_course_code() returns true, code to check the given course is placed here
+     * @param object $course
+     * @param int $triggerid
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
+        return trigger_response::exclude();
+    }
+
+    /**
+     * Returns the default response of this trigger.
+     * @return trigger_response
+     */
+    public function default_response() {
         return trigger_response::exclude();
     }
 

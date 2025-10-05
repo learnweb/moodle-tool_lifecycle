@@ -67,7 +67,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');
         $data = $generator->test_create_preparation();
-        $recordset = $this->processor->get_course_recordset([$data['trigger']], []);
+        $recordset = $this->processor->get_course_recordset([$data['trigger']]);
 
         foreach ($recordset as $element) {
             $this->assertNotEquals($data['teachercourse']->id, $element->id, 'The course should not have been triggered');
@@ -87,7 +87,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');
         $data = $generator->test_create_preparation();
-        $recordset = $this->processor->get_course_recordset([$data['trigger']], []);
+        $recordset = $this->processor->get_course_recordset([$data['trigger']]);
 
         foreach ($recordset as $element) {
             $this->assertNotEquals($data['norolecourse']->id, $element->id, 'The course should not have been triggered');
@@ -108,7 +108,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');
         $data = $generator->test_create_preparation();
-        $recordset = $this->processor->get_course_recordset([$data['trigger']], []);
+        $recordset = $this->processor->get_course_recordset([$data['trigger']]);
 
         $found = false;
         foreach ($recordset as $element) {
@@ -137,7 +137,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
         $exist = $DB->record_exists('lifecycletrigger_byrole', ['courseid' => $data['rolefoundagain']->id]);
         $this->assertEquals(true, $exist);
 
-        $recordset = $this->processor->get_course_recordset([$data['trigger']], []);
+        $recordset = $this->processor->get_course_recordset([$data['trigger']]);
 
         foreach ($recordset as $element) {
             $this->assertNotEquals($data['rolefoundagain']->id, $element->id, 'The course should not have been triggered');

@@ -32,7 +32,7 @@ span.tool_lifecycle-hint {
     text-align: center;
     border: 1px solid #aaa;
     border-radius: 8px;
-    min-width: 220px;
+    min-width: 260px;
     background-color: white;
 }
 
@@ -47,6 +47,7 @@ span.tool_lifecycle-hint {
 
 #lifecycle-workflow-details .workflow-trigger {
     max-width: 300px;
+    min-width: 260px;
     margin: 8px;
 }
 
@@ -110,12 +111,14 @@ span.tool_lifecycle-hint {
 #lifecycle-workflow-details .courses-table {
     flex: 45% 1 1;
     border: 1px solid #bbb;
-    margin-right: 2em;
+    border-radius: 8px;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
 #lifecycle-workflow-details .bar {
-    border: 1px solid #dee2e6;
-    border-right: none;
+    border: 1px none #dee2e6;
+    border-bottom-style: solid;
 }
 
 #lifecycle-workflow-details .close-button {
@@ -148,4 +151,8 @@ span.tool_lifecycle-hint {
 
 #lifecycle-workflow-details .dropdown-toggle::after {
     content: none;
+}
+
+#lifecycle-workflow-details .wf-wrapper a:hover {
+    text-decoration: none;
 }

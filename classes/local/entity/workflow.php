@@ -47,8 +47,8 @@ class workflow {
     /** @var int $sortindex Sort index of all active workflows. */
     public $sortindex;
 
-    /** @var bool|null $manual True if workflow is manually triggered. */
-    public $manual;
+    /** @var bool|null $manually True if workflow is manually triggered. */
+    public $manually;
 
     /** @var string $displaytitle Title that is displayed to users. */
     public $displaytitle;
@@ -68,6 +68,9 @@ class workflow {
     /** @var int $includesitecourse Is course 1 supposed to be processed in this workflow. */
     public $includesitecourse;
 
+    /** @var int $andor conjunction or disjunction when combining triggers. */
+    public $andor;
+
     /**
      * Workflow constructor.
      * @param int $id Id of the workflow.
@@ -82,21 +85,24 @@ class workflow {
      * @param bool $delayforallworkflows True if a delay counts for all workflows.
      * @param int $includedelayedcourses Are delayed courses supposed to be processed in this workflow.
      * @param int $includesitecourse Is course 1 supposed to be processed in this workflow.
+     * @param int $andor conjunction or disjunction when combining triggers.
      */
     private function __construct($id, $title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
-                                 $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses, $includesitecourse) {
+                                 $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses,
+                                 $includesitecourse, $andor) {
         $this->id = $id;
         $this->title = $title;
         $this->timeactive = $timeactive;
         $this->timedeactive = $timedeactive;
         $this->sortindex = $sortindex;
-        $this->manual = $manual;
+        $this->manually = $manual;
         $this->displaytitle = $displaytitle;
         $this->rollbackdelay = $rollbackdelay;
         $this->finishdelay = $finishdelay;
         $this->delayforallworkflows = $delayforallworkflows;
         $this->includedelayedcourses = $includedelayedcourses;
         $this->includesitecourse = $includesitecourse;
+        $this->andor = $andor;
     }
 
     /**
@@ -129,10 +135,10 @@ class workflow {
         }
 
         $manual = null;
-        if (object_property_exists($record, 'manual')) {
-            if ($record->manual == 1) {
+        if (object_property_exists($record, 'manually')) {
+            if ($record->manually == 1) {
                 $manual = true;
-            } else if ($record->manual == 0) {
+            } else if ($record->manually == 0) {
                 $manual = false;
             }
         }
@@ -168,8 +174,13 @@ class workflow {
             $includesitecourse = $record->includesitecourse;
         }
 
+        $andor = false;
+        if (object_property_exists($record, 'andor')) {
+            $andor = $record->andor;
+        }
+
         $instance = new self($id, $record->title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
-                $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses, $includesitecourse);
+            $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses, $includesitecourse, $andor);
 
         return $instance;
     }

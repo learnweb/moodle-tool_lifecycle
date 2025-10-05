@@ -41,8 +41,8 @@ class semindependent extends base_automatic {
 
     /**
      * Returns triggertype of trigger: trigger, triggertime or exclude.
-     * @param object $course DEPRECATED
-     * @param int $triggerid DEPRECATED
+     * @param object $course
+     * @param int $triggerid
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
@@ -59,9 +59,9 @@ class semindependent extends base_automatic {
     public function get_course_recordset_where($triggerid) {
         $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
         if ($exclude) {
-            $where = "{course}.startdate > :semindepdate";
+            $where = " NOT c.startdate > :semindepdate";
         } else {
-            $where = "{course}.startdate <= :semindepdate";
+            $where = "c.startdate > :semindepdate";
         }
         // Date before which a course counts as semester independent. In this case the 1.1.2000.
         $params = ["semindepdate" => 946688400];

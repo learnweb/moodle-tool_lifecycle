@@ -26,6 +26,7 @@ namespace tool_lifecycle\local\form;
 use tool_lifecycle\action;
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\manager\lib_manager;
+use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\step\libbase;
 
@@ -111,19 +112,46 @@ class form_step_instance extends \moodleform {
         $mform->addElement('header', 'step_settings_header', get_string('step_settings_header', 'tool_lifecycle'));
 
         $elementname = 'instancename';
-        $mform->addElement('text', $elementname, get_string('step_instancename', 'tool_lifecycle'));
-        $mform->addHelpButton($elementname, 'step_instancename', 'tool_lifecycle');
-        $mform->setType($elementname, PARAM_TEXT);
-        $mform->addRule($elementname, get_string('maximumchars', '', 100), 'maxlength', 100, 'client');
-        $mform->addRule($elementname, null, 'required');
+        if ($this->workflowid && !workflow_manager::is_editable($this->workflowid)) {
+            $mform->addElement('static', $elementname, get_string('step_instancename', 'tool_lifecycle'));
+            $mform->setType($elementname, PARAM_TEXT);
+        } else {
+            $mform->addElement('text', $elementname, get_string('step_instancename', 'tool_lifecycle'), ['size' => 60]);
+            $mform->addHelpButton($elementname, 'step_instancename', 'tool_lifecycle');
+            $mform->setType($elementname, PARAM_TEXT);
+            $mform->addRule($elementname, get_string('maximumchars', '', 100), 'maxlength', 100, 'client');
+            $mform->addRule($elementname, null, 'required');
+        }
 
         $elementname = 'subpluginnamestatic';
         $mform->addElement('static', $elementname, get_string('step_subpluginname', 'tool_lifecycle'));
         $mform->addHelpButton($elementname, 'step_subpluginname', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_TEXT);
+
         $elementname = 'subpluginname';
         $mform->addElement('hidden', $elementname);
         $mform->setType($elementname, PARAM_TEXT);
+
+        // If editing a step and if it's not the first workflow step provide the option to define target rollback index.
+        $options = [];
+        if ($this->step) {
+            if ($steps = step_manager::get_step_instances($this->workflowid)) {
+                foreach ($steps as $step) {
+                    if ($step->id != $this->step && $step->sortindex < $this->step->sortindex) {
+                        $options[$step->id] = get_string('step', 'tool_lifecycle').
+                            " #".$step->sortindex." ('".$step->instancename."')";
+                    }
+                }
+            }
+        }
+        if ($options) {
+            array_unshift($options, get_string('none'));
+            $elementname = 'rollbacktosortindex';
+            $mform->addElement('select', $elementname, get_string($elementname, 'tool_lifecycle'), $options);
+            $mform->addHelpButton($elementname, $elementname, 'tool_lifecycle');
+            $mform->setDefault($elementname, $this->step->rollbacktosortindex);
+            $mform->setType($elementname, PARAM_INT);
+        }
 
         // Insert the subplugin specific settings.
         if (!empty($this->lib->instance_settings())) {

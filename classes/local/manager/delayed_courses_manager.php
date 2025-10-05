@@ -53,6 +53,11 @@ class delayed_courses_manager {
             $workflow = $workfloworid;
         } else {
             $workflow = workflow_manager::get_workflow($workfloworid);
+            if (!$workflow) {
+                mtrace("Set course delayed: no workflow found. Course-ID:{$courseid},
+                var_dump workfloworid:". var_dump($workfloworid));
+                return;
+            }
         }
         if ($becauserollback) {
             $duration = $workflow->rollbackdelay;

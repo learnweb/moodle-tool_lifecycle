@@ -51,6 +51,7 @@
         <FIELD NAME="subpluginname" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="name of the subplugin"/>
         <FIELD NAME="workflowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the workflow"/>
         <FIELD NAME="sortindex" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="Order within the workflow in which the steps are executed"/>
+        <FIELD NAME="rollbacktosortindex" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" COMMENT="To which step a rollback should return"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -105,13 +106,14 @@
         <FIELD NAME="timeactive" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="timestamp the workflow was set active"/>
         <FIELD NAME="timedeactive" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="timestamp the workflow was deactivated"/>
         <FIELD NAME="sortindex" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Sortindex for active workflows"/>
-        <FIELD NAME="manual" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Specifies for active workflows if the workflow is manually or automatically triggered. True, if manual. False, if automatic."/>
+        <FIELD NAME="manually" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Specifies for active workflows if the workflow is manually or automatically triggered. True, if manual. False, if automatic."/>
         <FIELD NAME="displaytitle" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="rollbackdelay" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="finishdelay" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="delayforallworkflows" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="includesitecourse" TYPE="int" LENGTH="5" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="includedelayedcourses" TYPE="int" LENGTH="5" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="andor" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

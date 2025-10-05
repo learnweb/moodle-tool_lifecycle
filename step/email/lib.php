@@ -44,14 +44,14 @@ define('EMAIL_PROCDATA_KEY_KEEP', 'keep');
 class email extends libbase {
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param object $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
@@ -72,14 +72,14 @@ class email extends libbase {
     }
 
     /**
-     * Processes the course in status waiting and returns a repsonse.
+     * Processes the course in status waiting and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param object $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
@@ -155,7 +155,7 @@ class email extends libbase {
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    private function replace_placeholders($strings, $user, $stepid, $mailentries) {
+    public function replace_placeholders($strings, $user, $stepid, $mailentries) {
         global $CFG;
 
         $patterns = [];

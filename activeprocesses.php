@@ -31,8 +31,7 @@ use tool_lifecycle\urls;
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-require_login();
-require_capability('moodle/site:config', context_system::instance());
+require_admin();
 
 $syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::ACTIVE_PROCESSES));
@@ -71,7 +70,9 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('find_course_list_header', 'tool_lifecycle');
 echo $renderer->header($heading);
-$tabrow = tabs::get_tabrow(true);
+$tabparams = new stdClass();
+$tabparams->activelink = true;
+$tabrow = tabs::get_tabrow($tabparams);
 $id = 'activeworkflows';
 $renderer->tabs($tabrow, $id);
 

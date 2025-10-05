@@ -23,7 +23,9 @@
 
 namespace tool_lifecycle;
 
+use tool_lifecycle\local\manager\delayed_courses_manager;
 use core\exception\moodle_exception;
+use stdClass;
 
 /**
  * Class to generate a tab row for navigation within this plugin
@@ -36,16 +38,33 @@ class tabs {
     /**
      * Generates a Moodle tabrow i.e. an array of tabs
      *
-     * @param bool $activelink display active workflows tab as link
-     * @param bool $deactivatelink display deactivated workflows tab as link
-     * @param bool $draftlink display draft workflows tab as link
+     * @param object $params
      * @return array of tabobjects
      * @throws \coding_exception
      * @throws \dml_exception
      * @throws moodle_exception
      */
-    public static function get_tabrow($activelink = false, $deactivatelink = false, $draftlink = false) {
+    public static function get_tabrow($params = null) {
         global $DB;
+
+        $activelink = false;
+        $deactivatedlink = false;
+        $draftlink = false;
+        $approvelink = false;
+        if ($params !== null) {
+            if (isset($params->activelink)) {
+                $activelink = true;
+            }
+            if (isset($params->deactivatedlink)) {
+                $deactivatedlink = true;
+            }
+            if (isset($params->draftlink)) {
+                $draftlink = true;
+            }
+            if (isset($params->approvelink)) {
+                $approvelink = true;
+            }
+        }
 
         $classnotnull = 'badge badge-primary badge-pill ml-1';
         $classnull = 'badge badge-secondary badge-pill ml-1';
@@ -69,20 +88,21 @@ class tabs {
         from {tool_lifecycle_workflow}
         where timeactive IS NULL AND timedeactive IS NOT NULL";
         $i = $DB->count_records_sql($sql);
-        $deactivatedewf = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
+        $deactivatedwf = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
 
         $time = time();
         // Get number of delayed courses.
         $sql = "select count(c.id) from {course} c LEFT JOIN
-        (SELECT dw.courseid, dw.workflowid, w.title as workflow, dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount
-         FROM ( SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount FROM {tool_lifecycle_delayed_workf} dw
-            JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id
-            WHERE dw.delayeduntil >= $time AND w.timeactive IS NOT NULL GROUP BY courseid ) maxtable JOIN
-             {tool_lifecycle_delayed_workf} dw ON maxtable.maxid = dw.id JOIN
-             {tool_lifecycle_workflow} w ON dw.workflowid = w.id ) wfdelay ON wfdelay.courseid = c.id LEFT JOIN
-            (SELECT * FROM {tool_lifecycle_delayed} d WHERE d.delayeduntil > $time ) d ON c.id = d.courseid JOIN
-            {course_categories} cat ON c.category = cat.id
-        where COALESCE(wfdelay.courseid, d.courseid) IS NOT NULL";
+                (SELECT dw.courseid, dw.workflowid, w.title as workflow,
+                        dw.delayeduntil as workflowdelay,maxtable.wfcount as workflowcount
+                FROM (SELECT courseid, MAX(dw.id) AS maxid, COUNT(*) AS wfcount FROM {tool_lifecycle_delayed_workf} dw
+                    JOIN {tool_lifecycle_workflow} w ON dw.workflowid = w.id
+                    WHERE dw.delayeduntil >= $time AND w.timeactive IS NOT NULL GROUP BY courseid) maxtable JOIN
+                    {tool_lifecycle_delayed_workf} dw ON maxtable.maxid = dw.id JOIN
+                    {tool_lifecycle_workflow} w ON dw.workflowid = w.id ) wfdelay ON wfdelay.courseid = c.id LEFT JOIN
+                    (SELECT * FROM {tool_lifecycle_delayed} d WHERE d.delayeduntil > $time ) d ON c.id = d.courseid JOIN
+                    {course_categories} cat ON c.category = cat.id
+                    where COALESCE(wfdelay.courseid, d.courseid) IS NOT NULL";
         $i = $DB->count_records_sql($sql);
         $delayedcourses = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
 
@@ -109,11 +129,17 @@ class tabs {
         $i = $DB->count_records_sql($sql);
         $lcerrors = \html_writer::span($i, $i > 0 ? $classnotnull : $classnull);
 
-        // General Settings and Subplugins.
+        // General Settings.
         $targeturl = new \moodle_url('/admin/settings.php', ['section' => 'lifecycle']);
         $tabrow[] = new \tabobject('settings', $targeturl,
             get_string('general_config_header', 'tool_lifecycle'),
             get_string('general_config_header_title', 'tool_lifecycle'));
+
+        // Subplugins.
+        $targeturl = new \moodle_url('/admin/tool/lifecycle/subplugins.php', ['id' => 'subplugins']);
+        $tabrow[] = new \tabobject('subplugins', $targeturl,
+            get_string('subplugins', 'tool_lifecycle'),
+            get_string('subpluginsdesc', 'tool_lifecycle'));
 
         // Tab to the draft workflows page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/workflowdrafts.php', ['id' => 'workflowdrafts']);
@@ -130,8 +156,8 @@ class tabs {
         // Tab to the deactivated workflows page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/deactivatedworkflows.php', ['id' => 'deactivatedworkflows']);
         $tabrow[] = new \tabobject('deactivatedworkflows', $targeturl,
-            get_string('deactivated_workflows_header', 'tool_lifecycle').$deactivatedewf,
-            get_string('deactivated_workflows_header_title', 'tool_lifecycle'), $deactivatelink);
+            get_string('deactivated_workflows_header', 'tool_lifecycle').$deactivatedwf,
+            get_string('deactivated_workflows_header_title', 'tool_lifecycle'), $deactivatedlink);
 
         // Tab to the delayed courses list page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/delayedcourses.php', ['id' => 'delayedcourses']);
@@ -143,7 +169,7 @@ class tabs {
         $targeturl = new \moodle_url('/admin/tool/lifecycle/step/adminapprove/index.php', ['id' => 'adminapprove']);
         $tabrow[] = new \tabobject('adminapprove', $targeturl,
             get_string('adminapprovals_header', 'tool_lifecycle').$adminapprovals,
-            get_string('adminapprovals_header_title', 'tool_lifecycle'));
+            get_string('adminapprovals_header_title', 'tool_lifecycle'), $approvelink);
 
         // Tab to the course backups list page.
         $targeturl = new \moodle_url('/admin/tool/lifecycle/coursebackups.php', ['id' => 'coursebackups']);

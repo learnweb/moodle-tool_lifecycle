@@ -16,6 +16,7 @@
 
 namespace tool_lifecycle\trigger;
 
+use moodle_url;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\settings_type;
@@ -34,14 +35,21 @@ require_once(__DIR__ . '/../../lib.php');
 class customfielddelay extends base_automatic {
 
     /**
-     * Checks the course and returns a response, which tells if the course should be further processed.
-     * @param object $course DEPRECATED.
-     * @param int $triggerid DEPRECATED.
+     * If check_course_code() returns true, code to check the given course is placed here
+     * @param object $course
+     * @param int $triggerid
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
-        // Everything is already in the sql statement.
         return trigger_response::trigger();
+    }
+
+    /**
+     * Returns whether the lib function check_course contains particular selection code per course or not.
+     * @return bool
+     */
+    public function check_course_code() {
+        return false;
     }
 
     /**
@@ -57,12 +65,13 @@ class customfielddelay extends base_automatic {
         $delay = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['delay'];
         $fieldname = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['customfield'];
         if (!($field = $DB->get_record('customfield_field', ['shortname' => $fieldname, 'type' => 'date']))) {
-            throw new \moodle_exception("missingfield");
+            throw new \moodle_exception('missingfield',
+                'lifecycletrigger_customfielddelay', '', $fieldname);
         }
-        $where = "{course}.id in (select cxt.instanceid from {context} cxt join {customfield_data} d " .
+        $where = "c.id in (select cxt.instanceid from {context} cxt join {customfield_data} d " .
                     "ON d.contextid = cxt.id AND cxt.contextlevel=" . CONTEXT_COURSE . " " .
-                    "WHERE d.fieldid = :customfieldid AND d.intvalue > 0 AND d.intvalue < :customfielddelay)";
-        $params = ["customfielddelay" => time() - $delay, "customfieldid" => $field->id];
+                    "WHERE d.fieldid = :customfielddateid AND d.intvalue > 0 AND d.intvalue < :customfielddelay)";
+        $params = ["customfielddelay" => time() - $delay, "customfielddateid" => $field->id];
         return [$where, $params];
     }
 
@@ -79,7 +88,10 @@ class customfielddelay extends base_automatic {
      * @return instance_setting[] containing settings keys and PARAM_TYPES
      */
     public function instance_settings() {
-        return [new instance_setting('delay', PARAM_INT), new instance_setting('customfield', PARAM_TEXT)];
+        return [
+            new instance_setting('delay', PARAM_INT),
+            new instance_setting('customfield', PARAM_TEXT),
+        ];
     }
 
     /**
@@ -90,15 +102,25 @@ class customfielddelay extends base_automatic {
      */
     public function extend_add_instance_form_definition($mform) {
         global $DB;
-        $mform->addElement('duration', 'delay', get_string('delay', 'lifecycletrigger_customfielddelay'));
+        $mform->addElement('duration', 'delay',
+            get_string('delay', 'lifecycletrigger_customfielddelay'));
         $mform->addHelpButton('delay', 'delay', 'lifecycletrigger_customfielddelay');
         $fields = $DB->get_records('customfield_field', ['type' => 'date']);
         $choices = [];
         foreach ($fields as $field) {
             $choices[$field->shortname] = $field->name;
         }
-        $mform->addElement('select', 'customfield', get_string('customfield', 'lifecycletrigger_customfielddelay'), $choices);
-        $mform->addHelpButton('customfield', 'customfield', 'lifecycletrigger_customfielddelay');
+        if ($choices) {
+            $mform->addElement('select', 'customfield',
+                get_string('customfield', 'lifecycletrigger_customfielddelay'), $choices);
+            $mform->addHelpButton('customfield', 'customfield',
+                'lifecycletrigger_customfielddelay');
+        } else {
+            $mform->addElement('static', 'nocustomfields',
+                get_string('nocustomfields_warning', 'lifecycletrigger_customfielddelay'),
+                    \html_writer::link(new moodle_url('/course/customfield.php'),
+                        get_string('nocustomfields_link', 'lifecycletrigger_customfielddelay')));
+        }
     }
 
     /**

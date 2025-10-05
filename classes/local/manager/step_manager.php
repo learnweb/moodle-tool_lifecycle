@@ -24,6 +24,7 @@
 namespace tool_lifecycle\local\manager;
 
 use tool_lifecycle\action;
+use tool_lifecycle\event\process_rollback;
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\settings_type;
 
@@ -156,7 +157,9 @@ class step_manager extends subplugin_manager {
      */
     public static function change_sortindex($stepid, $up) {
         global $DB;
+
         $step = self::get_step_instance($stepid);
+
         // Prevent first entry to be put up even more.
         if ($step->sortindex == 1 && $up) {
             return;
@@ -165,6 +168,14 @@ class step_manager extends subplugin_manager {
         if ($step->sortindex == self::count_steps_of_workflow($step->workflowid) && !$up) {
             return;
         }
+        // Prevent reducing step sortindex under the step's target rollback sortindex, if any.
+        if ($step->rollbacktosortindex) {
+            if (!$up && $step->sortindex == $step->rollbacktosortindex + 1) {
+                return;
+            }
+
+        }
+
         $index = $step->sortindex;
         if ($up) {
             $otherindex = $index - 1;
@@ -323,7 +334,6 @@ class step_manager extends subplugin_manager {
         $steps = self::get_step_instances($oldworkflowid);
         foreach ($steps as $step) {
             $settings = settings_manager::get_settings($step->id, settings_type::STEP);
-
             $step->id = null;
             $step->workflowid = $newworkflowid;
             self::insert_or_update($step);

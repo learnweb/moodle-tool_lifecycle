@@ -52,7 +52,7 @@ class active_manual_workflows_table extends active_workflows_table {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
         list($sqlwheremanual, $paramsmanual) = $DB->get_in_or_equal(true);
-        $sqlwhere = 'timeactive IS NOT NULL AND manual ' . $sqlwheremanual;
+        $sqlwhere = 'timeactive IS NOT NULL AND manually ' . $sqlwheremanual;
         $params[1] = $paramsmanual[0];
         $this->set_sql("id, title, displaytitle, timeactive", '{tool_lifecycle_workflow}',
             $sqlwhere, $params);

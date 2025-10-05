@@ -18,7 +18,6 @@
  * Display the list of courses relevant for a specific user in a specific step instance.
  *
  * @package tool_lifecycle
-use tool_lifecycle\tabs;
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

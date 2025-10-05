@@ -23,6 +23,9 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core\exception\coding_exception;
+use core_date;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
@@ -42,11 +45,12 @@ class process_errors_table extends \table_sql {
     private $strings;
 
     /**
-     * Constructor for delayed_courses_table.
+     * Constructor for process_errors_table.
      *
+     * @param object $filterdata the previously submitted filter data
      * @throws \coding_exception
      */
-    public function __construct() {
+    public function __construct($filterdata) {
         global $OUTPUT;
 
         parent::__construct('tool_lifecycle-process_errors');
@@ -54,18 +58,38 @@ class process_errors_table extends \table_sql {
         $this->strings = [
                 'proceed' => get_string('proceed', 'tool_lifecycle'),
                 'rollback' => get_string('rollback', 'tool_lifecycle'),
+                'delete' => get_string('deleteprocesserror', 'tool_lifecycle'),
         ];
 
-        $fields = 'c.id, c.fullname as course, w.title as workflow, s.instancename as step, pe.*';
+        $fields = 'c.id, c.fullname as course,
+            w.id as workflowid, w.title as workflow,
+            s.id as stepid, s.instancename as step,
+            pe.id as errorid, pe.courseid, pe.errormessage, pe.errortrace, pe.errortimecreated';
 
         $from = '{tool_lifecycle_proc_error} pe ' .
-            'JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id ' .
-            'JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex ' .
+            'LEFT JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id ' .
+            'LEFT JOIN {tool_lifecycle_step} s ON pe.workflowid = s.workflowid AND pe.stepindex = s.sortindex ' .
             'LEFT JOIN {course} c ON pe.courseid = c.id ';
-
-        $this->set_sql($fields, $from, 'TRUE');
+        $where = 'TRUE';
+        $params = [];
+        $workflow = $filterdata->workflow ?? null;
+        if ($workflow) {
+            $where .= ' AND w.id = :workflow';
+            $params['workflow'] = $workflow;
+        }
+        $step = $filterdata->step ?? null;
+        if ($step) {
+            $where .= ' AND s.id = :step';
+            $params['step'] = $step;
+        }
+        $course = $filterdata->course ?? null;
+        if ($course) {
+            $where .= ' AND c.id = :course';
+            $params['course'] = $course;
+        }
+        $this->set_sql($fields, $from, $where, $params);
         $this->column_nosort = ['select', 'tools'];
-        $this->define_columns(['select', 'workflow', 'step', 'courseid', 'course', 'error', 'tools']);
+        $this->define_columns(['select', 'workflow', 'step', 'courseid', 'course', 'errortime', 'error', 'tools']);
         $this->define_headers([
                 $OUTPUT->render(new \core\output\checkbox_toggleall('procerrors-table', true, [
                         'id' => 'select-all-procerrors',
@@ -79,6 +103,7 @@ class process_errors_table extends \table_sql {
                 get_string('step', 'tool_lifecycle'),
                 get_string('courseid', 'tool_lifecycle'),
                 get_string('course'),
+                get_string('errortime', 'tool_lifecycle'),
                 get_string('error'),
                 get_string('tools', 'tool_lifecycle'),
         ]);
@@ -101,6 +126,22 @@ class process_errors_table extends \table_sql {
     }
 
     /**
+     * Render time of error.
+     *
+     * @param object $row Row data.
+     * @return string errortime cell
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    public function col_errortime($row) {
+        global $USER;
+
+        return userdate($row->errortimecreated,
+            get_string('strftimedatetimeshortaccurate', 'core_langconfig'),
+            core_date::get_user_timezone($USER));
+    }
+
+    /**
      * Render tools column.
      *
      * @param object $row Row data.
@@ -112,20 +153,30 @@ class process_errors_table extends \table_sql {
         global $OUTPUT;
 
         $actionmenu = new \action_menu();
-        $actionmenu->add_primary_action(
+        if ($row->workflowid && $row->stepid ?? false) {
+            $actionmenu->add_primary_action(
                 new \action_menu_link_primary(
-                        new \moodle_url('', ['action' => 'proceed', 'id[]' => $row->id, 'sesskey' => sesskey()]),
-                        new \pix_icon('e/tick', $this->strings['proceed']),
-                        $this->strings['proceed']
+                    new \moodle_url('', ['action' => 'proceed', 'id[]' => $row->errorid, 'sesskey' => sesskey()]),
+                    new \pix_icon('e/tick', $this->strings['proceed']),
+                    $this->strings['proceed']
                 )
-        );
-        $actionmenu->add_primary_action(
+            );
+            $actionmenu->add_primary_action(
                 new \action_menu_link_primary(
-                        new \moodle_url('', ['action' => 'rollback', 'id[]' => $row->id, 'sesskey' => sesskey()]),
-                        new \pix_icon('e/undo', $this->strings['rollback']),
-                        $this->strings['rollback']
+                    new \moodle_url('', ['action' => 'rollback', 'id[]' => $row->errorid, 'sesskey' => sesskey()]),
+                    new \pix_icon('e/undo', $this->strings['rollback']),
+                    $this->strings['rollback']
                 )
-        );
+            );
+        } else {
+            $actionmenu->add_primary_action(
+                new \action_menu_link_primary(
+                    new \moodle_url('', ['action' => 'delete', 'id[]' => $row->errorid, 'sesskey' => sesskey()]),
+                    new \pix_icon('t/delete', $this->strings['delete']),
+                    $this->strings['delete']
+                )
+            );
+        }
         return $OUTPUT->render($actionmenu);
     }
 
@@ -134,11 +185,14 @@ class process_errors_table extends \table_sql {
      *
      * @param \stdClass $data
      * @return string
+     * @throws \coding_exception
+     * @throws coding_exception
      */
     public function col_select($data) {
         global $OUTPUT;
 
-        $checkbox = new \core\output\checkbox_toggleall('procerrors-table', false, [
+        if ($data->workflowid && $data->stepid) {
+            $checkbox = new \core\output\checkbox_toggleall('procerrors-table', false, [
                 'classes' => 'usercheckbox m-1',
                 'id' => 'procerror' . $data->id,
                 'name' => 'procerror-select',
@@ -146,9 +200,12 @@ class process_errors_table extends \table_sql {
                 'checked' => false,
                 'label' => get_string('selectitem', 'moodle', $data->id),
                 'labelclasses' => 'accesshide',
-        ]);
+            ]);
 
-        return $OUTPUT->render($checkbox);
+            return $OUTPUT->render($checkbox);
+        } else {
+            return '';
+        }
     }
 
     /**
@@ -170,9 +227,9 @@ class process_errors_table extends \table_sql {
      * for example. Called only when there is data to display and not
      * downloading.
      */
-    public function wrap_html_finish() {
+    public function wrap_html_start() {
         global $OUTPUT;
-        parent::wrap_html_finish();
+        parent::wrap_html_start();
         echo "<br>";
 
         $actionmenu = new \action_menu();

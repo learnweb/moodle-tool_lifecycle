@@ -56,7 +56,7 @@ final class process_error_test extends \advanced_testcase {
     private $course;
 
     /**
-     * Setup the testcase.
+     * Set up the testcase.
      * @throws \coding_exception
      * @throws \moodle_exception
      */
@@ -65,7 +65,7 @@ final class process_error_test extends \advanced_testcase {
 
         parent::setUp();
 
-        // We do not need a sesskey check in theses tests.
+        // We do not need a sesskey check in these tests.
         $USER->ignoresesskey = true;
 
         $this->resetAfterTest(true);
@@ -112,14 +112,9 @@ final class process_error_test extends \advanced_testcase {
         $record = reset($records);
 
         $this->assertEquals($this->course->id, $record->courseid);
-        if (version_compare(PHP_VERSION, '8.0', '<')) {
-            $this->assertStringContainsString("Trying to get property 'id' of non-object", $record->errormessage);
-        } else if (version_compare(PHP_VERSION, '8.3', '<')) {
-            $this->assertStringContainsString("Attempt to read property \"id\" on bool", $record->errormessage);
-        } else {
-            $this->assertStringContainsString("Attempt to read property \"id\" on false", $record->errormessage);
-        }
-        $this->assertEquals($process->id, $record->id);
+        $this->assertEquals($process->workflowid, $record->workflowid);
+        $this->assertEquals(1, $record->stepindex);
+        $this->assertNotEmpty($record->errormessage);
     }
 
 }

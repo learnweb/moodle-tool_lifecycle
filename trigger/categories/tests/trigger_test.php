@@ -91,12 +91,12 @@ final class trigger_test extends \advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course(['category' => $this->category->id]);
 
-        $recordset = $this->processor->get_course_recordset([$this->excludetrigger], []);
+        $recordset = $this->processor->get_course_recordset([$this->excludetrigger]);
         foreach ($recordset as $element) {
             $this->assertNotEquals($course->id, $element->id, 'The course should have been excluded by the trigger');
         }
         $recordset->close();
-        $recordset = $this->processor->get_course_recordset([$this->includetrigger], []);
+        $recordset = $this->processor->get_course_recordset([$this->includetrigger]);
         $found = false;
         foreach ($recordset as $element) {
             if ($course->id === $element->id) {
@@ -116,12 +116,12 @@ final class trigger_test extends \advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course(['category' => $this->childcategory->id]);
 
-        $recordset = $this->processor->get_course_recordset([$this->excludetrigger], []);
+        $recordset = $this->processor->get_course_recordset([$this->excludetrigger]);
         foreach ($recordset as $element) {
             $this->assertNotEquals($course->id, $element->id, 'The course should have been excluded by the trigger');
         }
         $recordset->close();
-        $recordset = $this->processor->get_course_recordset([$this->includetrigger], []);
+        $recordset = $this->processor->get_course_recordset([$this->includetrigger]);
         $found = false;
         foreach ($recordset as $element) {
             if ($course->id === $element->id) {
@@ -140,12 +140,12 @@ final class trigger_test extends \advanced_testcase {
     public function test_course_not_within_cat(): void {
         $course = $this->getDataGenerator()->create_course();
 
-        $recordset = $this->processor->get_course_recordset([$this->includetrigger], []);
+        $recordset = $this->processor->get_course_recordset([$this->includetrigger]);
         foreach ($recordset as $element) {
             $this->assertNotEquals($course->id, $element->id, 'The course should have been excluded by the trigger');
         }
         $recordset->close();
-        $recordset = $this->processor->get_course_recordset([$this->excludetrigger], []);
+        $recordset = $this->processor->get_course_recordset([$this->excludetrigger]);
         $found = false;
         foreach ($recordset as $element) {
             if ($course->id === $element->id) {

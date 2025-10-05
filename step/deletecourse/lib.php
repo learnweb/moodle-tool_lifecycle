@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\step;
 
+use stdClass;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\settings_type;
@@ -44,14 +45,14 @@ class deletecourse extends libbase {
     private static $numberofdeletions = 0;
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
@@ -59,11 +60,16 @@ class deletecourse extends libbase {
     public function process_course($processid, $instanceid, $course) {
         global $CFG;
 
+        if ($course->id == 1) {
+            return step_response::rollback();
+        }
+
         if (self::$numberofdeletions >= settings_manager::get_settings(
             $instanceid, settings_type::STEP)['maximumdeletionspercron']) {
             return step_response::waiting(); // Wait with further deletions til the next cron run.
         }
-        delete_course($course->id, true);
+
+        delete_course($course);
 
         /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
            MDL-65228 (https://tracker.moodle.org/browse/MDL-65228) */
@@ -77,15 +83,17 @@ class deletecourse extends libbase {
     }
 
     /**
-     * Processes the course in status waiting and returns a repsonse.
+     * Processes the course in status waiting and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function process_waiting_course($processid, $instanceid, $course) {
         return $this->process_course($processid, $instanceid, $course);

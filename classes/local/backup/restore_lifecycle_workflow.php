@@ -203,7 +203,7 @@ class restore_lifecycle_workflow {
         }
 
         foreach ($this->trigger as $trigger) {
-            $steplib = lib_manager::get_trigger_lib($trigger->subpluginname);
+            $triggerlib = lib_manager::get_trigger_lib($trigger->subpluginname);
             $filteredsettings = [];
             foreach ($this->settings as $setting) {
                 if ($setting->pluginid === $trigger->id) {
@@ -212,7 +212,7 @@ class restore_lifecycle_workflow {
             }
             $errors = array_map(
                     fn($x) => get_string('restore_error_in_trigger', 'tool_lifecycle', $trigger->instancename) . $x,
-                    $steplib->ensure_validity($filteredsettings)
+                    $triggerlib->ensure_validity($filteredsettings)
             );
             $this->errors = array_merge($this->errors, $errors);
         }

@@ -23,10 +23,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['customfield'] = 'Ein Customfield des Kurses';
-$string['customfield_help'] = 'Der Trigger prüft den Wert dieses Customfields des Kurses.';
-$string['delay'] = 'Zeit seit dem Datum des Customfield, bis ein Prozess gestartet wird';
-$string['delay_help'] = 'Der Trigger wird ausgeführt, falls die Zeit, die seit dem Customfield-Datum des Kurses vergangen ist, größer ist, als der angegebene Zeitraum.';
-$string['plugindescription'] = 'Löst aus wenn das Datum eines zu spezifizierenden Customfield vom Typ Datum nach einem Zeitpunkt in der Zukunft ist.';
-$string['pluginname'] = 'Customfield Datum - Trigger';
+$string['customfield'] = 'Ein nutzerdefiniertes Kursfeld vom Typ Datum';
+$string['customfield_help'] = 'Der Trigger prüft den Wert dieses nutzerdefinierten Kursfeldes vom Typ Datum.';
+$string['delay'] = 'Zeitraum nach dem Datum des nutzerdefinierten Kursfeldes';
+$string['delay_help'] = 'Der Prozess startet sobald der angegebene Zeitraum nach dem nutzerdefinierten Kursfeld-Datum abgelaufen ist.';
+$string['missingfield'] = 'Nutzerdefiniertes Kursfeld "{$a}" vom Typ Datum ist in diesem Moodle nicht vorhanden und muss zuerst angelegt werden.';
+$string['nocustomfields_link'] = 'Link zum Anlegen von Nutzerdefinierten Kursfeldern';
+$string['nocustomfields_warning'] = 'Keine passenden Felder gefunden!';
+$string['plugindescription'] = 'Der Trigger löst aus sobald der angegebene Zeitraum nach dem nutzerdefinierten Kursfeld-Datum abgelaufen ist.';
+$string['pluginname'] = 'Nutzerdefiniertes Kursfeld Typ Datum - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';

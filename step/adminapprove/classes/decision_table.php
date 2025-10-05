@@ -24,6 +24,8 @@
 
 namespace lifecyclestep_adminapprove;
 
+use core_date;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -35,17 +37,6 @@ require_once($CFG->libdir . '/tablelib.php');
 class decision_table extends \table_sql {
 
     /**
-     * @var coursecategory
-     */
-    private $category;
-
-    /**
-     * @var string pattern for the coursename.
-     */
-    private $coursename;
-
-
-    /**
      * Constructs the table.
      * @param int $stepid
      * @param int $courseid
@@ -55,8 +46,6 @@ class decision_table extends \table_sql {
      */
     public function __construct($stepid, $courseid, $category, $coursename) {
         parent::__construct('lifecyclestep_adminapprove-decisiontable');
-        $this->category = $category;
-        $this->coursename = $coursename;
         $this->define_baseurl("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid");
         $this->define_columns(['checkbox', 'courseid', 'course', 'category', 'startdate', 'tools']);
         $this->define_headers(
@@ -90,9 +79,9 @@ class decision_table extends \table_sql {
             $where .= "AND c.fullname LIKE :cname ";
             $params['cname'] = '%' . $DB->sql_like_escape($coursename) . '%';
         }
+
         $this->set_sql($fields, $from, $where, $params);
     }
-
 
     /**
      * Column of checkboxes.
@@ -137,9 +126,12 @@ class decision_table extends \table_sql {
      * @return string human readable date
      */
     public function col_startdate($row) {
+        global $USER;
+
         if ($row->startdate) {
             $dateformat = get_string('strftimedate', 'langconfig');
-            return userdate($row->startdate, $dateformat);
+            return userdate($row->startdate, $dateformat,
+                core_date::get_user_timezone($USER));
         } else {
             return "-";
         }
@@ -153,14 +145,14 @@ class decision_table extends \table_sql {
      */
     public function col_tools($row) {
         $output = \html_writer::start_div('singlebutton mr-1');
-        $output .= \html_writer::tag('button', get_string('proceed', 'lifecyclestep_adminapprove'),
-                ['class' => 'btn btn-secondary adminapprove-action', 'data-action' => 'proceed', 'data-content' => $row->id,
-                        'type' => 'button']);
+        $output .= \html_writer::tag('button', get_string('rollback', 'lifecyclestep_adminapprove'),
+            ['class' => 'btn btn-secondary adminapprove-action', 'data-action' => 'rollback', 'data-content' => $row->id,
+                'type' => 'button']);
         $output .= \html_writer::end_div();
         $output .= \html_writer::start_div('singlebutton mr-1 ml-0 mt-1');
-        $output .= \html_writer::tag('button', get_string('rollback', 'lifecyclestep_adminapprove'),
-                ['class' => 'btn btn-secondary adminapprove-action', 'data-action' => 'rollback', 'data-content' => $row->id,
-                        'type' => 'button']);
+        $output .= \html_writer::tag('button', get_string('proceed', 'lifecyclestep_adminapprove'),
+            ['class' => 'btn btn-primary adminapprove-action', 'data-action' => 'proceed', 'data-content' => $row->id,
+                'type' => 'button']);
         $output .= \html_writer::end_div();
         return $output;
     }

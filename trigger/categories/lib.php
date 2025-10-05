@@ -42,9 +42,9 @@ require_once(__DIR__ . '/../../lib.php');
 class categories extends base_automatic {
 
     /**
-     * Returns triggertype of trigger: trigger, triggertime or exclude.
-     * @param object $course DEPRECATED
-     * @param int $triggerid DEPRECATED
+     * If check_course_code() returns true, code to check the given course is placed here
+     * @param object $course
+     * @param int $triggerid
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
@@ -87,7 +87,7 @@ class categories extends base_automatic {
 
         [$insql, $inparams] = $DB->get_in_or_equal($allcategories, SQL_PARAMS_NAMED, 'param', !$exclude);
 
-        $where = "{course}.category {$insql}";
+        $where = "c.category {$insql}";
 
         return [$where, $inparams];
     }
@@ -106,8 +106,8 @@ class categories extends base_automatic {
      */
     public function instance_settings() {
         return [
-            new instance_setting('categories', PARAM_SEQUENCE, true),
-            new instance_setting('exclude', PARAM_BOOL, true),
+            new instance_setting('categories', PARAM_SEQUENCE),
+            new instance_setting('exclude', PARAM_BOOL),
         ];
     }
 
@@ -119,24 +119,63 @@ class categories extends base_automatic {
      * @throws \dml_exception
      */
     public function extend_add_instance_form_definition($mform) {
-        $displaylist = core_course_category::make_categories_list();
-        $options = [
-            'multiple' => true,
-            'noselectionstring' => get_string('categories_noselection', 'lifecycletrigger_categories'),
-        ];
-        $mform->addElement('autocomplete', 'categories',
-            get_string('categories', 'lifecycletrigger_categories'),
-            $displaylist, $options);
-        $mform->setType('categories', PARAM_SEQUENCE);
+        $categories = core_course_category::make_categories_list();
+        $type = $mform->getElementType('instancename');
+        if ($type == "text") {
+            $options = [
+                'multiple' => true,
+                'noselectionstring' => get_string('categories_noselection', 'lifecycletrigger_categories'),
+            ];
+            $mform->addElement('autocomplete', 'categories',
+                get_string('categories', 'lifecycletrigger_categories'),
+                $categories, $options);
+            $mform->setType('categories', PARAM_SEQUENCE);
 
-        $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));
-        $mform->setType('exclude', PARAM_BOOL);
+            $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));
+            $mform->setType('exclude', PARAM_BOOL);
+        }
+    }
+
+    /**
+     * Since the rendering of frozen autocomplete elements is awful we overide it here.
+     * @param \MoodleQuickForm $mform
+     * @param array $settings array containing the settings from the db.
+     * @throws \coding_exception
+     */
+    public function extend_add_instance_form_definition_after_data($mform, $settings) {
+        $type = $mform->getElementType('instancename');
+        if ($type ?? "" == "text") {
+            if (is_array($settings) && array_key_exists('categories', $settings)) {
+                $triggercategories = explode(",", $settings['categories']);
+            } else {
+                $triggercategories = [];
+            }
+            $categories = core_course_category::make_categories_list();
+            $categorieshtml = "";
+            foreach ($categories as $key => $value) {
+                if (in_array($key, $triggercategories)) {
+                    $categorieshtml .= \html_writer::div($value, "badge text-bg-secondary mr-1");
+                }
+            }
+            $mform->insertElementBefore($mform->createElement(
+                'static',
+                'categoriesstatic',
+                get_string('categories', 'lifecycletrigger_categories'),
+                $categorieshtml), 'buttonar');
+            $mform->insertElementBefore($mform->createElement(
+                'advcheckbox',
+                'exclude',
+                get_string('exclude', 'lifecycletrigger_categories')),
+                'buttonar');
+            $mform->setType('exclude', PARAM_BOOL);
+        }
     }
 
     /**
      * Ensure validity of settings upon backup restoration.
      * @param array $settings
      * @return array List of errors with settings. If empty, the given settings are valid.
+     * @throws \coding_exception
      */
     public function ensure_validity(array $settings): array {
         $missingcategories = [];
@@ -152,6 +191,14 @@ class categories extends base_automatic {
         } else {
             return [];
         }
+    }
+
+    /**
+     * Specifies if this trigger can be used more than once in a single workflow.
+     * @return bool
+     */
+    public function multiple_use() {
+        return true;
     }
 
 }

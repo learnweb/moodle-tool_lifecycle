@@ -23,6 +23,8 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
+use html_writer;
 use tool_lifecycle\action;
 use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\trigger_manager;
@@ -68,9 +70,10 @@ abstract class workflow_table extends \table_sql {
      * @throws \moodle_exception
      */
     public function col_timeactive($row) {
-        global $OUTPUT, $PAGE;
+        global $OUTPUT, $PAGE, $USER;
         if ($row->timeactive) {
-            return userdate($row->timeactive, get_string('strftimedatetime'), 0);
+            return userdate($row->timeactive, get_string('strftimedatetime'),
+                core_date::get_user_timezone($USER));
         }
         return $OUTPUT->single_button(new \moodle_url($PAGE->url,
             ['action' => action::WORKFLOW_ACTIVATE,
@@ -86,8 +89,10 @@ abstract class workflow_table extends \table_sql {
      * @throws \coding_exception
      */
     public function col_timedeactive($row) {
+        global $USER;
         if ($row->timedeactive) {
-            return userdate($row->timedeactive, get_string('strftimedatetime'), 0);
+            return userdate($row->timedeactive, get_string('strftimedatetime'),
+                core_date::get_user_timezone($USER));
         }
         return get_string('workflow_active', 'tool_lifecycle');
     }
@@ -98,6 +103,7 @@ abstract class workflow_table extends \table_sql {
      * @return string instancename of the trigger
      */
     public function col_trigger($row) {
+        $triggerstring = "--";
         $triggers = trigger_manager::get_triggers_for_workflow($row->id);
         if ($triggers) {
             $triggerstring = $triggers[0]->instancename;
@@ -161,4 +167,56 @@ abstract class workflow_table extends \table_sql {
                 null , ['title' => $alt]) . ' ';
     }
 
+    /**
+     * This function is not part of the public api.
+     * @param array $row Row date
+     * @param string $classname classes to add
+     * @return string HTML code for the row passed.
+     */
+    public function print_row($row, $classname = '') {
+        echo $this->get_row_html($row, $classname);
+    }
+
+    /**
+     * Generate html code for the passed row.
+     *
+     * @param array $row Row data.
+     * @param string $classname classes to add.
+     *
+     * @return string $html html code for the row passed.
+     */
+    public function get_row_html($row, $classname = '') {
+        static $suppresslastrow = null;
+        $rowclasses = [];
+
+        if ($classname) {
+            $rowclasses[] = $classname;
+        }
+
+        $rowid = $this->uniqueid . '_r' . $this->currentrow;
+        $html = '';
+
+        $html .= html_writer::start_tag('tr', ['class' => implode(' ', $rowclasses), 'id' => $rowid]);
+
+        // If we have a separator, print it.
+        if ($row === null) {
+            $colcount = count($this->columns);
+            $html .= html_writer::tag('td', html_writer::tag(
+                'div',
+                '',
+                ['class' => 'tabledivider']
+            ), ['colspan' => $colcount]);
+        } else {
+            $html .= $this->get_row_cells_html($rowid, $row, $suppresslastrow);
+        }
+
+        $html .= html_writer::end_tag('tr');
+
+        $suppressenabled = array_sum($this->column_suppress);
+        if ($suppressenabled) {
+            $suppresslastrow = $row;
+        }
+        $this->currentrow++;
+        return $html;
+    }
 }

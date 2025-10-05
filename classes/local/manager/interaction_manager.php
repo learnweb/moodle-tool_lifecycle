@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\manager;
 
+use tool_lifecycle\event\process_rollback;
 use tool_lifecycle\local\entity\process;
 use tool_lifecycle\processor;
 use tool_lifecycle\local\response\step_interactive_response;
@@ -135,12 +136,12 @@ class interaction_manager {
     }
 
     /**
-     * Returns an array of interaction tools to be displayed to be displayed on the view.php
-     * Every entry is itself an array which consist of three elements:
+     * Returns an array of interaction tools to be displayed on view.php
+     * Every entry is an array that consists of three elements:
      *  'action' => an action string, which is later passed to handle_action
-     *  'alt' => a string text of the button
+     *  'alt' => text of the button
      * @param string $subpluginname name of the step
-     * @param int $processid if of the process the action tools are requested for
+     * @param int $processid id of the process the action tools are requested for
      * @return array of action tools
      * @throws \invalid_parameter_exception
      * @throws \coding_exception

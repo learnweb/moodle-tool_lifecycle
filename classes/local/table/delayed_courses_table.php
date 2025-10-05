@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
 use moodle_url;
 use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\urls;
@@ -150,12 +151,13 @@ class delayed_courses_table extends \table_sql {
 
         $this->set_sql($fields, $from, $where, $params);
         $this->column_nosort = ['workflow', 'tools'];
-        $this->define_columns(['coursefullname', 'category', 'workflow', 'tools']);
+        $this->define_columns(['courseid', 'coursefullname', 'category', 'workflow', 'tools']);
         $this->define_headers([
-                get_string('coursename', 'tool_lifecycle'),
-                get_string('category'),
-                get_string('delays', 'tool_lifecycle'),
-                get_string('tools', 'tool_lifecycle'),
+            get_string('courseid', 'tool_lifecycle'),
+            get_string('coursename', 'tool_lifecycle'),
+            get_string('category'),
+            get_string('delays', 'tool_lifecycle'),
+            get_string('tools', 'tool_lifecycle'),
         ]);
     }
 
@@ -168,7 +170,7 @@ class delayed_courses_table extends \table_sql {
      * @throws \dml_exception
      */
     public function col_workflow($row) {
-        global $OUTPUT;
+        global $OUTPUT, $USER;
 
         $url = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $row->workflowid]);
         if ($row->globaldelay >= time()) {
@@ -181,7 +183,7 @@ class delayed_courses_table extends \table_sql {
                 $html = $text;
             } else {
                 $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
-                $date = userdate($row->globaldelay, $dateformat);
+                $date = userdate($row->globaldelay, $dateformat, core_date::get_user_timezone($USER));
                 $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
                 $text = get_string('delayed_globally', 'tool_lifecycle', $date);
                 $html = \html_writer::link($url, $text).$typehtml;
@@ -191,7 +193,8 @@ class delayed_courses_table extends \table_sql {
                 $html = '';
             } else if ($row->workflowcount == 1) {
                 $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
-                $date = userdate($row->workflowdelay, $dateformat);
+                $date = userdate($row->workflowdelay, $dateformat,
+                    core_date::get_user_timezone($USER));
                 $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
                 $text = get_string('delayed_for_workflow_until', 'tool_lifecycle',
                         ['name' => $row->workflow, 'date' => $date]);
@@ -215,17 +218,19 @@ class delayed_courses_table extends \table_sql {
      * @throws \dml_exception
      */
     private function get_worklows_multiple($row, $url) {
-        global $DB;
+        global $DB, $USER;
         $html = '';
         $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
         if ($row->globaldelay >= time()) {
-            $date = userdate($row->globaldelay, $dateformat);
+            $date = userdate($row->globaldelay, $dateformat,
+                core_date::get_user_timezone($USER));
             $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
             $text = get_string('globally_until_date', 'tool_lifecycle', $date);
             $html .= \html_writer::link($url, $text).$typehtml."<br>";
         }
         if ($row->workflowcount == 1) {
-            $date = userdate($row->workflowdelay, $dateformat);
+            $date = userdate($row->workflowdelay, $dateformat,
+                core_date::get_user_timezone($USER));
             $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
             $text = get_string('name_until_date', 'tool_lifecycle',
                     ['name' => $row->workflow, 'date' => $date]);
@@ -238,7 +243,8 @@ class delayed_courses_table extends \table_sql {
                     AND w.timeactive IS NOT NULL';
             $records = $DB->get_records_sql($sql, ['courseid' => $row->courseid]);
             foreach ($records as $record) {
-                $date = userdate($record->delayeduntil, $dateformat);
+                $date = userdate($record->delayeduntil, $dateformat,
+                    core_date::get_user_timezone($USER));
                 $typehtml = delayed_courses_manager::delaytype_html($row->delaytype);
                 $text = get_string('name_until_date', 'tool_lifecycle',
                         ['name' => $record->title, 'date' => $date]);

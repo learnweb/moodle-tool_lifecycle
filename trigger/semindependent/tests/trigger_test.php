@@ -16,6 +16,7 @@
 
 namespace lifecycletrigger_semindependent;
 
+use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 use tool_lifecycle_trigger_semindependent_generator as generator;
 
@@ -43,6 +44,9 @@ final class trigger_test extends \advanced_testcase {
     /**@var \stdClass course with startdate now */
     private $semcourse;
 
+    /**@var trigger_subplugin instance of trigger */
+    private $triggerinstance;
+
     /**
      * Setup function for the trigger test.
      * @return void
@@ -64,7 +68,7 @@ final class trigger_test extends \advanced_testcase {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(false);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $foundsem = false;
         $foundsemindep = false;
         foreach ($recordset as $element) {
@@ -89,7 +93,7 @@ final class trigger_test extends \advanced_testcase {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(true);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $foundsem = false;
         $foundsemindep = false;
         foreach ($recordset as $element) {

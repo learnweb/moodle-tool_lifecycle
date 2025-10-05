@@ -31,11 +31,12 @@ use tool_lifecycle\urls;
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-require_login();
-require_capability('moodle/site:config', context_system::instance());
+require_admin();
+
+$wfid = optional_param('wfid', 0, PARAM_INT);
 
 $syscontext = context_system::instance();
-$PAGE->set_url(new \moodle_url(urls::DELAYED_COURSES));
+$PAGE->set_url(new \moodle_url(urls::DELAYED_COURSES, ['wfid' => $wfid]));
 $PAGE->set_context($syscontext);
 
 // Action handling (delete, bulk-delete).
@@ -133,7 +134,9 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('delayed_courses_header', 'tool_lifecycle');
 echo $renderer->header($heading);
-$tabrow = tabs::get_tabrow();
+$tabparams = new stdClass();
+$tabparams->wfid = $wfid;
+$tabrow = tabs::get_tabrow($tabparams);
 $id = optional_param('id', 'settings', PARAM_TEXT);
 $renderer->tabs($tabrow, $id);
 
@@ -176,12 +179,19 @@ if ($delayedcourses > 0) {
     if ($data) {
         $params = array_merge($params, (array) $data);
     }
-    $button = new single_button(new moodle_url('confirmation.php'),
+    $button = new single_button(new moodle_url('confirmation.php', $params),
         get_string('delete_all_delays', 'tool_lifecycle'));
     echo $OUTPUT->render($button);
+    $classnotnull = 'badge badge-primary badge-pill ml-1';
+    $classnull = 'badge badge-secondary badge-pill ml-1';
+    echo \html_writer::span($delayedcourses, $delayedcourses > 0 ? $classnotnull : $classnull);
     echo html_writer::div('', 'mb-2');
 }
 
 $table->out(100, false);
+
+if ($table->totalrows) {
+    echo \html_writer::div($table->totalrows." ".get_string('courses'), 'mt-3');
+}
 
 echo $OUTPUT->footer();

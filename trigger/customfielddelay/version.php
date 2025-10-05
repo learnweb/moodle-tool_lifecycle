@@ -31,4 +31,3 @@ $plugin->supported = [401, 405];
 $plugin->component = 'lifecycletrigger_customfielddelay';
 $plugin->release   = 'v4.5-r1';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = ['customfield_semester' => 2020041304];

@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\step;
 
+use stdClass;
 use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
@@ -49,18 +50,19 @@ class duplicate extends libbase {
     const PROC_DATA_COURSESHORTNAME = 'shortname';
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
+        $course = get_course($course->id);
         $fullname = process_data_manager::get_process_data($processid, $instanceid, self::PROC_DATA_COURSEFULLNAME);
         $shortname = process_data_manager::get_process_data($processid, $instanceid, self::PROC_DATA_COURSESHORTNAME);
         if (!empty($fullname) && !empty($shortname)) {
@@ -84,14 +86,14 @@ class duplicate extends libbase {
     }
 
     /**
-     * Processes the course in status waiting and returns a repsonse.
+     * Processes the course in status waiting and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      * @throws \dml_exception
      */

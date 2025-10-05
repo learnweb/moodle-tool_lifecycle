@@ -23,6 +23,8 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
@@ -135,7 +137,9 @@ class course_backups_table extends \table_sql {
      * @return string date of the backupcreated
      */
     public function col_backupcreated($row) {
-        return userdate($row->backupcreated);
+        global $USER;
+        return userdate($row->backupcreated, '',
+            core_date::get_user_timezone($USER));
     }
 
     /**

@@ -22,7 +22,10 @@
  */
 define(['jquery'], function($) {
     return {
-        init: function(sesskey, url) {
+        init: function(sesskey, url, totalrows) {
+
+            $('#adminapprove_totalrows').html(totalrows);
+
             $('input[name="checkall"]').click(function() {
                 $('input[name="c[]"]').prop('checked', $('input[name="checkall"]').prop('checked'));
             });

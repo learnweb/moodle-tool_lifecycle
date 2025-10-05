@@ -89,7 +89,6 @@ abstract class base {
     public function extend_add_instance_form_validation(&$error, $data) {
     }
 
-
     /**
      * If true, the trigger can be used to manually define workflows, based on an instance of this trigger.
      * This has to be combined with installing the workflow in db/install.php of the trigger plugin.
@@ -138,18 +137,42 @@ abstract class base {
 abstract class base_automatic extends base {
 
     /**
-     * Returns triggertype of trigger: trigger, triggertime or exclude.
-     * @param int $course DEPRECATED
-     * @param int $triggerid DEPRECATED
+     * If check_course_code() returns true, code to check the given course is placed here
+     * @param \stdClass $course
+     * @param int $triggerid
      * @return trigger_response
      */
     abstract public function check_course($course, $triggerid);
+
+    /**
+     * Returns whether the lib function check_course contains particular selection code per course or not.
+     * @return bool
+     */
+    public function check_course_code() {
+        return false;
+    }
+
+    /**
+     * Returns the default response of this trigger.
+     * @return trigger_response
+     */
+    public function default_response() {
+        return trigger_response::trigger();
+    }
 
     /**
      * Defines if the trigger subplugin is started manually or automatically.
      * @return bool
      */
     public function is_manual_trigger() {
+        return false;
+    }
+
+    /**
+     * Specifies if this trigger can be used more than once in a single workflow.
+     * @return bool
+     */
+    public function multiple_use() {
         return false;
     }
 

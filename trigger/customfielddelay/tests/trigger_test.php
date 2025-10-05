@@ -87,7 +87,7 @@ final class trigger_test extends \advanced_testcase {
         $customfieldvalue = ['shortname' => 'test', 'value' => time() + 1000000];
         $course = $this->getDataGenerator()->create_course(['customfields' => [$customfieldvalue]]);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $found = false;
         foreach ($recordset as $element) {
             if ($course->id === $element->id) {
@@ -118,7 +118,7 @@ final class trigger_test extends \advanced_testcase {
         $customfieldvalue2 = ['shortname' => 'test2', 'value' => 100];
         $course = $this->getDataGenerator()->create_course(['customfields' => [$customfieldvalue, $customfieldvalue2]]);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $found = false;
         foreach ($recordset as $element) {
             if ($course->id === $element->id) {
@@ -142,7 +142,7 @@ final class trigger_test extends \advanced_testcase {
         $customfieldvalue = ['shortname' => 'test', 'value' => time() - 1000000];
         $course = $this->getDataGenerator()->create_course(['customfields' => [$customfieldvalue]]);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $found = false;
         foreach ($recordset as $element) {
             if ($course->id === $element->id) {

@@ -24,8 +24,10 @@
 
 namespace tool_lifecycle\step;
 
+use stdClass;
 use tool_lifecycle\local\manager\process_data_manager;
 use tool_lifecycle\local\response\step_response;
+use function update_course;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -45,7 +47,7 @@ class makeinvisible extends libbase {
      *
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      */
     public function process_course($processid, $instanceid, $course) {
@@ -59,7 +61,8 @@ class makeinvisible extends libbase {
      * Roll back the changes.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be rolled back.
+     * @param stdClass $course to be rolled back.
+     * @throws \moodle_exception
      */
     public function rollback_course($processid, $instanceid, $course) {
         global $CFG;
@@ -70,11 +73,11 @@ class makeinvisible extends libbase {
 
         require_once($CFG->dirroot . '/course/lib.php');
         $cat = \core_course_category::get($course->category, MUST_EXIST, true);
-        $record = new \stdClass();
+        $record = new stdClass();
         $record->id = $course->id;
         $record->visibleold = (bool) process_data_manager::get_process_data($processid, $instanceid, 'visibleold');
         $record->visible = $record->visibleold && (bool)$cat->visible;
-        \update_course($record);
+        update_course($record);
     }
 
     /**

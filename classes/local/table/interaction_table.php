@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\manager\interaction_manager;
 use tool_lifecycle\local\manager\process_manager;
@@ -87,9 +88,11 @@ abstract class interaction_table extends \table_sql {
      * @throws \coding_exception
      */
     public function col_startdate($row) {
+        global $USER;
+
         if ($row->startdate) {
             $dateformat = get_string('strftimedate', 'langconfig');
-            return userdate($row->startdate, $dateformat);
+            return userdate($row->startdate, $dateformat, core_date::get_user_timezone($USER));
         } else {
             return "-";
         }
@@ -131,19 +134,20 @@ abstract class interaction_table extends \table_sql {
     public function col_category($row): String {
         $categorydepth = get_config('tool_lifecycle', 'enablecategoryhierachy');
         if ($categorydepth == false) {
-            return $row->category;
+            $categoryname = $row->category;
         } else {
             $categorydepth = (int) get_config('tool_lifecycle', 'coursecategorydepth');
             $categoryhierachy = explode('/', substr($row->categorypath, 1));
             $categoryhierachy = array_map('intval', $categoryhierachy);
             if (isset($categoryhierachy[$categorydepth])) {
                 $category = $this->coursecategories[$categoryhierachy[$categorydepth]];
-                return $category->name;
+                $categoryname = $category->name;
             } else {
                 $category = $this->coursecategories[end($categoryhierachy)];
-                return $category->name;
+                $categoryname = $category->name;
             }
         }
+        return \html_writer::div($categoryname, "badge text-bg-secondary");
     }
 
     /**

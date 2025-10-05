@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\data\manual_trigger_tool;
@@ -124,10 +125,10 @@ class interaction_remaining_table extends interaction_table {
         global $PAGE, $OUTPUT;
 
         if ($row->processid !== null) {
-            return '';
+            return '--';
         }
         if (empty($this->availabletools)) {
-            return get_string('noactiontools', 'tool_lifecycle');
+            return "--";
         }
         $actions = [];
         foreach ($this->availabletools as $tool) {
@@ -188,12 +189,15 @@ class interaction_remaining_table extends interaction_table {
      * @throws \coding_exception
      */
     public function col_lastmodified($row) {
+        global $USER;
+
         if (!$row->lastmodified) {
             return '';
         }
 
         $dateformat = get_string('strftimedatetime', 'core_langconfig');
-        return userdate($row->lastmodified, $dateformat);
+
+        return userdate($row->lastmodified, $dateformat, core_date::get_user_timezone($USER));
     }
 
     /**

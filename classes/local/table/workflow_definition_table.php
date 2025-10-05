@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
 use tool_lifecycle\action;
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\step_manager;
@@ -81,9 +82,10 @@ class workflow_definition_table extends workflow_table {
      * @throws \moodle_exception
      */
     public function col_timeactive($row) {
-        global $OUTPUT;
+        global $OUTPUT, $USER;
         if ($row->timeactive) {
-            return userdate($row->timeactive, get_string('strftimedatetime'), 0);
+            return userdate($row->timeactive, get_string('strftimedatetime'),
+                core_date::get_user_timezone($USER));
         }
         if (workflow_manager::is_valid($row->id)) {
             return $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
@@ -122,8 +124,8 @@ class workflow_definition_table extends workflow_table {
 
         if (!isset($lib) || $lib->has_multiple_instances()) {
             $action = action::WORKFLOW_BACKUP;
-            $alt = get_string('backupworkflow', 'tool_lifecycle');
-            $icon = 't/backup';
+            $alt = get_string('downloadworkflow', 'tool_lifecycle');
+            $icon = 't/download';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
             if (!workflow_manager::is_active($row->id)) {

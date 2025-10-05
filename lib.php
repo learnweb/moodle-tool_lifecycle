@@ -48,14 +48,9 @@ function tool_lifecycle_extend_navigation_course($navigation, $course, $context)
     if ($cache->has('workflowactive')) {
         $wfexists = $cache->get('workflowactive');
     } else {
-        $wfexists = $DB->record_exists_sql("SELECT 'yes' FROM {tool_lifecycle_workflow} wf " .
-                "JOIN {tool_lifecycle_trigger} t ON wf.id = t.workflowid " .
-                "WHERE wf.timeactive IS NOT NULL AND t.subpluginname NOT IN ('sitecourse', 'delayedcourses')");
+        $wfexists = $DB->record_exists_sql("SELECT 'yes' FROM {tool_lifecycle_workflow} " .
+                " WHERE timeactive IS NOT NULL");
         $cache->set('workflowactive', $wfexists);
-    }
-
-    if (!$wfexists) {
-        return null;
     }
 
     $url = new moodle_url('/admin/tool/lifecycle/view.php', [

@@ -24,6 +24,8 @@
 
 $string['delay'] = 'Wieviele Tage ohne Rolle';
 $string['delay_help'] = 'Wieviele Tage ein Kurs ohne diese Rolle sein muß, damit der Trigger ausgelöst wird.';
+$string['invert'] = 'Selektion der Kurse MIT dieser Rolle';
+$string['invert_help'] = 'Die Anwesenheit von mindestens einer der gewählten Rollen führt zur Selektion des Kurses.';
 $string['plugindescription'] = 'Löst aus wenn in einem Kurs für eine bestimmte Anzahl an Tagen eine bestimmte Rolle nicht vergeben wurde.';
 $string['pluginname'] = 'Kurse mit fehlender Rolle';
 $string['privacy:metadata'] = 'Speichert keine Userdaten';

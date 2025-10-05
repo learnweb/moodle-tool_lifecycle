@@ -24,6 +24,7 @@
  */
 namespace tool_lifecycle\step;
 
+use stdClass;
 use tool_lifecycle\local\entity\process;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\response\step_response;
@@ -41,27 +42,27 @@ defined('MOODLE_INTERNAL') || die();
 abstract class libbase {
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      */
     abstract public function process_course($processid, $instanceid, $course);
 
     /**
-     * Processes the course in status waiting and returns a repsonse.
+     * Processes the course in status waiting and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      */
     public function process_waiting_course($processid, $instanceid, $course) {

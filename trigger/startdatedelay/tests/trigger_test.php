@@ -65,7 +65,7 @@ final class trigger_test extends \advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - 50 * 24 * 60 * 60]);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $found = false;
         foreach ($recordset as $element) {
             if ($course->id === $element->id) {
@@ -84,7 +84,7 @@ final class trigger_test extends \advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - 200 * 24 * 60 * 60]);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance], []);
+        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $found = false;
         foreach ($recordset as $element) {
             if ($course->id === $element->id) {

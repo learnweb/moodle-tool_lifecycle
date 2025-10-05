@@ -65,58 +65,5 @@ if ($hassiteconfig) {
         get_string('config_logreceivedmails_desc', 'tool_lifecycle'),
         0));
 
-    $triggers = core_component::get_plugin_list('lifecycletrigger');
-    if ($triggers) {
-        $settings->add(new admin_setting_heading('lifecycletriggerheader',
-            get_string('triggers_installed', 'tool_lifecycle'), ''));
-        foreach ($triggers as $trigger => $path) {
-            $triggername = html_writer::span(get_string('pluginname', 'lifecycletrigger_' . $trigger),
-                "font-weight-bold");
-            $uninstall = '';
-            if ($trigger == 'sitecourse' || $trigger == 'delayedcourses') {
-                $uninstall = html_writer::span(' Depracated. Will be removed with version 5.0.', 'text-danger');
-            }
-            if ($trigger == 'customfieldsemester') {
-                $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
-                    $triggername,
-                    get_string('customfieldsemesterdescription', 'tool_lifecycle')));
-            } else {
-                try {
-                    $plugindescription = get_string('plugindescription', 'lifecycletrigger_' . $trigger);
-                } catch (Exception $e) {
-                    $plugindescription = "";
-                }
-                $settings->add(new admin_setting_description('lifecycletriggersetting_'.$trigger,
-                    $triggername,
-                    $plugindescription.$uninstall));
-            }
-        }
-    } else {
-        $settings->add(new admin_setting_heading('adminsettings_notriggers',
-            get_string('adminsettings_notriggers', 'tool_lifecycle'), ''));
-    }
-
-    $steps = core_component::get_plugin_list('lifecyclestep');
-    if ($steps) {
-        $settings->add(new admin_setting_heading('lifecyclestepheader',
-            get_string('steps_installed', 'tool_lifecycle'), ''));
-        foreach ($steps as $step => $path) {
-            $stepname = html_writer::span(get_string('pluginname', 'lifecyclestep_' . $step),
-                "font-weight-bold");
-            try {
-                $plugindescription = get_string('plugindescription', 'lifecyclestep_' . $step);
-            } catch (Exception $e) {
-                $plugindescription = "";
-            }
-            $settings->add(new admin_setting_description('lifecyclestepsetting_'.$step,
-                $stepname,
-                $plugindescription));
-        }
-    } else {
-        $settings->add(new admin_setting_heading('adminsettings_nosteps',
-            get_string('adminsettings_nosteps', 'tool_lifecycle'), ''));
-    }
-    $settings->add(new admin_setting_description('spacer', "", "&nbsp;"));
-
     $ADMIN->add('tools', $settings);
 }

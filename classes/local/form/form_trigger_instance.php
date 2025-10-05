@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Offers the possibility to add or modify a step instance.
+ * Offers the possibility to add or modify a trigger instance.
  *
  * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
@@ -35,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Provides a form to modify a step instance
+ * Provides a form to modify a trigger instance
  * @package    tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -118,11 +118,17 @@ class form_trigger_instance extends \moodleform {
         $mform->addElement('header', 'trigger_settings_header', get_string('trigger_settings_header', 'tool_lifecycle'));
 
         $elementname = 'instancename';
-        $mform->addElement('text', $elementname, get_string('trigger_instancename', 'tool_lifecycle'));
-        $mform->addHelpButton($elementname, 'trigger_instancename', 'tool_lifecycle');
-        $mform->setType($elementname, PARAM_TEXT);
-        $mform->addRule($elementname, get_string('maximumchars', '', 100), 'maxlength', 100, 'client');
-        $mform->addRule($elementname, null, 'required');
+        if ($this->workflowid && !workflow_manager::is_editable($this->workflowid)) {
+            $mform->addElement('static', $elementname,
+                get_string('trigger_instancename', 'tool_lifecycle'));
+            $mform->setType($elementname, PARAM_TEXT);
+        } else {
+            $mform->addElement('text', $elementname, get_string('trigger_instancename', 'tool_lifecycle'));
+            $mform->addHelpButton($elementname, 'trigger_instancename', 'tool_lifecycle');
+            $mform->setType($elementname, PARAM_TEXT);
+            $mform->addRule($elementname, get_string('maximumchars', '', 100), 'maxlength', 100, 'client');
+            $mform->addRule($elementname, null, 'required');
+        }
 
         $elementname = 'subpluginnamestatic';
         $mform->addElement('static', $elementname,

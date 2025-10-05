@@ -38,8 +38,7 @@ use tool_lifecycle\urls;
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-require_login();
-require_capability('moodle/site:config', context_system::instance());
+require_admin();
 
 $type = required_param('type', PARAM_ALPHA);
 $elementid = optional_param('elementid', null, PARAM_INT);
@@ -121,6 +120,9 @@ if ($data = $form->get_data()) {
             if (isset($data->instancename)) {
                 $element->instancename = $data->instancename;
             }
+            if (isset($data->rollbacktosortindex)) {
+                $element->rollbacktosortindex = $data->rollbacktosortindex;
+            }
         } else {
             $element = step_subplugin::from_record($data);
         }
@@ -135,7 +137,9 @@ if ($data = $form->get_data()) {
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
             foreach ($triggers as $trigger) {
                 if ($trigger->subpluginname == $data->subpluginname) {
-                    throw new coding_exception('Only one instance of each trigger type allowed!');
+                    if (!trigger_manager::trigger_multipleuse($trigger->subpluginname)) {
+                        throw new coding_exception('Only one instance of each trigger type allowed!');
+                    }
                 }
             }
             $element = trigger_subplugin::from_record($data);

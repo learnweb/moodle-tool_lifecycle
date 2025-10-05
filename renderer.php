@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\output\single_button;
+
 /**
  * Renderer for life cycle
  *
@@ -57,9 +59,10 @@ class tool_lifecycle_renderer extends plugin_renderer_base {
      * Write the tab row in page
      *
      * @param array $tabs the tabs
-     * @param string $id  ID of current page (can be empty)
+     * @param string $id ID of current page (can be empty)
      */
     public function tabs($tabs, $id) {
         echo $this->output->tabtree($tabs, $id);
     }
+
 }

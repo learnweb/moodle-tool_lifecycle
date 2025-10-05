@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core_date;
 use tool_lifecycle\action;
 use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\trigger_manager;
@@ -139,10 +140,14 @@ class select_workflow_table extends \flexible_table {
      * @return string since column
      */
     public function col_since($row) {
+        global $USER;
+
         if ($row->timedeactive) {
-            return userdate($row->timedeactive, get_string('strftimedatetime'));
+            return userdate($row->timedeactive, get_string('strftimedatetime'),
+                core_date::get_user_timezone($USER));
         } else if ($row->timeactive) {
-            return userdate($row->timeactive, get_string('strftimedatetime'));
+            return userdate($row->timeactive, get_string('strftimedatetime'),
+                core_date::get_user_timezone($USER));
         } else {
             return '';
         }

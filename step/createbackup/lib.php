@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\step;
 
+use stdClass;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\local\manager\backup_manager;
@@ -50,14 +51,14 @@ class createbackup extends libbase {
     private static $numberofbackups = 0;
 
     /**
-     * Processes the course and returns a repsonse.
+     * Processes the course and returns a response.
      * The response tells either
      *  - that the subplugin is finished processing.
      *  - that the subplugin is not yet finished processing.
      *  - that a rollback for this course is necessary.
      * @param int $processid of the respective process.
      * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * @param stdClass $course to be processed.
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
@@ -78,7 +79,7 @@ class createbackup extends libbase {
      * Simply call the process_course since it handles everything necessary for this plugin.
      * @param int $processid
      * @param int $instanceid
-     * @param mixed $course
+     * @param stdClass $course
      * @return step_response
      * @throws \coding_exception
      * @throws \dml_exception
