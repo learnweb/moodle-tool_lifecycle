@@ -156,8 +156,7 @@ if ($data = $form->get_data()) {
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".$workflow->title;
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
-$id = optional_param('id', '', PARAM_TEXT);
-$renderer->tabs($tabrow, $id);
+$renderer->tabs($tabrow, '');
 
 if (!workflow_manager::is_editable($workflow->id)) {
     echo $OUTPUT->notification(get_string('active_workflow_not_changeable', 'tool_lifecycle'), 'warning');

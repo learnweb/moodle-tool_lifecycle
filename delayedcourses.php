@@ -137,8 +137,7 @@ echo $renderer->header($heading);
 $tabparams = new stdClass();
 $tabparams->wfid = $wfid;
 $tabrow = tabs::get_tabrow($tabparams);
-$id = optional_param('id', 'settings', PARAM_TEXT);
-$renderer->tabs($tabrow, $id);
+$renderer->tabs($tabrow, 'delayedcourses');
 
 $mform = new form_delays_filter($PAGE->url);
 

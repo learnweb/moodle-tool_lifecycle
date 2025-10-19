@@ -62,8 +62,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('course_backups_list_header', 'tool_lifecycle');
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
-$id = optional_param('id', 'settings', PARAM_TEXT);
-$renderer->tabs($tabrow, $id);
+$renderer->tabs($tabrow, 'coursebackups');
 
 echo '<br>';
 

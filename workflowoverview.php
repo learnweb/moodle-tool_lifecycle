@@ -174,22 +174,22 @@ echo $renderer->header($heading);
 
 $tabparams = new stdClass();
 if ($isactive) {  // Active workflow.
-    $id = 'activeworkflows';
+    $tabid = 'activeworkflows';
     $tabparams->activelink = true;
     $classdetails = "bg-primary text-white";
 } else {
     if ($isdeactivated) { // Deactivated workflow.
-        $id = 'deactivatedworkflows';
+        $tabid = 'deactivatedworkflows';
         $tabparams->deactivatedlink = true;
         $classdetails = "bg-dark text-white";
     } else { // Draft.
-        $id = 'workflowdrafts';
+        $tabid = 'workflowdrafts';
         $tabparams->draftlink = true;
         $classdetails = "bg-light";
     }
 }
 $tabrow = tabs::get_tabrow($tabparams);
-$renderer->tabs($tabrow, $id);
+$renderer->tabs($tabrow, $tabid);
 
 $steps = step_manager::get_step_instances($workflow->id);
 $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
@@ -651,7 +651,7 @@ if (workflow_manager::is_editable($workflow->id)) {
                 'subplugin', $steptypes, '', ['' => get_string('add_new_step_instance', 'tool_lifecycle')],
                 null, ['id' => 'tool_lifecycle-choose-step']);
         }
-        if ($id == 'workflowdrafts') {
+        if ($tabid == 'workflowdrafts') {
             // At least one trigger and one step is necessary to activate the draft workflow.
             if (workflow_manager::is_valid($workflow->id)) {
                 $activate = $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
