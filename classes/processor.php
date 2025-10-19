@@ -166,8 +166,7 @@ class processor {
         global $FULLSCRIPT, $CFG;
 
         $run = str_contains($FULLSCRIPT, 'run.php');
-        $automatictest = defined('PHPUNIT_COMPOSER_INSTALL') ||
-            defined('__PHPUNIT_PHAR__') ||
+        $automatictest = (defined('PHPUNIT_TEST') && PHPUNIT_TEST) ||
             defined('BEHAT_SITE_RUNNING');
         $debug = $run && $CFG->debugdeveloper && !$automatictest;
 
