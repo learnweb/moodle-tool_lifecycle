@@ -42,7 +42,7 @@ $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('pluginna
         'lifecyclestep_adminapprove');
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
-$renderer->tabs($tabrow, '');
+$renderer->tabs($tabrow, 'adminapprove');
 
 $table = new lifecyclestep_adminapprove\step_table();
 $table->out(100, false);
