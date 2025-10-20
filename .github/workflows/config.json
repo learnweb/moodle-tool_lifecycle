@@ -1,5 +1,5 @@
 {
-  "moodle-plugin-ci": "4.5.6",
+  "moodle-plugin-ci": "4.5.7",
   "main-moodle": "MOODLE_405_STABLE",
   "main-php": "8.3",
   "main-db": "pgsql",
