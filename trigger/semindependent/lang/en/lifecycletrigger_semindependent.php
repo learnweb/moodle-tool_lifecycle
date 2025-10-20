@@ -26,6 +26,6 @@
 $string['exclude'] = 'Exclude semester independent';
 $string['exclude_help'] = 'If true, semester independent courses are excluded from workflow,
 otherwise they are included.';
-$string['privacy:metadata'] = 'Does not store user specific data';
 $string['plugindescription'] = 'Include or exclude courses that have no start date.';
 $string['pluginname'] = 'Semester independent trigger';
+$string['privacy:metadata'] = 'Does not store user specific data';
