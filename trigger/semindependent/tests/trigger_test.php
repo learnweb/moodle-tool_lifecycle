@@ -16,6 +16,7 @@
 
 namespace lifecycletrigger_semindependent;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 use tool_lifecycle_trigger_semindependent_generator as generator;
@@ -62,9 +63,8 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if trigger for inclusion of semester independent courses works as expected.
-     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\semindependent
      */
-    public function test_include_semester_independent(): void {
+    #[CoversClass(processor::class)] public function test_include_semester_independent(): void {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(false);
 
@@ -87,9 +87,8 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if trigger for exclusion of semester independent courses works as expected.
-     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\semindependent
      */
-    public function test_exclude_semester_independent(): void {
+    #[CoversClass(processor::class)] public function test_exclude_semester_independent(): void {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(true);
 
