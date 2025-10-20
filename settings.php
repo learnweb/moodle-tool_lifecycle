@@ -33,9 +33,8 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('lifecycle', get_string('pluginname', 'tool_lifecycle'));
 
     $tabrow = tabs::get_tabrow();
-    $id = optional_param('id', 'settings', PARAM_TEXT);
     $tabs = [$tabrow];
-    $tabsoutput = print_tabs($tabs, $id, null, null, true);
+    $tabsoutput = print_tabs($tabs, 'settings', null, null, true);
 
     // Main config page.
     $settings->add(new admin_setting_heading('lifecycle_settings_heading',

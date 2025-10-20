@@ -43,8 +43,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('subplugins', 'tool_lifecycle');
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
-$id = optional_param('id', 'subplugins', PARAM_TEXT);
-$renderer->tabs($tabrow, $id);
+$renderer->tabs($tabrow, 'subplugins');
 
 echo html_writer::link('https://github.com/learnweb/moodle-tool_lifecycle/wiki/List-of-Installed-Subplugins',
     get_string('documentationlink', 'tool_lifecycle'), ['target' => '_blank']);

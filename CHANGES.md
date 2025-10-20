@@ -1,10 +1,16 @@
 CHANGELOG
 =========
 
+4.5.6(2025-10-20)
+------------------
+* [FIXED] Fix bug in upgrade.php issue #259
+* [FIXED] process_courses: no debug messages when phpunit test
+* [CHANGE] No parameter id for tabs anymore
+
 Further information to the latest changes can be found here: https://github.com/learnweb/moodle-tool_lifecycle/wiki/Changes-of-version-4.5.4-and-4.5.5
 and here: https://github.com/learnweb/moodle-tool_lifecycle/wiki/Changes-of-version-4.5-in-detail
 
-4.5.5 (2025-02-10)
+4.5.5 (2025-10-02)
 ------------------
 * [FIXED] Problems with check_course_code
 * [FIXED] Display time as usertime, not UTC (Issue #188)

@@ -73,8 +73,7 @@ echo $renderer->header($heading);
 $tabparams = new stdClass();
 $tabparams->activelink = true;
 $tabrow = tabs::get_tabrow($tabparams);
-$id = 'activeworkflows';
-$renderer->tabs($tabrow, $id);
+$renderer->tabs($tabrow, 'activeworkflows');
 
 $table = new active_processes_table('tool_lifecycle_active_processes', $data);
 

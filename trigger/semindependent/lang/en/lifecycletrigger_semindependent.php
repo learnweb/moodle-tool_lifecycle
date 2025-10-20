@@ -28,3 +28,4 @@ $string['exclude_help'] = 'If true, semester independent courses are excluded fr
 otherwise they are included.';
 $string['plugindescription'] = 'Include or exclude courses that have no start date.';
 $string['pluginname'] = 'Semester independent trigger';
+$string['privacy:metadata'] = 'Does not store user specific data';

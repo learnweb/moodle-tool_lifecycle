@@ -27,3 +27,4 @@ $string['exclude'] = 'Exkludiere semesterunabhängige Kurse';
 $string['exclude_help'] = 'Ist diese Option aktiviert werden semesterunabhängige Kurse ausgeschlossen, wenn nicht werden sie inkludiert.';
 $string['plugindescription'] = 'Inkludiert oder exkludiert Kurse ohne Startdatum.';
 $string['pluginname'] = 'Semesterunabhängige Kurse Trigger';
+$string['privacy:metadata'] = 'Speichert keine Userdaten';

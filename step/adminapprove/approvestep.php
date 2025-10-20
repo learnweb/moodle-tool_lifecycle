@@ -150,8 +150,7 @@ echo $renderer->header($heading);
 $tabparams = new stdClass();
 $tabparams->approvelink = true;
 $tabrow = tabs::get_tabrow($tabparams);
-$id = optional_param('id', 'adminapprove', PARAM_TEXT);
-$renderer->tabs($tabrow, $id);
+$renderer->tabs($tabrow, 'adminapprove');
 
 $hasrecords = $DB->record_exists_sql('SELECT a.id FROM {lifecyclestep_adminapprove} a ' .
         'JOIN {tool_lifecycle_process} p ON p.id = a.processid ' .

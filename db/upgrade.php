@@ -602,7 +602,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         }
 
         $table = new xmldb_table('tool_lifecycle_step');
-        $field = new xmldb_field('rollbacktosortindex', XMLDB_TYPE_INTEGER, '5', null, null, null, null, 'delaytype');
+        $field = new xmldb_field('rollbacktosortindex', XMLDB_TYPE_INTEGER, '5', null, null, null, null, 'sortindex');
 
         // Conditionally create the field.
         if (!$dbman->field_exists($table, $field)) {

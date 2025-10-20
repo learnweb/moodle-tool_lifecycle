@@ -166,9 +166,11 @@ class processor {
         global $FULLSCRIPT, $CFG;
 
         $run = str_contains($FULLSCRIPT, 'run.php');
-        $debug = $run && $CFG->debugdeveloper && !defined('BEHAT_SITE_RUNNING');
+        $automatictest = (defined('PHPUNIT_TEST') && PHPUNIT_TEST) ||
+            defined('BEHAT_SITE_RUNNING');
+        $debug = $run && $CFG->debugdeveloper && !$automatictest;
 
-        if (!defined('BEHAT_SITE_RUNNING')) {
+        if (!$automatictest) {
             if ($run) {
                 echo \html_writer::div(get_string ('lifecycle_task', 'tool_lifecycle'));
             } else {
@@ -239,7 +241,7 @@ class processor {
                 }
             }
         }
-        if (!defined('BEHAT_SITE_RUNNING')) {
+        if (!$automatictest) {
             if ($run) {
                 echo \html_writer::div("   $coursesprocessed courses processed.");
                 echo \html_writer::div("   $coursesprocesserrors ".get_string('errors', 'search').".");

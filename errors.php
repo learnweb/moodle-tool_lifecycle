@@ -89,8 +89,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('process_errors_header', 'tool_lifecycle');
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
-$id = optional_param('id', 'settings', PARAM_TEXT);
-$renderer->tabs($tabrow, $id);
+$renderer->tabs($tabrow, 'errors');
 
 // Get number of process errors.
 $sql = "select count(c.id) from {tool_lifecycle_proc_error} pe

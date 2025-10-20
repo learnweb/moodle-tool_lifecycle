@@ -88,8 +88,7 @@ if ($data = $form->get_data()) {
 }
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
-$id = optional_param('id', 'settings', PARAM_TEXT);
-$renderer->tabs($tabrow, $id);
+$renderer->tabs($tabrow, '');
 
 $form->display();
 
