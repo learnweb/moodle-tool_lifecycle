@@ -63,6 +63,7 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if trigger for inclusion of semester independent courses works as expected.
+     * @covers \tool_lifecycle\trigger\semindependent
      */
     public function test_include_semester_independent(): void {
 
@@ -87,6 +88,7 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if trigger for exclusion of semester independent courses works as expected.
+     * @covers \tool_lifecycle\trigger\semindependent
      */
     public function test_exclude_semester_independent(): void {
 
