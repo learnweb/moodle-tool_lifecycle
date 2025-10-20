@@ -1,6 +1,6 @@
 {
-  "moodle-plugin-ci": "4.5.8",
-  "main-moodle": "MOODLE_500_STABLE",
+  "moodle-plugin-ci": "4.5.6",
+  "main-moodle": "MOODLE_405_STABLE",
   "main-php": "8.3",
   "main-db": "pgsql",
   "moodle-testmatrix": {
@@ -19,9 +19,9 @@
     },
     "MOODLE_405_STABLE": {
       "php": [
+        "8.1",
         "8.2",
-        "8.3",
-        "8.4"
+        "8.3"
       ],
       "db": [
         "pgsql",
