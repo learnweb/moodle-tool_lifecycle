@@ -92,11 +92,11 @@ class process_manager {
         global $DB;
         // Detect processes of not existing courses and move them to the proc_error table.
         $processeswithoutcourse = $DB->get_fieldset_select('tool_lifecycle_process', 'id',
-            "courseid not in (SELECT id FROM {course}) ",[]);
+            "courseid not in (SELECT id FROM {course}) ", []);
         foreach ($processeswithoutcourse as $processid) {
-            $process = process_manager::get_process_by_id($processid, true);
+            $process = self::get_process_by_id($processid, true);
             $e = new \Exception(get_string('process_withnotexistingcourse', 'tool_lifecycle'));
-            process_manager::insert_process_error($process, $e);
+            self::insert_process_error($process, $e);
         }
         $records = $DB->get_records('tool_lifecycle_process');
         $processes = [];
