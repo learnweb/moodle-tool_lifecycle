@@ -90,12 +90,14 @@ class process_manager {
      */
     public static function get_processes() {
         global $DB;
-        // Delete processes of already removed courses.
-        $DB->delete_records_select(
-            'tool_lifecycle_process',
-            "courseid not in (SELECT id FROM {course}) ",
-            []
-        );
+        // Detect processes of not existing courses and move them to the proc_error table.
+        $processeswithoutcourse = $DB->get_fieldset_select('tool_lifecycle_process', 'id',
+            "courseid not in (SELECT id FROM {course}) ",[]);
+        foreach ($processeswithoutcourse as $processid) {
+            $process = process_manager::get_process_by_id($processid, true);
+            $e = new \Exception(get_string('process_withnotexistingcourse', 'tool_lifecycle'));
+            process_manager::insert_process_error($process, $e);
+        }
         $records = $DB->get_records('tool_lifecycle_process');
         $processes = [];
         foreach ($records as $record) {
@@ -107,14 +109,15 @@ class process_manager {
     /**
      * Creates a process for the course which is at the respective step the trigger is followed by.
      * @param int $processid id of the process
+     * @param bool $coursedeleted If course does not exist (anymore)
      * @return process
      * @throws \dml_exception
      */
-    public static function get_process_by_id($processid) {
+    public static function get_process_by_id($processid, $coursedeleted = false) {
         global $DB;
         $record = $DB->get_record('tool_lifecycle_process', ['id' => $processid]);
         if ($record) {
-            return process::from_record($record);
+            return process::from_record($record, $coursedeleted);
         } else {
             return null;
         }

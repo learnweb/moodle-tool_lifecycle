@@ -183,12 +183,7 @@ class processor {
         foreach (process_manager::get_processes() as $process) {
             while (true) {
 
-                try {
-                    $course = get_course($process->courseid);
-                } catch (\dml_missing_record_exception $e) {
-                    // Course no longer exists!
-                    break;
-                }
+                $course = get_course($process->courseid);
 
                 if ($process->stepindex == 0) {
                     if (!process_manager::proceed_process($process)) {

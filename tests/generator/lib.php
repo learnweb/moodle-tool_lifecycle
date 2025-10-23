@@ -176,10 +176,11 @@ class tool_lifecycle_generator extends testing_module_generator {
      * Create a process for a combination of course and workflow.
      * @param int $courseid Id of the course.
      * @param int $workflowid Id of the workflow.
+     * @param bool $coursedeleted If course does not exist (anymore).
      * @return process
      * @throws dml_exception
      */
-    public static function create_process($courseid, $workflowid) {
+    public static function create_process($courseid, $workflowid, $coursedeleted = false) {
         global $DB;
 
         $record = new \stdClass();
@@ -188,7 +189,7 @@ class tool_lifecycle_generator extends testing_module_generator {
         $record->workflowid = $workflowid;
         $record->timestepchanged = time();
         $record->stepindex = 0;
-        $process = process::from_record($record);
+        $process = process::from_record($record, $coursedeleted);
         $process->id = $DB->insert_record('tool_lifecycle_process', $process);
         return $process;
     }

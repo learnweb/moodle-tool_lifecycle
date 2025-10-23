@@ -231,6 +231,7 @@ $string['process_errors_header_title'] = 'Liste der Bearbeitungsfehler';
 $string['process_proceeded_event'] = 'Ein Prozess wurde fortgeführt';
 $string['process_rollback_event'] = 'Ein Prozess wurde zurückgesetzt';
 $string['process_triggered_event'] = 'Ein Prozess wurde ausgelöst';
+$string['process_withnotexistingcourse'] = 'Ein Prozess für einen nicht (mehr) existierenden Kurs wurde gefunden.';
 $string['restore'] = 'Wiederherstellen';
 $string['restore_error_in_step'] = 'Beim Importieren des Steps \'{$a}\' ist ein Fehler aufgetreten: ';
 $string['restore_error_in_trigger'] = 'Beim Importieren des Triggers \'{$a}\' ist ein Fehler aufgetreten: ';

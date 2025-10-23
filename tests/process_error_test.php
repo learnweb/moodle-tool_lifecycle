@@ -27,6 +27,7 @@
 namespace tool_lifecycle;
 
 use tool_lifecycle\local\entity\trigger_subplugin;
+use tool_lifecycle\local\entity\workflow;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\manager\trigger_manager;
@@ -48,12 +49,14 @@ final class process_error_test extends \advanced_testcase {
     const MANUAL_TRIGGER1_DISPLAYNAME = 'Up';
     /** Capability of the manual trigger. */
     const MANUAL_TRIGGER1_CAPABILITY = 'moodle/course:manageactivities';
+    /** The not existing course id. */
+    const NOTEXISTING_COURSE_ID = 999;
 
+    /** @var \tool_lifecycle_generator $generator Instance of the test generator. */
+    private $generator;
 
-    /** @var trigger_subplugin $trigger Instances of the triggers under test. */
-    private $trigger;
-    /** @var array $course Instance of the course under test. */
-    private $course;
+    /** @var workflow $workflow Generated and activated workflow. */
+    private $workflow;
 
     /**
      * Set up the testcase.
@@ -61,60 +64,57 @@ final class process_error_test extends \advanced_testcase {
      * @throws \moodle_exception
      */
     public function setUp(): void {
-        global $USER, $DB;
+        global $USER;
 
         parent::setUp();
 
         // We do not need a sesskey check in these tests.
         $USER->ignoresesskey = true;
-
         $this->resetAfterTest(true);
-        $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
+        $this->generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
+
+        // Create manual trigger and a duplicate step for our workflow.
         $triggersettings = new \stdClass();
         $triggersettings->icon = self::MANUAL_TRIGGER1_ICON;
         $triggersettings->displayname = self::MANUAL_TRIGGER1_DISPLAYNAME;
         $triggersettings->capability = self::MANUAL_TRIGGER1_CAPABILITY;
-        $manualworkflow = $generator->create_manual_workflow($triggersettings);
-        $step = $generator->create_step("instance1", "deletecourse", $manualworkflow->id);
-        settings_manager::save_settings($step->id, settings_type::STEP, "deletecourse",
-                ["maximumdeletionspercron" => 10]
-        );
+        $this->workflow = $this->generator->create_manual_workflow($triggersettings);
+        $this->generator->create_step("instance1", "duplicate", $this->workflow->id);
 
-        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $manualworkflow->id);
-
-        $this->course = $this->getDataGenerator()->create_course();
-        $this->getDataGenerator()->create_module('page', ['course' => $this->course->id]);
-
-        // Corrupt course.
-        $DB->execute('UPDATE {course_modules} SET instance = 0');
-        $this->trigger = trigger_manager::get_triggers_for_workflow($manualworkflow->id)[0];
+        // Activate workflow.
+        workflow_manager::handle_action(action::WORKFLOW_ACTIVATE, $this->workflow->id);
     }
 
     /**
      * Test if the correct process error was put into the table.
      * @covers \tool_lifecycle\processor
+     * @throws \dml_exception
+     * @throws \moodle_exception
      */
     public function test_process_error_in_table(): void {
         global $DB;
-        $process = process_manager::manually_trigger_process($this->course->id, $this->trigger->id);
 
-        // The delete course step really wants to print output.
-        ob_start();
+        // Create entry in process table with not existing course id.
+        $this->generator->create_process(self::NOTEXISTING_COURSE_ID, $this->workflow->id, true);
+
+        // Process all the processes of our active workflow.
         $processor = new processor();
         $processor->process_courses();
-        ob_end_clean();
 
-        $records = $DB->get_records('tool_lifecycle_proc_error');
+        // Get all the entries of the proc_error table.
+        $errorrecords = $DB->get_records('tool_lifecycle_proc_error');
 
-        $this->assertEquals(1, count($records));
+        // It should be exactly one.
+        $this->assertCount(1, $errorrecords);
+        // And no entry in the process table any more.
         $this->assertEquals(0, $DB->count_records('tool_lifecycle_process'));
 
-        $record = reset($records);
+        $errorrecord = reset($errorrecords);
 
-        $this->assertEquals($this->course->id, $record->courseid);
-        $this->assertEquals($process->workflowid, $record->workflowid);
-        $this->assertEquals(1, $record->stepindex);
-        $this->assertNotEmpty($record->errormessage);
+        // Has the only entry in the proc_error table the expected course and workflow id and a message?
+        $this->assertEquals(self::NOTEXISTING_COURSE_ID, $errorrecord->courseid);
+        $this->assertEquals($this->workflow->id, $errorrecord->workflowid);
+        $this->assertNotEmpty($errorrecord->errormessage);
     }
 
 }
