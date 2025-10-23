@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+5.0.0(2025-10-23)
+------------------
+* [FIXED] Fix unit test process_error_test
+* Moodle 5.0 compatible version
+
 4.5.6(2025-10-20)
 ------------------
 * [FIXED] Fix bug in upgrade.php issue #259
