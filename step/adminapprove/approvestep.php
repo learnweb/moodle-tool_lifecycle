@@ -24,8 +24,10 @@
  */
 
 use lifecyclestep_adminapprove\course_filter_form;
+use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\workflow_manager;
+use tool_lifecycle\settings_type;
 use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
@@ -163,21 +165,34 @@ if ($hasrecords) {
     echo get_string('courses_waiting', 'lifecyclestep_adminapprove',
             ['step' => $step->instancename, 'workflow' => $workflow->title]);
 
+    $rollback = settings_manager::get_settings($step->id, settings_type::STEP)['rollbackbutton'];
+    $proceed = settings_manager::get_settings($step->id, settings_type::STEP)['proceedbutton'];
+
+
     echo '<div class="mt-2 mb-2">';
     echo \html_writer::div('0', 'totalrows badge badge-primary badge-pill mr-2',
         ['id' => 'adminapprove_totalrows']);
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK_ALL]),
-        get_string(ROLLBACK_ALL, 'lifecyclestep_adminapprove'));
+        isset($rollback)? get_string('all', 'lifecyclestep_adminapprove') . ' ' . $rollback:
+            get_string(ROLLBACK_ALL, 'lifecyclestep_adminapprove'));
     echo $OUTPUT->render($button);
+
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED_ALL]),
-        get_string(PROCEED_ALL, 'lifecyclestep_adminapprove'), 'post', 'primary');
+        isset($proceed)? get_string('all', 'lifecyclestep_adminapprove') . ' ' . $proceed:
+            get_string(PROCEED_ALL, 'lifecyclestep_adminapprove'),
+        'post', 'primary');
     echo $OUTPUT->render($button);
+
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK]),
+        isset($rollback)? get_string('selected', 'lifecyclestep_adminapprove') . ' ' . $rollback:
         get_string('rollbackselected', 'lifecyclestep_adminapprove'), 'post', 'secondary');
     echo $OUTPUT->render($button);
+
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED]),
+        isset($proceed)? get_string('selected', 'lifecyclestep_adminapprove') . ' ' . $proceed:
         get_string('proceedselected', 'lifecyclestep_adminapprove'), 'post', 'primary');
     echo $OUTPUT->render($button);
+
     echo '</div>';
 
     echo '<form action="" method="post"><input type="hidden" name="sesskey" value="' . sesskey() . '">';

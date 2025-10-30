@@ -24,6 +24,7 @@
  */
 
 $string['adminapprovals'] = 'Admin-Bestätigungen';
+$string['all'] = 'Alle';
 $string['amount_courses'] = 'Anzahl wartender Kurse';
 $string['bulkactions'] = 'Massenaktionen';
 $string['courseid'] = 'Kurs-ID';
@@ -39,11 +40,16 @@ $string['only_number'] = 'Es sind nur Ziffern erlaubt!';
 $string['plugindescription'] = 'In diesem Schritt wird die Bestätigung eines Systemadministrators eingeholt bevor die Ausführung des Workflows fortgesetzt werden kann.';
 $string['pluginname'] = 'Adminbestätigungs-Schritt';
 $string['proceed'] = 'Fortführen';
+$string['proceedbutton'] = 'Beschriftung des Fortsetzen-Buttons';
+$string['proceedbutton_help'] = 'Möglichkeit, den Button an den Workflow anzupassen';
 $string['proceedall'] = 'Alle fortführen';
 $string['proceedselected'] = 'Ausgewählte fortführen';
 $string['rollback'] = 'Zurücksetzten';
+$string['rollbackbutton'] = 'Beschriftung des Zurücksetzen-Buttons';
+$string['rollbackbutton_help'] = 'Möglichkeit, den Button an den Workflow anzupassen';
 $string['rollbackall'] = 'Alle zurücksetzten';
 $string['rollbackselected'] = 'Ausgewählte zurücksetzten';
+$string['selected'] = 'Ausgewählte';
 $string['statusmessage'] = 'Statusnachricht';
 $string['statusmessage_help'] = 'Statusnachricht, welche dem Lehrer angezeigt wird, wenn ein Prozess eines Kurses den Adminbestätigungs-Schritt bearbeitet.';
 $string['tools'] = 'Aktionen';
