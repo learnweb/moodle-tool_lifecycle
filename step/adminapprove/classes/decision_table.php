@@ -150,18 +150,19 @@ class decision_table extends \table_sql {
 
         $element = step_manager::get_step_instance($row->sid);
 
-        $rollback = settings_manager::get_settings($element->id, settings_type::STEP)['rollbackbutton'] ??
-            get_string('rollback', 'lifecyclestep_adminapprove');
+        $rollback = settings_manager::get_settings($element->id, settings_type::STEP)['rollbackbutton'];
+        $rollbackbutton = !empty($rollback) ? $rollback : get_string('rollback', 'lifecyclestep_adminapprove');
+
         $output = \html_writer::start_div('singlebutton mr-1');
-        $output .= \html_writer::tag('button', $rollback ,
+        $output .= \html_writer::tag('button', $rollbackbutton ,
             ['class' => 'btn btn-secondary adminapprove-action', 'data-action' => 'rollback', 'data-content' => $row->id,
                 'type' => 'button']);
         $output .= \html_writer::end_div();
 
-        $proceed = settings_manager::get_settings($element->id, settings_type::STEP)['proceedbutton'] ??
-            get_string('proceed', 'lifecyclestep_adminapprove');
+        $proceed = settings_manager::get_settings($element->id, settings_type::STEP)['proceedbutton'];
+        $proceedbutton = !empty($proceed) ? $proceed : get_string('proceed', 'lifecyclestep_adminapprove');
         $output .= \html_writer::start_div('singlebutton mr-1 ml-0 mt-1');
-        $output .= \html_writer::tag('button', $proceed,
+        $output .= \html_writer::tag('button', $proceedbutton,
             ['class' => 'btn btn-primary adminapprove-action', 'data-action' => 'proceed', 'data-content' => $row->id,
                 'type' => 'button']);
         $output .= \html_writer::end_div();

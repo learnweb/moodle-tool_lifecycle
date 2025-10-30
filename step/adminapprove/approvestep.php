@@ -173,23 +173,23 @@ if ($hasrecords) {
     echo \html_writer::div('0', 'totalrows badge badge-primary badge-pill mr-2',
         ['id' => 'adminapprove_totalrows']);
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK_ALL]),
-        isset($rollback)? get_string('all', 'lifecyclestep_adminapprove') . ' ' . $rollback:
+        !empty($rollback)? get_string('all', 'lifecyclestep_adminapprove') . ' ' . $rollback:
             get_string(ROLLBACK_ALL, 'lifecyclestep_adminapprove'));
     echo $OUTPUT->render($button);
 
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED_ALL]),
-        isset($proceed)? get_string('all', 'lifecyclestep_adminapprove') . ' ' . $proceed:
+        !empty($proceed)? get_string('all', 'lifecyclestep_adminapprove') . ' ' . $proceed:
             get_string(PROCEED_ALL, 'lifecyclestep_adminapprove'),
         'post', 'primary');
     echo $OUTPUT->render($button);
 
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK]),
-        isset($rollback)? get_string('selected', 'lifecyclestep_adminapprove') . ' ' . $rollback:
+        !empty($rollback)? get_string('selected', 'lifecyclestep_adminapprove') . ' ' . $rollback:
         get_string('rollbackselected', 'lifecyclestep_adminapprove'), 'post', 'secondary');
     echo $OUTPUT->render($button);
 
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED]),
-        isset($proceed)? get_string('selected', 'lifecyclestep_adminapprove') . ' ' . $proceed:
+        !empty($proceed)? get_string('selected', 'lifecyclestep_adminapprove') . ' ' . $proceed:
         get_string('proceedselected', 'lifecyclestep_adminapprove'), 'post', 'primary');
     echo $OUTPUT->render($button);
 

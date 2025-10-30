@@ -184,23 +184,20 @@ class courses_in_step_table extends \table_sql {
 
         $element = step_manager::get_step_instance($row->stepinstanceid);
 
-        $rollback = settings_manager::get_settings($element->id, settings_type::STEP)['rollbackbutton'] ??
-            get_string('rollback', 'lifecyclestep_adminapprove');
-        $proceed = settings_manager::get_settings($element->id, settings_type::STEP)['proceedbutton'] ??
-            get_string('proceed', 'lifecyclestep_adminapprove');
-
+        $rollback = settings_manager::get_settings($element->id, settings_type::STEP)['rollbackbutton'];
+        $proceed = settings_manager::get_settings($element->id, settings_type::STEP)['proceedbutton'];
 
         $output = $OUTPUT->single_button(
             new \moodle_url($PAGE->url, ['action' => 'rollback', 'processid' => $row->processid,
                 'sesskey' => sesskey(), 'search' => $this->search]),
-            $rollback,
+            !empty($rollback)?$rollback:get_string('rollback', 'lifecyclestep_adminapprove'),
             'post',
             ['class' => 'mr-1']
         );
         $output .= $OUTPUT->single_button(
             new \moodle_url($PAGE->url, ['action' => 'proceed', 'processid' => $row->processid,
                 'sesskey' => sesskey(), 'search' => $this->search]),
-            $proceed,
+            !empty($proceed)?$proceed:get_string('proceed', 'lifecyclestep_adminapprove'),
             'post',
             ['class' => 'mt-1']
         );
