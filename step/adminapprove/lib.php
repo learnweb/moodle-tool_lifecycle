@@ -160,14 +160,13 @@ class adminapprove extends libbase {
         $mform->addElement('text', $elementname, get_string('proceedbutton', 'lifecyclestep_adminapprove'));
         $mform->addHelpButton($elementname, 'proceedbutton', 'lifecyclestep_adminapprove');
         $mform->setType($elementname, PARAM_TEXT);
-        // leave empty in order to allow default to be translated
-        // $mform->setDefault($elementname, get_string('proceed', 'lifecyclestep_adminapprove'));
+        // Default: empty in order to keep translation.
 
         $elementname = 'rollbackbutton';
         $mform->addElement('text', $elementname, get_string('rollbackbutton', 'lifecyclestep_adminapprove'));
         $mform->addHelpButton($elementname, 'rollbackbutton', 'lifecyclestep_adminapprove');
         $mform->setType($elementname, PARAM_TEXT);
-        // $mform->setDefault($elementname, get_string('rollback', 'lifecyclestep_adminapprove'));
+        // Default: empty in order to keep translation.
     }
 
     /**

@@ -190,14 +190,14 @@ class courses_in_step_table extends \table_sql {
         $output = $OUTPUT->single_button(
             new \moodle_url($PAGE->url, ['action' => 'rollback', 'processid' => $row->processid,
                 'sesskey' => sesskey(), 'search' => $this->search]),
-            !empty($rollback)?$rollback:get_string('rollback', 'lifecyclestep_adminapprove'),
+            !empty($rollback) ? $rollback : get_string('rollback', 'lifecyclestep_adminapprove'),
             'post',
             ['class' => 'mr-1']
         );
         $output .= $OUTPUT->single_button(
             new \moodle_url($PAGE->url, ['action' => 'proceed', 'processid' => $row->processid,
                 'sesskey' => sesskey(), 'search' => $this->search]),
-            !empty($proceed)?$proceed:get_string('proceed', 'lifecyclestep_adminapprove'),
+            !empty($proceed) ? $proceed : get_string('proceed', 'lifecyclestep_adminapprove'),
             'post',
             ['class' => 'mt-1']
         );
