@@ -23,7 +23,7 @@
  */
 
 $string['adminapprovals'] = 'Admin Approvals';
-$string['all'] = 'All';
+$string['all'] = 'All:';
 $string['amount_courses'] = 'Remaining waiting courses';
 $string['bulkactions'] = 'Bulk actions';
 $string['cachedef_mformdata'] = 'Caches the mform data';
@@ -50,7 +50,7 @@ $string['rollbackall'] = 'Rollback all';
 $string['rollbackbutton'] = 'Rollback button text';
 $string['rollbackbutton_help'] = 'Adjust button text to workflow';
 $string['rollbackselected'] = 'Rollback selected';
-$string['selected'] = 'Ausgewählte';
+$string['selected'] = 'Selected:';
 $string['statusmessage'] = 'Status message';
 $string['statusmessage_help'] = 'Status message, which is displayed to a teacher, if a process of a course is at this admin approve step.';
 $string['tools'] = 'Tools';

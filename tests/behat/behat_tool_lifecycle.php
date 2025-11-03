@@ -457,4 +457,13 @@ class behat_tool_lifecycle extends behat_base {
     public function i_am_on_coursebackups_page() {
         $this->execute('behat_general::i_visit', ['/admin/tool/lifecycle/coursebackups.php']);
     }
+
+    /**
+     * Open the approvals page.
+     *
+     * @Given /^I am on approvals page$/
+     */
+    public function i_am_on_approvals_page() {
+        $this->execute('behat_general::i_visit', ['/admin/tool/lifecycle/step/adminapprove/index.php']);
+    }
 }
