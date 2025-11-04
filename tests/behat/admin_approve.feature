@@ -66,10 +66,10 @@ Feature: Add an admin approve step with and without 'button' customisation
 
     Then I should see "Cancel"
     And I should see "Create backup"
-    And I should see "All: Cancel"
-    And I should see "All: Create backup"
-    And I should see "Selected: Cancel"
-    And I should see "Selected: Create backup"
+    And I should see "All cancel"
+    And I should see "All create backup"
+    And I should see "Selected cancel"
+    And I should see "Selected create backup"
 #    When I click on "Proceed" "button"
 
     When I am on activeworkflows page
