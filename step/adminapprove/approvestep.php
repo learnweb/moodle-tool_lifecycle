@@ -165,9 +165,8 @@ if ($hasrecords) {
     echo get_string('courses_waiting', 'lifecyclestep_adminapprove',
             ['step' => $step->instancename, 'workflow' => $workflow->title]);
 
-    $rollback = settings_manager::get_settings($step->id, settings_type::STEP)['rollbackbutton'];
-    $proceed = settings_manager::get_settings($step->id, settings_type::STEP)['proceedbutton'];
-
+    $rollback = settings_manager::get_settings($step->id, settings_type::STEP)['rollbackbutton'] ?? null;
+    $proceed = settings_manager::get_settings($step->id, settings_type::STEP)['proceedbutton'] ?? null;
 
     echo '<div class="mt-2 mb-2">';
     echo \html_writer::div('0', 'totalrows badge badge-primary badge-pill mr-2',

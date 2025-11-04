@@ -150,7 +150,7 @@ class decision_table extends \table_sql {
 
         $element = step_manager::get_step_instance($row->sid);
 
-        $rollback = settings_manager::get_settings($element->id, settings_type::STEP)['rollbackbutton'];
+        $rollback = settings_manager::get_settings($element->id, settings_type::STEP)['rollbackbutton'] ?? null;
         $rollbackbutton = !empty($rollback) ? $rollback : get_string('rollback', 'lifecyclestep_adminapprove');
 
         $output = \html_writer::start_div('singlebutton mr-1');
@@ -159,7 +159,7 @@ class decision_table extends \table_sql {
                 'type' => 'button']);
         $output .= \html_writer::end_div();
 
-        $proceed = settings_manager::get_settings($element->id, settings_type::STEP)['proceedbutton'];
+        $proceed = settings_manager::get_settings($element->id, settings_type::STEP)['proceedbutton'] ?? null;
         $proceedbutton = !empty($proceed) ? $proceed : get_string('proceed', 'lifecyclestep_adminapprove');
         $output .= \html_writer::start_div('singlebutton mr-1 ml-0 mt-1');
         $output .= \html_writer::tag('button', $proceedbutton,
