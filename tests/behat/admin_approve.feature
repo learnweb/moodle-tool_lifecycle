@@ -142,7 +142,6 @@ Feature: Add a manual trigger and test view and actions as a teacher
     And I should see "Proceed all"
     And I should see "Rollback selected"
     And I should see "Proceed selected"
-#    When I click on "Proceed" "button"
 
     When I am on activeworkflows page
     Then I should see the row "My Workflow" in the "tool_lifecycle_manual_workflows" table
