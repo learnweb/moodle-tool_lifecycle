@@ -1,5 +1,5 @@
 @tool @tool_lifecycle @manual_trigger
-Feature: Add a manual trigger and test view and actions as a teacher
+Feature: Add an admin approve step with and without 'button' customisation
 
   Background:
     Given the following "users" exist:
@@ -91,7 +91,6 @@ Feature: Add a manual trigger and test view and actions as a teacher
     And I am on coursebackups page
     Then I should see "Course 1"
     And I should not see "Course 2"
-
 
   @javascript
   Scenario: Admin approve with default settings (delete course)
