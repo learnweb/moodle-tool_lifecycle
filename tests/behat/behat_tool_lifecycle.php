@@ -450,6 +450,15 @@ class behat_tool_lifecycle extends behat_base {
     }
 
     /**
+     * Open the delayedworkflows page.
+     *
+     * @Given /^I am on delayedworkflows page$/
+     */
+    public function i_am_on_delayedworkflows_page() {
+        $this->execute('behat_general::i_visit', ['/admin/tool/lifecycle/delayedcourses.php']);
+    }
+
+    /**
      * Open the coursebackups page.
      *
      * @Given /^I am on coursebackups page$/
