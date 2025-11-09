@@ -57,5 +57,7 @@ $string['rollbackbuttonlabel_help'] = 'Option to customize the label of the butt
 $string['rollbackselected'] = 'Rollback selected';
 $string['rollbackselectedbuttonlabel'] = 'Rollback selected label';
 $string['rollbackselectedbuttonlabel_help'] = 'Option to customize the label of the button \'Rollback selected\'. Leave it empty if you are ok with the default value.';
+$string['statusmessage'] = 'Status message';
+$string['statusmessage_help'] = 'Status message, which is displayed to a teacher, if a process of a course is at this admin approve step.';
 $string['tools'] = 'Tools';
 $string['workflow'] = 'Workflow';
