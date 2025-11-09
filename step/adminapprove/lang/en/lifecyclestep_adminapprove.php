@@ -23,6 +23,7 @@
  */
 
 $string['adminapprovals'] = 'Admin Approvals';
+$string['all'] = 'All';
 $string['amount_courses'] = 'Remaining waiting courses';
 $string['bulkactions'] = 'Bulk actions';
 $string['cachedef_mformdata'] = 'Caches the mform data';
@@ -41,10 +42,15 @@ $string['pluginname'] = 'Admin approve step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 $string['proceed'] = 'Proceed';
 $string['proceedall'] = 'Proceed all';
+$string['proceedbutton'] = 'Proceed button text';
+$string['proceedbutton_help'] = 'Adjust button text to workflow';
 $string['proceedselected'] = 'Proceed selected';
 $string['rollback'] = 'Rollback';
 $string['rollbackall'] = 'Rollback all';
+$string['rollbackbutton'] = 'Rollback button text';
+$string['rollbackbutton_help'] = 'Adjust button text to workflow';
 $string['rollbackselected'] = 'Rollback selected';
+$string['selected'] = 'Selected';
 $string['statusmessage'] = 'Status message';
 $string['statusmessage_help'] = 'Status message, which is displayed to a teacher, if a process of a course is at this admin approve step.';
 $string['tools'] = 'Tools';

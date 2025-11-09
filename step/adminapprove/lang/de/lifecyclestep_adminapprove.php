@@ -24,6 +24,7 @@
  */
 
 $string['adminapprovals'] = 'Admin-Bestätigungen';
+$string['all'] = 'Alle';
 $string['amount_courses'] = 'Anzahl wartender Kurse';
 $string['bulkactions'] = 'Massenaktionen';
 $string['courseid'] = 'Kurs-ID';
@@ -40,10 +41,15 @@ $string['plugindescription'] = 'In diesem Schritt wird die Bestätigung eines Sy
 $string['pluginname'] = 'Adminbestätigungs-Schritt';
 $string['proceed'] = 'Fortführen';
 $string['proceedall'] = 'Alle fortführen';
+$string['proceedbutton'] = 'Beschriftung des Fortsetzen-Buttons';
+$string['proceedbutton_help'] = 'ändert die Beschriftung des Fortsetzen-Buttons. Wenn das Feld leer bleibt, wird die Standardbeschriftung beibehalten.';
 $string['proceedselected'] = 'Ausgewählte fortführen';
 $string['rollback'] = 'Zurücksetzten';
 $string['rollbackall'] = 'Alle zurücksetzten';
+$string['rollbackbutton'] = 'Beschriftung des Zurücksetzen-Buttons';
+$string['rollbackbutton_help'] = 'ändert die Beschriftung des Zurücksetzen-Buttons. Wenn das Feld leer bleibt, wird die Standardbeschriftung beibehalten';
 $string['rollbackselected'] = 'Ausgewählte zurücksetzten';
+$string['selected'] = 'Ausgewählte';
 $string['statusmessage'] = 'Statusnachricht';
 $string['statusmessage_help'] = 'Statusnachricht, welche dem Lehrer angezeigt wird, wenn ein Prozess eines Kurses den Adminbestätigungs-Schritt bearbeitet.';
 $string['tools'] = 'Aktionen';

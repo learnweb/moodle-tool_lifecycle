@@ -139,6 +139,8 @@ class adminapprove extends libbase {
     public function instance_settings() {
         return [
             new instance_setting('statusmessage', PARAM_TEXT, true),
+            new instance_setting('proceedbutton', PARAM_TEXT, true),
+            new instance_setting('rollbackbutton', PARAM_TEXT, true),
         ];
     }
 
@@ -153,6 +155,18 @@ class adminapprove extends libbase {
         $mform->addElement('text', $elementname, get_string('statusmessage', 'lifecyclestep_adminapprove'));
         $mform->addHelpButton($elementname, 'statusmessage', 'lifecyclestep_adminapprove');
         $mform->setType($elementname, PARAM_TEXT);
+
+        $elementname = 'proceedbutton';
+        $mform->addElement('text', $elementname, get_string('proceedbutton', 'lifecyclestep_adminapprove'));
+        $mform->addHelpButton($elementname, 'proceedbutton', 'lifecyclestep_adminapprove');
+        $mform->setType($elementname, PARAM_TEXT);
+        // Default: empty in order to keep translation.
+
+        $elementname = 'rollbackbutton';
+        $mform->addElement('text', $elementname, get_string('rollbackbutton', 'lifecyclestep_adminapprove'));
+        $mform->addHelpButton($elementname, 'rollbackbutton', 'lifecyclestep_adminapprove');
+        $mform->setType($elementname, PARAM_TEXT);
+        // Default: empty in order to keep translation.
     }
 
     /**
