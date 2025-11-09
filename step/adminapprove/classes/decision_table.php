@@ -126,7 +126,8 @@ class decision_table extends \table_sql {
     /**
      * Render startdate column.
      * @param object $row
-     * @return string human readable date
+     * @return string human-readable date
+     * @throws \coding_exception
      */
     public function col_startdate($row) {
         global $USER;
@@ -144,14 +145,16 @@ class decision_table extends \table_sql {
      * Show the availble tool/actions for a column.
      * @param object $row
      * @return string
-     * @throws \coding_exception
+     * @throws \coding_exception|\dml_exception
      */
     public function col_tools($row) {
 
-        $element = step_manager::get_step_instance($row->sid);
+        $step = step_manager::get_step_instance($row->sid);
 
-        $rollback = settings_manager::get_settings($element->id, settings_type::STEP)['rollbackbutton'] ?? null;
-        $rollbackbutton = !empty($rollback) ? $rollback : get_string('rollback', 'lifecyclestep_adminapprove');
+        $rollbackcustlabel =
+            settings_manager::get_settings($step->id, settings_type::STEP)['rollbackbuttonlabel'] ?? null;
+        $rollbackbutton = !empty($rollbackcustlabel) ?
+            $rollbackcustlabel : get_string('rollback', 'lifecyclestep_adminapprove');
 
         $output = \html_writer::start_div('singlebutton mr-1');
         $output .= \html_writer::tag('button', $rollbackbutton ,
@@ -159,8 +162,10 @@ class decision_table extends \table_sql {
                 'type' => 'button']);
         $output .= \html_writer::end_div();
 
-        $proceed = settings_manager::get_settings($element->id, settings_type::STEP)['proceedbutton'] ?? null;
-        $proceedbutton = !empty($proceed) ? $proceed : get_string('proceed', 'lifecyclestep_adminapprove');
+        $proceedcustlabel =
+            settings_manager::get_settings($step->id, settings_type::STEP)['proceedbuttonlabel'] ?? null;
+        $proceedbutton = !empty($proceedcustlabel) ?
+            $proceedcustlabel : get_string('proceed', 'lifecyclestep_adminapprove');
         $output .= \html_writer::start_div('singlebutton mr-1 ml-0 mt-1');
         $output .= \html_writer::tag('button', $proceedbutton,
             ['class' => 'btn btn-primary adminapprove-action', 'data-action' => 'proceed', 'data-content' => $row->id,

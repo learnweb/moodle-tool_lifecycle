@@ -165,30 +165,36 @@ if ($hasrecords) {
     echo get_string('courses_waiting', 'lifecyclestep_adminapprove',
             ['step' => $step->instancename, 'workflow' => $workflow->title]);
 
-    $rollback = settings_manager::get_settings($step->id, settings_type::STEP)['rollbackbutton'] ?? null;
-    $proceed = settings_manager::get_settings($step->id, settings_type::STEP)['proceedbutton'] ?? null;
+    $rollbackallcustlabel =
+        settings_manager::get_settings($step->id, settings_type::STEP)['rollbackallbuttonlabel'] ?? null;
+    $proceedallcustlabel =
+        settings_manager::get_settings($step->id, settings_type::STEP)['proceedallbuttonlabel'] ?? null;
+    $rollbackselectedcustlabel =
+        settings_manager::get_settings($step->id, settings_type::STEP)['rollbackselectedbuttonlabel'] ?? null;
+    $proceedselectedcustlabel =
+        settings_manager::get_settings($step->id, settings_type::STEP)['proceedselectedbuttonlabel'] ?? null;
 
     echo '<div class="mt-2 mb-2">';
     echo \html_writer::div('0', 'totalrows badge badge-primary badge-pill mr-2',
         ['id' => 'adminapprove_totalrows']);
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK_ALL]),
-        !empty($rollback) ? get_string('all', 'lifecyclestep_adminapprove') . ' ' . lcfirst($rollback) :
+        !empty($rollbackallcustlabel) ? $rollbackallcustlabel :
             get_string(ROLLBACK_ALL, 'lifecyclestep_adminapprove'));
     echo $OUTPUT->render($button);
 
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED_ALL]),
-        !empty($proceed) ? get_string('all', 'lifecyclestep_adminapprove') . ' ' . lcfirst($proceed) :
+        !empty($proceedallcustlabel) ? $proceedallcustlabel :
             get_string(PROCEED_ALL, 'lifecyclestep_adminapprove'),
         'post', 'primary');
     echo $OUTPUT->render($button);
 
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK]),
-        !empty($rollback) ? get_string('selected', 'lifecyclestep_adminapprove') . ' ' . lcfirst($rollback) :
+        !empty($rollbackselectedcustlabel) ? $rollbackselectedcustlabel :
         get_string('rollbackselected', 'lifecyclestep_adminapprove'), 'post', 'secondary');
     echo $OUTPUT->render($button);
 
     $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED]),
-        !empty($proceed) ? get_string('selected', 'lifecyclestep_adminapprove') . ' ' . lcfirst($proceed) :
+        !empty($proceedselectedcustlabel) ? $proceedselectedcustlabel :
         get_string('proceedselected', 'lifecyclestep_adminapprove'), 'post', 'primary');
     echo $OUTPUT->render($button);
 

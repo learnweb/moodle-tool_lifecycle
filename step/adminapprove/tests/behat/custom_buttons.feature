@@ -30,8 +30,12 @@ Feature: Add an admin approve step with 'button' customisation
     And I press "Save changes"
     And I select "Admin approve step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "admin approve step"
-    And I set the field "Proceed button text" to "Create backup"
-    And I set the field "Rollback button text" to "Cancel workflow"
+    And I set the field "Label of the proceed button" to "Create backup"
+    And I set the field "Label of the rollback button" to "Cancel workflow"
+    And I set the field "Proceed all label" to "All create backup"
+    And I set the field "Rollback all label" to "All cancel workflow"
+    And I set the field "Proceed selected label" to "Selected create backup"
+    And I set the field "Rollback selected label" to "Selected cancel workflow"
     And I press "Save changes"
     And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Create backup step"

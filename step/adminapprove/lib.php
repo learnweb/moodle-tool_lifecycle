@@ -139,8 +139,12 @@ class adminapprove extends libbase {
     public function instance_settings() {
         return [
             new instance_setting('statusmessage', PARAM_TEXT, true),
-            new instance_setting('proceedbutton', PARAM_TEXT, true),
-            new instance_setting('rollbackbutton', PARAM_TEXT, true),
+            new instance_setting('proceedbuttonlabel', PARAM_TEXT, true),
+            new instance_setting('rollbackbuttonlabel', PARAM_TEXT, true),
+            new instance_setting('proceedallbuttonlabel', PARAM_TEXT, true),
+            new instance_setting('rollbackallbuttonlabel', PARAM_TEXT, true),
+            new instance_setting('proceedselectedbuttonlabel', PARAM_TEXT, true),
+            new instance_setting('rollbackselectedbuttonlabel', PARAM_TEXT, true),
         ];
     }
 
@@ -156,23 +160,30 @@ class adminapprove extends libbase {
         $mform->addHelpButton($elementname, 'statusmessage', 'lifecyclestep_adminapprove');
         $mform->setType($elementname, PARAM_TEXT);
 
-        $elementname = 'proceedbutton';
-        $mform->addElement('text', $elementname, get_string('proceedbutton', 'lifecyclestep_adminapprove'));
-        $mform->addHelpButton($elementname, 'proceedbutton', 'lifecyclestep_adminapprove');
-        $mform->setType($elementname, PARAM_TEXT);
-        // Default: empty in order to keep translation.
+        $buttons = [
+            'proceedbuttonlabel',
+            'rollbackbuttonlabel',
+            'proceedallbuttonlabel',
+            'rollbackallbuttonlabel',
+            'proceedselectedbuttonlabel',
+            'rollbackselectedbuttonlabel',
+        ];
 
-        $elementname = 'rollbackbutton';
-        $mform->addElement('text', $elementname, get_string('rollbackbutton', 'lifecyclestep_adminapprove'));
-        $mform->addHelpButton($elementname, 'rollbackbutton', 'lifecyclestep_adminapprove');
-        $mform->setType($elementname, PARAM_TEXT);
-        // Default: empty in order to keep translation.
+        foreach ($buttons as $button) {
+            $elementname = $button;
+            $mform->addElement('text', $elementname,
+                get_string($elementname, 'lifecyclestep_adminapprove'));
+            $mform->addHelpButton($elementname, $elementname, 'lifecyclestep_adminapprove');
+            $mform->setType($elementname, PARAM_TEXT);
+            // Default: empty in order to keep translation.
+        }
     }
 
     /**
      * This is called when a course and the
      * corresponding process get deleted.
      * @param process $process the process that was aborted.
+     * @throws \dml_exception
      */
     public function abort_course($process) {
         global $DB;

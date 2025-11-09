@@ -23,7 +23,6 @@
  */
 
 $string['adminapprovals'] = 'Admin Approvals';
-$string['all'] = 'All';
 $string['amount_courses'] = 'Remaining waiting courses';
 $string['bulkactions'] = 'Bulk actions';
 $string['cachedef_mformdata'] = 'Caches the mform data';
@@ -42,16 +41,21 @@ $string['pluginname'] = 'Admin approve step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 $string['proceed'] = 'Proceed';
 $string['proceedall'] = 'Proceed all';
-$string['proceedbutton'] = 'Proceed button text';
-$string['proceedbutton_help'] = 'Adjust button text to workflow';
+$string['proceedallbuttonlabel'] = 'Proceed all label';
+$string['proceedallbuttonlabel_help'] = 'Option to customize the label of the button \'Proceed all\'. Leave it empty if you are ok with the default value.';
+$string['proceedbuttonlabel'] = 'Label of the proceed button';
+$string['proceedbuttonlabel_help'] = 'Option to customize the label of the button \'Proceed\'. Leave it empty if you are ok with the default value.';
 $string['proceedselected'] = 'Proceed selected';
+$string['proceedselectedbuttonlabel'] = 'Proceed selected label';
+$string['proceedselectedbuttonlabel_help'] = 'Option to customize the label of the button \'Proceed selected\'. Leave it empty if you are ok with the default value.';
 $string['rollback'] = 'Rollback';
 $string['rollbackall'] = 'Rollback all';
-$string['rollbackbutton'] = 'Rollback button text';
-$string['rollbackbutton_help'] = 'Adjust button text to workflow';
+$string['rollbackallbuttonlabel'] = 'Rollback all label';
+$string['rollbackallbuttonlabel_help'] = 'Option to customize the label of the button \'Rollback all\'. Leave it empty if you are ok with the default value.';
+$string['rollbackbuttonlabel'] = 'Label of the rollback button';
+$string['rollbackbuttonlabel_help'] = 'Option to customize the label of the button \'Rollback\'. Leave it empty if you are ok with the default value.';
 $string['rollbackselected'] = 'Rollback selected';
-$string['selected'] = 'Selected';
-$string['statusmessage'] = 'Status message';
-$string['statusmessage_help'] = 'Status message, which is displayed to a teacher, if a process of a course is at this admin approve step.';
+$string['rollbackselectedbuttonlabel'] = 'Rollback selected label';
+$string['rollbackselectedbuttonlabel_help'] = 'Option to customize the label of the button \'Rollback selected\'. Leave it empty if you are ok with the default value.';
 $string['tools'] = 'Tools';
 $string['workflow'] = 'Workflow';
