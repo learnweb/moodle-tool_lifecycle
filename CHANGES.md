@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+5.0.1(2025-11-09)
+------------------
+* [FEATURE] Customise buttons in adminapprove step (PR #266)
+
 5.0.0(2025-10-23)
 ------------------
 * [FIXED] Fix unit test process_error_test

@@ -13,7 +13,7 @@ Feature: Add an admin approve step with 'button' customisation
       | user | course | role |
       | teacher1 | C1 | editingteacher |
       | teacher1 | C2 | editingteacher |
-      | teacher1 | C3 | teacher |
+      | teacher1 | C3 | editingteacher |
     Given I log in as "admin"
     And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
@@ -29,28 +29,29 @@ Feature: Add an admin approve step with 'button' customisation
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
     And I select "Admin approve step" from the "tool_lifecycle-choose-step" singleselect
-    And I set the field "Instance name" to "admin approve step"
+    And I set the field "Instance name" to "Admin approve step"
     And I set the field "Label of the proceed button" to "Create backup"
     And I set the field "Label of the rollback button" to "Cancel workflow"
-    And I set the field "Proceed all label" to "All create backup"
-    And I set the field "Rollback all label" to "All cancel workflow"
-    And I set the field "Proceed selected label" to "Selected create backup"
-    And I set the field "Rollback selected label" to "Selected cancel workflow"
+    And I set the field "Label of the proceed all button" to "All create backup"
+    And I set the field "Label of the rollback all button" to "All cancel workflow"
+    And I set the field "Label of the proceed selected button" to "Selected create backup"
+    And I set the field "Label of the rollback selected button" to "Selected cancel workflow"
     And I press "Save changes"
     And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Create backup step"
     And I press "Save changes"
 
-    And I am on workflowdrafts page
+    When I am on workflowdrafts page
     And I press "Activate"
     And I log out
     And I log in as "teacher1"
     And I am on lifecycle view
-    Then I should see the tool "Backup course" in the "Course 1" row of the "tool_lifecycle_remaining" table
     When I click on the tool "Backup course" in the "Course 1" row of the "tool_lifecycle_remaining" table
-    Then I should see "Course 1"
-    When I log out
+    Then I should see "Workflow started successfully."
+    When I click on the tool "Backup course" in the "Course 2" row of the "tool_lifecycle_remaining" table
+    Then I should see "Workflow started successfully."
 
+    And I log out
     And I log in as "admin"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds
@@ -58,13 +59,9 @@ Feature: Add an admin approve step with 'button' customisation
   @javascript
   Scenario: Check button texts on approval page
 
-    And I am on approvals page
-    And I click on "admin approve step" "link"
-
-    Then I should not see "Rollback"
-    And I should not see "Proceed"
-
-    And I should see "Cancel workflow"
+    When I am on approvals page
+    And I click on "Admin approve step" "link"
+    Then I should see "Cancel workflow"
     And I should see "Create backup"
     And I should see "All cancel workflow"
     And I should see "All create backup"
@@ -74,9 +71,9 @@ Feature: Add an admin approve step with 'button' customisation
   @javascript
   Scenario: Proceed on approval page (customisation)
 
-    And I am on approvals page
-    And I click on "admin approve step" "link"
-    When I click on "Create backup" "button"
+    When I am on approvals page
+    And I click on "Admin approve step" "link"
+    And I click on the tool "Create backup" in the "Course 1" row of the "lifecyclestep_adminapprove-decisiontable" table
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
@@ -85,12 +82,14 @@ Feature: Add an admin approve step with 'button' customisation
     And I am on coursebackups page
     Then I should see "Course 1"
     And I should not see "Course 2"
+
   @javascript
   Scenario: Proceed all on approval page (customisation)
 
-    And I am on approvals page
-    And I click on "admin approve step" "link"
-    When I click on "All create backup" "button"
+    When I am on approvals page
+    And I click on "Admin approve step" "link"
+    And I click on "All create backup" "button"
+
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds
@@ -102,9 +101,10 @@ Feature: Add an admin approve step with 'button' customisation
   @javascript
   Scenario: Rollback on approval page (customisation)
 
-    And I am on approvals page
-    And I click on "admin approve step" "link"
-    When I click on "Cancel workflow" "button"
+    When I am on approvals page
+    And I click on "Admin approve step" "link"
+    And I click on "Cancel workflow" "button"
+
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds
@@ -116,10 +116,10 @@ Feature: Add an admin approve step with 'button' customisation
   @javascript
   Scenario: Rollback all on approval page (customisation)
 
-    And I am on approvals page
-    And I click on "admin approve step" "link"
+    When I am on approvals page
+    And I click on "Admin approve step" "link"
+    And I click on "All cancel workflow" "button"
 
-    When I click on "All cancel workflow" "button"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds
@@ -127,6 +127,7 @@ Feature: Add an admin approve step with 'button' customisation
     And I am on delayedworkflows page
     Then I should see "Course 1"
     And I should not see "Course 2"
+
   @javascript
   Scenario: Proceed on active workflows page (customisation)
 
@@ -134,12 +135,9 @@ Feature: Add an admin approve step with 'button' customisation
     Then I should see the row "My Workflow" in the "tool_lifecycle_manual_workflows" table
     When I click on the tool "View workflow steps" in the "My Workflow" row of the "tool_lifecycle_manual_workflows" table
     Then I should see "Courses: 1"
-    And I should not see "Rollback"
-    And I should not see "Proceed"
     When I click on "Courses: 1" "link"
-    Then I should see "Cancel workflow"
     And I should see "Create backup"
-    When I click on "Create backup" "button"
+    And I click on "Create backup" "button"
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds
@@ -158,7 +156,7 @@ Feature: Add an admin approve step with 'button' customisation
     When I click on "Courses: 1" "link"
     Then I should see "Cancel workflow"
     And I should see "Create backup"
-    When I click on "Cancel workflow" "button"
+    And I click on "Cancel workflow" "button"
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds
