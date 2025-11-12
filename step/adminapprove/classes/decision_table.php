@@ -80,7 +80,6 @@ class decision_table extends \table_sql {
         $this->strings['proceedselectedbuttonlabel'] = !empty($proceedselectedcustlabel) ?
             $proceedselectedcustlabel : get_string('proceedselected', 'lifecyclestep_adminapprove');
 
-
         $this->define_baseurl("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid");
         $this->define_columns(['checkbox', 'courseid', 'course', 'category', 'startdate', 'tools']);
         $this->define_headers(
@@ -187,7 +186,7 @@ class decision_table extends \table_sql {
                 'action' => 'rollback',
                 'cid' => $row->id,
                 'stepid' => $row->sid,
-                'sesskey' => sesskey()
+                'sesskey' => sesskey(),
             ]),
             $this->strings['rollbackbuttonlabel'],
             'post',
@@ -201,7 +200,7 @@ class decision_table extends \table_sql {
                 'action' => 'proceed',
                 'cid' => $row->id,
                 'stepid' => $row->sid,
-                'sesskey' => sesskey()
+                'sesskey' => sesskey(),
             ]),
             $this->strings['proceedbuttonlabel'],
             'post',
