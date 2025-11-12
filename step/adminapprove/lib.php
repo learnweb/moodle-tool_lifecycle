@@ -141,8 +141,6 @@ class adminapprove extends libbase {
             new instance_setting('statusmessage', PARAM_TEXT, true),
             new instance_setting('proceedbuttonlabel', PARAM_TEXT, true),
             new instance_setting('rollbackbuttonlabel', PARAM_TEXT, true),
-            new instance_setting('proceedallbuttonlabel', PARAM_TEXT, true),
-            new instance_setting('rollbackallbuttonlabel', PARAM_TEXT, true),
             new instance_setting('proceedselectedbuttonlabel', PARAM_TEXT, true),
             new instance_setting('rollbackselectedbuttonlabel', PARAM_TEXT, true),
         ];
@@ -163,8 +161,6 @@ class adminapprove extends libbase {
         $buttons = [
             'proceedbuttonlabel',
             'rollbackbuttonlabel',
-            'proceedallbuttonlabel',
-            'rollbackallbuttonlabel',
             'proceedselectedbuttonlabel',
             'rollbackselectedbuttonlabel',
         ];

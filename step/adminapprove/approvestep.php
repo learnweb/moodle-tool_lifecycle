@@ -38,7 +38,7 @@ require_login(null, false);
 
 require_capability('moodle/site:config', context_system::instance());
 
-$action = optional_param('act', null, PARAM_ALPHA);
+$action = optional_param('action', null, PARAM_ALPHANUMEXT);
 $ids = optional_param_array('c', [], PARAM_INT);
 $stepid = required_param('stepid', PARAM_INT);
 
@@ -110,38 +110,13 @@ if ($action) {
     if (is_array($ids) && count($ids) > 0 && ($action == PROCEED || $action == ROLLBACK)) {
         [$insql, $inparams] = $DB->get_in_or_equal($ids);
         $sql = 'UPDATE {lifecyclestep_adminapprove} ' .
-                'SET status = ' . ($action == PROCEED ? 1 : 2) . ' ' .
-                'WHERE id ' . $insql . ' ' .
-                'AND status = 0';
+            'SET status = ' . ($action == PROCEED ? 1 : 2) . ' ' .
+            'WHERE id ' . $insql . ' ' .
+            'AND status = 0';
         $DB->execute($sql, $inparams);
-    } else if ($action == PROCEED_ALL || $action == ROLLBACK_ALL) {
-        $sql = 'SELECT p.id FROM {lifecyclestep_adminapprove} a ' .
-                'JOIN {tool_lifecycle_process} p ON p.id = a.processid ' .
-                'JOIN {tool_lifecycle_step} s ON s.workflowid = p.workflowid AND s.sortindex = p.stepindex ' .
-                'JOIN {course} c ON p.courseid = c.id ' .
-                'WHERE s.id = :stepid ';
-        $params = ['stepid' => $stepid];
 
-        if ($courseid) {
-            $sql .= 'AND c.id = :cid ';
-            $params['cid'] = $courseid;
-        }
-        if ($coursename) {
-            $sql .= "AND c.fullname LIKE :cname ";
-            $params['cname'] = '%' . $DB->sql_like_escape($coursename) . '%';
-        }
-
-        $ids = array_keys($DB->get_records_sql_menu($sql, $params));
-        if (!empty($ids)) {
-            [$insql, $inparams] = $DB->get_in_or_equal($ids);
-            $sql = 'UPDATE {lifecyclestep_adminapprove} ' .
-                'SET status = ' . ($action == PROCEED_ALL ? 1 : 2) . ' ' .
-                'WHERE status = 0 ' .
-                'AND processid ' . $insql;
-            $DB->execute($sql, $inparams);
-        }
+        redirect($PAGE->url);
     }
-    redirect($PAGE->url);
 }
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
@@ -165,39 +140,10 @@ if ($hasrecords) {
     echo get_string('courses_waiting', 'lifecyclestep_adminapprove',
             ['step' => $step->instancename, 'workflow' => $workflow->title]);
 
-    $rollbackallcustlabel =
-        settings_manager::get_settings($step->id, settings_type::STEP)['rollbackallbuttonlabel'] ?? null;
-    $proceedallcustlabel =
-        settings_manager::get_settings($step->id, settings_type::STEP)['proceedallbuttonlabel'] ?? null;
-    $rollbackselectedcustlabel =
-        settings_manager::get_settings($step->id, settings_type::STEP)['rollbackselectedbuttonlabel'] ?? null;
-    $proceedselectedcustlabel =
-        settings_manager::get_settings($step->id, settings_type::STEP)['proceedselectedbuttonlabel'] ?? null;
-
-    echo '<div class="mt-2 mb-2">';
-    echo \html_writer::div('0', 'totalrows badge badge-primary badge-pill mr-2',
+    echo '<div class="mt-2">';
+    echo \html_writer::span('0', 'totalrows badge badge-primary badge-pill mr-1 mb-1',
         ['id' => 'adminapprove_totalrows']);
-    $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK_ALL]),
-        !empty($rollbackallcustlabel) ? $rollbackallcustlabel :
-            get_string(ROLLBACK_ALL, 'lifecyclestep_adminapprove'));
-    echo $OUTPUT->render($button);
-
-    $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED_ALL]),
-        !empty($proceedallcustlabel) ? $proceedallcustlabel :
-            get_string(PROCEED_ALL, 'lifecyclestep_adminapprove'),
-        'post', 'primary');
-    echo $OUTPUT->render($button);
-
-    $button = new \single_button(new moodle_url($PAGE->url, ['act' => ROLLBACK]),
-        !empty($rollbackselectedcustlabel) ? $rollbackselectedcustlabel :
-        get_string('rollbackselected', 'lifecyclestep_adminapprove'), 'post', 'secondary');
-    echo $OUTPUT->render($button);
-
-    $button = new \single_button(new moodle_url($PAGE->url, ['act' => PROCEED]),
-        !empty($proceedselectedcustlabel) ? $proceedselectedcustlabel :
-        get_string('proceedselected', 'lifecyclestep_adminapprove'), 'post', 'primary');
-    echo $OUTPUT->render($button);
-
+    echo \html_writer::span(get_string('courses'));
     echo '</div>';
 
     echo '<form action="" method="post"><input type="hidden" name="sesskey" value="' . sesskey() . '">';
@@ -205,8 +151,7 @@ if ($hasrecords) {
     $table->out(100, false);
     echo '</form>';
 
-    $PAGE->requires->js_call_amd('lifecyclestep_adminapprove/init', 'init',
-        [sesskey(), $PAGE->url->out(), $table->totalrows]);
+    $PAGE->requires->js_call_amd('lifecyclestep_adminapprove/init', 'init', [$table->totalrows]);
 } else {
     echo get_string('no_courses_waiting', 'lifecyclestep_adminapprove',
             ['step' => $step->instancename, 'workflow' => $workflow->title]);

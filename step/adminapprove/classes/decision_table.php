@@ -24,6 +24,7 @@
 
 namespace lifecyclestep_adminapprove;
 
+use core\output\single_button;
 use core_date;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\step_manager;
@@ -40,6 +41,16 @@ require_once($CFG->libdir . '/tablelib.php');
 class decision_table extends \table_sql {
 
     /**
+     * @var array "cached" lang strings
+     */
+    private $strings;
+
+    /**
+     * @var int stepid
+     */
+    private $stepid;
+
+    /**
      * Constructs the table.
      * @param int $stepid
      * @param int $courseid
@@ -49,6 +60,27 @@ class decision_table extends \table_sql {
      */
     public function __construct($stepid, $courseid, $category, $coursename) {
         parent::__construct('lifecyclestep_adminapprove-decisiontable');
+
+        $this->stepid = $stepid;
+
+        $rollbackcustlabel =
+            settings_manager::get_settings($stepid, settings_type::STEP)['rollbackbuttonlabel'] ?? null;
+        $this->strings['rollbackbuttonlabel'] = !empty($rollbackcustlabel) ?
+            $rollbackcustlabel : get_string('rollback', 'lifecyclestep_adminapprove');
+        $proceedcustlabel =
+            settings_manager::get_settings($stepid, settings_type::STEP)['proceedbuttonlabel'] ?? null;
+        $this->strings['proceedbuttonlabel'] = !empty($proceedcustlabel) ?
+            $proceedcustlabel : get_string('proceed', 'lifecyclestep_adminapprove');
+        $rollbackselectedcustlabel =
+            settings_manager::get_settings($stepid, settings_type::STEP)['rollbackselectedbuttonlabel'] ?? null;
+        $this->strings['rollbackselectedbuttonlabel'] = !empty($rollbackselectedcustlabel) ?
+            $rollbackselectedcustlabel : get_string('rollbackselected', 'lifecyclestep_adminapprove');
+        $proceedselectedcustlabel =
+            settings_manager::get_settings($stepid, settings_type::STEP)['proceedselectedbuttonlabel'] ?? null;
+        $this->strings['proceedselectedbuttonlabel'] = !empty($proceedselectedcustlabel) ?
+            $proceedselectedcustlabel : get_string('proceedselected', 'lifecyclestep_adminapprove');
+
+
         $this->define_baseurl("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid");
         $this->define_columns(['checkbox', 'courseid', 'course', 'category', 'startdate', 'tools']);
         $this->define_headers(
@@ -148,29 +180,36 @@ class decision_table extends \table_sql {
      * @throws \coding_exception|\dml_exception
      */
     public function col_tools($row) {
+        global $OUTPUT;
 
-        $step = step_manager::get_step_instance($row->sid);
+        $button = new \single_button(
+            new \moodle_url('', [
+                'action' => 'rollback',
+                'cid' => $row->id,
+                'stepid' => $row->sid,
+                'sesskey' => sesskey()
+            ]),
+            $this->strings['rollbackbuttonlabel'],
+            'post',
+            single_button::BUTTON_SECONDARY,
+            ['class' => 'mr-1']
+        );
+        $output = $OUTPUT->render($button);
 
-        $rollbackcustlabel =
-            settings_manager::get_settings($step->id, settings_type::STEP)['rollbackbuttonlabel'] ?? null;
-        $rollbackbutton = !empty($rollbackcustlabel) ?
-            $rollbackcustlabel : get_string('rollback', 'lifecyclestep_adminapprove');
+        $button = new \single_button(
+            new \moodle_url('', [
+                'action' => 'proceed',
+                'cid' => $row->id,
+                'stepid' => $row->sid,
+                'sesskey' => sesskey()
+            ]),
+            $this->strings['proceedbuttonlabel'],
+            'post',
+            single_button::BUTTON_PRIMARY,
+            ['class' => 'mr-1 ml-0 mt-1']
+        );
+        $output .= $OUTPUT->render($button);
 
-        $output = \html_writer::start_div('singlebutton mr-1');
-        $output .= \html_writer::tag('button', $rollbackbutton ,
-            ['class' => 'btn btn-secondary adminapprove-action', 'data-action' => 'rollback', 'data-content' => $row->id,
-                'type' => 'button']);
-        $output .= \html_writer::end_div();
-
-        $proceedcustlabel =
-            settings_manager::get_settings($step->id, settings_type::STEP)['proceedbuttonlabel'] ?? null;
-        $proceedbutton = !empty($proceedcustlabel) ?
-            $proceedcustlabel : get_string('proceed', 'lifecyclestep_adminapprove');
-        $output .= \html_writer::start_div('singlebutton mr-1 ml-0 mt-1');
-        $output .= \html_writer::tag('button', $proceedbutton,
-            ['class' => 'btn btn-primary adminapprove-action', 'data-action' => 'proceed', 'data-content' => $row->id,
-                'type' => 'button']);
-        $output .= \html_writer::end_div();
         return $output;
     }
 
@@ -184,5 +223,28 @@ class decision_table extends \table_sql {
         echo $this->render_reset_button();
         $this->print_initials_bar();
         echo get_string('nothingtodisplay', 'lifecyclestep_adminapprove');
+    }
+
+    /**
+     * Hook that can be overridden in child classes to wrap a table in a form
+     * for example. Called only when there is data to display and not
+     * downloading.
+     */
+    public function wrap_html_start() {
+        parent::wrap_html_start();
+
+        $output = \html_writer::div(
+            $this->strings['rollbackselectedbuttonlabel'],
+            'selectedbutton btn btn-secondary mb-1',
+            ['action' => 'rollback', 'sesskey' => sesskey(), 'stepid' => $this->stepid]
+        );
+
+        $output .= \html_writer::div(
+            $this->strings['proceedselectedbuttonlabel'],
+            'selectedbutton btn btn-primary ml-1 mb-1',
+            ['action' => 'proceed', 'sesskey' => sesskey(), 'stepid' => $this->stepid]
+        );
+
+        echo $output;
     }
 }

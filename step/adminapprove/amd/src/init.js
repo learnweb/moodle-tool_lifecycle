@@ -22,7 +22,7 @@
  */
 define(['jquery'], function($) {
     return {
-        init: function(sesskey, url, totalrows) {
+        init: function(totalrows) {
 
             $('#adminapprove_totalrows').html(totalrows);
 
@@ -30,27 +30,49 @@ define(['jquery'], function($) {
                 $('input[name="c[]"]').prop('checked', $('input[name="checkall"]').prop('checked'));
             });
 
-            $('.adminapprove-action').each(function() {
-                $(this).click(function() {
-                    var post = {
-                        'act': $(this).attr('data-action'),
-                        'c[]': $(this).attr('data-content'),
-                        'sesskey': sesskey
-                    };
-                    var form = document.createElement('form');
+            $('.selectedbutton').click(function() {
+                const sesskey = this.getAttribute('sesskey');
+                const stepid = this.getAttribute('stepid');
+                const action = this.getAttribute('action');
+                const checkboxes = document.querySelectorAll('input[name="c[]"]');
+                let data = [];
+                let input;
+                for (let i = 0; checkboxes[i]; ++i) {
+                    if (checkboxes[i].checked) {
+                        data.push(checkboxes[i].value);
+                    }
+                }
+                let datalength = data.length;
+                if (datalength > 0) {
+                    let form = document.createElement('form');
                     form.hidden = true;
                     form.method = 'post';
-                    form.action = url;
-                    for (var k in post) {
-                        var input = document.createElement('input');
+                    form.action = '';
+                    for (let i = 0; i < datalength; i++) {
+                        input = document.createElement('input');
                         input.type = 'hidden';
-                        input.name = k;
-                        input.value = post[k];
+                        input.name = 'c[]';
+                        input.value = data[i];
                         form.append(input);
                     }
+                    input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'action';
+                    input.value = action;
+                    form.append(input);
+                    input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'stepid';
+                    input.value = stepid;
+                    form.append(input);
+                    input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'sesskey';
+                    input.value = sesskey;
+                    form.append(input);
                     document.body.append(form);
                     form.submit();
-                });
+                }
             });
         }
     };
