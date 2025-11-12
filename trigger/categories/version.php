@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2025050400;
+$plugin->version = 2025050400.01;
 $plugin->requires = 2022112800; // Requires Moodle 4.1+.
 $plugin->supported = [401, 405];
 $plugin->component = 'lifecycletrigger_categories';
