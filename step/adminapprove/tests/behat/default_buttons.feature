@@ -9,12 +9,10 @@ Feature: Add an admin approve step without 'button' customisation
       | fullname | shortname | category |
       | Course 1 | C1 | 0 |
       | Course 2 | C2 | 0 |
-      | Course 3 | C3 | 0 |
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
       | teacher1 | C2 | editingteacher |
-      | teacher1 | C3 | teacher |
     Given I log in as "admin"
     And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
@@ -59,8 +57,6 @@ Feature: Add an admin approve step without 'button' customisation
 
     Then I should see "Rollback"
     And I should see "Proceed"
-    And I should see "Rollback all"
-    And I should see "Proceed all"
     And I should see "Rollback selected"
     And I should see "Proceed selected"
 
@@ -84,7 +80,8 @@ Feature: Add an admin approve step without 'button' customisation
 
     And I am on approvals page
     And I click on "admin approve step" "link"
-    When I click on "Proceed all" "button"
+    And I check "checkall"
+    When I click on "Proceed selected" "button"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds
@@ -114,7 +111,8 @@ Feature: Add an admin approve step without 'button' customisation
     And I am on approvals page
     And I click on "admin approve step" "link"
 
-    When I click on "Rollback all" "button"
+    And I check "checkall"
+    When I click on "Rollback selected" "button"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds

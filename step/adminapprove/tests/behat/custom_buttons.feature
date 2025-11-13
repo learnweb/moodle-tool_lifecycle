@@ -8,12 +8,10 @@ Feature: Add an admin approve step with 'button' customisation
       | fullname | shortname | category |
       | Course 1 | C1 | 0 |
       | Course 2 | C2 | 0 |
-      | Course 3 | C3 | 0 |
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
       | teacher1 | C2 | editingteacher |
-      | teacher1 | C3 | editingteacher |
     Given I log in as "admin"
     And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
@@ -32,8 +30,6 @@ Feature: Add an admin approve step with 'button' customisation
     And I set the field "Instance name" to "Admin approve step"
     And I set the field "Label of the proceed button" to "Create backup"
     And I set the field "Label of the rollback button" to "Cancel workflow"
-    And I set the field "Label of the proceed all button" to "All create backup"
-    And I set the field "Label of the rollback all button" to "All cancel workflow"
     And I set the field "Label of the proceed selected button" to "Selected create backup"
     And I set the field "Label of the rollback selected button" to "Selected cancel workflow"
     And I press "Save changes"
@@ -61,12 +57,10 @@ Feature: Add an admin approve step with 'button' customisation
 
     When I am on approvals page
     And I click on "Admin approve step" "link"
-    Then I should see "Cancel workflow"
-    And I should see "Create backup"
-    And I should see "All cancel workflow"
-    And I should see "All create backup"
-    And I should see "Selected cancel workflow"
+    Then I should see "Create backup"
+    And I should see "Cancel workflow"
     And I should see "Selected create backup"
+    And I should see "Selected cancel workflow"
 
   @javascript
   Scenario: Proceed on approval page (customisation)
@@ -88,7 +82,8 @@ Feature: Add an admin approve step with 'button' customisation
 
     When I am on approvals page
     And I click on "Admin approve step" "link"
-    And I click on "All create backup" "button"
+    And I check "checkall"
+    And I click on "Selected create backup" "button"
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
@@ -118,7 +113,8 @@ Feature: Add an admin approve step with 'button' customisation
 
     When I am on approvals page
     And I click on "Admin approve step" "link"
-    And I click on "All cancel workflow" "button"
+    And I check "checkall"
+    And I click on "Selected cancel workflow" "button"
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
