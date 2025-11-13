@@ -24,6 +24,8 @@
 
 namespace lifecyclestep_adminapprove;
 
+use core\exception\coding_exception;
+use core\exception\moodle_exception;
 use core\output\single_button;
 use core_date;
 use tool_lifecycle\local\manager\settings_manager;
@@ -176,7 +178,8 @@ class decision_table extends \table_sql {
      * Show the availble tool/actions for a column.
      * @param object $row
      * @return string
-     * @throws \coding_exception|\dml_exception
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public function col_tools($row) {
         global $OUTPUT;
@@ -184,7 +187,7 @@ class decision_table extends \table_sql {
         $button = new \single_button(
             new \moodle_url('', [
                 'action' => 'rollback',
-                'cid' => $row->id,
+                'c[]' => $row->id,
                 'stepid' => $row->sid,
                 'sesskey' => sesskey(),
             ]),
@@ -198,7 +201,7 @@ class decision_table extends \table_sql {
         $button = new \single_button(
             new \moodle_url('', [
                 'action' => 'proceed',
-                'cid' => $row->id,
+                'c[]' => $row->id,
                 'stepid' => $row->sid,
                 'sesskey' => sesskey(),
             ]),
@@ -237,13 +240,11 @@ class decision_table extends \table_sql {
             'selectedbutton btn btn-secondary mb-1',
             ['action' => 'rollback', 'sesskey' => sesskey(), 'stepid' => $this->stepid]
         );
-
         $output .= \html_writer::div(
             $this->strings['proceedselectedbuttonlabel'],
             'selectedbutton btn btn-primary ml-1 mb-1',
             ['action' => 'proceed', 'sesskey' => sesskey(), 'stepid' => $this->stepid]
         );
-
         echo $output;
     }
 }

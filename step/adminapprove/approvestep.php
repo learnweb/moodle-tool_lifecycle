@@ -146,10 +146,8 @@ if ($hasrecords) {
     echo \html_writer::span(get_string('courses'));
     echo '</div>';
 
-    echo '<form action="" method="post"><input type="hidden" name="sesskey" value="' . sesskey() . '">';
     $table = new lifecyclestep_adminapprove\decision_table($stepid, $courseid, $category, $coursename);
     $table->out(100, false);
-    echo '</form>';
 
     $PAGE->requires->js_call_amd('lifecyclestep_adminapprove/init', 'init', [$table->totalrows]);
 } else {
