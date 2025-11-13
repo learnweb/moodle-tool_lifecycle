@@ -122,7 +122,7 @@ class interaction_remaining_table extends interaction_table {
      * @throws \moodle_exception
      */
     public function col_tools($row) {
-        global $PAGE, $OUTPUT;
+        global $PAGE, $OUTPUT, $DB;
 
         if ($row->processid !== null) {
             return '--';
@@ -132,6 +132,46 @@ class interaction_remaining_table extends interaction_table {
         }
         $actions = [];
         foreach ($this->availabletools as $tool) {
+            // Check if there is an automatic trigger AND associated with the manual trigger.
+            $records = $DB->get_records_select('tool_lifecycle_trigger', "subpluginname != :plugin and workflowid in 
+                (select workflowid from {tool_lifecycle_trigger} where id = :id)",
+                ['id' => $tool->triggerid, 'plugin' => 'manual']);
+            if (!empty($records)) {
+                // There is at least one automatic trigger associated
+                // => check for AND condition.
+                $field = $DB->get_field('tool_lifecycle_workflow', 'andor', ['id' => $records[0]->workflowid]);
+                if ($field) {
+                    // No AND condition => OR condition is not supported.
+                    echo 'OR condition is not supported.<br>';
+                    continue;
+                }
+                // Ok, we have an AND condition =>
+                // Check if courses belonging to the other triggers fit.
+                // var_dump($records);
+                $triggers = [];
+                foreach ($records as $record) {
+                    $triggers[] = $record;
+                }
+                if (count($triggers) > 0) {
+                    // var_dump($triggers);
+                    // echo '<br><br>';
+                    $processor = new \tool_lifecycle\processor();
+                    $recordset = $processor->get_course_recordset($triggers);
+                    // var_dump($recordset);
+                    $found = false;
+                    foreach ($recordset as $element) {
+                        if ($row->courseid === $element->id) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if (!$found) {
+                        continue;
+                    }
+                }
+            }
+
+            // Check capability.
             if (has_capability($tool->capability, \context_course::instance($row->courseid), null, false)) {
                 $actions[$tool->triggerid] = new \action_menu_link_secondary(
                     new \moodle_url($PAGE->url, ['triggerid' => $tool->triggerid,
