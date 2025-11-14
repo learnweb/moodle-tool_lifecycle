@@ -243,7 +243,7 @@ class decision_table extends \table_sql {
                 'stepid' => $this->stepid,
                 'name' => 'button_rollback_selected',
                 'value' => $this->strings['rollbackselectedbuttonlabel'],
-                'class' => 'selectedbutton btn btn-secondary mb-1'
+                'class' => 'selectedbutton btn btn-secondary mb-1',
             ]
         );
         $output .= \html_writer::empty_tag('input',
@@ -254,7 +254,7 @@ class decision_table extends \table_sql {
                 'stepid' => $this->stepid,
                 'name' => 'button_proceed_selected',
                 'value' => $this->strings['proceedselectedbuttonlabel'],
-                'class' => 'selectedbutton btn btn-primary ml-1 mb-1'
+                'class' => 'selectedbutton btn btn-primary ml-1 mb-1',
             ]
         );
 
