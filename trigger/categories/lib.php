@@ -144,7 +144,7 @@ class categories extends base_automatic {
      */
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
         $type = $mform->getElementType('instancename');
-        if ($type ?? "" == "text") {
+        if (($type ?? "") != "text") {
             if (is_array($settings) && array_key_exists('categories', $settings)) {
                 $triggercategories = explode(",", $settings['categories']);
             } else {
