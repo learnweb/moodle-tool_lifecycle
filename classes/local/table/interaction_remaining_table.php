@@ -43,6 +43,10 @@ class interaction_remaining_table extends interaction_table {
 
     /** @var manual_trigger_tool[] $availabletools list of all available trigger tools. */
     private $availabletools;
+    /** @var array[] $trigger2courses map from trigger id to courses that are selected by automatic trigger(s)
+     * which is (are) assiciated to manual trigger.
+     */
+    private $trigger2courses = [];
 
     /**
      * Constructor for deactivated_workflows_table.
@@ -51,9 +55,36 @@ class interaction_remaining_table extends interaction_table {
      */
     public function __construct($uniqueid, $courseids) {
         parent::__construct($uniqueid);
-        global $PAGE, $CFG;
+        global $PAGE, $CFG, $DB;
 
         $this->availabletools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
+        foreach ($this->availabletools as $tool) {
+            // Check if there is an automatic trigger associated with the manual trigger.
+            $records = $DB->get_records_select('tool_lifecycle_trigger', "subpluginname != :plugin and workflowid in
+                (select workflowid from {tool_lifecycle_trigger} where id = :id)",
+                ['id' => $tool->triggerid, 'plugin' => 'manual']);
+            if ($records != false && !empty($records)) {
+                // There is at least one automatic trigger associated
+                // => check for AND condition.
+                $field = $DB->get_field('tool_lifecycle_workflow', 'andor', ['id' => $records[0]->workflowid]);
+                if ($field) {
+                    // No AND condition => OR condition is not supported.
+                    echo 'OR condition is not supported.<br>';
+                    continue;
+                }
+                // Ok, we have an AND condition =>
+                // Check if courses belonging to the other triggers fit.
+                $triggers = [];
+                foreach ($records as $record) {
+                    $triggers[] = $record;
+                }
+                if (count($triggers) > 0) {
+                    $processor = new \tool_lifecycle\processor();
+                    $recordset = $processor->get_course_recordset($triggers);
+                    $this->trigger2courses[$tool->triggerid] = $recordset;
+                }
+            }
+        }
 
         // COALESCE returns l.time if l.time != null and 0 otherwise.
         // We need to do this, so that courses without any action have a smaller timestamp than courses with an recorded action.
@@ -132,42 +163,22 @@ class interaction_remaining_table extends interaction_table {
         }
         $actions = [];
         foreach ($this->availabletools as $tool) {
-            // Check if there is an automatic trigger AND associated with the manual trigger.
-            $records = $DB->get_records_select('tool_lifecycle_trigger', "subpluginname != :plugin and workflowid in 
-                (select workflowid from {tool_lifecycle_trigger} where id = :id)",
-                ['id' => $tool->triggerid, 'plugin' => 'manual']);
-            if (!empty($records)) {
-                // There is at least one automatic trigger associated
-                // => check for AND condition.
-                $field = $DB->get_field('tool_lifecycle_workflow', 'andor', ['id' => $records[0]->workflowid]);
-                if ($field) {
-                    // No AND condition => OR condition is not supported.
-                    echo 'OR condition is not supported.<br>';
+            // Check if the manual trigegr has at least one automatic trigger associated.
+            if (array_key_exists($tool->triggerid, $this->trigger2courses)) {
+                // There is at least one automatic trigger =>
+                // Check if 'this' course is included in course set.
+                $found = false;
+                foreach ($this->trigger2courses[$tool->triggerid] as $element) {
+                    if ($row->courseid === $element->id) {
+                        // Course is included in course set of automatic trigger(s).
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found) {
+                    // Course is not included in automatic trigger(s) set
+                    // => do not display action in action menu.
                     continue;
-                }
-                // Ok, we have an AND condition =>
-                // Check if courses belonging to the other triggers fit.
-                // var_dump($records);
-                $triggers = [];
-                foreach ($records as $record) {
-                    $triggers[] = $record;
-                }
-                if (count($triggers) > 0) {
-                    // var_dump($triggers);
-                    // echo '<br><br>';
-                    $processor = new \tool_lifecycle\processor();
-                    $recordset = $processor->get_course_recordset($triggers);
-                    // var_dump($recordset);
-                    $found = false;
-                    foreach ($recordset as $element) {
-                        if ($row->courseid === $element->id) {
-                            $found = true;
-                            break;
-                        }
-                    }
-                    if (!$found) {
-                        continue;
-                    }
                 }
             }
 
