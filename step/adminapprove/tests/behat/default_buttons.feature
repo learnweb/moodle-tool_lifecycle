@@ -1,5 +1,5 @@
 @tool @tool_lifecycle @lifecyclestep @lifecyclestep_adminapprove
-Feature: Add an admin approve step without 'button' customisation
+Feature: Add an admin approve step without button label customisation
 
   Background:
     Given the following "users" exist:
