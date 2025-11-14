@@ -235,16 +235,29 @@ class decision_table extends \table_sql {
     public function wrap_html_start() {
         parent::wrap_html_start();
 
-        $output = \html_writer::div(
-            $this->strings['rollbackselectedbuttonlabel'],
-            'selectedbutton btn btn-secondary mb-1',
-            ['action' => 'rollback', 'sesskey' => sesskey(), 'stepid' => $this->stepid]
+        $output = \html_writer::empty_tag('input',
+            [
+                'type' => 'button',
+                'action' => 'rollback',
+                'sesskey' => sesskey(),
+                'stepid' => $this->stepid,
+                'name' => 'button_rollback_selected',
+                'value' => $this->strings['rollbackselectedbuttonlabel'],
+                'class' => 'selectedbutton btn btn-secondary mb-1'
+            ]
         );
-        $output .= \html_writer::div(
-            $this->strings['proceedselectedbuttonlabel'],
-            'selectedbutton btn btn-primary ml-1 mb-1',
-            ['action' => 'proceed', 'sesskey' => sesskey(), 'stepid' => $this->stepid]
+        $output .= \html_writer::empty_tag('input',
+            [
+                'type' => 'button',
+                'action' => 'proceed',
+                'sesskey' => sesskey(),
+                'stepid' => $this->stepid,
+                'name' => 'button_proceed_selected',
+                'value' => $this->strings['proceedselectedbuttonlabel'],
+                'class' => 'selectedbutton btn btn-primary ml-1 mb-1'
+            ]
         );
+
         echo $output;
     }
 }

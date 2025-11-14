@@ -184,8 +184,8 @@ class courses_in_step_table extends \table_sql {
 
         $element = step_manager::get_step_instance($row->stepinstanceid);
 
-        $rollback = settings_manager::get_settings($element->id, settings_type::STEP)['rollbackbutton'] ?? null;
-        $proceed = settings_manager::get_settings($element->id, settings_type::STEP)['proceedbutton'] ?? null;
+        $rollback = settings_manager::get_settings($element->id, settings_type::STEP)['rollbackbuttonlabel'] ?? null;
+        $proceed = settings_manager::get_settings($element->id, settings_type::STEP)['proceedbuttonlabel'] ?? null;
 
         $output = $OUTPUT->single_button(
             new \moodle_url($PAGE->url, ['action' => 'rollback', 'processid' => $row->processid,

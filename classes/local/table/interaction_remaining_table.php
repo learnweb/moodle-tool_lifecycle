@@ -132,7 +132,7 @@ class interaction_remaining_table extends interaction_table {
         }
         $actions = [];
         foreach ($this->availabletools as $tool) {
-            if (has_capability($tool->capability, \context_course::instance($row->courseid), null, false)) {
+            if (has_capability($tool->capability, \context_course::instance($row->courseid), null, true)) {
                 $actions[$tool->triggerid] = new \action_menu_link_secondary(
                     new \moodle_url($PAGE->url, ['triggerid' => $tool->triggerid,
                         'courseid' => $row->courseid, 'sesskey' => sesskey(), ]),
