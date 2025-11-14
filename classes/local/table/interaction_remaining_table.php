@@ -63,10 +63,11 @@ class interaction_remaining_table extends interaction_table {
             $records = $DB->get_records_select('tool_lifecycle_trigger', "subpluginname != :plugin and workflowid in
                 (select workflowid from {tool_lifecycle_trigger} where id = :id)",
                 ['id' => $tool->triggerid, 'plugin' => 'manual']);
-            if ($records != false && !empty($records)) {
+            if ($records && count($records) > 0) {
+                $first = reset($records);
                 // There is at least one automatic trigger associated
                 // => check for AND condition.
-                $field = $DB->get_field('tool_lifecycle_workflow', 'andor', ['id' => $records[0]->workflowid]);
+                $field = $DB->get_field('tool_lifecycle_workflow', 'andor', ['id' => $first->workflowid]);
                 if ($field) {
                     // No AND condition => OR condition is not supported.
                     echo 'OR condition is not supported.<br>';
