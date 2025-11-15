@@ -300,7 +300,7 @@ class processor {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function get_course_recordset($triggers, $nositecourse = true, $forcounting = false) {
+    public function  get_course_recordset($triggers, $nositecourse = true, $forcounting = false) {
         global $DB, $SESSION;
 
         $where = " TRUE ";

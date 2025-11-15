@@ -57,7 +57,7 @@ final class trigger_test extends \advanced_testcase {
         $this->resetAfterTest(true);
         $this->setAdminUser();
         $this->processor = new processor();
-        $this->semindependentcourse = $this->getDataGenerator()->create_course(['startdate' => 915152400]);
+        $this->semindependentcourse = $this->getDataGenerator()->create_course(['startdate' => 946600000]);
         $this->semcourse = $this->getDataGenerator()->create_course(['startdate' => time()]);
     }
 
@@ -69,15 +69,15 @@ final class trigger_test extends \advanced_testcase {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(false);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
+        $triggeredcourses = $this->processor->get_course_recordset([$this->triggerinstance]);
         $foundsem = false;
         $foundsemindep = false;
-        foreach ($recordset as $element) {
-            if ($this->semcourse->id === $element->id) {
+        foreach ($triggeredcourses as $triggeredcourse) {
+            if ($triggeredcourse->id === $this->semcourse->id) {
                 $foundsem = true;
                 break;
             }
-            if ($this->semindependentcourse->id === $element->id) {
+            if ($triggeredcourse->id === $this->semindependentcourse->id) {
                 $foundsemindep = true;
                 break;
             }
