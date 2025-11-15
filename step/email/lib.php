@@ -118,7 +118,7 @@ class email extends libbase {
                     ['instanceid' => $step->id,
                         'touser' => $user->id, ]);
 
-                $parsedsettings = $this->replace_placeholders($settings, $user, $step->id, $mailentries);
+                $parsedsettings = $this->replace_placeholders($settings, $user, $mailentries);
                 $subject = $parsedsettings['subject'];
                 $content = $parsedsettings['content'];
                 $contenthtml = $parsedsettings['contenthtml'];
@@ -148,14 +148,13 @@ class email extends libbase {
     /**
      * Replaces certain placeholders within the mail template.
      * @param string[] $strings array of mail templates.
-     * @param core_user $user User object.
-     * @param int $stepid Id of the step instance.
+     * @param \stdClass $user User object.
      * @param array[] $mailentries Array consisting of course entries from the database.
      * @return string[] array of mail text.
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    public function replace_placeholders($strings, $user, $stepid, $mailentries) {
+    public function replace_placeholders($strings, $user, $mailentries) {
         global $CFG;
 
         $patterns = [];

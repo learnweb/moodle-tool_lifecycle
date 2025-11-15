@@ -50,12 +50,19 @@ final class lib_test extends \advanced_testcase {
         $course1 = $this->getDataGenerator()->create_course(['fullname' => 'Course 1', 'shortname' => 'C1']);
         $course2 = $this->getDataGenerator()->create_course(['fullname' => 'Course 2', 'shortname' => 'C2']);
         $lib = new email();
-        $response = $lib->replace_placeholders([
+        $response = $lib->replace_placeholders(
+            [
                 "##firstname##\n##lastname##\n##courses##\n##shortcourses##",
                 "##firstname##<br>##lastname##<br>##courses-html##<br>##shortcourses-html##",
-        ], $user1, 0, [(object) ['courseid' => $course1->id], (object) ['courseid' => $course2->id]]);
+            ],
+            $user1,
+            [
+                (object) ['courseid' => $course1->id],
+                (object) ['courseid' => $course2->id],
+            ]
+        );
         $this->assertCount(2, $response);
-        $this->assertEquals("Jane\nDoe\nCourse 1\nCourse 2\nC1\nC2", $response[0]);
+        $this->assertEquals("Jane\nDoe\nCourse 1\r\nCourse 2\nC1\r\nC2", $response[0]);
         $this->assertEquals("Jane<br>Doe<br>Course 1<br>Course 2<br>C1<br>C2", $response[1]);
     }
 }
