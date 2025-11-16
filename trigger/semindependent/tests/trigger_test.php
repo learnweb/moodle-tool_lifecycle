@@ -16,7 +16,6 @@
 
 namespace lifecycletrigger_semindependent;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 use tool_lifecycle_trigger_semindependent_generator as generator;
@@ -30,7 +29,6 @@ require_once(__DIR__ . '/generator/lib.php');
  * Trigger test for semester independent trigger.
  *
  * @package    lifecycletrigger_semindependent
- * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -63,7 +61,6 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if trigger for inclusion of semester independent courses works as expected.
-     * @covers \tool_lifecycle\trigger\semindependent
      */
     public function test_include_semester_independent(): void {
 
@@ -88,7 +85,6 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if trigger for exclusion of semester independent courses works as expected.
-     * @covers \tool_lifecycle\trigger\semindependent
      */
     public function test_exclude_semester_independent(): void {
 

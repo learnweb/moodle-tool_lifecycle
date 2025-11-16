@@ -45,7 +45,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
 
     /**
      * Set up environment for phpunit test.
-     * @return mixed data for test
+     * @return void data for test
      */
     protected function setUp(): void {
         // Recommended in Moodle docs to always include CFG.
@@ -58,7 +58,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
 
     /**
      * Test the locallib function for valid courses.
-     * @covers \tool_lifecycle\trigger\byrole
+     *
      * @return void
      * @throws \coding_exception
      * @throws \dml_exception
@@ -78,7 +78,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
 
     /**
      * Test the locallib function for a invalid course that is recognized for the first time.
-     * @covers \tool_lifecycle\trigger\byrole
+     *
      * @return void
      * @throws \coding_exception
      * @throws \dml_exception
@@ -99,7 +99,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
 
     /**
      * Test the locallib function for a invalid course that is old enough to be triggered.
-     * @covers \tool_lifecycle\trigger\byrole
+     *
      * @return void
      * @throws \coding_exception
      * @throws \dml_exception
@@ -124,7 +124,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
 
     /**
      * Test the locallib function for a course that was invalid and has a responsible person again.
-     * @covers \tool_lifecycle\trigger\byrole
+     *
      * @return void
      * @throws \coding_exception
      * @throws \dml_exception

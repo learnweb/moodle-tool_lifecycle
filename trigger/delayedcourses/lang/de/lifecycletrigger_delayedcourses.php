@@ -18,12 +18,14 @@
  * Lang strings for delayed course trigger
  *
  * @package lifecycletrigger_delayedcourses
+ * @copyright  2025 Thomas Niedermaier University of Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['delay'] = 'Dieser Trigger wird alle Kurse ausschließen, die durch Nutzerinteraktion verzögert wurden.';
-$string['plugindescription'] = 'Schließt Kurse von diesem Workflow aus, die durch Nutzeraktion verzögert wurden.';
-$string['pluginname'] = 'Verzögerte Kurse ausschließen - Trigger';
+$string['includegenerallydelayed'] = 'Generell verzögerte Kurse einschliessen';
+$string['includegenerallydelayed_help'] = 'Neben den im Rahmen des Workflows verzögerten Kursen werden auch generell verzögerte Kurse getriggered.';
+$string['plugindescription'] = 'Schließt im Rahmen des Workflows verzögerte und optional auch generell verzögerte Kurse in die Verarbeitung ein.';
+$string['pluginname'] = 'Verzögerte Kurse Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 

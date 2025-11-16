@@ -18,7 +18,6 @@
  * Trigger test for categories trigger.
  *
  * @package    lifecycletrigger_categories
- * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -37,7 +36,6 @@ require_once(__DIR__ . '/generator/lib.php');
  * Trigger test for categories trigger.
  *
  * @package    lifecycletrigger_categories
- * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -85,7 +83,6 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are in the category are correctly triggered.
-     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\categories
      */
     public function test_course_has_cat(): void {
 
@@ -110,7 +107,6 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are in the category are correctly triggered.
-     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\categories
      */
     public function test_course_within_cat(): void {
 
@@ -135,7 +131,6 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are not in the category are correctly triggered.
-     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\categories
      */
     public function test_course_not_within_cat(): void {
         $course = $this->getDataGenerator()->create_course();

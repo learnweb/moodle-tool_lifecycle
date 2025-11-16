@@ -159,21 +159,29 @@ class adminapprove extends libbase {
         $mform->addElement('text', $elementname, get_string('statusmessage', 'lifecyclestep_adminapprove'));
         $mform->addHelpButton($elementname, 'statusmessage', 'lifecyclestep_adminapprove');
         $mform->setType($elementname, PARAM_TEXT);
+        $mform->setDefault($elementname, get_string('statusmessagedefault', 'lifecyclestep_adminapprove'));
+
+        $mform->addElement('static', 'statusmsgdefault', " ",
+            get_string('default').": ".get_string('statusmessagedefault', 'lifecyclestep_adminapprove'));
 
         $buttons = [
-            'proceedbuttonlabel',
-            'rollbackbuttonlabel',
-            'proceedselectedbuttonlabel',
-            'rollbackselectedbuttonlabel',
+            ['proceedbuttonlabel', get_string('proceed', 'lifecyclestep_adminapprove')],
+            ['rollbackbuttonlabel', get_string('rollback', 'lifecyclestep_adminapprove')],
+            ['proceedselectedbuttonlabel', get_string('proceedselected', 'lifecyclestep_adminapprove')],
+            ['rollbackselectedbuttonlabel', get_string('rollbackselected', 'lifecyclestep_adminapprove')],
         ];
 
         foreach ($buttons as $button) {
-            $elementname = $button;
+            $elementname = $button[0];
+
             $mform->addElement('text', $elementname,
                 get_string($elementname, 'lifecyclestep_adminapprove'));
             $mform->addHelpButton($elementname, $elementname, 'lifecyclestep_adminapprove');
             $mform->setType($elementname, PARAM_TEXT);
-            // Default: empty in order to keep translation.
+            $mform->setDefault($elementname, $button[1]);
+
+            $mform->addElement('static', $elementname."default", " ",
+                get_string('default').": ".$button[1]);
         }
     }
 

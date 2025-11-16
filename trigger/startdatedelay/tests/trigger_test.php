@@ -18,7 +18,6 @@
  * Trigger test for start date delay trigger.
  *
  * @package    lifecycletrigger_startdatedelay
- * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -36,7 +35,6 @@ require_once(__DIR__ . '/generator/lib.php');
  * Trigger test for start date delay trigger.
  *
  * @package    lifecycletrigger_startdatedelay
- * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -59,7 +57,6 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are newer than the default of 190 days are not triggered by this plugin.
-     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\startdatedelay
      */
     public function test_young_course(): void {
 
@@ -78,7 +75,6 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are older than the default of 190 days are triggered by this plugin.
-     * @covers \tool_lifecycle\processor \tool_lifecycle\trigger\startdatedelay
      */
     public function test_old_course(): void {
 

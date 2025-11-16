@@ -29,8 +29,6 @@ use tool_lifecycle\processor;
  * Tests the make invisible step.
  *
  * @package    lifecyclestep_makeinvisible
- * @group      lifecyclestep_makeinvisible
- * @category   test
  * @copyright  2019 Justus Dieckmann
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -53,12 +51,11 @@ final class make_invisible_test extends \advanced_testcase {
     /**
      * Test the visibility of courses after the step is executed.
      *
-     * @covers \tool_lifecycle\step\makeinvisible
      * @return void
-     * @throws coding_exception
-     * @throws dml_exception
-     * @throws dml_transaction_exception
-     * @throws moodle_exception
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
+     * @throws \moodle_exception
      */
     public function test_make_invisible(): void {
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');

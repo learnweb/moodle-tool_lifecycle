@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Unit tests for the lifecyclestep_email lib.php.
+ * Unit tests for the lifecyclestep_email.
  *
  * @package    lifecyclestep_email
  * @copyright  2024 Justus Dieckmann, University of Münster.
@@ -41,7 +41,6 @@ final class lib_test extends \advanced_testcase {
     /**
      * Tests \tool_lifecycle\step\email::replace_placeholders.
      *
-     * @covers \tool_lifecycle\step\email::replace_placeholders
      */
     public function test_replace_placeholders(): void {
         $this->resetAfterTest();
