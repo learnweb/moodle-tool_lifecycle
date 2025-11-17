@@ -26,6 +26,8 @@ use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\processor;
 
+// phpcs:disable moodle.PHPUnit.TestCaseCovers.Missing
+
 /**
  * Tests the make invisible step.
  *

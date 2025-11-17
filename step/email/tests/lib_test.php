@@ -23,7 +23,7 @@
  */
 namespace lifecyclestep_email;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use tool_lifecycle\step\email;
 
 defined('MOODLE_INTERNAL') || die();
@@ -34,17 +34,17 @@ require_once(__DIR__ . '/../lib.php');
  * Unit tests for the lifecyclestep_email lib.php.
  *
  * @package    lifecyclestep_email
+ * @category   test
+ * @coversDefaultClass \tool_lifecycle\step\email
  * @copyright  2024 Justus Dieckmann, University of Münster.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[CoversNothing]
 final class lib_test extends \advanced_testcase {
 
     /**
      * Tests \tool_lifecycle\step\email::replace_placeholders.
-     *
      */
-    #[CoversNothing]
+    #[CoversFunction('replace_placeholders')]
     public function test_replace_placeholders(): void {
         $this->resetAfterTest();
 

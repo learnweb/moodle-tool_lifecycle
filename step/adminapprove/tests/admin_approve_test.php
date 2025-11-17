@@ -25,6 +25,8 @@ use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\task\lifecycle_task;
 
+// phpcs:disable moodle.PHPUnit.TestCaseCovers.Missing
+
 /**
  * Tests the admin approve step.
  *
