@@ -43,8 +43,8 @@ class interaction_remaining_table extends interaction_table {
 
     /** @var manual_trigger_tool[] $availabletools list of all available trigger tools. */
     private $availabletools;
-    /** @var array[] $trigger2courses map from trigger id to courses that are selected by automatic trigger(s)
-     * which is (are) assiciated to manual trigger.
+    /** @var array[] $trigger2courses map from manual trigger id to courses that are selected by
+     * automatic trigger(s) which is (are) associated to manual trigger.
      */
     private $trigger2courses = [];
 
@@ -74,7 +74,7 @@ class interaction_remaining_table extends interaction_table {
                     continue;
                 }
                 // Ok, we have an AND condition =>
-                // Check if courses belonging to the other triggers fit.
+                // Store courses selected by this (these) trigger(s).
                 $triggers = [];
                 foreach ($records as $record) {
                     $triggers[] = $record;
@@ -164,7 +164,7 @@ class interaction_remaining_table extends interaction_table {
         }
         $actions = [];
         foreach ($this->availabletools as $tool) {
-            // Check if the manual trigegr has at least one automatic trigger associated.
+            // Check if the manual trigger has at least one automatic trigger associated.
             if (array_key_exists($tool->triggerid, $this->trigger2courses)) {
                 // There is at least one automatic trigger =>
                 // Check if 'this' course is included in course set.
