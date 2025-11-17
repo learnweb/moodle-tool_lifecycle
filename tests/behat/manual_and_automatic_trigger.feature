@@ -19,15 +19,15 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | Course C    | CC        | catc     |
       | Course Arch | CArch     | archive  |
     And the following "course enrolments" exist:
-      | user | course | role |
-      | teacher1 | CA | editingteacher |
-      | teacher1 | CBA | editingteacher |
-      | teacher1 | CC | editingteacher |
-      | teacher1 | CArch | editingteacher |
-      | teacher2| CA | editingteacher |
-      | teacher2 | CBA | teacher |
-      | teacher2 | CC | teacher |
-      | teacher2 | CArch | editingteacher |
+      | user     | course | role           |
+      | teacher1 | CA     | editingteacher |
+      | teacher1 | CBA    | editingteacher |
+      | teacher1 | CC     | editingteacher |
+      | teacher1 | CArch  | editingteacher |
+      | teacher2 | CA     | editingteacher |
+      | teacher2 | CBA    | teacher        |
+      | teacher2 | CC     | teacher        |
+      | teacher2 | CArch  | editingteacher |
 
   @javascript
   Scenario: Combine manual trigger with automatic categories trigger (backup and course deletion)
@@ -69,27 +69,32 @@ Feature: Add a manual trigger and test view and actions as a teacher
     Then I should see the tool "Delete course" in the "Course A" row of the "tool_lifecycle_remaining" table
     And I should see the tool "Delete course" in the "Course BA" row of the "tool_lifecycle_remaining" table
     And I should see the tool "Delete course" in the "Course C" row of the "tool_lifecycle_remaining" table
-    And I pause
-    And I should not see "Action" in the "Course Arch" row of the "tool_lifecycle_remaining" table
-    When I click on the tool "Delete course" in the "Course A" row of the "tool_lifecycle_remaining" table
-    And I pause
-    Then I should see "Course A"
-    And I should see "Course BA"
-    And I should not see the tool "Delete course" in the "Course 1" row of the "tool_lifecycle_remaining" table
-    And I should see the tool "Delete course" in the "Course 2" row of the "tool_lifecycle_remaining" table
+    And I should not see "Action" in the "Course Arch" "table_row"
+
+    When I click on the tool "Delete course" in the "Course C" row of the "tool_lifecycle_remaining" table
+    And I should not see the tool "Delete course" in the "Course C" row of the "tool_lifecycle_remaining" table
+    And I should see the tool "Delete course" in the "Course BA" row of the "tool_lifecycle_remaining" table
+    And I should see the tool "Delete course" in the "Course A" row of the "tool_lifecycle_remaining" table
     When I log out
     And I log in as "admin"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "20" seconds
+    And I wait "5" seconds
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "20" seconds
+    And I wait "5" seconds
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I wait "5" seconds
     And I log out
     And I log in as "teacher1"
     And I am on lifecycle view
-    Then I should not see "Course 1"
-    And I should see "Course 2"
+    Then I should not see "Course C"
+    And I should see "Course BA"
+    And I should see "Course A"
+    And I should see "Course Arch"
     When I log out
     And I log in as "admin"
     And I am on coursebackups page
-    Then I should see "Course 1"
-    And I should not see "Course 2"
+    Then I should see "Course C"
+    And I should not see "Course BA"
+    And I should not see "Course A"
+    And I should not see "Course Arch"
+
