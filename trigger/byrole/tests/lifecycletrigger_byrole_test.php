@@ -24,9 +24,8 @@
 
 namespace lifecycletrigger_byrole;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use tool_lifecycle\processor;
-use tool_lifecycle\local\response\trigger_response;
+
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
@@ -40,7 +39,6 @@ require_once(__DIR__ . '/../lib.php');
  * @copyright  2017 Tobias Reischmann WWU Nina Herrmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[CoversNothing]
 final class lifecycletrigger_byrole_test extends \advanced_testcase {
 
     /** @var \tool_lifecycle\processor $processor Instance of the lifecycle processor */
@@ -66,7 +64,6 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    #[CoversNothing]
     public function test_lib_validcourse(): void {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');
@@ -87,7 +84,6 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    #[CoversNothing]
     public function test_lib_norolecourse(): void {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');
@@ -109,7 +105,6 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    #[CoversNothing]
     public function test_lib_norolefoundcourse(): void {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');
@@ -135,7 +130,6 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    #[CoversNothing]
     public function test_lib_rolefoundagain(): void {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');

@@ -23,7 +23,6 @@
  */
 namespace lifecyclestep_email;
 
-use PHPUnit\Framework\Attributes\CoversFunction;
 use tool_lifecycle\step\email;
 
 defined('MOODLE_INTERNAL') || die();
@@ -46,7 +45,6 @@ final class lib_test extends \advanced_testcase {
     /**
      * Tests \tool_lifecycle\step\email::replace_placeholders.
      */
-    #[CoversFunction('replace_placeholders')]
     public function test_replace_placeholders(): void {
         $this->resetAfterTest();
 

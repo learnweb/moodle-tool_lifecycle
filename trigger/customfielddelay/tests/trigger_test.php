@@ -23,7 +23,6 @@
  */
 namespace lifecycletrigger_customfielddelay;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 
@@ -41,7 +40,6 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2020 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[CoversNothing]
 final class trigger_test extends \advanced_testcase {
 
     /** @var $triggerinstance trigger_subplugin Instance of the trigger. */
@@ -85,7 +83,6 @@ final class trigger_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    #[CoversNothing]
     public function test_young_course(): void {
         $customfieldvalue = ['shortname' => 'test', 'value' => time() + 1000000];
         $course = $this->getDataGenerator()->create_course(['customfields' => [$customfieldvalue]]);
@@ -110,7 +107,6 @@ final class trigger_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    #[CoversNothing]
     public function test_young_course_with_second_customcourse_field(): void {
 
         // Add additional course field.
@@ -141,7 +137,6 @@ final class trigger_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    #[CoversNothing]
     public function test_old_course(): void {
 
         $customfieldvalue = ['shortname' => 'test', 'value' => time() - 1000000];

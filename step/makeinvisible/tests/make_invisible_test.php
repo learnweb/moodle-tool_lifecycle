@@ -20,7 +20,6 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../../tests/generator/lib.php');
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\workflow_manager;
@@ -35,7 +34,6 @@ use tool_lifecycle\processor;
  * @copyright  2019 Justus Dieckmann
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[CoversNothing]
 final class make_invisible_test extends \advanced_testcase {
 
     /**
@@ -61,7 +59,6 @@ final class make_invisible_test extends \advanced_testcase {
      * @throws \dml_transaction_exception
      * @throws \moodle_exception
      */
-    #[CoversNothing]
     public function test_make_invisible(): void {
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
         $workflow = $generator->create_workflow([], []);

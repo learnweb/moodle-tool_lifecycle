@@ -23,7 +23,6 @@
  */
 namespace lifecycletrigger_startdatedelay;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 
@@ -41,7 +40,6 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[CoversNothing]
 final class trigger_test extends \advanced_testcase {
 
     /** @var $triggerinstance trigger_subplugin Instance of the trigger. */
@@ -62,7 +60,6 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if courses, which are newer than the default of 190 days are not triggered by this plugin.
      */
-    #[CoversNothing]
     public function test_young_course(): void {
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - 50 * 24 * 60 * 60]);
@@ -81,7 +78,6 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if courses, which are older than the default of 190 days are triggered by this plugin.
      */
-    #[CoversNothing]
     public function test_old_course(): void {
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - 200 * 24 * 60 * 60]);

@@ -22,7 +22,6 @@
  */
 namespace tool_lifecycle\step;
 
-use core_user;
 use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;

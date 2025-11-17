@@ -23,7 +23,6 @@
  */
 namespace lifecycletrigger_categories;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 use tool_lifecycle\local\response\trigger_response;
@@ -42,7 +41,6 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[CoversNothing]
 final class trigger_test extends \advanced_testcase {
 
     /** @var trigger_subplugin $excludetrigger Trigger instance that excludes a category. */
@@ -88,7 +86,6 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if courses, which are in the category are correctly triggered.
      */
-    #[CoversNothing]
     public function test_course_has_cat(): void {
 
         $course = $this->getDataGenerator()->create_course(['category' => $this->category->id]);
@@ -113,7 +110,6 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if courses, which are in the category are correctly triggered.
      */
-    #[CoversNothing]
     public function test_course_within_cat(): void {
 
         $course = $this->getDataGenerator()->create_course(['category' => $this->childcategory->id]);
@@ -138,7 +134,6 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if courses, which are not in the category are correctly triggered.
      */
-    #[CoversNothing]
     public function test_course_not_within_cat(): void {
         $course = $this->getDataGenerator()->create_course();
 
