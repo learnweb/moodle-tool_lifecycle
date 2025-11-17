@@ -31,6 +31,8 @@ use tool_lifecycle\local\response\trigger_response;
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 
+// phpcs:disable moodle.PHPUnit.TestCaseCovers.Missing
+
 /**
  * Class lifecycletrigger_byrole_testcase
  *
