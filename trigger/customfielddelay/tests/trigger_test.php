@@ -83,6 +83,7 @@ final class trigger_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
+    #[CoversNothing]
     public function test_young_course(): void {
         $customfieldvalue = ['shortname' => 'test', 'value' => time() + 1000000];
         $course = $this->getDataGenerator()->create_course(['customfields' => [$customfieldvalue]]);
@@ -107,6 +108,7 @@ final class trigger_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
+    #[CoversNothing]
     public function test_young_course_with_second_customcourse_field(): void {
 
         // Add additional course field.
@@ -137,6 +139,7 @@ final class trigger_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
+    #[CoversNothing]
     public function test_old_course(): void {
 
         $customfieldvalue = ['shortname' => 'test', 'value' => time() - 1000000];

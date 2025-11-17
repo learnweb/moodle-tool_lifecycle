@@ -64,6 +64,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
+    #[CoversNothing]
     public function test_lib_validcourse(): void {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');
@@ -84,6 +85,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
+    #[CoversNothing]
     public function test_lib_norolecourse(): void {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');
@@ -105,6 +107,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
+    #[CoversNothing]
     public function test_lib_norolefoundcourse(): void {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');
@@ -130,6 +133,7 @@ final class lifecycletrigger_byrole_test extends \advanced_testcase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
+    #[CoversNothing]
     public function test_lib_rolefoundagain(): void {
         global $DB;
         $generator = $this->getDataGenerator()->get_plugin_generator('lifecycletrigger_byrole');

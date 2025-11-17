@@ -77,6 +77,7 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if trigger for inclusion of delayed courses works as expected.
      */
+    #[CoversNothing]
     public function test_include_delayedcourses(): void {
 
         $this->triggerinstance = generator::create_workflow_with_delayedcourses_trigger();

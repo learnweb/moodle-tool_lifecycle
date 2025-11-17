@@ -64,6 +64,7 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if trigger for inclusion of semester independent courses works as expected.
      */
+    #[CoversNothing]
     public function test_include_semester_independent(): void {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(false);
@@ -88,6 +89,7 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if trigger for exclusion of semester independent courses works as expected.
      */
+    #[CoversNothing]
     public function test_exclude_semester_independent(): void {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(true);

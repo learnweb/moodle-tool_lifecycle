@@ -44,6 +44,7 @@ final class lib_test extends \advanced_testcase {
      * Tests \tool_lifecycle\step\email::replace_placeholders.
      *
      */
+    #[CoversNothing]
     public function test_replace_placeholders(): void {
         $this->resetAfterTest();
 

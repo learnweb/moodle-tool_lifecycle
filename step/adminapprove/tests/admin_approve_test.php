@@ -43,6 +43,7 @@ final class admin_approve_test extends \advanced_testcase {
      * @throws \dml_transaction_exception
      * @throws \moodle_exception
      */
+    #[CoversNothing]
     public function test_admin_mail(): void {
         $this->resetAfterTest(true);
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');

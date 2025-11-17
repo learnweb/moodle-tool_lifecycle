@@ -59,6 +59,7 @@ final class make_invisible_test extends \advanced_testcase {
      * @throws \dml_transaction_exception
      * @throws \moodle_exception
      */
+    #[CoversNothing]
     public function test_make_invisible(): void {
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_lifecycle');
         $workflow = $generator->create_workflow([], []);
