@@ -1,5 +1,5 @@
 @tool @tool_lifecycle @manual_trigger
-Feature: Add a manual trigger and test view and actions as a teacher
+Feature: Combine triggers with and operation and test view and actions
 
   Background:
     Given the following "users" exist:
@@ -17,7 +17,7 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | Course A    | CA        | cata     |
       | Course BA   | CBA       | catba    |
       | Course C    | CC        | catc     |
-      | Course Arch | CArch     | archive  |
+      | ArchCourse | CArch     | archive  |
     And the following "course enrolments" exist:
       | user     | course | role           |
       | teacher1 | CA     | editingteacher |
@@ -25,8 +25,8 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | teacher1 | CC     | editingteacher |
       | teacher1 | CArch  | editingteacher |
       | teacher2 | CA     | editingteacher |
-      | teacher2 | CBA    | teacher        |
-      | teacher2 | CC     | teacher        |
+      | teacher2 | CBA    | student        |
+      | teacher2 | CC     | student        |
       | teacher2 | CArch  | editingteacher |
 
   @javascript
@@ -69,7 +69,7 @@ Feature: Add a manual trigger and test view and actions as a teacher
     Then I should see the tool "Delete course" in the "Course A" row of the "tool_lifecycle_remaining" table
     And I should see the tool "Delete course" in the "Course BA" row of the "tool_lifecycle_remaining" table
     And I should see the tool "Delete course" in the "Course C" row of the "tool_lifecycle_remaining" table
-    And I should not see "Action" in the "Course Arch" "table_row"
+    And I should not see "Action" in the "ArchCourse" "table_row"
 
     When I click on the tool "Delete course" in the "Course C" row of the "tool_lifecycle_remaining" table
     And I should not see the tool "Delete course" in the "Course C" row of the "tool_lifecycle_remaining" table
@@ -89,12 +89,67 @@ Feature: Add a manual trigger and test view and actions as a teacher
     Then I should not see "Course C"
     And I should see "Course BA"
     And I should see "Course A"
-    And I should see "Course Arch"
+    And I should see "ArchCourse"
     When I log out
     And I log in as "admin"
     And I am on coursebackups page
     Then I should see "Course C"
     And I should not see "Course BA"
     And I should not see "Course A"
-    And I should not see "Course Arch"
+    And I should not see "ArchCourse"
+
+  @javascript
+  Scenario: Combine automatic triggers (backup and course deletion)
+    Given I log in as "admin"
+    And I am on workflowdrafts page
+    And I click on "Create new workflow" "link"
+    And I set the following fields to these values:
+      | Title                      | My Workflow                               |
+      | Displayed workflow title   | Teachers view on workflow                 |
+    And I press "Save changes"
+
+    And I select "Trigger courses by roles missing" from the "tool_lifecycle-choose-trigger" singleselect
+    And I set the following fields to these values:
+      | Instance name              | Roles                                |
+      | Responsible Roles in courses | student                     |
+    And I press "Save changes"
+
+    And I select "Categories trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    And I set the following fields to these values:
+      | Instance name              | Categories                                |
+    And I set the following fields to these values:
+      | Categories, for which the workflow should be triggered              | cata, catc |
+    And I press "Save changes"
+
+    And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
+    And I set the field "Instance name" to "Create backup step"
+    And I press "Save changes"
+    And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
+    And I set the field "Instance name" to "Delete Course 2"
+    And I press "Save changes"
+
+    And I am on workflowdrafts page
+    And I press "Activate"
+
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I wait "2" seconds
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I wait "2" seconds
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I wait "2" seconds
+
+    And I log out
+    And I log in as "teacher1"
+    And I am on lifecycle view
+    Then I should not see "Course A"
+    And I should see "Course BA"
+    And I should see "Course C"
+    And I should see "ArchCourse"
+    When I log out
+    And I log in as "admin"
+    And I am on coursebackups page
+    Then I should see "Course A"
+    And I should not see "Course BA"
+    And I should not see "Course CS"
+    And I should not see "ArchCourse"
 
