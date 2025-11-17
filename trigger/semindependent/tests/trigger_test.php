@@ -16,6 +16,7 @@
 
 namespace lifecycletrigger_semindependent;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 use tool_lifecycle_trigger_semindependent_generator as generator;
@@ -32,6 +33,7 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[CoversNothing]
 final class trigger_test extends \advanced_testcase {
 
     /**@var processor Instance of the lifecycle processor */

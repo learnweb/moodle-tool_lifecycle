@@ -16,6 +16,7 @@
 
 namespace lifecycletrigger_delayedcourses;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\manager\settings_manager;
@@ -35,6 +36,7 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2025 Thomas Niedermaier University of Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[CoversNothing]
 final class trigger_test extends \advanced_testcase {
 
     /**@var processor Instance of the lifecycle processor */

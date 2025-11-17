@@ -24,6 +24,7 @@
 
 namespace lifecycletrigger_byrole;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use tool_lifecycle\processor;
 use tool_lifecycle\local\response\trigger_response;
 
@@ -32,12 +33,12 @@ require_once(__DIR__ . '/../lib.php');
 
 /**
  * Class lifecycletrigger_byrole_testcase
- * @category   test
+ *
  * @package    lifecycletrigger_byrole
- * @group      lifecycletrigger_byrole
  * @copyright  2017 Tobias Reischmann WWU Nina Herrmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[CoversNothing]
 final class lifecycletrigger_byrole_test extends \advanced_testcase {
 
     /** @var \tool_lifecycle\processor $processor Instance of the lifecycle processor */

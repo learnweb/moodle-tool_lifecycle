@@ -23,6 +23,7 @@
  */
 namespace lifecycletrigger_startdatedelay;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 
@@ -38,6 +39,7 @@ require_once(__DIR__ . '/generator/lib.php');
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[CoversNothing]
 final class trigger_test extends \advanced_testcase {
 
     /** @var $triggerinstance trigger_subplugin Instance of the trigger. */

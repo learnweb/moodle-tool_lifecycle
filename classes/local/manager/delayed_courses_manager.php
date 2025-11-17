@@ -166,6 +166,7 @@ class delayed_courses_manager {
 
     /**
      * Build where SQL for the processor to select courses delayed for workflow.
+     * @param int $workflowid workflow ID
      * @return array sql-where-clause and params
      */
     public static function get_course_delayed_all_wheresql($workflowid) {
