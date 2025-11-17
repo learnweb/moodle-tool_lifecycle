@@ -32,6 +32,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/generator/lib.php');
 
+// phpcs:disable moodle.PHPUnit.TestCaseCovers.Missing
+
 /**
  * Trigger test for start date delay trigger.
  *
