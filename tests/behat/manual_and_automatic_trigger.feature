@@ -152,4 +152,3 @@ Feature: Combine triggers with and operation and test view and actions
     And I should not see "Course BA"
     And I should not see "Course CS"
     And I should not see "ArchCourse"
-
