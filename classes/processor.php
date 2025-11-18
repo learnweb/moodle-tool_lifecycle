@@ -466,12 +466,9 @@ class processor {
 
         $triggercoursesall = [];
         $recordset = $this->get_course_recordset([$trigger], !$workflow->includesitecourse, true);
-        $response = $lib->default_response();
         while ($recordset->valid()) {
             $course = $recordset->current();
-            if ($lib->check_course_code()) {
-                $response = $lib->check_course($course, $trigger->id);
-            }
+            $response = $lib->check_course($course, $trigger->id);
             if ($response !== trigger_response::next()) {
                 $triggercoursesall[] = $course->id;
             }
@@ -589,27 +586,16 @@ class processor {
             while ($recordset->valid()) {
                 $course = $recordset->current();
                 if ($checkcoursecode) {
-                    $action = false;
+                    $excludecourse = false;
                     foreach ($autotriggers as $trigger) {
                         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                         $response = $lib->check_course($course, $trigger->id);
-                        if ($response == trigger_response::next()) {
-                            if (!$action) {
-                                $action = true;
-                            }
-                            continue;
-                        }
                         if ($response == trigger_response::exclude()) {
-                            if (!$action) {
-                                $action = true;
-                            }
-                            continue;
-                        }
-                        if ($response == trigger_response::trigger()) {
-                            continue;
+                            $excludecourse = true;
+                            break;
                         }
                     }
-                    if (!$action) {
+                    if (!$excludecourse) {
                         if ($course->hasprocess) {
                             $hasprocess++;
                             if ($course->delaycourse && $course->delaycourse > time()) {

@@ -32,13 +32,13 @@ namespace tool_lifecycle\local\response;
  */
 class trigger_response {
 
-    /** @var string Ask the next workflow if it wants to trigger the course. */
+    /** @var string Ask the next trigger if it wants to trigger the course. */
     const NEXT = 'next';
-    /** @var string Exclude the course from being processed by this and any succeeding workflow. */
+    /** @var string Exclude the course from being processed by this and any succeeding trigger. */
     const EXCLUDE = 'exclude';
     /** @var string Trigger a process for this workflow if all other triggers of this workflow say the same. */
     const TRIGGER = 'trigger';
-    /** @var string This trigger determines when the trigger selection takes place. */
+    /** @var string This trigger determines when the trigger selection for this workflow takes place. */
     const TRIGGERTIME = 'triggertime';
 
     /** @var string Value of the response. */
