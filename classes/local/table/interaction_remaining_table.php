@@ -82,7 +82,11 @@ class interaction_remaining_table extends interaction_table {
                 if (count($triggers) > 0) {
                     $processor = new \tool_lifecycle\processor();
                     $recordset = $processor->get_course_recordset($triggers);
-                    $this->trigger2courses[$tool->triggerid] = $recordset;
+                    $courses = [];
+                    foreach ($recordset as $element) {
+                        $courses[] = $element->id;
+                    }
+                    $this->trigger2courses[$tool->triggerid] = $courses;
                 }
             }
         }
@@ -170,7 +174,7 @@ class interaction_remaining_table extends interaction_table {
                 // Check if 'this' course is included in course set.
                 $found = false;
                 foreach ($this->trigger2courses[$tool->triggerid] as $element) {
-                    if ($row->courseid === $element->id) {
+                    if ($row->courseid === $element) {
                         // Course is included in course set of automatic trigger(s).
                         $found = true;
                         break;

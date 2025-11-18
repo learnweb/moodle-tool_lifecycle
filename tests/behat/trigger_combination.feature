@@ -1,5 +1,5 @@
 @tool @tool_lifecycle @manual_trigger
-Feature: Combine triggers with and operation and test view and actions
+Feature: Combine triggers with 'and' operation and test view and actions
 
   Background:
     Given the following "users" exist:
@@ -31,6 +31,7 @@ Feature: Combine triggers with and operation and test view and actions
 
   @javascript
   Scenario: Combine manual trigger with automatic categories trigger (backup and course deletion)
+    # => category archive is excluded, so course ArchCourse shall not be deleted
     Given I log in as "admin"
     And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
