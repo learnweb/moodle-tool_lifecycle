@@ -140,7 +140,7 @@ class triggered_courses_table_workflow extends \table_sql {
                     LEFT JOIN {tool_lifecycle_process} po ON c.id = po.courseid AND po.workflowid <> $workflow->id
                     LEFT JOIN {tool_lifecycle_proc_error} peo ON c.id = peo.courseid AND peo.workflowid <> $workflow->id
                     LEFT JOIN {tool_lifecycle_delayed} d ON c.id = d.courseid
-                    LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid";
+                    LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid AND dw.workflowid=$workflow->id";
 
         $where = 'true';
         $inparams = [];
