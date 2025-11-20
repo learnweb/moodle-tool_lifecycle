@@ -207,7 +207,7 @@ $string['notifyerrorsemailcontent'] = 'There are {$a->amount} new tool_lifecycle
 Please review them at {$a->url}.';
 $string['notifyerrorsemailcontenthtml'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!<br>Please review them at the <a href="{$a->url}">error handling overview</a>.';
 $string['notifyerrorsemailsubject'] = 'There are {$a->amount} new tool_lifecycle process errors waiting to be fixed!';
-$string['numbersotherwfordelayed'] = ' / {$a->otherwf} in other workflows / {$a->delayed} delayed';
+$string['numbersotherwfordelayed'] = 'On this page: {$a->tablerows} courses / {$a->triggered} triggered / {$a->otherwf} in other workflows / {$a->delayed} delayed';
 $string['overview:add_trigger'] = 'Add trigger';
 $string['overview:add_trigger_help'] = 'You can only add one instance of each trigger type.';
 $string['overview:timetrigger_help'] = 'When should the next course selection for this workflow takes place?';
@@ -287,6 +287,7 @@ $string['trigger_sortindex'] = 'Up/Down';
 $string['trigger_subpluginname'] = 'Trigger type';
 $string['trigger_subpluginname_help'] = 'Step subplugin/trigger title (visible for admins only).';
 $string['trigger_workflow'] = 'Workflow';
+$string['triggered'] = 'triggered';
 $string['triggers_installed'] = 'Installed Triggers';
 $string['triggertype_settings_header'] = 'Specific settings of the trigger type';
 $string['type'] = 'Type';

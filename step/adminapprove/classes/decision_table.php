@@ -29,7 +29,6 @@ use core\exception\moodle_exception;
 use core\output\single_button;
 use core_date;
 use tool_lifecycle\local\manager\settings_manager;
-use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();

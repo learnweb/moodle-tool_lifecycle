@@ -48,7 +48,19 @@ class categories extends base_automatic {
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
-        return trigger_response::trigger();
+        if ($course->id > 30) {
+            return trigger_response::trigger();
+        } else {
+            return trigger_response::exclude();
+        }
+    }
+
+    /**
+     * Returns whether the lib function check_course contains particular selection code per course or not.
+     * @return bool
+     */
+    public function check_course_code() {
+        return true;
     }
 
     /**

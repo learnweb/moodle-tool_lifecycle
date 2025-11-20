@@ -131,9 +131,6 @@ class processor {
                         $recordset->next();
                         continue 2;
                     }
-                    if ($response == trigger_response::trigger()) {
-                        continue;
-                    }
                 }
                 // If all trigger instances agree that they want to trigger a process we do so.
                 $process = process_manager::create_process($course->id, $workflow->id);

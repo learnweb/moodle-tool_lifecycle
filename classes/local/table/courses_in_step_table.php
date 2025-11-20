@@ -24,6 +24,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core\output\single_button;
 use core_date;
 use tool_lifecycle\local\entity\step_subplugin;
 use tool_lifecycle\local\manager\settings_manager;
@@ -187,20 +188,26 @@ class courses_in_step_table extends \table_sql {
         $rollback = settings_manager::get_settings($element->id, settings_type::STEP)['rollbackbuttonlabel'] ?? null;
         $proceed = settings_manager::get_settings($element->id, settings_type::STEP)['proceedbuttonlabel'] ?? null;
 
-        $output = $OUTPUT->single_button(
+        $button = new \single_button(
             new \moodle_url($PAGE->url, ['action' => 'rollback', 'processid' => $row->processid,
                 'sesskey' => sesskey(), 'search' => $this->search]),
             !empty($rollback) ? $rollback : get_string('rollback', 'lifecyclestep_adminapprove'),
             'post',
+            single_button::BUTTON_SECONDARY,
             ['class' => 'mr-1']
         );
-        $output .= $OUTPUT->single_button(
+        $output = $OUTPUT->render($button);
+
+        $button = new \single_button(
             new \moodle_url($PAGE->url, ['action' => 'proceed', 'processid' => $row->processid,
                 'sesskey' => sesskey(), 'search' => $this->search]),
             !empty($proceed) ? $proceed : get_string('proceed', 'lifecyclestep_adminapprove'),
             'post',
+            single_button::BUTTON_PRIMARY,
             ['class' => 'mt-1']
         );
+        $output .= $OUTPUT->render($button);
+
         return $output;
     }
 

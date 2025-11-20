@@ -44,6 +44,7 @@ use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\response\trigger_response;
+use tool_lifecycle\local\table\courses_in_process_table;
 use tool_lifecycle\local\table\courses_in_step_table;
 use tool_lifecycle\local\table\triggered_courses_table_trigger;
 use tool_lifecycle\local\table\triggered_courses_table_workflow;
@@ -202,18 +203,20 @@ $str = [
 ];
 
 $nextrun = false;
-$coursestriggered = [];
-$coursesdelayed = [];
+$coursestriggered = 0;
+$coursesdelayed = 0;
+$hasotherwf = 0;
 $displaytotaltriggered = false;
 if ($showdetails) {
     /*
-     * Preview of what courses would be triggered if the course selection would run now.
+     * Preview of what courses would be triggered if the course selection ran now.
      * For each trigger the amount of the select statement without the courses already in this process will be count.
      * The amount of courses already in the process is shown as well.
     */
     $amounts = (new processor())->get_count_of_courses_to_trigger_for_workflow($workflow);
-    $coursestriggered = $amounts['all']->coursestriggered;
-    $coursesdelayed = $amounts['all']->delayedcourses;
+    $coursestriggered = $amounts['all']->coursestriggered ?? 0;
+    $coursesdelayed = $amounts['all']->delayedcourses ?? 0;
+    $hasotherwf = $amounts['all']->hasotherwf ?? 0;
     $nextrun = $amounts['all']->nextrun == 0 ? false : $amounts['all']->nextrun;
     $displaytotaltriggered = !empty($triggers);
 }
@@ -398,16 +401,6 @@ if ($stepid) { // Display courses table with courses of this step.
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
-        if ($table->otherwf > 0 || $table->delayed > 0) {
-            $a = new \stdClass();
-            $a->otherwf = $table->otherwf;
-            $a->delayed = $table->delayed;
-            $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-                get_string('courses')." ".get_string('numbersotherwfordelayed', 'tool_lifecycle', $a), 'm-3');
-        } else {
-            $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-                get_string('courses'), 'm-3');
-        }
         $hiddenfieldssearch[] = ['name' => 'trigger', 'value' => $triggerid];
         $tablecoursesamount = $amounts[$trigger->sortindex]->triggered;
     }
@@ -419,66 +412,31 @@ if ($stepid) { // Display courses table with courses of this step.
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
-        if ($table->otherwf > 0 || $table->delayed > 0) {
-            $a = new \stdClass();
-            $a->otherwf = $table->otherwf;
-            $a->delayed = $table->delayed;
-            $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-                get_string('courses')." ".get_string('numbersotherwfordelayed', 'tool_lifecycle', $a), 'm-3');
-        } else {
-            $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-                get_string('courses'), 'm-3');
-        }
         $hiddenfieldssearch[] = ['name' => 'excluded', 'value' => $excluded];
         $tablecoursesamount = $amounts[$trigger->sortindex]->excluded;
     }
 } else if ($triggered) { // Display courses table with triggered courses of this workflow.
-    if ($coursestriggered ?? false) {
-        $table = new triggered_courses_table_workflow($coursestriggered, $workflow, 'triggeredworkflow', $search);
+    $triggeredcourses = $coursestriggered;
+    $triggeredcourses += $coursesdelayed;
+    $triggeredcourses += $hasotherwf;
+    if ($triggeredcourses) {
+        $table = new triggered_courses_table_workflow($workflow, $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
-        $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-            get_string('courses'), 'm-3');
         $hiddenfieldssearch[] = ['name' => 'triggered', 'value' => $triggered];
-        $tablecoursesamount = $coursestriggered;
-    }
-} else if ($delayed) { // Display courses table with courses delayed for this workflow.
-    if ($coursesdelayed ?? false) {
-        $table = new triggered_courses_table_workflow($coursesdelayed, $workflow, 'delayed', $search);
-        ob_start();
-        $table->out(PAGESIZE, false);
-        $out = ob_get_contents();
-        ob_end_clean();
-        $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-            get_string('courses'), 'm-3');
-        $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
-        $tablecoursesamount = $coursesdelayed;
-    }
-} else if ($used) { // Display courses triggered by this workflow but involved in other processes already.
-    if ($amounts['all']->hasotherwf ?? null) {
-        $table = new triggered_courses_table_workflow($amounts['all']->hasotherwf, $workflow, 'used', $search);
-        ob_start();
-        $table->out(PAGESIZE, false);
-        $out = ob_get_contents();
-        ob_end_clean();
-        $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-            get_string('courses'), 'm-3');
-        $hiddenfieldssearch[] = ['name' => 'used', 'value' => $used];
-        $tablecoursesamount = $amounts['all']->used;
+        $tablecoursesamount = $triggeredcourses;
     }
 } else if ($processes) { // Display courses table with courses in a process or in state process error for this workflow.
     $coursesinprocess = process_manager::count_processes_by_workflow($workflow->id) +
         process_manager::count_process_errors_by_workflow($workflow->id);
     if ($coursesinprocess) {
-        $table = new triggered_courses_table_workflow($coursesinprocess, $workflow, 'processes', $search);
+        $table = new courses_in_process_table($workflow, $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
-        $out .= \html_writer::div(get_string('total').": ".$table->totalrows." ".
-            get_string('courses'), 'm-3');
         $hiddenfieldssearch[] = ['name' => 'processes', 'value' => $processes];
         $tablecoursesamount = $coursesinprocess;
     }
@@ -595,13 +553,13 @@ if ($showdetails) {
     $data['coursestriggeredcount'] = $triggered;
     // Count delayed total, displayed in mustache only if there are any.
     $delayed = $amounts['all']->delayedcourses ?? 0;  // Matters only if delayed courses are not included in workflow.
-    $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
+    $delayedlink = new moodle_url($popuplink, ['triggered' => $workflowid]);
     $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
         ['class' => 'btn btn-outline-secondary mt-1']) : 0;
     $data['coursesdelayed'] = $delayedhtml;
     // Count in other processes used courses total, displayed in mustache only if there are any.
     $used = $amounts['all']->hasotherwf ?? 0;
-    $usedlink = new moodle_url($popuplink, ['used' => "1"]);
+    $usedlink = new moodle_url($popuplink, ['triggered' => "1"]);
     $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,
         ['class' => 'btn btn-outline-secondary mt-1']) : 0;
     $data['coursesused'] = $usedhtml;

@@ -206,7 +206,7 @@ $string['notifyerrorsemailcontent'] = '{$a->amount} neue fehlerhafte tool_lifecy
 Bitte besuchen Sie {$a->url}.';
 $string['notifyerrorsemailcontenthtml'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!<br>Bitte besuchen Sie <a href="{$a->url}">die Übersichtsseite</a>.';
 $string['notifyerrorsemailsubject'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!';
-$string['numbersotherwfordelayed'] = ' / {$a->otherwf} in anderen Worfklows / {$a->delayed} verzögert';
+$string['numbersotherwfordelayed'] = 'Diese Seite: {$a->tablerows} Kurse / {$a->triggered} getriggert / {$a->otherwf} in anderem Workflow / {$a->delayed} verzögert';
 $string['overview:add_trigger'] = 'Trigger hinzufügen';
 $string['overview:add_trigger_help'] = 'Es kann nur eine Instanz jedes Triggertyps hinzugefügt werden.';
 $string['overview:timetrigger_help'] = 'Wann sollte der Kursselektionsjob für diesen Workflow das nächste Mal laufen?';
@@ -286,6 +286,7 @@ $string['trigger_sortindex'] = 'Hoch/Runter';
 $string['trigger_subpluginname'] = 'Trigger Typ';
 $string['trigger_subpluginname_help'] = 'Name des Schritt/Trigger-Subplugins (nur für Admins sichtbar).';
 $string['trigger_workflow'] = 'Workflow';
+$string['triggered'] = 'getriggert';
 $string['triggers_installed'] = 'Installierte Trigger-Subplugins';
 $string['triggertype_settings_header'] = 'Spezifische Einstellungen des Triggertypen';
 $string['type'] = 'Typ';

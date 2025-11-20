@@ -61,65 +61,49 @@ class triggered_courses_table_workflow extends \table_sql {
     /** @var bool $coursecheckcode use course_check function to trigger courses */
     private $checkcoursecode = false;
 
-    /** @var int $tablerows number of table rows effectively written */
+    /** @var int $otherwf the number of courses in another workflow on this page */
+    public $otherwf = 0;
+
+    /** @var int $delayed the number of courses that are delayed on this page */
+    public $delayed = 0;
+
+    /** @var int $triggered the number of courses that are triggered on this page */
+    public $triggered = 0;
+
+    /** @var int $tablerows number of table rows effectively written on this page */
     public $tablerows = 0;
+
+    /** @var int $excludedbycheckcourse number of courses excluded by function check_course on this page */
+    public $excludedbycheckcourse = 0;
 
     /**
      * Builds a table of courses.
-     * @param int $courses number of courses to list
      * @param workflow $workflow of which the courses are listed
-     * @param string $type of list: triggeredworkflow, delayed, used, processes
      * @param string $filterdata optional, term to filter the table by course id or -name
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function __construct($courses, $workflow, $type, $filterdata = '') {
-        parent::__construct('tool_lifecycle-courses-in-trigger');
+    public function __construct($workflow, $filterdata = '') {
+        parent::__construct('tool_lifecycle-trigger-courses-in-workflow');
         global $PAGE, $SESSION;
 
         $this->define_baseurl($PAGE->url);
-        $this->type = $type;
         $this->workflowid = $workflow->id;
 
         $a = new \stdClass();
         $a->title = $workflow->title;
-        if ($type == 'triggeredworkflow') {
-            $this->caption = get_string('coursestriggeredworkflow', 'tool_lifecycle', $a);
-            $this->selectable = workflow_manager::is_active($workflow->id);
-        } else if ($type == 'delayed') {
-            $this->caption = get_string('coursesdelayed', 'tool_lifecycle', $a);
-        } else if ($type == 'used') {
-            $this->caption = get_string('coursesused', 'tool_lifecycle', $a);
-        } else if ($type == 'processes') {
-            $this->caption = get_string('coursesinprocess', 'tool_lifecycle', $a);
-        }
+        $this->caption = get_string('coursestriggeredworkflow', 'tool_lifecycle', $a);
+        $this->selectable = workflow_manager::is_active($workflow->id);
         $this->captionattributes = ['class' => 'ml-3'];
 
-        $columns = ['courseid', 'coursefullname', 'coursecategory'];
-        if ( $type == 'triggeredworkflow' && $this->selectable) {
-            $columns[] = 'tools';
-        } else if ($type == 'delayed') {
-            $columns[] = 'delayeduntil';
-        } else if ($type == 'used') {
-            $columns[] = 'otherworkflow';
-        } else if ($type == 'processes') {
-            $columns[] = 'processtype';
-        }
+        $columns = ['courseid', 'coursefullname', 'coursecategory', 'tools'];
         $this->define_columns($columns);
         $headers = [
             get_string('courseid', 'tool_lifecycle'),
             get_string('coursename', 'tool_lifecycle'),
             get_string('coursecategory', 'moodle'),
+            get_string('tools', 'tool_lifecycle'),
         ];
-        if ( $type == 'triggeredworkflow' && $this->selectable) {
-            $headers[] = get_string('tools', 'tool_lifecycle');
-        } else if ($type == 'delayed') {
-            $headers[] = get_string('delayeduntil', 'tool_lifecycle');
-        } else if ($type == 'used') {
-            $headers[] = get_string('workflow', 'tool_lifecycle');
-        } else if ($type == 'processes') {
-            $headers[] = get_string('type', 'tool_lifecycle');
-        }
         $this->define_headers($headers);
 
         $fields = " c.id as courseid,
@@ -142,43 +126,25 @@ class triggered_courses_table_workflow extends \table_sql {
                     LEFT JOIN {tool_lifecycle_delayed} d ON c.id = d.courseid
                     LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid AND dw.workflowid=$workflow->id";
 
-        $where = 'true';
+        $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+        $andor = ($workflow->andor ?? 0) == 0 ? 'AND' : 'OR';
+        $where = $andor == 'AND' ? 'true ' : 'false ';
         $inparams = [];
-        if ($type == 'processes') {
-            $where .= " AND (p.workflowid = $workflow->id OR pe.workflowid = $workflow->id)";
-        } else {
-            if ($type == 'delayed') {
-                $where .= " AND (d.delayeduntil > 0 OR dw.delayeduntil > 0) ";
-            } else if ($type == 'used') {
-                $where .= " AND (po.workflowid IS NOT NULL OR peo.workflowid IS NOT NULL)";
-            } else if ($type == 'triggeredworkflow') {
-                $where .= " AND p.courseid IS NULL AND pe.courseid IS NULL
-                            AND po.workflowid IS NULL AND peo.workflowid IS NULL
-                            AND COALESCE(d.delayeduntil, 0) < :time1 AND COALESCE(dw.delayeduntil, 0) < :time2 ";
-                $inparams = array_merge($inparams, ['time1' => time(), 'time2' => time()]);
-            }
-            $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
-            $andor = ($workflow->andor ?? 0) == 0 ? 'AND' : 'OR';
-            foreach ($triggers as $trigger) {
-                $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-                if ($lib->is_manual_trigger()) {
-                    continue;
-                } else {
-                    if (!$this->checkcoursecode) {
-                        $this->checkcoursecode = $lib->check_course_code();
-                    }
-                    [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
-                    $sql = preg_replace("/{course}/", "c", $sql, 1);
-                    if (!empty($sql)) {
-                        $where .= " $andor " . $sql;
-                        $inparams = array_merge($inparams, $params);
-                    }
+        foreach ($triggers as $trigger) {
+            $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+            if ($lib->is_manual_trigger()) {
+                continue;
+            } else {
+                if (!$this->checkcoursecode) {
+                    $this->checkcoursecode = $lib->check_course_code();
+                }
+                [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
+                $sql = preg_replace("/{course}/", "c", $sql, 1);
+                if (!empty($sql)) {
+                    $where .= " $andor " . $sql;
+                    $inparams = array_merge($inparams, $params);
                 }
             }
-        }
-
-        if (!$workflow->includesitecourse) {
-            $where = "($where) AND c.id <> 1 ";
         }
 
         if ($filterdata) {
@@ -209,11 +175,12 @@ class triggered_courses_table_workflow extends \table_sql {
      * After calling this function, remember to call close_recordset.
      */
     public function build_table() {
+
         if (!$this->rawdata) {
             return;
         }
 
-        if ($this->type == 'triggeredworkflow' && $this->checkcoursecode) {
+        if ($this->checkcoursecode) {
             $autotriggers = [];
             $triggers = trigger_manager::get_triggers_for_workflow($this->workflowid);
             foreach ($triggers as $trigger) {
@@ -227,25 +194,22 @@ class triggered_courses_table_workflow extends \table_sql {
         }
         $course = new stdClass();
         foreach ($this->rawdata as $row) {
-            if ($this->type == 'triggeredworkflow') {
-                if ($this->checkcoursecode) {
-                    foreach ($autotriggers as $trigger) {
-                        $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-                        $course->id = $row->courseid;
-                        $response = $lib->check_course($course, $trigger->id);
-                        if ($response == trigger_response::next()) {
-                            continue 2;
-                        }
-                        if ($response == trigger_response::exclude()) {
-                            continue 2;
-                        }
-                    }
-                } else {
-                    if ($row->hasprocess || $row->hasotherwfprocess ||
-                        ($row->delaycourse && $row->delaycourse > time())) {
-                        continue;
+            $validrow = true;
+            if ($this->checkcoursecode) {
+                $row->status = trigger_response::trigger();
+                foreach ($autotriggers as $trigger) {
+                    $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+                    $course->id = $row->courseid;
+                    $response = $lib->check_course($course, $trigger->id);
+                    if ($response == trigger_response::exclude()) {
+                        $validrow = false;
+                        break;
                     }
                 }
+            }
+            if (!$validrow) {
+                $row->status = trigger_response::exclude();
+                $this->excludedbycheckcourse++;
             }
             $formattedrow = $this->format_row($row);
             $this->add_data_keyed($formattedrow, $this->get_row_class($row));
@@ -291,8 +255,21 @@ class triggered_courses_table_workflow extends \table_sql {
      */
     public function col_tools($row) {
         global $OUTPUT, $PAGE;
-
-        if ($this->type == 'triggeredworkflow' && $this->selectable) {
+        $out = "";
+        if ($row->hasotherwfprocess) {
+            $this->otherwf++;
+            $out .= \html_writer::div(get_string('alreadyinprocessotherworkflow', 'tool_lifecycle'),
+                'text-warning');
+        }
+        if ($row->delaycourse && $row->delaycourse > time()) {
+            $this->delayed++;
+            $out .= \html_writer::div(get_string('delayed', 'tool_lifecycle'), 'text-info');
+        }
+        if ($row->status && !($row->status == trigger_response::trigger())) {
+            $out .= \html_writer::div(get_string('excludedbycoursecode', 'tool_lifecycle'),
+                'text-warning');
+        }
+        if ($this->selectable) {
             $params = [
                 'action' => 'select',
                 'cid' => $row->courseid,
@@ -300,10 +277,14 @@ class triggered_courses_table_workflow extends \table_sql {
                 'wf' => $this->workflowid,
             ];
             $button = new \single_button(new \moodle_url($PAGE->url, $params), get_string('select'));
-            return $OUTPUT->render($button);
+            $out .= $OUTPUT->render($button);
+        }
+        if (!$out) {
+            $this->triggered++;
+            $out = \html_writer::span(get_string('statusok'), 'text-success');
         }
 
-        return '';
+        return $out;
     }
 
     /**
@@ -345,6 +326,25 @@ class triggered_courses_table_workflow extends \table_sql {
             }
         }
         return "-";
+    }
+
+    /**
+     * Hook that can be overridden in child classes to wrap a table in a form
+     * for example. Called only when there is data to display and not
+     * downloading.
+     */
+    public function wrap_html_finish() {
+        $a = new \stdClass();
+        $a->otherwf = $this->otherwf;
+        $a->delayed = $this->delayed;
+        $a->triggered = $this->triggered;
+        $a->tablerows = $this->tablerows;
+        $cont = get_string('numbersotherwfordelayed', 'tool_lifecycle', $a);
+        if ($this->checkcoursecode) {
+            $cont .= " / ".$this->excludedbycheckcourse." ".
+                get_string('excludedbycoursecode', 'tool_lifecycle');
+        }
+        echo \html_writer::div($cont, 'm-3');
     }
 
     /**
