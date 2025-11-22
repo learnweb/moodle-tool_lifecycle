@@ -32,6 +32,7 @@ use tool_lifecycle\settings_type;
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/../../lib.php');
+require_once(__DIR__ . '/../../locallib.php');
 
 /**
  * Class which implements the basic methods necessary for a lifecycle trigger subplugin
@@ -57,14 +58,34 @@ class semindependent extends base_automatic {
      * @throws \dml_exception
      */
     public function get_course_recordset_where($triggerid) {
-        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
-        if ($exclude) {
-            $where = " NOT c.startdate < :semindepdate";
+        global  $CFG;
+        $nosemester = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['nosemester'] ?? false;
+        $customfield = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['customfield'] ?? false;
+        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'] ?? false;
+        $params = [];
+        if ($nosemester) {
+            require_once($CFG->dirroot.'/customfield/field/semester/locallib.php');
+            $termindependentintvalue = CUSTOMFIELD_SEMESTER_INTERNAL_TERMINDEPENDENT;
+            $where = " NOT EXISTS (SELECT 1 FROM {customfield_data} AS cfd WHERE cfd.fieldid = :customfield AND
+                    cfd.instanceid = c.id AND cfd.intvalue <> :termindependentintvalue) ";
+            if ($exclude) {
+                $where = " NOT ($where) ";
+            } else {
+                $where = " ($where) ";
+            }
+            $params = [
+                "customfield" => $customfield,
+                "termindependentintvalue" => $termindependentintvalue,
+                ];
         } else {
-            $where = "c.startdate < :semindepdate";
+            if ($exclude) {
+                $where = " NOT c.startdate < :semindepdate";
+            } else {
+                $where = "c.startdate < :semindepdate";
+                // Date before which a course counts as semester independent. In this case the 1.1.2000.
+                $params = ["semindepdate" => 946688400];
+            }
         }
-        // Date before which a course counts as semester independent. In this case the 1.1.2000.
-        $params = ["semindepdate" => 946688400];
         return [$where, $params];
     }
 
@@ -77,23 +98,50 @@ class semindependent extends base_automatic {
     }
 
     /**
-     * Introduce the admin setting exclude for this subplugin.
-     * @return instance_setting[] exclude
+     * Introduce the admin settings for this subplugin.
+     * @return instance_setting[]
      */
     public function instance_settings() {
-        return [new instance_setting('exclude', PARAM_BOOL)];
+        $settings = [];
+        if (lifecycle_is_plugin_installed('semester', 'customfield') === true) {
+            $settings[] = new instance_setting('nosemester', PARAM_BOOL);
+            $settings[] = new instance_setting('customfield', PARAM_INT);
+        }
+        $settings[] = new instance_setting('exclude', PARAM_BOOL);
+        return $settings;
     }
 
     /**
-     * Adds a checkbox "include" to a moodle form
+     * Adds a checkbox "exclude" and optionally - if customfield_semester is installed - another checkbox "nosemester"
+     * to the moodle form
      * @param object $mform
      * @return void
      * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
+        global $DB;
+        if (lifecycle_is_plugin_installed('semester', 'customfield') === true) {
+            if ($customfields = $DB->get_records('customfield_field', ['type' => 'semester'])) {
+                $mform->addElement('advcheckbox', 'nosemester', get_string('nosemester', 'lifecycletrigger_semindependent'));
+                $mform->addHelpButton('nosemester', 'nosemester', 'lifecycletrigger_semindependent');
+                $mform->setType('nosemester', PARAM_BOOL);
+                $mform->setDefault('nosemester', false);
+                // Add the 'Customfield' field.
+                // If we have found at least one field.
+                $customfieldchoices = [];
+                foreach ($customfields as $field) {
+                    $customfieldchoices[$field->id] = $field->name;
+                }
+                $mform->addElement('select', 'customfield', get_string('setting_customfield', 'lifecycletrigger_semindependent'),
+                    $customfieldchoices);
+                $mform->addHelpButton('customfield', 'setting_customfield', 'lifecycletrigger_semindependent');
+                $mform->setType('customfield', PARAM_INT);
+                $mform->disabledif('customfield', 'nosemester', 'notchecked');
+            }
+        }
         $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_semindependent'));
         $mform->addHelpButton('exclude', 'exclude', 'lifecycletrigger_semindependent');
         $mform->setType('exclude', PARAM_BOOL);
-        $mform->setDefault('exclude', true);
+        $mform->setDefault('exclude', false);
     }
 }

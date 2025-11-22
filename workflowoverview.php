@@ -403,6 +403,14 @@ if ($stepid) { // Display courses table with courses of this step.
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'trigger', 'value' => $triggerid];
         $tablecoursesamount = $amounts[$trigger->sortindex]->triggered;
+        echo \html_writer::div(\html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
+                [
+                    "wf" => $workflowid,
+                    "trigger" => $triggerid,
+                    "showtablesql" => "1",
+                    "showdetails" => "1"
+                ]),
+                "XXYYZZ&nbsp;&nbsp;&nbsp;", ["class" => "text-muted fs-6 text-decoration-none"]));
     }
 } else if ($excluded) { // Display courses table with excluded courses of this trigger.
     $trigger = trigger_manager::get_instance($excluded);

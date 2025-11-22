@@ -48,11 +48,7 @@ class categories extends base_automatic {
      * @return trigger_response
      */
     public function check_course($course, $triggerid) {
-        if ($course->id > 30) {
-            return trigger_response::trigger();
-        } else {
-            return trigger_response::exclude();
-        }
+        return trigger_response::trigger();
     }
 
     /**
@@ -60,7 +56,7 @@ class categories extends base_automatic {
      * @return bool
      */
     public function check_course_code() {
-        return true;
+        return false;
     }
 
     /**
@@ -77,13 +73,7 @@ class categories extends base_automatic {
         $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
         $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
         if ($categories = explode(',', $categories)) {
-            // Use core_course_category for moodle 3.6 and higher.
-            if ($CFG->version >= 2018120300) {
-                $categoryobjects = \core_course_category::get_many($categories);
-            } else {
-                require_once($CFG->libdir . '/coursecatlib.php');
-                $categoryobjects = \coursecat::get_many($categories);
-            }
+            $categoryobjects = \core_course_category::get_many($categories);
             $allcategories = [];
             foreach ($categories as $category) {
                 array_push($allcategories, $category);
