@@ -30,6 +30,7 @@ use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
+
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/../../lib.php');
 require_once(__DIR__ . '/../../locallib.php');
@@ -66,7 +67,7 @@ class semindependent extends base_automatic {
         if ($nosemester) {
             require_once($CFG->dirroot.'/customfield/field/semester/locallib.php');
             $termindependentintvalue = CUSTOMFIELD_SEMESTER_INTERNAL_TERMINDEPENDENT;
-            $where = " NOT EXISTS (SELECT 1 FROM {customfield_data} AS cfd WHERE cfd.fieldid = :customfield AND
+            $where = " NOT EXISTS (SELECT 1 FROM {customfield_data} cfd WHERE cfd.fieldid = :customfield AND
                     cfd.instanceid = c.id AND cfd.intvalue <> :termindependentintvalue) ";
             if ($exclude) {
                 $where = " NOT ($where) ";

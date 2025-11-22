@@ -28,6 +28,8 @@ use tool_lifecycle\action;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\settings_type;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once(__DIR__ . '/../../../locallib.php');
 
 /**

@@ -408,7 +408,7 @@ if ($stepid) { // Display courses table with courses of this step.
                     "wf" => $workflowid,
                     "trigger" => $triggerid,
                     "showtablesql" => "1",
-                    "showdetails" => "1"
+                    "showdetails" => "1",
                 ]),
                 "XXYYZZ&nbsp;&nbsp;&nbsp;", ["class" => "text-muted fs-6 text-decoration-none"]));
     }
