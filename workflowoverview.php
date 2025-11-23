@@ -25,6 +25,7 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+require_once(__DIR__ . '/locallib.php');
 
 require_admin();
 
@@ -67,6 +68,7 @@ $search = optional_param('search', null, PARAM_RAW);
 $showdetails = optional_param('showdetails', 0, PARAM_INT);
 $showsql = optional_param('showsql', 0, PARAM_INT);
 $showtablesql = optional_param('showtablesql', 0, PARAM_INT);
+
 $debugtriggersql = "";
 $debugtablesql = "";
 if ($showdetails == 0) {
@@ -194,6 +196,29 @@ $renderer->tabs($tabrow, $tabid);
 
 $steps = step_manager::get_step_instances($workflow->id);
 $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+foreach ($triggers as $trigger) {
+    // Check if plugin dependencies are met.
+    if ($trigger->subpluginname == 'customfieldsemester') {
+        if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+            echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
+                get_string('customfieldsemesternotinstalled',
+                'tool_lifecycle', "customfieldsemester"), 'error');
+            echo $renderer->footer();
+            die();
+        }
+    } else if ($trigger->subpluginname == 'semindependent') {
+        $nosemester = settings_manager::get_settings($trigger->id, settings_type::TRIGGER)['nosemester'] ?? false;
+        if ($nosemester) {
+            if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
+                    get_string('customfieldsemesternotinstalled',
+                    'tool_lifecycle', "semindependent"), 'error');
+                echo $renderer->footer();
+                die();
+            }
+        }
+    }
+}
 
 $str = [
     'edit' => get_string('edit'),
@@ -210,8 +235,8 @@ $displaytotaltriggered = false;
 if ($showdetails) {
     /*
      * Preview of what courses would be triggered if the course selection ran now.
-     * For each trigger the amount of the select statement without the courses already in this process will be count.
-     * The amount of courses already in the process is shown as well.
+     * For each trigger, the amount of the select statement without the courses already in this process will be counted.
+     * The number of courses already in the process is shown as well.
     */
     $amounts = (new processor())->get_count_of_courses_to_trigger_for_workflow($workflow);
     $coursestriggered = $amounts['all']->coursestriggered ?? 0;
@@ -255,9 +280,8 @@ $displaytriggers = [];
 $displaytimetriggers = [];
 foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
-    // Mustache cannot handle arrays which have other keys therefore a new array is build.
-    // FUTURE: Nice to have Icon for each subplugin.
-    $trigger = (object)(array) $trigger; // Cast to normal object to be able to set dynamic properties.
+    // Mustache cannot handle arrays which have other keys. Therefore, a new array is build.
+    $trigger = (object)(array) $trigger; // Cast to a normal object to be able to set dynamic properties.
     $editlink = new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::TRIGGER, 'elementid' => $trigger->id]);
     $trigger->editlink = $editlink->out();
     $actionmenu = new action_menu([
@@ -403,14 +427,14 @@ if ($stepid) { // Display courses table with courses of this step.
         ob_end_clean();
         $hiddenfieldssearch[] = ['name' => 'trigger', 'value' => $triggerid];
         $tablecoursesamount = $amounts[$trigger->sortindex]->triggered;
-        echo \html_writer::div(\html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
+        $out .= \html_writer::div(\html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
                 [
                     "wf" => $workflowid,
-                    "trigger" => $triggerid,
+                    "showsql" => "1",
                     "showtablesql" => "1",
                     "showdetails" => "1",
                 ]),
-                "XXYYZZ&nbsp;&nbsp;&nbsp;", ["class" => "text-muted fs-6 text-decoration-none"]));
+                "&nbsp;&nbsp;&nbsp;", ["class" => "text-muted fs-6 text-decoration-none"]));
     }
 } else if ($excluded) { // Display courses table with excluded courses of this trigger.
     $trigger = trigger_manager::get_instance($excluded);

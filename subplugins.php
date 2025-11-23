@@ -63,12 +63,11 @@ if ($triggers) {
         if ($plugindescription) {
             echo html_writer::start_div().$plugindescription;
             if ($trigger == 'customfieldsemester') {
-                if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                if (!lifecycle_is_plugin_installed('semester', 'customfield') === false) {
                     echo \html_writer::span(
-                        get_string('customfieldsemesternotinstalled', 'lifecycletrigger_customfieldsemester'),
-                        'text-danger');
+                        get_string('customfieldsemesternotinstalled', 'tool_lifecycle', "customfieldsemester"),
+                        'text-danger ml-1');
                 }
-
             }
             echo html_writer::end_div();
         }
