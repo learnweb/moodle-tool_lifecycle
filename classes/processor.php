@@ -43,6 +43,8 @@ use tool_lifecycle\local\response\step_interactive_response;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\local\response\trigger_response;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once(__DIR__ . '/../locallib.php');
 
 /**
