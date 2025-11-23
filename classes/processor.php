@@ -379,6 +379,7 @@ class processor {
             $debugsql = str_replace(":".$key, $value, $debugsql);
         }
         $SESSION->debugtriggersql = $debugsql;
+
         return $DB->get_recordset_sql($sql, $whereparams);
     }
 

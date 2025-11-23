@@ -83,9 +83,9 @@ class semindependent extends base_automatic {
                 $where = " NOT c.startdate < :semindepdate";
             } else {
                 $where = "c.startdate < :semindepdate";
-                // Date before which a course counts as semester independent. In this case the 1.1.2000.
-                $params = ["semindepdate" => 946688400];
             }
+            // Date before which a course counts as semester independent. In this case the 1.1.2000.
+            $params = ["semindepdate" => 946688400];
         }
         return [$where, $params];
     }
