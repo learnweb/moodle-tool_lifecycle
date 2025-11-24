@@ -265,7 +265,7 @@ class triggered_courses_table_workflow extends \table_sql {
             $this->delayed++;
             $out .= \html_writer::div(get_string('delayed', 'tool_lifecycle'), 'text-info');
         }
-        if ($row->status && !($row->status == trigger_response::trigger())) {
+        if (($row->status ?? false) && !($row->status == trigger_response::trigger())) {
             $out .= \html_writer::div(get_string('excludedbycoursecode', 'tool_lifecycle'),
                 'text-warning');
         }
