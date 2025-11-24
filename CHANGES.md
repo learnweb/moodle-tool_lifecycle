@@ -1,9 +1,16 @@
 CHANGELOG
 =========
 
-5.0.1(2025-11-09)
+5.0.1(2025-11-15)
 ------------------
-* [FEATURE] Customise buttons in adminapprove step (PR #266)
+* [FEATURE] Customise buttons in adminapprove step PR #266
+* [FEATURE] Improve listings of triggered courses in workflowoverview
+* [FEATURE] Semindependent trigger: add option to select courses with no customfield semester or termindependent value
+* [FEATURE] Implement checks for plugin dependencies
+* [FIXED] adminapprove step: insert into table only if it does not yet exist PR #268
+* [FIXED] category trigger: do not display form elements twice PR #267
+* [FIXED] Handle manual trigger correctly with AND condition PR #269
+* [FIXED] Respect use of check_course function when counting triggered courses
 
 5.0.0(2025-10-23)
 ------------------
