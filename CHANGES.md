@@ -11,6 +11,7 @@ CHANGELOG
 * [FIXED] category trigger: do not display form elements twice PR #267
 * [FIXED] Handle manual trigger correctly with AND condition PR #269
 * [FIXED] Respect use of check_course function when counting triggered courses
+* [FIXED] Activate the automatic tests of the subplugins
 
 5.0.0(2025-10-23)
 ------------------
