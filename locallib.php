@@ -15,18 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life Cycle Delete Course Step
- *
- * @package    lifecyclestep_deletecourse
- * @copyright  2025 Thomas Niedermaier Universität Münster
+ * Helper functions for tool_lifecycle.
+ * @package    tool_lifecycle
+ * @copyright  2025 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
-$plugin->component = 'lifecyclestep_deletecourse';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->version  = 2025102300;
-$plugin->requires = 2022112800; // Requires Moodle 4.1+.
-$plugin->supported = [405, 500];
-$plugin->release   = 'v5.0-r1';
+/**
+ * Check if a plugin is installed.
+ * @param string $plugin name of the plugin
+ * @param string $plugintype name of the plugin's plugin type
+ * @return bool
+ */
+function lifecycle_is_plugin_installed($plugin, $plugintype) {
+    $pluginsinstalled = core_component::get_plugin_list($plugintype);
+    $found = false;
+    foreach ($pluginsinstalled as $installed => $path) {
+        if ($plugin == $installed) {
+            $found = true;
+            break;
+        }
+    }
+    return $found;
+}

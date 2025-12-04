@@ -16,7 +16,6 @@
 
 namespace lifecycletrigger_semindependent;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 use tool_lifecycle_trigger_semindependent_generator as generator;
@@ -26,11 +25,12 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/generator/lib.php');
 
+// phpcs:disable moodle.PHPUnit.TestCaseCovers.Missing
+
 /**
  * Trigger test for semester independent trigger.
  *
  * @package    lifecycletrigger_semindependent
- * @group      lifecycletrigger
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -57,27 +57,26 @@ final class trigger_test extends \advanced_testcase {
         $this->resetAfterTest(true);
         $this->setAdminUser();
         $this->processor = new processor();
-        $this->semindependentcourse = $this->getDataGenerator()->create_course(['startdate' => 915152400]);
+        $this->semindependentcourse = $this->getDataGenerator()->create_course(['startdate' => 946600000]);
         $this->semcourse = $this->getDataGenerator()->create_course(['startdate' => time()]);
     }
 
     /**
      * Tests if trigger for inclusion of semester independent courses works as expected.
-     * @covers \tool_lifecycle\trigger\semindependent
      */
     public function test_include_semester_independent(): void {
 
         $this->triggerinstance = generator::create_workflow_with_semindependent(false);
 
-        $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
+        $triggeredcourses = $this->processor->get_course_recordset([$this->triggerinstance]);
         $foundsem = false;
         $foundsemindep = false;
-        foreach ($recordset as $element) {
-            if ($this->semcourse->id === $element->id) {
+        foreach ($triggeredcourses as $triggeredcourse) {
+            if ($triggeredcourse->id === $this->semcourse->id) {
                 $foundsem = true;
                 break;
             }
-            if ($this->semindependentcourse->id === $element->id) {
+            if ($triggeredcourse->id === $this->semindependentcourse->id) {
                 $foundsemindep = true;
                 break;
             }
@@ -88,7 +87,6 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if trigger for exclusion of semester independent courses works as expected.
-     * @covers \tool_lifecycle\trigger\semindependent
      */
     public function test_exclude_semester_independent(): void {
 

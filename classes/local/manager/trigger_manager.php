@@ -28,6 +28,10 @@ use tool_lifecycle\action;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\settings_type;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once(__DIR__ . '/../../../locallib.php');
+
 /**
  * Manager for Trigger subplugins
  *
@@ -262,6 +266,11 @@ class trigger_manager extends subplugin_manager {
         $triggers = self::get_trigger_types();
         $result = [];
         foreach ($triggers as $id => $trigger) {
+            if ($trigger == 'Customfield semester trigger') {
+                if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                    continue;
+                }
+            }
             $lib = lib_manager::get_trigger_lib($id);
             if ($lib->has_multiple_instances()) {
                 $result[$id] = $trigger;

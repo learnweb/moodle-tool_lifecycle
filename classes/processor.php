@@ -43,6 +43,10 @@ use tool_lifecycle\local\response\step_interactive_response;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\local\response\trigger_response;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once(__DIR__ . '/../locallib.php');
+
 /**
  * Offers functionality to trigger, process and finish lifecycle processes.
  *
@@ -56,24 +60,23 @@ class processor {
      * Processes the trigger plugins for all relevant courses.
      */
     public function call_trigger() {
-        global $FULLSCRIPT, $CFG, $USER;
+        global $FULLSCRIPT, $USER;
 
-        $run = str_contains($FULLSCRIPT, 'run.php'); // Called by run-command of workflowoverview?
-        // Debug mode if admin setting debug is active and function is not called within a behat test.
-        $debug = $run && $CFG->debugdeveloper && !defined('BEHAT_SITE_RUNNING');
+        $eol = "\n";
+        // HTML end of line if called by run-command of workflowoverview.
+        if ($run = str_contains($FULLSCRIPT, 'run.php')) {
+            $eol = "<br>";
+        }
+        $automatictest = (defined('PHPUNIT_TEST') && PHPUNIT_TEST) ||
+            defined('BEHAT_SITE_RUNNING');
 
         // Only active workflows that are not manual workflows.
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
 
         // Print debug message if this is not a behat test.
-        if (!defined('BEHAT_SITE_RUNNING')) {
-            if ($run) {
-                echo \html_writer::div(get_string ('active_workflows_header_title', 'tool_lifecycle').
-                    ": ".count($activeworkflows));
-            } else {
-                mtrace(get_string ('active_workflows_header_title', 'tool_lifecycle').
-                    ": ".count($activeworkflows));
-            }
+        if (!$automatictest) {
+            mtrace(get_string ('active_automatic_workflows_heading', 'tool_lifecycle').
+                ": ".count($activeworkflows), $eol);
         }
 
         // Walk through the active workflows.
@@ -84,20 +87,43 @@ class processor {
             $exclude = [];
 
             // Print debug message if this is not a behat test.
-            if (!defined('BEHAT_SITE_RUNNING')) {
-                if ($run) {
-                    echo \html_writer::div('Calling triggers for workflow "' . $workflow->title . '" '.
-                        userdate(time(), get_string('strftimedatetimeaccurate'),
-                            core_date::get_user_timezone($USER)));
-                } else {
-                    mtrace('Calling triggers for workflow "' . $workflow->title . '" '.
-                        userdate(time(), get_string('strftimedatetimeaccurate'),
-                            core_date::get_user_timezone($USER)));
-                }
+            if (!$automatictest) {
+                mtrace('Calling triggers for workflow "' . $workflow->title . '" '.
+                    userdate(time(), get_string('strftimedatetimeaccurate'), core_date::get_user_timezone($USER)),
+                    $eol);
             }
 
             // Get workflow triggers and settings.
             $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+            foreach ($triggers as $trigger) {
+                // Check if plugin dependencies are met.
+                if ($trigger->subpluginname == 'customfieldsemester') {
+                    if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                        if ($run) {
+                            mtrace(get_string('workflownotvalid', 'tool_lifecycle')." ".
+                                get_string('customfieldsemesternotinstalled',
+                                    'tool_lifecycle', "customfieldsemester"), $eol);
+                        }
+                        continue 2;
+                    }
+                } else if ($trigger->subpluginname == 'semindependent') {
+                    $nosemester =
+                        settings_manager::get_settings($trigger->id, settings_type::TRIGGER)['nosemester'] ?? false;
+                    if ($nosemester) {
+                        if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                            if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                                if ($run) {
+                                    mtrace(get_string('workflownotvalid', 'tool_lifecycle')." ".
+                                        get_string('customfieldsemesternotinstalled',
+                                            'tool_lifecycle', "semindependent"), $eol);
+                                }
+                                continue 2;
+                            }
+                        }
+                    }
+                }
+            }
+
             if (!$workflow->includesitecourse) {
                 $exclude[] = 1;
             }
@@ -116,8 +142,8 @@ class processor {
                     $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                     $response = $lib->check_course($course, $trigger->id);
                     if ($response == trigger_response::next()) {
-                        if ($debug) {
-                            echo \html_writer::div("Course next: $course->id");
+                        if ($run) {
+                            mtrace("Course next: $course->id", $eol);
                         }
                         $recordset->next();
                         continue 2;
@@ -125,36 +151,27 @@ class processor {
                     if ($response == trigger_response::exclude()) {
                         array_push($exclude, $course->id);
                         $countexcluded++;
-                        if ($debug) {
-                            echo \html_writer::div("Course exclude: $course->id");
+                        if ($run) {
+                            mtrace("Course exclude: $course->id", $eol);
                         }
                         $recordset->next();
                         continue 2;
-                    }
-                    if ($response == trigger_response::trigger()) {
-                        continue;
                     }
                 }
                 // If all trigger instances agree that they want to trigger a process we do so.
                 $process = process_manager::create_process($course->id, $workflow->id);
                 process_triggered::event_from_process($process)->trigger();
                 $counttriggered++;
-                if ($debug) {
-                    echo \html_writer::div("Course triggered: $course->id");
+                if ($run) {
+                    mtrace("Course triggered: $course->id", $eol);
                 }
                 $recordset->next();
             }
             // Final debug messages if this is not a behat test.
-            if (!defined('BEHAT_SITE_RUNNING')) {
-                if ($run) {
-                    echo \html_writer::div("   $countcourses courses processed.");
-                    echo \html_writer::div("   $counttriggered courses triggered.");
-                    echo \html_writer::div("   $countexcluded courses excluded.");
-                } else {
-                    mtrace("   $countcourses courses processed.");
-                    mtrace("   $counttriggered courses triggered.");
-                    mtrace("   $countexcluded courses excluded.");
-                }
+            if (!$automatictest) {
+                mtrace("   $countcourses courses processed.", $eol);
+                mtrace("   $counttriggered courses triggered.", $eol);
+                mtrace("   $countexcluded courses excluded.", $eol);
             }
         }
     }
@@ -163,19 +180,18 @@ class processor {
      * Calls the process_course() method of each step submodule currently responsible for a given course.
      */
     public function process_courses() {
-        global $FULLSCRIPT, $CFG;
+        global $FULLSCRIPT;
 
-        $run = str_contains($FULLSCRIPT, 'run.php');
+        $eol = "\n";
+        // HTML end of line if called by run-command of workflowoverview.
+        if ($run = str_contains($FULLSCRIPT, 'run.php')) {
+            $eol = "<br>";
+        }
         $automatictest = (defined('PHPUNIT_TEST') && PHPUNIT_TEST) ||
             defined('BEHAT_SITE_RUNNING');
-        $debug = $run && $CFG->debugdeveloper && !$automatictest;
 
         if (!$automatictest) {
-            if ($run) {
-                echo \html_writer::div(get_string ('lifecycle_task', 'tool_lifecycle'));
-            } else {
-                mtrace(get_string ('lifecycle_task', 'tool_lifecycle'));
-            }
+            mtrace(get_string ('lifecycle_task', 'tool_lifecycle'), $eol);
         }
         $coursesprocessed = 0;
         $coursesprocesserrors = 0;
@@ -210,8 +226,8 @@ class processor {
                 }
                 if ($result == step_response::waiting()) {
                     process_manager::set_process_waiting($process);
-                    if ($debug) {
-                        echo \html_writer::div("Course processed: $course->id - Result: Waiting");
+                    if ($run) {
+                        mtrace("Course processed: $course->id - Result: Waiting", $eol);
                     }
                     break;
                 } else if ($result == step_response::proceed()) {
@@ -219,16 +235,16 @@ class processor {
                         delayed_courses_manager::set_course_delayed_for_workflow($course->id,
                             false, $process->workflowid);
                     }
-                    if ($debug) {
-                        echo \html_writer::div("Course processed: $course->id - Result: Proceed");
+                    if ($run) {
+                        mtrace("Course processed: $course->id - Result: Proceed", $eol);
                     }
                     break;
                 } else if ($result == step_response::rollback()) {
                     delayed_courses_manager::set_course_delayed_for_workflow($course->id,
                         true, $process->workflowid);
                     process_manager::rollback_process($process);
-                    if ($debug) {
-                        echo \html_writer::div("Course processed: $course->id - Result: Rollback");
+                    if ($run) {
+                        mtrace("Course processed: $course->id - Result: Rollback", $eol);
                     }
                     break;
                 } else {
@@ -237,13 +253,8 @@ class processor {
             }
         }
         if (!$automatictest) {
-            if ($run) {
-                echo \html_writer::div("   $coursesprocessed courses processed.");
-                echo \html_writer::div("   $coursesprocesserrors ".get_string('errors', 'search').".");
-            } else {
-                mtrace("   $coursesprocessed courses processed.");
-                mtrace("   $coursesprocesserrors ".get_string('errors', 'search').".");
-            }
+            mtrace("   $coursesprocessed courses processed.", $eol);
+            mtrace("   $coursesprocesserrors ".get_string('errors', 'search').".", $eol);
         }
 
     }
@@ -368,6 +379,7 @@ class processor {
             $debugsql = str_replace(":".$key, $value, $debugsql);
         }
         $SESSION->debugtriggersql = $debugsql;
+
         return $DB->get_recordset_sql($sql, $whereparams);
     }
 
@@ -466,12 +478,9 @@ class processor {
 
         $triggercoursesall = [];
         $recordset = $this->get_course_recordset([$trigger], !$workflow->includesitecourse, true);
-        $response = $lib->default_response();
         while ($recordset->valid()) {
             $course = $recordset->current();
-            if ($lib->check_course_code()) {
-                $response = $lib->check_course($course, $trigger->id);
-            }
+            $response = $lib->check_course($course, $trigger->id);
             if ($response !== trigger_response::next()) {
                 $triggercoursesall[] = $course->id;
             }
@@ -589,27 +598,16 @@ class processor {
             while ($recordset->valid()) {
                 $course = $recordset->current();
                 if ($checkcoursecode) {
-                    $action = false;
+                    $excludecourse = false;
                     foreach ($autotriggers as $trigger) {
                         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                         $response = $lib->check_course($course, $trigger->id);
-                        if ($response == trigger_response::next()) {
-                            if (!$action) {
-                                $action = true;
-                            }
-                            continue;
-                        }
                         if ($response == trigger_response::exclude()) {
-                            if (!$action) {
-                                $action = true;
-                            }
-                            continue;
-                        }
-                        if ($response == trigger_response::trigger()) {
-                            continue;
+                            $excludecourse = true;
+                            break;
                         }
                     }
-                    if (!$action) {
+                    if (!$excludecourse) {
                         if ($course->hasprocess) {
                             $hasprocess++;
                             if ($course->delaycourse && $course->delaycourse > time()) {

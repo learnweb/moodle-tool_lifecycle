@@ -53,10 +53,12 @@ class adminapprove extends libbase {
      */
     public function process_course($processid, $instanceid, $course) {
         global $DB;
-        $record = new \stdClass();
-        $record->processid = $processid;
-        $record->status = 0;
-        $DB->insert_record('lifecyclestep_adminapprove', $record);
+        if ($DB->get_field('lifecyclestep_adminapprove', 'status', ['processid' => $processid]) === false) {
+            $record = new \stdClass();
+            $record->processid = $processid;
+            $record->status = 0;
+            $DB->insert_record('lifecyclestep_adminapprove', $record);
+        }
         self::$newcourses++;
         return step_response::waiting();
     }
@@ -139,6 +141,10 @@ class adminapprove extends libbase {
     public function instance_settings() {
         return [
             new instance_setting('statusmessage', PARAM_TEXT, true),
+            new instance_setting('proceedbuttonlabel', PARAM_TEXT, true),
+            new instance_setting('rollbackbuttonlabel', PARAM_TEXT, true),
+            new instance_setting('proceedselectedbuttonlabel', PARAM_TEXT, true),
+            new instance_setting('rollbackselectedbuttonlabel', PARAM_TEXT, true),
         ];
     }
 
@@ -153,12 +159,37 @@ class adminapprove extends libbase {
         $mform->addElement('text', $elementname, get_string('statusmessage', 'lifecyclestep_adminapprove'));
         $mform->addHelpButton($elementname, 'statusmessage', 'lifecyclestep_adminapprove');
         $mform->setType($elementname, PARAM_TEXT);
+        $mform->setDefault($elementname, get_string('statusmessagedefault', 'lifecyclestep_adminapprove'));
+
+        $mform->addElement('static', 'statusmsgdefault', " ",
+            get_string('default').": ".get_string('statusmessagedefault', 'lifecyclestep_adminapprove'));
+
+        $buttons = [
+            ['proceedbuttonlabel', get_string('proceed', 'lifecyclestep_adminapprove')],
+            ['rollbackbuttonlabel', get_string('rollback', 'lifecyclestep_adminapprove')],
+            ['proceedselectedbuttonlabel', get_string('proceedselected', 'lifecyclestep_adminapprove')],
+            ['rollbackselectedbuttonlabel', get_string('rollbackselected', 'lifecyclestep_adminapprove')],
+        ];
+
+        foreach ($buttons as $button) {
+            $elementname = $button[0];
+
+            $mform->addElement('text', $elementname,
+                get_string($elementname, 'lifecyclestep_adminapprove'));
+            $mform->addHelpButton($elementname, $elementname, 'lifecyclestep_adminapprove');
+            $mform->setType($elementname, PARAM_TEXT);
+            $mform->setDefault($elementname, $button[1]);
+
+            $mform->addElement('static', $elementname."default", " ",
+                get_string('default').": ".$button[1]);
+        }
     }
 
     /**
      * This is called when a course and the
      * corresponding process get deleted.
      * @param process $process the process that was aborted.
+     * @throws \dml_exception
      */
     public function abort_course($process) {
         global $DB;

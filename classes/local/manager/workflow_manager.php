@@ -223,7 +223,7 @@ class workflow_manager {
 
     /**
      * Returns tools for all active manual workflows.
-     * You need to check the capability based on course and user before diplaying it.
+     * You need to check the capability based on course and user before displaying it.
      *
      * @return manual_trigger_tool[] list of tools, available in the whole system.
      * @throws \coding_exception

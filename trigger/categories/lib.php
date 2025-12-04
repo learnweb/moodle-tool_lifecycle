@@ -52,6 +52,14 @@ class categories extends base_automatic {
     }
 
     /**
+     * Returns whether the lib function check_course contains particular selection code per course or not.
+     * @return bool
+     */
+    public function check_course_code() {
+        return false;
+    }
+
+    /**
      * Return sql snippet for including (or excluding) the courses belonging to specific categories
      * and all their children.
      * @param int $triggerid Id of the trigger.
@@ -65,13 +73,7 @@ class categories extends base_automatic {
         $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
         $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];
         if ($categories = explode(',', $categories)) {
-            // Use core_course_category for moodle 3.6 and higher.
-            if ($CFG->version >= 2018120300) {
-                $categoryobjects = \core_course_category::get_many($categories);
-            } else {
-                require_once($CFG->libdir . '/coursecatlib.php');
-                $categoryobjects = \coursecat::get_many($categories);
-            }
+            $categoryobjects = \core_course_category::get_many($categories);
             $allcategories = [];
             foreach ($categories as $category) {
                 array_push($allcategories, $category);
@@ -144,7 +146,7 @@ class categories extends base_automatic {
      */
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
         $type = $mform->getElementType('instancename');
-        if ($type ?? "" == "text") {
+        if (($type ?? "") != "text") {
             if (is_array($settings) && array_key_exists('categories', $settings)) {
                 $triggercategories = explode(",", $settings['categories']);
             } else {

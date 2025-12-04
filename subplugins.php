@@ -28,6 +28,7 @@ use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+require_once(__DIR__ . '/locallib.php');
 
 require_admin();
 
@@ -61,8 +62,12 @@ if ($triggers) {
         }
         if ($plugindescription) {
             echo html_writer::start_div().$plugindescription;
-            if ($trigger == 'sitecourse' || $trigger == 'delayedcourses') {
-                echo html_writer::span(' Depracated. Will be removed with version 5.0.', 'text-danger');
+            if ($trigger == 'customfieldsemester') {
+                if (!lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                    echo \html_writer::span(
+                        get_string('customfieldsemesternotinstalled', 'tool_lifecycle', "customfieldsemester"),
+                        'text-danger ml-1');
+                }
             }
             echo html_writer::end_div();
         }

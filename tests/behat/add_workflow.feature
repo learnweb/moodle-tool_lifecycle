@@ -38,7 +38,7 @@ Feature: Add a workflow definition
     Then I should see "Delay in case of rollback"
     When I select "Start date delay trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
-      | Instance name              | My Trigger                                |
+      | Instance name    | My Trigger                 |
       | delay[number]    | 2                          |
       | delay[timeunit]  | days                       |
     And I press "Save changes"
