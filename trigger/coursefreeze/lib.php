@@ -56,9 +56,11 @@ class coursefreeze extends base_automatic {
      */
     public function instance_settings() {
         return [
-            new instance_setting('delay', PARAM_INT),
+            new instance_setting('lastaccessdelay', PARAM_INT),
+            new instance_setting('creationdelay', PARAM_INT),
         ];
     }
+    
 
     /**
      * Returns the where statement for all courses that should be triggered,
@@ -72,22 +74,22 @@ class coursefreeze extends base_automatic {
      */
     public function get_course_recordset_where($triggerid) {
         global $DB;
-
-        // Get trigger settings.
+    
+        // Load instance settings.
         $settings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
-
-        // Fallback defaults if not set.
-        $lastaccessdelay = isset($settings['lastaccessdelay']) ? $settings['lastaccessdelay'] : DAYSECS * 365;        // 12 months.
-        $creationdelay   = isset($settings['creationdelay'])   ? $settings['creationdelay']   : DAYSECS * 365 * 2;    // 24 months.
-
+    
+        $lastaccessdelay = $settings['lastaccessdelay'] ?? (DAYSECS * 365);
+        $creationdelay   = $settings['creationdelay']   ?? (DAYSECS * 365 * 2);
+    
         $now = time();
+    
         $lastaccessthreshold = $now - $lastaccessdelay;
         $creationthreshold   = $now - $creationdelay;
-
+    
         // Only courses that:
-        //  - have last access older than lastaccessthreshold
-        //  - AND were created before creationthreshold.
-        $where = 'c.timecreated < :creationthreshold
+        // 1. Were created before creationthreshold
+        // 2. Have lastaccess older than lastaccessthreshold
+        $where = "c.timecreated < :creationthreshold
                   AND c.id IN (
                         SELECT la.courseid
                           FROM {user_enrolments} ue
@@ -96,15 +98,16 @@ class coursefreeze extends base_automatic {
                          WHERE e.courseid = la.courseid
                          GROUP BY la.courseid
                          HAVING MAX(la.timeaccess) < :lastaccessthreshold
-                  )';
-
+                  )";
+    
         $params = [
             'creationthreshold'   => $creationthreshold,
             'lastaccessthreshold' => $lastaccessthreshold,
         ];
-
+    
         return [$where, $params];
     }
+    
 
 
     /**
