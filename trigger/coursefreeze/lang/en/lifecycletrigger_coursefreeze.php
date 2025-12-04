@@ -22,9 +22,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['delay'] = 'blank.';
-$string['delay_help'] = 'blank.';
-$string['plugindescription'] = 'Triggers when Lastaccess date is older than 12 months AND Creation date is older than 24 months.';
-$string['pluginname'] = 'Course freeze trigger';
-$string['privacy:metadata'] = 'The course freeze trigger does not store personal data.';
+ $string['pluginname'] = 'Course freeze trigger';
+ $string['plugindescription'] = 'Triggers when last course access and creation date exceed configured thresholds.';
+ 
+ $string['lastaccessdelay'] = 'Trigger when last access is older than';
+ $string['lastaccessdelay_help'] = 'The course will be selected if the most recent student access is older than this duration.';
+ 
+ $string['creationdelay'] = 'AND creation date is older than';
+ $string['creationdelay_help'] = 'The course must also be older than this creation date threshold.';
+ 
+ $string['privacy:metadata'] = 'The course freeze trigger does not store personal data.';
 
