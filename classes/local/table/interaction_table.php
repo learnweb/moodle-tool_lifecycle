@@ -147,7 +147,7 @@ abstract class interaction_table extends \table_sql {
                 $categoryname = $category->name;
             }
         }
-        return \html_writer::div($categoryname, "badge text-bg-secondary");
+        return \html_writer::div($categoryname, "badge badge-secondary");
     }
 
     /**
