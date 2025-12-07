@@ -324,11 +324,14 @@ class processor {
                 $where = $andor == 'AND' ? 'true ' : 'false ';
             }
             $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
-            [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
-            $sql = preg_replace("/{course}/", "c", $sql, 1);
-            if (!empty($sql)) {
-                $where .= " $andor " . $sql;
-                $whereparams = array_merge($whereparams, $params);
+            // Exclude specificdate trigger when counting.
+            if (!($forcounting && $lib->default_response() == trigger_response::triggertime())) {
+                [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
+                $sql = preg_replace("/{course}/", "c", $sql, 1);
+                if (!empty($sql)) {
+                    $where .= " $andor " . $sql;
+                    $whereparams = array_merge($whereparams, $params);
+                }
             }
         }
 

@@ -134,6 +134,8 @@ class triggered_courses_table_workflow extends \table_sql {
             $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
             if ($lib->is_manual_trigger()) {
                 continue;
+            } else if ($lib->default_response() == trigger_response::triggertime()) { // No specificdate trigger here.
+                continue;
             } else {
                 if (!$this->checkcoursecode) {
                     $this->checkcoursecode = $lib->check_course_code();
