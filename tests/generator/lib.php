@@ -188,6 +188,7 @@ class tool_lifecycle_generator extends testing_module_generator {
         $record->courseid = $courseid;
         $record->workflowid = $workflowid;
         $record->timestepchanged = time();
+        $record->timestampcreated = time();
         $record->stepindex = 0;
         $process = process::from_record($record, $coursedeleted);
         $process->id = $DB->insert_record('tool_lifecycle_process', $process);
