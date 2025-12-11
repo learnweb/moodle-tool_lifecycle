@@ -133,8 +133,17 @@ class processor {
             }
             // Get recordset of triggered courses.
             $recordset = $this->get_course_recordset($triggers, !$workflow->includesitecourse);
+            // Compute max number of courses processed by this cron run.
+            $maxprocesses = 9223372036854775807;
+            if ($workflow->triggeredpercron) {
+                $maxprocesses = $workflow->triggeredpercron;
+            }
+            if ($workflow->triggeredperday) {
+                $processestoday = process_manager::count_processes_by_workflow_created_today($workflow->id);
+                $maxprocesses = min($workflow->triggeredperday-$processestoday, $maxprocesses);
+            }
             // Walk through the course list.
-            while ($recordset->valid()) {
+            while ($recordset->valid() && ($maxprocesses > $counttriggered)) {
                 $course = $recordset->current();
                 $countcourses++;
                 // Check trigger by trigger if the course is to be triggered or not.

@@ -574,7 +574,7 @@ $data = [
     'abortdisableworkflowlink' => $abortdisableworkflowlink,
     'workflowprocesseslink'  => $workflowprocesseslink,
     'runnable' => $isactive,
-    'runlink' => new \moodle_url(urls::RUN),
+    'runlink' => new \moodle_url(urls::RUN, ['wf' => $workflow->id]),
 ];
 if ($showdetails) {
     // The triggers total box.

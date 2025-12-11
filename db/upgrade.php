@@ -612,6 +612,32 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025050405, 'tool', 'lifecycle');
 
     }
+    if ($oldversion < 2025102303) {
+        $table = new xmldb_table('tool_lifecycle_workflow');
+
+        // Define field "triggeredpercron" to be added to tool_lifecycle_workflow.
+        $field = new xmldb_field('triggeredpercron', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'includedelayedcourses');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field "triggeredperday" to be added to tool_lifecycle_workflow.
+        $field = new xmldb_field('triggeredperday', XMLDB_TYPE_INTEGER, '5', null, null, null, '0', 'triggeredpercron');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $table = new xmldb_table('tool_lifecycle_process');
+
+        // Define field "timestampcreated" to be added to tool_lifecycle_process.
+        $field = new xmldb_field('timestampcreated', XMLDB_TYPE_INTEGER, '11', null, null, null, null);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2025102303, 'tool', 'lifecycle');
+
+    }
 
     return true;
 }

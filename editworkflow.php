@@ -75,6 +75,8 @@ if ($data = $form->get_data()) {
         $workflow->delayforallworkflows = property_exists($data, 'delayforallworkflows') ? $data->delayforallworkflows : 0;
         $workflow->includedelayedcourses = $data->includedelayedcourses;
         $workflow->includesitecourse = $data->includesitecourse;
+        $workflow->triggeredpercron = $data->triggeredpercron;
+        $workflow->triggeredperday = $data->triggeredperday;
         $workflow->andor = $data->andorgroup['andor'];
         $newworkflow = false;
     } else {

@@ -56,6 +56,7 @@ class process_manager {
             $record->courseid = $courseid;
             $record->workflowid = $workflowid;
             $record->timestepchanged = time();
+            $record->timestampcreated = time();
             $process = process::from_record($record);
             $process->id = $DB->insert_record('tool_lifecycle_process', $process);
             return $process;
@@ -132,6 +133,32 @@ class process_manager {
     public static function count_processes_by_workflow($workflowid) {
         global $DB;
         return $DB->count_records('tool_lifecycle_process', ['workflowid' => $workflowid]);
+    }
+
+    /**
+     * Counts the processes for the given workflow created today.
+     * @param int $workflowid id of the workflow
+     * @return int number of processes.
+     * @throws \dml_exception
+     */
+    public static function count_processes_by_workflow_created_today($workflowid) {
+        global $DB;
+
+        $todayStart = date('Y-m-d 00:00:00', );
+        $todayEnd   = date('Y-m-d 00:00:00', strtotime('+1 day'));
+        $tstart = strtotime($todayStart);
+        $tend   = strtotime($todayEnd);
+
+        $sql = "SELECT count(1) FROM {tool_lifecycle_process}
+                WHERE workflowid = :workflowid
+                AND timestampcreated >= :tstart
+                AND timestampcreated < :tend";
+
+        return $DB->count_records_sql($sql, [
+            'workflowid' => $workflowid,
+            'tstart' => $tstart,
+            'tend' => $tend
+        ]);
     }
 
     /**

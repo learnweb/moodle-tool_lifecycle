@@ -68,6 +68,12 @@ class workflow {
     /** @var int $includesitecourse Is course 1 supposed to be processed in this workflow. */
     public $includesitecourse;
 
+    /** @var int $triggeredpercron How many courses to be triggered at max per cron run */
+    public $triggeredpercron;
+
+    /** @var int $triggeredperday How many courses to be triggered at max per day */
+    public $triggeredperday;
+
     /** @var int $andor conjunction or disjunction when combining triggers. */
     public $andor;
 
@@ -85,11 +91,13 @@ class workflow {
      * @param bool $delayforallworkflows True if a delay counts for all workflows.
      * @param int $includedelayedcourses Are delayed courses supposed to be processed in this workflow.
      * @param int $includesitecourse Is course 1 supposed to be processed in this workflow.
+     * @param int $triggeredpercron How many courses to be triggered at max per cron run.
+     * @param int $triggeredperday How many courses to be triggered at max per day.
      * @param int $andor conjunction or disjunction when combining triggers.
      */
     private function __construct($id, $title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
                                  $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses,
-                                 $includesitecourse, $andor) {
+                                 $includesitecourse, $triggeredpercron, $triggeredperday, $andor) {
         $this->id = $id;
         $this->title = $title;
         $this->timeactive = $timeactive;
@@ -102,6 +110,8 @@ class workflow {
         $this->delayforallworkflows = $delayforallworkflows;
         $this->includedelayedcourses = $includedelayedcourses;
         $this->includesitecourse = $includesitecourse;
+        $this->triggeredpercron = $triggeredpercron;
+        $this->triggeredperday = $triggeredperday;
         $this->andor = $andor;
     }
 
@@ -174,13 +184,24 @@ class workflow {
             $includesitecourse = $record->includesitecourse;
         }
 
+        $triggeredpercron = false;
+        if (object_property_exists($record, 'triggeredpercron')) {
+            $triggeredpercron = $record->triggeredpercron;
+        }
+
+        $triggeredperday = false;
+        if (object_property_exists($record, 'triggeredperday')) {
+            $triggeredperday = $record->triggeredperday;
+        }
+
         $andor = false;
         if (object_property_exists($record, 'andor')) {
             $andor = $record->andor;
         }
 
         $instance = new self($id, $record->title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
-            $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses, $includesitecourse, $andor);
+            $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses, $includesitecourse,
+            $triggeredpercron, $triggeredperday, $andor);
 
         return $instance;
     }
