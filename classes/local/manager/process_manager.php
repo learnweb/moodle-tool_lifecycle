@@ -144,10 +144,10 @@ class process_manager {
     public static function count_processes_by_workflow_created_today($workflowid) {
         global $DB;
 
-        $todayStart = date('Y-m-d 00:00:00', );
-        $todayEnd   = date('Y-m-d 00:00:00', strtotime('+1 day'));
-        $tstart = strtotime($todayStart);
-        $tend   = strtotime($todayEnd);
+        $todaystart = date('Y-m-d 00:00:00', );
+        $todayend   = date('Y-m-d 00:00:00', strtotime('+1 day'));
+        $tstart = strtotime($todaystart);
+        $tend   = strtotime($todayend);
 
         $sql = "SELECT count(1) FROM {tool_lifecycle_process}
                 WHERE workflowid = :workflowid
@@ -157,7 +157,7 @@ class process_manager {
         return $DB->count_records_sql($sql, [
             'workflowid' => $workflowid,
             'tstart' => $tstart,
-            'tend' => $tend
+            'tend' => $tend,
         ]);
     }
 

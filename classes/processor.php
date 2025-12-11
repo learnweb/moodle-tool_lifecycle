@@ -140,7 +140,7 @@ class processor {
             }
             if ($workflow->triggeredperday) {
                 $processestoday = process_manager::count_processes_by_workflow_created_today($workflow->id);
-                $maxprocesses = min($workflow->triggeredperday-$processestoday, $maxprocesses);
+                $maxprocesses = min($workflow->triggeredperday - $processestoday, $maxprocesses);
             }
             // Walk through the course list.
             while ($recordset->valid() && ($maxprocesses > $counttriggered)) {
