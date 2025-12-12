@@ -62,13 +62,14 @@ class processor {
     public function call_trigger() {
         global $FULLSCRIPT, $USER;
 
+        $automatictest = (defined('PHPUNIT_TEST') && PHPUNIT_TEST) ||
+            defined('BEHAT_SITE_RUNNING');
+
         $eol = "\n";
         // HTML end of line if called by run-command of workflowoverview.
         if ($run = str_contains($FULLSCRIPT, 'run.php')) {
             $eol = "<br>";
         }
-        $automatictest = (defined('PHPUNIT_TEST') && PHPUNIT_TEST) ||
-            defined('BEHAT_SITE_RUNNING');
 
         // Only active workflows that are not manual workflows.
         $activeworkflows = workflow_manager::get_active_automatic_workflows();
@@ -124,16 +125,9 @@ class processor {
                 }
             }
 
-            if (!$workflow->includesitecourse) {
-                $exclude[] = 1;
-            }
-            if (!$workflow->includedelayedcourses) {
-                $exclude = array_merge(delayed_courses_manager::get_delayed_courses_for_workflow($workflow->id),
-                    delayed_courses_manager::get_globally_delayed_courses(), $exclude);
-            }
             // Get recordset of triggered courses.
-            $recordset = $this->get_course_recordset($triggers, !$workflow->includesitecourse);
-            // Compute max number of courses processed by this cron run.
+            $recordset = $this->get_course_recordset($triggers);
+            // Compute max number of courses to be processed by this cron run.
             $maxprocesses = 9223372036854775807;
             if ($workflow->triggeredpercron) {
                 $maxprocesses = $workflow->triggeredpercron;
