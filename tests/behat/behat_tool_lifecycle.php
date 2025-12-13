@@ -468,7 +468,7 @@ class behat_tool_lifecycle extends behat_base {
     }
 
     /**
-     * Open the approvals page.
+     * Open the approval page.
      *
      * @Given /^I am on approvals page$/
      */

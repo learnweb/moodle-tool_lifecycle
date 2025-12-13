@@ -4,12 +4,12 @@ Feature: Test the max number of courses to be processed-limitations of a workflo
   Background:
     Given the following "category" exist:
       | name    | category | idnumber |
-      | cat     | 0        | cat      |
+      | cat01    | 0        | cat01     |
     And the following "courses" exist:
       | fullname    | shortname | category |
-      | Course A    | C_A       | cat      |
-      | Course B    | C_B       | cat      |
-      | Course C    | C_C       | cat      |
+      | Course A    | C_A       | cat01     |
+      | Course B    | C_B       | cat01     |
+      | Course C    | C_C       | cat01     |
 
   @javascript
   Scenario: Create a workflow with a category trigger and an admin approve step
@@ -18,7 +18,7 @@ Feature: Test the max number of courses to be processed-limitations of a workflo
     And I am on workflowdrafts page
     And I click on "Create new workflow" "link"
     And I set the following fields to these values:
-      | Title                                | My Workflow                               |
+      | Title                                | WF1                               |
       | Displayed workflow title             | Teachers view on workflow                 |
       | Maximum courses triggered per cron   | 1                                         |
       | Maximum courses triggered per day    | 2                                         |
@@ -26,8 +26,8 @@ Feature: Test the max number of courses to be processed-limitations of a workflo
 
     And I select "Categories trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
-      | Instance name                                          | Categories |
-      | Categories, for which the workflow should be triggered | cat        |
+      | Instance name                                          | CategoriesTrigger |
+      | Categories, for which the workflow should be triggered | cat01             |
     And I press "Save changes"
 
     And I select "Admin approve step" from the "tool_lifecycle-choose-step" singleselect
@@ -38,32 +38,32 @@ Feature: Test the max number of courses to be processed-limitations of a workflo
     And I press "Activate"
 
     And I am on activeworkflows page
-    Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-    When I click on the tool "View workflow steps" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
+    Then I should see the row "WF1" in the "tool_lifecycle_active_automatic_workflows" table
+    When I click on the tool "View workflow steps" in the "WF1" row of the "tool_lifecycle_active_automatic_workflows" table
     Then I should see "Admin approve Step"
-    And I should see "Categories"
+    And I should see "CategoriesTrigger"
     And I should see "Courses: 0"
 
-    When I follow "Run"
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds
 
     And I am on activeworkflows page
-    Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-    When I click on the tool "View workflow steps" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
-    Then I should see "Courses: 1"
+    Then I should see the row "WF1" in the "tool_lifecycle_active_automatic_workflows" table
+    Then I click on the tool "View workflow steps" in the "WF1" row of the "tool_lifecycle_active_automatic_workflows" table
+    And I should see "Courses: 1"
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds
 
     And I am on activeworkflows page
-    Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-    When I click on the tool "View workflow steps" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
-    Then I should see "Courses: 2"
+    Then I should see the row "WF1" in the "tool_lifecycle_active_automatic_workflows" table
+    When I click on the tool "View workflow steps" in the "WF1" row of the "tool_lifecycle_active_automatic_workflows" table
+    And I should see "Courses: 2"
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I wait "5" seconds
 
     And I am on activeworkflows page
-    Then I should see the row "My Workflow" in the "tool_lifecycle_active_automatic_workflows" table
-    When I click on the tool "View workflow steps" in the "My Workflow" row of the "tool_lifecycle_active_automatic_workflows" table
-    Then I should see "Courses: 2"
+    Then I should see the row "WF1" in the "tool_lifecycle_active_automatic_workflows" table
+    When I click on the tool "View workflow steps" in the "WF1" row of the "tool_lifecycle_active_automatic_workflows" table
+    And I should see "Courses: 2"
