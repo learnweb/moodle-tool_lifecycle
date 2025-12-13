@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+5.0.2(2025-12-13)
+------------------
+* [FEATURE] workflowoverview: Do not take the specificdata trigger into account when counting
+* [FEATURE] Introduce optional max number of courses triggered per cron run and/or per day for a workflow
+* [FEATURE] New trigger depending on enddate PR #272
+* [FIXED] Fix a bootstrap bug in interaction table
+
 5.0.1(2025-11-15)
 ------------------
 * [FEATURE] Customise buttons in adminapprove step PR #266

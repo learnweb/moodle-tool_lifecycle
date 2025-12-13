@@ -612,7 +612,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025050405, 'tool', 'lifecycle');
 
     }
-    if ($oldversion < 2025102303) {
+    if ($oldversion < 2025102302) {
         $table = new xmldb_table('tool_lifecycle_workflow');
 
         // Define field "triggeredpercron" to be added to tool_lifecycle_workflow.
@@ -635,7 +635,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        upgrade_plugin_savepoint(true, 2025102303, 'tool', 'lifecycle');
+        upgrade_plugin_savepoint(true, 2025102302, 'tool', 'lifecycle');
 
     }
 
