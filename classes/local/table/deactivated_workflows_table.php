@@ -106,6 +106,11 @@ class deactivated_workflows_table extends workflow_table {
             );
         }
 
+        $action = action::WORKFLOW_BACKUP;
+        $alt = get_string('downloadworkflow', 'tool_lifecycle');
+        $icon = 't/backup';
+        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+
         // The check for is_deprecated is temporary to make deprecated sitecourse and coursedelayed trigger workflows removable.
         if (workflow_manager::is_removable($row->id)  || workflow_manager::is_deprecated($row->id)) {
             $alt = get_string('deleteworkflow', 'tool_lifecycle');

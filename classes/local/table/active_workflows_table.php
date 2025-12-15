@@ -60,11 +60,12 @@ abstract class active_workflows_table extends workflow_table {
         $output .= $OUTPUT->action_icon($overviewurl, new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
             null, ['title' => $alt]);
 
+        $action = action::WORKFLOW_BACKUP;
+        $alt = get_string('downloadworkflow', 'tool_lifecycle');
+        $icon = 't/backup';
+        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+
         if (workflow_manager::is_disableable($row->id)) {
-            $action = action::WORKFLOW_BACKUP;
-            $alt = get_string('downloadworkflow', 'tool_lifecycle');
-            $icon = 't/backup';
-            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
             $alt = get_string('disableworkflow', 'tool_lifecycle');
             $icon = 't/disable';
