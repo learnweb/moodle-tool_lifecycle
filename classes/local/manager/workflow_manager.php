@@ -607,7 +607,6 @@ class workflow_manager {
             }
         }
 
-
         // If we couldn't get nextrun or lastrun so far, we analyze the lifecycle task.
         if (!($nextrun && $lastrun)) {
             $task = manager::get_scheduled_task('tool_lifecycle\task\lifecycle_task');
