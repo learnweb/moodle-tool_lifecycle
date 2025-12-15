@@ -35,7 +35,6 @@ use core\output\notification;
 use core\output\single_button;
 use core\task\manager;
 use tool_lifecycle\action;
-use tool_lifecycle\event\process_rollback;
 use tool_lifecycle\event\process_triggered;
 use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\manager\lib_manager;
@@ -227,7 +226,6 @@ $str = [
     'move_down' => get_string('move_down', 'tool_lifecycle'),
 ];
 
-$nextrun = false;
 $coursestriggered = 0;
 $coursesdelayed = 0;
 $hasotherwf = 0;
@@ -242,37 +240,7 @@ if ($showdetails) {
     $coursestriggered = $amounts['all']->coursestriggered ?? 0;
     $coursesdelayed = $amounts['all']->delayedcourses ?? 0;
     $hasotherwf = $amounts['all']->hasotherwf ?? 0;
-    $nextrun = $amounts['all']->nextrun == 0 ? false : $amounts['all']->nextrun;
     $displaytotaltriggered = !empty($triggers);
-}
-
-$task = manager::get_scheduled_task('tool_lifecycle\task\lifecycle_task');
-$lastrun = $task->get_last_run_time();
-$nextrunt = $task->get_next_run_time();
-$nextrunout = "";
-if (!$task->is_component_enabled() && !$task->get_run_if_component_disabled()) {
-    $nextrunt = get_string('plugindisabled', 'tool_task');
-} else if ($task->get_disabled()) {
-    $nextrunt = get_string('taskdisabled', 'tool_task');
-} else if (is_numeric($nextrunt) && $nextrunt < time()) {
-    $nextrunt = get_string('asap', 'tool_task');
-}
-if (is_numeric($nextrunt) && is_numeric($nextrun)) { // Task nextrun and trigger nextrun are valid times: take the minimum.
-    $nextrunout = min($nextrunt, $nextrun);
-} else if (!is_numeric($nextrunt) && is_numeric($nextrun)) { // Only trigger nextrun is valid time.
-    $nextrun = $nextrun;
-} else if (is_numeric($nextrunt)) { // Only task next run is valid time.
-    $nextrunout = $nextrunt;
-} else { // There is no valid next run time. Print the task message.
-    $nextrunout = $nextrunt;
-}
-if (is_numeric($nextrunout)) {
-    if ($nextrunout) {
-        $nextrunout = userdate($nextrunout, get_string('strftimedatetimeshort', 'langconfig'),
-            core_date::get_user_timezone($USER));
-    } else {
-        $nextrunout = get_string('statusunknown');
-    }
 }
 
 $nomanualtriggerinvolved = true;
@@ -309,7 +277,6 @@ foreach ($triggers as $trigger) {
             $sqlresult = trigger_manager::get_trigger_sqlresult($trigger);
             if ($sqlresult == "false") {
                 $trigger->classfires = "border-danger";
-                $trigger->additionalinfo = $amounts[$trigger->sortindex]->additionalinfo ?? "-";
             } else {
                 $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
                 $trigger->exclude = $settings['exclude'] ?? false;
@@ -344,11 +311,6 @@ foreach ($triggers as $trigger) {
     }
     if ($response == trigger_response::triggertime()) {
         $displaytimetriggers[] = $trigger;
-        if (isset($amounts[$trigger->sortindex]->lastrun) && $amounts[$trigger->sortindex]->lastrun) {
-            $lastrun = $amounts[$trigger->sortindex]->lastrun;
-        } else {
-            $lastrun = 0;
-        }
     } else {
         $displaytriggers[] = $trigger;
     }
@@ -538,9 +500,8 @@ if ($isactive) {
     }
 }
 
-if (!($isactive || $isdeactivated)) {
-    $lastrun = 0;
-}
+list($lastrun, $nextrun) = workflow_manager::get_lastrun_nextrun($workflow->id);
+
 $data = [
     'editsettingslink' => (new moodle_url(urls::EDIT_WORKFLOW, ['wf' => $workflow->id]))->out(false),
     'title' => $workflow->title,
@@ -565,10 +526,8 @@ $data = [
     'showdetailslink' => $showdetailslink,
     'showdetailsicon' => $showdetails == 0,
     'isactive' => $isactive || $isdeactivated,
-    'nextrun' => $nextrunout,
-    'lastrun' => $lastrun != 0 ?
-        userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig'),
-            core_date::get_user_timezone($USER)) : '--',
+    'nextrun' => $nextrun,
+    'lastrun' => $lastrun,
     'nomanualtriggerinvolved' => $nomanualtriggerinvolved,
     'disableworkflowlink' => $disableworkflowlink,
     'abortdisableworkflowlink' => $abortdisableworkflowlink,

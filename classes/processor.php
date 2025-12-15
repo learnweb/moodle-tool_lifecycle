@@ -574,15 +574,14 @@ class processor {
                     $autotriggers[] = $trigger;
                 } else if ($obj->response == trigger_response::triggertime()) {
                     if ($nextrun = $lib->get_next_run_time($trigger->id)) {
-                        if ($obj->lastrun = $settings['timelastrun'] ?? 0) {
-                            $obj->additionalinfo = get_string('lastrun', 'tool_lifecycle',
-                                userdate($settings['timelastrun'], get_string('strftimedatetimeshort', 'langconfig'),
-                                    core_date::get_user_timezone($USER)));
-                        } else {
-                            $obj->additionalinfo = "--";
-                        }
-                    } else {
-                        $obj->additionalinfo = "--";
+                        $obj->nextrun = userdate($nextrun,
+                            get_string('strftimedatetimeshort', 'langconfig'),
+                            core_date::get_user_timezone($USER));
+                    }
+                    if ($lastrun = $settings['timelastrun'] ?? 0) {
+                        $obj->lastrun = userdate($lastrun,
+                            get_string('strftimedatetimeshort', 'langconfig'),
+                                core_date::get_user_timezone($USER));
                     }
                     $obj->sql = "---";
                     $autotriggers[] = $trigger;
