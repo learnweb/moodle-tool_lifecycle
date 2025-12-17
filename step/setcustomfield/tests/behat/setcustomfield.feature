@@ -99,8 +99,8 @@ Feature: Select setcustomfield step and test view and actions
       | FieldCB       | FieldCB                 |  1                 |  1                 |
       | FieldCB       | FieldCB                 |  0                 |  0                 |
 
-@javascript
-Scenario Outline: Empty custom field
+  @javascript
+  Scenario Outline: Empty custom field
     When I set the following fields to these values:
       | Course customfield          | <setfield>     |
       | Set field to                | empty       |

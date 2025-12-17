@@ -144,17 +144,14 @@ class setcustomfield extends libbase {
 
     }
 
-
     /**
-     * read custom field for course contact from database
+     * set course custom field according to configuration
      *
-     * @param int $instanceid
-     * @param \moodle_database|null $DB
-     * @param object $course
+     * @param int $instanceid instance id
+     * @param object $course course object
      * @return void
      * @throws \coding_exception
      * @throws \dml_exception
-     * @throws \moodle_exception
      */
     protected function set_field(int $instanceid, object $course) {
         $fieldname = settings_manager::get_settings($instanceid, settings_type::STEP)['customfield'];
