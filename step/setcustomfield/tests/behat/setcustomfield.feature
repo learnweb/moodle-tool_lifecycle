@@ -126,14 +126,14 @@ Feature: Select setcustomfield step and test view and actions
     And I expand all fieldsets
     And the field "<getfield>" matches value "<value>"
 
-  Examples:
-    | setfield      | getfield                |  value    |
-    | FieldSelect   | FieldSelect             |           |
-    | FieldTextarea | FieldTextarea           |           |
-    | FieldDate     | customfield_date[enabled]| 0        |
-    | FieldText     | FieldText               |           |
-    | FieldNumber   | FieldNumber             |  0        |
-    | FieldCB       | FieldCB                 |  0        |
+    Examples:
+      | setfield      | getfield                |  value    |
+      | FieldSelect   | FieldSelect             |           |
+      | FieldTextarea | FieldTextarea           |           |
+      | FieldDate     | customfield_date[enabled]| 0        |
+      | FieldText     | FieldText               |           |
+      | FieldNumber   | FieldNumber             |  0        |
+      | FieldCB       | FieldCB                 |  0        |
 
   @javascript
   Scenario: Set custom date field
