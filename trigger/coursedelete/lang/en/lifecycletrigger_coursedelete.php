@@ -22,23 +22,24 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Select long-term archived courses for deletion';
+ $string['pluginname'] = 'Select long-term archived courses for deletion';
+ // Description shown on the workflow configuration page.
 
-// Description shown on the workflow configuration page.
-$string['plugindescription'] =
+ $string['plugindescription'] =
     'Selects courses that have been archived (frozen), have not been accessed for a prolonged period, '
     . 'and were created sufficiently long ago. These courses are considered end-of-life and may be '
     . 'safely removed using a delete step in the workflow.';
 
-$string['inactivitydelay'] = 'Inactivity threshold';
-$string['inactivitydelay_help'] =
-    'The minimum period since a course was last accessed by enrolled users. '
-    . 'Only courses with no activity within this time window will be eligible for deletion.';
+ $string['inactivitydelay'] = 'Last access threshold';
+ $string['inactivitydelay_help'] =
+    'Only delete courses where the most recent user activity is older than this period. '
+    . 'Set to 48 months by default to target courses with no access for at least 4 years.';
 
-$string['creationdelay'] = 'Minimum course age';
-$string['creationdelay_help'] =
+ $string['creationdelay'] = 'Minimum course age';
+
+ $string['creationdelay_help'] =
     'The minimum age of a course based on its creation date. '
-    . 'Courses created more recently than this threshold will not be selected for deletion.';
+    . 'Courses created more recently than this threshold will not be selected for deletion.'
+    . 'Set to 60 months by default to target courses with older than at least 5 years.';
 
-$string['privacy:metadata'] =
-    'The Course deletion trigger does not store or process personal data.';
+ $string['privacy:metadata'] = 'The Course deletion trigger does not store or process personal data.';

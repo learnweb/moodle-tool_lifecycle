@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2025120500;
+$plugin->version   = 2025121801;
 $plugin->component = 'lifecycletrigger_coursedelete';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->requires = 2022112800; // Requires Moodle 4.1+.
