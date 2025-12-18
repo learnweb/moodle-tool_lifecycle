@@ -18,33 +18,27 @@
  * Lang strings for course freeze trigger
  *
  * @package lifecycletrigger_coursedelete
- * @copyright  2025 Gifty Wanzola (ccaewan)
+ * @copyright  2025 Gifty (ccaewan)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- // English strings for the Course deletion trigger.
+$string['pluginname'] = 'Select long-term archived courses for deletion';
 
+// Description shown on the workflow configuration page.
+$string['plugindescription'] =
+    'Selects courses that have been archived (frozen), have not been accessed for a prolonged period, '
+    . 'and were created sufficiently long ago. These courses are considered end-of-life and may be '
+    . 'safely removed using a delete step in the workflow.';
 
- // Short name shown in the trigger dropdown.
+$string['inactivitydelay'] = 'Inactivity threshold';
+$string['inactivitydelay_help'] =
+    'The minimum period since a course was last accessed by enrolled users. '
+    . 'Only courses with no activity within this time window will be eligible for deletion.';
 
- $string['pluginname'] = 'Select previously archived courses to delete';
+$string['creationdelay'] = 'Minimum course age';
+$string['creationdelay_help'] =
+    'The minimum age of a course based on its creation date. '
+    . 'Courses created more recently than this threshold will not be selected for deletion.';
 
-
- //Description shown on the workflow configuration page.
-
- $string['plugindescription'] =
-     'Selects courses that have already been archived/frozen and have remained in that state '
-     . 'for longer than the configured retention period. These courses can then be removed by '
-     . 'a delete step in the workflow.';
-
-
- //Frozen duration setting.
-
- $string['frozendelay'] = 'Retention period for archived courses';
- $string['frozendelay_help'] =
-     'The minimum time an archived (frozen) course should be kept before it is eligible for deletion. '
-     . 'For example, set this to 3 years to match the standard UCL retention period.';
-
- //Privacy
- $string['privacy:metadata'] =
-     'The Course deletion trigger does not store any personal data.';
+$string['privacy:metadata'] =
+    'The Course deletion trigger does not store or process personal data.';
