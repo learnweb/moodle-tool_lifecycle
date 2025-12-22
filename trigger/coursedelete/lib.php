@@ -21,7 +21,6 @@
   * @copyright  2025
   * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
   */
-
  namespace tool_lifecycle\trigger;
 
  use tool_lifecycle\local\manager\settings_manager;
@@ -83,9 +82,9 @@
          $lastaccessthreshold = $now - $inactivitydelay;
          $creationthreshold   = $now - $creationdelay;
 
-         // Frozen courses: course context locked.
-         // Inactive courses: max(lastaccess.timeaccess) for enrolled users is older than threshold.
-         // Old courses: timecreated older than threshold.
+         // Frozen courses: course context locked
+         // Inactive courses: most recent recorded course access is older than threshold
+         // Old courses: timecreated older than threshold
          $where = "c.timecreated < :creationthreshold
                    AND EXISTS (
                          SELECT 1
@@ -96,13 +95,11 @@
                    )
                    AND c.id IN (
                          SELECT la.courseid
-                           FROM {user_enrolments} ue
-                           JOIN {enrol} e ON ue.enrolid = e.id
-                           JOIN {user_lastaccess} la ON ue.userid = la.userid
-                          WHERE e.courseid = la.courseid
+                           FROM {user_lastaccess} la
                           GROUP BY la.courseid
                           HAVING MAX(la.timeaccess) < :lastaccessthreshold
                    )";
+      
 
          $params = [
              'creationthreshold'   => $creationthreshold,
