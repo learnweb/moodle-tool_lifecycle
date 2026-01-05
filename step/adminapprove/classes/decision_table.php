@@ -83,6 +83,7 @@ class decision_table extends \table_sql {
 
         $this->define_baseurl("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid");
         $this->define_columns(['checkbox', 'courseid', 'course', 'category', 'startdate', 'tools']);
+        $this->column_class('tools', 'text-nowrap');
         $this->define_headers(
                 [\html_writer::checkbox('checkall', null, false),
                         get_string('courseid', 'lifecyclestep_adminapprove'),
@@ -174,7 +175,7 @@ class decision_table extends \table_sql {
     }
 
     /**
-     * Show the availble tool/actions for a column.
+     * Show the available tool/actions for a column.
      * @param object $row
      * @return string
      * @throws coding_exception
@@ -206,8 +207,7 @@ class decision_table extends \table_sql {
             ]),
             $this->strings['proceedbuttonlabel'],
             'post',
-            single_button::BUTTON_PRIMARY,
-            ['class' => 'mr-1 ml-0 mt-1']
+            single_button::BUTTON_PRIMARY
         );
         $output .= $OUTPUT->render($button);
 

@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
@@ -29,9 +31,53 @@ require_once(__DIR__ . '/../../../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 require_admin();
+$action = optional_param('action', null, PARAM_ALPHANUMEXT);
+$wfid = optional_param('wfid', null, PARAM_INT);
+$stepindex = optional_param('stepindex', null, PARAM_INT);
+
+/**
+ * Constant to roll back selected.
+ */
+const ROLLBACK = 'rollback';
+/**
+ * Constant to proceed selected.
+ */
+const PROCEED = 'proceed';
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_url(new \moodle_url(urls::SUBPLUGINS));
+$PAGE->set_url("/admin/tool/lifecycle/step/adminapprove/index.php");
+
+if ($action) {
+    require_sesskey();
+
+    $subselect = 'SELECT id FROM {tool_lifecycle_process} WHERE workflowid = :wfid AND stepindex = :stepindex';
+    $params = ['wfid' => $wfid, 'stepindex' => $stepindex];
+    if ($action == PROCEED || $action == ROLLBACK) {
+        $sql = 'UPDATE {lifecyclestep_adminapprove} ' .
+            'SET status = ' . ($action == PROCEED ? 1 : 2) . ' ' .
+            'WHERE processid IN (' . $subselect . ') ' .
+            'AND status = 0';
+        try {
+            $DB->execute($sql, $params);
+        } catch (dml_exception $e) {
+            throw $e;
+        }
+
+        $a = new stdClass();
+        $step = step_manager::get_step_instance_by_workflow_index($wfid, $stepindex);
+        $workflow = workflow_manager::get_workflow($wfid);
+        $a->step = $step->instancename;
+        $a->workflow = $workflow->title;
+
+        if ($action == PROCEED) {
+            $message = get_string('allstepapprovalsproceed', 'lifecyclestep_adminapprove', $a);
+        } else if ($action == ROLLBACK) {
+            $message = get_string('allstepapprovalsrollback', 'lifecyclestep_adminapprove', $a);
+        }
+
+        redirect($PAGE->url, $message);
+    }
+}
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');

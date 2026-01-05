@@ -24,6 +24,10 @@
 
 namespace lifecyclestep_adminapprove;
 
+use core\output\single_button;
+use moodle_url;
+use tool_lifecycle\urls;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -41,13 +45,18 @@ class step_table extends \table_sql {
     public function __construct() {
         parent::__construct('lifecyclestep_adminapprove-steptable');
         $this->define_baseurl("/admin/tool/lifecycle/step/adminapprove/index.php");
-        $this->define_columns(['stepname', 'workflowname', 'courses']);
+        $this->define_columns(['stepname', 'workflowname', 'courses', 'tools']);
         $this->define_headers(
-            [get_string('step', 'tool_lifecycle'), get_string('workflow', 'lifecyclestep_adminapprove'),
-                get_string('amount_courses', 'lifecyclestep_adminapprove')]);
+            [get_string('step', 'tool_lifecycle'),
+                get_string('workflow', 'lifecyclestep_adminapprove'),
+                get_string('amount_courses', 'lifecyclestep_adminapprove'),
+                get_string('tools', 'lifecyclestep_adminapprove'),
+            ]
+        );
         $this->set_attribute('id', 'adminapprove-steptable');
         $this->sortable(false);
-        $fields = 's.id as id, s.instancename as stepname, w.title as workflowname, b.courses as courses';
+        $fields = 's.id as id, s.instancename as stepname, w.title as workflowname, b.courses as courses,
+        b.workflowid as wfid, b.stepindex as stepindex';
         $from = '( ' .
             'SELECT p.workflowid, p.stepindex, COUNT(1) as courses FROM {lifecyclestep_adminapprove} a ' .
             'JOIN {tool_lifecycle_process} p ON p.id = a.processid ' .
@@ -65,8 +74,60 @@ class step_table extends \table_sql {
      * @return string
      */
     public function col_stepname($row) {
+
         return '<div data-stepid="' . $row->id . '" hidden></div> <a href="approvestep.php?stepid='. $row->id .'">'
                 . $row->stepname . '</a>';
+    }
+
+    /**
+     * Show the wokflowname.
+     * @param object $row
+     * @return string
+     */
+    public function col_workflowname($row) {
+        $url = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $row->wfid]);
+        $link = \html_writer::link($url, $row->workflowname);
+        return $link;
+    }
+
+    /**
+     * Show the available tool/actions for a column.
+     * @param object $row
+     * @return string
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
+    public function col_tools($row) {
+        global $OUTPUT;
+
+        $button = new \single_button(
+            new \moodle_url('', [
+                'action' => 'rollback',
+                'wfid' => $row->wfid,
+                'stepindex' => $row->stepindex,
+                'sesskey' => sesskey(),
+            ]),
+            get_string('rollbackall', 'lifecyclestep_adminapprove'),
+            'post',
+            single_button::BUTTON_SECONDARY,
+            ['class' => 'mr-1']
+        );
+        $output = $OUTPUT->render($button);
+
+        $button = new \single_button(
+            new \moodle_url('', [
+                'action' => 'proceed',
+                'wfid' => $row->wfid,
+                'stepindex' => $row->stepindex,
+                'sesskey' => sesskey(),
+            ]),
+            get_string('proceedall', 'lifecyclestep_adminapprove'),
+            'post',
+            single_button::BUTTON_PRIMARY
+        );
+        $output .= $OUTPUT->render($button);
+
+        return $output;
     }
 
     /**

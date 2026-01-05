@@ -24,6 +24,8 @@
  */
 
 $string['adminapprovals'] = 'Admin-Bestätigungen';
+$string['allstepapprovalsproceed'] = 'Alle Prozesse im Schritt "{$a->step}" des Workflow "{$a->workflow}" wurden der weiteren Verarbeitung zugewiesen.';
+$string['allstepapprovalsrollback'] = 'Alle Prozesse im Schritt "{$a->step}" des Workflow "{$a->workflow}" wurden zurückgesetzt.';
 $string['amount_courses'] = 'Anzahl wartender Kurse';
 $string['bulkactions'] = 'Massenaktionen';
 $string['courseid'] = 'Kurs-ID';
@@ -45,6 +47,7 @@ $string['proceedselected'] = 'Ausgewählte fortführen';
 $string['proceedselectedbuttonlabel'] = 'Ausgewählte fortführen';
 $string['proceedselectedbuttonlabel_help'] = 'Ändert die Beschriftung des Buttons \'Ausgewählte fortführen\'. Wenn das Feld leer bleibt, wird die Standardbeschriftung beibehalten.';
 $string['rollback'] = 'Zurücksetzten';
+$string['rollbackall'] = 'Rollback all';
 $string['rollbackbuttonlabel'] = 'Beschriftung des Zurücksetzten-Buttons';
 $string['rollbackbuttonlabel_help'] = 'Ändert die Beschriftung des Zurücksetzten-Buttons. Wenn das Feld leer bleibt, wird die Standardbeschriftung beibehalten.';
 $string['rollbackselected'] = 'Ausgewählte zurücksetzten';

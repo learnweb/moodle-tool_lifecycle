@@ -62,17 +62,9 @@ if ($step->subpluginname !== 'adminapprove') {
  */
 const ROLLBACK = 'rollback';
 /**
- * Constant to roll back all courses.
- */
-const ROLLBACK_ALL = 'rollbackall';
-/**
  * Constant to proceed selected.
  */
 const PROCEED = 'proceed';
-/**
- * Constant to proceed all courses.
- */
-const PROCEED_ALL = 'proceedall';
 
 $workflow = workflow_manager::get_workflow($step->workflowid);
 

@@ -23,6 +23,8 @@
  */
 
 $string['adminapprovals'] = 'Admin Approvals';
+$string['allstepapprovalsproceed'] = 'All pending processes of step "{$a->step}" of the workflow "{$a->workflow}" have been proceeded.';
+$string['allstepapprovalsrollback'] = 'All pending processes of step "{$a->step}" of the workflow "{$a->workflow}" have been rolled back.';
 $string['amount_courses'] = 'Remaining waiting courses';
 $string['bulkactions'] = 'Bulk actions';
 $string['cachedef_mformdata'] = 'Caches the mform data';
@@ -47,6 +49,7 @@ $string['proceedselected'] = 'Proceed selected';
 $string['proceedselectedbuttonlabel'] = 'Label of the proceed selected button';
 $string['proceedselectedbuttonlabel_help'] = 'Option to customize the label of the button \'Proceed selected\'. Leave it empty if you are ok with the default value.';
 $string['rollback'] = 'Rollback';
+$string['rollbackall'] = 'Rollback all';
 $string['rollbackbuttonlabel'] = 'Label of the rollback button';
 $string['rollbackbuttonlabel_help'] = 'Option to customize the label of the button \'Rollback\'. Leave it empty if you are ok with the default value.';
 $string['rollbackselected'] = 'Rollback selected';
