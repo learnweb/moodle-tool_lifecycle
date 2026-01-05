@@ -132,6 +132,7 @@ class opencast extends base_automatic {
      * @throws \dml_exception
      */
     public function extend_add_instance_form_definition($mform) {
+        global $DB;
 
         $mform->addElement('advcheckbox', 'activity',
             get_string('activity', 'lifecycletrigger_opencast'));
@@ -139,9 +140,13 @@ class opencast extends base_automatic {
         $mform->addHelpButton('activity', 'activity', 'lifecycletrigger_opencast');
 
         $types = lti_filter_get_types(get_site()->id);
-        $configuredtools = lti_filter_tool_types($types, LTI_TOOL_STATE_CONFIGURED);
+        $tools = lti_filter_tool_types($types, LTI_TOOL_STATE_ANY);
+        $ltiinstances = $DB->get_fieldset_sql('SELECT DISTINCT(typeid) FROM {lti}');
         $ltitools = [];
-        foreach ($configuredtools as $key => $tool) {
+        foreach ($tools as $key => $tool) {
+            if (!array_key_exists($tool->typeid, $ltiinstances)) {
+                continue;
+            }
             $ltitools[$key] = $tool->name." (".$tool->baseurl.")";
         }
         if ($ltitools) {
