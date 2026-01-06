@@ -94,7 +94,7 @@ class opencast extends base_automatic {
                 }
             } else {
                 $sql = "c.id $not IN (SELECT DISTINCT(l.course) FROM {lti} l where
-                    l.typeid IN $insql)";
+                    l.typeid $insql)";
             }
         }
 
@@ -132,20 +132,15 @@ class opencast extends base_automatic {
      * @throws \dml_exception
      */
     public function extend_add_instance_form_definition($mform) {
-        global $DB;
 
         $mform->addElement('advcheckbox', 'activity',
             get_string('activity', 'lifecycletrigger_opencast'));
         $mform->setType('activity', PARAM_BOOL);
         $mform->addHelpButton('activity', 'activity', 'lifecycletrigger_opencast');
 
-        $ltitypes = lti_filter_get_types(get_site()->id);
-        $typesused = $DB->get_fieldset_sql('SELECT DISTINCT(typeid) FROM {lti}');
+        $ltitypes = lti_filter_get_types(false);
         $ltis = [];
         foreach ($ltitypes as $key => $type) {
-            if (!array_key_exists($key, $typesused)) {
-                continue;
-            }
             $ltis[$key] = $type->name." (".$type->baseurl.")";
         }
         if ($ltis) {
