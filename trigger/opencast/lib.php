@@ -139,17 +139,16 @@ class opencast extends base_automatic {
         $mform->setType('activity', PARAM_BOOL);
         $mform->addHelpButton('activity', 'activity', 'lifecycletrigger_opencast');
 
-        $types = lti_filter_get_types(get_site()->id);
-        $tools = lti_filter_tool_types($types, LTI_TOOL_STATE_ANY);
-        $ltiinstances = $DB->get_fieldset_sql('SELECT DISTINCT(typeid) FROM {lti}');
-        $ltitools = [];
-        foreach ($tools as $key => $tool) {
-            if (!array_key_exists($tool->typeid, $ltiinstances)) {
+        $ltitypes = lti_filter_get_types(get_site()->id);
+        $typesused = $DB->get_fieldset_sql('SELECT DISTINCT(typeid) FROM {lti}');
+        $ltis = [];
+        foreach ($ltitypes as $key => $type) {
+            if (!array_key_exists($key, $typesused)) {
                 continue;
             }
-            $ltitools[$key] = $tool->name." (".$tool->baseurl.")";
+            $ltis[$key] = $type->name." (".$type->baseurl.")";
         }
-        if ($ltitools) {
+        if ($ltis) {
             $mform->addElement('advcheckbox', 'lti',
                 get_string('lti', 'lifecycletrigger_opencast'));
             $mform->setType('lti', PARAM_BOOL);
@@ -158,7 +157,7 @@ class opencast extends base_automatic {
                 'multiple' => true,
                 'noselectionstring' => get_string('lti_noselection', 'lifecycletrigger_opencast'),
             ];
-            $mform->addElement('autocomplete', 'ltitools', "", $ltitools, $options);
+            $mform->addElement('autocomplete', 'ltitools', "", $ltis, $options);
             $mform->setType('ltitools', PARAM_SEQUENCE);
 
             // Disable lti tools unless lti checkbox is checked.
