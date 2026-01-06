@@ -32,8 +32,6 @@ require_admin();
 define('PAGESIZE', 10);
 
 use core\output\notification;
-use core\output\single_button;
-use core\task\manager;
 use tool_lifecycle\action;
 use tool_lifecycle\event\process_triggered;
 use tool_lifecycle\local\manager\delayed_courses_manager;

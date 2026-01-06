@@ -60,6 +60,8 @@ $string['backupcreated'] = 'Created at';
 $string['cachedef_application'] = 'Cache for course menu if there are workflows enabled.';
 $string['cachedef_mformdata'] = 'Caches the mform data.';
 $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not be triggered manually.';
+$string['config_adminapproveuserstonotify'] = 'Admin Approve Step: Admin users to notify';
+$string['config_adminapproveuserstonotify_desc'] = 'Which admin user(s) shall be notified when new courses are triggered for an admin approve step instance.';
 $string['config_backup_path'] = 'Path of the lifecycle backup folder';
 $string['config_backup_path_desc'] = 'This settings defines the storage location of the backups created by the backup step.
 The path has to be specified as an absolute path on your server.';

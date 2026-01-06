@@ -155,7 +155,7 @@ class opencast extends base_automatic {
             $mform->addElement('autocomplete', 'ltitools', "", $ltis, $options);
             $mform->setType('ltitools', PARAM_SEQUENCE);
 
-            // Disable lti tools unless lti checkbox is checked.
+            // Hide lti tools unless lti checkbox is checked.
             $mform->hideIf('ltitools', 'lti', 'notchecked');
         }
 

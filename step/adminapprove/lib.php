@@ -24,9 +24,12 @@
 
 namespace tool_lifecycle\step;
 
+use core_user;
 use stdClass;
 use tool_lifecycle\local\entity\process;
+use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
+use tool_lifecycle\settings_type;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -127,10 +130,19 @@ class adminapprove extends libbase {
             $obj->amount = self::$newcourses;
             $obj->url = $CFG->wwwroot . '/admin/tool/lifecycle/step/adminapprove/index.php';
 
-            email_to_user(get_admin(), \core_user::get_noreply_user(),
-                get_string('emailsubject', 'lifecyclestep_adminapprove'),
-                get_string('emailcontent', 'lifecyclestep_adminapprove',  $obj),
-                get_string('emailcontenthtml', 'lifecyclestep_adminapprove', $obj));
+            $userstonotify = get_config('tool_lifecycle', 'adminapproveuserstonotify') ?? 0;
+            if ($userstonotify == 0) {
+                $userstonotify = [get_admin()->id ?? 2];
+            } else {
+                $userstonotify = explode(",",$userstonotify);
+            }
+            foreach ($userstonotify as $userid) {
+                $receiver = core_user::get_user($userid);
+                email_to_user($receiver, \core_user::get_noreply_user(),
+                    get_string('emailsubject', 'lifecyclestep_adminapprove'),
+                    get_string('emailcontent', 'lifecyclestep_adminapprove',  $obj),
+                    get_string('emailcontenthtml', 'lifecyclestep_adminapprove', $obj));
+            }
         }
     }
 

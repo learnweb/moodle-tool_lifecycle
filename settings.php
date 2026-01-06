@@ -64,5 +64,16 @@ if ($hassiteconfig) {
         get_string('config_logreceivedmails_desc', 'tool_lifecycle'),
         0));
 
+    $admins = get_admins();
+    $candidates = [];
+    $candidates[0] = get_string('none');
+    foreach ($admins as $admin) {
+        $candidates[$admin->id] = $admin->firstname.' '.$admin->lastname.' ('.$admin->email.')';
+    }
+    $settings->add(new admin_setting_configmultiselect('tool_lifecycle/adminapproveuserstonotify',
+        get_string('config_adminapproveuserstonotify', 'tool_lifecycle'),
+        get_string('config_adminapproveuserstonotify_desc', 'tool_lifecycle'),
+        [2], $candidates));
+
     $ADMIN->add('tools', $settings);
 }
