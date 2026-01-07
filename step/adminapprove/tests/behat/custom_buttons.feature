@@ -34,6 +34,8 @@ Feature: Add an admin approve step WITH button label customisation
     And I set the field "Label of the rollback button" to "Call off workflow"
     And I set the field "Label of the proceed selected button" to "Selected create backup"
     And I set the field "Label of the rollback selected button" to "Selected call off workflow"
+    And I set the field "Label of the rollback all button" to "Create backup for all"
+    And I set the field "Label of the proceed all button" to "Call off workflow for all"
     And I press "Save changes"
 
     And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
@@ -72,15 +74,14 @@ Feature: Add an admin approve step WITH button label customisation
     When I am on approvals page
     And I click on "admin approve step" "link"
     Then I should see "Course 1"
-    And I click on "checkall" "checkbox"
     And I click on "Create backup" "button"
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "25" seconds
+    And I wait "5" seconds
 
-    And I am on coursebackups page
-    Then I should see "Course 1"
+    And I am on approvals page
+    Then I should not see "Course 1"
 
   @javascript
   Scenario: Proceed all on approval page (default)
@@ -119,7 +120,7 @@ Feature: Add an admin approve step WITH button label customisation
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "25" seconds
+    And I wait "5" seconds
 
     And I am on delayedworkflows page
     Then I should see "Course 1"

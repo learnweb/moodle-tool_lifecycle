@@ -184,7 +184,7 @@ class adminapprove extends libbase {
             ['proceedselectedbuttonlabel', get_string('proceedselected', 'lifecyclestep_adminapprove')],
             ['rollbackselectedbuttonlabel', get_string('rollbackselected', 'lifecyclestep_adminapprove')],
             ['rollbackallbuttonlabel', get_string('rollbackall', 'lifecyclestep_adminapprove')],
-            ['proceedbackbuttonlabel', get_string('proceedall', 'lifecyclestep_adminapprove')],
+            ['proceedallbuttonlabel', get_string('proceedall', 'lifecyclestep_adminapprove')],
         ];
 
         foreach ($buttons as $button) {
