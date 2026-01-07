@@ -47,9 +47,19 @@ class decision_table extends \table_sql {
     private $strings;
 
     /**
-     * @var int stepid
+     * @var int stepid ID of step instance
      */
     private $stepid;
+
+    /**
+     * @var int wfid ID of workflow of step instance
+     */
+    private $wfid;
+
+    /**
+     * @var int stepindex step's position in workflow
+     */
+    private $stepindex;
 
     /**
      * Constructs the table.
@@ -68,18 +78,31 @@ class decision_table extends \table_sql {
             settings_manager::get_settings($stepid, settings_type::STEP)['rollbackbuttonlabel'] ?? null;
         $this->strings['rollbackbuttonlabel'] = !empty($rollbackcustlabel) ?
             $rollbackcustlabel : get_string('rollback', 'lifecyclestep_adminapprove');
+
         $proceedcustlabel =
             settings_manager::get_settings($stepid, settings_type::STEP)['proceedbuttonlabel'] ?? null;
         $this->strings['proceedbuttonlabel'] = !empty($proceedcustlabel) ?
             $proceedcustlabel : get_string('proceed', 'lifecyclestep_adminapprove');
+
         $rollbackselectedcustlabel =
             settings_manager::get_settings($stepid, settings_type::STEP)['rollbackselectedbuttonlabel'] ?? null;
         $this->strings['rollbackselectedbuttonlabel'] = !empty($rollbackselectedcustlabel) ?
             $rollbackselectedcustlabel : get_string('rollbackselected', 'lifecyclestep_adminapprove');
+
         $proceedselectedcustlabel =
             settings_manager::get_settings($stepid, settings_type::STEP)['proceedselectedbuttonlabel'] ?? null;
         $this->strings['proceedselectedbuttonlabel'] = !empty($proceedselectedcustlabel) ?
             $proceedselectedcustlabel : get_string('proceedselected', 'lifecyclestep_adminapprove');
+
+        $rollbackallcustlabel =
+            settings_manager::get_settings($stepid, settings_type::STEP)['rollbackallbuttonlabel'] ?? null;
+        $this->strings['rollbackallbuttonlabel'] = !empty($rollbackallcustlabel) ?
+            $rollbackallcustlabel : get_string('rollbackall', 'lifecyclestep_adminapprove');
+
+        $proceedallcustlabel =
+            settings_manager::get_settings($stepid, settings_type::STEP)['proceedallbuttonlabel'] ?? null;
+        $this->strings['proceedallbuttonlabel'] = !empty($proceedallcustlabel) ?
+            $proceedallcustlabel : get_string('proceedall', 'lifecyclestep_adminapprove');
 
         $this->define_baseurl("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid");
         $this->define_columns(['checkbox', 'courseid', 'course', 'category', 'startdate', 'tools']);
@@ -93,7 +116,7 @@ class decision_table extends \table_sql {
                         get_string('tools', 'lifecyclestep_adminapprove')]);
         $this->column_nosort = ['checkbox', 'tools'];
         $fields = 'm.id, w.displaytitle as workflow, c.id as courseid, c.fullname as course, cc.name as category, s.id as sid,
-            c.startdate, m.status';
+            c.startdate, m.status, p.workflowid as wfid, p.stepindex';
         $from = '{lifecyclestep_adminapprove} m ' .
                 'LEFT JOIN {tool_lifecycle_process} p ON p.id = m.processid ' .
                 'LEFT JOIN {course} c ON c.id = p.courseid ' .
@@ -125,6 +148,12 @@ class decision_table extends \table_sql {
      * @return string
      */
     public function col_checkbox($row) {
+        if (!($this->wfid ?? false)) {
+            $this->wfid = $row->wfid;
+        }
+        if (!($this->stepindex ?? false)) {
+            $this->stepindex = $row->stepindex;
+        }
         return \html_writer::checkbox('c[]', $row->id, false);
     }
 
@@ -193,8 +222,7 @@ class decision_table extends \table_sql {
             ]),
             $this->strings['rollbackbuttonlabel'],
             'post',
-            single_button::BUTTON_SECONDARY,
-            ['class' => 'mr-1']
+            single_button::BUTTON_SECONDARY
         );
         $output = $OUTPUT->render($button);
 
@@ -232,6 +260,8 @@ class decision_table extends \table_sql {
      * downloading.
      */
     public function wrap_html_start() {
+        global $OUTPUT;
+
         parent::wrap_html_start();
 
         $output = \html_writer::empty_tag('input',
@@ -253,10 +283,39 @@ class decision_table extends \table_sql {
                 'stepid' => $this->stepid,
                 'name' => 'button_proceed_selected',
                 'value' => $this->strings['proceedselectedbuttonlabel'],
-                'class' => 'selectedbutton btn btn-primary ml-1 mb-1',
+                'class' => 'selectedbutton btn btn-primary ml-2 mb-1 mr-2',
             ]
         );
 
+        $button = new \single_button(
+            new \moodle_url('', [
+                'action' => 'rollback_all',
+                'stepid' => $this->stepid,
+                'stepindex' => $this->stepindex,
+                'wfid' => $this->wfid,
+                'sesskey' => sesskey(),
+            ]),
+            $this->strings['rollbackallbuttonlabel'],
+            'post',
+            single_button::BUTTON_SECONDARY
+        );
+        $output .= $OUTPUT->render($button);
+
+        $button = new \single_button(
+            new \moodle_url('', [
+                'action' => 'proceed_all',
+                'stepid' => $this->stepid,
+                'stepindex' => $this->stepindex,
+                'wfid' => $this->wfid,
+                'sesskey' => sesskey(),
+            ]),
+            $this->strings['proceedallbuttonlabel'],
+            'post',
+            single_button::BUTTON_PRIMARY
+        );
+        $output .= $OUTPUT->render($button);
+
         echo $output;
+
     }
 }

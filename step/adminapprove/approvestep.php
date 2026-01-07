@@ -41,13 +41,14 @@ require_capability('moodle/site:config', context_system::instance());
 $action = optional_param('action', null, PARAM_ALPHANUMEXT);
 $ids = optional_param_array('c', [], PARAM_INT);
 $stepid = required_param('stepid', PARAM_INT);
+$wfid = optional_param('wfid', null, PARAM_INT);
+$stepindex = optional_param('stepindex', null, PARAM_INT);
 
 $syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid"));
 $PAGE->set_context($syscontext);
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');
-
 
 $step = step_manager::get_step_instance($stepid);
 if (!$step) {
@@ -62,9 +63,17 @@ if ($step->subpluginname !== 'adminapprove') {
  */
 const ROLLBACK = 'rollback';
 /**
+ * Constant to roll back all courses.
+ */
+const ROLLBACK_ALL = 'rollback_all';
+/**
  * Constant to proceed selected.
  */
 const PROCEED = 'proceed';
+/**
+ * Constant to proceed all courses.
+ */
+const PROCEED_ALL = 'proceed_all';
 
 $workflow = workflow_manager::get_workflow($step->workflowid);
 
@@ -98,17 +107,51 @@ if ($mform->is_validated()) {
 
 if ($action) {
     require_sesskey();
+    $message = "";
 
-    if (is_array($ids) && count($ids) > 0 && ($action == PROCEED || $action == ROLLBACK)) {
-        [$insql, $inparams] = $DB->get_in_or_equal($ids);
+    if ($action == PROCEED_ALL || $action == ROLLBACK_ALL) {
+        $subselect = 'SELECT id FROM {tool_lifecycle_process} WHERE workflowid = :wfid AND stepindex = :stepindex';
+        $params = ['wfid' => $wfid, 'stepindex' => $stepindex];
         $sql = 'UPDATE {lifecyclestep_adminapprove} ' .
-            'SET status = ' . ($action == PROCEED ? 1 : 2) . ' ' .
-            'WHERE id ' . $insql . ' ' .
+            'SET status = ' . ($action == PROCEED_ALL ? 1 : 2) . ' ' .
+            'WHERE processid IN (' . $subselect . ') ' .
             'AND status = 0';
-        $DB->execute($sql, $inparams);
+        try {
+            $DB->execute($sql, $params);
+        } catch (dml_exception $e) {
+            throw $e;
+        }
 
-        redirect($PAGE->url);
+        $a = new stdClass();
+        $step = step_manager::get_step_instance_by_workflow_index($wfid, $stepindex);
+        $workflow = workflow_manager::get_workflow($wfid);
+        $a->step = $step->instancename;
+        $a->workflow = $workflow->title;
+
+        if ($action == PROCEED_ALL) {
+            $message = get_string('allstepapprovalsproceed', 'lifecyclestep_adminapprove', $a);
+        } else if ($action == ROLLBACK_ALL) {
+            $message = get_string('allstepapprovalsrollback', 'lifecyclestep_adminapprove', $a);
+        }
+    } else if ($action == PROCEED || $action == ROLLBACK) {
+        if (is_array($ids) && count($ids) > 0 && ($action == PROCEED || $action == ROLLBACK)) {
+            [$insql, $inparams] = $DB->get_in_or_equal($ids);
+            $sql = 'UPDATE {lifecyclestep_adminapprove} ' .
+                'SET status = ' . ($action == PROCEED ? 1 : 2) . ' ' .
+                'WHERE id ' . $insql . ' ' .
+                'AND status = 0';
+            $DB->execute($sql, $inparams);
+
+            $a = count($ids);
+            if ($action == PROCEED) {
+                $message = get_string('selectedstepapprovalsproceed', 'lifecyclestep_adminapprove', $a);
+            } else if ($action == ROLLBACK) {
+                $message = get_string('selectedstepapprovalsrollback', 'lifecyclestep_adminapprove', $a);
+            }
+        }
     }
+
+    redirect($PAGE->url, $message);
 }
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');

@@ -157,6 +157,8 @@ class adminapprove extends libbase {
             new instance_setting('rollbackbuttonlabel', PARAM_TEXT, true),
             new instance_setting('proceedselectedbuttonlabel', PARAM_TEXT, true),
             new instance_setting('rollbackselectedbuttonlabel', PARAM_TEXT, true),
+            new instance_setting('rollbackallbuttonlabel', PARAM_TEXT, true),
+            new instance_setting('proceedallbuttonlabel', PARAM_TEXT, true),
         ];
     }
 
@@ -181,6 +183,8 @@ class adminapprove extends libbase {
             ['rollbackbuttonlabel', get_string('rollback', 'lifecyclestep_adminapprove')],
             ['proceedselectedbuttonlabel', get_string('proceedselected', 'lifecyclestep_adminapprove')],
             ['rollbackselectedbuttonlabel', get_string('rollbackselected', 'lifecyclestep_adminapprove')],
+            ['rollbackallbuttonlabel', get_string('rollbackall', 'lifecyclestep_adminapprove')],
+            ['proceedbackbuttonlabel', get_string('proceedall', 'lifecyclestep_adminapprove')],
         ];
 
         foreach ($buttons as $button) {
