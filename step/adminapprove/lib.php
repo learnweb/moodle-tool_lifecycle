@@ -134,7 +134,7 @@ class adminapprove extends libbase {
             if ($userstonotify == 0) {
                 $userstonotify = [get_admin()->id ?? 2];
             } else {
-                $userstonotify = explode(",",$userstonotify);
+                $userstonotify = explode(",", $userstonotify);
             }
             foreach ($userstonotify as $userid) {
                 $receiver = core_user::get_user($userid);
