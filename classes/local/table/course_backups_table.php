@@ -224,7 +224,7 @@ class course_backups_table extends \table_sql {
      * downloading.
      */
     public function wrap_html_start() {
-        global $OUTPUT;
+        global $OUTPUT, $PAGE;
 
         parent::wrap_html_start();
 
@@ -241,7 +241,7 @@ class course_backups_table extends \table_sql {
 
         if ($this->deletedate ?? false) {
             $button = new \single_button(
-                new \moodle_url('', [
+                new \moodle_url($PAGE->url, [
                     'action' => 'deleteall',
                     'deletedate' => $this->deletedate,
                     'sesskey' => sesskey(),
@@ -250,15 +250,9 @@ class course_backups_table extends \table_sql {
                 'post',
                 single_button::BUTTON_PRIMARY
             );
+            $button->add_confirm_action(get_string('delete_all_confirmation_text', 'tool_lifecycle'));
             $output .= $OUTPUT->render($button);
             $output .= \html_writer::span(get_string('deletealldescription', 'tool_lifecycle'), "ml-1");
-            $output .= \html_writer::empty_tag('input',
-                [
-                    'type' => 'hidden',
-                    'name' => 'deletedate',
-                    'value' => $this->deletedate,
-                ]
-            );
         }
 
         echo $output;

@@ -58,6 +58,22 @@ const DELETE_SELECTED = 'deleteselected';
  */
 const DELETE_ALL = 'deleteall';
 
+$filterform = new form_courses_filter();
+
+// Cache handling.
+$cache = cache::make('tool_lifecycle', 'mformdata');
+if ($filterform->is_cancelled()) {
+    $cache->delete('coursebackups_filter');
+    redirect($PAGE->url);
+} else if ($data = $filterform->get_data()) {
+    $cache->set('coursebackups_filter', $data);
+} else {
+    $data = $cache->get('coursebackups_filter');
+    if ($data) {
+        $filterform->set_data($data);
+    }
+}
+
 if ($action) {
 
     require_sesskey();
@@ -84,22 +100,6 @@ if ($action) {
     }
 
     redirect($PAGE->url, $message);
-}
-
-$filterform = new form_courses_filter();
-
-// Cache handling.
-$cache = cache::make('tool_lifecycle', 'mformdata');
-if ($filterform->is_cancelled()) {
-    $cache->delete('coursebackups_filter');
-    redirect($PAGE->url);
-} else if ($data = $filterform->get_data()) {
-    $cache->set('coursebackups_filter', $data);
-} else {
-    $data = $cache->get('coursebackups_filter');
-    if ($data) {
-        $filterform->set_data($data);
-    }
 }
 
 $table = new tool_lifecycle\local\table\course_backups_table('tool_lifecycle_course_backups', $data);
