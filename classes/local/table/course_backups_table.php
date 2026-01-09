@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core\output\single_button;
 use core_date;
 
 defined('MOODLE_INTERNAL') || die;
@@ -39,14 +40,30 @@ require_once($CFG->libdir . '/tablelib.php');
 class course_backups_table extends \table_sql {
 
     /**
+     * @var array "cached" lang strings
+     */
+    private $strings;
+
+    /**
+     * @var int timestamp of delete date => delete backup files which were created before that date
+     */
+    private $deletedate;
+
+    /**
      * Constructor for course_backups_table.
      * @param int $uniqueid Unique id of this table.
      * @param \stdClass|null $filterdata
+     * @throws \coding_exception
      */
     public function __construct($uniqueid, $filterdata) {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
         $this->set_attribute('class', $this->attributes['class'] . ' ' . $uniqueid);
+
+        $this->strings['deleteselectedbuttonlabel'] = get_string('deleteselectedbuttonlabel',
+            'lifecyclestep_createbackup');
+        $this->strings['deleteallbuttonlabel'] = get_string('deleteallbuttonlabel',
+            'lifecyclestep_createbackup');
 
         $where = ['TRUE'];
         $params = [];
@@ -66,11 +83,23 @@ class course_backups_table extends \table_sql {
                 $where[] = 'b.courseid = :courseid';
                 $params['courseid'] = $filterdata->courseid;
             }
+
+            if ($filterdata->deletedate) {
+                $where[] = 'b.backupcreated < :deletedate';
+                $params['deletedate'] = $filterdata->deletedate;
+                $deletedate = $filterdata->deletedate;
+                if (!is_int($deletedate)) {
+                    $deletedate = make_timestamp($deletedate['year'], $deletedate['month'], $deletedate['day'],
+                        $deletedate['hour'], $deletedate['minute']);
+                }
+                $this->deletedate = $deletedate;
+            }
         }
 
         $this->set_sql('b.id, b.courseid, b.shortname as courseshortname, b.fullname as coursefullname, b.backupcreated',
             '{tool_lifecycle_backups} b',
             join(" AND ", $where), $params);
+        $this->no_sorting('checkbox');
         $this->no_sorting('download');
         $this->no_sorting('restore');
         $this->define_baseurl($PAGE->url);
@@ -81,8 +110,14 @@ class course_backups_table extends \table_sql {
      * Initialize the table.
      */
     public function init() {
-        $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'backupcreated', 'download', 'restore']);
+        $checked = false;
+        if ($this->deletedate ?? false) {
+            $checked = true;
+        }
+        $this->define_columns(['checkbox', 'courseid', 'courseshortname', 'coursefullname', 'backupcreated',
+            'download', 'restore']);
         $this->define_headers([
+            \html_writer::checkbox('checkall', null, $checked),
             get_string('courseid', 'tool_lifecycle'),
             get_string('shortnamecourse'),
             get_string('fullnamecourse'),
@@ -90,6 +125,19 @@ class course_backups_table extends \table_sql {
             get_string('download', 'tool_lifecycle'),
             get_string('restore', 'tool_lifecycle'), ]);
         $this->setup();
+    }
+
+    /**
+     * Column of checkboxes.
+     * @param object $row
+     * @return string
+     */
+    public function col_checkbox($row) {
+        $checked = false;
+        if ($this->deletedate ?? false) {
+            $checked = true;
+        }
+        return \html_writer::checkbox('c[]', $row->id, $checked);
     }
 
     /**
@@ -168,5 +216,52 @@ class course_backups_table extends \table_sql {
             new \moodle_url('/admin/tool/lifecycle/restore.php', ['backupid' => $row->id]),
                 get_string('restore', 'tool_lifecycle')
         );
+    }
+
+    /**
+     * Hook that can be overridden in child classes to wrap a table in a form
+     * for example. Called only when there is data to display and not
+     * downloading.
+     */
+    public function wrap_html_start() {
+        global $OUTPUT;
+
+        parent::wrap_html_start();
+
+        $output = \html_writer::empty_tag('input',
+            [
+                'type' => 'button',
+                'action' => 'deleteselected',
+                'sesskey' => sesskey(),
+                'name' => 'button_delete_selected',
+                'value' => $this->strings['deleteselectedbuttonlabel'],
+                'class' => 'selectedbutton btn btn-secondary mr-2',
+            ]
+        );
+
+        if ($this->deletedate ?? false) {
+            $button = new \single_button(
+                new \moodle_url('', [
+                    'action' => 'deleteall',
+                    'deletedate' => $this->deletedate,
+                    'sesskey' => sesskey(),
+                ]),
+                $this->strings['deleteallbuttonlabel'],
+                'post',
+                single_button::BUTTON_PRIMARY
+            );
+            $output .= $OUTPUT->render($button);
+            $output .= \html_writer::span(get_string('deletealldescription', 'tool_lifecycle'), "ml-1");
+            $output .= \html_writer::empty_tag('input',
+                [
+                    'type' => 'hidden',
+                    'name' => 'deletedate',
+                    'value' => $this->deletedate,
+                ]
+            );
+        }
+
+        echo $output;
+
     }
 }

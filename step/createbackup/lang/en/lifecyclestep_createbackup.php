@@ -22,7 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['coursebackups'] = 'Course Backups';
+$string['deleteallbuttonlabel'] = 'Delete all';
+$string['deleteselectedbuttonlabel'] = 'Delete selected';
 $string['maximumbackupspercron'] = 'Maximum number of backups per cron';
+$string['nobackups'] = 'No backups found.';
 $string['plugindescription'] = 'Initiates a backup of the triggered courses.';
 $string['pluginname'] = 'Create backup step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
