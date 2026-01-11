@@ -173,7 +173,7 @@ class triggered_courses_table_trigger extends \table_sql {
      * method or if other_cols returns NULL then put the data straight into the
      * table.
      *
-     * After calling this function, don't forget to call close_recordset.
+     * After calling this function, remember to call close_recordset.
      * @throws \dml_exception
      */
     public function build_table() {
@@ -187,25 +187,21 @@ class triggered_courses_table_trigger extends \table_sql {
         $response = $lib->default_response();
         $course = new stdClass();
         foreach ($this->rawdata as $row) {
+            // If trigger uses individual check course code get the response for the course.
             if ($lib->check_course_code()) {
                 $this->checkcoursecode = true;
                 $course->id = $row->courseid;
                 $response = $lib->check_course($course, $this->triggerid);
             }
-            if (!($response == trigger_response::exclude() || $response == trigger_response::trigger())) {
-                continue;
+            // Add course to the list according to the trigger type and the response.
+            if ($this->type == 'triggerid' && $response == trigger_response::trigger() ||
+                $this->type == 'excluded' && $response == trigger_response::exclude() ||
+                $this->type == 'excluded' && $response == trigger_response::trigger() && $this->triggerexclude) {
+                $row->status = $response;
+                $formattedrow = $this->format_row($row);
+                $this->add_data_keyed($formattedrow, $this->get_row_class($row));
+                $this->tablerows++;
             }
-            if ($this->type == 'triggerid' && !$response == trigger_response::trigger()) {
-                continue;
-            } else if ($this->type == 'excluded' &&
-                (!$response == trigger_response::exclude() ||
-                    !($response == trigger_response::trigger() && $this->triggerexclude))) {
-                continue;
-            }
-            $row->status = $response;
-            $formattedrow = $this->format_row($row);
-            $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-            $this->tablerows++;
         }
     }
 
