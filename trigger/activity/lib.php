@@ -15,14 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Trigger subplugin to include or exclude courses with certain opencast videos.
+ * Trigger subplugin to include or exclude courses with certain activity videos.
  *
- * @package     lifecycletrigger_opencast
+ * @package     lifecycletrigger_activity
  * @copyright   2025 Thomas Niedermaier University Münster
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace tool_lifecycle\trigger;
 
+use core_plugin_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\settings_type;
@@ -30,15 +31,14 @@ use tool_lifecycle\settings_type;
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/../../lib.php');
-require_once(__DIR__ . '/../../../../../mod/lti/locallib.php');
 
 /**
- * Class which implements the basic methods necessary for a cleanyp courses trigger subplugin
- * @package     lifecycletrigger_opencast
+ * Class which implements the basic methods necessary for a courses trigger subplugin
+ * @package     lifecycletrigger_activity
  * @copyright   2025 Thomas Niedermaier University Münster
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class opencast extends base_automatic {
+class activity extends base_automatic {
 
     /**
      * If check_course_code() returns true, code to check the given course is placed here
@@ -59,47 +59,32 @@ class opencast extends base_automatic {
     }
 
     /**
-     * Return sql snippet for including (or excluding) the courses with defined opencast videos.
+     * Return SQL snippet for including (or excluding) the courses with at least one instance of the defined activities.
      * @param int $triggerid Id of the trigger.
      * @return array A list containing the constructed sql fragment and an array of parameters.
      * @throws \coding_exception
      * @throws \dml_exception
      */
     public function get_course_recordset_where($triggerid) {
-        global $DB;
 
-        $sql = "";
-        $inparams = [];
+        $sql = "(";
 
         $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
-        $activity = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['activity'];
-        $lti = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['lti'];
+        $activities = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['activities'];
+
+        $modules = explode(',', $activities);
 
         $not = $exclude ? 'NOT' : '';
-        if ($activity) {
-            $sql = " c.id $not IN (SELECT DISTINCT(course) FROM {opencast}) ";
+        $conj = "";
+        foreach ($modules as $module) {
+            $sql .= $conj." c.id $not IN (SELECT course FROM {course_modules} where module = $module) ";
+            $conj = " OR ";
         }
-        if ($lti) {
-            $ltitools = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['ltitools'];
-            $ltitoolsarr = explode(",", $ltitools);
-            [$insql, $inparams] = $DB->get_in_or_equal($ltitoolsarr, SQL_PARAMS_NAMED);
-            if ($sql) {
-                if ($exclude) {
-                    $sql = "($sql AND c.id $not IN (SELECT DISTINCT(l.course) FROM {lti} l where
-                    l.typeid $insql))";
-                } else {
-                    $sql = "($sql OR c.id IN (SELECT DISTINCT(l.course) FROM {lti} l where
-                    l.typeid $insql))";
-                }
-            } else {
-                $sql = "c.id $not IN (SELECT DISTINCT(l.course) FROM {lti} l where
-                    l.typeid $insql)";
-            }
-        }
+        $sql .= ")";
 
         $where = $sql;
 
-        return [$where, $inparams];
+        return [$where, []];
     }
 
     /**
@@ -107,7 +92,7 @@ class opencast extends base_automatic {
      * @return string technical name of the subplugin
      */
     public function get_subpluginname() {
-        return 'opencast';
+        return 'activity';
     }
 
     /**
@@ -116,9 +101,7 @@ class opencast extends base_automatic {
      */
     public function instance_settings() {
         return [
-            new instance_setting('activity', PARAM_BOOL),
-            new instance_setting('lti', PARAM_BOOL),
-            new instance_setting('ltitools', PARAM_SEQUENCE),
+            new instance_setting('activities', PARAM_SEQUENCE),
             new instance_setting('exclude', PARAM_BOOL),
         ];
     }
@@ -131,35 +114,26 @@ class opencast extends base_automatic {
      * @throws \dml_exception
      */
     public function extend_add_instance_form_definition($mform) {
+        global $DB;
 
-        $mform->addElement('advcheckbox', 'activity',
-            get_string('activity', 'lifecycletrigger_opencast'));
-        $mform->setType('activity', PARAM_BOOL);
-        $mform->addHelpButton('activity', 'activity', 'lifecycletrigger_opencast');
-
-        $ltitypes = lti_filter_get_types(false);
-        $ltis = [];
-        foreach ($ltitypes as $key => $type) {
-            $ltis[$key] = $type->name." (".$type->baseurl.")";
+        $modules = $DB->get_records('modules', null, 'name', 'id,name');
+        $activities = [];
+        foreach ($modules as $key => $module) {
+            $activities[$key] = $module->name;
         }
-        if ($ltis) {
-            $mform->addElement('advcheckbox', 'lti',
-                get_string('lti', 'lifecycletrigger_opencast'));
-            $mform->setType('lti', PARAM_BOOL);
-            $mform->addHelpButton('lti', 'lti', 'lifecycletrigger_opencast');
+        if ($activities) {
             $options = [
                 'multiple' => true,
-                'noselectionstring' => get_string('lti_noselection', 'lifecycletrigger_opencast'),
+                'noselectionstring' => get_string('noselection', 'lifecycletrigger_activity'),
             ];
-            $mform->addElement('autocomplete', 'ltitools', "", $ltis, $options);
-            $mform->setType('ltitools', PARAM_SEQUENCE);
+            $mform->addElement('autocomplete', 'activities', "", $activities, $options);
+            $mform->setType('activities', PARAM_SEQUENCE);
+            $mform->addRule('activities', get_string('activities_rule', 'lifecycletrigger_activity'), 'required');
 
-            // Hide lti tools unless lti checkbox is checked.
-            $mform->hideIf('ltitools', 'lti', 'notchecked');
+            $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_activity'));
+
+            $mform->addHelpButton('exclude', 'exclude', 'lifecycletrigger_activity');
         }
-
-        $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_opencast'));
-        $mform->addHelpButton('exclude', 'exclude', 'lifecycletrigger_opencast');
     }
 
     /**
@@ -169,30 +143,32 @@ class opencast extends base_automatic {
      * @throws \coding_exception
      */
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
+        global $DB;
+
         $type = $mform->getElementType('instancename');
         if (($type ?? "") != "text") {
-            if (is_array($settings) && array_key_exists('ltitools', $settings)) {
-                $triggerltitools = explode(",", $settings['ltitools']);
+            if (is_array($settings) && array_key_exists('', $settings)) {
+                $triggeractivities = explode(",", $settings['activities']);
             } else {
-                $triggerltitools = [];
+                $triggeractivities = [];
             }
-            $types = lti_filter_get_types(get_site()->id);
-            $configuredtools = lti_filter_tool_types($types, LTI_TOOL_STATE_CONFIGURED);
-            $ltitoolshtml = "";
-            foreach ($configuredtools as $key => $tool) {
-                if (in_array($key, $triggerltitools)) {
-                    $ltitoolshtml .= \html_writer::div($tool->name." (".$tool->baseurl.")", "badge badge-secondary mr-1");
+            $modules = $DB->get_records('modules', null, 'name', 'id,name');
+            $activitieshtml = "";
+            foreach ($modules as $key => $module) {
+                $activities[$key] = $module->name;
+                if (in_array($key, $triggeractivities)) {
+                    $activitieshtml .= \html_writer::div($module->name, "badge badge-secondary mr-1");
                 }
             }
             $mform->insertElementBefore($mform->createElement(
                 'static',
-                'ltitoolsstatic',
-                get_string('ltitools', 'lifecycletrigger_opencast'),
-                $ltitoolshtml), 'buttonar');
+                'activitiesstatic',
+                get_string('activities', 'lifecycletrigger_activity'),
+                $activitieshtml), 'buttonar');
             $mform->insertElementBefore($mform->createElement(
                 'advcheckbox',
                 'exclude',
-                get_string('exclude', 'lifecycletrigger_opencast')),
+                get_string('exclude', 'lifecycletrigger_activity')),
                 'buttonar');
             $mform->setType('exclude', PARAM_BOOL);
         }
