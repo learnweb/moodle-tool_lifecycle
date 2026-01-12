@@ -1,6 +1,20 @@
 CHANGELOG
 =========
 
+5.1.0(2026-01-13)
+------------------
+* [FEATURE] Introduce new trigger 'activity'
+* [FEATURE] Introduce new trigger 'opencast'
+* [FEATURE] Introduce new step 'setcustomfield' (PR #275)
+* [FEATURE] lifecycle-backups: new filter option 'create date' and option to bulk-delete backups
+* [FEATURE] Bulk 'keep course'-option list for teachers (#172)
+* [FEATURE] Step adminapprove: reintroduce proceed all- and rollback all-buttons
+* [FEATURE] Add option to define sysadmin(s) to receive notifications when course is triggered for an admin approve step instance
+* [FEATURE] workflowoverview: display workflow options 'max courses per day/cron', if active
+* [FEATURE] Provide download option for deactivated workflows as well
+* [FIXED] Include filepath as debug info when backup file does not exist (#277)
+* Moodle 5.1 compatible version
+
 5.0.2(2025-12-13)
 ------------------
 * [FEATURE] workflowoverview: Do not take the specificdata trigger into account when counting
