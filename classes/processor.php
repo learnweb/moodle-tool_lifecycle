@@ -67,7 +67,7 @@ class processor {
 
         $eol = "\n";
         // HTML end of line if called by run-command of workflowoverview.
-        if ($run = str_contains($FULLSCRIPT, 'run.php')) {
+        if ($run = str_contains($FULLSCRIPT ?? '', 'run.php')) {
             $eol = "<br>";
         }
 
@@ -187,7 +187,7 @@ class processor {
 
         $eol = "\n";
         // HTML end of line if called by run-command of workflowoverview.
-        if ($run = str_contains($FULLSCRIPT, 'run.php')) {
+        if ($run = str_contains($FULLSCRIPT ?? '', 'run.php')) {
             $eol = "<br>";
         }
         $automatictest = (defined('PHPUNIT_TEST') && PHPUNIT_TEST) ||
