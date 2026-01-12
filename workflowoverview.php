@@ -503,6 +503,9 @@ list($lastrun, $nextrun) = workflow_manager::get_lastrun_nextrun($workflow->id);
 $data = [
     'editsettingslink' => (new moodle_url(urls::EDIT_WORKFLOW, ['wf' => $workflow->id]))->out(false),
     'title' => $workflow->title,
+    'triggeredpercron' => $workflow->triggeredpercron,
+    'triggeredperday' => $workflow->triggeredperday,
+    'triggeredper' => $workflow->triggeredpercron || $workflow->triggeredperday,
     'rollbackdelay' => format_time($workflow->rollbackdelay),
     'finishdelay' => format_time($workflow->finishdelay),
     'delayglobally' => $workflow->delayforallworkflows,
@@ -533,6 +536,7 @@ $data = [
     'runnable' => $isactive,
     'runlink' => new \moodle_url(urls::RUN, ['wf' => $workflow->id]),
 ];
+
 if ($showdetails) {
     // The triggers total box.
     $data['displaytotaltriggered'] = $displaytotaltriggered;
