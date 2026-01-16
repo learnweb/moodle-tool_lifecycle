@@ -47,7 +47,9 @@ $courseid = optional_param('courseid', null, PARAM_INT);
 // Bulk edit params.
 $bulkedit = optional_param('bulkedit', 0, PARAM_INT);
 $bulkactions = optional_param_array('bulkactions', [], PARAM_TEXT);
-$reportparam = optional_param_array('report', [], PARAM_RAW);
+if ($reportparam = optional_param('report', null, PARAM_RAW)) {
+    $reportparam = explode("__", urldecode($reportparam));
+}
 
 $controller = new view_controller();
 
@@ -105,6 +107,7 @@ if ($bulkactions) {
     }
 }
 if ($report) {
+    $report = urlencode(implode("__", $report));
     $redirecturl = new moodle_url($PAGE->url, ['report' => $report, 'bulkedit' => $bulkedit]);
     redirect($redirecturl);
 }
