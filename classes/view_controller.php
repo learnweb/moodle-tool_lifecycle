@@ -102,18 +102,19 @@ class view_controller {
 
         $PAGE->requires->js_call_amd('tool_lifecycle/tablebulkactions_view', 'init');
 
+        // List of courses where an interaction is required.
         echo $renderer->heading(get_string('tablecoursesrequiringattention', 'tool_lifecycle'), 3);
         $table1 = new interaction_attention_table('tool_lifecycle_interaction',
             $requiresinteractioncourses, $filterdata, $bulk);
-
         echo $renderer->box_start("managing_courses_tables");
         $table1->out(50, false);
         echo $renderer->box_end();
 
+        // List of courses the user is enrolled to and has the required lifecycle rights.
         echo $renderer->box("");
         echo $renderer->heading(get_string('tablecoursesremaining', 'tool_lifecycle'), 3);
-        $table2 = new interaction_remaining_table('tool_lifecycle_remaining', $remainingcourses, $bulk);
-
+        $table2 = new interaction_remaining_table('tool_lifecycle_remaining',
+            $remainingcourses, $filterdata, $bulk);
         echo $renderer->box_start("lifecycle-enable-overflow lifecycle-table");
         $table2->out(50, false);
         echo $renderer->box_end();

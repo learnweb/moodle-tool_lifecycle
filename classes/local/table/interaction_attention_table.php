@@ -231,7 +231,7 @@ class interaction_attention_table extends interaction_table {
                     'sesskey' => sesskey(),
                     'name' => 'button_submit_action_table',
                     'value' => get_string('savechanges'),
-                    'class' => 'btn btn-primary mt-2 d-inline-block text-end',
+                    'class' => 'btn btn-primary d-inline-block text-end',
                 ]
             );
             $output .= \html_writer::end_tag('div');

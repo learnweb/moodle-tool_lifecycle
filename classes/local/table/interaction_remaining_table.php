@@ -58,9 +58,10 @@ class interaction_remaining_table extends interaction_table {
      * Constructor for deactivated_workflows_table.
      * @param int $uniqueid Unique id of this table.
      * @param int[] $courseids List of ids for courses that require no attention.
+     * @param object $filterdata Object of filter criteria
      * @param bool $bulk switch whether bulk editing is active
      */
-    public function __construct($uniqueid, $courseids, $bulk = false) {
+    public function __construct($uniqueid, $courseids, $filterdata = null, $bulk = false) {
         parent::__construct($uniqueid);
         global $PAGE, $CFG, $DB;
 
@@ -135,10 +136,29 @@ class interaction_remaining_table extends interaction_table {
             $where = 'c.id IN ('. $ids . ')';
         }
 
+        $params = [];
+
+        if ($filterdata) {
+            if ($filterdata->shortname) {
+                $where .= " AND ".$DB->sql_like('c.shortname', ':shortname', false, false);
+                $params['shortname'] = '%' . $DB->sql_like_escape($filterdata->shortname) . '%';
+            }
+
+            if ($filterdata->fullname) {
+                $where .= " AND ".$DB->sql_like('c.fullname', ':fullname', false, false);
+                $params['fullname'] = '%' . $DB->sql_like_escape($filterdata->fullname) . '%';
+            }
+
+            if ($filterdata->courseid) {
+                $where .= ' AND c.id = :courseid';
+                $params['courseid'] = $filterdata->courseid;
+            }
+        }
+
         $this->column_nosort = ['status', 'tools'];
         $this->sortable(true, 'lastmodified', 'DESC');
-        $this->set_sql($fields, $from, $where, []);
-        $this->set_count_sql("SELECT COUNT(1) FROM {course} c WHERE $where");
+        $this->set_sql($fields, $from, $where, $params);
+        $this->set_count_sql("SELECT COUNT(1) FROM {course} c WHERE $where", $params);
         $this->define_baseurl($PAGE->url);
         $this->init();
     }

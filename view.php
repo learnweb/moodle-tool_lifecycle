@@ -47,7 +47,7 @@ $courseid = optional_param('courseid', null, PARAM_INT);
 // Bulk edit params.
 $bulkedit = optional_param('bulkedit', 0, PARAM_INT);
 $bulkactions = optional_param_array('bulkactions', [], PARAM_TEXT);
-if ($reportparam = optional_param('report', null, PARAM_RAW)) {
+if ($reportparam = optional_param('report', null, PARAM_TEXT)) {
     $reportparam = explode("__", urldecode($reportparam));
 }
 
@@ -119,7 +119,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 echo $renderer->header();
 
-$filterform = new form_courses_filter();
+$filterform = new form_courses_filter('', ['bulkedit' => $bulkedit]);
 
 // Cache handling.
 $cache = cache::make('tool_lifecycle', 'mformdata');
