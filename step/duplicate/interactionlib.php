@@ -57,7 +57,7 @@ class interactionduplicate extends interactionlibbase {
 
     /**
      * Returns an array of interaction tools to be displayed to be displayed on the view.php
-     * Every entry is itself an array which consist of three elements:
+     * Every entry is itself an array that consists of two elements:
      *  'action' => an action string, which is later passed to handle_action
      *  'alt' => a string text of the button
      * @param process $process process the action tools are requested for

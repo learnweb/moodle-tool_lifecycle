@@ -41,14 +41,22 @@ require_once($CFG->libdir . '/tablelib.php');
 class interaction_attention_table extends interaction_table {
 
     /**
+     * @var bool $bulk bulk handling of user interactions on or of for the table (true/false)
+     */
+    private $bulk = false;
+
+    /**
      * Constructor for deactivated_workflows_table.
      * @param int $uniqueid Unique id of this table.
      * @param int[] $courseids List of ids for courses that require attention.
      * @param object $filterdata Object of filter criteria
+     * @param bool $bulk switch whether bulk editing is active
      */
-    public function __construct($uniqueid, $courseids, $filterdata = null) {
+    public function __construct($uniqueid, $courseids, $filterdata = null, $bulk = false) {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
+
+        $this->bulk = $bulk;
 
         $fields = "p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, " .
             "c.startdate, cc.name as category, cc.path as categorypath, s.id as stepinstanceid, " .
@@ -90,7 +98,7 @@ class interaction_attention_table extends interaction_table {
     }
 
     /**
-     * Initialises the columns of the table.
+     * Initializes the columns of the table.
      */
     public function init() {
         $this->define_columns(['coursefullname', 'startdate', 'category', 'status', 'tools', 'date']);
@@ -113,16 +121,26 @@ class interaction_attention_table extends interaction_table {
      * @throws \invalid_parameter_exception
      */
     public function col_tools($row) {
-        $output = '';
         $step = step_manager::get_step_instance($row->stepinstanceid);
-
         $tools = interaction_manager::get_action_tools($step->subpluginname, $row->processid);
         if (empty($tools)) {
             return get_string('noactiontools', 'tool_lifecycle');
         }
+
+        $output = '';
+        $options = [];
         foreach ($tools as $tool) {
-            $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['alt']);
+            if ($this->bulk) {
+                $options[$tool['action']."_".$row->processid."_".$step->id] = $tool['alt'];
+            } else {
+                $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['alt']);
+            }
         }
+        if ($this->bulk) {
+            $output = \html_writer::select($options, 'bulkactions', false,
+                ['' => get_string('choosedots')]);
+        }
+
         return $output;
     }
 
@@ -165,5 +183,61 @@ class interaction_attention_table extends interaction_table {
             ]), $alt
         );
         return $OUTPUT->render($button);
+    }
+
+    /**
+     * Hook that can be overridden in child classes to wrap a table in a form
+     * for example. Called only when there is data to display and not
+     * downloading.
+     */
+    public function wrap_html_start() {
+        global $OUTPUT, $PAGE;
+
+        parent::wrap_html_start();
+
+        $temp = (object) [
+            'legacyseturl' => $PAGE->url,
+            'pagecontextid' => $PAGE->context->id,
+            'pageurl' => $PAGE->url,
+            'sesskey' => sesskey(),
+            'bulk' => $this->bulk ? 0 : 1,
+            'formid' => 'interaction',
+        ];
+        if ($this->bulk) {
+            $temp->checked = "checked";
+        }
+        $output = $OUTPUT->render_from_template('tool_lifecycle/editswitch', $temp);
+
+        echo $output;
+
+    }
+
+    /**
+     * Hook that can be overridden in child classes to wrap a table in a form
+     * for example. Called only when there is data to display and not
+     * downloading.
+     */
+    public function wrap_html_finish() {
+
+        parent::wrap_html_finish();
+
+        $output = "";
+        if ($this->bulk) {
+            $output = \html_writer::start_tag('div', ['class' => 'd-inline-block w-100 text-end']);
+            $output .= \html_writer::empty_tag('input',
+                [
+                    'type' => 'submit',
+                    'action' => '',
+                    'sesskey' => sesskey(),
+                    'name' => 'button_submit_action_table',
+                    'value' => get_string('savechanges'),
+                    'class' => 'btn btn-primary mt-2 d-inline-block text-end',
+                ]
+            );
+            $output .= \html_writer::end_tag('div');
+        }
+
+        echo $output;
+
     }
 }

@@ -46,17 +46,21 @@ class view_controller {
      *
      * @param \renderer_base $renderer
      * @param object $filterdata
+     * @param bool $bulk switch whether bulk editing is active
      * @throws \coding_exception
      * @throws \dml_exception
      * @throws \invalid_parameter_exception
      */
-    public function handle_view($renderer, $filterdata) {
-        global $DB, $USER;
+    public function handle_view($renderer, $filterdata, $bulk) {
+        global $DB, $USER, $PAGE;
 
+        // Get all courses where current user is manager. Sysadmin rights ignored.
         $coursesasmanager = get_user_capability_course('tool/lifecycle:managecourses', null, false);
         $courseids1 = array_column($coursesasmanager, 'id');
+        // Get all courses where current user is enrolled.
         $usercourses = enrol_get_users_courses($USER->id);
         $courseids2 = array_column($usercourses, 'id');
+        // Only take courses where both is the case (enrolled and manager).
         $courses = array_intersect($courseids1, $courseids2);
         if (!$courses) {
             echo 'no courses';
@@ -64,6 +68,7 @@ class view_controller {
             return;
         }
 
+        // Select all processes of these courses.
         [$insql, $inparams] = $DB->get_in_or_equal($courses);
         $sql = "SELECT p.id as processid, c.id as courseid, c.fullname as coursefullname, " .
             "c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname " .
@@ -74,22 +79,32 @@ class view_controller {
             "WHERE p.courseid $insql";
         $processes = $DB->get_recordset_sql($sql, $inparams);
 
-        $requiresinteraction = [];
-        $remainingcourses = $inparams;
+        $requiresinteractioncourses = [];
+        $remainingcourses = $inparams; // All courses.
 
+        // Check for every process whether the current user has the required rights and if there are actions.
         foreach ($processes as $process) {
             $step = step_manager::get_step_instance($process->stepinstanceid);
-            $capability = interaction_manager::get_relevant_capability($step->subpluginname);
-
-            if ($capability && has_capability($capability, \context_course::instance($process->courseid), null, false) &&
-                !empty(interaction_manager::get_action_tools($step->subpluginname, $process->processid))) {
-                $requiresinteraction[] = $process->courseid;
+            if ($capability = (interaction_manager::get_relevant_capability($step->subpluginname) ?? false)) {
+                $capabilityok = has_capability($capability, \context_course::instance($process->courseid),
+                    null, false);
+            } else {
+                $capabilityok = true;
+            }
+            // Does the step interaction lib returns one or more actions for the user? (I.e. "Keep" in the email step).
+            $actions = !empty(interaction_manager::get_action_tools($step->subpluginname, $process->processid));
+            if ($capabilityok && $actions) {
+                $requiresinteractioncourses[] = $process->courseid;
             }
         }
-        $remainingcourses = array_diff($remainingcourses, $requiresinteraction);
+        // Remove interaction courses from remaining courses.
+        $remainingcourses = array_diff($remainingcourses, $requiresinteractioncourses);
+
+        $PAGE->requires->js_call_amd('tool_lifecycle/tablebulkactions_view', 'init');
 
         echo $renderer->heading(get_string('tablecoursesrequiringattention', 'tool_lifecycle'), 3);
-        $table1 = new interaction_attention_table('tool_lifecycle_interaction', $requiresinteraction, $filterdata);
+        $table1 = new interaction_attention_table('tool_lifecycle_interaction',
+            $requiresinteractioncourses, $filterdata, $bulk);
 
         echo $renderer->box_start("managing_courses_tables");
         $table1->out(50, false);
@@ -97,11 +112,12 @@ class view_controller {
 
         echo $renderer->box("");
         echo $renderer->heading(get_string('tablecoursesremaining', 'tool_lifecycle'), 3);
-        $table2 = new interaction_remaining_table('tool_lifecycle_remaining', $remainingcourses);
+        $table2 = new interaction_remaining_table('tool_lifecycle_remaining', $remainingcourses, $bulk);
 
         echo $renderer->box_start("lifecycle-enable-overflow lifecycle-table");
         $table2->out(50, false);
         echo $renderer->box_end();
+
     }
 
     /**
@@ -110,6 +126,7 @@ class view_controller {
      * @param string $action triggered action code.
      * @param int $processid id of the process the action was triggered for.
      * @param int $stepid id of the step the action was triggered for.
+     * @returns bool true for success
      * @throws \coding_exception
      * @throws \dml_exception
      * @throws \invalid_parameter_exception
@@ -117,7 +134,6 @@ class view_controller {
      * @throws \required_capability_exception
      */
     public function handle_interaction($action, $processid, $stepid) {
-        global $PAGE;
 
         $process = process_manager::get_process_by_id($processid);
         $step = step_manager::get_step_instance($stepid);
@@ -125,22 +141,24 @@ class view_controller {
         require_capability($capability, \context_course::instance($process->courseid), null, false);
 
         if (interaction_manager::handle_interaction($stepid, $processid, $action)) {
-            redirect($PAGE->url, get_string('interaction_success', 'tool_lifecycle'), null, notification::SUCCESS);
+            return true;
         }
+        return false;
     }
 
     /**
      * Handle the case that the user manually triggered a workflow.
      *
      * @param int $triggerid id of the trigger whose workflow was requested.
-     * @param int $courseid id of the course the workflow was requested for.
+     * @param int $courseid id of the course, the workflow was requested for.
+     * @returns string|int $rc error message or 0 for success
      * @throws \coding_exception
      * @throws \dml_exception
      * @throws \moodle_exception
      * @throws \required_capability_exception
      */
     public function handle_trigger($triggerid, $courseid) {
-        global $PAGE;
+
         // Software enhancement check if trigger to triggerid exists.
         // Check if trigger is manual.
         $trigger = trigger_manager::get_instance($triggerid);
@@ -153,10 +171,10 @@ class view_controller {
         $triggersettings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
         require_capability($triggersettings['capability'], \context_course::instance($courseid), null, true);
 
-        // Check if course does not have a running process.
+        // Check if the course does not have a running process.
         $runningprocess = process_manager::get_process_by_course_id($courseid);
         if ($runningprocess !== null) {
-            redirect($PAGE->url, get_string('manual_trigger_process_existed', 'tool_lifecycle'), null, notification::ERROR);
+            return get_string('manual_trigger_process_existed', 'tool_lifecycle');
         }
 
         // Actually trigger process.
@@ -164,7 +182,9 @@ class view_controller {
 
         $processor = new processor();
         if ($processor->process_course_interactive($process->id)) {
-            redirect($PAGE->url, get_string('manual_trigger_success', 'tool_lifecycle'), null, notification::SUCCESS);
+            return 0;
+        } else {
+            return get_string('error');
         }
     }
 }

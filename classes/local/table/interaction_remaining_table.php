@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core\output\single_button;
 use core_date;
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\workflow_manager;
@@ -49,13 +50,21 @@ class interaction_remaining_table extends interaction_table {
     private $trigger2courses = [];
 
     /**
+     * @var bool $bulk bulk handling of user interactions on or of for the table (true/false)
+     */
+    private $bulk = false;
+
+    /**
      * Constructor for deactivated_workflows_table.
      * @param int $uniqueid Unique id of this table.
      * @param int[] $courseids List of ids for courses that require no attention.
+     * @param bool $bulk switch whether bulk editing is active
      */
-    public function __construct($uniqueid, $courseids) {
+    public function __construct($uniqueid, $courseids, $bulk = false) {
         parent::__construct($uniqueid);
         global $PAGE, $CFG, $DB;
+
+        $this->bulk = $bulk;
 
         $this->availabletools = workflow_manager::get_manual_trigger_tools_for_active_workflows();
         foreach ($this->availabletools as $tool) {
@@ -158,7 +167,7 @@ class interaction_remaining_table extends interaction_table {
      * @throws \moodle_exception
      */
     public function col_tools($row) {
-        global $PAGE, $OUTPUT, $DB;
+        global $PAGE, $OUTPUT;
 
         if ($row->processid !== null) {
             return '--';
@@ -189,23 +198,31 @@ class interaction_remaining_table extends interaction_table {
 
             // Check capability.
             if (has_capability($tool->capability, \context_course::instance($row->courseid), null, false)) {
-                $actions[$tool->triggerid] = new \action_menu_link_secondary(
-                    new \moodle_url($PAGE->url, ['triggerid' => $tool->triggerid,
-                        'courseid' => $row->courseid, 'sesskey' => sesskey(), ]),
-                    new \pix_icon($tool->icon, $tool->displayname, 'moodle', ['class' => 'iconsmall', 'title' => '']),
-                    $tool->displayname
-                );
+                if ($this->bulk) {
+                    $actions[$tool->triggerid."_".$row->courseid] = $tool->displayname;
+                } else {
+                    $actions[$tool->triggerid] = new \action_menu_link_secondary(
+                        new \moodle_url($PAGE->url, ['triggerid' => $tool->triggerid,
+                            'courseid' => $row->courseid, 'sesskey' => sesskey(), ]),
+                        new \pix_icon($tool->icon, $tool->displayname, 'moodle', ['class' => 'iconsmall', 'title' => '']),
+                        $tool->displayname
+                    );
+                }
             }
         }
 
-        $menu = new \action_menu();
-        $menu->set_menu_trigger(get_string('action'));
-
-        foreach ($actions as $action) {
-            $menu->add($action);
+        if ($this->bulk) {
+            $output = \html_writer::select($actions, 'bulkactions', false,
+                ['' => get_string('choosedots')]);
+            return $output;
+        } else {
+            $menu = new \action_menu();
+            $menu->set_menu_trigger(get_string('action'));
+            foreach ($actions as $action) {
+                $menu->add($action);
+            }
+            return $OUTPUT->render($menu);
         }
-
-        return $OUTPUT->render($menu);
     }
 
     /**
@@ -270,4 +287,57 @@ class interaction_remaining_table extends interaction_table {
         echo $OUTPUT->box(get_string('noremainingcoursestodisplay', 'tool_lifecycle'));
     }
 
+    /**
+     * Hook that can be overridden in child classes to wrap a table in a form
+     * for example. Called only when there is data to display and not
+     * downloading.
+     */
+    public function wrap_html_start() {
+        global $OUTPUT, $PAGE;
+
+        parent::wrap_html_start();
+
+        $temp = (object) [
+            'legacyseturl' => $PAGE->url,
+            'pagecontextid' => $PAGE->context->id,
+            'pageurl' => $PAGE->url,
+            'sesskey' => sesskey(),
+            'bulk' => $this->bulk ? 0 : 1,
+            'formid' => 'remaining',
+        ];
+        if ($this->bulk) {
+            $temp->checked = "checked";
+        }
+        $output = $OUTPUT->render_from_template('tool_lifecycle/editswitch', $temp);
+
+        echo $output;
+
+    }
+
+    /**
+     * Hook that can be overridden in child classes to wrap a table in a form
+     * for example. Called only when there is data to display and not
+     * downloading.
+     */
+    public function wrap_html_finish() {
+
+        parent::wrap_html_finish();
+
+        $output = "";
+        if ($this->bulk) {
+            $output = \html_writer::start_tag('div', ['class' => 'd-inline-block w-100 text-end']);
+            $output .= \html_writer::empty_tag('input',
+                [
+                    'type' => 'button',
+                    'name' => 'button_submit_action_table',
+                    'value' => get_string('savechanges'),
+                    'class' => 'btn btn-primary mt-2 d-inline-block text-end',
+                ]
+            );
+            $output .= \html_writer::end_tag('div');
+        }
+
+        echo $output;
+
+    }
 }

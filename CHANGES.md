@@ -7,7 +7,7 @@ CHANGELOG
 * [FEATURE] Introduce new trigger 'opencast'
 * [FEATURE] Introduce new step 'setcustomfield' (PR #275)
 * [FEATURE] lifecycle-backups: new filter option 'create date' and option to bulk-delete backups
-* [FEATURE] Bulk 'keep course'-option list for teachers (#172)
+* [FEATURE] Add Bulk Editing option to the course interactions lists (#172)
 * [FEATURE] Step adminapprove: reintroduce proceed all- and rollback all-buttons
 * [FEATURE] Add option to define sysadmin(s) to receive notifications when course is triggered for an admin approve step instance
 * [FEATURE] workflowoverview: display workflow options 'max courses per day/cron', if active

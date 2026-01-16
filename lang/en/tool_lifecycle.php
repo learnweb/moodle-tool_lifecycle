@@ -59,6 +59,7 @@ $string['apply'] = 'Apply';
 $string['backupcreated'] = 'Created at';
 $string['backupsdeleted'] = '{$a} backups deleted';
 $string['backupsnotdeleted'] = 'Some problems occurred - no backups deleted.';
+$string['bulkedit'] = 'Bulk edit';
 $string['cachedef_application'] = 'Cache for course menu if there are workflows enabled.';
 $string['cachedef_mformdata'] = 'Caches the mform data.';
 $string['cannot_trigger_workflow_manually'] = 'The requested workflow could not be triggered manually.';

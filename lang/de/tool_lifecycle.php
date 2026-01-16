@@ -59,6 +59,7 @@ $string['apply'] = 'Anwenden';
 $string['backupcreated'] = 'Erstellt am';
 $string['backupsdeleted'] = '{$a} Kurssicherungen gelöscht';
 $string['backupsnotdeleted'] = 'Es sind Probleme aufgetreten und es wurden keine Kurssicherungen gelöscht!';
+$string['bulkedit'] = 'Sammelbearbeitung';
 $string['cachedef_application'] = 'Cache für das Kurs-Menü wenn es aktivierte Workflows gibt.';
 $string['cachedef_mformdata'] = 'Cached die mform-Daten.';
 $string['cannot_trigger_workflow_manually'] = 'Der Workflow konnte nicht manuell ausgelöst werden.';
