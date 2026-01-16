@@ -44,7 +44,11 @@ class form_courses_filter extends \moodleform {
     public function definition() {
         $mform = $this->_form;
 
-        $bulkedit = $this->_customdata['bulkedit'];
+        // Keep this flag in the user interaction tables.
+        if ($bulkedit = $this->_customdata['bulkedit'] ?? false) {
+            $mform->addElement('hidden', 'bulkedit', $bulkedit);
+            $mform->setType('bulkedit', PARAM_INT);
+        }
 
         $mform->addElement('text', 'courseid', get_string('courseid', 'tool_lifecycle'));
         $mform->setType('courseid', PARAM_ALPHANUM);
@@ -61,9 +65,6 @@ class form_courses_filter extends \moodleform {
         $date = (new DateTime())->setTimestamp(usergetmidnight(time()));
         $date->modify('+1 day');
         $mform->setDefault('startdate', $date->getTimestamp());
-
-        $mform->addElement('hidden', 'bulkedit', $bulkedit);
-        $mform->setType('bulkedit', PARAM_INT);
 
         // Edited from $this->add_action_buttons to allow custom cancel text.
         $buttonarray = [];
