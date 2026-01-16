@@ -61,7 +61,7 @@ if ($bulkactions) {
             $courseid = $item[1];
             $course = get_course($courseid);
             $coursename = get_course_display_name_for_list($course);
-            if ($rc = $controller->handle_trigger($triggerid, $courseid)){
+            if ($rc = $controller->handle_trigger($triggerid, $courseid)) {
                 $report[] = \html_writer::div($coursename.": ".$rc, 'alert alert-danger');
             } else {
                 $successmsg = get_string('manual_trigger_success', 'tool_lifecycle');
@@ -96,7 +96,7 @@ if ($bulkactions) {
         require_sesskey();
         $course = get_course($courseid);
         $coursename = get_course_display_name_for_list($course);
-        if ($rc = $controller->handle_trigger($triggerid, $courseid)){
+        if ($rc = $controller->handle_trigger($triggerid, $courseid)) {
             $report[] = \html_writer::div($coursename.": ".$rc, 'alert alert-danger');
         } else {
             $successmsg = get_string('manual_trigger_success', 'tool_lifecycle');
