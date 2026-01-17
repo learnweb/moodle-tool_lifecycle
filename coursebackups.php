@@ -58,7 +58,7 @@ const DELETE_SELECTED = 'deleteselected';
  */
 const DELETE_ALL = 'deleteall';
 
-$filterform = new form_courses_filter();
+$filterform = new form_courses_filter('', ['backups' => 1]);
 
 // Cache handling.
 $cache = cache::make('tool_lifecycle', 'mformdata');

@@ -60,11 +60,14 @@ class form_courses_filter extends \moodleform {
         $mform->addElement('text', 'fullname', get_string('fullname'));
         $mform->setType('fullname', PARAM_TEXT);
 
-        $mform->addElement('date_time_selector', 'deletedate', get_string('deletedate', 'tool_lifecycle'));
-        $mform->addHelpButton('deletedate', 'deletedate', 'tool_lifecycle');
-        $date = (new DateTime())->setTimestamp(usergetmidnight(time()));
-        $date->modify('+1 day');
-        $mform->setDefault('startdate', $date->getTimestamp());
+        // Keep this flag in the user interaction tables.
+        if ($this->_customdata['backups'] ?? false) {
+            $mform->addElement('date_time_selector', 'deletedate', get_string('deletedate', 'tool_lifecycle'));
+            $mform->addHelpButton('deletedate', 'deletedate', 'tool_lifecycle');
+            $date = (new DateTime())->setTimestamp(usergetmidnight(time()));
+            $date->modify('+1 day');
+            $mform->setDefault('startdate', $date->getTimestamp());
+        }
 
         // Edited from $this->add_action_buttons to allow custom cancel text.
         $buttonarray = [];
