@@ -213,9 +213,11 @@ class triggered_courses_table_workflow extends \table_sql {
                 $row->status = trigger_response::exclude();
                 $this->excludedbycheckcourse++;
             }
-            $formattedrow = $this->format_row($row);
-            $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-            $this->tablerows++;
+            if (!$row->hasprocess ?? false) {
+                $formattedrow = $this->format_row($row);
+                $this->add_data_keyed($formattedrow, $this->get_row_class($row));
+                $this->tablerows++;
+            }
         }
     }
 

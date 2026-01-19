@@ -41,31 +41,23 @@ require_once($CFG->libdir . '/tablelib.php');
 class interaction_attention_table extends interaction_table {
 
     /**
-     * @var bool $bulk bulk handling of user interactions on or of for the table (true/false)
-     */
-    private $bulk = false;
-
-    /**
-     * Constructor for deactivated_workflows_table.
+     * Constructor for user interactions table.
      * @param int $uniqueid Unique id of this table.
      * @param int[] $courseids List of ids for courses that require attention.
      * @param object $filterdata Object of filter criteria
-     * @param bool $bulk switch whether bulk editing is active
      */
-    public function __construct($uniqueid, $courseids, $filterdata = null, $bulk = false) {
+    public function __construct($uniqueid, $courseids, $filterdata = null) {
         parent::__construct($uniqueid);
         global $PAGE, $DB;
 
-        $this->bulk = $bulk;
-
         $fields = "p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, " .
             "c.startdate, cc.name as category, cc.path as categorypath, s.id as stepinstanceid, " .
-            "s.instancename as stepinstancename, s.subpluginname as subpluginname";
+            "s.instancename as stepinstancename, s.subpluginname as subpluginname, wf.title as workflow";
         $from = '{tool_lifecycle_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
-            '{tool_lifecycle_step} s ' .
-            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex ' .
-            'left join {course_categories} cc on c.category = cc.id';
+            '{tool_lifecycle_step} s on p.workflowid = s.workflowid AND p.stepindex = s.sortindex ' .
+            'left join {course_categories} cc on c.category = cc.id ' .
+            'left join {tool_lifecycle_workflow} wf on wf.id = p.workflowid';
         $ids = implode(',', $courseids);
         $where = ['FALSE'];
         if ($ids) {
@@ -101,15 +93,24 @@ class interaction_attention_table extends interaction_table {
      * Initializes the columns of the table.
      */
     public function init() {
-        $this->define_columns(['coursefullname', 'startdate', 'category', 'status', 'tools', 'date']);
-        $this->define_headers([
+        global $USER;
+        $columns = ['coursefullname', 'startdate', 'category', 'status', 'tools', 'date'];
+        if (is_siteadmin($USER->id)) {
+            $columns[] = 'workflow';
+        }
+        $this->define_columns($columns);
+        $headers = [
             get_string('coursename', 'tool_lifecycle'),
             get_string('startdate'),
             get_string('category'),
             get_string('status', 'tool_lifecycle'),
             get_string('tools', 'tool_lifecycle'),
             get_string('date', 'tool_lifecycle'),
-        ]);
+        ];
+        if (is_siteadmin($USER->id)) {
+            $headers[] = get_string('workflow', 'tool_lifecycle');
+        }
+        $this->define_headers($headers);
         $this->setup();
     }
 
@@ -128,17 +129,8 @@ class interaction_attention_table extends interaction_table {
         }
 
         $output = '';
-        $options = [];
         foreach ($tools as $tool) {
-            if ($this->bulk) {
-                $options[$tool['action']."_".$row->processid."_".$step->id] = $tool['alt'];
-            } else {
-                $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['alt']);
-            }
-        }
-        if ($this->bulk) {
-            $output = \html_writer::select($options, 'bulkactions', false,
-                ['' => get_string('choosedots')]);
+            $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['alt']);
         }
 
         return $output;
@@ -167,7 +159,6 @@ class interaction_attention_table extends interaction_table {
      * @param string $processid URL parameter to include in the link
      * @param int $stepinstanceid ID of the step instance
      * @param string $alt The string description of the link used as the title and alt text
-     *
      * @return string The icon/link
      * @throws \moodle_exception
      */
@@ -185,59 +176,4 @@ class interaction_attention_table extends interaction_table {
         return $OUTPUT->render($button);
     }
 
-    /**
-     * Hook that can be overridden in child classes to wrap a table in a form
-     * for example. Called only when there is data to display and not
-     * downloading.
-     */
-    public function wrap_html_start() {
-        global $OUTPUT, $PAGE;
-
-        parent::wrap_html_start();
-
-        $temp = (object) [
-            'legacyseturl' => $PAGE->url,
-            'pagecontextid' => $PAGE->context->id,
-            'pageurl' => $PAGE->url,
-            'sesskey' => sesskey(),
-            'bulk' => $this->bulk ? 0 : 1,
-            'formid' => 'interaction',
-        ];
-        if ($this->bulk) {
-            $temp->checked = "checked";
-        }
-        $output = $OUTPUT->render_from_template('tool_lifecycle/editswitch', $temp);
-
-        echo $output;
-
-    }
-
-    /**
-     * Hook that can be overridden in child classes to wrap a table in a form
-     * for example. Called only when there is data to display and not
-     * downloading.
-     */
-    public function wrap_html_finish() {
-
-        parent::wrap_html_finish();
-
-        $output = "";
-        if ($this->bulk) {
-            $output = \html_writer::start_tag('div', ['class' => 'd-inline-block w-100 text-end']);
-            $output .= \html_writer::empty_tag('input',
-                [
-                    'type' => 'submit',
-                    'action' => '',
-                    'sesskey' => sesskey(),
-                    'name' => 'button_submit_action_table',
-                    'value' => get_string('savechanges'),
-                    'class' => 'btn btn-primary d-inline-block text-end',
-                ]
-            );
-            $output .= \html_writer::end_tag('div');
-        }
-
-        echo $output;
-
-    }
 }

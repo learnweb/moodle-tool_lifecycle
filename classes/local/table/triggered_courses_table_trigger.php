@@ -193,14 +193,16 @@ class triggered_courses_table_trigger extends \table_sql {
                 $course->id = $row->courseid;
                 $response = $lib->check_course($course, $this->triggerid);
             }
-            // Add course to the list according to the trigger type and the response.
-            if ($this->type == 'triggerid' && $response == trigger_response::trigger() ||
-                $this->type == 'excluded' && $response == trigger_response::exclude() ||
-                $this->type == 'excluded' && $response == trigger_response::trigger() && $this->triggerexclude) {
-                $row->status = $response;
-                $formattedrow = $this->format_row($row);
-                $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-                $this->tablerows++;
+            if (!$row->hasprocess ?? false) { // Do not pick courses already part of the workflow process.
+                // Add course to the list according to the trigger type and the response.
+                if ($this->type == 'triggerid' && $response == trigger_response::trigger() ||
+                    $this->type == 'excluded' && $response == trigger_response::exclude() ||
+                    $this->type == 'excluded' && $response == trigger_response::trigger() && $this->triggerexclude) {
+                    $row->status = $response;
+                    $formattedrow = $this->format_row($row);
+                    $this->add_data_keyed($formattedrow, $this->get_row_class($row));
+                    $this->tablerows++;
+                }
             }
         }
     }

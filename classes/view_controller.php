@@ -52,7 +52,7 @@ class view_controller {
      * @throws \invalid_parameter_exception
      */
     public function handle_view($renderer, $filterdata, $bulk) {
-        global $DB, $USER, $PAGE;
+        global $DB, $USER;
 
         // Get all courses where current user is manager. Sysadmin rights ignored.
         $coursesasmanager = get_user_capability_course('tool/lifecycle:managecourses', null, false);
@@ -100,12 +100,10 @@ class view_controller {
         // Remove interaction courses from remaining courses.
         $remainingcourses = array_diff($remainingcourses, $requiresinteractioncourses);
 
-        $PAGE->requires->js_call_amd('tool_lifecycle/tablebulkactions_view', 'init');
-
         // List of courses where an interaction is required.
         echo $renderer->heading(get_string('tablecoursesrequiringattention', 'tool_lifecycle'), 3);
         $table1 = new interaction_attention_table('tool_lifecycle_interaction',
-            $requiresinteractioncourses, $filterdata, $bulk);
+            $requiresinteractioncourses, $filterdata);
         echo $renderer->box_start("managing_courses_tables");
         $table1->out(50, false);
         echo $renderer->box_end();
@@ -135,6 +133,7 @@ class view_controller {
      * @throws \required_capability_exception
      */
     public function handle_interaction($action, $processid, $stepid) {
+        global $PAGE;
 
         $process = process_manager::get_process_by_id($processid);
         $step = step_manager::get_step_instance($stepid);
@@ -142,9 +141,8 @@ class view_controller {
         require_capability($capability, \context_course::instance($process->courseid), null, false);
 
         if (interaction_manager::handle_interaction($stepid, $processid, $action)) {
-            return true;
+            redirect($PAGE->url, get_string('interaction_success', 'tool_lifecycle'), null, notification::SUCCESS);
         }
-        return false;
     }
 
     /**
@@ -161,7 +159,7 @@ class view_controller {
     public function handle_trigger($triggerid, $courseid) {
 
         // Software enhancement check if trigger to triggerid exists.
-        // Check if trigger is manual.
+        // Check if the trigger is manual.
         $trigger = trigger_manager::get_instance($triggerid);
         $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
         if (!$lib->is_manual_trigger()) {

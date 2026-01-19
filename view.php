@@ -54,13 +54,13 @@ if ($reportparam = optional_param('report', null, PARAM_TEXT)) {
 $controller = new view_controller();
 
 $report = [];
-if ($bulkactions) {
+if ($bulkactions) { // Only for interactions so far.
     require_sesskey();
     foreach ($bulkactions as $action) {
-        $item = explode('_', $action);
-        if (count($item) == 2) {
-            $triggerid = $item[0];
-            $courseid = $item[1];
+        $items = explode('_', $action);
+        if (count($items) == 2) {
+            $triggerid = $items[0];
+            $courseid = $items[1];
             $course = get_course($courseid);
             $coursename = get_course_display_name_for_list($course);
             if ($rc = $controller->handle_trigger($triggerid, $courseid)) {
@@ -69,32 +69,14 @@ if ($bulkactions) {
                 $successmsg = get_string('manual_trigger_success', 'tool_lifecycle');
                 $report[] = \html_writer::div($coursename.": ".$successmsg, 'alert alert-success');
             }
-        } else if (count($item) == 3) {
-            $action = $item[0];
-            $processid = $item[1];
-            $courseid = $DB->get_field_sql(
-                "SELECT courseid FROM {tool_lifecycle_process} WHERE id = :pid", ['pid' => $processid]);
-            $course = get_course($courseid);
-            $coursename = get_course_display_name_for_list($course);
-            $stepid = $item[2];
-            if ($controller->handle_interaction($action, $processid, $stepid)) {
-                $successmsg = get_string('interaction_success', 'tool_lifecycle');
-                $report[] = \html_writer::div($coursename.": ".$successmsg, 'alert alert-success');
-            }
         }
     }
-} else {
-    if ($action !== null && $processid !== null && $stepid !== null) {
+} else { // Single edit: interaction or manual workflow.
+    if ($action !== null && $processid !== null && $stepid !== null) { // User interaction.
         require_sesskey();
-        $courseid = $DB->get_field_sql(
-            "SELECT courseid FROM {tool_lifecycle_process} WHERE id = :pid", ['pid' => $processid]);
-        $course = get_course($courseid);
-        $coursename = get_course_display_name_for_list($course);
-        if ($controller->handle_interaction($action, $processid, $stepid)) {
-            $successmsg = get_string('interaction_success', 'tool_lifecycle');
-            $report[] = \html_writer::div($coursename.": ".$successmsg, 'alert alert-success');
-        }
-    } else if ($triggerid !== null && $courseid !== null) {
+        $controller->handle_interaction($action, $processid, $stepid);
+        exit;
+    } else if ($triggerid !== null && $courseid !== null) { // Manual workflow ("remaining courses").
         require_sesskey();
         $course = get_course($courseid);
         $coursename = get_course_display_name_for_list($course);
@@ -116,6 +98,10 @@ $PAGE->set_title(get_string('viewheading', 'tool_lifecycle'));
 $PAGE->set_heading(get_string('viewheading', 'tool_lifecycle'));
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
+
+if ($bulkedit) {
+    $PAGE->requires->js_call_amd('tool_lifecycle/tablebulkactions_view', 'init');
+}
 
 echo $renderer->header();
 
