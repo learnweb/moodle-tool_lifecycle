@@ -78,14 +78,8 @@ if ($bulkactions) { // Only for interactions so far.
         exit;
     } else if ($triggerid !== null && $courseid !== null) { // Manual workflow ("remaining courses").
         require_sesskey();
-        $course = get_course($courseid);
-        $coursename = get_course_display_name_for_list($course);
-        if ($rc = $controller->handle_trigger($triggerid, $courseid)) {
-            $report[] = \html_writer::div($coursename.": ".$rc, 'alert alert-danger');
-        } else {
-            $successmsg = get_string('manual_trigger_success', 'tool_lifecycle');
-            $report[] = \html_writer::div($coursename.": ".$successmsg, 'alert alert-success');
-        }
+        $controller->handle_trigger($triggerid, $courseid);
+        exit;
     }
 }
 if ($report) {
