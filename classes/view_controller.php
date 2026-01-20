@@ -156,7 +156,8 @@ class view_controller {
      * @throws \moodle_exception
      * @throws \required_capability_exception
      */
-    public function handle_trigger($triggerid, $courseid) {
+    public function handle_trigger($triggerid, $courseid, $bulk = false) {
+        global $PAGE;
 
         // Software enhancement check if trigger to triggerid exists.
         // Check if the trigger is manual.
@@ -181,7 +182,12 @@ class view_controller {
 
         $processor = new processor();
         if ($processor->process_course_interactive($process->id)) {
-            return 0;
+            if ($bulk) {
+                return 0;
+            } else {
+                redirect($PAGE->url, get_string('manual_trigger_success', 'tool_lifecycle'),
+                    null, notification::SUCCESS);
+            }
         } else {
             return get_string('error');
         }

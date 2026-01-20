@@ -50,7 +50,7 @@ class interaction_remaining_table extends interaction_table {
     private $trigger2courses = [];
 
     /**
-     * @var bool $bulk bulk handling of user interactions on or of for the table (true/false)
+     * @var bool $bulk switches bulk handling of user interactions on or of for the table (true/false)
      */
     private $bulk = false;
 
