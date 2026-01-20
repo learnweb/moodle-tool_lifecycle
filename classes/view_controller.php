@@ -150,6 +150,7 @@ class view_controller {
      *
      * @param int $triggerid id of the trigger whose workflow was requested.
      * @param int $courseid id of the course, the workflow was requested for.
+     * @param bool $bulk indicator if called while bulk editing.
      * @return string|int $rc error message or 0 for success
      * @throws \coding_exception
      * @throws \dml_exception
