@@ -27,14 +27,13 @@ $string['action_help'] = 'Wie soll das Kursfeld gesetzt werden?';
 $string['customfield'] = 'Kursfeld';
 $string['customfield_help'] = 'Der Schritt verändert das Kursfeld.';
 $string['error.invalidvalue'] = 'Der Wert ist ungültig';
-
+$string['nocustomfields_link'] = 'Link zum Anlegen von Nutzerdefinierten Kursfeldern';
+$string['nocustomfields_warning'] = 'Keine passenden Felder gefunden!';
 $string['plugindescription'] = 'Es wird ein bestimmtes Kursfeld gesetzt.';
 $string['pluginname'] = 'Nutzerdefiniertes Kursfeld setzen - Schritt';
 $string['privacy:metadata'] = 'Speichert keine personenbezogenen Daten';
-
 $string['setempty'] = 'leer';
 $string['settimestamp'] = 'aktuellen Zeitstempel (jetzt)';
 $string['setvalue'] = 'festen Wert';
-
 $string['value'] = 'Wert';
 $string['value_help'] = 'Wert, auf den gesetzt werden soll (nur falls "fester Wert" ausgewählt ist). Bei Auswahlfelder kann dies sowohl der Index als auch der Wert selbst sein.';
