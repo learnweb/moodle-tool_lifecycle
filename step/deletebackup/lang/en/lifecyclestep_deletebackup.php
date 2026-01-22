@@ -22,11 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Delete backup step';
+$string['deletebackupsolderthan'] = 'Delete all backups that are older than x days';
+$string['maximumdeletionspercron'] = 'Maximum number of backups deleted per cron job';
+
 $string['plugindescription'] = 'Delete backup step';
+$string['pluginname'] = 'Delete backup step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
-// For maximum deletions (per cron execution)
-$string['maximumdeletionspercron'] = 'Maximum number of backups deleted per cron job';
-// For deleting all backups that are older than this date
-$string['deletebackupsolderthan'] = 'Delete all backups that are older than x days';
+
+

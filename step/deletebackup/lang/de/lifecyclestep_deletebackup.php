@@ -22,11 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Backuplöschen-Schritt';
-$string['plugindescription'] = 'Backuplöschen-Schritt';
-$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
-
-// For maximum deletions (per cron execution)
-$string['maximumdeletionspercron'] = 'Maximale Anzahl an Backuplöschungen per Cron Job';
-// For deleting all backups that are older than this date
 $string['deletebackupsolderthan'] = 'Lösche alle Backups, die älter sind als x Tage';
+$string['maximumdeletionspercron'] = 'Maximale Anzahl an Backuplöschungen per Cron Job';
+
+$string['plugindescription'] = 'Backuplöschen-Schritt';
+$string['pluginname'] = 'Backuplöschen-Schritt';
+$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';

@@ -39,9 +39,9 @@ use tool_lifecycle\local\manager\step_manager;
  * @throws upgrade_exception
  */
 function xmldb_lifecyclestep_deletebackup_upgrade($oldversion) {
-    // Check step's version
+    /* Check step's version
     if ($oldversion < 2024101600) {
-        /* Example: How to add new settings to all old/stored workflows
+        // Example: How to add new settings to all old/stored workflows
 
         // Define new setting name & default value
         $settingsname = 'maximumdeletionspercron';
@@ -59,6 +59,6 @@ function xmldb_lifecyclestep_deletebackup_upgrade($oldversion) {
 
         // Deletebackup savepoint reached.
         upgrade_plugin_savepoint(true, 2024101600, 'lifecyclestep', 'deletebackup');
-        */
     }
+    */
 }

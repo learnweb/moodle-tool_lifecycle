@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $plugin->version  = 2024101600;
 $plugin->component = 'lifecyclestep_deletebackup';
-$plugin->dependencies = array('tool_lifecycle' => 2022112400);
+$plugin->dependencies = ['tool_lifecycle' => 2022112400];
 $plugin->requires = 2020061500; // Requires Moodle 3.9+.
 $plugin->release = '0.1.0';
-$plugin->maturity = MATURITY_ALPHA; //MATURITY_STABLE
+$plugin->maturity = MATURITY_ALPHA; // MATURITY_STABLE.
