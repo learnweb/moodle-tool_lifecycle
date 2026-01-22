@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-5.1.0(2026-01-13)
+5.1.0(2026-01-20)
 ------------------
 * [FEATURE] Introduce new trigger 'activity'
 * [FEATURE] Introduce new trigger 'opencast'

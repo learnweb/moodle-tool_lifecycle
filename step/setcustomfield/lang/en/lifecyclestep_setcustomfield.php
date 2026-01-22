@@ -27,14 +27,13 @@ $string['action_help'] = 'How shall the custom field be set?';
 $string['customfield'] = 'Course customfield';
 $string['customfield_help'] = 'The step updates the value of the course customfield.';
 $string['error.invalidvalue'] = 'Invalid value';
-
+$string['nocustomfields_link'] = 'Link to add costumfields to this Moodle site';
+$string['nocustomfields_warning'] = 'No appropriate fields have been defined!';
 $string['plugindescription'] = 'Sets a course custom field.';
 $string['pluginname'] = 'Set course custom field step';
 $string['privacy:metadata'] = 'Does not store any data';
-
 $string['setempty'] = 'empty';
 $string['settimestamp'] = 'current timestamp (now)';
 $string['setvalue'] = 'specific value';
-
 $string['value'] = 'Value';
 $string['value_help'] = 'Value to be set (if action is \'specific value\'). For select fields this can be either index or text.';
