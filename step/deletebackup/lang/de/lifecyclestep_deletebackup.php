@@ -22,9 +22,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['backupdeleted'] = 'Löschzeitpunkt';
+$string['backupdeletionlogtable'] = 'Kurssicherungslöschungs-Log von Schritt {$a}';
 $string['deletebackupsolderthan'] = 'Lösche alle Backups, die älter sind als x Tage';
+$string['files'] = 'Sicherungsdateien gelöscht';
+$string['log'] = 'Log-Einträge schreiben';
+$string['log_help'] = 'Mit dieser Option bestimmen Sie, ob Log-Einträge pro gelöschtem Backup geschrieben werden sollen. Diese können Sie im Workflow-Übersicht bei diesem Schritt sehen.';
 $string['maximumdeletionspercron'] = 'Maximale Anzahl an Backuplöschungen per Cron Job';
-
+$string['mtracebackupdeleted'] = 'Kurssicherung ID {$a->recordid}. Datensatz erfolgreich gelöscht: {$a->recorddeleted}. Sicherungsdatei {$a->backupfile} erfolgreich gelöscht: {$a->filedeleted}';
 $string['plugindescription'] = 'Backuplöschen-Schritt';
 $string['pluginname'] = 'Backuplöschen-Schritt';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';

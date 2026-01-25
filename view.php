@@ -119,9 +119,8 @@ if ($reportparam) {
     foreach ($reportparam as $message) {
         echo $message;
     }
+    echo '<br>';
 }
-
-echo '<br>';
 
 $filterform->display();
 

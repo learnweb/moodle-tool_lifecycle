@@ -42,6 +42,7 @@ use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\response\trigger_response;
+use tool_lifecycle\local\table\course_backups_deletionlog_table;
 use tool_lifecycle\local\table\courses_in_process_table;
 use tool_lifecycle\local\table\courses_in_step_table;
 use tool_lifecycle\local\table\triggered_courses_table_trigger;
@@ -61,6 +62,7 @@ $excluded = optional_param('excluded', null, PARAM_INT);
 $delayed = optional_param('delayed', null, PARAM_INT);
 $processes = optional_param('processes', null, PARAM_INT);
 $used = optional_param('used', null, PARAM_INT);
+$backupdeletionlog = optional_param('backupdeletionlog', 0, PARAM_INT);
 $search = optional_param('search', null, PARAM_RAW);
 $showdetails = optional_param('showdetails', 0, PARAM_INT);
 $showsql = optional_param('showsql', 0, PARAM_INT);
@@ -323,6 +325,13 @@ foreach ($steps as $step) {
     if ($step->id == $stepid) {
         $step->selected = true;
     }
+    if ($step->subpluginname == 'deletebackup') {
+        $sql = "SELECT SUM(files) as filesdeleted FROM {tool_lifecycle_deletebackup_log} WHERE stepid = :stepid";
+        $step->backupdeletions = $DB->get_field_sql($sql, ['stepid' => $step->id]);
+        if ($step->id == $backupdeletionlog) {
+            $step->selected = true;
+        }
+    }
     $editlink = new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::STEP, 'elementid' => $step->id]);
     $step->editlink = $editlink->out();
     $actionmenu = new action_menu([
@@ -432,6 +441,12 @@ if ($stepid) { // Display courses table with courses of this step.
         $hiddenfieldssearch[] = ['name' => 'processes', 'value' => $processes];
         $tablecoursesamount = $coursesinprocess;
     }
+} else if ($backupdeletionlog) { // Display a step's entries in the backup deletions log.
+        $table = new course_backups_deletionlog_table($backupdeletionlog);
+        ob_start();
+        $table->out(PAGESIZE, false);
+        $out = ob_get_contents();
+        ob_end_clean();
 } else if ($showsql && $debugtriggersql) { // Display the trigger sql statement stored in session.
     $out = \html_writer::div(
         str_replace("}", "", str_replace("{", $CFG->prefix, $debugtriggersql)),

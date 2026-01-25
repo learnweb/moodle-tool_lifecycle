@@ -223,7 +223,11 @@ class processor {
                     }
                     $coursesprocessed++;
                 } catch (\Exception $e) {
-                    process_manager::insert_process_error($process, $e);
+                    try {
+                        process_manager::insert_process_error($process, $e);
+                    } catch (\Exception $e) {
+                        mtrace($e->getMessage(), $e);
+                    }
                     $coursesprocesserrors++;
                     break;
                 }

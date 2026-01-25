@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\step;
 
+use stdClass;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\settings_type;
@@ -40,9 +41,6 @@ require_once(__DIR__ . '/../lib.php');
  */
 class deletebackup extends libbase {
 
-    /** @var int $numberofdeletions Deletions done so far in this php call. */
-    private static $numberofdeletions = 0;
-
     /**
      * Processes the course and returns a repsonse.
      * The response tells either
@@ -57,21 +55,37 @@ class deletebackup extends libbase {
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
+        global $FULLSCRIPT, $DB;
+
+        $eol = "\n";
+        // HTML end of line if called by run-command of workflowoverview.
+        if (str_contains($FULLSCRIPT ?? '', 'run.php')) {
+            $eol = "<br>";
+        }
+
         // Get settings.
         $settings = settings_manager::get_settings($instanceid, settings_type::STEP);
 
-        // Call $this->delete_backups(...) only once.
-        if (self::$numberofdeletions < 1) {
-            // Delete course backup files older than date.
-            $results = $this->delete_backups($settings['deletebackupsolderthan'], $settings['maximumdeletionspercron']);
-            foreach ($results as $result) {
-                mtrace("Record id: " . $result['recordid'] . " (deleted: " . $result['recorddeleted'] . "), file: "
-                    . $result['backupfile'] . " (deleted: " . $result['filedeleted'] . ")");
+        $filesdeleted = 0;
+        // Delete course backup files older than date.
+        $results = $this->delete_backups($course->id,
+            $settings['deletebackupsolderthan'], $settings['maximumdeletionspercron']);
+        foreach ($results as $result) {
+            mtrace(get_string('mtracebackupdeleted', 'lifecyclestep_deletebackup', $result), $eol);
+            if ($result->filedeleted == get_string('yes')) {
+                $filesdeleted++;
             }
         }
 
-        // Raise deletion counter.
-        self::$numberofdeletions++;
+        // Write log if switched on.
+        if (($settings['log'] ?? false) && $filesdeleted) {
+            $recordlog = new stdClass();
+            $recordlog->courseid = $course->id;
+            $recordlog->stepid = $instanceid;
+            $recordlog->timestampdeleted = time();
+            $recordlog->files = $filesdeleted;
+            $DB->insert_record('tool_lifecycle_deletebackup_log', $recordlog);
+        }
 
         return step_response::proceed();
     }
@@ -105,10 +119,12 @@ class deletebackup extends libbase {
      */
     public function instance_settings() {
         return [
-            // Add instance for maximum deletions (per cron execution).
+            // Add instance setting for maximum deletions (per cron execution).
             new instance_setting('maximumdeletionspercron', PARAM_INT, true),
-            // Add instance for deleting all backups that are older than.
+            // Add instance setting for deleting all backups that are older than.
             new instance_setting('deletebackupsolderthan', PARAM_INT, true),
+            // Add instance setting to decide if log entries should be written for deletions.
+            new instance_setting('log', PARAM_INT, true),
         ];
     }
 
@@ -128,6 +144,12 @@ class deletebackup extends libbase {
         $mform->addElement('text', 'deletebackupsolderthan', get_string('deletebackupsolderthan', 'lifecyclestep_deletebackup'));
         $mform->setType('deletebackupsolderthan', PARAM_INT);
         $mform->setDefault('deletebackupsolderthan', 365);
+
+        // Add input field to decide if log entries should be written for deletions.
+        $mform->addElement('advcheckbox', 'log', get_string('log', 'lifecyclestep_deletebackup'));
+        $mform->addHelpButton('log', 'log', 'lifecyclestep_deletebackup');
+        $mform->setType('log', PARAM_BOOL);
+        $mform->setDefault('log', false);
     }
 
     // ... ################################################ Additional Methods ################################################ ...
@@ -156,10 +178,13 @@ class deletebackup extends libbase {
 
     /**
      * Delete course backup files older than date.
+     * @param int $courseid id of the course which is processed.
      * @param string $timestamp of "older than date".
      * @param int $maxdeletions per run.
+     * @return object[] one result object for each deletion.
+     * @throws \dml_exception
      */
-    public function delete_backups($timestamp = null, $maxdeletions = 10) {
+    public function delete_backups($courseid, $timestamp = null, $maxdeletions = 10) {
         global $DB;
 
         // If date is null, use now - 1 year.
@@ -171,61 +196,55 @@ class deletebackup extends libbase {
         }
 
         // Get all course backups older than timestamp from db.
-        $sql = "SELECT id, backupfile FROM {tool_lifecycle_backups} WHERE backupcreated < ?";
-        $records = $DB->get_records_sql($sql, [$timestamp]);
+        $sql = "SELECT id, backupfile
+                FROM {tool_lifecycle_backups}
+                WHERE courseid = :courseid AND backupcreated < :timestmp";
+        $records = $DB->get_records_sql($sql, ['courseid' => $courseid, 'timestmp' => $timestamp]);
 
         // Get path of backup folder.
         $path = get_config('tool_lifecycle', 'backup_path');
-        // Define file extension of course backups.
-        $extension = "mbz";
-        // Define result array.
         $results = [];
         $counter = 0;
-
         // Check if backup path exists.
         if (is_dir($path)) {
             foreach ($records as $record) {
-                $deletedfile = -1;
-                $deletedrecord = -1;
+                $deletedfile = false;
+                $deletedrecord = false;
 
                 if ($counter < $maxdeletions) {
                     // If file exists.
                     if (is_file("$path/$record->backupfile")) {
-                        // If file extension = mbz.
-                        if (pathinfo($record->backupfile, PATHINFO_EXTENSION) === $extension
-                            // If parsed time of file name <= timestamp.
-                            && preg_match('/(\d{4}-\d{2}-\d{2})/', $record->backupfile, $matches)
-                            && \DateTime::createFromFormat('Y-m-d', $matches[1])->getTimestamp() < $timestamp
-                        ) {
-                            // Set permissions to 777 of course backup file.
-                            chmod("$path/$record->backupfile", 0777);
-                            // Clears file status cache.
-                            clearstatcache();
-                            // Delete course backup file first.
-                            $deletedfile = unlink("$path/$record->backupfile");
-                            // If deletion of course backup file was unsuccessful.
-                            if (!$deletedfile) {
-                                // Delete course backup file with system command.
-                                exec("rm -f " . escapeshellarg("$path/$record->backupfile"), $output, $resultcode);
-                                if ($resultcode == 0) {
-                                    $deletedfile = 1;
-                                }
+                        // Set permissions to 777 of course backup file.
+                        chmod("$path/$record->backupfile", 0777);
+                        // Clears file status cache.
+                        clearstatcache();
+                        // Delete course backup file first.
+                        $deletedfile = unlink("$path/$record->backupfile");
+                         // If deletion of course backup file was unsuccessful.
+                        if (!$deletedfile) {
+                            // Delete course backup file with system command.
+                            exec("rm -f " . escapeshellarg("$path/$record->backupfile"),
+                                $output, $resultcode);
+                            if ($resultcode == 0) {
+                                $deletedfile = true;
                             }
-
-                            // If file was deleted, delete record too.
-                            if ($deletedfile) {
-                                $deletedrecord = $DB->delete_records('tool_lifecycle_backups',
-                                        ['backupfile' => $record->backupfile]);
-                            }
-                            $counter++;
                         }
-                        // If file not exists, delete just record.
-                    } else {
-                        $deletedrecord = $DB->delete_records('tool_lifecycle_backups', ['backupfile' => $record->backupfile]);
+                        // If file was deleted, delete record too.
+                        if ($deletedfile) {
+                            $deletedrecord = $DB->delete_records('tool_lifecycle_backups',
+                                    ['id' => $record->id]);
+                        }
+                        $counter++;
+                    } else { // If file not exists, delete just record.
+                        $deletedrecord = $DB->delete_records('tool_lifecycle_backups',
+                            ['id' => $record->id]);
                     }
-
-                    $results[] = ['recordid' => $record->id, 'backupfile' => $path.'/'.$record->backupfile,
-                            'recorddeleted' => $deletedrecord, 'filedeleted' => $deletedfile];
+                    $result = new stdClass();
+                    $result->filedeleted = $deletedfile ? get_string('yes') : get_string('no');
+                    $result->recorddeleted = $deletedrecord ? get_string('yes') : get_string('no');
+                    $result->backupfile = $path.'/'.$record->backupfile;
+                    $result->recordid = $record->id;
+                    $results[] = $result;
                 }
             }
         } else {

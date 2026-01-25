@@ -639,5 +639,20 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     }
 
+    if ($oldversion < 2026012001) {
+
+        // Define field step to be added to tool_lifecycle_backups.
+        $table = new xmldb_table('tool_lifecycle_backups');
+        $field = new xmldb_field('step', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'backupcreated');
+
+        // Conditionally launch add field step.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2026012001, 'tool', 'lifecycle');
+    }
+
     return true;
 }

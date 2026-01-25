@@ -29,7 +29,7 @@ use tool_lifecycle\local\manager\step_manager;
  * Update script for lifecycles subplugin deletebackup
  *
  * @package    lifecyclestep_deletebackup
- * @copyright  2024 Michael Schink JKU
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @param int $oldversion Version id of the previously installed version.
  * @throws coding_exception
@@ -39,26 +39,33 @@ use tool_lifecycle\local\manager\step_manager;
  * @throws upgrade_exception
  */
 function xmldb_lifecyclestep_deletebackup_upgrade($oldversion) {
-    /* Check step's version
-    if ($oldversion < 2024101600) {
-        // Example: How to add new settings to all old/stored workflows
 
-        // Define new setting name & default value
-        $settingsname = 'maximumdeletionspercron';
-        $settingsvalue = 10;
+    global $DB;
+    $dbman = $DB->get_manager();
 
-        // Get step instances
-        $coursedeletesteps = step_manager::get_step_instances_by_subpluginname('deletebackup');
-        foreach ($coursedeletesteps as $step) {
-            // If settings are empty
-            if (empty(settings_manager::get_settings($step->id, 'step'))) {
-                // Add setting: maximumdeletionspercron with default value
-                settings_manager::save_settings($step->id, 'step', 'deletebackup', [$settingsname => $settingsvalue]);
-            }
+    if ($oldversion < 2026012301) {
+
+        // Define table tool_lifecycle_deletebackup_log to be created.
+        $table = new xmldb_table('tool_lifecycle_deletebackup_log');
+
+        // Adding fields to table tool_lifecycle_deletebackup_log.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('stepid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('files', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        $table->add_field('timestampdeleted', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        // Adding keys to table tool_lifecycle_deletebackup_log.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for tool_lifecycle_deletebackup_log.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
         }
 
         // Deletebackup savepoint reached.
-        upgrade_plugin_savepoint(true, 2024101600, 'lifecyclestep', 'deletebackup');
+        upgrade_plugin_savepoint(true, 2026012301, 'lifecyclestep', 'deletebackup');
     }
-    */
+
+    return true;
 }

@@ -95,6 +95,7 @@
         <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Shortname of the course"/>
         <FIELD NAME="backupfile" TYPE="char" LENGTH="120" NOTNULL="false" SEQUENCE="false" COMMENT="Name of the backup file"/>
         <FIELD NAME="backupcreated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="timestamp the backup was created"/>
+        <FIELD NAME="step" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="ID of the step by which this backup was triggered"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

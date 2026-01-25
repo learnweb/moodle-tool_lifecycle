@@ -22,9 +22,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['backupdeleted'] = 'deletion time';
+$string['backupdeletionlogtable'] = 'Backup deletion log of step {$a}';
 $string['deletebackupsolderthan'] = 'Delete all backups that are older than x days';
+$string['files'] = 'Backupfiles deleted';
+$string['log'] = 'Write log entries';
+$string['log_help'] = 'If checked a log entry for every file deletion is written. These log entries can be seen in the workflow overview page.';
 $string['maximumdeletionspercron'] = 'Maximum number of backups deleted per cron job';
-
+$string['mtracebackupdeleted'] = 'Backup id {$a->recordid}. DB-record succesfully deleted: {$a->recorddeleted}. File {$a->backupfile} successfully deleted: {$a->filedeleted}';
 $string['plugindescription'] = 'Delete backup step';
 $string['pluginname'] = 'Delete backup step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';

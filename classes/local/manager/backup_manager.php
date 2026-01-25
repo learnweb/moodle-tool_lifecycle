@@ -41,18 +41,20 @@ class backup_manager {
     /**
      * Creates a course backup in a specific life cycle backup folder
      * @param int $courseid id of the course the backup should be created for.
+     * $param int $stepid id of the step instance
      * @return bool tells if the backup was completed successfully.
      * @throws \coding_exception
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    public static function create_course_backup($courseid) {
+    public static function create_course_backup($courseid, $stepid) {
         global $CFG, $DB;
         $course = get_course($courseid);
         $record = new \stdClass();
         $record->courseid = $courseid;
         $record->fullname = $course->fullname;
         $record->shortname = $course->shortname;
+        $record->step = $stepid;
         $recordid = $DB->insert_record('tool_lifecycle_backups', $record, true);
         $record->id = $recordid;
 

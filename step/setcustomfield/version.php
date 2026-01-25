@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life Cycle S
+ * Life Cycle Step setcustomfield
  *
  * @package lifecyclestep_setcustomfield
  * @copyright  2025 Ostfalia
@@ -23,7 +23,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
-
 
 $plugin->version = 2025121200;
 $plugin->requires = 2022112800; // Requires Moodle 4.1+.

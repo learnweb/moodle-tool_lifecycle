@@ -25,6 +25,7 @@ namespace tool_lifecycle\local\table;
 
 use core\output\single_button;
 use core_date;
+use tool_lifecycle\urls;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -96,8 +97,12 @@ class course_backups_table extends \table_sql {
             }
         }
 
-        $this->set_sql('b.id, b.courseid, b.shortname as courseshortname, b.fullname as coursefullname, b.backupcreated',
-            '{tool_lifecycle_backups} b',
+        $this->set_sql('b.id, b.courseid, COALESCE(c.shortname, b.shortname) as courseshortname,
+                COALESCE(c.fullname, b.fullname) as coursefullname, s.instancename as step, s.workflowid,
+                b.backupcreated',
+            '{tool_lifecycle_backups} b LEFT JOIN 
+                   {course} c ON c.id = b.courseid LEFT JOIN 
+                   {tool_lifecycle_step} s ON s.id = b.step',
             join(" AND ", $where), $params);
         $this->no_sorting('checkbox');
         $this->no_sorting('download');
@@ -114,13 +119,12 @@ class course_backups_table extends \table_sql {
         if ($this->deletedate ?? false) {
             $checked = true;
         }
-        $this->define_columns(['checkbox', 'courseid', 'courseshortname', 'coursefullname', 'backupcreated',
-            'download', 'restore']);
+        $this->define_columns(['checkbox', 'courseid', 'coursename', 'step', 'backupcreated', 'download', 'restore']);
         $this->define_headers([
             \html_writer::checkbox('checkall', null, $checked),
             get_string('courseid', 'tool_lifecycle'),
-            get_string('shortnamecourse'),
-            get_string('fullnamecourse'),
+            get_string('coursename', 'tool_lifecycle'),
+            get_string('step', 'tool_lifecycle'),
             get_string('backupcreated', 'tool_lifecycle'),
             get_string('download', 'tool_lifecycle'),
             get_string('restore', 'tool_lifecycle'), ]);
@@ -154,29 +158,26 @@ class course_backups_table extends \table_sql {
     }
 
     /**
-     * Render courseshortname column.
+     * Render coursename column.
      * @param object $row Row data.
-     * @return string course link
+     * @return string course name + link
      */
-    public function col_courseshortname($row) {
-        try {
-            return \html_writer::link(course_get_url($row->courseid), $row->courseshortname);
-        } catch (\dml_missing_record_exception $e) {
-            return $row->courseshortname;
+    public function col_coursename($row) {
+        $out = \html_writer::link(course_get_url($row->courseid), format_string($row->coursefullname));
+        if ($row->coursefullname != $row->courseshortname) {
+            $out .= \html_writer::div($row->courseshortname, 'text-info');
         }
+        return $out;
     }
 
     /**
-     * Render coursefullname column.
+     * Render backupcreated column.
      * @param object $row Row data.
-     * @return string course link
+     * @return string date of the backupcreated
      */
-    public function col_coursefullname($row) {
-        try {
-            return \html_writer::link(course_get_url($row->courseid), format_string($row->coursefullname));
-        } catch (\dml_missing_record_exception $e) {
-            return format_string($row->coursefullname);
-        }
+    public function col_step($row) {
+        $out = \html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $row->workflowid]), $row->step);
+        return $row->step ? $out : '--';
     }
 
     /**
@@ -235,7 +236,7 @@ class course_backups_table extends \table_sql {
                 'sesskey' => sesskey(),
                 'name' => 'button_delete_selected',
                 'value' => $this->strings['deleteselectedbuttonlabel'],
-                'class' => 'selectedbutton btn btn-secondary mr-2',
+                'class' => 'selectedbutton btn btn-secondary mr-2 mb-1',
             ]
         );
 
