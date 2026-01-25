@@ -55,11 +55,11 @@ class deletebackup extends libbase {
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
-        global $FULLSCRIPT, $DB;
+        global $SCRIPT, $DB;
 
         $eol = "\n";
         // HTML end of line if called by run-command of workflowoverview.
-        if (str_contains($FULLSCRIPT ?? '', 'run.php')) {
+        if (str_contains($SCRIPT ?? '', 'run.php')) {
             $eol = "<br>";
         }
 

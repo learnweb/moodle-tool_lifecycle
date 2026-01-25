@@ -428,7 +428,7 @@ class process_manager {
                 $process->id = $processid;
             }
             $DB->delete_records('tool_lifecycle_proc_error', ['id' => $processerrorid]);
-            $process = process_manager::get_process_by_id($process->id);
+            $process = self::get_process_by_id($process->id);
         }
         return $process;
     }

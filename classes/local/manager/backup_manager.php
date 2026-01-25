@@ -41,7 +41,7 @@ class backup_manager {
     /**
      * Creates a course backup in a specific life cycle backup folder
      * @param int $courseid id of the course the backup should be created for.
-     * $param int $stepid id of the step instance
+     * @param int $stepid id of the step instance
      * @return bool tells if the backup was completed successfully.
      * @throws \coding_exception
      * @throws \dml_exception

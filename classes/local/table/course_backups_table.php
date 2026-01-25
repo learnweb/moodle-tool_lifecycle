@@ -100,8 +100,8 @@ class course_backups_table extends \table_sql {
         $this->set_sql('b.id, b.courseid, COALESCE(c.shortname, b.shortname) as courseshortname,
                 COALESCE(c.fullname, b.fullname) as coursefullname, s.instancename as step, s.workflowid,
                 b.backupcreated',
-            '{tool_lifecycle_backups} b LEFT JOIN 
-                   {course} c ON c.id = b.courseid LEFT JOIN 
+            '{tool_lifecycle_backups} b LEFT JOIN
+                   {course} c ON c.id = b.courseid LEFT JOIN
                    {tool_lifecycle_step} s ON s.id = b.step',
             join(" AND ", $where), $params);
         $this->no_sorting('checkbox');

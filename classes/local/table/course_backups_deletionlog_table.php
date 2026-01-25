@@ -56,8 +56,8 @@ class course_backups_deletionlog_table extends \table_sql {
 
         $this->set_sql('b.id, b.courseid, c.shortname as courseshortname,
                 c.fullname as coursefullname, b.files as filesdeleted, b.timestampdeleted',
-            '{tool_lifecycle_deletebackup_log} b LEFT JOIN 
-                   {course} c ON c.id = b.courseid LEFT JOIN 
+            '{tool_lifecycle_deletebackup_log} b LEFT JOIN
+                   {course} c ON c.id = b.courseid LEFT JOIN
                    {tool_lifecycle_step} s ON s.id = b.stepid',
             'b.stepid = :stepid', ['stepid' => $stepid]);
         $this->define_baseurl($PAGE->url);
