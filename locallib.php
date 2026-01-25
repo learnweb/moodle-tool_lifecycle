@@ -61,7 +61,7 @@ function lifecycle_select_change_workflow($activewf) {
         );
     }
 
-    $actionmenu->set_menu_trigger(get_string('changeworkflow', 'tool_lifecycle'));
+    $actionmenu->set_menu_trigger(get_string('switchworkflow', 'tool_lifecycle'));
     echo $OUTPUT->render_action_menu($actionmenu);
 
 }
