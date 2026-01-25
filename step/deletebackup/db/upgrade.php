@@ -43,7 +43,7 @@ function xmldb_lifecyclestep_deletebackup_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2026012301) {
+    if ($oldversion < 2026012500) {
 
         // Define table tool_lifecycle_deletebackup_log to be created.
         $table = new xmldb_table('tool_lifecycle_deletebackup_log');
@@ -64,7 +64,7 @@ function xmldb_lifecyclestep_deletebackup_upgrade($oldversion) {
         }
 
         // Deletebackup savepoint reached.
-        upgrade_plugin_savepoint(true, 2026012301, 'lifecyclestep', 'deletebackup');
+        upgrade_plugin_savepoint(true, 2026012500, 'lifecyclestep', 'deletebackup');
     }
 
     return true;

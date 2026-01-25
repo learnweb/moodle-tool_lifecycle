@@ -18,15 +18,16 @@
  * Life Cycle Delete Backup Step
  *
  * @package    lifecyclestep_deletebackup
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @copyright  2026 Michael Schink JKU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2026012301;
+$plugin->version  = 2026012500;
 $plugin->requires = 2022112800; // Requires Moodle 4.1+.
-$plugin->supported = [401, 405];
+$plugin->supported = [405, 501];
 $plugin->component = 'lifecyclestep_deletebackup';
-$plugin->release   = 'v4.5-r1';
+$plugin->release   = 'v5.1-r1';
 $plugin->maturity = MATURITY_STABLE;
