@@ -74,6 +74,8 @@ $string['config_delay_duration'] = 'Standardlänge eines Kursausschlusses';
 $string['config_delay_duration_desc'] = 'Diese Einstellung definiert den Standardlänge einer Kursausschlusses in einem Workflow
  falls ein Prozess des Workflows zurückgesetzt oder beendigt wird. Die Länge des Kursausschlusses besagt, wie lange es dauert, bis
  der Kurs wieder vom Workflow bearbeitet wird.';
+$string['config_deletebackupsafterdays'] = 'Lösche alle Backups, die älter sind als x Tage';
+$string['config_deletebackupsafterdays_desc'] = 'Alle Lifecycle-Kurssicherungen, die älter sind, werden gelöscht wenn die Task lifecycle_cleanup_task ausgfeführt wird.';
 $string['config_enablecategoryhierachy'] = 'Kurskategorienhierarchie in der Interaktionstabelle spezifizieren';
 $string['config_enablecategoryhierachy_desc'] = 'Standardmäßig wird die direkt zugewiesene Kurskategorie angezeigt, wenn Lehrkräfte den Status ihrer Kurse in der view.php verwalten. Die Einstellung ermöglicht es, eine bestimmte Ebene des Kurskategorienbaums anzuzeigen.';
 $string['config_logreceivedmails'] = 'Zusätzliches Logging von E-mails zu Nutzern.';
@@ -193,6 +195,7 @@ $string['invalid_workflow_details'] = 'Füge mindestens einen Trigger und einen 
 $string['lastaction'] = 'Letzte Aktion am';
 $string['lastrun'] = 'Letzte Durchführung: {$a}';
 $string['lifecycle:managecourses'] = 'Darf Kurse in tool_lifecycle verwalten.';
+$string['lifecycle_cleanup_task'] = 'Löscht veraltete Verzögerungsdatensätze und alte Lifecycle-Kurssicherungen.';
 $string['lifecycle_error_notify_task'] = 'Benachrichtigt die Administratoren bei Fehlern in tool_lifecycle-Prozessen.';
 $string['lifecycle_task'] = 'Führt den Lifecycle-Prozess aus.';
 $string['lifecyclestep'] = 'Schritt';

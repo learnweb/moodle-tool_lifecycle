@@ -74,6 +74,8 @@ $string['config_delay_duration'] = 'Default duration of a course delay';
 $string['config_delay_duration_desc'] = 'This setting defines the default delay duration of a workflow
 in case one of its processes is rolled back or finishes.
 The delay duration determines how long a course will be excepted from being processed again in either of the cases.';
+$string['config_deletebackupsafterdays'] = 'Delete all backups that are older than x days';
+$string['config_deletebackupsafterdays_desc'] = 'All lifecycle course backup files that are older will be deleted whenever the lifecycle_cleanup_task runs.';
 $string['config_enablecategoryhierachy'] = 'Show a specified level of the course category hierarchy in the interaction table';
 $string['config_enablecategoryhierachy_desc'] = 'By default the directly assigned course category is shown when teachers manage the status of their courses on the view.php. The setting enables to show a specified level of the course category tree.';
 $string['config_logreceivedmails'] = 'Save sent mails to the database';
@@ -193,7 +195,7 @@ $string['invalid_workflow_details'] = 'Add at least one trigger and one step for
 $string['lastaction'] = 'Last action on';
 $string['lastrun'] = 'Last run: {$a}';
 $string['lifecycle:managecourses'] = 'May manage courses in tool_lifecycle';
-$string['lifecycle_cleanup_task'] = 'Delete old delay entries for life cycle workflows';
+$string['lifecycle_cleanup_task'] = 'Delete old delay entries for life cycle workflows and old lifecycle course backups';
 $string['lifecycle_error_notify_task'] = 'Notify the admin upon errors in tool_lifecycle processes';
 $string['lifecycle_task'] = 'Run the life cycle processes';
 $string['lifecyclestep'] = 'Process step';

@@ -39,19 +39,23 @@ if ($hassiteconfig) {
     // Main config page.
     $settings->add(new admin_setting_heading('lifecycle_settings_heading',
         '', $tabsoutput));
+
     $settings->add(new admin_setting_configduration('tool_lifecycle/duration',
         get_string('config_delay_duration', 'tool_lifecycle'),
         get_string('config_delay_duration_desc', 'tool_lifecycle'),
         183 * 24 * 60 * 60)); // Dafault value is 180 days.
+
     $settings->add(new admin_setting_configdirectory('tool_lifecycle/backup_path',
         get_string('config_backup_path', 'tool_lifecycle'),
         get_string('config_backup_path_desc', 'tool_lifecycle'),
         $CFG->dataroot . DIRECTORY_SEPARATOR . 'lifecycle_backups'));
+
     $settingenablehierachy = new admin_setting_configcheckbox('tool_lifecycle/enablecategoryhierachy',
         get_string('config_enablecategoryhierachy', 'tool_lifecycle'),
         get_string('config_enablecategoryhierachy_desc', 'tool_lifecycle'),
         false);
     $settings->add($settingenablehierachy);
+
     $coursehierachysetting = new admin_setting_configtext('tool_lifecycle/coursecategorydepth',
         get_string('config_coursecategorydepth', 'tool_lifecycle'),
         get_string('config_coursecategorydepth_desc', 'tool_lifecycle'),
@@ -74,6 +78,11 @@ if ($hassiteconfig) {
         get_string('config_adminapproveuserstonotify', 'tool_lifecycle'),
         get_string('config_adminapproveuserstonotify_desc', 'tool_lifecycle'),
         [2], $candidates));
+
+    $settings->add(new admin_setting_configtext('tool_lifecycle/deletebackupsafterdays',
+        get_string('config_deletebackupsafterdays', 'tool_lifecycle'),
+        get_string('config_deletebackupsafterdays_desc', 'tool_lifecycle'),
+        365, PARAM_INT));
 
     $ADMIN->add('tools', $settings);
 }

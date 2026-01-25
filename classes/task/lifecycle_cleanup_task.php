@@ -23,6 +23,8 @@
  */
 namespace tool_lifecycle\task;
 
+use stdClass;
+
 /**
  * Scheduled task for cleanup past delays
  *
@@ -52,5 +54,66 @@ class lifecycle_cleanup_task extends \core\task\scheduled_task {
         $DB->delete_records_select('tool_lifecycle_delayed', 'delayeduntil <= :time', ['time' => $twomonthago]);
         $DB->delete_records_select('tool_lifecycle_delayed_workf', 'delayeduntil <= :time', ['time' => $twomonthago]);
         $DB->delete_records_select('lifecyclestep_email_notified', 'timemailsent <= :time', ['time' => $oneyearago]);
+        if ($days = get_config('tool_lifecycle', 'deletebackupsafterdays') ?? 0) {
+            $timestamp = time() - $days * 24 * 60 * 60;
+            $this->delete_course_backups($timestamp);
+        }
+    }
+
+    /**
+     * Delete all lifecycle course backups older than timestamp.
+     * @param int $timestamp date in milliseconds
+     * @return void
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    private function delete_course_backups($timestamp) {
+        global $DB;
+
+        // Get all course backups older than timestamp from db.
+        $sql = "SELECT id, backupfile
+                FROM {tool_lifecycle_backups}
+                WHERE backupcreated < :timestmp";
+        $records = $DB->get_records_sql($sql, ['timestmp' => $timestamp]);
+
+        // Get path of backup folder.
+        $path = get_config('tool_lifecycle', 'backup_path');
+        // Check if backup path exists.
+        if (is_dir($path)) {
+            $result = new stdClass;
+            foreach ($records as $record) {
+                $deletedfile = false;
+                $deletedrecord = false;
+                // If file exists.
+                if (is_file("$path/$record->backupfile")) {
+                    // Set permissions to 777 of course backup file.
+                    chmod("$path/$record->backupfile", 0777);
+                    // Clears file status cache.
+                    clearstatcache();
+                    // Delete course backup file first.
+                    $deletedfile = unlink("$path/$record->backupfile");
+                    // If deletion of course backup file was unsuccessful.
+                    if (!$deletedfile) {
+                        // Delete course backup file with system command.
+                        exec("rm -f " . escapeshellarg("$path/$record->backupfile"),
+                            $output, $resultcode);
+                        if ($resultcode == 0) {
+                            $deletedfile = true;
+                        }
+                    }
+                    // If file was deleted, delete record too.
+                    if ($deletedfile) {
+                        $deletedrecord = $DB->delete_records('tool_lifecycle_backups', ['id' => $record->id]);
+                    }
+                } else { // If file not exists, delete just record.
+                    $deletedrecord = $DB->delete_records('tool_lifecycle_backups', ['id' => $record->id]);
+                }
+                $result->filedeleted = $deletedfile ? get_string('yes') : get_string('no');
+                $result->recorddeleted = $deletedrecord ? get_string('yes') : get_string('no');
+                $result->backupfile = $path.'/'.$record->backupfile;
+                $result->recordid = $record->id;
+                mtrace(get_string('mtracebackupdeleted', 'lifecyclestep_deletebackup', $result));
+            }
+        }
     }
 }
