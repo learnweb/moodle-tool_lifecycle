@@ -63,6 +63,7 @@ $string['bulkedit'] = 'Sammelbearbeitung';
 $string['cachedef_application'] = 'Cache für das Kurs-Menü wenn es aktivierte Workflows gibt.';
 $string['cachedef_mformdata'] = 'Cached die mform-Daten.';
 $string['cannot_trigger_workflow_manually'] = 'Der Workflow konnte nicht manuell ausgelöst werden.';
+$string['changeworkflow'] = 'Wechsle zu Workflow';
 $string['config_adminapproveuserstonotify'] = 'Admin-Bestätigungs-Schritt: Benachrichtigungs-Emfpänger';
 $string['config_adminapproveuserstonotify_desc'] = 'Wer aus dem Kreis der Sysadmins soll benachrichtigt werden wenn neue Kurse im Rahmen eines manuellen Workflows für einen Admin-Bestätigungs-Schritt getriggert wurden.';
 $string['config_backup_path'] = 'Pfad des Lifecycle Backup Verzeichnisses';

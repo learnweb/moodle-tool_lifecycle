@@ -38,3 +38,30 @@ function lifecycle_is_plugin_installed($plugin, $plugintype) {
     }
     return $found;
 }
+
+function lifecycle_select_change_workflow($activewf) {
+    global $OUTPUT, $DB, $PAGE;
+
+    $records = $DB->get_records_sql(
+        'SELECT id, title, timeactive FROM {tool_lifecycle_workflow} ORDER BY title ASC');
+
+    $url = $PAGE->url;
+    $actionmenu = new \action_menu();
+    foreach ($records as $record) {
+        if ($record->id == $activewf) {
+            continue;
+        }
+        $pix = $record->timeactive ? 'i/hide' : 'i/show';
+        $actionmenu->add_secondary_action(
+            new \action_menu_link_secondary(
+                new \moodle_url($url, ['wf' => $record->id]),
+                new \pix_icon($pix, $record->title),
+                $record->title
+            )
+        );
+    }
+
+    $actionmenu->set_menu_trigger(get_string('changeworkflow', 'tool_lifecycle'));
+    echo $OUTPUT->render_action_menu($actionmenu);
+
+}

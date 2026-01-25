@@ -193,6 +193,8 @@ if ($isactive) {  // Active workflow.
 $tabrow = tabs::get_tabrow($tabparams);
 $renderer->tabs($tabrow, $tabid);
 
+lifecycle_select_change_workflow($workflowid);
+
 $steps = step_manager::get_step_instances($workflow->id);
 $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
 foreach ($triggers as $trigger) {
