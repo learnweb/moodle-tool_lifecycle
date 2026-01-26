@@ -211,4 +211,12 @@ class adminapprove extends libbase {
         global $DB;
         $DB->delete_records('lifecyclestep_adminapprove', ['processid' => $process->id]);
     }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'i/grades';
+    }
 }

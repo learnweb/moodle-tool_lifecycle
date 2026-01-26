@@ -206,4 +206,11 @@ class opencast extends base_automatic {
         return false;
     }
 
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'e/insert_edit_video';
+    }
 }

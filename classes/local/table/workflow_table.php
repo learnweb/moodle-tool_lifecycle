@@ -26,7 +26,9 @@ namespace tool_lifecycle\local\table;
 use core_date;
 use html_writer;
 use tool_lifecycle\action;
+use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\process_manager;
+use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\urls;
 
@@ -101,18 +103,46 @@ abstract class workflow_table extends \table_sql {
      * Render the trigger column.
      * @param object $row Row data.
      * @return string instancename of the trigger
+     * @throws \dml_exception
      */
     public function col_trigger($row) {
-        $triggerstring = "--";
+        global $OUTPUT;
+        $out= "";
         $triggers = trigger_manager::get_triggers_for_workflow($row->id);
         if ($triggers) {
-            $triggerstring = $triggers[0]->instancename;
-            for ($i = 1; $i < count($triggers); $i++) {
-                $triggerstring .= ', ';
-                $triggerstring .= $triggers[$i]->instancename;
+            foreach ($triggers as $key => $trigger) {
+                $triggertitle = "[".$trigger->subpluginname."] ".$trigger->instancename;
+                $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+                $triggericon = $lib->get_icon();
+                $out .= $OUTPUT->pix_icon($triggericon, $triggertitle);
             }
+        } else {
+            $out = "--";
         }
-        return $triggerstring;
+        return $out;
+    }
+
+    /**
+     * Render the step column.
+     * @param object $row Row data.
+     * @return string instancename of the step
+     * @throws \dml_exception
+     */
+    public function col_step($row) {
+        global $OUTPUT;
+        $out= "";
+        $steps = step_manager::get_step_instances($row->id);
+        if ($steps) {
+            foreach ($steps as $key => $step) {
+                $steptitle = "[".$step->subpluginname."] ".$step->instancename;
+                $lib = lib_manager::get_step_lib($step->subpluginname);
+                $stepicon = $lib->get_icon();
+                $out .= $OUTPUT->pix_icon($stepicon, $steptitle);
+            }
+        } else {
+            $out = "--";
+        }
+        return $out;
     }
 
     /**

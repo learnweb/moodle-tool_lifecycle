@@ -269,6 +269,7 @@ foreach ($triggers as $trigger) {
     $trigger->actionmenu = $OUTPUT->render($actionmenu);
     $response = null;
     $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+    $trigger->pix = $OUTPUT->render(new pix_icon($lib->get_icon(), $trigger->subpluginname));
     if ($trigger->automatic = !$lib->is_manual_trigger()) {
         // We need the response type only.
         $response = $lib->default_response();

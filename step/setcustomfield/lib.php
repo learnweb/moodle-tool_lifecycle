@@ -267,4 +267,12 @@ class setcustomfield extends libbase {
         }
         throw new \coding_exception('could not find custom field ' . $fieldname);
     }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'i/manual_item';
+    }
 }

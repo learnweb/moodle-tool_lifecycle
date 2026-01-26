@@ -132,4 +132,12 @@ class customfielddelay extends base_automatic {
             $mform->setDefault('customfield', $default);
         }
     }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'i/customfield';
+    }
 }

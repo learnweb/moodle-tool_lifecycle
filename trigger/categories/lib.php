@@ -203,4 +203,11 @@ class categories extends base_automatic {
         return true;
     }
 
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'i/categoryevent';
+    }
 }

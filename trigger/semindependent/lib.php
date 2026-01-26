@@ -145,4 +145,12 @@ class semindependent extends base_automatic {
         $mform->setType('exclude', PARAM_BOOL);
         $mform->setDefault('exclude', false);
     }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'e/insert_nonbreaking_space';
+    }
 }

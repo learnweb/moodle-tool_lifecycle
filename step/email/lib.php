@@ -262,4 +262,12 @@ class email extends libbase {
         $mform->setDefault('contenthtml',
                 ['text' => isset($settings['contenthtml']) ? $settings['contenthtml'] : '', 'format' => FORMAT_HTML]);
     }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'i/email';
+    }
 }

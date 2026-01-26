@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
@@ -53,8 +54,11 @@ $triggers = core_component::get_plugin_list('lifecycletrigger');
 if ($triggers) {
     echo html_writer::div(get_string('triggers_installed', 'tool_lifecycle'), 'h2 mt-2');
     foreach ($triggers as $trigger => $path) {
+        $lib = lib_manager::get_trigger_lib($trigger);
+        $triggericon = $lib->get_icon();
+        echo $OUTPUT->pix_icon($triggericon, $trigger, 'moodle', ['class' => 'mr-1']);
         echo html_writer::div(get_string('pluginname', 'lifecycletrigger_' . $trigger),
-            "font-weight-bold");
+            "font-weight-bold d-inline-block");
         try {
             $plugindescription = get_string('plugindescription', 'lifecycletrigger_' . $trigger);
         } catch (Exception $e) {
@@ -80,8 +84,11 @@ $steps = core_component::get_plugin_list('lifecyclestep');
 if ($steps) {
     echo html_writer::div(get_string('steps_installed', 'tool_lifecycle'), 'h2 mt-2');
     foreach ($steps as $step => $path) {
+        $lib = lib_manager::get_step_lib($step);
+        $stepicon = $lib->get_icon();
+        echo $OUTPUT->pix_icon($stepicon, $step, 'moodle', ['class' => 'mr-1']);
         echo html_writer::div(get_string('pluginname', 'lifecyclestep_' . $step),
-            "font-weight-bold");
+            "font-weight-bold d-inline-block");
         try {
             $plugindescription = get_string('plugindescription', 'lifecyclestep_' . $step);
         } catch (Exception $e) {

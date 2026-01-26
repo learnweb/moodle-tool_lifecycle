@@ -87,4 +87,12 @@ class makeinvisible extends libbase {
     public function get_subpluginname() {
         return 'makeinvisible';
     }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'i/show';
+    }
 }

@@ -129,4 +129,12 @@ class deletecourse extends libbase {
         $mform->setType($elementname, PARAM_INT);
         $mform->setDefault($elementname, 10);
     }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'e/delete';
+    }
 }

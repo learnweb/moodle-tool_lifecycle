@@ -63,10 +63,12 @@ class deactivated_workflows_table extends workflow_table {
      * Initialize the table.
      */
     public function init() {
-        $this->define_columns(['title', 'timedeactive', 'processes', 'tools']);
+        $this->define_columns(['title', 'timedeactive', 'trigger', 'step', 'processes', 'tools']);
         $this->define_headers([
             get_string('workflow_title', 'tool_lifecycle'),
             get_string('workflow_timedeactive', 'tool_lifecycle'),
+            get_string('trigger', 'tool_lifecycle'),
+            get_string('step', 'tool_lifecycle'),
             get_string('workflow_processes', 'tool_lifecycle'),
             get_string('workflow_tools', 'tool_lifecycle'),
         ]);
