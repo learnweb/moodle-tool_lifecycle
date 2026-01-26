@@ -183,7 +183,7 @@ if ($isactive) {  // Active workflow.
     if ($isdeactivated) { // Deactivated workflow.
         $tabid = 'deactivatedworkflows';
         $tabparams->deactivatedlink = true;
-        $classdetails = "bg-dark text-white";
+        $classdetails = "bg-secondary";
     } else { // Draft.
         $tabid = 'workflowdrafts';
         $tabparams->draftlink = true;
@@ -642,15 +642,18 @@ if (workflow_manager::is_editable($workflow->id)) {
     $data['newworkflow'] = $newworkflow;
     $data['activatebutton'] = "";
 } else if ($isdeactivated) {
-    $activate = $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
+    $activate = new \single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
         [
             'action' => action::WORKFLOW_ACTIVATE,
             'sesskey' => sesskey(),
             'workflowid' => $workflow->id,
             'backtooverview' => '1',
         ]),
-        get_string('activateworkflow', 'tool_lifecycle'));
-    $data['activatebutton'] = $activate;
+        get_string('activateworkflow', 'tool_lifecycle'),
+        'post',
+        single_button::BUTTON_PRIMARY
+    );
+    $data['activatebutton'] = $OUTPUT->render($activate);
 }
 
 echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);

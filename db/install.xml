@@ -118,6 +118,7 @@
         <FIELD NAME="triggeredpercron" TYPE="int" LENGTH="5" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="triggeredperday" TYPE="int" LENGTH="5" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="andor" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="char" LENGTH="500" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

@@ -18,6 +18,7 @@
  * Life Cycle Workflow class
  *
  * @package tool_lifecycle
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,6 +28,7 @@ namespace tool_lifecycle\local\entity;
  * Life Cycle Workflow class
  *
  * @package tool_lifecycle
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -52,6 +54,9 @@ class workflow {
 
     /** @var string $displaytitle Title that is displayed to users. */
     public $displaytitle;
+
+    /** @var string $description Short description of workflow. */
+    public $description;
 
     /** @var int $rollbackdelay The delay in case of rollback. */
     public $rollbackdelay;
@@ -81,11 +86,12 @@ class workflow {
      * Workflow constructor.
      * @param int $id Id of the workflow.
      * @param string $title Title of the workflow.
-     * @param timestamp $timeactive Time the workflow was set active.
-     * @param timestamp $timedeactive Time the workflow was deactivated.
+     * @param int $timeactive Time the workflow was set active.
+     * @param int $timedeactive Time the workflow was deactivated.
      * @param int $sortindex Sort index of all active workflows.
      * @param bool $manual True if workflow is manually triggered.
      * @param string $displaytitle Title that is displayed to users.
+     * @param string $description short workflow description.
      * @param int $rollbackdelay The delay in case of rollback.
      * @param int $finishdelay The delay in case of finished course.
      * @param bool $delayforallworkflows True if a delay counts for all workflows.
@@ -96,8 +102,9 @@ class workflow {
      * @param int $andor conjunction or disjunction when combining triggers.
      */
     private function __construct($id, $title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
-                                 $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses,
-                                 $includesitecourse, $triggeredpercron, $triggeredperday, $andor) {
+                                 $description, $rollbackdelay, $finishdelay, $delayforallworkflows,
+                                 $includedelayedcourses, $includesitecourse, $triggeredpercron, $triggeredperday,
+                                 $andor) {
         $this->id = $id;
         $this->title = $title;
         $this->timeactive = $timeactive;
@@ -105,6 +112,7 @@ class workflow {
         $this->sortindex = $sortindex;
         $this->manually = $manual;
         $this->displaytitle = $displaytitle;
+        $this->description = $description;
         $this->rollbackdelay = $rollbackdelay;
         $this->finishdelay = $finishdelay;
         $this->delayforallworkflows = $delayforallworkflows;
@@ -159,6 +167,11 @@ class workflow {
             $displaytitle = $record->displaytitle;
         }
 
+        $description = '';
+        if (object_property_exists($record, 'description')) {
+            $description = $record->description;
+        }
+
         $rollbackdelay = 0;
         if (object_property_exists($record, 'rollbackdelay')) {
             $rollbackdelay = $record->rollbackdelay;
@@ -200,8 +213,8 @@ class workflow {
         }
 
         $instance = new self($id, $record->title, $timeactive, $timedeactive, $sortindex, $manual, $displaytitle,
-            $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses, $includesitecourse,
-            $triggeredpercron, $triggeredperday, $andor);
+            $description, $rollbackdelay, $finishdelay, $delayforallworkflows, $includedelayedcourses,
+            $includesitecourse, $triggeredpercron, $triggeredperday, $andor);
 
         return $instance;
     }

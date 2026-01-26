@@ -18,6 +18,7 @@
  * Offers the possibility to add or modify a workflow instance.
  *
  * @package    tool_lifecycle
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,6 +33,7 @@ require_once($CFG->libdir . '/formslib.php');
 /**
  * Provides a form to modify a workflow instance
  * @package    tool_lifecycle
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -82,6 +84,13 @@ class form_workflow_instance extends \moodleform {
         $mform->setType($elementname, PARAM_TEXT);
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->displaytitle);
+        }
+
+        $elementname = 'description';
+        $mform->addElement('textarea', $elementname, get_string('description'));
+        $mform->setType($elementname, PARAM_TEXT);
+        if (isset($this->workflow)) {
+            $mform->setDefault($elementname, $this->workflow->{$elementname});
         }
 
         $elementname = 'rollbackdelay';

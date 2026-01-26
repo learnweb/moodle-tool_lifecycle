@@ -650,6 +650,15 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
+        // Define field description to be added to tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
+        $field = new xmldb_field('description', XMLDB_TYPE_CHAR, '500', null, null, null, null, 'andor');
+
+        // Conditionally launch add field description.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
         // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2026012001, 'tool', 'lifecycle');
     }

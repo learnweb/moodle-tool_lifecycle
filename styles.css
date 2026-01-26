@@ -160,3 +160,9 @@ span.tool_lifecycle-hint {
 #page-admin-setting-tool_lifecycle div.singlebutton {
     margin-bottom: 0.5rem;
 }
+
+#page-admin-setting-tool_lifecycle #id_title,
+#page-admin-setting-tool_lifecycle #id_displaytitle,
+#page-admin-setting-tool_lifecycle #id_description {
+    width: 40rem;
+}

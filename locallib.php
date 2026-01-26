@@ -43,7 +43,7 @@ function lifecycle_select_change_workflow($activewf) {
     global $OUTPUT, $DB, $PAGE;
 
     $records = $DB->get_records_sql(
-        'SELECT id, title, timeactive FROM {tool_lifecycle_workflow} ORDER BY title ASC');
+        'SELECT id, title, timeactive, timedeactive FROM {tool_lifecycle_workflow} ORDER BY title ASC');
 
     $url = $PAGE->url;
     $actionmenu = new \action_menu();
@@ -51,11 +51,10 @@ function lifecycle_select_change_workflow($activewf) {
         if ($record->id == $activewf) {
             continue;
         }
-        $pix = $record->timeactive ? 'i/hide' : 'i/show';
         $actionmenu->add_secondary_action(
             new \action_menu_link_secondary(
                 new \moodle_url($url, ['wf' => $record->id]),
-                new \pix_icon($pix, $record->title),
+                null,
                 $record->title
             )
         );
