@@ -1,0 +1,122 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+
+    @template tool_lifecycle/workflowcard
+
+    This template renders the bulk edit switch in view.php.
+
+    Example context (json):
+{
+  "cardclasses": "shadow-sm",
+  "image": {
+    "src": "https://via.placeholder.com/600x300",
+    "alt": "Beispielbild"
+  },
+  "header": {
+    "classes": "bg-primary text-white",
+    "content": "Card Header"
+  },
+  "body": {
+    "classes": "",
+    "title": "Card Title",
+    "subtitle": "Card Subtitle",
+    "text": "Dies ist der Hauptinhalt der Card.",
+    "links": [
+      {
+        "url": "#",
+        "label": "Link 1",
+        "classes": ""
+      }
+    ],
+    "buttons": [
+      {
+        "url": "#",
+        "label": "Aktion",
+        "classes": "btn-primary"
+      }
+    ]
+  },
+  "listgroup": {
+    "items": [
+      { "content": "Listenpunkt 1" },
+      { "content": "Listenpunkt 2" }
+    ]
+  },
+  "footer": {
+    "classes": "text-muted",
+    "content": "Card Footer"
+  }
+}
+}}
+
+<div class="card-flex-container">
+    {{#workflows}}
+    <div class="card {{cardclasses}}">
+        {{#headercontent}}
+            <div class="card-header text-center {{headerclass}}">
+                {{{headercontent}}}
+            </div>
+        {{/headercontent}}
+
+        {{#body}}
+            <div class="card-body {{body.classes}}">
+                {{#body.title}}
+                    <h5 class="card-title">{{{body.title}}}</h5>
+                {{/body.title}}
+
+                {{#body.text}}
+                    <p class="card-text">{{{body.text}}}</p>
+                {{/body.text}}
+                {{^body.text}}
+                    <p class="card-text">&nbsp;</p>
+                {{/body.text}}
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"></li>
+                    <li class="list-group-item">{{{triggers}}}</li>
+                    <li class="list-group-item">{{{steps}}}</li>
+                    <li class="list-group-item"></li>
+                </ul>
+
+                <div class="text-end">
+                    <a href="workflowoverview.php?wf={{id}}" class="btn btn-primary">
+                    {{#str}} details {{/str}}
+                    </a>
+                </div>
+
+            </div>
+        {{/body}}
+
+        {{#listgroup}}
+            <ul class="list-group list-group-flush">
+                {{#items}}
+                    <li class="list-group-item {{classes}}">
+                        {{{content}}}
+                    </li>
+                {{/items}}
+            </ul>
+        {{/listgroup}}
+
+        {{#footer}}
+            <div class="card-footer {{footer.classes}}">
+                {{{footer.content}}}
+            </div>
+        {{/footer}}
+    </div>
+    {{/workflows}}
+</div>

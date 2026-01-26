@@ -271,6 +271,8 @@ $string['runtask'] = 'Run scheduled lifecycle task';
 $string['searchcourses'] = 'Search for courses';
 $string['see_in_workflow'] = 'See in workflow';
 $string['show_delays'] = 'Kind of view';
+$string['showcase'] = 'Showcase';
+$string['showcasedesc'] = 'List of all workflows';
 $string['showextendeddetails'] = 'Show extended workflow details';
 $string['status'] = 'Status';
 $string['step'] = 'Process step';
@@ -343,6 +345,7 @@ $string['workflow_processesanderrors'] = 'Active workflow processes and process 
 $string['workflow_rollbackdelay'] = 'Delay in case of rollback';
 $string['workflow_rollbackdelay_help'] = 'If a course was rolled back within a process instance of this workflow,
 this value describes the time until a process for this combination of course and workflow can be started again.';
+$string['workflow_showcase_header'] = 'Workflow showcase';
 $string['workflow_sortindex'] = 'Up/Down';
 $string['workflow_started'] = 'Workflow started.';
 $string['workflow_timeactive'] = 'Active since';

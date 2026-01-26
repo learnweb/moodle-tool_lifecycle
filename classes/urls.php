@@ -32,15 +32,15 @@ namespace tool_lifecycle;
 class urls {
 
     /** @var string Lists active workflows. */
-    const ACTIVE_WORKFLOWS = '/admin/tool/lifecycle/activeworkflows.php?id=activeworkflows';
+    const ACTIVE_WORKFLOWS = '/admin/tool/lifecycle/activeworkflows.php';
     /** @var string Lists workflow drafts. */
-    const WORKFLOW_DRAFTS = '/admin/tool/lifecycle/workflowdrafts.php?id=workflowdrafts';
+    const WORKFLOW_DRAFTS = '/admin/tool/lifecycle/workflowdrafts.php';
     /** @var string Lists deactivated workflows. */
-    const DEACTIVATED_WORKFLOWS = '/admin/tool/lifecycle/deactivatedworkflows.php?id=deactivatedworkflows';
+    const DEACTIVATED_WORKFLOWS = '/admin/tool/lifecycle/deactivatedworkflows.php';
     /** @var string Edits general settings of workflow. */
-    const EDIT_WORKFLOW = '/admin/tool/lifecycle/editworkflow.php?id=workflowdrafts';
+    const EDIT_WORKFLOW = '/admin/tool/lifecycle/editworkflow.php';
     /** @var string Lets the user upload a workflow definition. */
-    const UPLOAD_WORKFLOW = '/admin/tool/lifecycle/uploadworkflow.php?id=workflowdrafts';
+    const UPLOAD_WORKFLOW = '/admin/tool/lifecycle/uploadworkflow.php';
     /** @var string Displays a nice visual representation of the workflow. */
     const WORKFLOW_DETAILS = '/admin/tool/lifecycle/workflowoverview.php';
     /** @var string Edits settings of triggers and steps */
@@ -50,17 +50,19 @@ class urls {
     /** @var string Lists active processes and finds courses */
     const ACTIVE_PROCESSES = '/admin/tool/lifecycle/activeprocesses.php';
     /** @var string Lists and search for delayed courses, deleting of delays */
-    const DELAYED_COURSES = '/admin/tool/lifecycle/delayedcourses.php?id=delayedcourses';
+    const DELAYED_COURSES = '/admin/tool/lifecycle/delayedcourses.php';
     /** @var string Lists course backups */
-    const COURSE_BACKUPS = '/admin/tool/lifecycle/coursebackups.php?id=coursebackups';
+    const COURSE_BACKUPS = '/admin/tool/lifecycle/coursebackups.php';
     /** @var string Lists and process errors */
-    const ADMIN_APPROVE = '/admin/tool/lifecycle/step/adminapprove/index.php?id=adminapprove';
+    const ADMIN_APPROVE = '/admin/tool/lifecycle/step/adminapprove/index.php';
     /** @var string Confirmation page for bulk operations */
-    const PROCESS_ERRORS = '/admin/tool/lifecycle/errors.php?id=errors';
+    const PROCESS_ERRORS = '/admin/tool/lifecycle/errors.php';
     /** @var string Confirmation page for bulk operations */
     const CONFIRMATION = '/admin/tool/lifecycle/confirmation.php';
     /** @var string subplugins page for a list of installed subplugins */
-    const SUBPLUGINS = '/admin/tool/lifecycle/subplugins.php?id=subplugins';
+    const SUBPLUGINS = '/admin/tool/lifecycle/subplugins.php';
+    /** @var string page with a list of all workflows */
+    const SHOWCASE = '/admin/tool/lifecycle/workflowshowcase.php';
     /** @var string run page for execute the scheduled lifecycle task ad hoc */
     const RUN = '/admin/tool/lifecycle/run.php?id=run';
 

@@ -151,6 +151,6 @@ class semindependent extends base_automatic {
      * @return string icon string
      */
     public function get_icon() {
-        return 'e/insert_nonbreaking_space';
+        return 'i/calendar';
     }
 }
