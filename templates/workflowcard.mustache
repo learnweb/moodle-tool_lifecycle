@@ -93,9 +93,12 @@
                     <li class="list-group-item"></li>
                 </ul>
 
-                <div class="text-end">
-                    <a href="workflowoverview.php?wf={{id}}" class="btn btn-primary">
-                    {{#str}} details {{/str}}
+                <div class="d-flex align-items-end justify-content-between">
+                    <a href="{{{downloadlink}}}" class="btn btn-primary" data-toggle="tooltip" title="{{#str}} download{{/str}}">
+                    {{#pix}} t/backup, core {{/pix}}{{#str}} download{{/str}}
+                    </a>
+                    <a href="workflowoverview.php?wf={{id}}" class="btn btn-primary" title="{{#str}} details{{/str}}">
+                    {{#pix}} t/viewdetails, core {{/pix}}{{#str}} details {{/str}}
                     </a>
                 </div>
 

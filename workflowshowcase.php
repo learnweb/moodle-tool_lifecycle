@@ -23,10 +23,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\action;
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
-use tool_lifecycle\local\table\workflow_definition_table;
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
@@ -36,8 +37,15 @@ require_once($CFG->libdir . '/adminlib.php');
 require_admin();
 
 $syscontext = context_system::instance();
-$PAGE->set_url(new \moodle_url(urls::WORKFLOW_DRAFTS));
+$PAGE->set_url(new \moodle_url(urls::SHOWCASE));
 $PAGE->set_context($syscontext);
+
+$action = optional_param('action', null, PARAM_TEXT);
+if ($action) {
+    $wfid = required_param('workflowid', PARAM_INT);
+    workflow_manager::handle_action($action, $wfid);
+    redirect($PAGE->url);
+}
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');
@@ -95,6 +103,10 @@ foreach ($records as $record) {
         $stepsstr = "--";
     }
 
+    $downloadlink = new \moodle_url($PAGE->url,
+        ['action' => action::WORKFLOW_BACKUP,
+            'workflowid' => $record->id,
+            'sesskey' => sesskey()]);
     $workflow = [
         'id' => $record->id,
         'headerclass' => $headerclass,
@@ -105,6 +117,7 @@ foreach ($records as $record) {
         ],
         'triggers' => $triggerstr,
         'steps' => $stepsstr,
+        'downloadlink' => $downloadlink,
     ];
     $data->workflows[] = $workflow;
 }

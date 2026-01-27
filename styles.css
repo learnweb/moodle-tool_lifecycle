@@ -181,3 +181,7 @@ span.tool_lifecycle-hint {
 #page-admin-setting-tool_lifecycle .card-text {
     height: 12rem;
 }
+
+#page-admin-setting-tool_lifecycle .card .btn-primary .icon {
+    margin-right: 0.2rem;
+}
