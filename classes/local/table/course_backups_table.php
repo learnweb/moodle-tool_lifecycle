@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\table;
 
+use core\exception\moodle_exception;
 use core\output\single_button;
 use core_date;
 use tool_lifecycle\urls;
@@ -163,7 +164,11 @@ class course_backups_table extends \table_sql {
      * @return string course name + link
      */
     public function col_coursename($row) {
-        $out = \html_writer::link(course_get_url($row->courseid), format_string($row->coursefullname));
+        try {
+            $out = \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
+        } catch (\dml_missing_record_exception $e) {
+            $out = $row->coursefullname;
+        }
         if ($row->coursefullname != $row->courseshortname) {
             $out .= \html_writer::div($row->courseshortname, 'text-info');
         }
@@ -174,6 +179,7 @@ class course_backups_table extends \table_sql {
      * Render backupcreated column.
      * @param object $row Row data.
      * @return string date of the backupcreated
+     * @throws moodle_exception
      */
     public function col_step($row) {
         $out = \html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $row->workflowid]), $row->step);
