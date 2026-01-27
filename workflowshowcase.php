@@ -57,6 +57,7 @@ echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $renderer->tabs($tabrow, 'showcase');
 
+$PAGE->requires->js_call_amd('tool_lifecycle/filtershowcase', 'init');
 
 echo $OUTPUT->box_start();
 
@@ -65,8 +66,11 @@ $records = $DB->get_records_sql(
 
 $data = new stdClass();
 $data->workflows = [];
+$usedtriggersubplugins = [];
+$usedstepsubplugins = [];
 foreach ($records as $record) {
     $workflow = new stdClass();
+    $cardclasses = [];
     if ($record->timeactive) {
         $headerclass = "bg-primary text-white";
         $headercontent = get_string('workflow_active', 'tool_lifecycle');
@@ -85,6 +89,8 @@ foreach ($records as $record) {
             $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
             $triggericon = $lib->get_icon();
             $triggerstr .= $OUTPUT->pix_icon($triggericon, $triggertitle);
+            $usedtriggersubplugins["lifecycle-".$trigger->subpluginname] = $trigger->subpluginname;
+            $cardclasses[] = 'lifecycle-'.$trigger->subpluginname;
         }
     } else {
         $triggerstr = "--";
@@ -98,6 +104,8 @@ foreach ($records as $record) {
             $lib = lib_manager::get_step_lib($step->subpluginname);
             $stepicon = $lib->get_icon();
             $stepsstr .= $OUTPUT->pix_icon($stepicon, $steptitle);
+            $usedstepsubplugins["lifecycle-".$step->subpluginname] = $step->subpluginname;
+            $cardclasses[] = "lifecycle-".$step->subpluginname;
         }
     } else {
         $stepsstr = "--";
@@ -118,11 +126,24 @@ foreach ($records as $record) {
         'triggers' => $triggerstr,
         'steps' => $stepsstr,
         'downloadlink' => $downloadlink,
+        'cardclasses' => implode(" ", $cardclasses),
     ];
     $data->workflows[] = $workflow;
 }
 
-echo $OUTPUT->render_from_template('tool_lifecycle/workflowcard', $data);
+$triggersubplugins = array_unique($usedtriggersubplugins);
+asort($triggersubplugins);
+$stepsubplugins = array_unique($usedstepsubplugins);
+asort($stepsubplugins);
+$headerdata = new stdClass();
+$headerdata->uploadlink = new \moodle_url($CFG->wwwroot . '/admin/tool/lifecycle/uploadworkflow.php', ['sesskey' => sesskey()]);
+$headerdata->filtertriggerselect = \html_writer::select($triggersubplugins, 'filtertrigger_select', '',
+    get_string('choosedots'), ['class' => 'd-inline-block showcasefilterselect']);
+$headerdata->filterstepselect = \html_writer::select($stepsubplugins, 'filterstep_select', '',
+    get_string('choosedots'), ['class' => 'd-inline-block showcasefilterselect']);
+echo $OUTPUT->render_from_template('tool_lifecycle/workflowshowcase_header', $headerdata);
+
+echo $OUTPUT->render_from_template('tool_lifecycle/workflowshowcase_card', $data);
 
 echo $OUTPUT->box_end();
 
