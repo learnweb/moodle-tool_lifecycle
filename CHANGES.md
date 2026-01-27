@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+5.1.1(2026-01-27)
+------------------
+* [FEATURE] Add new lifecycle step 'deletebackup'
+* [FEATURE] Add the task to delete old backup files to the already existing cleanup_task
+* [FEATURE] Workflowoverview: Add a dropdown to switch to a different workflow
+* [FEATURE] Add field 'description' to the workflow table
+* [FEATURE] Introduce Icons for all lifecycle subplugintypes
+* [FEATURE] Add new page 'showcase' to present all workflows
+* [FIXED] Improve error handling in errors table
+* [FIXED] Add missing lang strings of step setcustomfield
+
+
 5.1.0(2026-01-20)
 ------------------
 * [FEATURE] Introduce new trigger 'activity'
