@@ -39,6 +39,15 @@ function lifecycle_is_plugin_installed($plugin, $plugintype) {
     return $found;
 }
 
+/**
+ * Generates html for a select field to switch from one workflow to another
+ *
+ * @param string $activewf the current workflow
+ * @return void
+ * @throws \core\exception\moodle_exception
+ * @throws coding_exception
+ * @throws dml_exception
+ */
 function lifecycle_select_change_workflow($activewf) {
     global $OUTPUT, $DB, $PAGE;
 

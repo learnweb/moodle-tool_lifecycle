@@ -107,7 +107,7 @@ abstract class workflow_table extends \table_sql {
      */
     public function col_trigger($row) {
         global $OUTPUT;
-        $out= "";
+        $out = "";
         $triggers = trigger_manager::get_triggers_for_workflow($row->id);
         if ($triggers) {
             foreach ($triggers as $key => $trigger) {
@@ -130,7 +130,7 @@ abstract class workflow_table extends \table_sql {
      */
     public function col_step($row) {
         global $OUTPUT;
-        $out= "";
+        $out = "";
         $steps = step_manager::get_step_instances($row->id);
         if ($steps) {
             foreach ($steps as $key => $step) {
