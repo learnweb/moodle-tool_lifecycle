@@ -15,49 +15,47 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Step subplugin to delete a course using Catalyst Maintenance batch deletion logic.
+ * Step subplugin to delete a course context using Catalyst batch deletion task.
  *
- * @package    lifecyclestep_uclcontextdelete
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package lifecyclestep_uclcontextdelete
  */
 
 namespace tool_lifecycle\step;
 
+use stdClass;
 use tool_lifecycle\local\response\step_response;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
-/**
- * Lifecycle step: delete course via tool_catmaintenance deleter.
- */
-class uclcontextdelete extends base_step {
+class uclcontextdelete extends libbase {
 
     /**
-     * Process a single course.
-     *
-     * @param \stdClass $course
-     * @param int $stepid
-     * @return step_response
+     * Add course to Catalyst batch deletion queue.
      */
-    public function process_course($course, $stepid) {
-        global $CFG;
+    public function process_course($processid, $instanceid, $course) {
+        global $DB;
 
-        // Load Catalyst Maintenance deleter.
-        require_once($CFG->dirroot . '/admin/tool/catmaintenance/classes/local/deleter.php');
+        // Safety: never delete front page course.
+        if ((int)$course->id === 1) {
+            return step_response::rollback();
+        }
 
-        // Delegate deletion to Catalyst's logic.
-        \tool_catmaintenance\local\deleter::delete_course($course->id);
+        // Queue course into Catalyst batch deletion table.
+        $record = new \stdClass();
+        $record->courseid   = $course->id;
+        $record->timeadded  = time();
+        $record->status     = 0; // 0 = pending (Catalyst convention)
 
-        return step_response::success();
+        // Avoid duplicates.
+        if (!$DB->record_exists('tool_catmaintenance_delcourse', ['courseid' => $course->id])) {
+            $DB->insert_record('tool_catmaintenance_delcourse', $record);
+        }
+
+        return step_response::proceed();
     }
 
-    /**
-     * Human-readable step name.
-     *
-     * @return string
-     */
     public function get_subpluginname() {
         return 'uclcontextdelete';
     }
