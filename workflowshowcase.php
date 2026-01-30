@@ -150,7 +150,7 @@ foreach ($records as $record) {
         'triggers' => $triggerstr,
         'steps' => $stepsstr,
         'downloadlink' => $downloadlink,
-        'wordflowlink' => $workflowlink,
+        'workflowlink' => $workflowlink,
         'cardclasses' => implode(" ", $cardclasses),
         'forum' => $forum,
         'discussion' => $discussion,
