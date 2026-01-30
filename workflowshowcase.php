@@ -136,8 +136,8 @@ foreach ($records as $record) {
         $discussionclass = "";
         $discussionlink = "";
     }
-    $workflowlink = new \moodle_url($PAGE->url,
-        ['workflowid' => $record->id]);
+    $workflowlink = new \moodle_url(urls::WORKFLOW_DETAILS,
+        ['wf' => $record->id]);
 
     $workflow = [
         'id' => $record->id,

@@ -178,8 +178,12 @@ span.tool_lifecycle-hint {
     flex: 0 0 22rem;
 }
 
+#page-admin-setting-tool_lifecycle .card-title {
+    height: 4.5rem;
+}
+
 #page-admin-setting-tool_lifecycle .card-text {
-    height: 12rem;
+    height: 16rem;
 }
 
 #page-admin-setting-tool_lifecycle .card .btn-primary .icon {
