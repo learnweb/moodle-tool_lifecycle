@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\manager;
 
+use core\exception\moodle_exception;
 use core\task\manager;
 use core_date;
 use tool_lifecycle\action;
@@ -335,6 +336,9 @@ class workflow_manager {
                 \core\notification::add(get_string('workflow_not_removeable', 'tool_lifecycle')
                     , \core\notification::WARNING);
             }
+        } else if ($action === action::WORKFLOW_DISCUSSION) {
+            self::goto_workflowdiscussion($workflowid);
+            return; // Return, since we do not want to redirect outside to deactivated workflows.
         } else {
             // If no action has been called. Continue.
             return;
@@ -656,5 +660,27 @@ class workflow_manager {
         }
 
         return [$lastrun, $nextrun];
+    }
+
+    /**
+     * Get the discussion ID for the workflow and redirect to the discussion page.
+     * Create the discussion if there is none yet.
+     * @param int $workflowid Id of the workflow.
+     * @throws \dml_exception
+     * @throws \moodle_exception|moodle_exception
+     */
+    public static function goto_workflowdiscussion($workflowid) {
+        global $DB;
+        if ($forum = get_config('tool_lifecycle', 'forum') ?? false) {
+            $forumid = $DB->get_field('course_modules', 'instance', ['id' => $forum]);
+            list($discussion, $post) = lifecycle_get_workflow_discussion($workflowid, $forumid);
+            if ($discussion) {
+                $discussionurl = new \moodle_url('/mod/forum/discuss.php', ['d' => $discussion]);
+                redirect($discussionurl);
+            } else {
+                $posturl = new \moodle_url('/mod/forum/post.php', ['edit' => $post]);
+                redirect($posturl);
+            }
+        }
     }
 }

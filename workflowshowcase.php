@@ -33,6 +33,7 @@ use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+require_once(__DIR__ . '/locallib.php');
 
 require_admin();
 
@@ -68,6 +69,9 @@ $data = new stdClass();
 $data->workflows = [];
 $usedtriggersubplugins = [];
 $usedstepsubplugins = [];
+if ($forum = get_config('tool_lifecycle', 'forum') ?? false) {
+    $forumid = $DB->get_field('course_modules', 'instance', ['id'=>$forum]);
+}
 foreach ($records as $record) {
     $workflow = new stdClass();
     $cardclasses = [];
@@ -95,7 +99,6 @@ foreach ($records as $record) {
     } else {
         $triggerstr = "--";
     }
-
     $stepsstr = '';
     $steps = step_manager::get_step_instances($record->id);
     if ($steps) {
@@ -110,11 +113,32 @@ foreach ($records as $record) {
     } else {
         $stepsstr = "--";
     }
-
     $downloadlink = new \moodle_url($PAGE->url,
         ['action' => action::WORKFLOW_BACKUP,
             'workflowid' => $record->id,
             'sesskey' => sesskey()]);
+    if ($forum) {
+        if ($discussion = $DB->get_field('tool_lifecycle_workflow', 'forum_discussion', ['id'=>$record->id])) {
+            $discussions = $DB->count_records('forum_posts', ['discussion' => $discussion]);
+            $discussiontooltip = get_string('discussionparticipate', 'tool_lifecycle');
+        } else {
+            $discussions = 0;
+            $discussiontooltip = get_string('discussionstart', 'tool_lifecycle');
+        }
+        $discussionclass = $discussions == 0 ? 'secondary' : 'primary';
+        $discussionlink = new \moodle_url($PAGE->url,
+            ['action' => action::WORKFLOW_DISCUSSION,
+                'workflowid' => $record->id,
+                'sesskey' => sesskey()]);
+    } else {
+        $discussion = null;
+        $discussions = 0;
+        $discussionclass = "";
+        $discussionlink = "";
+    }
+    $workflowlink = new \moodle_url($PAGE->url,
+        ['workflowid' => $record->id]);
+
     $workflow = [
         'id' => $record->id,
         'headerclass' => $headerclass,
@@ -126,7 +150,14 @@ foreach ($records as $record) {
         'triggers' => $triggerstr,
         'steps' => $stepsstr,
         'downloadlink' => $downloadlink,
+        'wordflowlink' => $workflowlink,
         'cardclasses' => implode(" ", $cardclasses),
+        'forum' => $forum,
+        'discussion' => $discussion,
+        'discussions' => $discussions,
+        'discussionclass' => $discussionclass,
+        'discussiontooltip' => $discussiontooltip,
+        'discussionlink' => $discussionlink,
     ];
     $data->workflows[] = $workflow;
 }
