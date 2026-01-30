@@ -179,7 +179,7 @@ class activity extends base_automatic {
      * @return bool
      */
     public function multiple_use() {
-        return false;
+        return true;
     }
 
     /**
