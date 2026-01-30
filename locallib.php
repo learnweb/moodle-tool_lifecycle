@@ -82,10 +82,10 @@ function lifecycle_select_change_workflow($activewf) {
 function lifecycle_get_workflow_discussion($workflowid, $forumid) {
     global $DB, $USER;
 
-    if (!$forum = $DB->get_record('forum', ['id'=>$forumid])) {
+    if (!$forum = $DB->get_record('forum', ['id' => $forumid])) {
         throw new moodle_exception('invalidcoursemodule', 'moodle');
     }
-    $workflow = $DB->get_record('tool_lifecycle_workflow', ['id'=>$workflowid]);
+    $workflow = $DB->get_record('tool_lifecycle_workflow', ['id' => $workflowid]);
 
     $postid = "";
     if (!$discussionid = $DB->get_field('tool_lifecycle_workflow', 'forum_discussion', ['id' => $workflowid])) {
@@ -116,8 +116,8 @@ function lifecycle_get_workflow_discussion($workflowid, $forumid) {
         $post->messageformat = $discussion->messageformat;
         $post->messagetrust  = $discussion->messagetrust;
         $post->attachments   = null;
-        $post->forum         = $forum->id;     // speedup
-        $post->course        = $forum->course; // speedup
+        $post->forum         = $forum->id;
+        $post->course        = $forum->course;
         $post->mailnow       = $discussion->mailnow;
 
         \mod_forum\local\entities\post::add_message_counts($post);
@@ -132,10 +132,10 @@ function lifecycle_get_workflow_discussion($workflowid, $forumid) {
         $discussionid = $DB->insert_record("forum_discussions", $discussion);
 
         // Set the pointer to the discussion on the post.
-        $DB->set_field("forum_posts", "discussion", $discussionid, ["id"=>$post->id]);
+        $DB->set_field("forum_posts", "discussion", $discussionid, ["id" => $post->id]);
 
         // Make it the workflow's discussion.
-        $DB->set_field("tool_lifecycle_workflow", "forum_discussion", $discussionid, ["id"=>$workflowid]);
+        $DB->set_field("tool_lifecycle_workflow", "forum_discussion", $discussionid, ["id" => $workflowid]);
 
         $postid = $post->id;
         $discussionid = "";

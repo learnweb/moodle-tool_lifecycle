@@ -70,7 +70,7 @@ $data->workflows = [];
 $usedtriggersubplugins = [];
 $usedstepsubplugins = [];
 if ($forum = get_config('tool_lifecycle', 'forum') ?? false) {
-    $forumid = $DB->get_field('course_modules', 'instance', ['id'=>$forum]);
+    $forumid = $DB->get_field('course_modules', 'instance', ['id' => $forum]);
 }
 foreach ($records as $record) {
     $workflow = new stdClass();
@@ -118,7 +118,7 @@ foreach ($records as $record) {
             'workflowid' => $record->id,
             'sesskey' => sesskey()]);
     if ($forum) {
-        if ($discussion = $DB->get_field('tool_lifecycle_workflow', 'forum_discussion', ['id'=>$record->id])) {
+        if ($discussion = $DB->get_field('tool_lifecycle_workflow', 'forum_discussion', ['id' => $record->id])) {
             $discussions = $DB->count_records('forum_posts', ['discussion' => $discussion]);
             $discussiontooltip = get_string('discussionparticipate', 'tool_lifecycle');
         } else {
