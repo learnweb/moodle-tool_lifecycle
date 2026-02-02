@@ -1,25 +1,4 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
- * Step subplugin to delete a course context using Catalyst batch deletion task.
- *
- * @package lifecyclestep_uclcontextdelete
- */
-
 namespace tool_lifecycle\step;
 
 use stdClass;
@@ -32,24 +11,24 @@ require_once(__DIR__ . '/../lib.php');
 class uclcontextdelete extends libbase {
 
     /**
-     * Add course to Catalyst batch deletion queue.
+     * Queue course for deletion via Catalyst batch task.
      */
     public function process_course($processid, $instanceid, $course) {
-        global $DB;
+        global $DB, $USER;
 
-        // Safety: never delete front page course.
-        if ((int)$course->id === 1) {
+        $manager = $DB->get_manager();
+        if (!$manager->table_exists('tool_catmaintenance_delcourse')) {
+            debugging('Catalyst maintenance plugin not installed — cannot queue course deletion.', DEBUG_DEVELOPER);
             return step_response::rollback();
         }
 
-        // Queue course into Catalyst batch deletion table.
-        $record = new \stdClass();
-        $record->courseid   = $course->id;
-        $record->timeadded  = time();
-        $record->status     = 0; // 0 = pending (Catalyst convention)
-
-        // Avoid duplicates.
+        // Avoid duplicate queue entries.
         if (!$DB->record_exists('tool_catmaintenance_delcourse', ['courseid' => $course->id])) {
+            $record = new stdClass();
+            $record->courseid    = $course->id;
+            $record->timecreated = time();
+            $record->createdby   = $USER->id ?? 0;
+
             $DB->insert_record('tool_catmaintenance_delcourse', $record);
         }
 
