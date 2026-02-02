@@ -23,6 +23,6 @@
  */
 
 $string['stepname'] = 'Course deletion step';
-$string['plugindescription'] = 'Delegates deletion by calling the Catalyst batch deletion tool to delete courses that have already been archived by UCLs contextfreeze trigger';
+$string['plugindescription'] = "Delegates deletion by calling the Catalyst batch deletion tool to delete courses that have already been archived by UCL's contextfreeze trigger";
 $string['pluginname'] = 'UCL contextdelete (Deletion of archived courses)';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
