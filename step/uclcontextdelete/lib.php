@@ -11,7 +11,7 @@ require_once(__DIR__ . '/../lib.php');
 class uclcontextdelete extends libbase {
 
     /**
-     * Queue course for deletion via Catalyst batch task.
+     * Queue course for deletion via Catalyst batch task
      */
     public function process_course($processid, $instanceid, $course) {
         global $DB, $USER;
