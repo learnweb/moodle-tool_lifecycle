@@ -44,6 +44,7 @@ class course_backup_task extends \core\task\adhoc_task {
 
         $lockfactory = \core\lock\lock_config::get_lock_factory('course_backup_adhoc');
         $courseid = $this->get_custom_data()->courseid;
+        $stepid = $this->get_custom_data()->stepid;
 
         try {
             $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
@@ -60,7 +61,7 @@ class course_backup_task extends \core\task\adhoc_task {
         }
 
         try {
-            backup_manager::create_course_backup($courseid);
+            backup_manager::create_course_backup($courseid, $stepid);
         } catch (Exception $e) {
             mtrace('Backup for course: ' . $course->fullname . ' encounters an error.');
             mtrace('Exception: ' . $e->getMessage());
