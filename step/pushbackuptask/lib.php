@@ -50,6 +50,7 @@ class pushbackuptask extends libbase {
     public function process_course($processid, $instanceid, $course) {
         $asynctask = new course_backup_task();
         $asynctask->set_custom_data(['courseid' => $course->id]);
+        $asynctask->set_custom_data(['stepid' => $instanceid]);
         \core\task\manager::queue_adhoc_task($asynctask);
         return step_response::proceed();
     }
