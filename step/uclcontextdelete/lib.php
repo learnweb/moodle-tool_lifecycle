@@ -15,21 +15,21 @@ class uclcontextdelete extends libbase {
      */
     public function process_course($processid, $instanceid, $course) {
         global $DB, $USER;
-
+        //rollback on failure with error message 
         $manager = $DB->get_manager();
-        if (!$manager->table_exists('tool_catmaintenance_delcourse')) {
-            debugging('Catalyst maintenance plugin not installed — cannot queue course deletion.', DEBUG_DEVELOPER);
+        if (!$manager->table_exists('tool_catmaintenance_delcourses')) {
+            debugging('Catalyst maintenance plugin not installed — cannot queue course deletions.', DEBUG_DEVELOPER);
             return step_response::rollback();
         }
 
         // Avoid duplicate queue entries.
-        if (!$DB->record_exists('tool_catmaintenance_delcourse', ['courseid' => $course->id])) {
+        if (!$DB->record_exists('tool_catmaintenance_delcourses', ['courseid' => $course->id])) {
             $record = new stdClass();
             $record->courseid    = $course->id;
             $record->timecreated = time();
             $record->createdby   = $USER->id ?? 0;
 
-            $DB->insert_record('tool_catmaintenance_delcourse', $record);
+            $DB->insert_record('tool_catmaintenance_delcourses', $record);
         }
 
         return step_response::proceed();
