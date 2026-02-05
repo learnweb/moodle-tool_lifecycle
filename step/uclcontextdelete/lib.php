@@ -1,8 +1,8 @@
 <?php
 namespace tool_lifecycle\step;
 
-use stdClass;
 use tool_lifecycle\local\response\step_response;
+use core\task\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -11,25 +11,38 @@ require_once(__DIR__ . '/../lib.php');
 class uclcontextdelete extends libbase {
 
     /**
-     * Queue course for deletion via Catalyst batch task
+     * Ensure task only queued once per workflow execution.
+     *
+     * @var bool
      */
+    protected static $taskqueued = false;
+
     public function process_course($processid, $instanceid, $course) {
-        global $DB, $USER;
-        //rollback on failure with error message 
-        $manager = $DB->get_manager();
-        if (!$manager->table_exists('tool_catmaintenance_delcourses')) {
-            debugging('Catalyst maintenance plugin not installed — cannot queue course deletions.', DEBUG_DEVELOPER);
-            return step_response::rollback();
-        }
 
-        // Avoid duplicate queue entries.
-        if (!$DB->record_exists('tool_catmaintenance_delcourses', ['courseid' => $course->id])) {
-            $record = new stdClass();
-            $record->courseid    = $course->id;
-            $record->timecreated = time();
-            $record->createdby   = $USER->id ?? 0;
+        // only queue task once
+        if (!self::$taskqueued) {
 
-            $DB->insert_record('tool_catmaintenance_delcourses', $record);
+            // test error message
+            if (!class_exists('\tool_catmaintenance\task\batch_course_deletion')) {
+                debugging(
+                    'Catalyst batch_course_deletion task not available.',
+                    DEBUG_DEVELOPER
+                );
+                return step_response::rollback();
+            }
+
+            // initialise task
+            $task = new \tool_catmaintenance\task\batch_course_deletion();
+
+            manager::queue_adhoc_task($task);
+
+            // mark as queued
+            self::$taskqueued = true;
+
+            debugging(
+                'Queued Catalyst batch_course_deletion task.',
+                DEBUG_DEVELOPER
+            );
         }
 
         return step_response::proceed();
