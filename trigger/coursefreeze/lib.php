@@ -122,7 +122,7 @@ public function instance_settings() {
      */
     public function extend_add_instance_form_definition($mform) {
 
-        // Check last access .
+        // Check last access
         $elementname = 'lastaccessdelay';
         $mform->addElement('duration', $elementname,
             get_string($elementname, 'lifecycletrigger_coursefreeze'));
@@ -130,7 +130,7 @@ public function instance_settings() {
         $mform->setDefault($elementname, DAYSECS * 365); // default = 12 months
 
 
-        // Chech course creation age.
+        // Check course creation age.
         $elementname = 'creationdelay';
         $mform->addElement('duration', $elementname,
             get_string($elementname, 'lifecycletrigger_coursefreeze'));

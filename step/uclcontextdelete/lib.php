@@ -19,30 +19,28 @@ class uclcontextdelete extends libbase {
 
     public function process_course($processid, $instanceid, $course) {
 
-        // only queue task once
+        // Only queue once per workflow run
         if (!self::$taskqueued) {
 
-            // test error message
-            if (!class_exists('\tool_catmaintenance\task\batch_course_deletion')) {
+            if (class_exists('\tool_catmaintenance\task\batch_course_deletion')) {
+
+                $task = new \tool_catmaintenance\task\batch_course_deletion();
+                manager::queue_adhoc_task($task);
+
+                self::$taskqueued = true;
+
                 debugging(
-                    'Catalyst batch_course_deletion task not available.',
+                    'Lifecycle queued Catalyst batch_course_deletion task.',
                     DEBUG_DEVELOPER
                 );
-                return step_response::rollback();
+
+            } else {
+
+                debugging(
+                    'Catalyst batch_course_deletion task not available — skipping queue.',
+                    DEBUG_DEVELOPER
+                );
             }
-
-            // initialise task
-            $task = new \tool_catmaintenance\task\batch_course_deletion();
-
-            manager::queue_adhoc_task($task);
-
-            // mark as queued
-            self::$taskqueued = true;
-
-            debugging(
-                'Queued Catalyst batch_course_deletion task.',
-                DEBUG_DEVELOPER
-            );
         }
 
         return step_response::proceed();
