@@ -206,9 +206,11 @@ Feature: Add an admin approve step without button label customisation
 
     When I click on "Proceed" "button" in the "Course 1" "table_row"
 
-    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "7" seconds
+    And I wait "1" seconds
+    And I trigger cron
+    And I wait "60" seconds
+    And I trigger cron
+    And I wait "3" seconds
 
     And I am on coursebackups page
     Then I should see "Course 1"
