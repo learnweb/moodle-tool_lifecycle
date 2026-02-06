@@ -77,13 +77,13 @@ Feature: Combine triggers with 'and' operation and test view and actions
     And I should see the tool "Delete course" in the "Course BA" row of the "tool_lifecycle_remaining" table
     And I should see the tool "Delete course" in the "Course A" row of the "tool_lifecycle_remaining" table
     When I log out
+
     And I log in as "admin"
-    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "5" seconds
-    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "5" seconds
-    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "5" seconds
+
+    And I trigger cron
+    And I wait "60" seconds
+    And I trigger cron
+
     And I log out
     And I log in as "teacher1"
     And I am on lifecycle view
