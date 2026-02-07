@@ -200,7 +200,7 @@ Feature: Add an admin approve step WITH button label customisation
     And I should see "Call off workflow" in the "Course 2" "table_row"
     And I should see "Call off workflow" in the "Course 3" "table_row"
 
-    When I click on "Create backup" "button"
+    When I click on "Create backup" "button" in the "Course 1" "table_row"
 
     And I wait "1" seconds
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
