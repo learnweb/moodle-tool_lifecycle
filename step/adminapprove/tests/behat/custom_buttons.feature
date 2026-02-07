@@ -36,7 +36,7 @@ Feature: Add an admin approve step WITH button label customisation
     And I set the field "Label of the rollback button" to "Call off workflow"
     And I press "Save changes"
 
-    And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Create Adhoc Backup Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Create backup step"
     And I press "Save changes"
 
@@ -83,7 +83,8 @@ Feature: Add an admin approve step WITH button label customisation
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "25" seconds
+    And I run all adhoc tasks
+    And I wait "2" seconds
 
     And I am on coursebackups page
     Then I should see "Course 1"
@@ -99,7 +100,8 @@ Feature: Add an admin approve step WITH button label customisation
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "5" seconds
+    And I run all adhoc tasks
+    And I wait "2" seconds
 
     And I am on coursebackups page
     Then I should see "Course 1"
@@ -114,7 +116,8 @@ Feature: Add an admin approve step WITH button label customisation
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "5" seconds
+    And I run all adhoc tasks
+    And I wait "2" seconds
 
     And I am on coursebackups page
     Then I should see "Course 1"
@@ -199,14 +202,10 @@ Feature: Add an admin approve step WITH button label customisation
 
     When I click on "Create backup" "button"
 
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I run all adhoc tasks
     And I wait "2" seconds
-    And I trigger cron
-    And I wait "60" seconds
-    And I trigger cron
-    And I wait "4" seconds
-#    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-#    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-#    And I wait "7" seconds
 
     And I am on coursebackups page
     Then I should see "Course 1"

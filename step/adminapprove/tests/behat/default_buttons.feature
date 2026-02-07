@@ -33,7 +33,7 @@ Feature: Add an admin approve step without button label customisation
     And I set the field "Instance name" to "admin approve step"
     And I press "Save changes"
 
-    And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Create Adhoc Backup Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Create backup step"
     And I press "Save changes"
 
@@ -77,15 +77,10 @@ Feature: Add an admin approve step without button label customisation
     And I click on "select-all-ids" "checkbox"
     And I set the field "With selected courses..." to "Proceed"
 
-    # Reset backup counter which might be preventing backups from being created
-    # and create backups
-    And I wait "1" seconds
-    And I trigger cron
-    And I wait "60" seconds
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "60" seconds
-    # And finally reset backup counter for next testcase
-    And I trigger cron
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I run all adhoc tasks
+    And I wait "2" seconds
 
     And I am on coursebackups page
     Then I should see "Course 1"
@@ -103,10 +98,10 @@ Feature: Add an admin approve step without button label customisation
     And I should see "Course 3"
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "5" seconds
-    And I trigger cron
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "5" seconds
+    And I run all adhoc tasks
+    And I wait "2" seconds
+
     And I am on coursebackups page
     Then I should see "Course 1"
     And I should not see "Course 2"
@@ -121,7 +116,8 @@ Feature: Add an admin approve step without button label customisation
 
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
-    And I wait "20" seconds
+    And I run all adhoc tasks
+    And I wait "2" seconds
 
     And I am on coursebackups page
     Then I should see "Course 1"
@@ -206,11 +202,10 @@ Feature: Add an admin approve step without button label customisation
 
     When I click on "Proceed" "button" in the "Course 1" "table_row"
 
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
+    And I run all adhoc tasks
     And I wait "2" seconds
-    And I trigger cron
-    And I wait "60" seconds
-    And I trigger cron
-    And I wait "4" seconds
 
     And I am on coursebackups page
     Then I should see "Course 1"
