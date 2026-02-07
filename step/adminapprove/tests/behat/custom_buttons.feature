@@ -202,10 +202,11 @@ Feature: Add an admin approve step WITH button label customisation
 
     When I click on "Create backup" "button"
 
+    And I wait "1" seconds
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run the scheduled task "tool_lifecycle\task\lifecycle_task"
     And I run all adhoc tasks
-    And I wait "2" seconds
+    And I wait "3" seconds
 
     And I am on coursebackups page
     Then I should see "Course 1"
