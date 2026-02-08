@@ -128,8 +128,8 @@ class processor {
             // Get recordset of triggered courses.
             $recordset = $this->get_course_recordset($triggers);
             // Compute max number of courses to be processed by this cron run.
-            $maxprocesses = PHP_INT_MAX; // Value depends if 64 bit or 32 bit system,
-            // So please do not use the integer value (for 64 bit: 9223372036854775807).
+            $maxprocesses = PHP_INT_MAX; // Value depends on system,
+            // so please do not use the actual integer value (for 64 bit: 9223372036854775807).
             if ($workflow->triggeredpercron) {
                 $maxprocesses = $workflow->triggeredpercron;
             }
