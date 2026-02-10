@@ -140,8 +140,12 @@ abstract class workflow_table extends \table_sql {
             foreach ($steps as $key => $step) {
                 $steptitle = "[".$step->subpluginname."] ".$step->instancename;
                 $lib = lib_manager::get_step_lib($step->subpluginname);
-                $stepicon = $lib->get_icon();
-                $out .= $OUTPUT->pix_icon($stepicon, $steptitle);
+                if (isset($lib)) {
+                    $stepicon = $lib->get_icon();
+                    $out .= $OUTPUT->pix_icon($stepicon, $steptitle);
+                } else {
+                    $out .= $OUTPUT->pix_icon('i/warning', get_string('notfound', 'error') . ': ' . $step->subpluginname);
+                }
             }
         } else {
             $out = "--";
