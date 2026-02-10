@@ -47,11 +47,6 @@ class decision_table extends \table_sql {
     private $strings;
 
     /**
-     * @var int stepid ID of step instance
-     */
-    private $stepid;
-
-    /**
      * @var int wfid ID of workflow of step instance
      */
     private $wfid;
@@ -60,6 +55,9 @@ class decision_table extends \table_sql {
      * @var int stepindex step's position in workflow
      */
     private $stepindex;
+
+    /** @var object master checkbox object */
+    private $_mastercheckbox;
 
     /**
      * Constructs the table.
@@ -72,8 +70,6 @@ class decision_table extends \table_sql {
     public function __construct($stepid, $courseid, $category, $coursename) {
         parent::__construct('lifecyclestep_adminapprove-decisiontable');
 
-        $this->stepid = $stepid;
-
         $rollbackcustlabel =
             settings_manager::get_settings($stepid, settings_type::STEP)['rollbackbuttonlabel'] ?? null;
         $this->strings['rollbackbuttonlabel'] = !empty($rollbackcustlabel) ?
@@ -84,31 +80,22 @@ class decision_table extends \table_sql {
         $this->strings['proceedbuttonlabel'] = !empty($proceedcustlabel) ?
             $proceedcustlabel : get_string('proceed', 'lifecyclestep_adminapprove');
 
-        $rollbackselectedcustlabel =
-            settings_manager::get_settings($stepid, settings_type::STEP)['rollbackselectedbuttonlabel'] ?? null;
-        $this->strings['rollbackselectedbuttonlabel'] = !empty($rollbackselectedcustlabel) ?
-            $rollbackselectedcustlabel : get_string('rollbackselected', 'lifecyclestep_adminapprove');
+        $this->_mastercheckbox = new \core\output\checkbox_toggleall('lifecycle-adminapprove-table', true, [
+            'id' => 'select-all-ids',
+            'name' => 'select-all-ids',
+            'label' => get_string('selectall'),
+            'labelclasses' => 'sr-only',
+            'classes' => 'm-1',
+            'checked' => false,
+        ]);
 
-        $proceedselectedcustlabel =
-            settings_manager::get_settings($stepid, settings_type::STEP)['proceedselectedbuttonlabel'] ?? null;
-        $this->strings['proceedselectedbuttonlabel'] = !empty($proceedselectedcustlabel) ?
-            $proceedselectedcustlabel : get_string('proceedselected', 'lifecyclestep_adminapprove');
-
-        $rollbackallcustlabel =
-            settings_manager::get_settings($stepid, settings_type::STEP)['rollbackallbuttonlabel'] ?? null;
-        $this->strings['rollbackallbuttonlabel'] = !empty($rollbackallcustlabel) ?
-            $rollbackallcustlabel : get_string('rollbackall', 'lifecyclestep_adminapprove');
-
-        $proceedallcustlabel =
-            settings_manager::get_settings($stepid, settings_type::STEP)['proceedallbuttonlabel'] ?? null;
-        $this->strings['proceedallbuttonlabel'] = !empty($proceedallcustlabel) ?
-            $proceedallcustlabel : get_string('proceedall', 'lifecyclestep_adminapprove');
-
-        $this->define_baseurl("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid");
         $this->define_columns(['checkbox', 'courseid', 'course', 'category', 'startdate', 'tools']);
+        // Set sort column to course id!
+        $this->sortable(true, 'courseid');
         $this->column_class('tools', 'text-nowrap');
+        global $OUTPUT;
         $this->define_headers(
-                [\html_writer::checkbox('checkall', null, false),
+            [$OUTPUT->render($this->_mastercheckbox),
                         get_string('courseid', 'lifecyclestep_adminapprove'),
                         get_string('course'),
                         get_string('category'),
@@ -139,6 +126,7 @@ class decision_table extends \table_sql {
             $params['cname'] = '%' . $DB->sql_like_escape($coursename) . '%';
         }
 
+        $where .= '';
         $this->set_sql($fields, $from, $where, $params);
     }
 
@@ -148,13 +136,29 @@ class decision_table extends \table_sql {
      * @return string
      */
     public function col_checkbox($row) {
+        global $OUTPUT;
+
         if (!($this->wfid ?? false)) {
             $this->wfid = $row->wfid;
         }
         if (!($this->stepindex ?? false)) {
             $this->stepindex = $row->stepindex;
         }
-        return \html_writer::checkbox('c[]', $row->id, false);
+
+        $name = $row->id;
+
+        $checkbox = new \core\output\checkbox_toggleall('lifecycle-adminapprove-table', false, [
+            'id' => 'adminapprove_check_' . $name,
+            'name' => 'c[]',
+            'label' => get_string('selectitem', 'moodle', $row->id),
+            'labelclasses' => 'accesshide',
+            'classes' => 'm-1',
+            'checked' => false,
+            'value' => $name,
+            'labelfor' => 'adminapprove_check_' . $name,
+        ]);
+
+        return $OUTPUT->render($checkbox);
     }
 
     /**
@@ -211,34 +215,27 @@ class decision_table extends \table_sql {
      * @throws moodle_exception
      */
     public function col_tools($row) {
-        global $OUTPUT;
-
-        $button = new \single_button(
-            new \moodle_url('', [
+        // We use links instead of actual button elements here in order to
+        // avoid creating nested forms. Nested forms do not work properly.
+        // Note that the whole table is also included in a form element.
+        // Anchors result in get requests which is also not a proper approach
+        // but it is commonly used throughout moodle for actions in tables.
+        $output = \html_writer::tag('a', $this->strings['rollbackbuttonlabel'], [
+            'class' => 'btn btn-secondary',
+            'href' => (new \moodle_url('', [
                 'action' => 'rollback',
                 'c[]' => $row->id,
                 'stepid' => $row->sid,
                 'sesskey' => sesskey(),
-            ]),
-            $this->strings['rollbackbuttonlabel'],
-            'post',
-            single_button::BUTTON_SECONDARY
-        );
-        $output = $OUTPUT->render($button);
-
-        $button = new \single_button(
-            new \moodle_url('', [
+            ]))]);
+        $output .= ' ' . \html_writer::tag('a', $this->strings['proceedbuttonlabel'], [
+            'class' => 'btn btn-primary',
+            'href' => (new \moodle_url('', [
                 'action' => 'proceed',
                 'c[]' => $row->id,
                 'stepid' => $row->sid,
                 'sesskey' => sesskey(),
-            ]),
-            $this->strings['proceedbuttonlabel'],
-            'post',
-            single_button::BUTTON_PRIMARY
-        );
-        $output .= $OUTPUT->render($button);
-
+            ]))]);
         return $output;
     }
 
@@ -255,67 +252,46 @@ class decision_table extends \table_sql {
     }
 
     /**
-     * Hook that can be overridden in child classes to wrap a table in a form
-     * for example. Called only when there is data to display and not
-     * downloading.
+     * add link for showing complete table
+     * @param int $pagesize
+     * @param boolean $useinitialsbar
+     * @param string $downloadhelpbutton
+     * @return void
+     * @throws \coding_exception
+     * @throws moodle_exception
      */
-    public function wrap_html_start() {
-        global $OUTPUT;
+    public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+        if ($pagesize < 1) {
+            $pagesize = $this->get_default_per_page();
+        }
+        parent::out($pagesize, $useinitialsbar, $downloadhelpbutton);
 
-        parent::wrap_html_start();
+        // Generate "Show all/Show per page" link.
+        if ($this->pagesize == TABLE_SHOW_ALL_PAGE_SIZE && $this->totalrows > $this->get_default_per_page()) {
+            $perpagesize = $this->get_default_per_page();
+            $perpagestring = get_string('showperpage', '', $this->get_default_per_page());
+        } else if ($this->pagesize < $this->totalrows) {
+            $perpagesize = TABLE_SHOW_ALL_PAGE_SIZE;
+            $perpagestring = get_string('showall', '', $this->totalrows);
+        }
+        if (isset($perpagesize) && isset($perpagestring)) {
+            global $PAGE;
+            $perpageurl = new \moodle_url($PAGE->url);
+            $perpageurl->remove_params('page'); // Reset page parameter.
+            $perpageurl->param('page', 0); // Reset page parameter.
+            $perpageurl->param('perpage', $perpagesize);
+            echo \html_writer::link(
+                $perpageurl,
+                $perpagestring);
+        }
+    }
 
-        $output = \html_writer::empty_tag('input',
-            [
-                'type' => 'button',
-                'action' => 'rollback',
-                'sesskey' => sesskey(),
-                'stepid' => $this->stepid,
-                'name' => 'button_rollback_selected',
-                'value' => $this->strings['rollbackselectedbuttonlabel'],
-                'class' => 'selectedbutton btn btn-secondary mb-1',
-            ]
-        );
-        $output .= \html_writer::empty_tag('input',
-            [
-                'type' => 'button',
-                'action' => 'proceed',
-                'sesskey' => sesskey(),
-                'stepid' => $this->stepid,
-                'name' => 'button_proceed_selected',
-                'value' => $this->strings['proceedselectedbuttonlabel'],
-                'class' => 'selectedbutton btn btn-primary ml-2 mb-1 mr-2',
-            ]
-        );
-
-        $button = new \single_button(
-            new \moodle_url('', [
-                'action' => 'rollback_all',
-                'stepid' => $this->stepid,
-                'stepindex' => $this->stepindex,
-                'wfid' => $this->wfid,
-                'sesskey' => sesskey(),
-            ]),
-            $this->strings['rollbackallbuttonlabel'],
-            'post',
-            single_button::BUTTON_SECONDARY
-        );
-        $output .= $OUTPUT->render($button);
-
-        $button = new \single_button(
-            new \moodle_url('', [
-                'action' => 'proceed_all',
-                'stepid' => $this->stepid,
-                'stepindex' => $this->stepindex,
-                'wfid' => $this->wfid,
-                'sesskey' => sesskey(),
-            ]),
-            $this->strings['proceedallbuttonlabel'],
-            'post',
-            single_button::BUTTON_PRIMARY
-        );
-        $output .= $OUTPUT->render($button);
-
-        echo $output;
-
+    /**
+     * Get the default per page.
+     *
+     * @return int
+     */
+    public function get_default_per_page(): int {
+        return 100;
     }
 }
