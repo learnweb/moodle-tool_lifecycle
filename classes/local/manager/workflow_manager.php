@@ -567,7 +567,8 @@ class workflow_manager {
     public static function is_deprecated($workflowid) {
         if ($triggers = trigger_manager::get_triggers_for_workflow($workflowid)) {
             foreach ($triggers as $trigger) {
-                if (!lib_manager::get_trigger_lib($trigger->subpluginname)->has_multiple_instances()) {
+                $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+                if (!isset($lib) || $lib->has_multiple_instances()) {
                     return true;
                 }
             }
