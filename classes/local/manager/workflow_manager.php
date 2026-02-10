@@ -568,7 +568,7 @@ class workflow_manager {
         if ($triggers = trigger_manager::get_triggers_for_workflow($workflowid)) {
             foreach ($triggers as $trigger) {
                 $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-                if (!isset($lib) || $lib->has_multiple_instances()) {
+                if (!isset($lib) || !$lib->has_multiple_instances()) {
                     return true;
                 }
             }
