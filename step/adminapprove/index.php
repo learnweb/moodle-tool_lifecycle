@@ -18,10 +18,13 @@
  * Life Cycle Admin Approve Step
  *
  * @package lifecyclestep_adminapprove
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @copyright  2019 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_lifecycle\local\manager\step_manager;
+use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
@@ -31,8 +34,7 @@ require_once($CFG->libdir . '/adminlib.php');
 require_admin();
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_url(new \moodle_url(urls::SUBPLUGINS));
-
+$PAGE->set_url("/admin/tool/lifecycle/step/adminapprove/index.php");
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');
 

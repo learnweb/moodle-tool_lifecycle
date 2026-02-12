@@ -1,6 +1,56 @@
 CHANGELOG
 =========
 
+5.1.1(2026-01-27)
+------------------
+* [FEATURE] Add new lifecycle step 'deletebackup'
+* [FEATURE] Add the task to delete old backup files to the already existing cleanup_task
+* [FEATURE] Workflowoverview: Add a dropdown to switch to a different workflow
+* [FEATURE] Add field 'description' to the workflow table
+* [FEATURE] Introduce Icons for all lifecycle subplugintypes
+* [FEATURE] Add new page 'showcase' to present all workflows
+* [FIXED] Improve error handling in errors table
+* [FIXED] Add missing lang strings of step setcustomfield
+
+
+5.1.0(2026-01-20)
+------------------
+* [FEATURE] Introduce new trigger 'activity'
+* [FEATURE] Introduce new trigger 'opencast'
+* [FEATURE] Introduce new step 'setcustomfield' (PR #275)
+* [FEATURE] lifecycle-backups: new filter option 'create date' and option to bulk-delete backups
+* [FEATURE] Add Bulk Editing option to the course interactions lists (#172)
+* [FEATURE] Step adminapprove: reintroduce proceed all- and rollback all-buttons
+* [FEATURE] Add option to define sysadmin(s) to receive notifications when course is triggered for an admin approve step instance
+* [FEATURE] workflowoverview: display workflow options 'max courses per day/cron', if active
+* [FEATURE] Provide download option for deactivated workflows as well
+* [FIXED] Include filepath as debug info when backup file does not exist (#277)
+* Moodle 5.1 compatible version
+
+5.0.2(2025-12-13)
+------------------
+* [FEATURE] workflowoverview: Do not take the specificdata trigger into account when counting
+* [FEATURE] Introduce optional max number of courses triggered per cron run and/or per day for a workflow
+* [FEATURE] New trigger depending on enddate PR #272
+* [FIXED] Fix a bootstrap bug in interaction table
+
+5.0.1(2025-11-15)
+------------------
+* [FEATURE] Customise buttons in adminapprove step PR #266
+* [FEATURE] Improve listings of triggered courses in workflowoverview
+* [FEATURE] Semindependent trigger: add option to select courses with no customfield semester or termindependent value
+* [FEATURE] Implement checks for plugin dependencies
+* [FIXED] adminapprove step: insert into table only if it does not yet exist PR #268
+* [FIXED] category trigger: do not display form elements twice PR #267
+* [FIXED] Handle manual trigger correctly with AND condition PR #269
+* [FIXED] Respect use of check_course function when counting triggered courses
+* [FIXED] Activate the automatic tests of the subplugins
+
+5.0.0(2025-10-23)
+------------------
+* [FIXED] Fix unit test process_error_test
+* Moodle 5.0 compatible version
+
 4.5.6(2025-10-20)
 ------------------
 * [FIXED] Fix bug in upgrade.php issue #259

@@ -26,6 +26,12 @@
 $string['exclude'] = 'Exclude semester independent';
 $string['exclude_help'] = 'If true, semester independent courses are excluded from workflow,
 otherwise they are included.';
+$string['nosemester'] = 'Courses without semester';
+$string['nosemester_help'] = 'Courses without valid start date are selected by default. If you want to select courses
+that have no semester field selected instead mark this option.';
 $string['plugindescription'] = 'Include or exclude courses that have no start date.';
 $string['pluginname'] = 'Semester independent trigger';
 $string['privacy:metadata'] = 'Does not store user specific data';
+$string['setting_customfield'] = 'Custom field';
+$string['setting_customfield_help'] = "Choose the course custom field of type semester to check";
+$string['setting_customfield_nofield'] = 'There isn\'t any custom course field which could be used by this trigger. Please create a custom course field of type "Semester" on the <a href="{$a}">custom course fields administration page</a> first.';

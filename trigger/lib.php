@@ -124,6 +124,13 @@ abstract class base {
         return [];
     }
 
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'i/nosubcat';
+    }
 }
 
 /**

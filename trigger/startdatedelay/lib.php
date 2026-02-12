@@ -106,4 +106,12 @@ class startdatedelay extends base_automatic {
         }
         $mform->setDefault('delay', $default);
     }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'e/insert_date';
+    }
 }

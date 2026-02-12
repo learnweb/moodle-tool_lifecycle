@@ -12,6 +12,7 @@
         <FIELD NAME="stepindex" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="sortindex of the step within the workflow"/>
         <FIELD NAME="waiting" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="tells if the process is in status waiting"/>
         <FIELD NAME="timestepchanged" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="unix timestamp - time the step instance of the process was changed last."/>
+        <FIELD NAME="timestampcreated" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false" COMMENT="unix timestamp - time this process was created."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -94,6 +95,7 @@
         <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Shortname of the course"/>
         <FIELD NAME="backupfile" TYPE="char" LENGTH="120" NOTNULL="false" SEQUENCE="false" COMMENT="Name of the backup file"/>
         <FIELD NAME="backupcreated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="timestamp the backup was created"/>
+        <FIELD NAME="step" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="ID of the step by which this backup was triggered"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -113,7 +115,10 @@
         <FIELD NAME="delayforallworkflows" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="includesitecourse" TYPE="int" LENGTH="5" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="includedelayedcourses" TYPE="int" LENGTH="5" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="triggeredpercron" TYPE="int" LENGTH="5" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="triggeredperday" TYPE="int" LENGTH="5" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="andor" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="char" LENGTH="500" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

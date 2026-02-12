@@ -56,6 +56,7 @@ class process_manager {
             $record->courseid = $courseid;
             $record->workflowid = $workflowid;
             $record->timestepchanged = time();
+            $record->timestampcreated = time();
             $process = process::from_record($record);
             $process->id = $DB->insert_record('tool_lifecycle_process', $process);
             return $process;
@@ -90,12 +91,14 @@ class process_manager {
      */
     public static function get_processes() {
         global $DB;
-        // Delete processes of already removed courses.
-        $DB->delete_records_select(
-            'tool_lifecycle_process',
-            "courseid not in (SELECT id FROM {course}) ",
-            []
-        );
+        // Detect processes of not existing courses and move them to the proc_error table.
+        $processeswithoutcourse = $DB->get_fieldset_select('tool_lifecycle_process', 'id',
+            "courseid not in (SELECT id FROM {course}) ", []);
+        foreach ($processeswithoutcourse as $processid) {
+            $process = self::get_process_by_id($processid, true);
+            $e = new \Exception(get_string('process_withnotexistingcourse', 'tool_lifecycle'));
+            self::insert_process_error($process, $e);
+        }
         $records = $DB->get_records('tool_lifecycle_process');
         $processes = [];
         foreach ($records as $record) {
@@ -107,14 +110,15 @@ class process_manager {
     /**
      * Creates a process for the course which is at the respective step the trigger is followed by.
      * @param int $processid id of the process
+     * @param bool $coursedeleted If course does not exist (anymore)
      * @return process
      * @throws \dml_exception
      */
-    public static function get_process_by_id($processid) {
+    public static function get_process_by_id($processid, $coursedeleted = false) {
         global $DB;
         $record = $DB->get_record('tool_lifecycle_process', ['id' => $processid]);
         if ($record) {
-            return process::from_record($record);
+            return process::from_record($record, $coursedeleted);
         } else {
             return null;
         }
@@ -129,6 +133,32 @@ class process_manager {
     public static function count_processes_by_workflow($workflowid) {
         global $DB;
         return $DB->count_records('tool_lifecycle_process', ['workflowid' => $workflowid]);
+    }
+
+    /**
+     * Counts the processes for the given workflow created today.
+     * @param int $workflowid id of the workflow
+     * @return int number of processes.
+     * @throws \dml_exception
+     */
+    public static function count_processes_by_workflow_created_today($workflowid) {
+        global $DB;
+
+        $todaystart = date('Y-m-d 00:00:00', );
+        $todayend   = date('Y-m-d 00:00:00', strtotime('+1 day'));
+        $tstart = strtotime($todaystart);
+        $tend   = strtotime($todayend);
+
+        $sql = "SELECT count(1) FROM {tool_lifecycle_process}
+                WHERE workflowid = :workflowid
+                AND timestampcreated >= :tstart
+                AND timestampcreated < :tend";
+
+        return $DB->count_records_sql($sql, [
+            'workflowid' => $workflowid,
+            'tstart' => $tstart,
+            'tend' => $tend,
+        ]);
     }
 
     /**
@@ -177,24 +207,30 @@ class process_manager {
     /**
      * Proceeds the process to the next step.
      * @param process $process
-     * @return true, if followed by another step; otherwise false.
+     * @return mixed true if followed by another step; otherwise false.
      * @throws \coding_exception
      * @throws \dml_exception
      */
     public static function proceed_process(&$process) {
         global $DB;
-        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
-        process_proceeded::event_from_process($process)->trigger();
-        if ($step) {
-            $process->stepindex++;
-            $process->waiting = false;
-            $process->timestepchanged = time();
-            $DB->update_record('tool_lifecycle_process', $process);
-            return true;
-        } else {
-            unset($process->context);
-            self::remove_process($process);
-            return false;
+        try {
+            $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
+            process_proceeded::event_from_process($process)->trigger();
+            if ($step) {
+                $process->stepindex++;
+                $process->waiting = false;
+                $process->timestepchanged = time();
+                $DB->update_record('tool_lifecycle_process', $process);
+                return true;
+            } else {
+                unset($process->context);
+                self::remove_process($process);
+                return false;
+            }
+        } catch (\coding_exception $e) {
+            return $e->getMessage();
+        } catch (\dml_exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -212,31 +248,37 @@ class process_manager {
     /**
      * Currently only removes the current process.
      * @param process $process process the rollback should be triggered for.
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @return mixed true or errormessage
      */
     public static function rollback_process($process) {
         global $DB;
 
-        process_rollback::event_from_process($process)->trigger();
-        if (!$tosortindex = $DB->get_field('tool_lifecycle_step',
-            'rollbacktosortindex', ['workflowid' => $process->workflowid, 'sortindex' => $process->stepindex])) {
-            $tosortindex = 0;
-        }
-        for ($i = $process->stepindex; $i > $tosortindex; $i--) {
-            $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $i);
-            $lib = lib_manager::get_step_lib($step->subpluginname);
-            try {
-                $course = get_course($process->courseid);
-            } catch (\dml_missing_record_exception $e) {
-                // Course no longer exists!
-                break;
+        try {
+            process_rollback::event_from_process($process)->trigger();
+            if (!$tosortindex = $DB->get_field('tool_lifecycle_step',
+                'rollbacktosortindex', ['workflowid' => $process->workflowid, 'sortindex' => $process->stepindex])) {
+                $tosortindex = 0;
             }
-            $lib->rollback_course($process->id, $step->id, $course);
+            for ($i = $process->stepindex; $i > $tosortindex; $i--) {
+                $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $i);
+                $lib = lib_manager::get_step_lib($step->subpluginname);
+                try {
+                    $course = get_course($process->courseid);
+                } catch (\dml_missing_record_exception $e) {
+                    // Course no longer exists!
+                    break;
+                }
+                $lib->rollback_course($process->id, $step->id, $course);
+            }
+            if ($tosortindex == 0) {
+                self::remove_process($process);
+            }
+        } catch (\coding_exception $e) {
+            return $e->getMessage();
+        } catch (\dml_exception $e) {
+            return $e->getMessage();
         }
-        if ($tosortindex == 0) {
-            self::remove_process($process);
-        }
+        return true;
     }
 
     /**
@@ -342,46 +384,52 @@ class process_manager {
     /**
      * Return process from process-error-table back into the process board.
      * @param int $processid the processid
-     * @return void
+     * @return mixed a db record object with process fields only or false
      * @throws \dml_exception
      */
     public static function proceed_process_after_error(int $processid) {
-        global $DB;
-
-        $process = $DB->get_record('tool_lifecycle_proc_error', ['id' => $processid]);
-        // Unset process-error-only entries and id.
-        unset($process->id);
-        unset($process->errormessage);
-        unset($process->errortrace);
-        unset($process->errorhash);
-        unset($process->errortimecreated);
-
-        $DB->insert_record('tool_lifecycle_process', $process, false);
-        $DB->delete_records('tool_lifecycle_proc_error', ['id' => $processid]);
+        return self::return_to_processtable_after_error($processid);
     }
 
     /**
-     * Roll back a process from procoss-error-table to process-table while setting the rollback delay
-     * @param int $processid the processid
-     * @return void
+     * Roll back a process from process-error-table to process-table while setting the rollback delay
+     * @param int $processerrorid the processid
+     * @return mixed true or errormessage
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public static function rollback_process_after_error(int $processid) {
+    public static function rollback_process_after_error(int $processerrorid) {
+        $process = self::return_to_processtable_after_error($processerrorid);
+        delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);
+        return self::rollback_process($process);
+    }
+
+    /**
+     * Return to process from process-error-table.
+     * @param int $processerrorid the processid of the process error table
+     * @return mixed a db record object with process fields only or false
+     * @throws \dml_exception
+     */
+    public static function return_to_processtable_after_error(int $processerrorid) {
         global $DB;
 
-        $process = $DB->get_record('tool_lifecycle_proc_error', ['id' => $processid]);
-        // Unset process-error-only entries.
-        unset($process->id);
-        unset($process->errormessage);
-        unset($process->errortrace);
-        unset($process->errorhash);
-        unset($process->errortimecreated);
-
-        $DB->insert_record('tool_lifecycle_process', $process, false);
-        $DB->delete_records('tool_lifecycle_proc_error', ['id' => $process->id]);
-
-        delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, true, $process->workflowid);
-        self::rollback_process($process);
+        if ($process = $DB->get_record('tool_lifecycle_proc_error', ['id' => $processerrorid])) {
+            // Unset process-error-only field values and id.
+            unset($process->id);
+            unset($process->errormessage);
+            unset($process->errortrace);
+            unset($process->errorhash);
+            unset($process->errortimecreated);
+            // In case something went wrong before during deleting an error so that the process is already active again.
+            if (!$processid = $DB->get_field('tool_lifecycle_process', 'id',
+                ['courseid' => $process->courseid, 'workflowid' => $process->workflowid])) {
+                $process->id = $DB->insert_record('tool_lifecycle_process', $process, true);
+            } else {
+                $process->id = $processid;
+            }
+            $DB->delete_records('tool_lifecycle_proc_error', ['id' => $processerrorid]);
+            $process = self::get_process_by_id($process->id);
+        }
+        return $process;
     }
 }

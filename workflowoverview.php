@@ -25,16 +25,14 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+require_once(__DIR__ . '/locallib.php');
 
 require_admin();
 
 define('PAGESIZE', 10);
 
 use core\output\notification;
-use core\output\single_button;
-use core\task\manager;
 use tool_lifecycle\action;
-use tool_lifecycle\event\process_rollback;
 use tool_lifecycle\event\process_triggered;
 use tool_lifecycle\local\manager\delayed_courses_manager;
 use tool_lifecycle\local\manager\lib_manager;
@@ -44,6 +42,8 @@ use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\local\response\trigger_response;
+use tool_lifecycle\local\table\course_backups_deletionlog_table;
+use tool_lifecycle\local\table\courses_in_process_table;
 use tool_lifecycle\local\table\courses_in_step_table;
 use tool_lifecycle\local\table\triggered_courses_table_trigger;
 use tool_lifecycle\local\table\triggered_courses_table_workflow;
@@ -63,10 +63,12 @@ $excluded = optional_param('excluded', null, PARAM_INT);
 $delayed = optional_param('delayed', null, PARAM_INT);
 $processes = optional_param('processes', null, PARAM_INT);
 $used = optional_param('used', null, PARAM_INT);
+$backupdeletionlog = optional_param('backupdeletionlog', 0, PARAM_INT);
 $search = optional_param('search', null, PARAM_RAW);
 $showdetails = optional_param('showdetails', 0, PARAM_INT);
 $showsql = optional_param('showsql', 0, PARAM_INT);
 $showtablesql = optional_param('showtablesql', 0, PARAM_INT);
+
 $debugtriggersql = "";
 $debugtablesql = "";
 if ($showdetails == 0) {
@@ -182,7 +184,7 @@ if ($isactive) {  // Active workflow.
     if ($isdeactivated) { // Deactivated workflow.
         $tabid = 'deactivatedworkflows';
         $tabparams->deactivatedlink = true;
-        $classdetails = "bg-dark text-white";
+        $classdetails = "bg-secondary";
     } else { // Draft.
         $tabid = 'workflowdrafts';
         $tabparams->draftlink = true;
@@ -192,8 +194,33 @@ if ($isactive) {  // Active workflow.
 $tabrow = tabs::get_tabrow($tabparams);
 $renderer->tabs($tabrow, $tabid);
 
+lifecycle_select_change_workflow($workflowid);
+
 $steps = step_manager::get_step_instances($workflow->id);
 $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+foreach ($triggers as $trigger) {
+    // Check if plugin dependencies are met.
+    if ($trigger->subpluginname == 'customfieldsemester') {
+        if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+            echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
+                get_string('customfieldsemesternotinstalled',
+                'tool_lifecycle', "customfieldsemester"), 'error');
+            echo $renderer->footer();
+            die();
+        }
+    } else if ($trigger->subpluginname == 'semindependent') {
+        $nosemester = settings_manager::get_settings($trigger->id, settings_type::TRIGGER)['nosemester'] ?? false;
+        if ($nosemester) {
+            if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
+                    get_string('customfieldsemesternotinstalled',
+                    'tool_lifecycle', "semindependent"), 'error');
+                echo $renderer->footer();
+                die();
+            }
+        }
+    }
+}
 
 $str = [
     'edit' => get_string('edit'),
@@ -202,50 +229,21 @@ $str = [
     'move_down' => get_string('move_down', 'tool_lifecycle'),
 ];
 
-$nextrun = false;
-$coursestriggered = [];
-$coursesdelayed = [];
+$coursestriggered = 0;
+$coursesdelayed = 0;
+$hasotherwf = 0;
 $displaytotaltriggered = false;
 if ($showdetails) {
     /*
-     * Preview of what courses would be triggered if the course selection would run now.
-     * For each trigger the amount of the select statement without the courses already in this process will be count.
-     * The amount of courses already in the process is shown as well.
+     * Preview of what courses would be triggered if the course selection ran now.
+     * For each trigger, the amount of the select statement without the courses already in this process will be counted.
+     * The number of courses already in the process is shown as well.
     */
     $amounts = (new processor())->get_count_of_courses_to_trigger_for_workflow($workflow);
-    $coursestriggered = $amounts['all']->coursestriggered;
-    $coursesdelayed = $amounts['all']->delayedcourses;
-    $nextrun = $amounts['all']->nextrun == 0 ? false : $amounts['all']->nextrun;
+    $coursestriggered = $amounts['all']->coursestriggered ?? 0;
+    $coursesdelayed = $amounts['all']->delayedcourses ?? 0;
+    $hasotherwf = $amounts['all']->hasotherwf ?? 0;
     $displaytotaltriggered = !empty($triggers);
-}
-
-$task = manager::get_scheduled_task('tool_lifecycle\task\lifecycle_task');
-$lastrun = $task->get_last_run_time();
-$nextrunt = $task->get_next_run_time();
-$nextrunout = "";
-if (!$task->is_component_enabled() && !$task->get_run_if_component_disabled()) {
-    $nextrunt = get_string('plugindisabled', 'tool_task');
-} else if ($task->get_disabled()) {
-    $nextrunt = get_string('taskdisabled', 'tool_task');
-} else if (is_numeric($nextrunt) && $nextrunt < time()) {
-    $nextrunt = get_string('asap', 'tool_task');
-}
-if (is_numeric($nextrunt) && is_numeric($nextrun)) { // Task nextrun and trigger nextrun are valid times: take the minimum.
-    $nextrunout = min($nextrunt, $nextrun);
-} else if (!is_numeric($nextrunt) && is_numeric($nextrun)) { // Only trigger nextrun is valid time.
-    $nextrun = $nextrun;
-} else if (is_numeric($nextrunt)) { // Only task next run is valid time.
-    $nextrunout = $nextrunt;
-} else { // There is no valid next run time. Print the task message.
-    $nextrunout = $nextrunt;
-}
-if (is_numeric($nextrunout)) {
-    if ($nextrunout) {
-        $nextrunout = userdate($nextrunout, get_string('strftimedatetimeshort', 'langconfig'),
-            core_date::get_user_timezone($USER));
-    } else {
-        $nextrunout = get_string('statusunknown');
-    }
 }
 
 $nomanualtriggerinvolved = true;
@@ -253,9 +251,8 @@ $displaytriggers = [];
 $displaytimetriggers = [];
 foreach ($triggers as $trigger) {
     // The array from the DB Function uses ids as keys.
-    // Mustache cannot handle arrays which have other keys therefore a new array is build.
-    // FUTURE: Nice to have Icon for each subplugin.
-    $trigger = (object)(array) $trigger; // Cast to normal object to be able to set dynamic properties.
+    // Mustache cannot handle arrays which have other keys. Therefore, a new array is build.
+    $trigger = (object)(array) $trigger; // Cast to a normal object to be able to set dynamic properties.
     $editlink = new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::TRIGGER, 'elementid' => $trigger->id]);
     $trigger->editlink = $editlink->out();
     $actionmenu = new action_menu([
@@ -273,6 +270,7 @@ foreach ($triggers as $trigger) {
     $trigger->actionmenu = $OUTPUT->render($actionmenu);
     $response = null;
     $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+    $trigger->pix = $OUTPUT->render(new pix_icon($lib->get_icon(), $trigger->subpluginname));
     if ($trigger->automatic = !$lib->is_manual_trigger()) {
         // We need the response type only.
         $response = $lib->default_response();
@@ -283,7 +281,6 @@ foreach ($triggers as $trigger) {
             $sqlresult = trigger_manager::get_trigger_sqlresult($trigger);
             if ($sqlresult == "false") {
                 $trigger->classfires = "border-danger";
-                $trigger->additionalinfo = $amounts[$trigger->sortindex]->additionalinfo ?? "-";
             } else {
                 $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
                 $trigger->exclude = $settings['exclude'] ?? false;
@@ -318,11 +315,6 @@ foreach ($triggers as $trigger) {
     }
     if ($response == trigger_response::triggertime()) {
         $displaytimetriggers[] = $trigger;
-        if (isset($amounts[$trigger->sortindex]->lastrun) && $amounts[$trigger->sortindex]->lastrun) {
-            $lastrun = $amounts[$trigger->sortindex]->lastrun;
-        } else {
-            $lastrun = 0;
-        }
     } else {
         $displaytriggers[] = $trigger;
     }
@@ -336,6 +328,13 @@ foreach ($steps as $step) {
     $step->numberofcourses = $ncourses;
     if ($step->id == $stepid) {
         $step->selected = true;
+    }
+    if ($step->subpluginname == 'deletebackup') {
+        $sql = "SELECT SUM(files) as filesdeleted FROM {tool_lifecycle_deletebackup_log} WHERE stepid = :stepid";
+        $step->backupdeletions = $DB->get_field_sql($sql, ['stepid' => $step->id]);
+        if ($step->id == $backupdeletionlog) {
+            $step->selected = true;
+        }
     }
     $editlink = new moodle_url(urls::EDIT_ELEMENT, ['type' => settings_type::STEP, 'elementid' => $step->id]);
     $step->editlink = $editlink->out();
@@ -399,18 +398,16 @@ if ($stepid) { // Display courses table with courses of this step.
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
-        if ($table->otherwf > 0 || $table->delayed > 0) {
-            $a = new \stdClass();
-            $a->otherwf = $table->otherwf;
-            $a->delayed = $table->delayed;
-            $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-                get_string('courses')." ".get_string('numbersotherwfordelayed', 'tool_lifecycle', $a), 'm-3');
-        } else {
-            $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-                get_string('courses'), 'm-3');
-        }
         $hiddenfieldssearch[] = ['name' => 'trigger', 'value' => $triggerid];
         $tablecoursesamount = $amounts[$trigger->sortindex]->triggered;
+        $out .= \html_writer::div(\html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
+                [
+                    "wf" => $workflowid,
+                    "showsql" => "1",
+                    "showtablesql" => "1",
+                    "showdetails" => "1",
+                ]),
+                "&nbsp;&nbsp;&nbsp;", ["class" => "text-muted fs-6 text-decoration-none"]));
     }
 } else if ($excluded) { // Display courses table with excluded courses of this trigger.
     $trigger = trigger_manager::get_instance($excluded);
@@ -420,69 +417,40 @@ if ($stepid) { // Display courses table with courses of this step.
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
-        if ($table->otherwf > 0 || $table->delayed > 0) {
-            $a = new \stdClass();
-            $a->otherwf = $table->otherwf;
-            $a->delayed = $table->delayed;
-            $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-                get_string('courses')." ".get_string('numbersotherwfordelayed', 'tool_lifecycle', $a), 'm-3');
-        } else {
-            $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-                get_string('courses'), 'm-3');
-        }
         $hiddenfieldssearch[] = ['name' => 'excluded', 'value' => $excluded];
         $tablecoursesamount = $amounts[$trigger->sortindex]->excluded;
     }
 } else if ($triggered) { // Display courses table with triggered courses of this workflow.
-    if ($coursestriggered ?? false) {
-        $table = new triggered_courses_table_workflow($coursestriggered, $workflow, 'triggeredworkflow', $search);
+    $triggeredcourses = $coursestriggered;
+    $triggeredcourses += $coursesdelayed;
+    $triggeredcourses += $hasotherwf;
+    if ($triggeredcourses) {
+        $table = new triggered_courses_table_workflow($workflow, $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
-        $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-            get_string('courses'), 'm-3');
         $hiddenfieldssearch[] = ['name' => 'triggered', 'value' => $triggered];
-        $tablecoursesamount = $coursestriggered;
-    }
-} else if ($delayed) { // Display courses table with courses delayed for this workflow.
-    if ($coursesdelayed ?? false) {
-        $table = new triggered_courses_table_workflow($coursesdelayed, $workflow, 'delayed', $search);
-        ob_start();
-        $table->out(PAGESIZE, false);
-        $out = ob_get_contents();
-        ob_end_clean();
-        $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-            get_string('courses'), 'm-3');
-        $hiddenfieldssearch[] = ['name' => 'delayed', 'value' => $delayed];
-        $tablecoursesamount = $coursesdelayed;
-    }
-} else if ($used) { // Display courses triggered by this workflow but involved in other processes already.
-    if ($amounts['all']->hasotherwf ?? null) {
-        $table = new triggered_courses_table_workflow($amounts['all']->hasotherwf, $workflow, 'used', $search);
-        ob_start();
-        $table->out(PAGESIZE, false);
-        $out = ob_get_contents();
-        ob_end_clean();
-        $out .= \html_writer::div(get_string('total').": ".$table->tablerows." ".
-            get_string('courses'), 'm-3');
-        $hiddenfieldssearch[] = ['name' => 'used', 'value' => $used];
-        $tablecoursesamount = $amounts['all']->used;
+        $tablecoursesamount = $triggeredcourses;
     }
 } else if ($processes) { // Display courses table with courses in a process or in state process error for this workflow.
     $coursesinprocess = process_manager::count_processes_by_workflow($workflow->id) +
         process_manager::count_process_errors_by_workflow($workflow->id);
     if ($coursesinprocess) {
-        $table = new triggered_courses_table_workflow($coursesinprocess, $workflow, 'processes', $search);
+        $table = new courses_in_process_table($workflow, $search);
         ob_start();
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
-        $out .= \html_writer::div(get_string('total').": ".$table->totalrows." ".
-            get_string('courses'), 'm-3');
         $hiddenfieldssearch[] = ['name' => 'processes', 'value' => $processes];
         $tablecoursesamount = $coursesinprocess;
     }
+} else if ($backupdeletionlog) { // Display a step's entries in the backup deletions log.
+        $table = new course_backups_deletionlog_table($backupdeletionlog);
+        ob_start();
+        $table->out(PAGESIZE, false);
+        $out = ob_get_contents();
+        ob_end_clean();
 } else if ($showsql && $debugtriggersql) { // Display the trigger sql statement stored in session.
     $out = \html_writer::div(
         str_replace("}", "", str_replace("{", $CFG->prefix, $debugtriggersql)),
@@ -549,12 +517,14 @@ if ($isactive) {
     }
 }
 
-if (!($isactive || $isdeactivated)) {
-    $lastrun = 0;
-}
+list($lastrun, $nextrun) = workflow_manager::get_lastrun_nextrun($workflow->id);
+
 $data = [
     'editsettingslink' => (new moodle_url(urls::EDIT_WORKFLOW, ['wf' => $workflow->id]))->out(false),
     'title' => $workflow->title,
+    'triggeredpercron' => $workflow->triggeredpercron,
+    'triggeredperday' => $workflow->triggeredperday,
+    'triggeredper' => $workflow->triggeredpercron || $workflow->triggeredperday,
     'rollbackdelay' => format_time($workflow->rollbackdelay),
     'finishdelay' => format_time($workflow->finishdelay),
     'delayglobally' => $workflow->delayforallworkflows,
@@ -576,17 +546,16 @@ $data = [
     'showdetailslink' => $showdetailslink,
     'showdetailsicon' => $showdetails == 0,
     'isactive' => $isactive || $isdeactivated,
-    'nextrun' => $nextrunout,
-    'lastrun' => $lastrun != 0 ?
-        userdate($lastrun, get_string('strftimedatetimeshort', 'langconfig'),
-            core_date::get_user_timezone($USER)) : '--',
+    'nextrun' => $nextrun,
+    'lastrun' => $lastrun,
     'nomanualtriggerinvolved' => $nomanualtriggerinvolved,
     'disableworkflowlink' => $disableworkflowlink,
     'abortdisableworkflowlink' => $abortdisableworkflowlink,
     'workflowprocesseslink'  => $workflowprocesseslink,
     'runnable' => $isactive,
-    'runlink' => new \moodle_url(urls::RUN),
+    'runlink' => new \moodle_url(urls::RUN, ['wf' => $workflow->id]),
 ];
+
 if ($showdetails) {
     // The triggers total box.
     $data['displaytotaltriggered'] = $displaytotaltriggered;
@@ -596,13 +565,13 @@ if ($showdetails) {
     $data['coursestriggeredcount'] = $triggered;
     // Count delayed total, displayed in mustache only if there are any.
     $delayed = $amounts['all']->delayedcourses ?? 0;  // Matters only if delayed courses are not included in workflow.
-    $delayedlink = new moodle_url($popuplink, ['delayed' => $workflowid]);
+    $delayedlink = new moodle_url($popuplink, ['triggered' => $workflowid]);
     $delayedhtml = $delayed > 0 ? html_writer::link($delayedlink, $delayed,
         ['class' => 'btn btn-outline-secondary mt-1']) : 0;
     $data['coursesdelayed'] = $delayedhtml;
     // Count in other processes used courses total, displayed in mustache only if there are any.
     $used = $amounts['all']->hasotherwf ?? 0;
-    $usedlink = new moodle_url($popuplink, ['used' => "1"]);
+    $usedlink = new moodle_url($popuplink, ['triggered' => "1"]);
     $usedhtml = $used > 0 ? html_writer::link($usedlink, $used,
         ['class' => 'btn btn-outline-secondary mt-1']) : 0;
     $data['coursesused'] = $usedhtml;
@@ -675,15 +644,18 @@ if (workflow_manager::is_editable($workflow->id)) {
     $data['newworkflow'] = $newworkflow;
     $data['activatebutton'] = "";
 } else if ($isdeactivated) {
-    $activate = $OUTPUT->single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
+    $activate = new \single_button(new \moodle_url(urls::ACTIVE_WORKFLOWS,
         [
             'action' => action::WORKFLOW_ACTIVATE,
             'sesskey' => sesskey(),
             'workflowid' => $workflow->id,
             'backtooverview' => '1',
         ]),
-        get_string('activateworkflow', 'tool_lifecycle'));
-    $data['activatebutton'] = $activate;
+        get_string('activateworkflow', 'tool_lifecycle'),
+        'post',
+        single_button::BUTTON_PRIMARY
+    );
+    $data['activatebutton'] = $OUTPUT->render($activate);
 }
 
 echo $OUTPUT->render_from_template('tool_lifecycle/workflowoverview', $data);

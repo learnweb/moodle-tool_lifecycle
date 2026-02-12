@@ -42,8 +42,9 @@ $PAGE->set_context($syscontext);
 // Action handling (delete, bulk-delete).
 $action = optional_param('action', null, PARAM_ALPHANUMEXT);
 if ($action) {
-    global $DB;
+
     require_sesskey();
+
     if ($action == 'delete') {
         $cid = required_param('cid', PARAM_INT);
         $workflow = optional_param('workflow', null, PARAM_ALPHANUM);
@@ -174,12 +175,16 @@ $table->define_baseurl($PAGE->url);
 
 if ($delayedcourses > 0) {
     $mform->display();
-    $params = ['sesskey' => sesskey(), 'action' => 'bulk-delete'];
+    $params = [
+        'sesskey' => sesskey(),
+        'action' => 'bulk-delete',
+    ];
     if ($data) {
         $params = array_merge($params, (array) $data);
     }
-    $button = new single_button(new moodle_url('confirmation.php', $params),
+    $button = new single_button(new moodle_url($PAGE->url, $params),
         get_string('delete_all_delays', 'tool_lifecycle'));
+    $button->add_confirm_action(get_string('delete_all_confirmation_text', 'tool_lifecycle'));
     echo $OUTPUT->render($button);
     $classnotnull = 'badge badge-primary badge-pill ml-1';
     $classnull = 'badge badge-secondary badge-pill ml-1';

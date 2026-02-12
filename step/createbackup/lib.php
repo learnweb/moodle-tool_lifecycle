@@ -68,7 +68,7 @@ class createbackup extends libbase {
                 $instanceid, settings_type::STEP)['maximumbackupspercron']) {
             return step_response::waiting(); // Wait with further backups til the next cron run.
         }
-        if (backup_manager::create_course_backup($course->id)) {
+        if (backup_manager::create_course_backup($course->id, $instanceid)) {
             self::$numberofbackups++;
             return step_response::proceed();
         }
@@ -118,5 +118,13 @@ class createbackup extends libbase {
             get_string('maximumbackupspercron', 'lifecyclestep_createbackup'));
         $mform->setType($elementname, PARAM_INT);
         $mform->setDefault($elementname, 10);
+    }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'e/save';
     }
 }

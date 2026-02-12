@@ -61,6 +61,13 @@
             {{^numberofcourses}}
                 {{#str}} courses {{/str}}: {{numberofcourses}}
             {{/numberofcourses}}
+            {{#backupdeletions}}
+                <a href="{{{popuplink}}}&backupdeletionlog={{id}}&showdetails={{showdetails}}" data-toggle="tooltip" title="{{#str}} backupsdeleted, tool_lifecycle, {{backupdeletions}} {{/str}}">
+                <span class="btn btn-outline-secondary">
+                    {{backupdeletions}}
+                </span>
+                </a>
+            {{/backupdeletions}}
         </div>
     </div>
 {{/steps}}

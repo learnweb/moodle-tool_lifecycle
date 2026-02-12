@@ -183,6 +183,12 @@ class tabs {
             get_string('process_errors_header', 'tool_lifecycle').$lcerrors,
             get_string('process_errors_header_title', 'tool_lifecycle'));
 
+        // Showcase.
+        $targeturl = new \moodle_url('/admin/tool/lifecycle/workflowshowcase.php');
+        $tabrow[] = new \tabobject('showcase', $targeturl,
+            get_string('showcase', 'tool_lifecycle'),
+            get_string('showcasedesc', 'tool_lifecycle'));
+
         return $tabrow;
 
     }

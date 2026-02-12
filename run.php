@@ -32,6 +32,8 @@ require_once($CFG->libdir . '/adminlib.php');
 
 require_admin();
 
+$workflowid = optional_param('wf', null, PARAM_INT);
+
 $syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url(urls::RUN));
 $PAGE->set_context($syscontext);
@@ -54,4 +56,5 @@ $task->execute();
 
 echo \html_writer::end_div();
 
+echo \html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflowid]), get_string('back'));
 echo $renderer->footer();

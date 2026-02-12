@@ -183,22 +183,22 @@ class process_errors_table extends \table_sql {
     /**
      * Generate the select column.
      *
-     * @param \stdClass $data
+     * @param \stdClass $row
      * @return string
      * @throws \coding_exception
      * @throws coding_exception
      */
-    public function col_select($data) {
+    public function col_select($row) {
         global $OUTPUT;
 
-        if ($data->workflowid && $data->stepid) {
+        if ($row->workflowid && $row->stepid) {
             $checkbox = new \core\output\checkbox_toggleall('procerrors-table', false, [
                 'classes' => 'usercheckbox m-1',
-                'id' => 'procerror' . $data->id,
+                'id' => 'procerror' . $row->errorid,
                 'name' => 'procerror-select',
-                'value' => $data->id,
+                'value' => $row->errorid,
                 'checked' => false,
-                'label' => get_string('selectitem', 'moodle', $data->id),
+                'label' => get_string('selectitem', 'moodle', $row->errorid),
                 'labelclasses' => 'accesshide',
             ]);
 

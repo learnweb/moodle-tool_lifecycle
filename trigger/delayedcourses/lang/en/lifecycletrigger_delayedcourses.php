@@ -15,14 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for delayed course trigger
+ * Lang strings for delayed courses trigger
  *
  * @package lifecycletrigger_delayedcourses
+ * @copyright  2025 Thomas Niedermaier University of Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['delay'] = 'This module will exclude all courses, which were delayed by user interaction';
-$string['plugindescription'] = 'Exludes all courses which were delayed by user interaction.';
-$string['pluginname'] = 'Exclude delayed courses trigger';
+$string['includegenerallydelayed'] = 'Include generally delayed courses';
+$string['includegenerallydelayed_help'] = 'Include not only courses delayed for workflow but also generally delayed courses.';
+$string['plugindescription'] = 'Includes courses delayed for workflow and optionally generally delayed courses.';
+$string['pluginname'] = 'Include delayed courses trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';

@@ -63,11 +63,12 @@ class active_automatic_workflows_table extends active_workflows_table {
      * Initialize the table.
      */
     public function init() {
-        $this->define_columns(['title', 'timeactive', 'trigger', 'processes', 'sortindex', 'tools']);
+        $this->define_columns(['title', 'timeactive', 'trigger', 'step', 'processes', 'sortindex', 'tools']);
         $this->define_headers([
             get_string('workflow_title', 'tool_lifecycle'),
             get_string('workflow_timeactive', 'tool_lifecycle'),
             get_string('trigger', 'tool_lifecycle'),
+            get_string('step', 'tool_lifecycle'),
             get_string('workflow_processes', 'tool_lifecycle'),
             get_string('workflow_sortindex', 'tool_lifecycle'),
             get_string('workflow_tools', 'tool_lifecycle'),

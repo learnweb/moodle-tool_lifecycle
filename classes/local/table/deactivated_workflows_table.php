@@ -63,10 +63,12 @@ class deactivated_workflows_table extends workflow_table {
      * Initialize the table.
      */
     public function init() {
-        $this->define_columns(['title', 'timedeactive', 'processes', 'tools']);
+        $this->define_columns(['title', 'timedeactive', 'trigger', 'step', 'processes', 'tools']);
         $this->define_headers([
             get_string('workflow_title', 'tool_lifecycle'),
             get_string('workflow_timedeactive', 'tool_lifecycle'),
+            get_string('trigger', 'tool_lifecycle'),
+            get_string('step', 'tool_lifecycle'),
             get_string('workflow_processes', 'tool_lifecycle'),
             get_string('workflow_tools', 'tool_lifecycle'),
         ]);
@@ -105,6 +107,11 @@ class deactivated_workflows_table extends workflow_table {
                 ['title' => $alt]
             );
         }
+
+        $action = action::WORKFLOW_BACKUP;
+        $alt = get_string('downloadworkflow', 'tool_lifecycle');
+        $icon = 't/backup';
+        $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
         // The check for is_deprecated is temporary to make deprecated sitecourse and coursedelayed trigger workflows removable.
         if (workflow_manager::is_removable($row->id)  || workflow_manager::is_deprecated($row->id)) {

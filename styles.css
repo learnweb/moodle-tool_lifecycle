@@ -156,3 +156,32 @@ span.tool_lifecycle-hint {
 #lifecycle-workflow-details .wf-wrapper a:hover {
     text-decoration: none;
 }
+
+#page-admin-setting-tool_lifecycle div.singlebutton {
+    margin-bottom: 0.5rem;
+}
+
+#page-admin-setting-tool_lifecycle #id_title,
+#page-admin-setting-tool_lifecycle #id_displaytitle,
+#page-admin-setting-tool_lifecycle #id_description {
+    width: 40rem;
+}
+
+#page-admin-setting-tool_lifecycle .card-flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#page-admin-setting-tool_lifecycle .card-flex-container > .card {
+    width: 22rem;
+    flex: 0 0 22rem;
+}
+
+#page-admin-setting-tool_lifecycle .card-text {
+    height: 12rem;
+}
+
+#page-admin-setting-tool_lifecycle .card .btn-primary .icon {
+    margin-right: 0.2rem;
+}

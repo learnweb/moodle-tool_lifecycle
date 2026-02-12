@@ -41,15 +41,20 @@ class backup_manager {
     /**
      * Creates a course backup in a specific life cycle backup folder
      * @param int $courseid id of the course the backup should be created for.
+     * @param int $stepid id of the step instance
      * @return bool tells if the backup was completed successfully.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
      */
-    public static function create_course_backup($courseid) {
+    public static function create_course_backup($courseid, $stepid) {
         global $CFG, $DB;
         $course = get_course($courseid);
         $record = new \stdClass();
         $record->courseid = $courseid;
         $record->fullname = $course->fullname;
         $record->shortname = $course->shortname;
+        $record->step = $stepid;
         $recordid = $DB->insert_record('tool_lifecycle_backups', $record, true);
         $record->id = $recordid;
 
@@ -132,5 +137,33 @@ class backup_manager {
         );
         redirect($restoreurl);
 
+    }
+
+    /**
+     * Deletes a lifecycle course backup
+     * @param int $backupid id of the course backup should be created to delete.
+     * @return bool tells if the deletion was completed successfully.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     */
+    public static function delete_course_backup($backupid) {
+        global $DB;
+
+        // Get the filename.
+        $filename = $DB->get_field('tool_lifecycle_backups', 'backupfile', ['id' => $backupid]);
+
+        // Path of backup folder.
+        $path = get_config('tool_lifecycle', 'backup_path');
+
+        $archivefile = $path . DIRECTORY_SEPARATOR . $filename;
+
+        if (file_exists($archivefile)) {
+            unlink($archivefile);
+        }
+
+        $DB->delete_records('tool_lifecycle_backups', ['id' => $backupid]);
+
+        return true;
     }
 }

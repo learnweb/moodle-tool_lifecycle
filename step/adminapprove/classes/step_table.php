@@ -24,6 +24,12 @@
 
 namespace lifecyclestep_adminapprove;
 
+use core\output\single_button;
+use moodle_url;
+use tool_lifecycle\local\manager\settings_manager;
+use tool_lifecycle\settings_type;
+use tool_lifecycle\urls;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -43,11 +49,15 @@ class step_table extends \table_sql {
         $this->define_baseurl("/admin/tool/lifecycle/step/adminapprove/index.php");
         $this->define_columns(['stepname', 'workflowname', 'courses']);
         $this->define_headers(
-            [get_string('step', 'tool_lifecycle'), get_string('workflow', 'lifecyclestep_adminapprove'),
-                get_string('amount_courses', 'lifecyclestep_adminapprove')]);
+            [get_string('step', 'tool_lifecycle'),
+                get_string('workflow', 'lifecyclestep_adminapprove'),
+                get_string('amount_courses', 'lifecyclestep_adminapprove'),
+            ]
+        );
         $this->set_attribute('id', 'adminapprove-steptable');
         $this->sortable(false);
-        $fields = 's.id as id, s.instancename as stepname, w.title as workflowname, b.courses as courses';
+        $fields = 's.id as id, s.instancename as stepname, w.title as workflowname, b.courses as courses,
+        b.workflowid as wfid, b.stepindex as stepindex';
         $from = '( ' .
             'SELECT p.workflowid, p.stepindex, COUNT(1) as courses FROM {lifecyclestep_adminapprove} a ' .
             'JOIN {tool_lifecycle_process} p ON p.id = a.processid ' .
@@ -65,8 +75,20 @@ class step_table extends \table_sql {
      * @return string
      */
     public function col_stepname($row) {
+
         return '<div data-stepid="' . $row->id . '" hidden></div> <a href="approvestep.php?stepid='. $row->id .'">'
                 . $row->stepname . '</a>';
+    }
+
+    /**
+     * Show the wokflowname.
+     * @param object $row
+     * @return string
+     */
+    public function col_workflowname($row) {
+        $url = new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $row->wfid]);
+        $link = \html_writer::link($url, $row->workflowname);
+        return $link;
     }
 
     /**

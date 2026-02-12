@@ -91,7 +91,7 @@
             {{! Add trigger and add step selection fields. }}
             {{>tool_lifecycle/overview_addinstance}}
             {{! If deactivated workflow display activate button. }}
-            {{{activatebutton}}}
+            <span class="d-inline-block text-end w-100 mr-2">{{{activatebutton}}}</span>
         </div>
 
         {{#counttriggers}}
@@ -163,12 +163,6 @@
                 <br>
                 <span class="text-muted">{{#str}} lastrun, tool_lifecycle, {{lastrun}} {{/str}}</span>
             </div>
-            {{/nomanualtriggerinvolved}}
-            {{^nomanualtriggerinvolved}}
-                <div class="mx-2">
-                    {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <a href="#" data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></a>
-                </div>
-            {{/nomanualtriggerinvolved}}
             {{#runnable}}
                 <div class="mb-2">
                     <a href="{{{runlink}}}">
@@ -178,6 +172,26 @@
                     </a>
                 </div>
             {{/runnable}}
+            {{#triggeredper}}
+                <hr>
+                {{#triggeredpercron}}
+                    <div class="mb-2 mx-2 w-100 text-start">
+                        {{#str}} triggeredpercron_overview, tool_lifecycle, {{triggeredpercron}} {{/str}}
+                    </div>
+                {{/triggeredpercron}}
+                {{#triggeredperday}}
+                    <div class="mb-2 mx-2 w-100 text-start">
+                        {{#str}} triggeredperday_overview, tool_lifecycle, {{triggeredperday}} {{/str}}
+                    </div>
+                {{/triggeredperday}}
+                <hr>
+            {{/triggeredper}}
+            {{/nomanualtriggerinvolved}}
+            {{^nomanualtriggerinvolved}}
+                <div class="mx-2">
+                    {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <a href="#" data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></a>
+                </div>
+            {{/nomanualtriggerinvolved}}
 
             {{#counttimetriggers}}
                 <div class="workflow wf-trigger-wrapper">

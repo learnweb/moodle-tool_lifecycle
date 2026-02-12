@@ -23,6 +23,8 @@
  */
 namespace tool_lifecycle\local\form;
 
+use DateTime;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
@@ -42,6 +44,12 @@ class form_courses_filter extends \moodleform {
     public function definition() {
         $mform = $this->_form;
 
+        // Keep this flag in the user interaction tables.
+        if ($bulkedit = $this->_customdata['bulkedit'] ?? false) {
+            $mform->addElement('hidden', 'bulkedit', $bulkedit);
+            $mform->setType('bulkedit', PARAM_INT);
+        }
+
         $mform->addElement('text', 'courseid', get_string('courseid', 'tool_lifecycle'));
         $mform->setType('courseid', PARAM_ALPHANUM);
         $mform->addRule('courseid', null, 'numeric', null, 'client');
@@ -51,6 +59,15 @@ class form_courses_filter extends \moodleform {
 
         $mform->addElement('text', 'fullname', get_string('fullname'));
         $mform->setType('fullname', PARAM_TEXT);
+
+        // Keep this flag in the user interaction tables.
+        if ($this->_customdata['backups'] ?? false) {
+            $mform->addElement('date_time_selector', 'deletedate', get_string('deletedate', 'tool_lifecycle'));
+            $mform->addHelpButton('deletedate', 'deletedate', 'tool_lifecycle');
+            $date = (new DateTime())->setTimestamp(usergetmidnight(time()));
+            $date->modify('+1 day');
+            $mform->setDefault('startdate', $date->getTimestamp());
+        }
 
         // Edited from $this->add_action_buttons to allow custom cancel text.
         $buttonarray = [];

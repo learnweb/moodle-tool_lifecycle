@@ -39,6 +39,9 @@ final class backup_manager_test extends \advanced_testcase {
     /** @var array $course Instance of the course under test. */
     private $course;
 
+    /** @var array $step Instance of the workflow step under test. */
+    private $step;
+
     /**
      * Setup the testcase.
      */
@@ -54,7 +57,7 @@ final class backup_manager_test extends \advanced_testcase {
      */
     public function test_backup_create(): void {
         global $DB;
-        $result = backup_manager::create_course_backup($this->course->id);
+        $result = backup_manager::create_course_backup($this->course->id, 1);
         $this->assertTrue($result);
         $backups = $DB->get_records('tool_lifecycle_backups');
         $this->assertEquals(1, count($backups));

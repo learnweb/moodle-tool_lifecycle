@@ -41,7 +41,7 @@ require_once($CFG->libdir . '/tablelib.php');
 class interaction_attention_table extends interaction_table {
 
     /**
-     * Constructor for deactivated_workflows_table.
+     * Constructor for user interactions table.
      * @param int $uniqueid Unique id of this table.
      * @param int[] $courseids List of ids for courses that require attention.
      * @param object $filterdata Object of filter criteria
@@ -52,12 +52,12 @@ class interaction_attention_table extends interaction_table {
 
         $fields = "p.id as processid, c.id as courseid, c.fullname as coursefullname, c.shortname as courseshortname, " .
             "c.startdate, cc.name as category, cc.path as categorypath, s.id as stepinstanceid, " .
-            "s.instancename as stepinstancename, s.subpluginname as subpluginname";
+            "s.instancename as stepinstancename, s.subpluginname as subpluginname, wf.title as workflow";
         $from = '{tool_lifecycle_process} p join ' .
             '{course} c on p.courseid = c.id join ' .
-            '{tool_lifecycle_step} s ' .
-            'on p.workflowid = s.workflowid AND p.stepindex = s.sortindex ' .
-            'left join {course_categories} cc on c.category = cc.id';
+            '{tool_lifecycle_step} s on p.workflowid = s.workflowid AND p.stepindex = s.sortindex ' .
+            'left join {course_categories} cc on c.category = cc.id ' .
+            'left join {tool_lifecycle_workflow} wf on wf.id = p.workflowid';
         $ids = implode(',', $courseids);
         $where = ['FALSE'];
         if ($ids) {
@@ -90,18 +90,27 @@ class interaction_attention_table extends interaction_table {
     }
 
     /**
-     * Initialises the columns of the table.
+     * Initializes the columns of the table.
      */
     public function init() {
-        $this->define_columns(['coursefullname', 'startdate', 'category', 'status', 'tools', 'date']);
-        $this->define_headers([
+        global $USER;
+        $columns = ['coursefullname', 'startdate', 'category', 'status', 'tools', 'date'];
+        if (is_siteadmin($USER->id)) {
+            $columns[] = 'workflow';
+        }
+        $this->define_columns($columns);
+        $headers = [
             get_string('coursename', 'tool_lifecycle'),
             get_string('startdate'),
             get_string('category'),
             get_string('status', 'tool_lifecycle'),
             get_string('tools', 'tool_lifecycle'),
             get_string('date', 'tool_lifecycle'),
-        ]);
+        ];
+        if (is_siteadmin($USER->id)) {
+            $headers[] = get_string('workflow', 'tool_lifecycle');
+        }
+        $this->define_headers($headers);
         $this->setup();
     }
 
@@ -113,16 +122,17 @@ class interaction_attention_table extends interaction_table {
      * @throws \invalid_parameter_exception
      */
     public function col_tools($row) {
-        $output = '';
         $step = step_manager::get_step_instance($row->stepinstanceid);
-
         $tools = interaction_manager::get_action_tools($step->subpluginname, $row->processid);
         if (empty($tools)) {
             return get_string('noactiontools', 'tool_lifecycle');
         }
+
+        $output = '';
         foreach ($tools as $tool) {
             $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['alt']);
         }
+
         return $output;
     }
 
@@ -149,7 +159,6 @@ class interaction_attention_table extends interaction_table {
      * @param string $processid URL parameter to include in the link
      * @param int $stepinstanceid ID of the step instance
      * @param string $alt The string description of the link used as the title and alt text
-     *
      * @return string The icon/link
      * @throws \moodle_exception
      */
@@ -166,4 +175,5 @@ class interaction_attention_table extends interaction_table {
         );
         return $OUTPUT->render($button);
     }
+
 }

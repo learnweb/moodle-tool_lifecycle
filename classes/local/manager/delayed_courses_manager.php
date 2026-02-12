@@ -155,12 +155,28 @@ class delayed_courses_manager {
     }
 
     /**
-     * Build where sql for the processor to select only delayed courses.
-     * @return array
+     * Build where SQL for the processor to select delayed courses.
+     * @return array sql-where-clause and params
      */
     public static function get_course_delayed_wheresql() {
         $where = "{course}.id IN (SELECT courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :now)";
         $params = ["now" => time()];
+        return [$where, $params];
+    }
+
+    /**
+     * Build where SQL for the processor to select courses delayed for workflow.
+     * @param int $workflowid workflow ID
+     * @return array sql-where-clause and params
+     */
+    public static function get_course_delayed_all_wheresql($workflowid) {
+        $where = "(";
+        $where .= "c.id IN (SELECT courseid FROM {tool_lifecycle_delayed_workf} WHERE delayeduntil > :now1
+            AND workflowid = :workflowid)";
+        $where .= " OR c.id IN (SELECT courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :now2)";
+        $where .= ")";
+        $now = time();
+        $params = ["now1" => $now, "workflowid" => $workflowid, "now2" => $now];
         return [$where, $params];
     }
 

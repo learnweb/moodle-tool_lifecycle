@@ -18,7 +18,6 @@
  * Trigger test for start date delay trigger.
  *
  * @package    lifecycletrigger_customfielddelay
- * @group      lifecycletrigger
  * @copyright  2020 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,11 +31,12 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/generator/lib.php');
 
+// phpcs:disable moodle.PHPUnit.TestCaseCovers.Missing
+
 /**
  * Trigger test for start date delay trigger.
  *
  * @package    lifecycletrigger_customfielddelay
- * @group      lifecycletrigger
  * @copyright  2020 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -78,7 +78,7 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which have a customfield date in the future are not triggered by this plugin.
-     * @covers \tool_lifecycle\trigger\customfielddelay
+     *
      * @return void
      * @throws \coding_exception
      * @throws \dml_exception
@@ -102,7 +102,7 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if courses, which have a customfield date in the future are not triggered by this plugin.
      * In addition a second custom course field is added to the course, which has a value that could trigger the course.
-     * @covers \tool_lifecycle\trigger\customfielddelay
+     *
      * @return void
      * @throws \coding_exception
      * @throws \dml_exception
@@ -132,7 +132,7 @@ final class trigger_test extends \advanced_testcase {
 
     /**
      * Tests if courses, which are older than the default of 190 days are triggered by this plugin.
-     * @covers \tool_lifecycle\trigger\customfielddelay
+     *
      * @return void
      * @throws \coding_exception
      * @throws \dml_exception

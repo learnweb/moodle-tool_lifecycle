@@ -24,6 +24,8 @@
  */
 
 $string['adminapprovals'] = 'Admin-Bestätigungen';
+$string['allstepapprovalsproceed'] = 'Alle Prozesse im Schritt "{$a->step}" des Workflow "{$a->workflow}" wurden der weiteren Verarbeitung zugewiesen.';
+$string['allstepapprovalsrollback'] = 'Alle Prozesse im Schritt "{$a->step}" des Workflow "{$a->workflow}" wurden zurückgesetzt.';
 $string['amount_courses'] = 'Anzahl wartender Kurse';
 $string['bulkactions'] = 'Massenaktionen';
 $string['courseid'] = 'Kurs-ID';
@@ -40,11 +42,26 @@ $string['plugindescription'] = 'In diesem Schritt wird die Bestätigung eines Sy
 $string['pluginname'] = 'Adminbestätigungs-Schritt';
 $string['proceed'] = 'Fortführen';
 $string['proceedall'] = 'Alle fortführen';
+$string['proceedallbuttonlabel'] = 'Alle fortführen';
+$string['proceedallbuttonlabel_help'] = 'Ändert die Beschriftung des Buttons \'Alle fortführen\'. Wenn das Feld leer bleibt, wird die Standardbeschriftung beibehalten.';
+$string['proceedbuttonlabel'] = 'Beschriftung des Fortsetzen-Buttons';
+$string['proceedbuttonlabel_help'] = 'Ändert die Beschriftung des Fortsetzen-Buttons. Wenn das Feld leer bleibt, wird die Standardbeschriftung beibehalten.';
 $string['proceedselected'] = 'Ausgewählte fortführen';
+$string['proceedselectedbuttonlabel'] = 'Ausgewählte fortführen';
+$string['proceedselectedbuttonlabel_help'] = 'Ändert die Beschriftung des Buttons \'Ausgewählte fortführen\'. Wenn das Feld leer bleibt, wird die Standardbeschriftung beibehalten.';
 $string['rollback'] = 'Zurücksetzten';
-$string['rollbackall'] = 'Alle zurücksetzten';
+$string['rollbackall'] = 'Rollback all';
+$string['rollbackallbuttonlabel'] = 'Alle zurücksetzten';
+$string['rollbackallbuttonlabel_help'] = 'Ändert die Beschriftung des Buttons \'Alle zurücksetzten\'. Wenn das Feld leer bleibt, wird die Standardbeschriftung beibehalten.';
+$string['rollbackbuttonlabel'] = 'Beschriftung des Zurücksetzten-Buttons';
+$string['rollbackbuttonlabel_help'] = 'Ändert die Beschriftung des Zurücksetzten-Buttons. Wenn das Feld leer bleibt, wird die Standardbeschriftung beibehalten.';
 $string['rollbackselected'] = 'Ausgewählte zurücksetzten';
+$string['rollbackselectedbuttonlabel'] = 'Ausgewählte zurücksetzten';
+$string['rollbackselectedbuttonlabel_help'] = 'Ändert die Beschriftung des Buttons \'Ausgewählte zurücksetzten\'. Wenn das Feld leer bleibt, wird die Standardbeschriftung beibehalten.';
+$string['selectedstepapprovalsproceed'] = '{$a} selektierte Bestätigungen wurden fortgeführt.';
+$string['selectedstepapprovalsrollback'] = '{$a} selektierte Bestätigungen wurden zurückgesetzt.';
 $string['statusmessage'] = 'Statusnachricht';
 $string['statusmessage_help'] = 'Statusnachricht, welche dem Lehrer angezeigt wird, wenn ein Prozess eines Kurses den Adminbestätigungs-Schritt bearbeitet.';
+$string['statusmessagedefault'] = 'In Admin-Bestätigungs-Schritt';
 $string['tools'] = 'Aktionen';
 $string['workflow'] = 'Workflow';

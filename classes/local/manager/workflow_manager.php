@@ -23,11 +23,14 @@
  */
 namespace tool_lifecycle\local\manager;
 
+use core\task\manager;
+use core_date;
 use tool_lifecycle\action;
 use tool_lifecycle\local\backup\backup_lifecycle_workflow;
 use tool_lifecycle\local\data\manual_trigger_tool;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\local\entity\workflow;
+use tool_lifecycle\local\response\trigger_response;
 use tool_lifecycle\settings_type;
 
 /**
@@ -223,7 +226,7 @@ class workflow_manager {
 
     /**
      * Returns tools for all active manual workflows.
-     * You need to check the capability based on course and user before diplaying it.
+     * You need to check the capability based on course and user before displaying it.
      *
      * @return manual_trigger_tool[] list of tools, available in the whole system.
      * @throws \coding_exception
@@ -568,4 +571,90 @@ class workflow_manager {
         return false;
     }
 
+    /**
+     * Tries to retrieve the last time and to predict the next time the trigger selection took/takes place.
+     *
+     * @param int $workflowid Id of the workflow.
+     * @return array lastrun, nextrun
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    public static function get_lastrun_nextrun($workflowid) {
+        global $USER;
+
+        $lastrun = 0;
+        $nextrun = false;
+
+        // Fetch and evaluate triggers of type triggertime, if there are any.
+        $triggers = trigger_manager::get_triggers_for_workflow($workflowid);
+        foreach ($triggers as $trigger) {
+            $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
+            $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
+            if (!$lib->is_manual_trigger()) {
+                $response = $lib->default_response();
+                if ($response == trigger_response::triggertime()) {
+                    if ($nextrunt = $lib->get_next_run_time($trigger->id)) {
+                        if ($nextrun) {
+                            $nextrun = min($nextrun, $nextrunt);
+                        } else {
+                            $nextrun = $nextrunt;
+                        }
+                    }
+                    if ($lastrunt = $settings['timelastrun'] ?? 0) {
+                        $lastrun = max($lastrun, $lastrunt);
+                    }
+                }
+            }
+        }
+
+        // If we couldn't get nextrun or lastrun so far, we analyze the lifecycle task.
+        if (!($nextrun && $lastrun)) {
+            $task = manager::get_scheduled_task('tool_lifecycle\task\lifecycle_task');
+            if (!$lastrun) {
+                $lastrun = $task->get_last_run_time();
+                if (is_numeric($lastrun)) {
+                    $lastrun = userdate($lastrun,
+                            get_string('strftimedatetimeshort', 'langconfig'),
+                            core_date::get_user_timezone($USER))." (Task run)";
+                }
+            }
+            if (!$nextrun) {
+                $nextrun = $task->get_next_run_time();
+                if (!$task->is_component_enabled() && !$task->get_run_if_component_disabled()) {
+                    $nextrun = get_string('plugindisabled', 'tool_task');
+                } else if ($task->get_disabled()) {
+                    $nextrun = get_string('taskdisabled', 'tool_task');
+                } else if (!is_numeric($nextrun)) {
+                    $nextrun = get_string('asap', 'tool_task');
+                } else if (is_numeric($nextrun)) {
+                    $nextrun = userdate($nextrun,
+                        get_string('strftimedatetimeshort', 'langconfig'),
+                        core_date::get_user_timezone($USER))." (Task scheduled)";
+                }
+            }
+        }
+
+        // Convert timestamps to human readable dates.
+        if ($lastrun) {
+            // Only display lastrun if workflow has been activated before.
+            $isactive = self::is_active($workflowid);
+            $isdeactivated = self::is_deactivated($workflowid);
+            if (!($isactive || $isdeactivated)) {
+                $lastrun = '--';
+            } else if (is_numeric($lastrun)) {
+                $lastrun = userdate($lastrun,
+                    get_string('strftimedatetimeshort', 'langconfig'),
+                    core_date::get_user_timezone($USER));
+            }
+        }
+        if ($nextrun) {
+            if (is_numeric($nextrun)) {
+                $nextrun = userdate($nextrun,
+                    get_string('strftimedatetimeshort', 'langconfig'),
+                    core_date::get_user_timezone($USER));
+            }
+        }
+
+        return [$lastrun, $nextrun];
+    }
 }

@@ -18,6 +18,7 @@
  * Offers the possibility to add or modify a workflow instance.
  *
  * @package    tool_lifecycle
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,6 +33,7 @@ require_once($CFG->libdir . '/formslib.php');
 /**
  * Provides a form to modify a workflow instance
  * @package    tool_lifecycle
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @copyright  2017 Tobias Reischmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -84,6 +86,13 @@ class form_workflow_instance extends \moodleform {
             $mform->setDefault($elementname, $this->workflow->displaytitle);
         }
 
+        $elementname = 'description';
+        $mform->addElement('textarea', $elementname, get_string('description'));
+        $mform->setType($elementname, PARAM_TEXT);
+        if (isset($this->workflow)) {
+            $mform->setDefault($elementname, $this->workflow->{$elementname});
+        }
+
         $elementname = 'rollbackdelay';
         $mform->addElement('duration', $elementname, get_string('workflow_rollbackdelay', 'tool_lifecycle'));
         $mform->addHelpButton($elementname, 'workflow_rollbackdelay', 'tool_lifecycle');
@@ -112,12 +121,34 @@ class form_workflow_instance extends \moodleform {
             $mform->setDefault($elementname, $this->workflow->delayforallworkflows);
         }
 
+        $mform->addElement('header', 'additional_settings_header', get_string('additionalworkflowsettings', 'tool_lifecycle'));
+        $additionalexpanded = false;
+
+        $elementname = 'triggeredpercron';
+        $mform->addElement('text', $elementname, get_string($elementname, 'tool_lifecycle'), ['size' => '3']);
+        $mform->addHelpButton($elementname, $elementname, 'tool_lifecycle');
+        $mform->setType($elementname, PARAM_INT);
+        if (isset($this->workflow)) {
+            $additionalexpanded |= $this->workflow->triggeredpercron ? true : false;
+            $mform->setDefault($elementname, $this->workflow->triggeredpercron);
+        }
+
+        $elementname = 'triggeredperday';
+        $mform->addElement('text', $elementname, get_string($elementname, 'tool_lifecycle'), ['size' => '3']);
+        $mform->addHelpButton($elementname, $elementname, 'tool_lifecycle');
+        $mform->setType($elementname, PARAM_INT);
+        if (isset($this->workflow)) {
+            $additionalexpanded |= $this->workflow->triggeredperday ? true : false;
+            $mform->setDefault($elementname, $this->workflow->triggeredperday);
+        }
+
         $elementname = 'includedelayedcourses';
         $mform->addElement('advcheckbox', $elementname, get_string($elementname, 'tool_lifecycle'),
             null, null, [0, 1]);
         $mform->addHelpButton($elementname, $elementname, 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
         if (isset($this->workflow)) {
+            $additionalexpanded |= $this->workflow->includedelayedcourses ? true : false;
             $mform->setDefault($elementname, $this->workflow->includedelayedcourses);
         }
 
@@ -127,6 +158,7 @@ class form_workflow_instance extends \moodleform {
         $mform->addHelpButton($elementname, $elementname, 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
         if (isset($this->workflow)) {
+            $additionalexpanded |= $this->workflow->includesitecourse ? true : false;
             $mform->setDefault($elementname, $this->workflow->includesitecourse);
         }
 
@@ -139,12 +171,15 @@ class form_workflow_instance extends \moodleform {
         $mform->addHelpButton('andorgroup', 'andor', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
         if (isset($this->workflow)) {
+            $additionalexpanded |= $this->workflow->andor ? true : false;
             $mform->setDefault("andorgroup[$elementname]", $this->workflow->andor);
         } else {
             $mform->setDefault("andorgroup[$elementname]", '0');
         }
 
         $this->add_action_buttons();
+
+        $mform->setExpanded('additional_settings_header', $additionalexpanded);
     }
 
 }

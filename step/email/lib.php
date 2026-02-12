@@ -22,7 +22,6 @@
  */
 namespace tool_lifecycle\step;
 
-use core_user;
 use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
@@ -118,7 +117,7 @@ class email extends libbase {
                     ['instanceid' => $step->id,
                         'touser' => $user->id, ]);
 
-                $parsedsettings = $this->replace_placeholders($settings, $user, $step->id, $mailentries);
+                $parsedsettings = $this->replace_placeholders($settings, $user, $mailentries);
                 $subject = $parsedsettings['subject'];
                 $content = $parsedsettings['content'];
                 $contenthtml = $parsedsettings['contenthtml'];
@@ -148,14 +147,13 @@ class email extends libbase {
     /**
      * Replaces certain placeholders within the mail template.
      * @param string[] $strings array of mail templates.
-     * @param core_user $user User object.
-     * @param int $stepid Id of the step instance.
+     * @param \stdClass $user User object.
      * @param array[] $mailentries Array consisting of course entries from the database.
      * @return string[] array of mail text.
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    public function replace_placeholders($strings, $user, $stepid, $mailentries) {
+    public function replace_placeholders($strings, $user, $mailentries) {
         global $CFG;
 
         $patterns = [];
@@ -263,5 +261,13 @@ class email extends libbase {
     public function extend_add_instance_form_definition_after_data($mform, $settings) {
         $mform->setDefault('contenthtml',
                 ['text' => isset($settings['contenthtml']) ? $settings['contenthtml'] : '', 'format' => FORMAT_HTML]);
+    }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'i/email';
     }
 }

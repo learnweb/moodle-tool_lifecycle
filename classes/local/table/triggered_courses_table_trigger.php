@@ -59,14 +59,23 @@ class triggered_courses_table_trigger extends \table_sql {
     /** @var int $triggerexclude if a trigger has setting exclude activated */
     private $triggerexclude;
 
-    /** @var int $otherwf to count the number of courses in another workflow */
+    /** @var bool $coursecheckcode use course_check function to trigger courses */
+    private $checkcoursecode = false;
+
+    /** @var int $otherwf to count the number of courses in another workflow on this page*/
     public $otherwf = 0;
 
-    /** @var int $delayed to count the number of courses that are delayed */
+    /** @var int $delayed to count the number of courses that are delayed on this page */
     public $delayed = 0;
 
-    /** @var int $tablerows number of table rows effectively written */
+    /** @var int $triggered to count the number of courses that are triggered on this page */
+    public $triggered = 0;
+
+    /** @var int $tablerows number of table rows effectively written on this page */
     public $tablerows = 0;
+
+    /** @var int $excludedbycheckcourse number of courses excluded by function check_course on this page */
+    public $excludedbycheckcourse = 0;
 
     /**
      * Builds a table of courses.
@@ -132,8 +141,7 @@ class triggered_courses_table_trigger extends \table_sql {
                     LEFT JOIN {tool_lifecycle_process} po ON c.id = po.courseid AND po.workflowid <> $workflow->id
                     LEFT JOIN {tool_lifecycle_proc_error} peo ON c.id = peo.courseid AND peo.workflowid <> $workflow->id
                     LEFT JOIN {tool_lifecycle_delayed} d ON c.id = d.courseid
-                    LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid
-                    AND dw.workflowid = $workflow->id ";
+                    LEFT JOIN {tool_lifecycle_delayed_workf} dw ON c.id = dw.courseid AND dw.workflowid=$workflow->id ";
 
         $where .= " AND p.courseid IS NULL AND pe.courseid IS NULL ";
         if (!$workflow->includesitecourse) {
@@ -165,7 +173,7 @@ class triggered_courses_table_trigger extends \table_sql {
      * method or if other_cols returns NULL then put the data straight into the
      * table.
      *
-     * After calling this function, don't forget to call close_recordset.
+     * After calling this function, remember to call close_recordset.
      * @throws \dml_exception
      */
     public function build_table() {
@@ -179,30 +187,23 @@ class triggered_courses_table_trigger extends \table_sql {
         $response = $lib->default_response();
         $course = new stdClass();
         foreach ($this->rawdata as $row) {
-            if ($row->hasotherwfprocess) {
-                $this->otherwf++;
-            }
-            if ($row->delaycourse && $row->delaycourse > time() && !$this->triggerexclude) {
-                $this->delayed++;
-            }
+            // If trigger uses individual check course code get the response for the course.
             if ($lib->check_course_code()) {
+                $this->checkcoursecode = true;
                 $course->id = $row->courseid;
                 $response = $lib->check_course($course, $this->triggerid);
             }
-            if (!($response == trigger_response::exclude() || $response == trigger_response::trigger())) {
-                continue;
+            if (!$row->hasprocess ?? false) { // Do not pick courses already part of the workflow process.
+                // Add course to the list according to the trigger type and the response.
+                if ($this->type == 'triggerid' && $response == trigger_response::trigger() ||
+                    $this->type == 'excluded' && $response == trigger_response::exclude() ||
+                    $this->type == 'excluded' && $response == trigger_response::trigger() && $this->triggerexclude) {
+                    $row->status = $response;
+                    $formattedrow = $this->format_row($row);
+                    $this->add_data_keyed($formattedrow, $this->get_row_class($row));
+                    $this->tablerows++;
+                }
             }
-            if ($this->type == 'triggerid' && !$response == trigger_response::trigger()) {
-                continue;
-            } else if ($this->type == 'excluded' &&
-                (!$response == trigger_response::exclude() ||
-                    !($response == trigger_response::trigger() && $this->triggerexclude))) {
-                continue;
-            }
-            $row->status = $response;
-            $formattedrow = $this->format_row($row);
-            $this->add_data_keyed($formattedrow, $this->get_row_class($row));
-            $this->tablerows++;
         }
     }
 
@@ -226,20 +227,43 @@ class triggered_courses_table_trigger extends \table_sql {
     public function col_status($row) {
         $out = "";
         if ($row->hasotherwfprocess) {
+            $this->otherwf++;
             $out .= \html_writer::div(get_string('alreadyinprocessotherworkflow', 'tool_lifecycle'),
                 'text-warning');
         }
         if ($row->delaycourse && $row->delaycourse > time() && !$this->triggerexclude) {
+            $this->delayed++;
             $out .= \html_writer::div(get_string('delayed', 'tool_lifecycle'), 'text-info');
         }
         if ($row->status && !($row->status == trigger_response::trigger())) {
+            $this->excludedbycheckcourse++;
             $out .= \html_writer::div(get_string('excludedbycoursecode', 'tool_lifecycle'),
                 'text-warning');
         }
         if ($out == "") {
+            $this->triggered++;
             $out .= \html_writer::div(get_string('ok'), 'text-success');
         }
         return $out;
+    }
+
+    /**
+     * Hook that can be overridden in child classes to wrap a table in a form
+     * for example. Called only when there is data to display and not
+     * downloading.
+     */
+    public function wrap_html_finish() {
+        $a = new \stdClass();
+        $a->otherwf = $this->otherwf;
+        $a->delayed = $this->delayed;
+        $a->triggered = $this->triggered;
+        $a->tablerows = $this->tablerows;
+        $cont = get_string('numbersotherwfordelayed', 'tool_lifecycle', $a);
+        if ($this->checkcoursecode) {
+            $cont .= " / ".$this->excludedbycheckcourse." ".
+                get_string('excludedbycoursecode', 'tool_lifecycle');
+        }
+        echo \html_writer::div($cont, 'm-3');
     }
 
     /**

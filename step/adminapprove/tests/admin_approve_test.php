@@ -24,14 +24,12 @@ use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\task\lifecycle_task;
 
+// phpcs:disable moodle.PHPUnit.TestCaseCovers.Missing
+
 /**
  * Tests the admin approve step.
  *
  * @package    lifecyclestep_adminapprove
- * @group      lifecyclestep_adminapprove
- * @group      lifecyclestep
- * @category   test
- * @covers     \tool_lifecycle\step\adminapprove
  * @copyright  2019 Justus Dieckmann
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -39,12 +37,11 @@ final class admin_approve_test extends \advanced_testcase {
 
     /**
      * Starts a manual trigger and checks that one mail is send.
-     * @covers \tool_lifecycle\step\adminapprove
      * @return void
-     * @throws coding_exception
-     * @throws dml_exception
-     * @throws dml_transaction_exception
-     * @throws moodle_exception
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
+     * @throws \moodle_exception
      */
     public function test_admin_mail(): void {
         $this->resetAfterTest(true);
@@ -65,14 +62,12 @@ final class admin_approve_test extends \advanced_testcase {
         process_manager::manually_trigger_process($course3->id, $trigger->id);
         process_manager::manually_trigger_process($course4->id, $trigger->id);
 
-        // Prevent output from the task execution.
-        $this->setOutputCallback(function() {
-        });
-
         // Create an email sink to query it after the processing.
         $sink = $this->redirectEmails();
         $task = new lifecycle_task();
+        ob_start();
         $task->execute();
+        ob_end_clean();
         $this->assertCount(1, $sink->get_messages());
         $sink->close();
     }

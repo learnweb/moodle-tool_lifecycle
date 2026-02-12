@@ -40,22 +40,70 @@ $PAGE->set_context($syscontext);
 
 // Action handling (delete, bulk-delete).
 $action = optional_param('action', null, PARAM_ALPHANUMEXT);
+if ($reportparam = optional_param('report', null, PARAM_TEXT)) {
+    $reportparam = explode("__", urldecode($reportparam));
+}
 if ($action) {
-    global $DB;
+    $report = [];
     require_sesskey();
     $ids = required_param_array('id', PARAM_INT);
     if ($action == 'proceed') {
         foreach ($ids as $id) {
-            process_manager::proceed_process_after_error($id);
+            if ($courseid = $DB->get_field('tool_lifecycle_proc_error', 'courseid', ['id' => $id])) {
+                $course = get_course($courseid);
+                $coursename = get_course_display_name_for_list($course);
+            } else {
+                $coursename = get_string('coursenotfound', 'tool_lifecycle');
+            }
+            $rc = process_manager::proceed_process_after_error($id);
+            if ($rc) {
+                $successmsg = get_string('proceed_process_after_error_success', 'tool_lifecycle');
+                $report[] = \html_writer::div($coursename.": ".$successmsg, 'alert alert-success');
+            } else {
+                $failedsmsg = get_string('proceed_process_after_error_fail', 'tool_lifecycle', $rc);
+                $report[] = \html_writer::div($coursename.": ".$failedsmsg, 'alert alert-danger');
+            }
         }
     } else if ($action == 'rollback') {
         foreach ($ids as $id) {
-            process_manager::rollback_process_after_error($id);
+            if ($courseid = $DB->get_field('tool_lifecycle_proc_error', 'courseid', ['id' => $id])) {
+                $course = get_course($courseid);
+                $coursename = get_course_display_name_for_list($course);
+            } else {
+                $coursename = get_string('coursenotfound', 'tool_lifecycle');
+            }
+            $rc = process_manager::rollback_process_after_error($id);
+            if ($rc) {
+                $successmsg = get_string('rollback_process_after_error_success', 'tool_lifecycle');
+                $report[] = \html_writer::div($coursename.": ".$successmsg, 'alert alert-success');
+            } else {
+                $failedsmsg = get_string('rollback_process_after_error_fail', 'tool_lifecycle', $rc);
+                $report[] = \html_writer::div($coursename.": ".$failedsmsg, 'alert alert-danger');
+            }
         }
     } else if ($action == 'delete') {
+        $deleted = 0;
+        $notdeleted = 0;
         foreach ($ids as $id) {
-            $DB->delete_records('tool_lifecycle_proc_error', ['id' => $id]);
+            if ($DB->delete_records('tool_lifecycle_proc_error', ['id' => $id])) {
+                $deleted++;
+            } else {
+                $notdeleted++;
+            }
         }
+        if ($deleted) {
+            $successmsg = get_string('errors_deleted_success', 'tool_lifecycle', $deleted);
+            $report[] = \html_writer::div($successmsg, 'alert alert-success');
+        }
+        if ($notdeleted) {
+            $failedsmsg = get_string('errors_deleted_fail', 'tool_lifecycle', $notdeleted);
+            $report[] = \html_writer::div($failedsmsg, 'alert alert-danger');
+        }
+    }
+    if ($report) {
+        $report = urlencode(implode("__", $report));
+        $redirecturl = new moodle_url($PAGE->url, ['report' => $report]);
+        redirect($redirecturl);
     }
     redirect($PAGE->url, get_string('deleteprocesserrormsg', 'tool_lifecycle'), 3);
 }
@@ -90,6 +138,13 @@ $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('process_
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $renderer->tabs($tabrow, 'errors');
+
+if ($reportparam) {
+    foreach ($reportparam as $message) {
+        echo $message;
+    }
+    echo '<br>';
+}
 
 // Get number of process errors.
 $sql = "select count(c.id) from {tool_lifecycle_proc_error} pe

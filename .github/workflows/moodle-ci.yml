@@ -4,4 +4,6 @@ on: [ push, pull_request ]
 jobs:
   call:
     name: ""
-    uses: learnweb/moodle-workflows-learnweb/.github/workflows/moodle-ci.yml@main
+    uses: learnweb/moodle-workflows-learnweb/.github/workflows/moodle-ci.yml@withsubplugins
+
+

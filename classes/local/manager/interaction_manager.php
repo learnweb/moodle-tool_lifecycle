@@ -148,12 +148,15 @@ class interaction_manager {
      * @throws \dml_exception
      */
     public static function get_action_tools($subpluginname, $processid) {
-        $interactionlib = lib_manager::get_step_interactionlib($subpluginname);
-        $process = process_manager::get_process_by_id($processid);
-        if (!$process) {
-            throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_lifecycle'));
+        if ($interactionlib = lib_manager::get_step_interactionlib($subpluginname)) {
+            $process = process_manager::get_process_by_id($processid);
+            if (!$process) {
+                throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_lifecycle'));
+            }
+            return $interactionlib->get_action_tools($process);
+        } else {
+            return [];
         }
-        return $interactionlib->get_action_tools($process);
     }
 
     /**

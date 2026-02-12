@@ -34,7 +34,7 @@ $backuprecord = $DB->get_record('tool_lifecycle_backups', ['id' => $backupid], '
 $source = get_config('tool_lifecycle', 'backup_path') . DIRECTORY_SEPARATOR . $backuprecord->backupfile;
 
 if (!file_exists($source)) {
-    throw new \moodle_exception('errorbackupfiledoesnotexist', 'tool_lifecycle', $source);
+    throw new \moodle_exception('errorbackupfiledoesnotexist', 'tool_lifecycle', '', null, $source);
 }
 
 header("Content-Type: application/zip");

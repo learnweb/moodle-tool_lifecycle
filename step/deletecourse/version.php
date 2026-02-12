@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2025050400;
-$plugin->requires = 2022112800; // Requires Moodle 4.1+.
-$plugin->supported = [401, 405];
 $plugin->component = 'lifecyclestep_deletecourse';
-$plugin->release   = 'v4.5-r1';
 $plugin->maturity = MATURITY_STABLE;
+$plugin->version  = 2025102300;
+$plugin->requires = 2022112800; // Requires Moodle 4.1+.
+$plugin->supported = [405, 500];
+$plugin->release   = 'v5.0-r1';

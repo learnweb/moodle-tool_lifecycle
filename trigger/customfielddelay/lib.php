@@ -45,14 +45,6 @@ class customfielddelay extends base_automatic {
     }
 
     /**
-     * Returns whether the lib function check_course contains particular selection code per course or not.
-     * @return bool
-     */
-    public function check_course_code() {
-        return false;
-    }
-
-    /**
      * Add sql comparing the current date to the start date of a course in combination with the specified delay.
      * @param int $triggerid Id of the trigger.
      * @return array A list containing the constructed sql fragment and an array of parameters.
@@ -139,5 +131,13 @@ class customfielddelay extends base_automatic {
             $default = $settings['customfield'];
             $mform->setDefault('customfield', $default);
         }
+    }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'i/customfield';
     }
 }
