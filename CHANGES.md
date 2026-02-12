@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-5.1.1(2026-01-27)
+4.5.7(2026-02-12)
 ------------------
 * [FEATURE] Add new lifecycle step 'deletebackup'
 * [FEATURE] Add the task to delete old backup files to the already existing cleanup_task
@@ -12,9 +12,6 @@ CHANGELOG
 * [FIXED] Improve error handling in errors table
 * [FIXED] Add missing lang strings of step setcustomfield
 
-
-5.1.0(2026-01-20)
-------------------
 * [FEATURE] Introduce new trigger 'activity'
 * [FEATURE] Introduce new trigger 'opencast'
 * [FEATURE] Introduce new step 'setcustomfield' (PR #275)
@@ -27,15 +24,11 @@ CHANGELOG
 * [FIXED] Include filepath as debug info when backup file does not exist (#277)
 * Moodle 5.1 compatible version
 
-5.0.2(2025-12-13)
-------------------
 * [FEATURE] workflowoverview: Do not take the specificdata trigger into account when counting
 * [FEATURE] Introduce optional max number of courses triggered per cron run and/or per day for a workflow
 * [FEATURE] New trigger depending on enddate PR #272
 * [FIXED] Fix a bootstrap bug in interaction table
 
-5.0.1(2025-11-15)
-------------------
 * [FEATURE] Customise buttons in adminapprove step PR #266
 * [FEATURE] Improve listings of triggered courses in workflowoverview
 * [FEATURE] Semindependent trigger: add option to select courses with no customfield semester or termindependent value
@@ -46,8 +39,6 @@ CHANGELOG
 * [FIXED] Respect use of check_course function when counting triggered courses
 * [FIXED] Activate the automatic tests of the subplugins
 
-5.0.0(2025-10-23)
-------------------
 * [FIXED] Fix unit test process_error_test
 * Moodle 5.0 compatible version
 
