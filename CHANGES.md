@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+5.1.2(2026-02-15)
+------------------
+* [FEATURE] Showcase: add workflow description link
+* [CHANGE] Activity trigger: set multi_use true
+* [FIXED] Adjust step pushbackuptask to new create_course_backup signature
+* [FIXED] Showcase: fix workflow details link
+
+
 5.1.1(2026-01-27)
 ------------------
 * [FEATURE] Add new lifecycle step 'deletebackup'
