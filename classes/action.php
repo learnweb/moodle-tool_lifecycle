@@ -70,5 +70,6 @@ class action {
     const WORKFLOW_ABORT = 'workflow_instance_abort';
     /** @var string Delete in bulk operation. */
     const BULK_DELETE = 'bulk-delete';
-
+    /** @var string Go to the forum discussion of the workflow and if there is none yet create one. */
+    const WORKFLOW_DISCUSSION = 'workflow-discussion';
 }
