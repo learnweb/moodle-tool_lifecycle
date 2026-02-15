@@ -359,6 +359,7 @@ $string['workflow_title_help'] = 'Titel des Workflows (nur sichtbar für Admins)
 $string['workflow_tools'] = 'Aktionen';
 $string['workflow_trigger'] = 'Trigger für den Workflow';
 $string['workflow_was_not_imported'] = 'Der Workflow wurde nicht importiert!';
+$string['workflowdescriptionlink'] = 'Bitte geben Sie hier eine Workflow-Beschreibung ein';
 $string['workflownotfound'] = 'Es konnte kein Workflow mit der ID {$a} gefunden werden!';
 $string['workflownotvalid'] = 'Dieser workflow ist nicht gültig.';
 $string['workflowoverview'] = 'Workflow ansehen';
