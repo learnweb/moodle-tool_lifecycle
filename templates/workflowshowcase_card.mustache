@@ -86,6 +86,13 @@
                     <p class="card-text"><a href="{{{workflowdescriptionlink}}}">{{#str}} workflowdescriptionlink, tool_lifecycle {{/str}}</a></p>
                 {{/body.text}}
 
+                {{#forum}}
+                    <a href="{{{discussionlink}}}" class="btn btn-outline-{{discussionclass}}"  data-toggle="tooltip" title="{{discussiontooltip}}">
+                        {{#str}} discussion, tool_lifecycle {{/str}}
+                        <span class="badge badge-{{discussionclass}} badge-pill ml-1">{{discussions}}</span>
+                    </a>
+                {{/forum}}
+
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"></li>
                     <li class="list-group-item">{{{triggers}}}</li>
@@ -97,7 +104,7 @@
                     <a href="{{{downloadlink}}}" class="btn btn-primary" data-toggle="tooltip" title="{{#str}} download{{/str}}">
                     {{#pix}} t/backup, core {{/pix}}{{#str}} download{{/str}}
                     </a>
-                    <a href="workflowoverview.php?wf={{id}}" class="btn btn-primary" title="{{#str}} details{{/str}}">
+                    <a href="{{{workflowlink}}}" class="btn btn-primary" title="{{#str}} details{{/str}}">
                     {{#pix}} t/viewdetails, core {{/pix}}{{#str}} details {{/str}}
                     </a>
                 </div>

@@ -84,5 +84,10 @@ if ($hassiteconfig) {
         get_string('config_deletebackupsafterdays_desc', 'tool_lifecycle'),
         365, PARAM_INT));
 
+    $settings->add(new admin_setting_configtext('tool_lifecycle/forum',
+        get_string('config_forum', 'tool_lifecycle'),
+        get_string('config_forum_desc', 'tool_lifecycle'),
+        null, PARAM_INT));
+
     $ADMIN->add('tools', $settings);
 }

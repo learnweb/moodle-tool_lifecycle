@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\local\manager;
 
+use core\exception\moodle_exception;
 use core\task\manager;
 use core_date;
 use tool_lifecycle\action;
@@ -331,13 +332,13 @@ class workflow_manager {
                 (self::is_removable($workflowid) || self::is_deprecated($workflowid))) {
                 self::remove($workflowid);
                 self::reset_has_workflow_cache();
-            } else if ($action === action::WORKFLOW_DISCUSSION) {
-                self::goto_workflowdiscussion($workflowid);
-                return; // Return, since we do not want to redirect outside to deactivated workflows.
             } else {
                 \core\notification::add(get_string('workflow_not_removeable', 'tool_lifecycle')
                     , \core\notification::WARNING);
             }
+        } else if ($action === action::WORKFLOW_DISCUSSION) {
+            self::goto_workflowdiscussion($workflowid);
+            return; // Return, since we do not want to redirect outside to deactivated workflows.
         } else {
             // If no action has been called. Continue.
             return;

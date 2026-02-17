@@ -137,6 +137,8 @@ foreach ($records as $record) {
     }
     $workflowlink = new \moodle_url(urls::WORKFLOW_DETAILS,
         ['wf' => $record->id]);
+    $workflowdescriptionlink = new \moodle_url(urls::EDIT_WORKFLOW,
+        ['wf' => $record->id]);
 
     $workflow = [
         'id' => $record->id,
@@ -150,6 +152,7 @@ foreach ($records as $record) {
         'steps' => $stepsstr,
         'downloadlink' => $downloadlink,
         'workflowlink' => $workflowlink,
+        'workflowdescriptionlink' => $workflowdescriptionlink,
         'cardclasses' => implode(" ", $cardclasses),
         'forum' => $forum,
         'discussion' => $discussion,

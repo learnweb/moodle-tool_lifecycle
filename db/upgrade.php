@@ -658,5 +658,20 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025050407, 'tool', 'lifecycle');
     }
 
+    if ($oldversion < 2025050408) {
+
+        // Define field forum_discussion to be added to tool_lifecycle_workflow.
+        $table = new xmldb_table('tool_lifecycle_workflow');
+        $field = new xmldb_field('forum_discussion', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'description');
+
+        // Conditionally launch add field forum_discussion.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2025050408, 'tool', 'lifecycle');
+    }
+
     return true;
 }
