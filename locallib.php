@@ -72,3 +72,74 @@ function lifecycle_select_change_workflow($activewf) {
     $actionmenu->set_menu_trigger(get_string('switchworkflow', 'tool_lifecycle'));
     echo $OUTPUT->render_action_menu($actionmenu);
 }
+
+/**
+ * Check if a discussion for this workflow already exists and if not create one. Return the url to this discussion.
+ * @param int $workflowid id of the workflow
+ * @param int $forumid id of the dedicated workflows discussion forum instance
+ * @return int[] discussionid or postid when new discussion
+ */
+function lifecycle_get_workflow_discussion($workflowid, $forumid) {
+    global $DB, $USER;
+
+    if (!$forum = $DB->get_record('forum', ['id' => $forumid])) {
+        throw new moodle_exception('invalidcoursemodule', 'moodle');
+    }
+    $workflow = $DB->get_record('tool_lifecycle_workflow', ['id' => $workflowid]);
+
+    $postid = "";
+    if (!$discussionid = $DB->get_field('tool_lifecycle_workflow', 'forum_discussion', ['id' => $workflowid])) {
+
+        $timenow = time();
+
+        $discussion = new stdClass();
+        $discussion->course          = $forum->course;
+        $discussion->forum           = $forum->id;
+        $discussion->name            = get_string('workflow', 'tool_lifecycle').": ".$workflow->title;
+        $discussion->assessed        = $forum->assessed;
+        $discussion->message         = "";
+        $discussion->messageformat   = $forum->introformat;
+        $discussion->messagetrust    = true;
+        $discussion->mailnow         = false;
+        $discussion->groupid         = -1;
+
+        $post = new \stdClass();
+        $post->discussion    = 0;
+        $post->parent        = 0;
+        $post->privatereplyto = 0;
+        $post->userid        = $USER->id;
+        $post->created       = $timenow;
+        $post->modified      = $timenow;
+        $post->mailed        = 0;
+        $post->subject       = $discussion->name;
+        $post->message       = "";
+        $post->messageformat = $discussion->messageformat;
+        $post->messagetrust  = $discussion->messagetrust;
+        $post->attachments   = null;
+        $post->forum         = $forum->id;
+        $post->course        = $forum->course;
+        $post->mailnow       = $discussion->mailnow;
+
+        \mod_forum\local\entities\post::add_message_counts($post);
+        $post->id = $DB->insert_record("forum_posts", $post);
+
+        $discussion->firstpost    = $post->id;
+        $discussion->timemodified = $timenow;
+        $discussion->usermodified = $post->userid;
+        $discussion->userid       = $USER->id;
+        $discussion->assessed     = 0;
+
+        $discussionid = $DB->insert_record("forum_discussions", $discussion);
+
+        // Set the pointer to the discussion on the post.
+        $DB->set_field("forum_posts", "discussion", $discussionid, ["id" => $post->id]);
+
+        // Make it the workflow's discussion.
+        $DB->set_field("tool_lifecycle_workflow", "forum_discussion", $discussionid, ["id" => $workflowid]);
+
+        $postid = $post->id;
+        $discussionid = "";
+    }
+
+    return [$discussionid, $postid];
+}
