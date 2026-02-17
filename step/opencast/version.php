@@ -31,7 +31,7 @@ $plugin->requires = 2024100700;
 $plugin->supported = [405, 405];
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [
-        'tool_lifecycle' => 2026012001,
+        'tool_lifecycle' => 2025050409,
         'tool_opencast' => 2024111105,
         'block_opencast' => 2025072506,
 ];
