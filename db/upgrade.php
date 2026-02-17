@@ -658,7 +658,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025050407, 'tool', 'lifecycle');
     }
 
-    if ($oldversion < 2025050408) {
+    if ($oldversion < 2025050409) {
 
         // Define field forum_discussion to be added to tool_lifecycle_workflow.
         $table = new xmldb_table('tool_lifecycle_workflow');
@@ -670,7 +670,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         }
 
         // Lifecycle savepoint reached.
-        upgrade_plugin_savepoint(true, 2025050408, 'tool', 'lifecycle');
+        upgrade_plugin_savepoint(true, 2025050409, 'tool', 'lifecycle');
     }
 
     return true;
