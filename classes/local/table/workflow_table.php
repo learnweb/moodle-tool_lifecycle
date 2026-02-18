@@ -113,8 +113,12 @@ abstract class workflow_table extends \table_sql {
             foreach ($triggers as $key => $trigger) {
                 $triggertitle = "[".$trigger->subpluginname."] ".$trigger->instancename;
                 $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-                $triggericon = $lib->get_icon();
-                $out .= $OUTPUT->pix_icon($triggericon, $triggertitle);
+                if (isset($lib)) {
+                    $triggericon = $lib->get_icon();
+                    $out .= $OUTPUT->pix_icon($triggericon, $triggertitle);
+                } else {
+                    $out .= $OUTPUT->pix_icon('i/warning', get_string('notfound', 'error') . ': ' . $trigger->subpluginname);
+                }
             }
         } else {
             $out = "--";
@@ -136,8 +140,12 @@ abstract class workflow_table extends \table_sql {
             foreach ($steps as $key => $step) {
                 $steptitle = "[".$step->subpluginname."] ".$step->instancename;
                 $lib = lib_manager::get_step_lib($step->subpluginname);
-                $stepicon = $lib->get_icon();
-                $out .= $OUTPUT->pix_icon($stepicon, $steptitle);
+                if (isset($lib)) {
+                    $stepicon = $lib->get_icon();
+                    $out .= $OUTPUT->pix_icon($stepicon, $steptitle);
+                } else {
+                    $out .= $OUTPUT->pix_icon('i/warning', get_string('notfound', 'error') . ': ' . $step->subpluginname);
+                }
             }
         } else {
             $out = "--";
