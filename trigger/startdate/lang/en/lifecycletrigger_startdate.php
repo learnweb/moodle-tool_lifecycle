@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Lang strings for start date delay trigger
  *
- * @package    tool_lifecycle
- * @copyright  2025 Thomas Niedermaier University Münster
+ * @package    lifecycletrigger_startdate
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+$string['datefrom'] = 'Date from';
+$string['datefrom_help'] = 'Enter the lower limit of the time window in which the course start date should fall.';
+$string['dateto'] = 'Date to';
+$string['dateto_help'] = 'Enter the upper limit of the time window in which the course start date should fall.';
+$string['plugindescription'] = 'Triggers courses whose start date falls within a specific time window.';
+$string['pluginname'] = 'Start date trigger';
+$string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
-$plugin->component = 'tool_lifecycle';
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->version  = 2026012002;
-$plugin->requires = 2022112800; // Requires Moodle 4.1+.
-$plugin->supported = [405, 501];
-$plugin->release   = 'v5.1-r3';

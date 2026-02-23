@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Lang strings for start date trigger
  *
- * @package    tool_lifecycle
- * @copyright  2025 Thomas Niedermaier University Münster
+ * @package    lifecycletrigger_startdate
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+$string['datefrom'] = 'Datum von';
+$string['datefrom_help'] = 'Geben Sie hier die untere Grenze des Zeitfensters an, in dem sich das Kurs-Beginndatum befinden soll.';
+$string['dateto'] = 'Datum bis';
+$string['dateto_help'] = 'Geben Sie hier die obere Grenze des Zeitfensters an, in dem sich das Kurs-Beginndatum befinden soll.';
+$string['plugindescription'] = 'Trigger des Lifecycle-Tools, der Kurse auslöst, deren Beginn-Datum sich innerhalb eines bestimmten Zeitfensters befindet.';
+$string['pluginname'] = 'Beginndatum - Trigger';
+$string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
 
-$plugin->component = 'tool_lifecycle';
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->version  = 2026012002;
-$plugin->requires = 2022112800; // Requires Moodle 4.1+.
-$plugin->supported = [405, 501];
-$plugin->release   = 'v5.1-r3';

@@ -14,19 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace lifecycletrigger_startdate\privacy;
+
+use core_privacy\local\metadata\null_provider;
+
 /**
- * Version details.
+ * Privacy subsystem implementation for lifecycletrigger_startdate.
  *
- * @package    tool_lifecycle
- * @copyright  2025 Thomas Niedermaier University Münster
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     lifecycletrigger_startdate
+ * @copyright   2022 ISB Bayern
+ * @author      Philipp Memmel
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class provider implements null_provider {
 
-defined('MOODLE_INTERNAL') || die;
-
-$plugin->component = 'tool_lifecycle';
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->version  = 2026012002;
-$plugin->requires = 2022112800; // Requires Moodle 4.1+.
-$plugin->supported = [405, 501];
-$plugin->release   = 'v5.1-r3';
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return string the reason
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}

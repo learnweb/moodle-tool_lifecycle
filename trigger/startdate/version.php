@@ -15,18 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Life Cycle startdate Trigger
  *
- * @package    tool_lifecycle
- * @copyright  2025 Thomas Niedermaier University Münster
+ * @package    lifecycletrigger_startdate
+ * @copyright  2025 Ostfalia
+ * @copyright  2025 Thomas Niedermaier Universität Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->component = 'tool_lifecycle';
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->version  = 2026012002;
+$plugin->version = 2025111100;
 $plugin->requires = 2022112800; // Requires Moodle 4.1+.
-$plugin->supported = [405, 501];
-$plugin->release   = 'v5.1-r3';
+$plugin->supported = [405, 500];
+$plugin->component = 'lifecycletrigger_startdate';
+$plugin->release   = 'v5.0-r1';
+$plugin->maturity = MATURITY_STABLE;
