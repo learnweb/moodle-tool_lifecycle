@@ -33,6 +33,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 require_once(__DIR__ . '/generator/lib.php');
 
+// phpcs:disable moodle.PHPUnit.TestCaseCovers.Missing
+
 /**
  * Trigger test for start date trigger.
  *
@@ -61,7 +63,7 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if a course, which has a start date within the instance settings, is triggered by this plugin.
      */
-    #[CoversClass(\tool_lifecycle\processor::class)] public function test_course_within(): void {
+    public function test_course_within(): void {
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - 7 * DAYSECS]);
 
@@ -79,7 +81,7 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if a course, which has a start date after the time window, is not triggered by this plugin.
      */
-    #[CoversClass(\tool_lifecycle\processor::class)] public function test_younger_course(): void {
+    public function test_younger_course(): void {
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - 4 * DAYSECS]);
 
@@ -95,9 +97,9 @@ final class trigger_test extends \advanced_testcase {
     }
 
     /**
-     * Tests if a course without start date is not triggered by this plugin.
+     * Tests if a course without a start date is not triggered by this plugin.
      */
-    #[CoversClass(\tool_lifecycle\processor::class)] public function test_course_without_startdate(): void {
+    public function test_course_without_startdate(): void {
 
         $course = $this->getDataGenerator()->create_course(['startdate' => 0]);
 
@@ -115,7 +117,7 @@ final class trigger_test extends \advanced_testcase {
     /**
      * Tests if a course, which has a start date before the time window, is triggered by this plugin.
      */
-    #[CoversClass(\tool_lifecycle\processor::class)] public function test_older_course(): void {
+    public function test_older_course(): void {
 
         $course = $this->getDataGenerator()->create_course(['startdate' => time() - 11 * DAYSECS]);
 
