@@ -54,14 +54,16 @@ class view_controller {
     public function handle_view($renderer, $filterdata, $bulk) {
         global $DB, $USER;
 
-        // Get all courses where current user is manager. Sysadmin rights ignored.
-        $coursesasmanager = get_user_capability_course('tool/lifecycle:managecourses', null, false);
-        $courseids1 = array_column($coursesasmanager, 'id');
-        // Get all courses where current user is enrolled.
-        $usercourses = enrol_get_users_courses($USER->id);
-        $courseids2 = array_column($usercourses, 'id');
-        // Only take courses where both is the case (enrolled and manager).
-        $courses = array_intersect($courseids1, $courseids2);
+        // Get all courses where current user is manager and is enrolled.
+        // Sysadmins will always have the capability, but only courses in which they are enrolled will be returned.
+        $courses = array_map(
+            fn($courselistitem) => $courselistitem->id,
+            \core_course_category::search_courses(
+                ['limittoenrolled' => true],
+                [],
+                ['tool/lifecycle:managecourses']
+            )
+        );
         if (!$courses) {
             echo 'no courses';
             // Software enhancement show error.
