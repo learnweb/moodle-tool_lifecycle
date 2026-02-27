@@ -15,24 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Scheduled task for cleanup past delays
+ * Scheduled cleanup task for lifecycle
  *
  * @package tool_lifecycle
  * @copyright  2019 Justus Dieckmann WWU
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace tool_lifecycle\task;
 
+use core\task\scheduled_task;
 use stdClass;
+use tool_lifecycle\local\manager\process_manager;
 
 /**
- * Scheduled task for cleanup past delays
+ * Scheduled cleanup task for lifecycle
  *
  * @package tool_lifecycle
  * @copyright  2019 Justus Dieckmann WWU
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class lifecycle_cleanup_task extends \core\task\scheduled_task {
+class lifecycle_cleanup_task extends scheduled_task {
 
     /**
      * Get a descriptive name for this task (shown to admins).
@@ -58,6 +62,7 @@ class lifecycle_cleanup_task extends \core\task\scheduled_task {
             $timestamp = time() - $days * 24 * 60 * 60;
             $this->delete_course_backups($timestamp);
         }
+        $this->delete_orphaned_processes();
     }
 
     /**
@@ -114,6 +119,28 @@ class lifecycle_cleanup_task extends \core\task\scheduled_task {
                 $result->recordid = $record->id;
                 mtrace(get_string('mtracebackupdeleted', 'lifecyclestep_deletebackup', $result));
             }
+        }
+    }
+
+    /**
+     * Delete all processes of courses that don't exist anymore.
+     * @return void
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    private function delete_orphaned_processes() {
+        global $DB;
+
+        // Get all processes with a course that doesn't exist anymore.
+        $sql = "SELECT p.id, p.workflowid, p.stepindex
+                FROM {tool_lifecycle_process} p
+                WHERE NOT EXISTS (SELECT c.id FROM {course} c WHERE c.id = p.courseid)";
+        $processes = $DB->get_records_sql($sql);
+        // Abort and remove every one of this orphaned processes.
+        foreach ($processes as $process) {
+            $process = process_manager::get_process_by_id($process->id);
+            process_manager::abort_process($process);
+            mtrace(get_string('processaborted', 'tool_lifecycle'));
         }
     }
 }

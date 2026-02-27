@@ -257,6 +257,7 @@ $string['process_proceeded_event'] = 'A process has been proceeded';
 $string['process_rollback_event'] = 'A process has been rolled back';
 $string['process_triggered_event'] = 'A process has been triggered';
 $string['process_withnotexistingcourse'] = 'A process for a not existing course has been found';
+$string['processaborted'] = 'An orphaned process has been aborted and/or removed.';
 $string['restore'] = 'Restore';
 $string['restore_error_in_step'] = 'An error occurred when importing step \'{$a}\': ';
 $string['restore_error_in_trigger'] = 'An error occurred when importing trigger \'{$a}\': ';

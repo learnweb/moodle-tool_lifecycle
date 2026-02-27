@@ -286,7 +286,7 @@ class process_manager {
      * @param process $process process to be deleted.
      * @throws \dml_exception
      */
-    private static function remove_process($process) {
+    public static function remove_process($process) {
         global $DB;
         $DB->delete_records('tool_lifecycle_procdata', ['processid' => $process->id]);
         $DB->delete_records('tool_lifecycle_process', ['id' => $process->id]);
@@ -345,9 +345,11 @@ class process_manager {
      * @throws \dml_exception
      */
     public static function abort_process($process) {
-        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
-        $steplib = lib_manager::get_step_lib($step->subpluginname);
-        $steplib->abort_course($process);
+        if (($process->stepindex ?? false) && ($process->workflowid ?? false)) {
+            $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
+            $steplib = lib_manager::get_step_lib($step->subpluginname);
+            $steplib->abort_course($process);
+        }
         self::remove_process($process);
     }
 
