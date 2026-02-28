@@ -23,15 +23,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use lifecyclestep_adminapprove\approvestep_form;
 use lifecyclestep_adminapprove\course_filter_form;
-use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\workflow_manager;
-use tool_lifecycle\settings_type;
 use tool_lifecycle\tabs;
-use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../../../config.php');
+
+global $DB, $CFG, $PAGE, $OUTPUT;
 require_once($CFG->libdir . '/adminlib.php');
 
 require_login(null, false);
@@ -43,6 +43,7 @@ $ids = optional_param_array('c', [], PARAM_INT);
 $stepid = required_param('stepid', PARAM_INT);
 $wfid = optional_param('wfid', null, PARAM_INT);
 $stepindex = optional_param('stepindex', null, PARAM_INT);
+$pagesize = optional_param('perpage', 0, PARAM_INT);
 
 $syscontext = context_system::instance();
 $PAGE->set_url(new \moodle_url("/admin/tool/lifecycle/step/adminapprove/approvestep.php?stepid=$stepid"));
@@ -58,22 +59,15 @@ if ($step->subpluginname !== 'adminapprove') {
     throw new moodle_exception('The given step is not a Admin Approve Step.');
 }
 
+
 /**
  * Constant to roll back selected.
  */
 const ROLLBACK = 'rollback';
 /**
- * Constant to roll back all courses.
- */
-const ROLLBACK_ALL = 'rollback_all';
-/**
  * Constant to proceed selected.
  */
 const PROCEED = 'proceed';
-/**
- * Constant to proceed all courses.
- */
-const PROCEED_ALL = 'proceed_all';
 
 $workflow = workflow_manager::get_workflow($step->workflowid);
 
@@ -109,32 +103,8 @@ if ($action) {
     require_sesskey();
     $message = "";
 
-    if ($action == PROCEED_ALL || $action == ROLLBACK_ALL) {
-        $subselect = 'SELECT id FROM {tool_lifecycle_process} WHERE workflowid = :wfid AND stepindex = :stepindex';
-        $params = ['wfid' => $wfid, 'stepindex' => $stepindex];
-        $sql = 'UPDATE {lifecyclestep_adminapprove} ' .
-            'SET status = ' . ($action == PROCEED_ALL ? 1 : 2) . ' ' .
-            'WHERE processid IN (' . $subselect . ') ' .
-            'AND status = 0';
-        try {
-            $DB->execute($sql, $params);
-        } catch (dml_exception $e) {
-            throw $e;
-        }
-
-        $a = new stdClass();
-        $step = step_manager::get_step_instance_by_workflow_index($wfid, $stepindex);
-        $workflow = workflow_manager::get_workflow($wfid);
-        $a->step = $step->instancename;
-        $a->workflow = $workflow->title;
-
-        if ($action == PROCEED_ALL) {
-            $message = get_string('allstepapprovalsproceed', 'lifecyclestep_adminapprove', $a);
-        } else if ($action == ROLLBACK_ALL) {
-            $message = get_string('allstepapprovalsrollback', 'lifecyclestep_adminapprove', $a);
-        }
-    } else if ($action == PROCEED || $action == ROLLBACK) {
-        if (is_array($ids) && count($ids) > 0 && ($action == PROCEED || $action == ROLLBACK)) {
+    if ($action == PROCEED || $action == ROLLBACK) {
+        if (is_array($ids) && count($ids) > 0) {
             [$insql, $inparams] = $DB->get_in_or_equal($ids);
             $sql = 'UPDATE {lifecyclestep_adminapprove} ' .
                 'SET status = ' . ($action == PROCEED ? 1 : 2) . ' ' .
@@ -149,6 +119,8 @@ if ($action) {
                 $message = get_string('selectedstepapprovalsrollback', 'lifecyclestep_adminapprove', $a);
             }
         }
+    } else {
+        throw new moodle_exception('Invalid action value.');
     }
 
     redirect($PAGE->url, $message);
@@ -181,10 +153,9 @@ if ($hasrecords) {
     echo \html_writer::span(get_string('courses'));
     echo '</div>';
 
-    $table = new lifecyclestep_adminapprove\decision_table($stepid, $courseid, $category, $coursename);
-    $table->out(100, false);
+    $mform = new approvestep_form($stepid, $courseid, $category, $coursename, $pagesize);
+    $mform->display();
 
-    $PAGE->requires->js_call_amd('lifecyclestep_adminapprove/init', 'init', [$table->totalrows]);
 } else {
     echo get_string('no_courses_waiting', 'lifecyclestep_adminapprove',
             ['step' => $step->instancename, 'workflow' => $workflow->title]);

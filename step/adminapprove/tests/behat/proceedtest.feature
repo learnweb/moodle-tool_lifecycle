@@ -33,7 +33,7 @@ Feature: Add a workflow with an adminapprove step and test it
     And I am on workflowdrafts page
     And I press "Activate"
 
-  Scenario: Test interaction of admin approve step
+  Scenario: Test interaction of admin approve step (admin view)
     When I am on adminapprove page
     Then I should see "There are currently no courses waiting for interaction in any Admin Approve step."
     When I run the scheduled task "tool_lifecycle\task\lifecycle_task"
@@ -43,9 +43,9 @@ Feature: Add a workflow with an adminapprove step and test it
     And I should see "Course 2"
     And I should see "Course 3"
     And I should see "Course 4"
-    When I click on the tool "Proceed" in the "Course 1" row of the "lifecyclestep_adminapprove-decisiontable" table
+    When I click on "Proceed" "link" in the "Course 1" "table_row"
     And I wait to be redirected
     Then I should not see "Course 1"
-    When I click on the tool "Rollback" in the "Course 2" row of the "lifecyclestep_adminapprove-decisiontable" table
+    When I click on "Rollback" "link" in the "Course 2" "table_row"
     And I wait to be redirected
     Then I should not see "Course 2"

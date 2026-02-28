@@ -75,13 +75,13 @@ abstract class workflow_table extends \table_sql {
         global $OUTPUT, $PAGE, $USER;
         if ($row->timeactive) {
             return userdate($row->timeactive, get_string('strftimedatetime'),
-                core_date::get_user_timezone($USER));
+                    core_date::get_user_timezone($USER));
         }
         return $OUTPUT->single_button(new \moodle_url($PAGE->url,
-            ['action' => action::WORKFLOW_ACTIVATE,
-                'sesskey' => sesskey(),
-                'workflowid' => $row->id, ]),
-            get_string('activateworkflow', 'tool_lifecycle'));
+                ['action' => action::WORKFLOW_ACTIVATE,
+                        'sesskey' => sesskey(),
+                        'workflowid' => $row->id, ]),
+                get_string('activateworkflow', 'tool_lifecycle'));
     }
 
     /**
@@ -94,7 +94,7 @@ abstract class workflow_table extends \table_sql {
         global $USER;
         if ($row->timedeactive) {
             return userdate($row->timedeactive, get_string('strftimedatetime'),
-                core_date::get_user_timezone($USER));
+                    core_date::get_user_timezone($USER));
         }
         return get_string('workflow_active', 'tool_lifecycle');
     }
@@ -113,8 +113,12 @@ abstract class workflow_table extends \table_sql {
             foreach ($triggers as $key => $trigger) {
                 $triggertitle = "[".$trigger->subpluginname."] ".$trigger->instancename;
                 $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-                $triggericon = $lib->get_icon();
-                $out .= $OUTPUT->pix_icon($triggericon, $triggertitle);
+                if (isset($lib)) {
+                    $triggericon = $lib->get_icon();
+                    $out .= $OUTPUT->pix_icon($triggericon, $triggertitle);
+                } else {
+                    $out .= $OUTPUT->pix_icon('i/warning', get_string('notfound', 'error') . ': ' . $trigger->subpluginname);
+                }
             }
         } else {
             $out = "--";
@@ -136,8 +140,12 @@ abstract class workflow_table extends \table_sql {
             foreach ($steps as $key => $step) {
                 $steptitle = "[".$step->subpluginname."] ".$step->instancename;
                 $lib = lib_manager::get_step_lib($step->subpluginname);
-                $stepicon = $lib->get_icon();
-                $out .= $OUTPUT->pix_icon($stepicon, $steptitle);
+                if (isset($lib)) {
+                    $stepicon = $lib->get_icon();
+                    $out .= $OUTPUT->pix_icon($stepicon, $steptitle);
+                } else {
+                    $out .= $OUTPUT->pix_icon('i/warning', get_string('notfound', 'error') . ': ' . $step->subpluginname);
+                }
             }
         } else {
             $out = "--";
@@ -169,9 +177,9 @@ abstract class workflow_table extends \table_sql {
         $alt = get_string('viewsteps', 'tool_lifecycle');
         $icon = 't/viewdetails';
         $url = new \moodle_url(urls::WORKFLOW_DETAILS,
-            ['wf' => $row->id]);
+                ['wf' => $row->id]);
         $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
-            null, ['title' => $alt]);
+                null, ['title' => $alt]);
 
         return $output;
     }
@@ -190,11 +198,11 @@ abstract class workflow_table extends \table_sql {
         global $OUTPUT, $PAGE;
 
         return $OUTPUT->action_icon(new \moodle_url($PAGE->url,
-                ['action' => $action,
-                    'workflowid' => $workflowid,
-                    'sesskey' => sesskey(), ]),
-                new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
-                null , ['title' => $alt]) . ' ';
+                        ['action' => $action,
+                                'workflowid' => $workflowid,
+                                'sesskey' => sesskey(), ]),
+                        new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
+                        null , ['title' => $alt]) . ' ';
     }
 
     /**
@@ -232,9 +240,9 @@ abstract class workflow_table extends \table_sql {
         if ($row === null) {
             $colcount = count($this->columns);
             $html .= html_writer::tag('td', html_writer::tag(
-                'div',
-                '',
-                ['class' => 'tabledivider']
+                    'div',
+                    '',
+                    ['class' => 'tabledivider']
             ), ['colspan' => $colcount]);
         } else {
             $html .= $this->get_row_cells_html($rowid, $row, $suppresslastrow);

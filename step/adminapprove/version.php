@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'lifecyclestep_adminapprove';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->version  = 2025102301;
+$plugin->version  = 2026012900;
 $plugin->requires = 2022112800; // Requires Moodle 4.1+.
 $plugin->supported = [405, 500];
 $plugin->release   = 'v5.0-r2';
