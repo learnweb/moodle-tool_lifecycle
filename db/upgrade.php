@@ -684,7 +684,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         // Find all steps that have a maximumdeletionspercron-value or maximumbackupspercron-value of 0.
         define("STEPSTOPPED", 1);
 
-        $sql = "SELECT s.instanceid 
+        $sql = "SELECT s.instanceid
                 FROM {tool_lifecycle_settings} s
                 WHERE s.type = 'step' AND (s.name = 'maximumdeletionspercron' OR s.name = 'maximumbackupspercron')
                 AND s.value = '0' ";

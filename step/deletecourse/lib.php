@@ -123,13 +123,13 @@ class deletecourse extends libbase {
         // Status (active or deactivated)?
         $elementname = 'status';
         $options = [
-            self::STEPACTIVE => get_string('active', 'tool_lifecycle'),
-            self::STEPSTOPPED => get_string('stopped', 'tool_lifecycle'),
+            STEPACTIVE => get_string('active', 'tool_lifecycle'),
+            STEPSTOPPED => get_string('stopped', 'tool_lifecycle'),
         ];
         $mform->addElement('select', $elementname, get_string('status', 'tool_lifecycle'), $options);
         $mform->addHelpButton($elementname, 'stopped', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
-        $mform->setDefault($elementname, self::STEPACTIVE);
+        $mform->setDefault($elementname, STEPACTIVE);
         // Maximum courses processed by a single task run.
         $elementname = 'maximumdeletionspercron';
         $mform->addElement('text', $elementname,

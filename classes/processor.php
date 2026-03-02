@@ -47,6 +47,8 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../locallib.php');
 
+define('STEPSTOPPED', 1);
+
 /**
  * Offers functionality to trigger, process and finish lifecycle processes.
  *
@@ -56,8 +58,6 @@ require_once(__DIR__ . '/../locallib.php');
  */
 class processor {
 
-    // Status stopped for stoppable steps.
-    private const STEPSTOPPED = 1;
     /**
      * Processes the trigger plugins for all relevant courses.
      */
@@ -227,7 +227,7 @@ class processor {
                 $lib = lib_manager::get_step_lib($step->subpluginname);
                 if ($lib->is_stoppable()) {
                     $stepsettings = settings_manager::get_settings($step->id, settings_type::STEP);
-                    if (isset($stepsettings['status']) && $stepsettings['status'] == self::STEPSTOPPED) {
+                    if (isset($stepsettings['status']) && $stepsettings['status'] == STEPSTOPPED) {
                         mtrace("Course $course->id not processed because step stopped: $step->instancename", $eol);
                         break;
                     }
@@ -300,7 +300,7 @@ class processor {
         $lib = lib_manager::get_step_lib($step->subpluginname);
         if ($lib->is_stoppable()) {
             $stepsettings = settings_manager::get_settings($step->id, settings_type::STEP);
-            if (isset($stepsettings['status']) && $stepsettings['status'] == self::STEPSTOPPED) {
+            if (isset($stepsettings['status']) && $stepsettings['status'] == STEPSTOPPED) {
                 return true;
             }
         }
