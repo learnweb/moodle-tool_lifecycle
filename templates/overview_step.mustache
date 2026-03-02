@@ -31,13 +31,27 @@
         "id": 1,
         "numberofcourses": 5,
         "actionmenu": "actionmenu",
-        "popuplink": "admin/tool/lifecycle/workflowoverview.php?wf=1"
+        "popuplink": "admin/tool/lifecycle/workflowoverview.php?wf=1",
+        "stoppable": true,
+        "stopped": true
     }
 }}
 {{#steps}}
     <div class="wf-arrow"></div>
     <div class="workflow-step workflow-item {{#selected}}wf-selected{{/selected}}">
         <div class="wf-header">
+            {{#stoppable}}
+                {{#stopped}}
+                    <span class="badge badge-danger badge-pill" data-toggle="tooltip" title="{{#str}} stopped, tool_lifecycle {{/str}}">
+                            <i class="fa-solid fa-pause fa-inverse"></i>
+                    </span>
+                {{/stopped}}
+                {{^stopped}}
+                    <span class="badge badge-success badge-pill" data-toggle="tooltip" title="{{#str}} active, tool_lifecycle {{/str}}">
+                            <i class="fa-solid fa-play fa-inverse"></i>
+                    </span>
+                {{/stopped}}
+            {{/stoppable}}
             <div class="wf-header-text">
                 <a href="{{{editlink}}}" data-toggle="tooltip" title="{{instancename}}">{{#shortentext}} 50, {{instancename}} {{/shortentext}}</a>
                 {{#rollbacktosortindex}}

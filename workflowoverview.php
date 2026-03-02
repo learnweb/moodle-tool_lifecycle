@@ -342,6 +342,11 @@ foreach ($steps as $step) {
             $editlink,
             new pix_icon('i/edit', $str['edit']), $str['edit']),
     ]);
+    $lib = lib_manager::get_step_lib($step->subpluginname);
+    if ($lib->is_stoppable()) {
+        $step->stoppable = true;
+        $step->stopped = settings_manager::get_settings($step->id, settings_type::STEP)['status'] ?? false;
+    }
     if ($iseditable) {
         $actionmenu->add(new action_menu_link_secondary(
             new moodle_url($PAGE->url,

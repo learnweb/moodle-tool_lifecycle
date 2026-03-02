@@ -58,25 +58,17 @@ class deletecourse extends libbase {
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
-        global $CFG;
-
-        if ($course->id == 1) {
+        if ($course->id == SITEID) {
             return step_response::rollback();
         }
 
-        if (self::$numberofdeletions >= settings_manager::get_settings(
-            $instanceid, settings_type::STEP)['maximumdeletionspercron']) {
-            return step_response::waiting(); // Wait with further deletions til the next cron run.
+        if (self::$numberofdeletions >= settings_manager::get_settings($instanceid, settings_type::STEP)
+            ['maximumdeletionspercron']) {
+            // Wait with further deletions at least until the next task run.
+            return step_response::waiting();
         }
 
         delete_course($course);
-
-        /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
-           MDL-65228 (https://tracker.moodle.org/browse/MDL-65228) */
-        if (is_object($CFG) && property_exists($CFG, "forced_plugin_settings") && is_array($CFG->forced_plugin_settings)
-                && array_key_exists("backup", $CFG->forced_plugin_settings) && !is_array($CFG->forced_plugin_settings["backup"])) {
-            $CFG->forced_plugin_settings["backup"] = [];
-        }
 
         self::$numberofdeletions++;
         return step_response::proceed();
@@ -113,6 +105,7 @@ class deletecourse extends libbase {
      */
     public function instance_settings() {
         return [
+            new instance_setting('status', PARAM_INT, true),
             new instance_setting('maximumdeletionspercron', PARAM_INT, true),
         ];
     }
@@ -124,8 +117,21 @@ class deletecourse extends libbase {
      * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
+        // Status (active or deactivated)?
+        $elementname = 'status';
+        $options = [
+            self::STEPACTIVE => get_string('active', 'tool_lifecycle'),
+            self::STEPSTOPPED => get_string('stopped', 'tool_lifecycle'),
+        ];
+        $mform->addElement('select', $elementname, get_string('status', 'tool_lifecycle'), $options);
+        $mform->addHelpButton($elementname, 'stopped', 'tool_lifecycle');
+        $mform->setType($elementname, PARAM_INT);
+        $mform->setDefault($elementname, self::STEPACTIVE);
+        // Maximum courses processed by a single task run.
         $elementname = 'maximumdeletionspercron';
-        $mform->addElement('text', $elementname, get_string('deletecourse_maximumdeletionspercron', 'lifecyclestep_deletecourse'));
+        $mform->addElement('text', $elementname,
+            get_string('deletecourse_maximumdeletionspercron', 'lifecyclestep_deletecourse'),
+            ['size' => 3]);
         $mform->setType($elementname, PARAM_INT);
         $mform->setDefault($elementname, 10);
     }
@@ -136,5 +142,13 @@ class deletecourse extends libbase {
      */
     public function get_icon() {
         return 'e/delete';
+    }
+
+    /**
+     * Returns if this step type is stoppable.
+     * @return bool
+     */
+    public function is_stoppable() {
+        return true;
     }
 }

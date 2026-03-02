@@ -189,3 +189,12 @@ span.tool_lifecycle-hint {
 #page-admin-setting-tool_lifecycle .card .btn-primary .icon {
     margin-right: 0.2rem;
 }
+
+:is(#id_maximumdeletionspercron, #id_maximumbackupspercron) {
+    text-align: center;
+}
+
+.lifecycle_step_stopped {
+    width: 0.5rem;
+    height: 0.5rem;
+}

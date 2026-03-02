@@ -41,6 +41,12 @@ defined('MOODLE_INTERNAL') || die();
  */
 abstract class libbase {
 
+    // Status active for stoppable steps.
+    protected const STEPACTIVE = 0;
+
+    // Status stopped for stoppable steps.
+    protected const STEPSTOPPED = 1;
+
     /**
      * Processes the course and returns a response.
      * The response tells either
@@ -119,7 +125,7 @@ abstract class libbase {
     }
 
     /**
-     * This method can be overriden, to add form elements to the form_step_instance.
+     * This method can be overridden, to add form elements to the form_step_instance.
      * It is called in definition().
      * @param \MoodleQuickForm $mform
      */
@@ -127,7 +133,7 @@ abstract class libbase {
     }
 
     /**
-     * This method can be overriden, to set default values to the form_step_instance.
+     * This method can be overridden, to set default values to the form_step_instance.
      * It is called in definition_after_data().
      * @param \MoodleQuickForm $mform
      * @param array $settings array containing the settings from the db.
@@ -136,7 +142,7 @@ abstract class libbase {
     }
 
     /**
-     * This method can be overriden, to add additional data validation to the instance form.
+     * This method can be overridden, to add additional data validation to the instance form.
      * @param array $error Array containing all errors.
      * @param array $data Data passed from the moodle form to be validated
      */
@@ -153,7 +159,7 @@ abstract class libbase {
 
 
     /**
-     * Ensure validity of settings upon backup restoration.
+     * Ensure the validity of settings upon backup restoration.
      * @param array $settings
      * @return array List of errors with settings. If empty, the given settings are valid.
      */
@@ -169,6 +175,13 @@ abstract class libbase {
         return 'i/nosubcat';
     }
 
+    /**
+     * Returns if this step type is stoppable.
+     * @return bool
+     */
+    public function is_stoppable() {
+        return false;
+    }
 }
 
 /**

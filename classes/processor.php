@@ -56,6 +56,8 @@ require_once(__DIR__ . '/../locallib.php');
  */
 class processor {
 
+    // Status stopped for stoppable steps.
+    private const STEPSTOPPED = 1;
     /**
      * Processes the trigger plugins for all relevant courses.
      */
@@ -128,7 +130,7 @@ class processor {
             // Get recordset of triggered courses.
             $recordset = $this->get_course_recordset($triggers);
             // Compute max number of courses to be processed by this cron run.
-            $maxprocesses = 9223372036854775807;
+            $maxprocesses = PHP_INT_MAX;
             if ($workflow->triggeredpercron) {
                 $maxprocesses = $workflow->triggeredpercron;
             }
@@ -183,7 +185,15 @@ class processor {
      * Calls the process_course() method of each step submodule currently responsible for a given course.
      */
     public function process_courses() {
-        global $FULLSCRIPT;
+        global $FULLSCRIPT, $CFG;
+
+        /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
+           MDL-65228 (https://tracker.moodle.org/browse/MDL-65228) */
+        if (is_object($CFG) && property_exists($CFG, "forced_plugin_settings")
+            && is_array($CFG->forced_plugin_settings) && array_key_exists("backup", $CFG->forced_plugin_settings)
+            && !is_array($CFG->forced_plugin_settings["backup"])) {
+            $CFG->forced_plugin_settings["backup"] = [];
+        }
 
         $eol = "\n";
         // HTML end of line if called by run-command of workflowoverview.
@@ -215,6 +225,13 @@ class processor {
 
                 $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
                 $lib = lib_manager::get_step_lib($step->subpluginname);
+                if ($lib->is_stoppable()) {
+                    $stepsettings = settings_manager::get_settings($step->id, settings_type::STEP);
+                    if (isset($stepsettings['status']) && $stepsettings['status'] == self::STEPSTOPPED) {
+                        mtrace("Course $course->id not processed because step stopped: $step->instancename", $eol);
+                        break;
+                    }
+                }
                 try {
                     if ($process->waiting) {
                         $result = $lib->process_waiting_course($process->id, $step->id, $course);
@@ -267,11 +284,11 @@ class processor {
     }
 
     /**
-     * In case we are in an interactive environment because the user is lead through the interactive interfaces
+     * In case we are in an interactive environment, the user is lead through the interactive interfaces
      * of multiple steps, this function cares for a redirection and processing through these steps until we reach a
      * no longer interactive state of the workflow.
      *
-     * @param int $processid Id of the process
+     * @param int $processid ID of the process
      * @return boolean if true, interaction finished.
      *      If false, the current step is still processing and cares for displaying the view.
      * @throws \coding_exception
@@ -279,17 +296,25 @@ class processor {
      */
     public function process_course_interactive($processid) {
         $process = process_manager::get_process_by_id($processid);
-        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
+        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
+        $lib = lib_manager::get_step_lib($step->subpluginname);
+        if ($lib->is_stoppable()) {
+            $stepsettings = settings_manager::get_settings($step->id, settings_type::STEP);
+            if (isset($stepsettings['status']) && $stepsettings['status'] == self::STEPSTOPPED) {
+                return true;
+            }
+        }
+        $nextstep = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);
         // If there is no next step, then proceed, which will delete/finish the process.
-        if (!$step) {
+        if (!$nextstep) {
             delayed_courses_manager::set_course_delayed_for_workflow($process->courseid, false, $process->workflowid);
             process_manager::proceed_process($process);
             return true;
         }
-        if ($interactionlib = lib_manager::get_step_interactionlib($step->subpluginname)) {
+        if ($interactionlib = lib_manager::get_step_interactionlib($nextstep->subpluginname)) {
             // Actually proceed to the next step.
             process_manager::proceed_process($process);
-            $response = $interactionlib->handle_interaction($process, $step);
+            $response = $interactionlib->handle_interaction($process, $nextstep);
             switch ($response) {
                 case step_interactive_response::still_processing():
                     return false;

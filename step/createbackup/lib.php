@@ -102,6 +102,7 @@ class createbackup extends libbase {
      */
     public function instance_settings() {
         return [
+            new instance_setting('status', PARAM_INT, true),
             new instance_setting('maximumbackupspercron', PARAM_INT, true),
         ];
     }
@@ -113,9 +114,20 @@ class createbackup extends libbase {
      * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
+        $elementname = 'status';
+        $options = [
+            self::STEPACTIVE => get_string('active', 'tool_lifecycle'),
+            self::STEPSTOPPED => get_string('stopped', 'tool_lifecycle'),
+        ];
+        $mform->addElement('select', $elementname, get_string('status', 'tool_lifecycle'), $options);
+        $mform->addHelpButton($elementname, 'stopped', 'tool_lifecycle');
+        $mform->setType($elementname, PARAM_INT);
+        $mform->setDefault($elementname, self::STEPACTIVE);
+        // Maximum courses processed by a single task run.
         $elementname = 'maximumbackupspercron';
         $mform->addElement('text', $elementname,
-            get_string('maximumbackupspercron', 'lifecyclestep_createbackup'));
+            get_string('maximumbackupspercron', 'lifecyclestep_createbackup'),
+            ['size' => 3]);
         $mform->setType($elementname, PARAM_INT);
         $mform->setDefault($elementname, 10);
     }
@@ -126,5 +138,13 @@ class createbackup extends libbase {
      */
     public function get_icon() {
         return 'e/save';
+    }
+
+    /**
+     * Returns if this step type is stoppable.
+     * @return bool
+     */
+    public function is_stoppable() {
+        return true;
     }
 }
