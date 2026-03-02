@@ -460,7 +460,7 @@ if ($stepid) { // Display courses table with courses of this step.
         str_replace("}", "", str_replace("{", $CFG->prefix, $debugtriggersql)),
         "p-3"
     );
-} else if ($showsql && $debugtablesql) { // Display the table sql statement stored in session.
+} else if ($showtablesql && $debugtablesql) { // Display the table sql statement stored in session.
     $out .= \html_writer::div(
         str_replace("}", "", str_replace("{", $CFG->prefix, $debugtablesql)), "p-3"
     );

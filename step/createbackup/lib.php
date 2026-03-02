@@ -64,8 +64,11 @@ class createbackup extends libbase {
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
-        if (self::$numberofbackups >= settings_manager::get_settings(
-                $instanceid, settings_type::STEP)['maximumbackupspercron']) {
+        // Get setting maximum backups per cron. "0" means no limit.
+        $maximumbackupspercron = settings_manager::get_settings(
+            $instanceid, settings_type::STEP)['maximumbackupspercron'] ?? 0;
+        $maximumbackupspercron = $maximumbackupspercron == 0 ? PHP_INT_MAX : $maximumbackupspercron;
+        if (self::$numberofbackups >= $maximumbackupspercron) {
             return step_response::waiting(); // Wait with further backups til the next cron run.
         }
         if (backup_manager::create_course_backup($course->id, $instanceid)) {

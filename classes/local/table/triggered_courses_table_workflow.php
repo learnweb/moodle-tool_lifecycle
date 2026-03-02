@@ -149,6 +149,10 @@ class triggered_courses_table_workflow extends \table_sql {
             }
         }
 
+        if (!$workflow->includesitecourse) {
+            $where .= " AND c.id <> 1 ";
+        }
+
         if ($filterdata) {
             if (is_numeric($filterdata)) {
                 $where = "($where) AND c.id = $filterdata ";

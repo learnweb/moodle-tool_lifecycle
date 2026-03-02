@@ -62,8 +62,11 @@ class deletecourse extends libbase {
             return step_response::rollback();
         }
 
-        if (self::$numberofdeletions >= settings_manager::get_settings($instanceid, settings_type::STEP)
-            ['maximumdeletionspercron']) {
+        // Get setting maximum deletions per cron. "0" means no limit.
+        $maximumdeletionspercron = settings_manager::get_settings(
+            $instanceid, settings_type::STEP)['maximumdeletionspercron'] ?? 0;
+        $maximumdeletionspercron = $maximumdeletionspercron == 0 ? PHP_INT_MAX : $maximumdeletionspercron;
+        if (self::$numberofdeletions >= $maximumdeletionspercron) {
             // Wait with further deletions at least until the next task run.
             return step_response::waiting();
         }

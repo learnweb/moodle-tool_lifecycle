@@ -190,7 +190,8 @@ span.tool_lifecycle-hint {
     margin-right: 0.2rem;
 }
 
-:is(#id_maximumdeletionspercron, #id_maximumbackupspercron) {
+:is(#id_maximumdeletionspercron, #id_maximumbackupspercron, #id_s_tool_lifecycle_durationv,
+#id_s_tool_lifecycle_coursecategorydepth, #id_s_tool_lifecycle_deletebackupsafterdays, #id_s_tool_lifecycle_forum) {
     text-align: center;
 }
 

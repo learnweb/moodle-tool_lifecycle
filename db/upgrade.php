@@ -25,6 +25,7 @@
 use tool_lifecycle\local\entity\process;
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\process_manager;
+use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 
@@ -676,6 +677,45 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2026012002, 'tool', 'lifecycle');
+    }
+
+    if ($oldversion < 2026012003) {
+
+        // Find all steps that have a maximumdeletionspercron-value or maximumbackupspercron-value of 0.
+        define("STEPSTOPPED", 1);
+
+        $sql = "SELECT s.instanceid 
+                FROM {tool_lifecycle_settings} s
+                WHERE s.type = 'step' AND (s.name = 'maximumdeletionspercron' OR s.name = 'maximumbackupspercron')
+                AND s.value = '0' ";
+        $instances = $DB->get_fieldset_sql($sql);
+        $params = ['type' => 'step', 'name' => 'status'];
+        // For every step create/update the setting 'status' with value STEPSTOPPED so that it is stopped the right way.
+        foreach ($instances as $instanceid) {
+            $step = step_manager::get_step_instance($instanceid);
+            $lib = lib_manager::get_step_lib($step->subpluginname);
+            $record = $DB->get_record('tool_lifecycle_settings',
+                array_merge($params, ['instanceid' => $instanceid])
+            );
+            if ($record) {
+                if ($record->value != STEPSTOPPED) {
+                    $oldvalue = $record->value;
+                    $record->value = STEPSTOPPED;
+                    $DB->update_record('tool_lifecycle_settings', $record);
+                    $lib->on_setting_changed('status', STEPSTOPPED, $oldvalue);
+                }
+            } else {
+                $newrecord = new \stdClass();
+                $newrecord->instanceid = $instanceid;
+                $newrecord->name = 'status';
+                $newrecord->value = STEPSTOPPED;
+                $newrecord->type = 'step';
+                $DB->insert_record('tool_lifecycle_settings', $newrecord);
+            }
+        }
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2026012003, 'tool', 'lifecycle');
     }
 
     return true;
