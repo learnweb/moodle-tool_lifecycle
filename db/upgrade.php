@@ -681,9 +681,6 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
     if ($oldversion < 2026012003) {
 
-        // Find all steps that have a maximumdeletionspercron-value or maximumbackupspercron-value of 0.
-        define("STEPSTOPPED", 1);
-
         $sql = "SELECT s.instanceid
                 FROM {tool_lifecycle_settings} s
                 WHERE s.type = 'step' AND (s.name = 'maximumdeletionspercron' OR s.name = 'maximumbackupspercron')
@@ -698,17 +695,17 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
                 array_merge($params, ['instanceid' => $instanceid])
             );
             if ($record) {
-                if ($record->value != STEPSTOPPED) {
+                if ($record->value != $lib::STEPSTOPPED) {
                     $oldvalue = $record->value;
-                    $record->value = STEPSTOPPED;
+                    $record->value = $lib::STEPSTOPPED;
                     $DB->update_record('tool_lifecycle_settings', $record);
-                    $lib->on_setting_changed('status', STEPSTOPPED, $oldvalue);
+                    $lib->on_setting_changed('status', $lib::STEPSTOPPED, $oldvalue);
                 }
             } else {
                 $newrecord = new \stdClass();
                 $newrecord->instanceid = $instanceid;
                 $newrecord->name = 'status';
-                $newrecord->value = STEPSTOPPED;
+                $newrecord->value = $lib::STEPSTOPPED;
                 $newrecord->type = 'step';
                 $DB->insert_record('tool_lifecycle_settings', $newrecord);
             }

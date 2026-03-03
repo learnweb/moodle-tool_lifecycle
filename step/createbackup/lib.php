@@ -119,13 +119,13 @@ class createbackup extends libbase {
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'status';
         $options = [
-            STEPACTIVE => get_string('active', 'tool_lifecycle'),
-            STEPSTOPPED => get_string('stopped', 'tool_lifecycle'),
+            self::STEPACTIVE => get_string('active', 'tool_lifecycle'),
+            self::STEPSTOPPED => get_string('stopped', 'tool_lifecycle'),
         ];
         $mform->addElement('select', $elementname, get_string('status', 'tool_lifecycle'), $options);
         $mform->addHelpButton($elementname, 'stopped', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
-        $mform->setDefault($elementname, STEPACTIVE);
+        $mform->setDefault($elementname, self::STEPACTIVE);
         // Maximum courses processed by a single task run.
         $elementname = 'maximumbackupspercron';
         $mform->addElement('text', $elementname,

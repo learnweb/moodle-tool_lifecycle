@@ -47,8 +47,6 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../locallib.php');
 
-define('STEPSTOPPED', 1);
-
 /**
  * Offers functionality to trigger, process and finish lifecycle processes.
  *
@@ -224,12 +222,13 @@ class processor {
                 }
 
                 $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
-                $lib = lib_manager::get_step_lib($step->subpluginname);
-                if ($lib->is_stoppable()) {
-                    $stepsettings = settings_manager::get_settings($step->id, settings_type::STEP);
-                    if (isset($stepsettings['status']) && $stepsettings['status'] == STEPSTOPPED) {
-                        mtrace("Course $course->id not processed because step stopped: $step->instancename", $eol);
-                        break;
+                if ($lib = lib_manager::get_step_lib($step->subpluginname)) {
+                    if ($lib->is_stoppable()) {
+                        $stepsettings = settings_manager::get_settings($step->id, settings_type::STEP);
+                        if (isset($stepsettings['status']) && $stepsettings['status'] == $lib::STEPSTOPPED) {
+                            mtrace("Course $course->id not processed because step stopped: $step->instancename", $eol);
+                            break;
+                        }
                     }
                 }
                 try {
@@ -296,12 +295,13 @@ class processor {
      */
     public function process_course_interactive($processid) {
         $process = process_manager::get_process_by_id($processid);
-        $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
-        $lib = lib_manager::get_step_lib($step->subpluginname);
-        if ($lib->is_stoppable()) {
-            $stepsettings = settings_manager::get_settings($step->id, settings_type::STEP);
-            if (isset($stepsettings['status']) && $stepsettings['status'] == STEPSTOPPED) {
-                return true;
+        if ($step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex)) {
+            $lib = lib_manager::get_step_lib($step->subpluginname);
+            if ($lib->is_stoppable()) {
+                $stepsettings = settings_manager::get_settings($step->id, settings_type::STEP);
+                if (isset($stepsettings['status']) && $stepsettings['status'] == $lib::STEPSTOPPED) {
+                    return true;
+                }
             }
         }
         $nextstep = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex + 1);

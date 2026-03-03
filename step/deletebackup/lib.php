@@ -136,12 +136,14 @@ class deletebackup extends libbase {
      */
     public function extend_add_instance_form_definition($mform) {
         // Add input field for maximum deletions (per cron execution).
-        $mform->addElement('text', 'maximumdeletionspercron', get_string('maximumdeletionspercron', 'lifecyclestep_deletebackup'));
+        $mform->addElement('text', 'maximumdeletionspercron',
+            get_string('maximumdeletionspercron','lifecyclestep_deletebackup'), ['size' => 3]);
         $mform->setType('maximumdeletionspercron', PARAM_INT);
         $mform->setDefault('maximumdeletionspercron', 10);
 
         // Add input field for deleting all backups that are older than X days.
-        $mform->addElement('text', 'deletebackupsolderthan', get_string('deletebackupsolderthan', 'lifecyclestep_deletebackup'));
+        $mform->addElement('text', 'deletebackupsolderthan',
+            get_string('deletebackupsolderthan', 'lifecyclestep_deletebackup'), ['size' => 3]);
         $mform->setType('deletebackupsolderthan', PARAM_INT);
         $mform->setDefault('deletebackupsolderthan', 365);
 

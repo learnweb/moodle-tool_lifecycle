@@ -31,9 +31,6 @@ use tool_lifecycle\local\response\step_response;
 
 defined('MOODLE_INTERNAL') || die();
 
-define('STEPSTOPPED', 1);
-define('STEPACTIVE', 0);
-
 /**
  * Interface for the subplugintype step.
  *
@@ -43,6 +40,20 @@ define('STEPACTIVE', 0);
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class libbase {
+
+    /**
+     * Step is stopped and will not be executed.
+     *
+     * @var int
+     */
+    public const STEPSTOPPED = 1;
+
+    /**
+     * Step is active and courses will be processed.
+     *
+     * @var int
+     */
+    public const STEPACTIVE = 0;
 
     /**
      * Processes the course and returns a response.
