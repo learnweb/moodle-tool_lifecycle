@@ -1,7 +1,17 @@
 CHANGELOG
 =========
 
-5.1.2(2026-02-15)
+5.1.3 (v5.1-r4, 2026-03-03)
+---------------------------
+* [FEATURE] Introduce new trigger: Startdate
+* [FEATURE] MBS-10615: Improve speed of view page (PR #289)
+* [FEATURE] Cleanup task: add run to delete orphaned processes
+* [FEATURE] Make steps deletecourse and createbackup stoppable
+* [FEATURE] MBS-10615: Add interactions filter at user level (PR #291)
+* [FIXED] Steps createbackup, deletecourse: fix maximum per cron bug
+
+
+5.1.2 (2026-02-15)
 ------------------
 * [FEATURE] Showcase: add workflow description link
 * [CHANGE] Activity trigger: set multi_use true
@@ -9,7 +19,7 @@ CHANGELOG
 * [FIXED] Showcase: fix workflow details link
 
 
-5.1.1(2026-01-27)
+5.1.1 (2026-01-27)
 ------------------
 * [FEATURE] Add new lifecycle step 'deletebackup'
 * [FEATURE] Add the task to delete old backup files to the already existing cleanup_task
@@ -21,7 +31,7 @@ CHANGELOG
 * [FIXED] Add missing lang strings of step setcustomfield
 
 
-5.1.0(2026-01-20)
+5.1.0 (2026-01-20)
 ------------------
 * [FEATURE] Introduce new trigger 'activity'
 * [FEATURE] Introduce new trigger 'opencast'
@@ -35,14 +45,14 @@ CHANGELOG
 * [FIXED] Include filepath as debug info when backup file does not exist (#277)
 * Moodle 5.1 compatible version
 
-5.0.2(2025-12-13)
+5.0.2 (2025-12-13)
 ------------------
 * [FEATURE] workflowoverview: Do not take the specificdata trigger into account when counting
 * [FEATURE] Introduce optional max number of courses triggered per cron run and/or per day for a workflow
 * [FEATURE] New trigger depending on enddate PR #272
 * [FIXED] Fix a bootstrap bug in interaction table
 
-5.0.1(2025-11-15)
+5.0.1 (2025-11-15)
 ------------------
 * [FEATURE] Customise buttons in adminapprove step PR #266
 * [FEATURE] Improve listings of triggered courses in workflowoverview
@@ -54,12 +64,12 @@ CHANGELOG
 * [FIXED] Respect use of check_course function when counting triggered courses
 * [FIXED] Activate the automatic tests of the subplugins
 
-5.0.0(2025-10-23)
+5.0.0 (2025-10-23)
 ------------------
 * [FIXED] Fix unit test process_error_test
 * Moodle 5.0 compatible version
 
-4.5.6(2025-10-20)
+4.5.6 (2025-10-20)
 ------------------
 * [FIXED] Fix bug in upgrade.php issue #259
 * [FIXED] process_courses: no debug messages when phpunit test
