@@ -137,7 +137,7 @@ class deletebackup extends libbase {
     public function extend_add_instance_form_definition($mform) {
         // Add input field for maximum deletions (per cron execution).
         $mform->addElement('text', 'maximumdeletionspercron',
-            get_string('maximumdeletionspercron','lifecyclestep_deletebackup'), ['size' => 3]);
+            get_string('maximumdeletionspercron', 'lifecyclestep_deletebackup'), ['size' => 3]);
         $mform->setType('maximumdeletionspercron', PARAM_INT);
         $mform->setDefault('maximumdeletionspercron', 10);
 
