@@ -122,6 +122,7 @@ class interaction_attention_table extends interaction_table {
      * @throws \invalid_parameter_exception
      */
     public function col_tools($row) {
+        global $USER;
         $step = step_manager::get_step_instance($row->stepinstanceid);
         $tools = interaction_manager::get_action_tools($step->subpluginname, $row->processid);
         if (empty($tools)) {
@@ -129,10 +130,20 @@ class interaction_attention_table extends interaction_table {
         }
 
         $output = '';
-        foreach ($tools as $tool) {
-            $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['alt']);
-        }
+        $toolsstrings = array_map(fn($action) => $action['action'], $tools);
 
+        $availabletoolsstrings = lib_manager::get_step_interactionlib($step->subpluginname)->
+            get_available_actions_for_user($toolsstrings, $USER->id, $row->courseid);
+
+        foreach ($tools as $tool) {
+            // Only show actions which are valid actions and which are available to the current user.
+            if (in_array($tool['action'], $toolsstrings) && in_array($tool['action'], $availabletoolsstrings)) {
+                $output .= $this->format_icon_link($tool['action'], $row->processid, $step->id, $tool['alt']);
+            }
+        }
+        if (empty($output)) {
+            $output = get_string('noactionsavailable', 'tool_lifecycle');
+        }
         return $output;
     }
 

@@ -214,6 +214,7 @@ $string['move_down'] = 'Nach unten bewegen';
 $string['move_up'] = 'Nach oben bewegen';
 $string['name_until_date'] = '"{$a->name}" bis {$a->date}';
 $string['nextrun'] = 'Nächste Durchführung: {$a}';
+$string['noactionsavailable'] = 'Sie können keine Aktion ausführen. Warten Sie, bis ein anderer Benutzer dies tut.';
 $string['noactiontools'] = 'Keine Aktionen verfügbar';
 $string['nocoursestodisplay'] = 'Es gibt derzeit keine Kurse, die Ihre Aufmerksamkeit erfordern!';
 $string['noentriesselected'] = 'Es wurden keine Tabellen-Einträge markiert.';
