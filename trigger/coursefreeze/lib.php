@@ -93,7 +93,8 @@ public function instance_settings() {
         // Only courses that:
         //  - have last access older than lastaccessthreshold
         //  - AND were created before creationthreshold.
-        $where = 'c.timecreated < :creationthreshold
+        $where = 'c.id <> 1
+                  AND c.timecreated < :creationthreshold
                   AND EXISTS (
                         SELECT 1
                           FROM {context} ctx
