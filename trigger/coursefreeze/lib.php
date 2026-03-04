@@ -94,6 +94,13 @@ public function instance_settings() {
         //  - have last access older than lastaccessthreshold
         //  - AND were created before creationthreshold.
         $where = 'c.timecreated < :creationthreshold
+                  AND EXISTS (
+                        SELECT 1
+                          FROM {context} ctx
+                         WHERE ctx.contextlevel = 50
+                           AND ctx.instanceid = c.id
+                           AND ctx.locked = 0
+                  )
                   AND c.id IN (
                         SELECT la.courseid
                           FROM {user_enrolments} ue
