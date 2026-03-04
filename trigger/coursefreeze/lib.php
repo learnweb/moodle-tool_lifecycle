@@ -92,7 +92,9 @@ public function instance_settings() {
 
         // Only courses that:
         //  - have last access older than lastaccessthreshold
-        //  - AND were created before creationthreshold.
+        // or have never been accessed
+        //  - AND were created before creationthreshold
+        // not including the front page course
         $where = 'c.id <> 1
                   AND c.timecreated < :creationthreshold
                   AND EXISTS (
@@ -102,14 +104,20 @@ public function instance_settings() {
                            AND ctx.instanceid = c.id
                            AND ctx.locked = 0
                   )
-                  AND c.id IN (
-                        SELECT la.courseid
-                          FROM {user_enrolments} ue
-                          JOIN {enrol} e ON ue.enrolid = e.id
-                          JOIN {user_lastaccess} la ON ue.userid = la.userid
-                         WHERE e.courseid = la.courseid
-                         GROUP BY la.courseid
-                         HAVING MAX(la.timeaccess) < :lastaccessthreshold
+                  AND (
+                        NOT EXISTS (
+                            SELECT 1
+                              FROM {user_lastaccess} la
+                             WHERE la.courseid = c.id
+                        )
+                        OR
+                        EXISTS (
+                            SELECT 1
+                              FROM {user_lastaccess} la
+                             WHERE la.courseid = c.id
+                             GROUP BY la.courseid
+                            HAVING MAX(la.timeaccess) < :lastaccessthreshold
+                        )
                   )';
 
         $params = [
