@@ -14,19 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->libdir.'/upgradelib.php');
+namespace tool_lifecycle;
 
 use tool_lifecycle\local\manager\lib_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\local\manager\trigger_manager;
 
+/**
+ * Tests the subplugin handling.
+ * @package    tool_lifecycle
+ * @category   test
+ * @group      tool_lifecycle
+ * @copyright  2026 Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+final class subplugin_test extends \advanced_testcase {
 
-class subplugin_test extends \advanced_testcase {
-
-    public function test_builtin_triggers() {
+    /**
+     * Tests that all builtin triggers are registered and loadable.
+     *
+     * @covers \tool_lifecycle\local\manager\trigger_manager::get_trigger_types
+     * @covers \tool_lifecycle\local\manager\lib_manager::get_trigger_lib
+     */
+    public function test_builtin_triggers(): void {
         $this->resetAfterTest();
         $builtintriggers = \core_component::get_plugin_list('lifecycletrigger');
         $triggers = trigger_manager::get_trigger_types();
@@ -40,7 +50,13 @@ class subplugin_test extends \advanced_testcase {
         }
     }
 
-    public function test_builtin_steps() {
+    /**
+     * Tests that all builtin steps are registered and loadable.
+     *
+     * @covers \tool_lifecycle\local\manager\step_manager::get_step_types
+     * @covers \tool_lifecycle\local\manager\lib_manager::get_step_lib
+     */
+    public function test_builtin_steps(): void {
         $this->resetAfterTest();
         $builtinsteps = \core_component::get_plugin_list('lifecyclestep');
         $steps = step_manager::get_step_types();
@@ -54,16 +70,22 @@ class subplugin_test extends \advanced_testcase {
         }
     }
 
-    public function test_additional_triggers() {
+    /**
+     * Tests that additional external triggers can be registered and loaded.
+     *
+     * @covers \tool_lifecycle\local\manager\trigger_manager::get_trigger_types
+     * @covers \tool_lifecycle\local\manager\lib_manager::get_trigger_lib
+     */
+    public function test_additional_triggers(): void {
         $this->resetAfterTest();
 
         // Add a fake tool plugin, which define a trigger.
-        $mockedcomponent = new ReflectionClass(\core_component::class);
+        $mockedcomponent = new \ReflectionClass(\core_component::class);
         $mockedplugins = $mockedcomponent->getProperty('plugins');
         $mockedplugins->setAccessible(true);
         $plugins = $mockedplugins->getValue();
         $plugins['tool'] += ['sampletrigger' => __DIR__ . '/fixtures/fakeplugins/sampletrigger'];
-        $mockedplugins->setValue($plugins);
+        $mockedplugins->setValue(null, $plugins);
 
         // The 'fixture' is not autoloaded, so we need to require it.
         require_once(__DIR__ . '/fixtures/fakeplugins/sampletrigger/classes//lifecycle/trigger.php');
@@ -78,19 +100,26 @@ class subplugin_test extends \advanced_testcase {
 
         // Unset the fake plugin.
         unset($plugins['tool']['sampletrigger']);
-        $mockedplugins->setValue($plugins);
+        $mockedplugins->setValue(null, $plugins);
     }
 
-    public function test_additional_steps() {
+    /**
+     * Tests that additional external steps and their interaction libs can be registered and loaded.
+     *
+     * @covers \tool_lifecycle\local\manager\step_manager::get_step_types
+     * @covers \tool_lifecycle\local\manager\lib_manager::get_step_lib
+     * @covers \tool_lifecycle\local\manager\lib_manager::get_step_interactionlib
+     */
+    public function test_additional_steps(): void {
         $this->resetAfterTest();
 
         // Add a fake tool plugin, which define a step.
-        $mockedcomponent = new ReflectionClass(\core_component::class);
+        $mockedcomponent = new \ReflectionClass(\core_component::class);
         $mockedplugins = $mockedcomponent->getProperty('plugins');
         $mockedplugins->setAccessible(true);
         $plugins = $mockedplugins->getValue();
         $plugins['tool'] += ['samplestep' => __DIR__ . '/fixtures/fakeplugins/samplestep'];
-        $mockedplugins->setValue($plugins);
+        $mockedplugins->setValue(null, $plugins);
 
         // The 'fixture'  is not autoloaded, so we need to require it.
         require_once(__DIR__ . '/fixtures/fakeplugins/samplestep/classes//lifecycle/step.php');
@@ -110,7 +139,7 @@ class subplugin_test extends \advanced_testcase {
 
         // Unset the fake plugin.
         unset($plugins['tool']['samplestep']);
-        $mockedplugins->setValue($plugins);
+        $mockedplugins->setValue(null, $plugins);
     }
 
 }

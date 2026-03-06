@@ -21,7 +21,8 @@ use core_privacy\local\metadata\null_provider;
 /**
  * Privacy subsystem implementation for tool_samplestep.
  *
- * @package     tool_samplestep
+ * @package     tool_lifecycle
+ * @copyright   2026 Catalyst IT
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements null_provider {
@@ -32,7 +33,7 @@ class provider implements null_provider {
      *
      * @return string the reason
      */
-    public static function get_reason() : string {
+    public static function get_reason(): string {
         return 'privacy:metadata';
     }
 }

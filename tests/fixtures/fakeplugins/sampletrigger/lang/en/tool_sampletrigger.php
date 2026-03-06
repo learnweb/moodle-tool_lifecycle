@@ -14,5 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Sample trigger language strings.
+ *
+ * @package tool_lifecycle
+ * @copyright 2026 Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 $string['pluginname'] = 'Sample trigger';
 $string['privacy:metadata'] = 'The plugin does not store any personal data.';

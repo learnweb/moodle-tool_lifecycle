@@ -17,7 +17,8 @@
 /**
  * Fake component for testing
  *
- * @package    core
+ * @package    tool_lifecycle
+ * @copyright  2026 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
