@@ -59,7 +59,17 @@ class form_workflow_instance extends \moodleform {
      * Defines forms elements
      */
     public function definition() {
+        global $CFG;
+
         $mform = $this->_form;
+
+        // Require and register the lifecycle duration element.
+        require_once($CFG->dirroot.'/admin/tool/lifecycle/classes/local/form/lifecycle_duration.php');
+        \MoodleQuickForm::registerElementType(
+            'tool_lifecycle_duration',
+            $CFG->dirroot.'/admin/tool/lifecycle/classes/local/form/lifecycle_duration.php',
+            '\tool_lifecycle\local\form\lifecycle_duration'
+        );
 
         $elementname = 'id';
         $mform->addElement('hidden', $elementname); // Save the record's id.
@@ -94,23 +104,25 @@ class form_workflow_instance extends \moodleform {
         }
 
         $elementname = 'rollbackdelay';
-        $mform->addElement('duration', $elementname, get_string('workflow_rollbackdelay', 'tool_lifecycle'));
+        $mform->addElement('tool_lifecycle_duration', $elementname,
+            get_string('workflow_rollbackdelay', 'tool_lifecycle'));
         $mform->addHelpButton($elementname, 'workflow_rollbackdelay', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->rollbackdelay);
         } else {
-            $mform->setDefault($elementname, get_config('tool_lifecycle', 'duration'));
+            $mform->setDefault($elementname, get_config('tool_lifecycle', 'rollbackdelay'));
         }
 
         $elementname = 'finishdelay';
-        $mform->addElement('duration', $elementname, get_string('workflow_finishdelay', 'tool_lifecycle'));
+        $mform->addElement('tool_lifecycle_duration', $elementname,
+            get_string('workflow_finishdelay', 'tool_lifecycle'));
         $mform->addHelpButton($elementname, 'workflow_finishdelay', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->finishdelay);
         } else {
-            $mform->setDefault($elementname, get_config('tool_lifecycle', 'duration'));
+            $mform->setDefault($elementname, get_config('tool_lifecycle', 'finishdelay'));
         }
 
         $elementname = 'delayforallworkflows';
