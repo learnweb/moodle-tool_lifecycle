@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Duration form element for lifecycle to introduce month and year as units.
  *
@@ -47,7 +46,7 @@ class lifecycle_duration extends \MoodleQuickForm_duration {
         $durationunits = parent::get_units();
         $additionalunits = [
                 YEARSECS => get_string('years'),
-                (int)(YEARSECS/12) => strtolower(get_string('months'))
+                (int)(YEARSECS / 12) => strtolower(get_string('months')),
             ];
         $units = $additionalunits + $durationunits;
         return $units;
