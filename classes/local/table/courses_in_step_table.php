@@ -91,7 +91,7 @@ class courses_in_step_table extends \table_sql {
 
         if ($filterdata) {
             if (is_numeric($filterdata)) {
-                $where = " AND c.id = $filterdata ";
+                $where = $where . " AND c.id = $filterdata ";
             } else {
                 $where = $where . " AND ( c.fullname LIKE '%$filterdata%' OR c.shortname LIKE '%$filterdata%')";
             }
