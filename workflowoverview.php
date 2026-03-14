@@ -65,10 +65,10 @@ $used = optional_param('used', null, PARAM_INT);
 $backupdeletionlog = optional_param('backupdeletionlog', 0, PARAM_INT);
 $search = optional_param('search', null, PARAM_RAW);
 $showdetails = optional_param('showdetails', 0, PARAM_INT);
-$showsql = optional_param('showsql', 0, PARAM_INT);
+$showprocesssql = optional_param('showprocesssql', 0, PARAM_INT);
 $showtablesql = optional_param('showtablesql', 0, PARAM_INT);
 
-$debugtriggersql = "";
+$debugprocesssql = "";
 $debugtablesql = "";
 if ($showdetails == 0) {
     if (isset($SESSION->showdetails)) {
@@ -78,14 +78,14 @@ if ($showdetails == 0) {
     }
 } else if ($showdetails == -1) {
     $SESSION->showdetails = $showdetails = 0;
-    $SESSION->debugtriggersql = $debugtriggersql = '';
+    $SESSION->debugprocesssql = $debugprocesssql = '';
     $SESSION->debugtablesql = $debugtablesql = '';
 } else {
     $SESSION->showdetails = $workflowid;
     if ($showtablesql && isset($SESSION->debugtablesql)) {
         $debugtablesql = $SESSION->debugtablesql;
-    } else if ($showsql && isset($SESSION->debugtriggersql)) {
-        $debugtriggersql = $SESSION->debugtriggersql;
+    } else if ($showprocesssql && isset($SESSION->debugprocesssql)) {
+        $debugprocesssql = $SESSION->debugprocesssql;
     }
 }
 
@@ -455,12 +455,12 @@ if ($stepid) { // Display courses table with courses of this step.
         $table->out(PAGESIZE, false);
         $out = ob_get_contents();
         ob_end_clean();
-} else if ($showsql && $debugtriggersql) { // Display the trigger sql statement stored in session.
+} else if ($showprocesssql && $debugprocesssql) { // Display the trigger SQL statement stored in session.
     $out = \html_writer::div(
-        str_replace("}", "", str_replace("{", $CFG->prefix, $debugtriggersql)),
+        str_replace("}", "", str_replace("{", $CFG->prefix, $debugprocesssql)),
         "p-3"
     );
-} else if ($showtablesql && $debugtablesql) { // Display the table sql statement stored in session.
+} else if ($showtablesql && $debugtablesql) { // Display the table SQL statement stored in session.
     $out .= \html_writer::div(
         str_replace("}", "", str_replace("{", $CFG->prefix, $debugtablesql)), "p-3"
     );

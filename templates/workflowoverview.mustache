@@ -75,7 +75,7 @@
     <div class="wf-wrapper">
 
         <div class="{{classdetails}} rounded shadow d-inline-block p-3 position-relative mb-2" style="min-width: 400px;">
-            <span class="edit-pen">
+            <span class="edit-pen text-center">
                 <a href="{{{editsettingslink}}}" {{#isactive}}class="text-white"{{/isactive}}>{{#pix}} i/edit, core, {{/pix}}</a>
                 {{{disableworkflowlink}}}
                 {{{abortdisableworkflowlink}}}
@@ -103,7 +103,7 @@
                     {{/showdetailsicon}}
                     {{^showdetailsicon}}
                         <a href="{{{showdetailslink}}}&showdetails=-1" data-toggle="tooltip" title="{{#str}} dontshowextendeddetails, tool_lifecycle{{/str}}"><i class="fa-regular fa-eye"></i></a>
-                        <a href="{{{popuplink}}}&showtablesql=1&showdetails=1" class="text-muted fs-6 text-decoration-none">&nbsp;&nbsp;&nbsp;</a>
+                        <a href="{{{popuplink}}}&showprocesssql=1&showdetails=1" class="text-muted fs-6 text-decoration-none">&nbsp;&nbsp;&nbsp;</a>
                     {{/showdetailsicon}}
             </h5>
             {{#showcoursecounts}}

@@ -413,7 +413,7 @@ class processor {
         foreach ($whereparams as $key => $value) {
             $debugsql = str_replace(":".$key, $value, $debugsql);
         }
-        $SESSION->debugtriggersql = $debugsql;
+        $SESSION->debugprocesssql = $debugsql;
 
         return $DB->get_recordset_sql($sql, $whereparams);
     }
