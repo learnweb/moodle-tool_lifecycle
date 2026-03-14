@@ -277,19 +277,19 @@ class triggered_courses_table_workflow extends \table_sql {
             $out .= \html_writer::div(get_string('excludedbycoursecode', 'tool_lifecycle'),
                 'text-warning');
         }
-        if ($this->selectable) {
-            $params = [
-                'action' => 'select',
-                'cid' => $row->courseid,
-                'sesskey' => sesskey(),
-                'wf' => $this->workflowid,
-            ];
-            $button = new \single_button(new \moodle_url($PAGE->url, $params), get_string('select'));
-            $out .= $OUTPUT->render($button);
-        }
         if (!$out) {
             $this->triggered++;
             $out = \html_writer::span(get_string('statusok'), 'text-success');
+            if ($this->selectable) {
+                $params = [
+                    'action' => 'select',
+                    'cid' => $row->courseid,
+                    'sesskey' => sesskey(),
+                    'wf' => $this->workflowid,
+                ];
+                $button = new \single_button(new \moodle_url($PAGE->url, $params), get_string('select'));
+                $out .= "&nbsp;". $OUTPUT->render($button);
+            }
         }
 
         return $out;
