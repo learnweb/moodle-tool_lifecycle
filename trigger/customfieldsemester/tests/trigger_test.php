@@ -41,6 +41,8 @@ define('TEST_LIFECYCLETRIGGER_CUSTOMFIELDSEMESTER_DELAY', 12);
 define('TEST_LIFECYCLETRIGGER_CUSTOMFIELDSEMESTER_SUMMERTERMSTART', 4);
 define('TEST_LIFECYCLETRIGGER_CUSTOMFIELDSEMESTER_WINTERTERMSTART', 10);
 
+// phpcs:disable moodle.PHPUnit.TestCaseCovers.Missing
+
 /**
  * Admin tool "Course Life Cycle" - Subplugin "Customfield Semester Trigger" - Trigger test
  *
