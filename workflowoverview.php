@@ -201,9 +201,12 @@ foreach ($triggers as $trigger) {
     // Check if plugin dependencies are met.
     if ($trigger->subpluginname == 'customfieldsemester') {
         if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+            $a = new \stdClass();
+            $a->lifecyclesubplugin = $trigger->subpluginname;
+            $a->plugin = "customfieldsemester";
             echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
-                get_string('customfieldsemesternotinstalled',
-                'tool_lifecycle', "customfieldsemester"), 'error');
+                get_string('plugindependencynotmet',
+                'tool_lifecycle', $a), 'error');
             echo $renderer->footer();
             die();
         }
@@ -211,9 +214,12 @@ foreach ($triggers as $trigger) {
         $nosemester = settings_manager::get_settings($trigger->id, settings_type::TRIGGER)['nosemester'] ?? false;
         if ($nosemester) {
             if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                $a = new \stdClass();
+                $a->lifecyclesubplugin = $trigger->subpluginname;
+                $a->plugin = "semindependent";
                 echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
-                    get_string('customfieldsemesternotinstalled',
-                    'tool_lifecycle', "semindependent"), 'error');
+                    get_string('plugindependencynotmet',
+                    'tool_lifecycle', $a), 'error');
                 echo $renderer->footer();
                 die();
             }

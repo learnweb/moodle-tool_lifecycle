@@ -68,8 +68,10 @@ if ($triggers) {
             echo html_writer::start_div().$plugindescription;
             if ($trigger == 'customfieldsemester') {
                 if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
-                    echo \html_writer::span(
-                        get_string('customfieldsemesternotinstalled', 'tool_lifecycle', "customfieldsemester"),
+                    $a = new \stdClass();
+                    $a->lifecyclesubplugin = $trigger;
+                    $a->plugin = "customfieldsemester";
+                    echo \html_writer::span(get_string('plugindependencynotmet', 'tool_lifecycle', $a),
                         'text-danger ml-1');
                 }
             }

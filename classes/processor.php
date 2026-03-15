@@ -101,9 +101,11 @@ class processor {
                 if ($trigger->subpluginname == 'customfieldsemester') {
                     if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
                         if ($run) {
+                            $a = new \stdClass();
+                            $a->lifecyclesubplugin = $trigger->subpluginname;
+                            $a->plugin = "customfieldsemester";
                             mtrace(get_string('workflownotvalid', 'tool_lifecycle')." ".
-                                get_string('customfieldsemesternotinstalled',
-                                    'tool_lifecycle', "customfieldsemester"), $eol);
+                                get_string('plugindependencynotmet', 'tool_lifecycle', $a), $eol);
                         }
                         continue 2;
                     }
@@ -112,14 +114,14 @@ class processor {
                         settings_manager::get_settings($trigger->id, settings_type::TRIGGER)['nosemester'] ?? false;
                     if ($nosemester) {
                         if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
-                            if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
-                                if ($run) {
-                                    mtrace(get_string('workflownotvalid', 'tool_lifecycle')." ".
-                                        get_string('customfieldsemesternotinstalled',
-                                            'tool_lifecycle', "semindependent"), $eol);
-                                }
-                                continue 2;
+                            if ($run) {
+                                $a = new \stdClass();
+                                $a->lifecyclesubplugin = $trigger->subpluginname;
+                                $a->plugin = "customfieldsemester";
+                                mtrace(get_string('workflownotvalid', 'tool_lifecycle') . " " .
+                                    get_string('plugindependencynotmet', 'tool_lifecycle', $a), $eol);
                             }
+                            continue 2;
                         }
                     }
                 }

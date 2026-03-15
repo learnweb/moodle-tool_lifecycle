@@ -99,7 +99,7 @@ class process_manager {
             $e = new \Exception(get_string('process_withnotexistingcourse', 'tool_lifecycle'));
             self::insert_process_error($process, $e);
         }
-        $sql = "SELECT p.* 
+        $sql = "SELECT p.*
                 FROM {tool_lifecycle_process} p INNER JOIN {tool_lifecycle_workflow} w ON p.workflowid = w.id
                 WHERE w.timedeactive IS NULL";
         $records = $DB->get_records_sql($sql);

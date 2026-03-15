@@ -176,6 +176,12 @@ class restore_lifecycle_workflow {
                 $this->errors[] = get_string('restore_trigger_does_not_exist',
                     'tool_lifecycle', $trigger->subpluginname);
             }
+            if ($trigger->subpluginname == 'customfieldsemester') {
+                if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                    $this->errors[] = get_string('plugindependencynotmet',
+                        'tool_lifecycle', 'customfieldsemester');
+                }
+            }
         }
         if (count($this->errors) > 0) {
             return false;
