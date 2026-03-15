@@ -120,7 +120,6 @@ $string['create_copy'] = 'Kopie erstellen';
 $string['create_step'] = 'Schritt erstellen';
 $string['create_trigger'] = 'Trigger erstellen';
 $string['create_workflow_from_existing'] = 'Kopie von bestehendem Workflow erstellen';
-$string['plugindependencynotmet'] = '{$a->lifecyclesubplugin} benötigt das Plugin {$a->plugin}, das in diesem Moodle nicht installiert ist.';
 $string['date'] = 'Fälligkeitsdatum';
 $string['deactivated'] = 'Deaktiviert';
 $string['deactivated_workflows_header'] = 'Inaktive';
@@ -238,6 +237,7 @@ Ein Kurs wird je nach Workflow-Konfiguration der Verarbeitung zugeführt wenn al
 Trotzdem sind die Zahlen nur Näherungswerte, da der Kurs z.Bsp. schon von einem höher gereihten Workflow exkludiert oder verarbeitet werden könnte.';
 $string['overview:trigger_info'] = 'Hier wird die Anzahl der Kurse ausgewiesen, die durch den Trigger ausgelöst würden, abzüglich der Kurse, die vom Workflow schon verarbeitet werden oder - je nach Workflow-Einstellung - verzögert sind.
 Beim Mouseover sehen Sie nähere Informationen zum aktuellen Stand des Triggers.';
+$string['plugindependencynotmet'] = '{$a->lifecyclesubplugin} benötigt das Plugin {$a->plugin}, das in diesem Moodle nicht installiert ist.';
 $string['pluginname'] = 'Kurs-Lebenszyklus';
 $string['plugintitle'] = 'Kurs-Lebenszyklus';
 $string['privacy:metadata:tool_lifecycle_action_log'] = 'Ein Log von Aktionen des Kursmanagers.';

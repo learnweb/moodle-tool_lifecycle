@@ -121,7 +121,6 @@ $string['create_copy'] = 'Create copy';
 $string['create_step'] = 'Create step';
 $string['create_trigger'] = 'Create trigger';
 $string['create_workflow_from_existing'] = 'Copy new workflow from existing';
-$string['plugindependencynotmet'] = '{$a->lifecyclesubplugin} depends on the plugin {$a->plugin}, which is not installed.';
 $string['date'] = 'Due date';
 $string['deactivated'] = 'Deactivated';
 $string['deactivated_workflows_header'] = 'Deactivated';
@@ -238,6 +237,7 @@ According to your workflow configuration courses will be triggered if all trigge
 Still, these numbers are only approximates, since it could be that a course is excluded by another workflow, or will trigger another workflow before this one.';
 $string['overview:trigger_info'] = 'The number of courses which would be triggered by this trigger and are not already processed by this workflow and - regarding to the workflow configuration - are not delayed.
 See the tooltip for more details.';
+$string['plugindependencynotmet'] = '{$a->lifecyclesubplugin} depends on the plugin {$a->plugin}, which is not installed.';
 $string['pluginname'] = 'Life Cycle';
 $string['plugintitle'] = 'Course Life Cycle';
 $string['privacy:metadata:tool_lifecycle_action_log'] = 'A log of actions done by course managers.';
