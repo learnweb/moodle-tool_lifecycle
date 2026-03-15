@@ -111,7 +111,7 @@ class form_workflow_instance extends \moodleform {
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->rollbackdelay);
         } else {
-            $mform->setDefault($elementname, get_config('tool_lifecycle', 'rollbackdelay'));
+            $mform->setDefault($elementname, get_config('tool_lifecycle', 'duration'));
         }
 
         $elementname = 'finishdelay';
@@ -122,7 +122,7 @@ class form_workflow_instance extends \moodleform {
         if (isset($this->workflow)) {
             $mform->setDefault($elementname, $this->workflow->finishdelay);
         } else {
-            $mform->setDefault($elementname, get_config('tool_lifecycle', 'finishdelay'));
+            $mform->setDefault($elementname, get_config('tool_lifecycle', 'duration'));
         }
 
         $elementname = 'delayforallworkflows';
