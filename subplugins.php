@@ -74,7 +74,7 @@ if ($triggers) {
                     echo \html_writer::span(get_string('plugindependencynotmet', 'tool_lifecycle', $a),
                         'text-danger ml-1');
                 }
-            } elseif ($trigger == 'opencast') {
+            } else if ($trigger == 'opencast') {
                 if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
                     $a = new \stdClass();
                     $a->lifecyclesubplugin = get_string('trigger', 'tool_lifecycle') . ' ' . 'opencast';

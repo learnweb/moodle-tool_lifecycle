@@ -270,7 +270,7 @@ class trigger_manager extends subplugin_manager {
                 if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
                     continue;
                 }
-            } elseif ($id == 'opencast') {
+            } else if ($id == 'opencast') {
                 if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
                     continue;
                 }
