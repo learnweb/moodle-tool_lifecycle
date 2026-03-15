@@ -16,8 +16,7 @@
     }
   },
   "additional_plugins": [
-    "learnweb/moodle-customfield_semester",
-    "Opencast-Moodle/moodle-tool_opencast"
+    "learnweb/moodle-customfield_semester"
   ]
 
 }
