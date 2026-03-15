@@ -109,7 +109,7 @@ class categories extends base_automatic {
     public function instance_settings() {
         return [
             new instance_setting('categories', PARAM_SEQUENCE, true),
-            new instance_setting('exclude', PARAM_BOOL),
+            new instance_setting('exclude', PARAM_BOOL, true),
         ];
     }
 
@@ -122,55 +122,17 @@ class categories extends base_automatic {
      */
     public function extend_add_instance_form_definition($mform) {
         $categories = core_course_category::make_categories_list();
-        $type = $mform->getElementType('instancename');
-        if ($type == "text") {
-            $options = [
-                'multiple' => true,
-                'noselectionstring' => get_string('categories_noselection', 'lifecycletrigger_categories'),
-            ];
-            $mform->addElement('autocomplete', 'categories',
-                get_string('categories', 'lifecycletrigger_categories'),
-                $categories, $options);
-            $mform->setType('categories', PARAM_SEQUENCE);
+        $options = [
+            'multiple' => true,
+            'noselectionstring' => get_string('categories_noselection', 'lifecycletrigger_categories'),
+        ];
+        $mform->addElement('autocomplete', 'categories',
+            get_string('categories', 'lifecycletrigger_categories'),
+            $categories, $options);
+        $mform->setType('categories', PARAM_SEQUENCE);
 
-            $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));
-            $mform->setType('exclude', PARAM_BOOL);
-        }
-    }
-
-    /**
-     * Since the rendering of frozen autocomplete elements is awful we overide it here.
-     * @param \MoodleQuickForm $mform
-     * @param array $settings array containing the settings from the db.
-     * @throws \coding_exception
-     */
-    public function extend_add_instance_form_definition_after_data($mform, $settings) {
-        $type = $mform->getElementType('instancename');
-        if (($type ?? "") != "text") {
-            if (is_array($settings) && array_key_exists('categories', $settings)) {
-                $triggercategories = explode(",", $settings['categories']);
-            } else {
-                $triggercategories = [];
-            }
-            $categories = core_course_category::make_categories_list();
-            $categorieshtml = "";
-            foreach ($categories as $key => $value) {
-                if (in_array($key, $triggercategories)) {
-                    $categorieshtml .= \html_writer::div($value, "badge badge-secondary mr-1");
-                }
-            }
-            $mform->insertElementBefore($mform->createElement(
-                'static',
-                'categoriesstatic',
-                get_string('categories', 'lifecycletrigger_categories'),
-                $categorieshtml), 'buttonar');
-            $mform->insertElementBefore($mform->createElement(
-                'advcheckbox',
-                'exclude',
-                get_string('exclude', 'lifecycletrigger_categories')),
-                'buttonar');
-            $mform->setType('exclude', PARAM_BOOL);
-        }
+        $mform->addElement('advcheckbox', 'exclude', get_string('exclude', 'lifecycletrigger_categories'));
+        $mform->setType('exclude', PARAM_BOOL);
     }
 
     /**
