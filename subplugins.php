@@ -74,6 +74,14 @@ if ($triggers) {
                     echo \html_writer::span(get_string('plugindependencynotmet', 'tool_lifecycle', $a),
                         'text-danger ml-1');
                 }
+            } elseif ($trigger == 'opencast') {
+                if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+                    $a = new \stdClass();
+                    $a->lifecyclesubplugin = get_string('trigger', 'tool_lifecycle') . ' ' . 'opencast';
+                    $a->plugin = "tool_opencast";
+                    echo \html_writer::span(get_string('plugindependencynotmet', 'tool_lifecycle', $a),
+                        'text-danger ml-1');
+                }
             }
             echo html_writer::end_div();
         }
@@ -98,6 +106,15 @@ if ($steps) {
         }
         if ($plugindescription) {
             echo html_writer::div($plugindescription);
+            if ($step == 'opencast') {
+                if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+                    $a = new \stdClass();
+                    $a->lifecyclesubplugin = get_string('step', 'tool_lifecycle') . ' ' . 'opencast';
+                    $a->plugin = "tool_opencast";
+                    echo \html_writer::span(get_string('plugindependencynotmet', 'tool_lifecycle', $a),
+                        'text-danger ml-1');
+                }
+            }
         }
     }
 } else {

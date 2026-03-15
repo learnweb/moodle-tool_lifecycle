@@ -197,8 +197,9 @@ lifecycle_select_change_workflow($workflowid);
 
 $steps = step_manager::get_step_instances($workflow->id);
 $triggers = trigger_manager::get_triggers_for_workflow($workflow->id);
+
+// Triggers: Check if plugin dependencies are met.
 foreach ($triggers as $trigger) {
-    // Check if plugin dependencies are met.
     if ($trigger->subpluginname == 'customfieldsemester') {
         if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
             $a = new \stdClass();
@@ -223,6 +224,33 @@ foreach ($triggers as $trigger) {
                 echo $renderer->footer();
                 die();
             }
+        }
+    } else if ($trigger->subpluginname == 'opencast') {
+        if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+            $a = new \stdClass();
+            $a->lifecyclesubplugin = get_string('trigger', 'tool_lifecycle') . ' ' . 'opencast';
+            $a->plugin = "tool_opencast";
+            echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
+                get_string('plugindependencynotmet',
+                    'tool_lifecycle', $a), 'error');
+            echo $renderer->footer();
+            die();
+        }
+    }
+}
+
+// Steps: Check if plugin dependencies are met.
+foreach ($steps as $step) {
+    if ($step->subpluginname == 'opencast') {
+        if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+            $a = new \stdClass();
+            $a->lifecyclesubplugin = get_string('step', 'tool_lifecycle') . ' ' . 'opencast';
+            $a->plugin = "tool_opencast";
+            echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
+                get_string('plugindependencynotmet',
+                    'tool_lifecycle', $a), 'error');
+            echo $renderer->footer();
+            die();
         }
     }
 }
@@ -625,7 +653,7 @@ if (workflow_manager::is_editable($workflow->id)) {
         null, ['id' => 'tool_lifecycle-choose-trigger']);
     // Add step selection field.
     if (!$newworkflow) { // At first select a course selection trigger, than you can select the first step.
-        if ($steptypes = step_manager::get_step_types()) {
+        if ($steptypes = step_manager::get_chooseable_step_types()) {
             $addstepselect = $OUTPUT->single_select(new \moodle_url(urls::EDIT_ELEMENT,
                 ['type' => settings_type::STEP, 'wf' => $workflow->id]),
                 'subplugin', $steptypes, '', ['' => get_string('add_new_step_instance', 'tool_lifecycle')],

@@ -258,7 +258,7 @@ class trigger_manager extends subplugin_manager {
     }
 
     /**
-     * Gets the list of trigger subplugins, which are not preset and can therefore be chosen from trigger form dropdown..
+     * Get a list of trigger subplugins, which plugin depencencies are met. They can be chosen at workflow creation.
      * @return array of trigger subplugins.
      * @throws \coding_exception
      */
@@ -266,8 +266,12 @@ class trigger_manager extends subplugin_manager {
         $triggers = self::get_trigger_types();
         $result = [];
         foreach ($triggers as $id => $trigger) {
-            if ($trigger == 'Customfield semester trigger') {
+            if ($id == 'customfieldsemester') {
                 if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
+                    continue;
+                }
+            } elseif ($id == 'opencast') {
+                if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
                     continue;
                 }
             }

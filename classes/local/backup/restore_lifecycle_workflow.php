@@ -169,6 +169,14 @@ class restore_lifecycle_workflow {
             if (!array_key_exists($step->subpluginname, $installedsteps)) {
                 $this->errors[] = get_string('restore_step_does_not_exist', 'tool_lifecycle', $step->subpluginname);
             }
+            if ($step->subpluginname == 'opencast') {
+                if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+                    $a = new \stdClass();
+                    $a->lifecyclesubplugin = get_string('step', 'tool_lifecycle') . ' ' . 'opencast';
+                    $a->plugin = "tool_opencast";
+                    $this->errors[] = get_string('plugindependencynotmet', 'tool_lifecycle', $a);
+                }
+            }
         }
         $installedtrigger = \core_component::get_plugin_list('lifecycletrigger');
         foreach ($this->trigger as $trigger) {
@@ -178,8 +186,18 @@ class restore_lifecycle_workflow {
             }
             if ($trigger->subpluginname == 'customfieldsemester') {
                 if (lifecycle_is_plugin_installed('semester', 'customfield') === false) {
-                    $this->errors[] = get_string('plugindependencynotmet',
-                        'tool_lifecycle', 'customfieldsemester');
+                    $a = new \stdClass();
+                    $a->lifecyclesubplugin = get_string('trigger', 'tool_lifecycle') . ' ' . 'customfieldsemester';
+                    $a->plugin = "customfieldsemester";
+                    $this->errors[] = get_string('plugindependencynotmet', 'tool_lifecycle', $a);
+                }
+            }
+            if ($trigger->subpluginname == 'opencast') {
+                if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+                    $a = new \stdClass();
+                    $a->lifecyclesubplugin = get_string('trigger', 'tool_lifecycle') . ' ' . 'opencast';
+                    $a->plugin = "tool_opencast";
+                    $this->errors[] = get_string('plugindependencynotmet', 'tool_lifecycle', $a);
                 }
             }
         }

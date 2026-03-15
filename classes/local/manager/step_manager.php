@@ -248,6 +248,25 @@ class step_manager extends subplugin_manager {
     }
 
     /**
+     * Get a list of step subplugins, which plugin depencencies are met. They can be chosen at workflow creation.
+     * @return array of step subplugins.
+     * @throws \coding_exception
+     */
+    public static function get_chooseable_step_types() {
+        $steps = self::get_step_types();
+        $result = [];
+        foreach ($steps as $id => $step) {
+            if ($id == 'opencast') {
+                if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+                    continue;
+                }
+            }
+            $result[$id] = $step;
+        }
+        return $result;
+    }
+
+    /**
      * Handles an action for a workflow step.
      * @param string $action action to be executed
      * @param int $subpluginid id of the step instance
