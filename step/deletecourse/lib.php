@@ -74,10 +74,10 @@ class deletecourse extends libbase {
             $instanceid, settings_type::STEP)['maximumdeletionspercron']) {
             return step_response::waiting(); // Wait with further deletions til the next cron run.
         }
-        // Comment out action for testing 
-        // delete_course($course);
-        // Following addedd for testing - log instead of deleting
-        debugging('Lifecycle would delete course: '.$course->id.' ('.$course->fullname.')', DEBUG_DEVELOPER);
+        // Following addedd for testing - log deletion
+        debugging('Lifecycle is deleting course:'.$course->id.' ('.$course->fullname.')', DEBUG_DEVELOPER);
+        
+        delete_course($course);
 
         /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
            MDL-65228 (https://tracker.moodle.org/browse/MDL-65228) */
