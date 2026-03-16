@@ -75,7 +75,7 @@ class deletecourse extends libbase {
             return step_response::waiting(); // Wait with further deletions til the next cron run.
         }
         // Following addedd for testing - log deletion
-        debugging('Lifecycle is deleting course:'.$course->id.' ('.$course->fullname.')', DEBUG_DEVELOPER);
+        debugging('Lifecycle is deleting CourseID: '.$course->id.' Course Title: ('.$course->fullname.')', DEBUG_DEVELOPER);
         
         delete_course($course);
 
