@@ -58,7 +58,13 @@ class deletecourse extends libbase {
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
-        global $CFG;
+        global $CFG, $DB;
+
+        // Error prevention incase course has already been deleted
+        if (!$DB->record_exists('course', ['id' => $course->id])) {
+            debugging('Lifecycle skipping already deleted course: '.$course->id, DEBUG_DEVELOPER);
+            return step_response::proceed();
+        }
 
         if ($course->id == 1) {
             return step_response::rollback();
@@ -68,8 +74,10 @@ class deletecourse extends libbase {
             $instanceid, settings_type::STEP)['maximumdeletionspercron']) {
             return step_response::waiting(); // Wait with further deletions til the next cron run.
         }
-
-        delete_course($course);
+        // Comment out action for testing 
+        // delete_course($course);
+        // Following addedd for testing - log instead of deleting
+        debugging('Lifecycle would delete course: '.$course->id.' ('.$course->fullname.')', DEBUG_DEVELOPER);
 
         /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
            MDL-65228 (https://tracker.moodle.org/browse/MDL-65228) */
