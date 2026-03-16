@@ -57,35 +57,41 @@ class deletecourse extends libbase {
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public function process_course($processid, $instanceid, $course) {
+      public function process_course($processid, $instanceid, $course) {
         global $CFG, $DB;
-
-        // Error prevention incase course has already been deleted
+    
+        // skip if course no longer exists
         if (!$DB->record_exists('course', ['id' => $course->id])) {
             debugging('Lifecycle skipping already deleted course: '.$course->id, DEBUG_DEVELOPER);
             return step_response::proceed();
         }
-
+    
         if ($course->id == 1) {
             return step_response::rollback();
         }
-
+    
         if (self::$numberofdeletions >= settings_manager::get_settings(
             $instanceid, settings_type::STEP)['maximumdeletionspercron']) {
-            return step_response::waiting(); // Wait with further deletions til the next cron run.
+            return step_response::waiting();
         }
-        // Following addedd for testing - log deletion
-        debugging('Lifecycle is deleting CourseID: '.$course->id.' Course Title: ('.$course->fullname.')', DEBUG_DEVELOPER);
-        
+    
+        // output for testing
+        debugging(
+            'Lifecycle deleting CourseID: '.$course->id.' Course Name: ('.$course->fullname.')',
+            DEBUG_DEVELOPER
+        );
+    
         delete_course($course);
-
-        /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
-           MDL-65228 (https://tracker.moodle.org/browse/MDL-65228) */
-        if (is_object($CFG) && property_exists($CFG, "forced_plugin_settings") && is_array($CFG->forced_plugin_settings)
-                && array_key_exists("backup", $CFG->forced_plugin_settings) && !is_array($CFG->forced_plugin_settings["backup"])) {
+    
+        // Moodle bug workaround (MDL-65228)
+        if (is_object($CFG) && property_exists($CFG, "forced_plugin_settings") &&
+            is_array($CFG->forced_plugin_settings) &&
+            array_key_exists("backup", $CFG->forced_plugin_settings) &&
+            !is_array($CFG->forced_plugin_settings["backup"])) {
+    
             $CFG->forced_plugin_settings["backup"] = [];
         }
-
+    
         self::$numberofdeletions++;
         return step_response::proceed();
     }
