@@ -89,7 +89,7 @@ class process_errors_table extends \table_sql {
         }
         $this->set_sql($fields, $from, $where, $params);
         $this->column_nosort = ['select', 'tools'];
-        $this->define_columns(['select', 'workflow', 'step', 'courseid', 'course', 'errortime', 'error', 'tools']);
+        $this->define_columns(['select', 'workflow', 'step', 'courseid', 'course', 'errortimecreated', 'error', 'tools']);
         $this->define_headers([
                 $OUTPUT->render(new \core\output\checkbox_toggleall('procerrors-table', true, [
                         'id' => 'select-all-procerrors',
