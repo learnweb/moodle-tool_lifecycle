@@ -124,7 +124,7 @@ class triggered_courses_table_trigger extends \table_sql {
         // TODO: Find a better way to distinguish between an exclude-option-SQL and the NOT clause in an include-SQL!
         // If exclude option active: We just want the triggered courses here, no matter of including or excluding.
         if ($this->triggerexclude) {
-            $where = str_replace("<>", "=", str_replace(" NOT ", " ", $where));
+            $where = str_replace(" <> ", "=", str_replace(" NOT ", " ", $where));
         }
 
         $fields = " c.id as courseid,

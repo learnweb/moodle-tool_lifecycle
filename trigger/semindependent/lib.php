@@ -67,8 +67,8 @@ class semindependent extends base_automatic {
         if ($nosemester) {
             require_once($CFG->dirroot.'/customfield/field/semester/locallib.php');
             $termindependentintvalue = CUSTOMFIELD_SEMESTER_INTERNAL_TERMINDEPENDENT;
-            $where = " NOT EXISTS (SELECT 1 FROM {customfield_data} cfd WHERE cfd.fieldid = :customfield AND
-                    cfd.instanceid = c.id AND cfd.intvalue <> :termindependentintvalue) ";
+            $where = " NOT(EXISTS (SELECT 1 FROM {customfield_data} cfd WHERE cfd.fieldid = :customfield AND
+                        cfd.instanceid = c.id AND cfd.intvalue <>:termindependentintvalue))";
             if ($exclude) {
                 $where = " NOT ($where) ";
             } else {
@@ -77,6 +77,7 @@ class semindependent extends base_automatic {
             $params = [
                 "customfield" => $customfield,
                 "termindependentintvalue" => $termindependentintvalue,
+                "customfield2" => $customfield,
                 ];
         } else {
             if ($exclude) {

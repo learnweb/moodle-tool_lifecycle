@@ -443,7 +443,7 @@ class processor {
         $exclude = settings_manager::get_settings($trigger->id, settings_type::TRIGGER)['exclude'] ?? false;
         // If exclude option active: We just want the triggered courses here, no matter of including or excluding.
         if ($exclude) {
-            $where = str_replace("<>", "=", str_replace(" NOT ", " ", $where));
+            $where = str_replace(" <> ", " = ", str_replace(" NOT ", " ", $where));
         }
 
         // Now get all the courses triggered by this trigger.
