@@ -77,11 +77,16 @@ class deletecourse extends libbase {
         // Delete course and write course deletion log table.
         $record = new stdClass();
         $record->stepid = $instanceid;
+        $record->courseid = $course->id;
         $record->modules = $DB->count_records('course_modules', ['course' => $course->id]);
         $record->participants = count(get_enrolled_users(context_course::instance($course->id)));
         delete_course($course);
         $record->timedeleted = time();
-        $DB->insert_record('lifecyclestep_deletecourse', $record);
+        try {
+            $DB->insert_record('lifecyclestep_deletecourse', $record);
+        } catch (\dml_write_exception $exception) {
+            mtrace($exception->getMessage());
+        }
 
         self::$numberofdeletions++;
         return step_response::proceed();

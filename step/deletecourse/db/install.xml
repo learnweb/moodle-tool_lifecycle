@@ -6,7 +6,8 @@
     <TABLE NAME="lifecyclestep_deletecourse" COMMENT="log table containing one entry for every course deleted">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true" COMMENT="id of the log entry"/>
-        <FIELD NAME="stepid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true" COMMENT="id of the deletecourse step instance"/>
+        <FIELD NAME="stepid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the deletecourse step instance"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the deleted course"/>
         <FIELD NAME="modules" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="amount of deleted course modules"/>
         <FIELD NAME="participants" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="number of deleted enrollments"/>
         <FIELD NAME="timedeleted" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="unix timestamp of deletion"/>
