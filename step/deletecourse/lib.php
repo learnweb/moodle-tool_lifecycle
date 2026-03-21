@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\step;
 
+use context_course;
 use stdClass;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
@@ -58,6 +59,8 @@ class deletecourse extends libbase {
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
+        global $DB;
+
         if ($course->id == SITEID) {
             return step_response::rollback();
         }
@@ -71,7 +74,14 @@ class deletecourse extends libbase {
             return step_response::waiting();
         }
 
+        // Delete course and write course deletion log table.
+        $record = new stdClass();
+        $record->stepid = $instanceid;
+        $record->modules = $DB->count_records('course_modules', ['course' => $course->id]);
+        $record->participants = count(get_enrolled_users(context_course::instance($course->id)));
         delete_course($course);
+        $record->timedeleted = time();
+        $DB->insert_record('lifecyclestep_deletecourse', $record);
 
         self::$numberofdeletions++;
         return step_response::proceed();

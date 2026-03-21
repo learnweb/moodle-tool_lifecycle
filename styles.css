@@ -193,7 +193,7 @@ span.tool_lifecycle-hint {
 :is(#id_maximumdeletionspercron, #id_maximumbackupspercron, #id_s_tool_lifecycle_durationv,
 #id_s_tool_lifecycle_coursecategorydepth, #id_s_tool_lifecycle_deletebackupsafterdays, #id_s_tool_lifecycle_forum,
 #id_rollbackdelay_number, #id_finishdelay_number, #id_triggeredpercron, #id_triggeredperday, #id_delay_number,
-#id_deletebackupsolderthan, #id_responsetimeout_number) {
+#id_deletebackupsolderthan, #id_responsetimeout_number, #id_age) {
     text-align: center;
 }
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="admin/tool/lifecycle/step/deletecourse/db" VERSION="2026032000" COMMENT="XMLDB file for Moodle lifecycle_step/deletecourse"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+  <TABLES>
+    <TABLE NAME="lifecyclestep_deletecourse" COMMENT="log table containing one entry for every course deleted">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true" COMMENT="id of the log entry"/>
+        <FIELD NAME="stepid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true" COMMENT="id of the deletecourse step instance"/>
+        <FIELD NAME="modules" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="amount of deleted course modules"/>
+        <FIELD NAME="participants" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="number of deleted enrollments"/>
+        <FIELD NAME="timedeleted" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="unix timestamp of deletion"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

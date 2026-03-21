@@ -39,6 +39,9 @@ use tool_lifecycle\local\manager\step_manager;
  * @throws upgrade_exception
  */
 function xmldb_lifecyclestep_deletecourse_upgrade($oldversion) {
+    global $DB;
+
+    $dbman = $DB->get_manager();
 
     if ($oldversion < 2018122300) {
 
@@ -56,6 +59,31 @@ function xmldb_lifecyclestep_deletecourse_upgrade($oldversion) {
         // Deletecourse savepoint reached.
         upgrade_plugin_savepoint(true, 2018122300, 'lifecyclestep', 'deletecourse');
     }
+
+    if ($oldversion < 2026012003) {
+
+        // Define table lifecyclestep_deletecourse to be created.
+        $table = new xmldb_table('lifecyclestep_deletecourse');
+
+        // Adding fields to table lifecyclestep_deletecourse.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('stepid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('modules', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('participants', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timedeleted', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table lifecyclestep_deletecourse.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for lifecyclestep_deletecourse.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Deletecourse savepoint reached.
+        upgrade_plugin_savepoint(true, 2026012003, 'lifecyclestep', 'deletecourse');
+    }
+
 
     return true;
 }

@@ -267,6 +267,9 @@ class triggered_courses_table_trigger extends \table_sql {
                 get_string('excludedbycoursecode', 'tool_lifecycle');
         }
         echo \html_writer::div($cont, 'm-3');
+        echo \html_writer::div("&nbsp;&nbsp;&nbsp;".\html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
+                ["wf" => $this->workflowid, "showtablesql" => "1", "showdetails" => "1"]),
+                "&nbsp;&nbsp;&nbsp;", ["class" => "text-muted fs-6 text-decoration-none"]));
     }
 
     /**
@@ -277,7 +280,7 @@ class triggered_courses_table_trigger extends \table_sql {
         echo \html_writer::div($OUTPUT->notification(get_string('nothingtodisplay', 'moodle'), 'info'),
             'm-3');
         echo \html_writer::div("&nbsp;&nbsp;&nbsp;".\html_writer::link(new \moodle_url(urls::WORKFLOW_DETAILS,
-                ["wf" => $this->workflowid, "showsql" => "1", "showtablesql" => "1", "showdetails" => "1"]),
+                ["wf" => $this->workflowid, "showtablesql" => "1", "showdetails" => "1"]),
                 "&nbsp;&nbsp;&nbsp;", ["class" => "text-muted fs-6 text-decoration-none"]));
     }
 }
