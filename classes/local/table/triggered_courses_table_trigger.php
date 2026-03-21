@@ -121,8 +121,11 @@ class triggered_courses_table_trigger extends \table_sql {
         $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
         [$where, $whereparams] = $lib->get_course_recordset_where($trigger->id);
         $where = str_replace("{course}", "c", $where);
-        // If exclude-trigger show selected courses to exclude.
-        $where = str_replace("<>", "=", str_replace(" NOT ", " ", $where));
+        // TODO: Find a better way to distinguish between an exclude-option-SQL and the NOT clause in an include-SQL!
+        // If exclude option active: We just want the triggered courses here, no matter of including or excluding.
+        if ($this->triggerexclude) {
+            $where = str_replace("<>", "=", str_replace(" NOT ", " ", $where));
+        }
 
         $fields = " c.id as courseid,
                     c.fullname as coursefullname,

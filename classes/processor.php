@@ -439,8 +439,12 @@ class processor {
         [$where, $whereparams] = $lib->get_course_recordset_where($trigger->id);
         $where = str_replace("{course}", "c", $where);
 
-        // We just want the triggered courses here, no matter of including or excluding.
-        $where = str_replace("<>", "=", str_replace(" NOT ", " ", $where));
+        // TODO: Find a better way to distinguish between an exclude-option-SQL and the NOT clause in an include-SQL!
+        $exclude = settings_manager::get_settings($trigger->id, settings_type::TRIGGER)['exclude'] ?? false;
+        // If exclude option active: We just want the triggered courses here, no matter of including or excluding.
+        if ($exclude) {
+            $where = str_replace("<>", "=", str_replace(" NOT ", " ", $where));
+        }
 
         // Now get all the courses triggered by this trigger.
         $sql = 'SELECT c.id from {course} c WHERE '. $where;

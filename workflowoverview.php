@@ -206,8 +206,7 @@ foreach ($triggers as $trigger) {
             $a->lifecyclesubplugin = $trigger->subpluginname;
             $a->plugin = "customfieldsemester";
             echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
-                get_string('plugindependencynotmet',
-                'tool_lifecycle', $a), 'error');
+                get_string('plugindependencynotmet', 'tool_lifecycle', $a), 'error');
             echo $renderer->footer();
             die();
         }
@@ -219,8 +218,7 @@ foreach ($triggers as $trigger) {
                 $a->lifecyclesubplugin = $trigger->subpluginname;
                 $a->plugin = "semindependent";
                 echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
-                    get_string('plugindependencynotmet',
-                    'tool_lifecycle', $a), 'error');
+                    get_string('plugindependencynotmet', 'tool_lifecycle', $a), 'error');
                 echo $renderer->footer();
                 die();
             }
@@ -231,8 +229,7 @@ foreach ($triggers as $trigger) {
             $a->lifecyclesubplugin = get_string('trigger', 'tool_lifecycle') . ' ' . 'opencast';
             $a->plugin = "tool_opencast";
             echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
-                get_string('plugindependencynotmet',
-                    'tool_lifecycle', $a), 'error');
+                get_string('plugindependencynotmet', 'tool_lifecycle', $a), 'error');
             echo $renderer->footer();
             die();
         }
@@ -247,8 +244,7 @@ foreach ($steps as $step) {
             $a->lifecyclesubplugin = get_string('step', 'tool_lifecycle') . ' ' . 'opencast';
             $a->plugin = "tool_opencast";
             echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
-                get_string('plugindependencynotmet',
-                    'tool_lifecycle', $a), 'error');
+                get_string('plugindependencynotmet', 'tool_lifecycle', $a), 'error');
             echo $renderer->footer();
             die();
         }

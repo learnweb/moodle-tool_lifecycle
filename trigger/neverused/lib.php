@@ -44,7 +44,7 @@ class neverused extends base_automatic {
     }
 
     /**
-     * Add SQL for to trigger a course. The age is determined with days.
+     * Add SQL for to trigger a course. The age is determined by days.
      * @param int $triggerid ID of the trigger.
      * @return array A list containing the constructed SQL fragment and an array of parameters.
      * @throws \coding_exception
