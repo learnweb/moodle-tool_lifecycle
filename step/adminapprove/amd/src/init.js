@@ -39,7 +39,9 @@ define(['jquery'], function($) {
                 let input;
                 for (let i = 0; checkboxes[i]; ++i) {
                     if (checkboxes[i].checked) {
-                        data.push(checkboxes[i].value);
+                        if (!data.includes(checkboxes[i].value)) {
+                            data.push(checkboxes[i].value);
+                        }
                     }
                 }
                 let datalength = data.length;
