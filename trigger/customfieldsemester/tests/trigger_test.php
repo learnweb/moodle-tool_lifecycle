@@ -67,33 +67,39 @@ final class trigger_test extends \advanced_testcase {
      * Initial set up.
      */
     public function setUp(): void {
-        // Standard setup.
-        $this->resetAfterTest(true);
-        $this->setAdminUser();
 
-        // Create a new lifecycle processor.
-        $this->processor = new processor();
+        if (!\core_plugin_manager::instance()->get_plugin_info('customfield_semester')) {
+            $this->markTestSkipped('Plugin customfield_semester is required for this test.');
+        } else {
+            // Standard setup.
+            $this->resetAfterTest(true);
+            $this->setAdminUser();
 
-        // Create a new custom field category.
-        $this->fieldcategory = self::getDataGenerator()->create_custom_field_category(['name' => 'Other fields']);
+            // Create a new lifecycle processor.
+            $this->processor = new processor();
 
-        // Set global config of custom field of type semester.
-        set_config('summertermstartmonth', TEST_LIFECYCLETRIGGER_CUSTOMFIELDSEMESTER_SUMMERTERMSTART, 'customfield_semester');
-        set_config('wintertermstartmonth', TEST_LIFECYCLETRIGGER_CUSTOMFIELDSEMESTER_WINTERTERMSTART, 'customfield_semester');
+            // Create a new custom field category.
+            $this->fieldcategory = self::getDataGenerator()->create_custom_field_category(['name' => 'Other fields']);
 
-        // Create a new custom field of type semester.
-        // The submitted configdata is the standard configuration of the custom field and not relevant for this test.
-        $customfield = ['shortname' => 'lectureterm', 'name' => 'Lecture term', 'type' => 'semester',
+            // Set global config of custom field of type semester.
+            set_config('summertermstartmonth', TEST_LIFECYCLETRIGGER_CUSTOMFIELDSEMESTER_SUMMERTERMSTART, 'customfield_semester');
+            set_config('wintertermstartmonth', TEST_LIFECYCLETRIGGER_CUSTOMFIELDSEMESTER_WINTERTERMSTART, 'customfield_semester');
+
+            // Create a new custom field of type semester.
+            // The submitted configdata is the standard configuration of the custom field and not relevant for this test.
+            $customfield = ['shortname' => 'lectureterm', 'name' => 'Lecture term', 'type' => 'semester',
                 'configdata' => ['showmonthsintofuture' => 6, 'defaultmonthsintofuture' => 3, 'beginofsemesters' => 2007],
                 'categoryid' => $this->fieldcategory->get('id'), ];
-        self::getDataGenerator()->create_custom_field($customfield);
+            self::getDataGenerator()->create_custom_field($customfield);
 
-        // Create the workflow including the trigger.
-        $this->triggerinstance = \tool_lifecycle_trigger_customfieldsemester_generator::create_trigger_with_workflow(
-            $customfield['shortname'], TEST_LIFECYCLETRIGGER_CUSTOMFIELDSEMESTER_DELAY);
+            // Create the workflow including the trigger.
+            $this->triggerinstance = \tool_lifecycle_trigger_customfieldsemester_generator::create_trigger_with_workflow(
+                $customfield['shortname'], TEST_LIFECYCLETRIGGER_CUSTOMFIELDSEMESTER_DELAY);
 
-        // Call parent setup.
-        parent::setUp();
+            // Call parent setup.
+            parent::setUp();
+        }
+
     }
 
     /**
