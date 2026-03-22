@@ -61,7 +61,7 @@ class tool_lifecycle_trigger_neverused_generator extends testing_module_generato
         trigger_manager::insert_or_update($trigger);
         // Set age setting.
         $settings = new stdClass();
-        $settings->delay = 365;
+        $settings->age = 365;
         settings_manager::save_settings($trigger->id, settings_type::TRIGGER, $trigger->subpluginname, $settings);
 
         return $trigger;
