@@ -60,7 +60,7 @@ class delayedcourses extends base_automatic {
 
     /**
      * Return SQL which excludes delayed courses.
-     * @param int $triggerid Id of the trigger.
+     * @param int $triggerid ID of the trigger.
      * @return array A list containing the constructed sql fragment and an array of parameters.
      * @throws \coding_exception
      * @throws \dml_exception

@@ -18,12 +18,10 @@
  * Lang strings for site course trigger
  *
  * @package    lifecycletrigger_sitecourse
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['delay'] = 'Dieser Trigger wird den Startseitenkurs ausschließen.';
-$string['plugindescription'] = 'Schließt den Startseitenkurs von diesen Workflow aus.';
-$string['pluginname'] = 'Startseitenkurs ausschließen - Trigger';
+$string['plugindescription'] = 'Schließt den Startseitenkurs (ID = 1) in diesen Workflow ein. Seien Sie vorsichtig!';
+$string['pluginname'] = 'Startseitenkurs einschließen - Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
-

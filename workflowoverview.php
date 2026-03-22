@@ -306,32 +306,35 @@ foreach ($triggers as $trigger) {
     }
     $nomanualtriggerinvolved &= $trigger->automatic;
     if ($showdetails) {
-        if ($trigger->automatic) {
+        // Define only trigger's tooltip and border color here!
+        if ($trigger->automatic) { // Not a manual trigger.
             $sqlresult = trigger_manager::get_trigger_sqlresult($trigger);
-            if ($sqlresult == "false") {
+            if ($sqlresult == "false") { // Specific date trigger but not today.
                 $trigger->classfires = "border-danger";
             } else {
                 $settings = settings_manager::get_settings($trigger->id, settings_type::TRIGGER);
                 $trigger->exclude = $settings['exclude'] ?? false;
+                // Not a time-trigger => course selection trigger.
                 if ($response != trigger_response::triggertime()) {
-                    if ($amounts[$trigger->sortindex]->triggered) {
-                        $trigger->classfires = "border-success";
-                    } else if ($amounts[$trigger->sortindex]->excluded) {
-                        $trigger->classfires = "border-danger";
-                    }
                     $trigger->tooltip = "";
+                    // Trigger excludes courses.
                     if ($amounts[$trigger->sortindex]->excluded !== false) {
+                        $trigger->classfires = "border-danger";
                         $trigger->excludedcourses = $amounts[$trigger->sortindex]->excluded ?? 0;
                         $trigger->tooltip = get_string('courses_will_be_excluded',
                             'tool_lifecycle', $trigger->excludedcourses);
-                    } else {
+                    } else { // Trigger includes courses.
+                        $trigger->classfires = "border-success";
+                        // How many triggered courses.
                         $trigger->triggeredcourses = $amounts[$trigger->sortindex]->triggered;
                         $trigger->tooltip = get_string('courses_will_be_triggered',
                             'tool_lifecycle', $trigger->triggeredcourses);
+                        // How many delayed courses.
                         if ($trigger->delayedcourses = $amounts[$trigger->sortindex]->delayed) {
                             $trigger->tooltip .= get_string('courses_candidates_delayed',
                                 'tool_lifecycle', $trigger->delayedcourses);
                         }
+                        // How many courses already in process.
                         if ($trigger->alreadyin = $amounts[$trigger->sortindex]->alreadyin) {
                             $trigger->tooltip .= get_string('courses_candidates_alreadyin',
                                 'tool_lifecycle', $trigger->alreadyin);

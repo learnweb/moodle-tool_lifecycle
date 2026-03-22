@@ -107,33 +107,20 @@ class workflow_definition_table extends workflow_table {
      * @throws \moodle_exception
      */
     public function col_tools($row) {
-        global $OUTPUT;
-        $output = '';
+        $output = parent::col_tools($row);
 
-        $alt = get_string('viewsteps', 'tool_lifecycle');
-        $icon = 't/viewdetails';
-        $url = new \moodle_url(urls::WORKFLOW_DETAILS,
-            ['wf' => $row->id]);
-        $output .= $OUTPUT->action_icon($url, new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
-            null, ['title' => $alt]);
-
-        $trigger = trigger_manager::get_triggers_for_workflow($row->id);
-        if (!empty($trigger)) {
-            $lib = lib_manager::get_trigger_lib($trigger[0]->subpluginname);
-        }
-
-        if (!isset($lib) || $lib->has_multiple_instances()) {
+        if (!empty(trigger_manager::get_triggers_for_workflow($row->id))) {
             $action = action::WORKFLOW_BACKUP;
             $alt = get_string('downloadworkflow', 'tool_lifecycle');
             $icon = 't/download';
             $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
+        }
 
-            if (!workflow_manager::is_active($row->id)) {
-                $action = action::WORKFLOW_DELETE;
-                $alt = get_string('deleteworkflow', 'tool_lifecycle');
-                $icon = 't/delete';
-                $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
-            }
+        if (!workflow_manager::is_active($row->id)) {
+            $action = action::WORKFLOW_DELETE;
+            $alt = get_string('deleteworkflow', 'tool_lifecycle');
+            $icon = 't/delete';
+            $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
         }
 
         return $output;

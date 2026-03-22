@@ -74,8 +74,6 @@ class lib_manager {
         return $lib;
     }
 
-
-
     /**
      * Gets the step class of a subplugin lib.
      * @param string $subpluginname name of the subplugin

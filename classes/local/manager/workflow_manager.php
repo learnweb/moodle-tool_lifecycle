@@ -92,13 +92,11 @@ class workflow_manager {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         $workflow = self::get_workflow($workflowid);
-        if ($workflow && self::is_disableable($workflowid)) {
-            $workflow->timeactive = null;
-            self::remove_from_sortindex($workflow);
-            $workflow->sortindex = null;
-            $workflow->timedeactive = time();
-            $DB->update_record('tool_lifecycle_workflow', $workflow);
-        }
+        $workflow->timeactive = null;
+        self::remove_from_sortindex($workflow);
+        $workflow->sortindex = null;
+        $workflow->timedeactive = time();
+        $DB->update_record('tool_lifecycle_workflow', $workflow);
         $transaction->allow_commit();
     }
 
@@ -496,24 +494,6 @@ class workflow_manager {
     }
 
     /**
-     * Checks if it should be possible to disable a workflow
-     *
-     * @param int $workflowid Id of the workflow.
-     * @return bool
-     * @throws \dml_exception
-     */
-    public static function is_disableable($workflowid) {
-        $trigger = trigger_manager::get_triggers_for_workflow($workflowid);
-        if (!empty($trigger)) {
-            $lib = lib_manager::get_trigger_lib($trigger[0]->subpluginname);
-        }
-        if (!isset($lib) || $lib->has_multiple_instances()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Workflows should only be editable if never been activated before
      *
      * @param int $workflowid Id of the workflow
@@ -552,7 +532,7 @@ class workflow_manager {
      */
     public static function is_removable($workflowid) {
         $countprocesses = process_manager::count_processes_by_workflow($workflowid);
-        if (self::is_disableable($workflowid) && $countprocesses == 0) {
+        if ($countprocesses == 0) {
             return true;
         }
         return false;
@@ -568,7 +548,7 @@ class workflow_manager {
         if ($triggers = trigger_manager::get_triggers_for_workflow($workflowid)) {
             foreach ($triggers as $trigger) {
                 $lib = lib_manager::get_trigger_lib($trigger->subpluginname);
-                if (!isset($lib) || !$lib->has_multiple_instances()) {
+                if (!isset($lib)) {
                     return true;
                 }
             }

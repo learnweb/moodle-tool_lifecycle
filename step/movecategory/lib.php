@@ -101,6 +101,7 @@ class movecategory extends libbase {
             get_string('categorytomoveto', 'lifecyclestep_movecategory'), $displaylist);
         $mform->addHelpButton($elementname, 'categorytomoveto', 'lifecyclestep_movecategory');
         $mform->setType($elementname, PARAM_INT);
+        $mform->addRule('categorytomoveto', null, 'required');
     }
 
     /**

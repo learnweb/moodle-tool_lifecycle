@@ -18,12 +18,10 @@
  * Lang strings for site course trigger
  *
  * @package    lifecycletrigger_sitecourse
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['delay'] = 'This module will exclude the site course from processing';
-$string['plugindescription'] = 'Excludes the site course from this workflow.';
-$string['pluginname'] = 'Exclude site course trigger';
+$string['plugindescription'] = 'Includes the site course (ID = 1) in the workflow. Be careful!';
+$string['pluginname'] = 'Include site course trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
-

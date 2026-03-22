@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Trigger subplugin that excludes the sitecourse.
+ * Trigger subplugin that INCLUDES the site course.
  *
  * @package lifecycletrigger_sitecourse
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace tool_lifecycle\trigger;
@@ -31,7 +31,7 @@ require_once(__DIR__ . '/../lib.php');
 /**
  * Class which implements the basic methods necessary for a life cycle trigger subplugin
  * @package lifecycletrigger_sitecourse
- * @copyright  2017 Tobias Reischmann WWU
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class sitecourse extends base_automatic {
@@ -47,15 +47,15 @@ class sitecourse extends base_automatic {
     }
 
     /**
-     * Sql that queries only the sitecourse.
-     * @param int $triggerid Id of the trigger.
-     * @return array A list containing the constructed sql fragment and an array of parameters.
+     * SQL that queries only the sitecourse.
+     * @param int $triggerid ID of the trigger.
+     * @return array A list containing the constructed SQL fragment and an array of parameters.
      * @throws \coding_exception
      * @throws \dml_exception
      */
     public function get_course_recordset_where($triggerid) {
         global $DB;
-        list($insql, $inparam) = $DB->get_in_or_equal(SITEID, SQL_PARAMS_NAMED, 'param', false);
+        list($insql, $inparam) = $DB->get_in_or_equal(SITEID, SQL_PARAMS_NAMED, 'param', true);
         return ["{course}.id {$insql}", $inparam];
     }
 
@@ -68,11 +68,11 @@ class sitecourse extends base_automatic {
     }
 
     /**
-     * Has only one instance and results in a preset workflow.
-     * @return bool
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
      */
-    public function has_multiple_instances() {
-        return false;
+    public function get_icon() {
+        return 'i/warning';
     }
 
 }

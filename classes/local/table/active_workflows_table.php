@@ -51,21 +51,14 @@ abstract class active_workflows_table extends workflow_table {
      */
     public function col_tools($row) {
         global $OUTPUT;
-        $output = '';
-
-        $alt = get_string('viewsteps', 'tool_lifecycle');
-        $icon = 't/viewdetails';
-        $overviewurl = new \moodle_url(urls::WORKFLOW_DETAILS,
-            ['wf' => $row->id]);
-        $output .= $OUTPUT->action_icon($overviewurl, new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
-            null, ['title' => $alt]);
+        $output = parent::col_tools($row);
 
         $action = action::WORKFLOW_BACKUP;
         $alt = get_string('downloadworkflow', 'tool_lifecycle');
         $icon = 't/backup';
         $output .= $this->format_icon_link($action, $row->id, $icon, $alt);
 
-        if (workflow_manager::is_disableable($row->id)) {
+        if (workflow_manager::is_active($row->id)) {
 
             $alt = get_string('disableworkflow', 'tool_lifecycle');
             $icon = 't/disable';
@@ -82,20 +75,6 @@ abstract class active_workflows_table extends workflow_table {
             $url = new \moodle_url(urls::DEACTIVATED_WORKFLOWS,
                 ['workflowid' => $row->id, 'action' => action::WORKFLOW_ABORTDISABLE, 'sesskey' => sesskey()]);
             $confirmaction = new \confirm_action(get_string('abortdisableworkflow_confirm', 'tool_lifecycle'));
-            $output .= $OUTPUT->action_icon($url,
-                new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
-                $confirmaction,
-                ['title' => $alt]
-            );
-        }
-
-        // The check for is_deprecated is temporary to make deprecated sitecourse and coursedelayed trigger workflows removable.
-        if (workflow_manager::is_deprecated($row->id)) {
-            $alt = get_string('deleteworkflow', 'tool_lifecycle');
-            $icon = 't/delete';
-            $url = new \moodle_url(urls::ACTIVE_WORKFLOWS,
-                ['workflowid' => $row->id, 'action' => action::WORKFLOW_DELETE, 'sesskey' => sesskey()]);
-            $confirmaction = new \confirm_action(get_string('deleteworkflow_confirm', 'tool_lifecycle'));
             $output .= $OUTPUT->action_icon($url,
                 new \pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
                 $confirmaction,

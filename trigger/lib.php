@@ -90,17 +90,6 @@ abstract class base {
     }
 
     /**
-     * If true, the trigger can be used to manually define workflows, based on an instance of this trigger.
-     * This has to be combined with installing the workflow in db/install.php of the trigger plugin.
-     * If false, at installation the trigger will result in a preset workflow, which can not be changed.
-     * This is for instance relevant for the sitecourse trigger or the delayedcourses trigger.
-     * @return bool
-     */
-    public function has_multiple_instances() {
-        return true;
-    }
-
-    /**
      * Specifies if the trigger is a manual or an automatic trigger.
      * @return boolean
      */

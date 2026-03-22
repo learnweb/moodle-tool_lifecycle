@@ -466,15 +466,20 @@ class processor {
         }
         if (!$workflow->includedelayedcourses) {
             $where .= " AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf}
-            WHERE delayeduntil > :time1 AND workflowid = :workflowid)
+            WHERE delayeduntil > :time1 AND workflowid = :workflowid_)
             AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
-            $inparams = ['time1' => time(), 'time2' => time(), 'workflowid' => $workflow->id];
+            $inparams = ['time1' => time(), 'workflowid_' => $workflow->id, 'time2' => time()];
             $whereparams = array_merge($whereparams, $inparams);
         }
 
         $sql = 'SELECT count(c.id) from {course} c WHERE '. $where;
-
-        $triggercourses = $DB->count_records_sql($sql, $whereparams);
+        try {
+            $triggercourses = $DB->count_records_sql($sql, $whereparams);
+        } catch (\Exception $e) {
+            echo \html_writer::div($sql);
+            echo \html_writer::div(var_dump($whereparams));
+            die();
+        }
 
         // Only get courses which are not part of this workflow yet. Exclude processes and proc_errors of this wf.
         $sql .= " AND c.id NOT IN (
@@ -625,11 +630,11 @@ class processor {
             $amounts[$trigger->sortindex] = $obj;
         }
 
+        // Walk through the courses and apply all involved trigger's logic.
         $recordset = false;
         if ($autotriggers) {
             $recordset = $this->get_course_recordset($autotriggers, !$workflow->includesitecourse, true);
         }
-
         $coursestriggered = 0;
         $coursesdelayed = 0; // Only delayed courses of selected courses are of interest here.
         $hasprocess = 0;  // Number of courses that already have a process in this workflow.
@@ -637,8 +642,10 @@ class processor {
         if ($recordset) {
             while ($recordset->valid()) {
                 $course = $recordset->current();
+                // With individual check_course code.
                 if ($checkcoursecode) {
                     $excludecourse = false;
+                    // Apply all involved trigger's logic by walking through them each by each.
                     foreach ($autotriggers as $trigger) {
                         $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
                         $response = $lib->check_course($course, $trigger->id);
@@ -651,32 +658,49 @@ class processor {
                         if ($course->hasprocess) {
                             $hasprocess++;
                             if ($course->delaycourse && $course->delaycourse > time()) {
-                                $coursesdelayed++;
+                                if (!$workflow->includedelayedcourses) {
+                                    $coursesdelayed++;
+                                } else {
+                                    $coursestriggered++;
+                                }
                             }
                         } else if ($course->hasotherwfprocess) {
                             $hasotherwfprocess++;
                             if ($course->delaycourse && $course->delaycourse > time()) {
-                                $coursesdelayed++;
+                                if (!$workflow->includedelayedcourses) {
+                                    $coursesdelayed++;
+                                } else {
+                                    $coursestriggered++;
+                                }
                             }
                         } else if ($course->delaycourse && $course->delaycourse > time()) {
-                            $coursesdelayed++;
+                            if (!$workflow->includedelayedcourses) {
+                                $coursesdelayed++;
+                            } else {
+                                $coursestriggered++;
+                            }
                         } else {
                             $coursestriggered++;
                         }
                     }
-                } else {
+                } else { // With no special check_course code. All trigger logic is already in the recordset.
                     if ($course->hasprocess) {
                         $hasprocess++;
-                        if ($course->delaycourse && $course->delaycourse > time()) {
-                            $coursesdelayed++;
-                        }
                     } else if ($course->hasotherwfprocess) {
                         $hasotherwfprocess++;
                         if ($course->delaycourse && $course->delaycourse > time()) {
-                            $coursesdelayed++;
+                            if (!$workflow->includedelayedcourses) {
+                                $coursesdelayed++;
+                            } else {
+                                $coursestriggered++;
+                            }
                         }
                     } else if ($course->delaycourse && $course->delaycourse > time()) {
-                        $coursesdelayed++;
+                        if (!$workflow->includedelayedcourses) {
+                            $coursesdelayed++;
+                        } else {
+                            $coursestriggered++;
+                        }
                     } else {
                         $coursestriggered++;
                     }

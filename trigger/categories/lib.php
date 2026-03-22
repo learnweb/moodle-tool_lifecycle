@@ -68,7 +68,7 @@ class categories extends base_automatic {
      * @throws \dml_exception
      */
     public function get_course_recordset_where($triggerid) {
-        global $DB, $CFG;
+        global $DB;
 
         $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
         $categories = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['categories'];

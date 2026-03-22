@@ -275,10 +275,7 @@ class trigger_manager extends subplugin_manager {
                     continue;
                 }
             }
-            $lib = lib_manager::get_trigger_lib($id);
-            if ($lib->has_multiple_instances()) {
-                $result[$id] = $trigger;
-            }
+            $result[$id] = $trigger;
         }
         return $result;
     }
