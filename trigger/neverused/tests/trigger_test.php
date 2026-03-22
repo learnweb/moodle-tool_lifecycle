@@ -94,7 +94,7 @@ final class trigger_test extends \advanced_testcase {
      * @throws \dml_exception
      */
     public function test_unused_course_younger(): void {
-        $startdate = time() - 24 * 60 * 60 * 30; // Minus 30 days;
+        $startdate = time() - 24 * 60 * 60 * 30; // Minus 30 days.
         $course = $this->getDataGenerator()->create_course(['startdate' => $startdate]);
 
         $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
