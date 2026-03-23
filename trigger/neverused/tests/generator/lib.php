@@ -19,7 +19,7 @@
  *
  * @package    lifecycletrigger_neverused
  * @category   test
- * @copyright  2018 Tobias Reischmann WWU
+ * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,7 +31,7 @@ use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\settings_type;
 
 /**
- * lifecycletrigger_neverused generator tests
+ * Generate workflow with neverused trigger
  *
  * @package    lifecycletrigger_neverused
  * @category   test
@@ -65,5 +65,34 @@ class tool_lifecycle_trigger_neverused_generator extends testing_module_generato
         settings_manager::save_settings($trigger->id, settings_type::TRIGGER, $trigger->subpluginname, $settings);
 
         return $trigger;
+    }
+
+}
+
+/**
+ * Generate a course with a news forum and one enrolled user with a defined start date
+ *
+ * @package    lifecycletrigger_neverused
+ * @category   test
+ * @copyright  2026 Thomas Niedermaier University Münster
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class tool_lifecycle_trigger_neverused_data_generator extends testing_data_generator {
+    public function create_course($record = null, ?array $options = null) {
+        global $CFG;
+
+        $course = parent::create_course($record, $options);
+        $teacher = parent::create_user();
+        // Add forum.
+        require_once($CFG->dirroot . '/mod/forum/lib.php');
+        forum_get_course_forum($course->id, 'news');
+        // Enroll teacher.
+        parent::enrol_user(
+            $teacher->id,
+            $course->id,
+            'editingteacher'
+        );
+
+        return $course;
     }
 }

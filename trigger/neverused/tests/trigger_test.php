@@ -23,6 +23,7 @@
  */
 namespace lifecycletrigger_neverused;
 
+use stdClass;
 use tool_lifecycle\local\entity\trigger_subplugin;
 use tool_lifecycle\processor;
 
@@ -48,6 +49,12 @@ final class trigger_test extends \advanced_testcase {
     /** @var $processor processor Instance of the lifecycle processor. */
     private $processor;
 
+    /** @var $courseolder stdClass course that is old enough to be triggered. */
+    private $courseolder;
+
+    /** @var $courseyounger stdClass course that is NOT old enough to be triggered. */
+    private $courseyounger;
+
     /**
      * Setup for the Tests.
      * @return void
@@ -61,24 +68,29 @@ final class trigger_test extends \advanced_testcase {
         $this->processor = new processor();
 
         $this->triggerinstance = \tool_lifecycle_trigger_neverused_generator::create_trigger_with_workflow();
+        $startdate = time() - (24 * 60 * 60 * 730); // Minus two years.
+        $this->courseolder = (new
+            \tool_lifecycle_trigger_neverused_data_generator)->create_course(
+            ['shortname' => 'Course old', 'timecreated' => $startdate]);
+        $startdate = time() - (24 * 60 * 60 * 30); // Minus 30 days.
+        $this->courseyounger = (new
+            \tool_lifecycle_trigger_neverused_data_generator)->create_course(
+            ['shortname' => 'Course young', 'timecreated' => $startdate]);
     }
 
 
     /**
-     * Tests if unused courses, which are older than 365 days are triggered by this plugin.
+     * Tests if unused courses, which are older than 365 days, are triggered by this plugin.
      *
      * @return void
      * @throws \coding_exception
      * @throws \dml_exception
      */
     public function test_unused_course_old(): void {
-        $startdate = time() - 24 * 60 * 60 * 730; // Minus two years.
-        $course = $this->getDataGenerator()->create_course(['startdate' => $startdate]);
-
         $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $found = false;
         foreach ($recordset as $element) {
-            if ($course->id === $element->id) {
+            if ($this->courseolder->id == $element->id) {
                 $found = true;
                 break;
             }
@@ -87,20 +99,17 @@ final class trigger_test extends \advanced_testcase {
     }
 
     /**
-     * Tests if unused courses, which are older than 365 days are triggered by this plugin.
+     * Tests if unused courses, which are younger than 365 days, are not triggered by this plugin.
      *
      * @return void
      * @throws \coding_exception
      * @throws \dml_exception
      */
     public function test_unused_course_younger(): void {
-        $startdate = time() - 24 * 60 * 60 * 30; // Minus 30 days.
-        $course = $this->getDataGenerator()->create_course(['startdate' => $startdate]);
-
         $recordset = $this->processor->get_course_recordset([$this->triggerinstance]);
         $found = false;
         foreach ($recordset as $element) {
-            if ($course->id === $element->id) {
+            if ($this->courseyounger->id === $element->id) {
                 $found = true;
                 break;
             }
