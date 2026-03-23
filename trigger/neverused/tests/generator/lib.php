@@ -82,9 +82,9 @@ class tool_lifecycle_trigger_neverused_generator extends testing_module_generato
 class tool_lifecycle_trigger_neverused_data_generator extends testing_data_generator {
     /**
      * Create a course as it would be created following a course request
-     * @param $record
-     * @param array|null $options
-     * @return stdClass
+     * @param array $record define fields of the course (optional)
+     * @param array|null $options define options for the course (optional)
+     * @return stdClass the course object
      */
     public function create_course($record = null, ?array $options = null) {
         global $CFG;
