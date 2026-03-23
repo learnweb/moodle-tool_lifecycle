@@ -1,6 +1,22 @@
 CHANGELOG
 =========
 
+5.1.4 (v5.1-r5, 2026-03-23)
+---------------------------
+* [FEATURE] Introduce new trigger: Neverused
+* [FEATURE] Workflow settings: Extend date settings by month and year units #219
+* [FEATURE] Implement trigger customfieldsemester in main plugin
+* [FEATURE] Testing workflow: Add customfieldsemester as additional plugin
+* [FEATURE] Add course deletion protocol
+* [FEATURE] Make sitecourse trigger and delayed courses trigger common triggers
+* [FEATURE] Make trigger categories editable
+* [FIXED] Fix: Workflow table crashes when custom subplugin is missing. (#284)
+* [FIXED] Fix course table search for course id
+* [FIXED] Triggered courses in workflow-table: select button only if course has label "ok"
+* [FIXED] Fix errortime in process errors table PR #296
+* [FIXED] Fix adminapprove "proceed/rollback selected" counting bug
+
+
 5.1.3 (v5.1-r4, 2026-03-03)
 ---------------------------
 * [FEATURE] Introduce new trigger: Startdate

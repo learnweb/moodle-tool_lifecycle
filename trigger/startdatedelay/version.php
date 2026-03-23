@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Life Cycle Startdate Trigger
+ * Life Cycle Startdate Delay Trigger
  *
  * @package lifecycletrigger_startdatedelay
  * @copyright  2025 Thomas Niedermaier Universität Münster
@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'lifecycletrigger_startdatedelay';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->version  = 2025102300;
-$plugin->requires = 2022112800; // Requires Moodle 4.1+.
-$plugin->supported = [405, 500];
-$plugin->release   = 'v5.0-r1';
+$plugin->version = 2026012004;
+$plugin->requires = 2024100700; // Requires Moodle 4.5+.
+$plugin->supported = [405, 501];
+$plugin->release   = 'v5.1-r5';
