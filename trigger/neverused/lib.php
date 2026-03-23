@@ -84,9 +84,10 @@ class neverused extends base_automatic {
                         HAVING COUNT(DISTINCT ue.userid) > 1
                     )
 
-                    AND c.timecreated < EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - INTERVAL '$age days'))::bigint
+                    AND c.timecreated < :ageseconds
         ";
-        $params = ["age" => $age];
+        $ageseconds = time() - ($age * 86400);
+        $params = ["ageseconds" => $ageseconds];
         return [$where, $params];
     }
 
