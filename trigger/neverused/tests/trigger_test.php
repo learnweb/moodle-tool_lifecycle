@@ -78,7 +78,6 @@ final class trigger_test extends \advanced_testcase {
             ['shortname' => 'Course young', 'timecreated' => $startdate]);
     }
 
-
     /**
      * Tests if unused courses, which are older than 365 days, are triggered by this plugin.
      *

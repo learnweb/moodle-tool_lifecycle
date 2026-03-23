@@ -30,6 +30,8 @@ use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\workflow_manager;
 use tool_lifecycle\settings_type;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Generate workflow with neverused trigger
  *
@@ -78,6 +80,12 @@ class tool_lifecycle_trigger_neverused_generator extends testing_module_generato
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tool_lifecycle_trigger_neverused_data_generator extends testing_data_generator {
+    /**
+     * Create a course as it would be created following a course request
+     * @param $record
+     * @param array|null $options
+     * @return stdClass
+     */
     public function create_course($record = null, ?array $options = null) {
         global $CFG;
 
