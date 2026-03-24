@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for site course trigger
+ * Lang strings for by role trigger
  *
  * @package lifecycletrigger_byrole
  * @copyright  2017 Tobias Reischmann WWU Nina Herrmann WWU

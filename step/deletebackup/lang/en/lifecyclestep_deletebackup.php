@@ -30,8 +30,8 @@ $string['log'] = 'Write log entries';
 $string['log_help'] = 'If checked a log entry for every file deletion is written. These log entries can be seen in the workflow overview page.';
 $string['maximumdeletionspercron'] = 'Maximum number of backups deleted per cron job';
 $string['mtracebackupdeleted'] = 'Backup id {$a->recordid}. DB-record succesfully deleted: {$a->recorddeleted}. File {$a->backupfile} successfully deleted: {$a->filedeleted}';
-$string['plugindescription'] = 'Delete backup step';
-$string['pluginname'] = 'Delete backup step';
+$string['plugindescription'] = 'Delete lifecycle backup files within a workflow.';
+$string['pluginname'] = 'Delete Backup Step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
 

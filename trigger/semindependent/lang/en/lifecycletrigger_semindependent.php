@@ -30,7 +30,7 @@ $string['nosemester'] = 'Courses without semester';
 $string['nosemester_help'] = 'Courses without valid start date are selected by default. If you want to select courses
 that have no semester field selected instead mark this option.';
 $string['plugindescription'] = 'Include or exclude courses that have no start date.';
-$string['pluginname'] = 'Semester independent trigger';
+$string['pluginname'] = 'Semester Independent Trigger';
 $string['privacy:metadata'] = 'Does not store user specific data';
 $string['setting_customfield'] = 'Custom field';
 $string['setting_customfield_help'] = "Choose the course custom field of type semester to check";

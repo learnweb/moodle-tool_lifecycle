@@ -24,7 +24,7 @@
  */
 
 $string['includegenerallydelayed'] = 'Include generally delayed courses';
-$string['includegenerallydelayed_help'] = 'Include not only courses delayed for workflow but also generally delayed courses.';
-$string['plugindescription'] = 'Includes courses delayed for workflow and optionally generally delayed courses.';
-$string['pluginname'] = 'Include delayed courses trigger';
+$string['includegenerallydelayed_help'] = 'Include not only courses delayed for other workflows but also generally delayed courses.';
+$string['plugindescription'] = 'Includes courses delayed for other workflows and optionally generally delayed courses.';
+$string['pluginname'] = 'Delayed Courses Trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';

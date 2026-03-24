@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for site course trigger
+ * Lang strings for by role trigger
  *
  * @package lifecycletrigger_byrole
  * @copyright  2017 Tobias Reischmann WWU Nina Herrmann WWU
@@ -26,8 +26,8 @@ $string['delay'] = 'Days of delay for triggering';
 $string['delay_help'] = 'Days a course has to remain without the mandatory role until the course is finally triggered';
 $string['invert'] = 'Invert role selection for triggering';
 $string['invert_help'] = 'If ticked, any of the selected roles have to be present for a course to be triggered.';
-$string['plugindescription'] = 'Triggers if a specified role is misssing in a course for a certain timespan.';
-$string['pluginname'] = 'Trigger courses by roles missing';
+$string['plugindescription'] = 'Triggers if a specified role is missing in a course for a certain timespan.';
+$string['pluginname'] = 'By Roles Trigger';
 $string['privacy:metadata'] = 'Does not store user specific data';
 $string['responsibleroles'] = 'Responsible Roles in courses';
 $string['responsibleroles_help'] = 'Select the roles that have to be present in the course. If one of these roles is present the course is not triggered.';

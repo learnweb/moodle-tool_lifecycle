@@ -25,6 +25,6 @@
 $string['delay'] = 'Delay from start of course until starting a process';
 $string['delay_help'] = 'The trigger will be invoked if the time passed since the course has started is longer than this delay.';
 $string['plugindescription'] = 'Defines the time that has to pass after the course start date has been reached before this workflow starts.';
-$string['pluginname'] = 'Start date delay trigger';
+$string['pluginname'] = 'Start Date Delay Trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 

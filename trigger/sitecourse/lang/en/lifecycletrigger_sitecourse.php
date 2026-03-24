@@ -23,5 +23,5 @@
  */
 
 $string['plugindescription'] = 'Includes the site course (ID = 1) in the workflow. Be careful!';
-$string['pluginname'] = 'Include site course trigger';
+$string['pluginname'] = 'Site Course Trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';

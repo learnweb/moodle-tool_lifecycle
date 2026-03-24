@@ -26,6 +26,6 @@
 $string['delay'] = 'Delay from end of course until starting a process';
 $string['delay_help'] = 'The trigger will be invoked if the time passed since the course has ended is longer than this delay.';
 $string['plugindescription'] = 'Defines the time that has to pass after the course end date has been reached before this workflow starts.';
-$string['pluginname'] = 'End date trigger';
+$string['pluginname'] = 'End Date Trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 

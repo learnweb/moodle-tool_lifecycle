@@ -27,6 +27,6 @@ $string['datefrom_help'] = 'Enter the lower limit of the time window in which th
 $string['dateto'] = 'Date to';
 $string['dateto_help'] = 'Enter the upper limit of the time window in which the course start date should fall.';
 $string['plugindescription'] = 'Triggers courses whose start date falls within a specific time window.';
-$string['pluginname'] = 'Start date trigger';
+$string['pluginname'] = 'Start Date Trigger';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 

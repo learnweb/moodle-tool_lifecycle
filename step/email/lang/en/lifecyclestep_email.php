@@ -50,7 +50,7 @@ $string['email_subject_help'] = 'Set the template for the subject of the email.'
         . '</p>';
 $string['keep_course'] = 'Keep course';
 $string['plugindescription'] = 'Informs course executives of the upcoming deletion of a triggered course.';
-$string['pluginname'] = 'Email step';
+$string['pluginname'] = 'Email Step';
 $string['privacy:metadata:lifecyclestep_email:courseid'] = 'ID of the course, emails will be sent for';
 $string['privacy:metadata:lifecyclestep_email:instanceid'] = 'ID of the step instance sending emails';
 $string['privacy:metadata:lifecyclestep_email:summary'] = 'Information about whhich users will be informed by email';

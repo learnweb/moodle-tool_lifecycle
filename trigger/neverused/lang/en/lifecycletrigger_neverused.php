@@ -25,5 +25,5 @@
 $string['age'] = 'The days since the creation date of the course';
 $string['age_help'] = 'Enter the minimum number of days that must have passed since the unused course was created.';
 $string['plugindescription'] = 'Triggers courses that have not been modified since they were created.';
-$string['pluginname'] = 'Never used trigger';
+$string['pluginname'] = 'Never Used Courses Trigger';
 $string['privacy:metadata'] = 'The lifecycletrigger_neverused plugin does not store any personal data.';

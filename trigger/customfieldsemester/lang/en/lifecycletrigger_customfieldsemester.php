@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['error_delaypositive'] = 'The amount of months must be a positive integer value between 1 and 999.';
 $string['error_missingfield'] = 'The configured custom field \'{$a->missingfield}\' is missing.';
 $string['plugindescription'] = 'Trigger courses by the course custom field \'semester\'';
-$string['pluginname'] = 'Customfield semester trigger';
+$string['pluginname'] = 'Customfield Semester Trigger';
 $string['privacy:metadata'] = 'The "Customfield Semester Trigger" subplugin of the admin tool "Course Life Cycle" does not store any personal data.';
 $string['setting_customfield'] = 'Custom field';
 $string['setting_customfield_help'] = "With this setting, you define the custom field which holds the term of a course. The value of this field will be the basis of this trigger.";

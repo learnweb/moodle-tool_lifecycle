@@ -24,6 +24,6 @@
 
 $string['delay'] = 'Delay from last access of course until starting a process';
 $string['delay_help'] = 'Delay from last access of course (only regarding enrolled users) until starting a process.';
-$string['plugindescription'] = 'Triggers when a specifiable period after the last access of course is over.';
-$string['pluginname'] = 'Last access trigger';
+$string['plugindescription'] = 'Triggers when a specifiable period after the last access of course has passed.';
+$string['pluginname'] = 'Last Access Trigger';
 $string['privacy:metadata'] = 'The lifecycletrigger_lastaccess plugin does not store any personal data.';

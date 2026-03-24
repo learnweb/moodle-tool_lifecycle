@@ -28,6 +28,6 @@ $string['deleteselectedbuttonlabel'] = 'Delete selected';
 $string['maximumbackupspercron'] = 'Maximum number of backups per cron';
 $string['nobackups'] = 'No backups found.';
 $string['plugindescription'] = 'Initiates a backup of the triggered courses.';
-$string['pluginname'] = 'Create backup step';
+$string['pluginname'] = 'Create Backup Step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
