@@ -30,7 +30,7 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
-    And I select "Manual trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    And I select "Manual Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name              | My Trigger                                |
       | Icon                       | t/delete                                  |
@@ -61,7 +61,7 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
-    And I select "Manual trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    And I select "Manual Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name              | My Trigger                                |
       | Icon                       | t/delete                                  |

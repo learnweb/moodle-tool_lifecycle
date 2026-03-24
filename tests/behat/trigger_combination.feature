@@ -39,7 +39,7 @@ Feature: Combine triggers with 'and' operation and test view and actions
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
-    And I select "Manual trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    And I select "Manual Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name              | My Trigger                                |
       | Icon                       | t/delete                                  |
@@ -47,7 +47,7 @@ Feature: Combine triggers with 'and' operation and test view and actions
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
 
-    And I select "Categories trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    And I select "Categories Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name              | Categories                                |
     And I set the following fields to these values:

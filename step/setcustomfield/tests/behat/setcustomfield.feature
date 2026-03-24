@@ -36,7 +36,7 @@ Feature: Select setcustomfield step and test view and actions
       | rollbackdelay[number]      | 0              |
       | finishdelay[number]        | 0              |
     And I press "Save changes"
-    And I select "Manual trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    And I select "Manual Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name              | Test                       |
       | Action name                | Test                       |

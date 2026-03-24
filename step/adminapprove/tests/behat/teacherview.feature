@@ -19,7 +19,7 @@ Feature: Add a workflow with an adminapprove step and test the status in the tea
       | Title                    | Admin Approve Step WF #1 |
       | Displayed workflow title | Admin Approve Step WF #1 |
     And I press "Save changes"
-    And I select "Start date delay trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    And I select "Start Date Delay Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name   | My Trigger |
       | delay[number]   | 0          |

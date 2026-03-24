@@ -13,7 +13,7 @@ Feature: Disable a workflow
       | Title                      | My Workflow                               |
       | Displayed workflow title   | Teachers view on workflow                 |
     And I press "Save changes"
-    And I select "Start date delay trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    And I select "Start Date Delay Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name   | My Trigger |
       | delay[number]   | 3          |

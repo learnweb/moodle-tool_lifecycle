@@ -12,7 +12,7 @@ Feature: Add a workflow definition
       | Displayed workflow title   | Teachers view on workflow                 |
     When I press "Save changes"
     Then I should see "Delay in case of rollback"
-    When I select "Manual trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    When I select "Manual Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     Then I should see "Settings of the trigger"
     When I set the following fields to these values:
       | Instance name              | My Trigger                                |
@@ -36,7 +36,7 @@ Feature: Add a workflow definition
       | Displayed workflow title   | Teachers view on workflow                 |
     When I press "Save changes"
     Then I should see "Delay in case of rollback"
-    When I select "Start date delay trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    When I select "Start Date Delay Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name    | My Trigger                 |
       | delay[number]    | 2                          |
@@ -59,7 +59,7 @@ Feature: Add a workflow definition
       | Displayed workflow title   | Teachers view on workflow                 |
     When I press "Save changes"
     Then I should see "Delay in case of rollback"
-    When I select "Start date delay trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    When I select "Start Date Delay Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name    | My Trigger                 |
       | delay[number]    | 2                          |
@@ -92,7 +92,7 @@ Feature: Add a workflow definition
       | Displayed workflow title   | Teachers view on workflow                 |
     When I press "Save changes"
     Then I should see "Delay in case of rollback"
-    When I select "Start date delay trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    When I select "Start Date Delay Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name    | My Trigger                 |
       | delay[number]    | 2                          |

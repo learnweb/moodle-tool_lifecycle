@@ -24,7 +24,7 @@ Feature: Test the max number of courses to be processed-limitations of a workflo
       | Maximum courses triggered per day    | 2                                         |
     And I press "Save changes"
 
-    And I select "Categories trigger" from the "tool_lifecycle-choose-trigger" singleselect
+    And I select "Categories Trigger" from the "tool_lifecycle-choose-trigger" singleselect
     And I set the following fields to these values:
       | Instance name                                          | CategoriesTrigger |
       | Categories, for which the workflow should be triggered | cat01             |
