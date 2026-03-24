@@ -25,9 +25,9 @@ Feature: Add a workflow with a manual trigger and a duplicate step and test the 
       | Action name                | Duplicate course                          |
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
-    And I select "Duplicate step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Duplicate Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the following fields to these values:
-      | Instance name              | Duplicate step                  |
+      | Instance name              | Duplicate Step                  |
     And I press "Save changes"
     And I am on workflowdrafts page
     And I press "Activate"

@@ -37,8 +37,8 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | Action name                | Delete course                             |
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
-    And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
-    And I set the field "Instance name" to "Create backup step"
+    And I select "Create Backup Step" from the "tool_lifecycle-choose-step" singleselect
+    And I set the field "Instance name" to "Create Backup Step"
     And I press "Save changes"
     And I am on workflowdrafts page
     And I press "Activate"
@@ -68,10 +68,10 @@ Feature: Add a manual trigger and test view and actions as a teacher
       | Action name                | Delete course                             |
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
-    And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
-    And I set the field "Instance name" to "Create backup step"
+    And I select "Create Backup Step" from the "tool_lifecycle-choose-step" singleselect
+    And I set the field "Instance name" to "Create Backup Step"
     And I press "Save changes"
-    And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Delete Course Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 2"
     And I press "Save changes"
     And I am on workflowdrafts page

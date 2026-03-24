@@ -28,12 +28,12 @@ Feature: Add an admin approve step without button label customisation
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
 
-    And I select "Admin approve step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Admin Approve Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "admin approve step"
     And I press "Save changes"
 
-    And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
-    And I set the field "Instance name" to "Create backup step"
+    And I select "Create Backup Step" from the "tool_lifecycle-choose-step" singleselect
+    And I set the field "Instance name" to "Create Backup Step"
     And I press "Save changes"
 
     And I am on workflowdrafts page

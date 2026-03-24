@@ -21,19 +21,19 @@ Feature: Add a workflow definition activate it
     And I press "Save changes"
     Then I should see "Add new step instance"
     And I should see "startdatedelay"
-    When I select "Email step" from the "tool_lifecycle-choose-step" singleselect
+    When I select "Email Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the following fields to these values:
-      | Instance name               | Email step                  |
+      | Instance name               | Email Step                  |
       | responsetimeout[number]     | 14                          |
       | responsetimeout[timeunit]   | days                        |
       | Subject template            | Subject                     |
       | Content plain text template | Content                     |
       | Content HTML Template       | Content HTML                |
     And I press "Save changes"
-    And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
-    And I set the field "Instance name" to "Create backup step"
+    And I select "Create Backup Step" from the "tool_lifecycle-choose-step" singleselect
+    And I set the field "Instance name" to "Create Backup Step"
     And I press "Save changes"
-    And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Delete Course Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 2"
     And I press "Save changes"
     And I am on workflowdrafts page

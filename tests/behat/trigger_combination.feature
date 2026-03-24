@@ -54,10 +54,10 @@ Feature: Combine triggers with 'and' operation and test view and actions
       | Categories, for which the workflow should be triggered              | cata, catc |
     And I press "Save changes"
 
-    And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
-    And I set the field "Instance name" to "Create backup step"
+    And I select "Create Backup Step" from the "tool_lifecycle-choose-step" singleselect
+    And I set the field "Instance name" to "Create Backup Step"
     And I press "Save changes"
-    And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Delete Course Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 2"
     And I press "Save changes"
 

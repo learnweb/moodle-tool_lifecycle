@@ -44,7 +44,7 @@ Feature: Add a workflow definition
     And I press "Save changes"
     Then I should see "Delay in case of rollback"
     And I should see "startdatedelay"
-    When I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
+    When I select "Delete Course Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course"
     And I press "Save changes"
     Then I should see "Delay in case of rollback"
@@ -100,23 +100,23 @@ Feature: Add a workflow definition
     And I press "Save changes"
     Then I should see "Delay in case of rollback"
     And I should see "startdatedelay"
-    When I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
+    When I select "Delete Course Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 1"
     And I press "Save changes"
     And I select "deletecourse" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course 2"
     And I press "Save changes"
     And I select "createbackup" from the "tool_lifecycle-choose-step" singleselect
-    And I set the field "Instance name" to "Create backup step"
+    And I set the field "Instance name" to "Create Backup Step"
     And I press "Save changes"
     Then the step "Delete Course 1" should be at the 1 position
     And the step "Delete Course 2" should be at the 2 position
-    And the step "Create backup step" should be at the 3 position
+    And the step "Create Backup Step" should be at the 3 position
     And I click on "Move down" in the step "Delete Course 1"
     Then the step "Delete Course 1" should be at the 2 position
     And the step "Delete Course 2" should be at the 1 position
-    And the step "Create backup step" should be at the 3 position
-    And I click on "Move up" in the step "Create backup step"
+    And the step "Create Backup Step" should be at the 3 position
+    And I click on "Move up" in the step "Create Backup Step"
     Then the step "Delete Course 1" should be at the 3 position
     And the step "Delete Course 2" should be at the 1 position
-    And the step "Create backup step" should be at the 2 position
+    And the step "Create Backup Step" should be at the 2 position

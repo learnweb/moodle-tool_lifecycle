@@ -42,7 +42,7 @@ Feature: Select setcustomfield step and test view and actions
       | Action name                | Test                       |
       | Capability                 | moodle/course:manageactivities     |
     And I press "Save changes"
-    And I select "Set course custom field step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Set Course Customfield Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "set field step"
 
   @javascript

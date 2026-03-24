@@ -28,7 +28,7 @@ Feature: Add an admin approve step WITH button label customisation
       | Capability                 | moodle/course:manageactivities            |
     And I press "Save changes"
 
-    And I select "Admin approve step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Admin Approve Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "admin approve step"
     And I set the field "Label of the proceed button" to "Create backup"
     And I set the field "Label of the rollback button" to "Call off workflow"
@@ -38,8 +38,8 @@ Feature: Add an admin approve step WITH button label customisation
     And I set the field "Label of the proceed all button" to "Call off workflow for all"
     And I press "Save changes"
 
-    And I select "Create backup step" from the "tool_lifecycle-choose-step" singleselect
-    And I set the field "Instance name" to "Create backup step"
+    And I select "Create Backup Step" from the "tool_lifecycle-choose-step" singleselect
+    And I set the field "Instance name" to "Create Backup Step"
     And I press "Save changes"
 
     And I am on workflowdrafts page

@@ -30,7 +30,7 @@ Feature: Test the max number of courses to be processed-limitations of a workflo
       | Categories, for which the workflow should be triggered | cat01             |
     And I press "Save changes"
 
-    And I select "Admin approve step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Admin Approve Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Admin approve Step"
     And I press "Save changes"
 

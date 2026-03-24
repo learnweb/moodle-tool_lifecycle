@@ -22,12 +22,12 @@ Feature: Add a workflow with an adminapprove step and test it
       | delay[number]   | 0          |
       | delay[timeunit] | seconds    |
     And I press "Save changes"
-    And I select "Admin approve step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Admin Approve Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the following fields to these values:
       | Instance name | Admin Approve Step #1 |
       | Status message | My status |
     And I press "Save changes"
-    And I select "Delete course step" from the "tool_lifecycle-choose-step" singleselect
+    And I select "Delete Course Step" from the "tool_lifecycle-choose-step" singleselect
     And I set the field "Instance name" to "Delete Course #1"
     And I press "Save changes"
     And I am on workflowdrafts page
