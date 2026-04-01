@@ -165,12 +165,12 @@ class course_backups_table extends \table_sql {
      */
     public function col_coursename($row) {
         try {
-            $out = \html_writer::link(course_get_url($row->courseid), $row->coursefullname);
+            $out = \html_writer::link(course_get_url($row->courseid), format_string($row->coursefullname));
         } catch (\dml_missing_record_exception $e) {
-            $out = $row->coursefullname;
+            $out = format_string($row->coursefullname);
         }
         if ($row->coursefullname != $row->courseshortname) {
-            $out .= \html_writer::div($row->courseshortname, 'text-info');
+            $out .= \html_writer::div(format_string($row->courseshortname), 'text-info');
         }
         return $out;
     }
