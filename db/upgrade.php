@@ -435,7 +435,6 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         }
 
         // Lifecycle savepoint reached.
-
         upgrade_plugin_savepoint(true, 2019082200, 'tool', 'lifecycle');
     }
 
@@ -448,7 +447,6 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         set_config('duration', $duration, 'tool_lifecycle');
 
         // Lifecycle savepoint reached.
-
         upgrade_plugin_savepoint(true, 2019082300, 'tool', 'lifecycle');
     }
 
@@ -613,6 +611,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025050405, 'tool', 'lifecycle');
 
     }
+
     if ($oldversion < 2025102302) {
         $table = new xmldb_table('tool_lifecycle_workflow');
 
@@ -713,6 +712,27 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
 
         // Lifecycle savepoint reached.
         upgrade_plugin_savepoint(true, 2026012003, 'tool', 'lifecycle');
+    }
+
+    if ($oldversion < 2026012004) {
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2026012004, 'tool', 'lifecycle');
+    }
+
+    if ($oldversion < 2026012005) {
+
+        // Remove orphaned process records pointing to courses that no longer exist.
+        // These cause a fatal dml_missing_record_exception in abortprocesses() when
+        // lifecycle tries to load the course context via process::from_record().
+        // This mirrors the cleanup already done at upgrade 2020091800 but uses a
+        // direct DELETE for efficiency and to avoid calling abort_process() on records
+        // whose course context cannot be loaded.
+        $DB->execute('DELETE FROM {tool_lifecycle_process}
+                      WHERE courseid NOT IN (SELECT id FROM {course})');
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2026012005, 'tool', 'lifecycle');
     }
 
     return true;
