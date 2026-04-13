@@ -13,7 +13,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  * Version details.
  *
@@ -26,7 +25,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'tool_lifecycle';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->version = 2026012004;
+$plugin->version = 2026012005;
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
 $plugin->supported = [405, 501];
 $plugin->release   = 'v5.1-r5';
