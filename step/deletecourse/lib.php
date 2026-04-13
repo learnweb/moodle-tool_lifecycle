@@ -23,6 +23,7 @@
  */
 namespace tool_lifecycle\step;
 
+use context_course;
 use stdClass;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
@@ -58,45 +59,33 @@ class deletecourse extends libbase {
      * @throws \dml_exception
      */
     public function process_course($processid, $instanceid, $course) {
-        global $CFG, $DB;
+        global $DB;
 
-        // Skip if course no longer exists — clean up the orphaned process record so it
-        // never surfaces again in subsequent workflow runs or abort operations.
-        if (!$DB->record_exists('course', ['id' => $course->id])) {
-            debugging(
-                'tool_lifecycle deletecourse: course ' . $course->id .
-                ' no longer exists — removing orphaned process record ' . $processid,
-                DEBUG_DEVELOPER
-            );
-            $DB->delete_records('tool_lifecycle_process', ['id' => $processid]);
-            return step_response::proceed();
-        }
-
-        if ($course->id == 1) {
+        if ($course->id == SITEID) {
             return step_response::rollback();
         }
 
-        if (self::$numberofdeletions >= settings_manager::get_settings(
-            $instanceid, settings_type::STEP)['maximumdeletionspercron']) {
+        // Get setting maximum deletions per cron. "0" means no limit.
+        $maximumdeletionspercron = settings_manager::get_settings(
+            $instanceid, settings_type::STEP)['maximumdeletionspercron'] ?? 0;
+        $maximumdeletionspercron = $maximumdeletionspercron == 0 ? PHP_INT_MAX : $maximumdeletionspercron;
+        if (self::$numberofdeletions >= $maximumdeletionspercron) {
+            // Wait with further deletions at least until the next task run.
             return step_response::waiting();
         }
 
-        // Output for testing.
-        debugging(
-            'tool_lifecycle deletecourse: deleting CourseID: ' . $course->id .
-            ' Course Name: (' . $course->fullname . ')',
-            DEBUG_DEVELOPER
-        );
-
+        // Delete course and write course deletion log table.
+        $record = new stdClass();
+        $record->stepid = $instanceid;
+        $record->courseid = $course->id;
+        $record->modules = $DB->count_records('course_modules', ['course' => $course->id]);
+        $record->participants = count(get_enrolled_users(context_course::instance($course->id)));
         delete_course($course);
-
-        // Moodle bug workaround (MDL-65228).
-        if (is_object($CFG) && property_exists($CFG, "forced_plugin_settings") &&
-            is_array($CFG->forced_plugin_settings) &&
-            array_key_exists("backup", $CFG->forced_plugin_settings) &&
-            !is_array($CFG->forced_plugin_settings["backup"])) {
-
-            $CFG->forced_plugin_settings["backup"] = [];
+        $record->timedeleted = time();
+        try {
+            $DB->insert_record('lifecyclestep_deletecourse', $record);
+        } catch (\dml_write_exception $exception) {
+            mtrace($exception->getMessage());
         }
 
         self::$numberofdeletions++;
@@ -134,6 +123,7 @@ class deletecourse extends libbase {
      */
     public function instance_settings() {
         return [
+            new instance_setting('status', PARAM_INT, true),
             new instance_setting('maximumdeletionspercron', PARAM_INT, true),
         ];
     }
@@ -145,9 +135,38 @@ class deletecourse extends libbase {
      * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
+        // Status (active or deactivated)?
+        $elementname = 'status';
+        $options = [
+            self::STEPACTIVE => get_string('active', 'tool_lifecycle'),
+            self::STEPSTOPPED => get_string('stopped', 'tool_lifecycle'),
+        ];
+        $mform->addElement('select', $elementname, get_string('status', 'tool_lifecycle'), $options);
+        $mform->addHelpButton($elementname, 'stopped', 'tool_lifecycle');
+        $mform->setType($elementname, PARAM_INT);
+        $mform->setDefault($elementname, self::STEPACTIVE);
+        // Maximum courses processed by a single task run.
         $elementname = 'maximumdeletionspercron';
-        $mform->addElement('text', $elementname, get_string('deletecourse_maximumdeletionspercron', 'lifecyclestep_deletecourse'));
+        $mform->addElement('text', $elementname,
+            get_string('deletecourse_maximumdeletionspercron', 'lifecyclestep_deletecourse'),
+            ['size' => 3]);
         $mform->setType($elementname, PARAM_INT);
         $mform->setDefault($elementname, 10);
+    }
+
+    /**
+     * Returns the string of the specific icon for this trigger.
+     * @return string icon string
+     */
+    public function get_icon() {
+        return 'e/delete';
+    }
+
+    /**
+     * Returns if this step type is stoppable.
+     * @return bool
+     */
+    public function is_stoppable() {
+        return true;
     }
 }
