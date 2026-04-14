@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - http://moodle.org/.
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,19 +13,20 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Version details.
+ * Version info for lifecycle deletion trigger.
  *
- * @package    tool_lifecycle
- * @copyright  2025 Thomas Niedermaier University Münster
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     lifecycletrigger_coursedelete
+ * @copyright   2025 Gifty Wanzola (ccaewan)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'tool_lifecycle';
+$plugin->version   = 2025121802;
+$plugin->component = 'lifecycletrigger_coursedelete';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->version = 2026012005;
-$plugin->requires = 2024100700; // Requires Moodle 4.5+.
-$plugin->supported = [405, 501];
-$plugin->release   = 'v5.1-r5';
+$plugin->requires = 2022112800; // Requires Moodle 4.1+.
+$plugin->supported = [405, 500];
+$plugin->release   = 'v5.0-r1';

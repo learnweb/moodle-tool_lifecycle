@@ -176,9 +176,13 @@ class process_manager {
     }
 
     /**
-     * Returns all processes for given workflow id
+     * Returns all processes for given workflow id.
+     * Orphaned process records (where the course no longer exists) are detected here
+     * and moved to the proc_error table rather than being returned, preventing a fatal
+     * dml_missing_record_exception when lifecycle later tries to load the course context
+     * (e.g. during abortprocesses()).
      * @param int $workflowid id of the workflow
-     * @return array of proccesses initiated by specifed workflow id
+     * @return array of processes initiated by specified workflow id
      * @throws \dml_exception
      */
     public static function get_processes_by_workflow($workflowid) {
@@ -186,6 +190,23 @@ class process_manager {
         $records = $DB->get_records('tool_lifecycle_process', ['workflowid' => $workflowid]);
         $processes = [];
         foreach ($records as $record) {
+            /* 
+            Detect orphaned process records pointing to courses that no longer exist
+            and route them to the error table, consistent with how get_processes() handles
+            the same situation. Without this guard,= abortprocesses() could fatally crash when
+            process::from_record() calls context_course::instance() on a deleted course 
+            */
+            if (!$DB->record_exists('course', ['id' => $record->courseid])) {
+                debugging(
+                    'tool_lifecycle get_processes_by_workflow: course ' . $record->courseid .
+                    ' no longer exists — moving process ' . $record->id . ' to error table.',
+                    DEBUG_DEVELOPER
+                );
+                $process = process::from_record($record, true);
+                $e = new \Exception(get_string('process_withnotexistingcourse', 'tool_lifecycle'));
+                self::insert_process_error($process, $e);
+                continue;
+            }
             $processes[] = process::from_record($record);
         }
         return $processes;

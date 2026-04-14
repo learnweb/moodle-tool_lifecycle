@@ -13,19 +13,20 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Version details.
+ * Life Cycle course freeze Trigger
  *
- * @package    tool_lifecycle
- * @copyright  2025 Thomas Niedermaier University Münster
+ * @package lifecycletrigger_coursefreeze
+ * @copyright  2025 Gifty (ccaewan)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->component = 'tool_lifecycle';
+$plugin->component = 'lifecycletrigger_coursefreeze';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->version = 2026012005;
-$plugin->requires = 2024100700; // Requires Moodle 4.5+.
-$plugin->supported = [405, 501];
-$plugin->release   = 'v5.1-r5';
+$plugin->version  = 2025103000;
+$plugin->requires = 2022112800; // Requires Moodle 4.1+.
+$plugin->supported = [405, 500];
+$plugin->release   = 'v5.0-r1';

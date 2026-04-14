@@ -50,8 +50,13 @@ if ($action) {
     if ($action == 'proceed') {
         foreach ($ids as $id) {
             if ($courseid = $DB->get_field('tool_lifecycle_proc_error', 'courseid', ['id' => $id])) {
-                $course = get_course($courseid);
-                $coursename = get_course_display_name_for_list($course);
+                // Course may have been deleted — guard against get_course() throwing.
+                try {
+                    $course = get_course($courseid);
+                    $coursename = get_course_display_name_for_list($course);
+                } catch (\dml_missing_record_exception $e) {
+                    $coursename = get_string('coursenotfound', 'tool_lifecycle') . ' (ID: ' . $courseid . ')';
+                }
             } else {
                 $coursename = get_string('coursenotfound', 'tool_lifecycle');
             }
@@ -67,8 +72,13 @@ if ($action) {
     } else if ($action == 'rollback') {
         foreach ($ids as $id) {
             if ($courseid = $DB->get_field('tool_lifecycle_proc_error', 'courseid', ['id' => $id])) {
-                $course = get_course($courseid);
-                $coursename = get_course_display_name_for_list($course);
+                // Course may have been deleted — guard against get_course() throwing.
+                try {
+                    $course = get_course($courseid);
+                    $coursename = get_course_display_name_for_list($course);
+                } catch (\dml_missing_record_exception $e) {
+                    $coursename = get_string('coursenotfound', 'tool_lifecycle') . ' (ID: ' . $courseid . ')';
+                }
             } else {
                 $coursename = get_string('coursenotfound', 'tool_lifecycle');
             }

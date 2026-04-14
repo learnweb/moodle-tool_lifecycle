@@ -13,19 +13,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Version details.
+ * Lang strings for delete course step
  *
- * @package    tool_lifecycle
- * @copyright  2025 Thomas Niedermaier University Münster
+ * @package lifecyclestep_uclcontextfreeze
+ * @copyright  2025 UCL
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+$string['stepname'] = 'Archive/Freeze course step';
+$string['plugindescription'] = 'Calls UCLs contextfreeze (block) to archive courses';
+$string['pluginname'] = 'UCL contextfreeze';
+$string['privacy:metadata'] = 'This subplugin does not store any personal data.';
 
-$plugin->component = 'tool_lifecycle';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->version = 2026012005;
-$plugin->requires = 2024100700; // Requires Moodle 4.5+.
-$plugin->supported = [405, 501];
-$plugin->release   = 'v5.1-r5';
