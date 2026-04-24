@@ -225,12 +225,17 @@ class step_manager extends subplugin_manager {
      */
     public static function get_step_instances_by_subpluginname($subpluginname) {
         global $DB;
-        $records = $DB->get_records('tool_lifecycle_step', ['subpluginname' => $subpluginname]);
-        $steps = [];
-        foreach ($records as $id => $record) {
-            $steps[$id] = step_subplugin::from_record($record);
+
+        try {
+            $records = $DB->get_records('tool_lifecycle_step', ['subpluginname' => $subpluginname]);
+            $steps = [];
+            foreach ($records as $id => $record) {
+                $steps[$id] = step_subplugin::from_record($record);
+            }
+            return $steps;
+        } catch (\dml_exception $e) {
+            return [];
         }
-        return $steps;
     }
 
     /**
