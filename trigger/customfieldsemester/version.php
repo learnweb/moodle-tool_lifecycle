@@ -31,6 +31,3 @@ $plugin->version = 2026012004;
 $plugin->requires = 2024100700; // Requires Moodle 4.5+.
 $plugin->supported = [405, 501];
 $plugin->release   = 'v5.1-r5';
-
-$plugin->dependencies = ['tool_lifecycle' => 2025050403,
-        'customfield_semester' => 2025043001, ];
