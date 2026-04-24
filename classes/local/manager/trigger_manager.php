@@ -78,13 +78,17 @@ class trigger_manager extends subplugin_manager {
      */
     public static function get_instances($subpluginname) {
         global $DB;
-        $result = [];
-        $records = $DB->get_records('tool_lifecycle_trigger', ['subpluginname' => $subpluginname]);
-        foreach ($records as $record) {
-            $subplugin = trigger_subplugin::from_record($record);
-            $result[] = $subplugin;
+        try {
+            $records = $DB->get_records('tool_lifecycle_trigger', ['subpluginname' => $subpluginname]);
+            $result = [];
+            foreach ($records as $record) {
+                $subplugin = trigger_subplugin::from_record($record);
+                $result[] = $subplugin;
+            }
+            return $result;
+        } catch (\dml_exception $e) {
+            return [];
         }
-        return $result;
     }
 
     /**
