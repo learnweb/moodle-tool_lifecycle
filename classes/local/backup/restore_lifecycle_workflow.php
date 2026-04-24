@@ -32,6 +32,8 @@ use tool_lifecycle\local\manager\trigger_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\settings_type;
 
+require_once(__DIR__ . '/../../../locallib.php');
+
 /**
  * Class to restore a workflow.
  * @package    tool_lifecycle
