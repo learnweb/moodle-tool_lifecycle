@@ -27,19 +27,19 @@ namespace tool_lifecycle\step;
 
 use core_cache\cache;
 use core\output\html_writer;
+use lifecyclestep_opencast\notification_helper;
+use lifecyclestep_opencast\log_helper;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\settings_type;
 use tool_opencast\local\settings_api;
 use tool_opencast\settings\setting_helper;
-use lifecyclestep_opencast\notification_helper;
-use lifecyclestep_opencast\log_helper;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
-// Constants which are used in the plugin settings.
+// Constants that are used in the plugin settings.
 define('LIFECYCLESTEP_OPENCAST_SELECT_YES', 'yes');
 define('LIFECYCLESTEP_OPENCAST_SELECT_NO', 'no');
 
@@ -118,36 +118,37 @@ class opencast extends libbase {
         // Iterate over the instances.
         foreach ($ocinstances as $instance) {
             // Instance setting for the 'ocworkflowtags' field.
-            $settings[] = new instance_setting('ocworkflowtags' . $instance->id, PARAM_RAW);
+            $settings[] = new instance_setting('ocworkflowtags' . $instance->id, PARAM_RAW, true);
             // Instance setting for the 'ocworkflow' field.
-            $settings[] = new instance_setting('ocworkflow_instance' . $instance->id, PARAM_ALPHANUMEXT);
-            $settings[] = new instance_setting('ocisdelete' . $instance->id, PARAM_ALPHA);
-            $settings[] = new instance_setting('ocremoveseriesmapping' . $instance->id, PARAM_ALPHA);
+            $settings[] = new instance_setting('ocworkflow_instance' . $instance->id, PARAM_ALPHANUMEXT, true);
+            $settings[] = new instance_setting('ocisdelete' . $instance->id, PARAM_ALPHA, true);
+            $settings[] = new instance_setting('ocremoveseriesmapping' . $instance->id, PARAM_ALPHA, true);
         }
 
         // Instance setting for the 'ocdryrun' field.
-        $settings[] = new instance_setting('ocdryrun', PARAM_ALPHA);
+        $settings[] = new instance_setting('ocdryrun', PARAM_ALPHA, true);
 
         // Instance setting for the 'octrace' field.
-        $settings[] = new instance_setting('octrace', PARAM_ALPHA);
+        $settings[] = new instance_setting('octrace', PARAM_ALPHA, true);
 
         // Instance setting for the 'ocnotifyadmin' field.
-        $settings[] = new instance_setting('ocnotifyadmin', PARAM_ALPHA);
+        $settings[] = new instance_setting('ocnotifyadmin', PARAM_ALPHA, true);
 
         // Instance setting for the 'ocratelimiter' field.
-        $settings[] = new instance_setting('ocratelimiter', PARAM_ALPHA);
+        $settings[] = new instance_setting('ocratelimiter', PARAM_ALPHA, true);
 
         // Return settings array.
         return $settings;
     }
 
     /**
-     * This method can be overridden, to add form elements to the form_step_instance.
+     * This method can be overridden to add form elements to the form_step_instance.
      * It is called in definition().
      * @param \MoodleQuickForm $mform
+     * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
-        // Prepare options array for select settings.
+        // Prepare option array for select settings.
         $yesnooption = [
             LIFECYCLESTEP_OPENCAST_SELECT_YES => get_string('yes'),
             LIFECYCLESTEP_OPENCAST_SELECT_NO => get_string('no'),
@@ -272,6 +273,7 @@ class opencast extends libbase {
      * @param \MoodleQuickForm $mform
      * @param array $settings
      * @return void
+     * @throws \coding_exception
      */
     public function extend_add_instance_form_definition_after_data($mform, $settings): void {
         $ocinstances = settings_api::get_ocinstances();
