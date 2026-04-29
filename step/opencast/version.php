@@ -30,6 +30,3 @@ $plugin->release = 'v5.0-r1';
 $plugin->requires = 2024100700;
 $plugin->supported = [500, 501];
 $plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = [
-        'tool_opencast' => 2025080103,
-];
