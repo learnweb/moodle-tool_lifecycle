@@ -48,9 +48,9 @@ class manual extends base_manual {
      */
     public function instance_settings() {
         return [
-            new instance_setting('icon',  PARAM_SAFEPATH),
-            new instance_setting('displayname',  PARAM_TEXT),
-            new instance_setting('capability',  PARAM_CAPABILITY),
+            new instance_setting('icon',  PARAM_SAFEPATH, true),
+            new instance_setting('displayname',  PARAM_TEXT, true),
+            new instance_setting('capability',  PARAM_CAPABILITY, true),
         ];
     }
 
