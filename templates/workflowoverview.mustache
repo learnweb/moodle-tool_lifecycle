@@ -191,6 +191,15 @@
                 <div class="mx-2">
                     {{#str}} manualtriggerenvolved, tool_lifecycle {{/str}} <a href="#" data-toggle="tooltip" title="{{#str}} manualtriggerenvolved_help, tool_lifecycle{{/str}}"><i class="fa fa-circle-question"></i></a>
                 </div>
+                {{#runnable}}
+                    <div class="mb-2">
+                        <a href="{{{runlink}}}">
+                      <span data-toggle="tooltip" title="{{#str}} runtask, tool_lifecycle {{/str}}">
+                          {{#str}} run, tool_lifecycle {{/str}}
+                      </span>
+                        </a>
+                    </div>
+                {{/runnable}}
             {{/nomanualtriggerinvolved}}
 
             {{#counttimetriggers}}
