@@ -71,9 +71,20 @@ class opencast extends base_automatic {
         $sql = "";
         $inparams = [];
 
-        $exclude = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['exclude'];
-        $activity = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['activity'];
-        $lti = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['lti'];
+        $exclude = false;
+        $activity = false;
+        $lti = false;
+
+        $settings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
+        if (isset($settings['exclude']) && $settings['exclude'] != false) {
+            $exclude = true;
+        }
+        if (isset($settings['$activity']) && $settings['$activity'] != false) {
+            $activity = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['activity'];
+        }
+        if (isset($settings['$lti']) && $settings['$lti'] != false) {
+            $lti = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['lti'];
+        }
 
         $not = $exclude ? 'NOT' : '';
         if ($activity) {
