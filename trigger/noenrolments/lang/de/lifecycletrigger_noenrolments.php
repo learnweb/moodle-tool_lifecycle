@@ -22,5 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['plugindescription'] = 'Löst Kurse ohne Einschreibungen aus.';
 $string['pluginname'] = 'Keine Einschreibungen - Trigger';
 $string['privacy:metadata'] = 'Das Subplugin lifecycletrigger_noenrolments speichert keine persönlichen Daten.';

@@ -19,6 +19,7 @@ namespace tool_lifecycle\trigger;
 use tool_lifecycle\local\response\trigger_response;
 
 defined('MOODLE_INTERNAL') || die();
+
 require_once(__DIR__ . '/../lib.php');
 
 /**
@@ -32,11 +33,24 @@ class noenrolments extends base_automatic {
     #[\Override]
     public function check_course($course, $triggerid): trigger_response {
         // Every decision is already in the where statement.
-        if (empty(enrol_get_course_users($course->id))) {
-            return trigger_response::trigger();
-        } else {
-            return trigger_response::next();
-        }
+        return trigger_response::trigger();
+    }
+
+    /**
+     * Add SQL for to trigger a course.
+     * @param int $notused
+     * @return array A list containing the constructed SQL fragment and an array of parameters.
+     */
+    #[\Override]
+    public function get_course_recordset_where($notused): array {
+        $where = "  NOT EXISTS (
+                        SELECT 1
+                        FROM {user_enrolments} ue
+                        JOIN {enrol} e ON e.id = ue.enrolid
+                        WHERE e.courseid = c.id
+                    )
+        ";
+        return [$where, []];
     }
 
     #[\Override]

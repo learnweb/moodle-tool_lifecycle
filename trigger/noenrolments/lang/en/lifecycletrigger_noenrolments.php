@@ -22,5 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Noenrolments trigger';
+$string['plugindescription'] = 'Triggers courses with no enrolments.';
+$string['pluginname'] = 'Noenrolments Trigger';
 $string['privacy:metadata'] = 'The subplugin lifecycletrigger_noenrolments does not store any personal data.';
