@@ -79,10 +79,10 @@ class opencast extends base_automatic {
         if (isset($settings['exclude']) && $settings['exclude'] != false) {
             $exclude = true;
         }
-        if (isset($settings['$activity']) && $settings['$activity'] != false) {
+        if (isset($settings['activity']) && $settings['activity'] != false) {
             $activity = true;
         }
-        if (isset($settings['$lti']) && $settings['$lti'] != false) {
+        if (isset($settings['lti']) && $settings['lti'] != false) {
             $lti = true;
         }
 
