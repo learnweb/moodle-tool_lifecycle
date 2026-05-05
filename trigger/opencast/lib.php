@@ -68,7 +68,7 @@ class opencast extends base_automatic {
     public function get_course_recordset_where($triggerid) {
         global $DB;
 
-        $sql = "";
+        $sql = " TRUE ";
         $inparams = [];
 
         $exclude = false;
@@ -80,10 +80,10 @@ class opencast extends base_automatic {
             $exclude = true;
         }
         if (isset($settings['$activity']) && $settings['$activity'] != false) {
-            $activity = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['activity'];
+            $activity = true;
         }
         if (isset($settings['$lti']) && $settings['$lti'] != false) {
-            $lti = settings_manager::get_settings($triggerid, settings_type::TRIGGER)['lti'];
+            $lti = true;
         }
 
         $not = $exclude ? 'NOT' : '';
