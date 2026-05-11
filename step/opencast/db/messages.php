@@ -15,18 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Admin tool "Course Life Cycle" - Subplugin "Opencast step" - Version file
+ * Message providers for opencast lifecycle step.
  *
  * @package    lifecyclestep_opencast
- * @copyright  2022 Alexander Bias, lern.link GmbH <alexander.bias@lernlink.de>
+ * @copyright  2026 Farbod Zamani Boroujeni, elan e.V.
+ * @author     Farbod Zamani Boroujeni <zamani@elan-ev.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'lifecyclestep_opencast';
-$plugin->version = 2026040703;
-$plugin->release = 'v4.5-r1';
-$plugin->requires = 2024100700;
-$plugin->supported = [405, 405];
-$plugin->maturity = MATURITY_STABLE;
+$messageproviders = [
+    'error' => [
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+        ],
+    ],
+    'report' => [
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+        ],
+    ],
+];

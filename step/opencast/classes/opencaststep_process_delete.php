@@ -28,7 +28,9 @@ namespace lifecyclestep_opencast;
 use core_cache\cache;
 use tool_lifecycle\local\response\step_response;
 use lifecyclestep_opencast\notification_helper;
+use lifecyclestep_opencast\report_helper;
 use lifecyclestep_opencast\log_helper;
+use tool_lifecycle\step\opencast;
 
 /**
  * Helper class to perform all required opencast related processes in Opencast Step for deletion
@@ -65,6 +67,9 @@ class opencaststep_process_delete {
         $ratelimiterenabled,
         $ocdryrunenabled
     ) {
+        // Report.
+        $report = new report_helper($course->id, $ocinstanceid, $instanceid);
+
         // Prepare series videos cache.
         $seriesvideoscache = cache::make('lifecyclestep_opencast', 'seriesvideos');
 
@@ -77,7 +82,7 @@ class opencaststep_process_delete {
         }
 
         // Get an APIbridge instance for this OCinstance.
-        $apibridge = \tool_opencast\local\apibridge::get_instance($ocinstanceid);
+        $apibridge = \block_opencast\local\apibridge::get_instance($ocinstanceid);
 
         // Get the course's series.
         $courseseries = $apibridge->get_course_series($course->id);
@@ -145,6 +150,7 @@ class opencaststep_process_delete {
 
             // This happens when a series is shared among multiple courses via ACL change.
             if (count($seriesmappings) > 1) {
+                $report->add_info_line("Trying to unlink Series (ID: {$series->series}) from Course (ID: {$course->id})");
                 // Only unlink series when dry run mode if off!
                 $seriesunlinked = true;
                 if ($ocdryrunenabled === false) {
@@ -167,8 +173,11 @@ class opencaststep_process_delete {
                         get_string('error_removeseriestacl', 'lifecyclestep_opencast')
                     );
 
-                    return step_response::WAITING;
+                    $message = get_string('interaction_state_info_unlink_series_error', 'lifecyclestep_opencast', $series->series);
+                    return opencast::return_result(step_response::WAITING, $report, $message);
                 }
+
+                $report->add_info_line("Series (ID: {$series->series}) has been unlinked from Course (ID: {$course->id})");
 
                 // Trace.
                 $logtrace->print_mtrace(
@@ -185,6 +194,9 @@ class opencaststep_process_delete {
                 // make sure that all other eligible courses are removed.
                 // In case of Duplication, we are good to go as it is one to one relationship.
 
+                $report->add_info_line(
+                    "Trying to process Videos in Series (ID: {$series->series}) in Course (ID: {$course->id})"
+                );
                 // Iterate over the videos.
                 foreach ($seriesvideos->videos as $video) {
                     // Skip the video if already being processed.
@@ -242,10 +254,14 @@ class opencaststep_process_delete {
                             $ocworkflow
                         );
 
-                        return step_response::WAITING;
+                        $a = (object) [
+                            'wf' => $ocworkflow,
+                            'eid' => $video->identifier,
+                        ];
 
-                        // Otherwise.
-                    } else {
+                        $message = get_string('interaction_state_info_workflow_error', 'lifecyclestep_opencast', $a);
+                        return opencast::return_result(step_response::WAITING, $report, $message);
+                    } else { // Otherwise.
                         // Trace.
                         $logtrace->print_mtrace(
                             get_string('mtrace_success_delete_workflow_started', 'lifecyclestep_opencast'),
@@ -259,6 +275,7 @@ class opencaststep_process_delete {
                         $processedvideoscacheobj->stepprocessedvideos = $stepprocessedvideos;
                         $processedvideoscache->set($instanceid, $processedvideoscacheobj);
 
+                        $report->add_info_line("Video (ID: {$video->identifier}) has been processed by deletion.");
                         // If the rate limiter is enabled.
                         if ($ratelimiterenabled == true) {
                             // Trace.
@@ -269,7 +286,8 @@ class opencaststep_process_delete {
                             );
 
                             // Return waiting so that the processing will continue on the next run of this scheduled task.
-                            return step_response::WAITING;
+                            $message = get_string('interaction_state_info_rate_limiter', 'lifecyclestep_opencast');
+                            return opencast::return_result(step_response::WAITING, $report, $message);
                         }
                     }
                 }
@@ -321,8 +339,18 @@ class opencaststep_process_delete {
                             get_string('error_removeseriesmapping', 'lifecyclestep_opencast')
                         );
 
-                        return step_response::WAITING;
+                        $a = (object) [
+                            'cid' => $course->id,
+                            'sid' => $$series->series,
+                        ];
+
+                        $message = get_string('interaction_state_info_remove_mapping_error', 'lifecyclestep_opencast', $a);
+                        return opencast::return_result(step_response::WAITING, $report, $message);
                     }
+
+                    $report->add_info_line(
+                        "The Course (ID: {$course->id}) Series (ID: {$series->series}) mapping has been removed!"
+                    );
                 }
 
                 // Trace.
@@ -357,11 +385,11 @@ class opencaststep_process_delete {
             );
         }
 
-        return '';
+        return opencast::return_result(step_response::PROCEED, $report);
     }
 
     /**
-     * Performs deletiong of event by starting the workflow on event, and then hand it over to tool_opencast_deletejob cron.
+     * Performs deletiong of event by starting the workflow on event, and then hand it over to block_opencast_deletejob cron.
      *
      * @param int $ocinstanceid the opencast instance id
      * @param string $videoidentifier video identifier
@@ -372,18 +400,18 @@ class opencaststep_process_delete {
     private static function perform_delete_event($ocinstanceid, $videoidentifier, $ocworkflow) {
         global $DB;
         // Get an APIbridge instance.
-        $apibridge = \tool_opencast\local\apibridge::get_instance($ocinstanceid);
+        $apibridge = \block_opencast\local\apibridge::get_instance($ocinstanceid);
         $workflowresult = $apibridge->start_workflow($videoidentifier, $ocworkflow);
         if ($workflowresult) {
             $deletejobrecord = [
                 'opencasteventid' => $videoidentifier,
                 'ocinstanceid' => $ocinstanceid,
             ];
-            if (!$DB->record_exists('tool_opencast_deletejob', $deletejobrecord)) {
+            if (!$DB->record_exists('block_opencast_deletejob', $deletejobrecord)) {
                 $deletejobrecord['timecreated'] = time();
                 $deletejobrecord['timemodified'] = time();
                 $deletejobrecord['failed'] = false;
-                $DB->insert_record('tool_opencast_deletejob', $deletejobrecord);
+                $DB->insert_record('block_opencast_deletejob', $deletejobrecord);
             }
         }
         return $workflowresult;

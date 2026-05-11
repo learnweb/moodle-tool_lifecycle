@@ -27,19 +27,24 @@ namespace tool_lifecycle\step;
 
 use core_cache\cache;
 use core\output\html_writer;
-use lifecyclestep_opencast\notification_helper;
-use lifecyclestep_opencast\log_helper;
+use lifecyclestep_opencast\process_status_helper;
+use tool_lifecycle\step\interactionopencast;
+use tool_lifecycle\local\manager\process_data_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\response\step_response;
 use tool_lifecycle\settings_type;
 use tool_opencast\local\settings_api;
-use tool_opencast\settings\setting_helper;
+use block_opencast\setting_helper;
+use lifecyclestep_opencast\notification_helper;
+use lifecyclestep_opencast\log_helper;
+use lifecyclestep_opencast\report_helper;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
+require_once(__DIR__ . '/interactionlib.php');
 
-// Constants that are used in the plugin settings.
+// Constants which are used in the plugin settings.
 define('LIFECYCLESTEP_OPENCAST_SELECT_YES', 'yes');
 define('LIFECYCLESTEP_OPENCAST_SELECT_NO', 'no');
 
@@ -55,6 +60,12 @@ class opencast extends libbase {
     /** @var string Default Opencast workflow tags. */
     const DEFAULT_OPENCAST_WORKFLOW_TAGS = 'delete,archive';
 
+    /** @var string Response message key. */
+    const RESPONSE_MESSAGE = 'message';
+
+    /** @var string Response status key. */
+    const RESPONSE_STATUS = 'status';
+
     /**
      * Returns the string of the specific icon for this step.
      * @return string icon string
@@ -62,21 +73,125 @@ class opencast extends libbase {
     public function get_icon() {
         return 'i/messagecontentvideo';
     }
+
     /**
-     * Processes the course and returns a response.
-     * The response tells either
-     *  - that the subplugin is finished processing.
-     *  - that the subplugin is not yet finished processing.
-     *  - that a rollback for this course is necessary.
-     * @param int $processid of the respective process.
-     * @param int $instanceid of the step instance.
-     * @param mixed $course to be processed.
+     * Process a course for this lifecycle step.
+     *
+     * This method reads the decision for the current process and instance,
+     * handles pending and abort decisions, and forwards confirmed requests to
+     * the Opencast video processing workflow.
+     *
+     * The returned step_response indicates whether the step is complete,
+     * still waiting for administrator confirmation, or requires rollback.
+     *
+     * @param int $processid The lifecycle process id.
+     * @param int $instanceid The step instance id.
+     * @param object $course The course object being processed.
      * @return step_response
      */
     public function process_course($processid, $instanceid, $course) {
-        // Call the private function to process the videos.
-        // It will return the proper return values itself.
-        return self::process_ocvideos($processid, $instanceid, $course);
+        $logtrace = new log_helper(true);
+        $decision = $this->read_decision($course->id, $processid, $instanceid);
+
+        // It is new and has no status record yet, therefore, we have to ask admin.
+        if (empty($decision)) {
+            // Force put the process into pending in order to wait for admins to decide.
+            $decision = process_status_helper::DECISION_PENDING;
+            $this->save_state_info(
+                $processid,
+                $instanceid,
+                get_string('interaction_state_info_first_spin', 'lifecyclestep_opencast')
+            );
+            $this->save_status(
+                $course->id,
+                $processid,
+                $instanceid,
+                process_status_helper::map_status_by_decision($decision),
+                $decision
+            );
+            $logtrace->print_mtrace(
+                "Processing course (ID: {$course->id}) is waiting for administration decision..."
+            );
+            return step_response::waiting();
+        }
+
+        // Handling aborted, so that we finish this process as proceed without doing anything.
+        if ($decision === process_status_helper::DECISION_ABORT) {
+            $this->save_status(
+                $course->id,
+                $processid,
+                $instanceid,
+                process_status_helper::map_status_by_decision($decision),
+                $decision
+            );
+            $logtrace->print_mtrace(
+                "Processing course (ID: {$course->id}) has been aborted and it finishes its processing here."
+            );
+            return step_response::proceed();
+        }
+
+        // Now we handle pending decision, by simply putting this into waiting state until admin decide.
+        if ($decision === process_status_helper::DECISION_PENDING) {
+            $logtrace->print_mtrace(
+                "Processing course (ID: {$course->id}) is still pending administrator's decision..."
+            );
+            return step_response::waiting();
+        }
+
+        // Now we reach here, meaning the decision is "CONFIRM" and we can proceed with processing based on status.
+        $status = $this->read_status($course->id, $processid, $instanceid);
+
+        // If status is processing, meaning it has been just confirmed by admin.
+        if ($status === process_status_helper::STATUS_PROCESSING) {
+            $stepresponse = $this->process_ocvideos($processid, $instanceid, $course);
+            // Separating the response status and message.
+            $stepresponsestatus = $stepresponse[self::RESPONSE_STATUS];
+            $stepresponsemessage = $stepresponse[self::RESPONSE_MESSAGE];
+            // When message is empty, we fallback to a default one.
+            if (empty($stepresponsemessage)) {
+                $stepresponsemessage = get_string('interaction_state_info_default', 'lifecyclestep_opencast');
+            }
+
+            // Now refresh the status to be checked in the next step.
+            $status = process_status_helper::STATUS_WAITING; // Default to waiting.
+            if ($stepresponsestatus === step_response::PROCEED) {
+                $status = process_status_helper::STATUS_COMPLETED;
+            }
+        }
+
+        // If status is completed, meaning everything went good and we close the process.
+        if ($status === process_status_helper::STATUS_COMPLETED) {
+            $this->save_status(
+                $course->id,
+                $processid,
+                $instanceid,
+                $status,
+                $decision
+            );
+
+            return step_response::proceed();
+        }
+
+        // If we reach here, meaning the status is "WAITING" and needs the admins decision.
+        $decision = process_status_helper::DECISION_PENDING;
+        $this->save_state_info(
+            $processid,
+            $instanceid,
+            $stepresponsemessage
+        );
+        $this->save_status(
+            $course->id,
+            $processid,
+            $instanceid,
+            process_status_helper::map_status_by_decision($decision),
+            $decision
+        );
+
+        $logtrace->print_mtrace(
+            "Processing course (ID: {$course->id}) requires administrator's decision..."
+        );
+
+        return step_response::waiting();
     }
 
     /**
@@ -91,9 +206,9 @@ class opencast extends libbase {
      * @return step_response
      */
     public function process_waiting_course($processid, $instanceid, $course) {
-        // Call the private function to process the videos.
-        // It will return the proper return values itself.
-        return self::process_ocvideos($processid, $instanceid, $course);
+        // Since we are now having the admin confirmation feature,
+        // processing waiting course means that admin just decided.
+        return $this->process_course($processid, $instanceid, $course);
     }
 
     /**
@@ -118,11 +233,11 @@ class opencast extends libbase {
         // Iterate over the instances.
         foreach ($ocinstances as $instance) {
             // Instance setting for the 'ocworkflowtags' field.
-            $settings[] = new instance_setting('ocworkflowtags' . $instance->id, PARAM_RAW, true);
+            $settings[] = new instance_setting('ocworkflowtags' . $instance->id, PARAM_TAGLIST, false);
             // Instance setting for the 'ocworkflow' field.
-            $settings[] = new instance_setting('ocworkflow_instance' . $instance->id, PARAM_ALPHANUMEXT, true);
-            $settings[] = new instance_setting('ocisdelete' . $instance->id, PARAM_ALPHA, true);
-            $settings[] = new instance_setting('ocremoveseriesmapping' . $instance->id, PARAM_ALPHA, true);
+            $settings[] = new instance_setting('ocworkflow_instance' . $instance->id, PARAM_ALPHANUMEXT, false);
+            $settings[] = new instance_setting('ocisdelete' . $instance->id, PARAM_ALPHA, false);
+            $settings[] = new instance_setting('ocremoveseriesmapping' . $instance->id, PARAM_ALPHA, false);
         }
 
         // Instance setting for the 'ocdryrun' field.
@@ -142,13 +257,12 @@ class opencast extends libbase {
     }
 
     /**
-     * This method can be overridden to add form elements to the form_step_instance.
+     * This method can be overridden, to add form elements to the form_step_instance.
      * It is called in definition().
      * @param \MoodleQuickForm $mform
-     * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
-        // Prepare option array for select settings.
+        // Prepare options array for select settings.
         $yesnooption = [
             LIFECYCLESTEP_OPENCAST_SELECT_YES => get_string('yes'),
             LIFECYCLESTEP_OPENCAST_SELECT_NO => get_string('no'),
@@ -182,7 +296,7 @@ class opencast extends libbase {
                 'lifecyclestep_opencast'
             );
 
-            $workflowchoices = [null => get_string('adminchoice_noconnection', 'tool_opencast')];
+            $workflowchoices = [null => get_string('adminchoice_noconnection', 'block_opencast')];
 
             // Add the 'ocworkflow' field.
             $ocworkflowelementid = "ocworkflow_instance{$instance->id}";
@@ -273,7 +387,6 @@ class opencast extends libbase {
      * @param \MoodleQuickForm $mform
      * @param array $settings
      * @return void
-     * @throws \coding_exception
      */
     public function extend_add_instance_form_definition_after_data($mform, $settings): void {
         $ocinstances = settings_api::get_ocinstances();
@@ -293,7 +406,7 @@ class opencast extends libbase {
                 $workflowchoices instanceof \tool_opencast\empty_configuration_exception
             ) {
                 $opencasterror = $workflowchoices->getMessage();
-                $workflowchoices = [null => get_string('adminchoice_noconnection', 'tool_opencast')];
+                $workflowchoices = [null => get_string('adminchoice_noconnection', 'block_opencast')];
             }
 
             $workflowelementid = "ocworkflow_instance{$instance->id}";
@@ -426,7 +539,7 @@ class opencast extends libbase {
             }
 
             // Get an APIbridge instance for this OCinstance.
-            $apibridge = \tool_opencast\local\apibridge::get_instance($ocinstance->id);
+            $apibridge = \block_opencast\local\apibridge::get_instance($ocinstance->id);
 
             // Check if workflow exists.
             $ocworkflows = [];
@@ -524,8 +637,8 @@ class opencast extends libbase {
             }
 
             // Evaluate step response, at this stage only waiting will be returned.
-            if ($stepresponse === step_response::WAITING) {
-                return step_response::waiting();
+            if ($stepresponse[self::RESPONSE_STATUS] === step_response::WAITING) {
+                return $stepresponse;
             }
 
             // Trace.
@@ -569,6 +682,138 @@ class opencast extends libbase {
         }
 
         // At this point, all videos have been processed and the step is done.
-        return step_response::proceed();
+        if (empty($stepresponse)) {
+            $stepresponse[self::RESPONSE_STATUS] = step_response::PROCEED;
+        }
+        return $stepresponse;
+    }
+
+    /**
+     * Saves the state info process data.
+     * @param int $processid The process ID.
+     * @param int $stepid The step ID.
+     * @param string $value The value of the record.
+     * @return void
+     */
+    private function save_state_info(int $processid, int $stepid, string $value) {
+        $this->save_process_data(
+            $processid,
+            $stepid,
+            interactionopencast::PROC_DATA_STATE_INFO_KEY,
+            $value
+        );
+    }
+
+    /**
+     * Using general process data manager to save or update data for the process in the step.
+     * @param int $processid The process ID.
+     * @param int $stepid The step ID.
+     * @param string $key The key of the record.
+     * @param string $value The value of the record.
+     * @return void
+     */
+    private function save_process_data(int $processid, int $stepid, string $key, string $value) {
+        process_data_manager::set_process_data(
+            $processid,
+            $stepid,
+            $key,
+            $value
+        );
+    }
+
+    /**
+     * Saves or updates opencast step process status record.
+     * @param int $courseid The course ID.
+     * @param int $processid The process ID.
+     * @param int $stepid The step ID.
+     * @param string $status The status to be saved.
+     * @param string $decision The decision to be saved.
+     * @return void
+     */
+    private function save_status(int $courseid, int $processid, int $stepid, string $status, string $decision) {
+        process_status_helper::save_or_update(
+            $courseid,
+            $processid,
+            $stepid,
+            $status,
+            $decision
+        );
+    }
+
+    /**
+     * Reads the opencast step process status.
+     * @param int $courseid The course ID.
+     * @param int $processid The process ID.
+     * @param int $stepid The step ID.
+     * @return mixed
+     */
+    private function read_status(int $courseid, int $processid, int $stepid) {
+        $record = process_status_helper::read(
+            $courseid,
+            $processid,
+            $stepid,
+            'status'
+        );
+        return $record ? $record->status : null;
+    }
+
+    /**
+     * Read the decision for the given process and step.
+     *
+     * If no record exists for the current process, it checks for an existing
+     * aborted process for the course and step, removes it, and returns its decision.
+     *
+     * @param int $courseid The course ID.
+     * @param int $processid The process ID.
+     * @param int $stepid The step ID.
+     * @return string|null The decision value or null if not found.
+     */
+    private function read_decision(int $courseid, int $processid, int $stepid) {
+        $record = process_status_helper::read(
+            $courseid,
+            $processid,
+            $stepid,
+            'decision'
+        );
+
+        // In case, a process has been aborted, we need to pass PROCEED response,
+        // therefore, the lifecycle removes the data and by next run, it tries to
+        // recreate a new process for this aborted course if there are any pending
+        // processes in the step for other courses.
+        // We handle this scenario here, by simple looking to the aborted process
+        // for this step in the course that may have different processid!
+        if (empty($record)) { // So it is empty!
+            $existingrecord = process_status_helper::read_by_course($courseid, $stepid, 'decision,processid');
+
+            // Get rid of existing record, after we get the values.
+            if ($existingrecord) {
+                $record = $existingrecord;
+                process_status_helper::remove_entry($courseid, (int) $existingrecord->processid, $stepid);
+            }
+        }
+
+        return $record ? $record->decision : null;
+    }
+
+    /**
+     * Return a standardized response array for step processing.
+     *
+     * If the report has information, it adds a completion line and notifies administrators.
+     *
+     * @param string $status The response status.
+     * @param report_helper $report The report instance.
+     * @param string $message The message.
+     * @return array<string, string>
+     */
+    public static function return_result(string $status, report_helper $report, string $message = '') {
+        if ($report->has_info()) {
+            $report->add_info_line('Processing finished with status: ' . $status);
+            $notificationhelper = new notification_helper(true);
+            $notificationhelper->notify_report($report->get_info());
+        }
+        return [
+            self::RESPONSE_STATUS => $status,
+            self::RESPONSE_MESSAGE => $message,
+        ];
     }
 }

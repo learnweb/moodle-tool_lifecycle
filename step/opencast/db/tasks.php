@@ -15,18 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Admin tool "Course Life Cycle" - Subplugin "Opencast step" - Version file
+ * Definition of opencast life cycle step scheduled tasks.
  *
  * @package    lifecyclestep_opencast
- * @copyright  2022 Alexander Bias, lern.link GmbH <alexander.bias@lernlink.de>
+ * @copyright  2026 Farbod Zamani Boroujeni, elan e.V.
+ * @author     Farbod Zamani Boroujeni <zamani@elan-ev.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'lifecyclestep_opencast';
-$plugin->version = 2026040703;
-$plugin->release = 'v4.5-r1';
-$plugin->requires = 2024100700;
-$plugin->supported = [405, 405];
-$plugin->maturity = MATURITY_STABLE;
+$tasks = [
+    [
+        'classname' => 'lifecyclestep_opencast\task\cleanup_task',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '12',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '0',
+    ],
+];

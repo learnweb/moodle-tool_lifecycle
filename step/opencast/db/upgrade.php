@@ -43,7 +43,10 @@ require_once(__DIR__ . '/../lib.php');
  */
 function xmldb_lifecyclestep_opencast_upgrade($oldversion) {
 
-    if ($oldversion < 2026031800) {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    if ($oldversion < 2026031700) {
         $tags = get_config('lifecyclestep_opencast', 'workflowtags');
         if (empty($tags)) {
             $tags = \tool_lifecycle\step\opencast::DEFAULT_OPENCAST_WORKFLOW_TAGS;
@@ -80,7 +83,32 @@ function xmldb_lifecyclestep_opencast_upgrade($oldversion) {
         unset_config('ratelimiter', 'lifecyclestep_opencast');
 
         // Opencast step savepoint reached.
-        upgrade_plugin_savepoint(true, 2026031800, 'lifecyclestep', 'opencast');
+        upgrade_plugin_savepoint(true, 2026031700, 'lifecyclestep', 'opencast');
+    }
+
+    if ($oldversion < 2026040700) {
+        // Define table lifecyclestep_opencast_process_status to be created.
+        $table = new xmldb_table('lifecyclestep_opencast_process_status');
+
+        // Adding fields to table lifecyclestep_opencast_process_status.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('processid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('stepid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('status', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('decision', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table lifecyclestep_opencast_process_status.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for lifecyclestep_opencast_process_status.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Opencast savepoint reached.
+        upgrade_plugin_savepoint(true, 2026040700, 'lifecyclestep', 'opencast');
     }
 
     return true;
