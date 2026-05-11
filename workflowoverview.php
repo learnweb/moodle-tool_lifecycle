@@ -224,10 +224,10 @@ foreach ($triggers as $trigger) {
             }
         }
     } else if ($trigger->subpluginname == 'opencast') {
-        if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+        if (lifecycle_is_plugin_installed('opencast', 'block') === false) {
             $a = new \stdClass();
             $a->lifecyclesubplugin = get_string('trigger', 'tool_lifecycle') . ' ' . 'opencast';
-            $a->plugin = "tool_opencast";
+            $a->plugin = "block_opencast";
             echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
                 get_string('plugindependencynotmet', 'tool_lifecycle', $a), 'error');
             echo $renderer->footer();
@@ -239,10 +239,10 @@ foreach ($triggers as $trigger) {
 // Steps: Check if plugin dependencies are met.
 foreach ($steps as $step) {
     if ($step->subpluginname == 'opencast') {
-        if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+        if (lifecycle_is_plugin_installed('opencast', 'block') === false) {
             $a = new \stdClass();
             $a->lifecyclesubplugin = get_string('step', 'tool_lifecycle') . ' ' . 'opencast';
-            $a->plugin = "tool_opencast";
+            $a->plugin = "block_opencast";
             echo $OUTPUT->notification(get_string('workflownotvalid', 'tool_lifecycle')." ".
                 get_string('plugindependencynotmet', 'tool_lifecycle', $a), 'error');
             echo $renderer->footer();

@@ -275,7 +275,7 @@ class trigger_manager extends subplugin_manager {
                     continue;
                 }
             } else if ($id == 'opencast') {
-                if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+                if (lifecycle_is_plugin_installed('opencast', 'block') === false) {
                     continue;
                 }
             }

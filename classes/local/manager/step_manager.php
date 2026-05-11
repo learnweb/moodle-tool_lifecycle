@@ -262,7 +262,7 @@ class step_manager extends subplugin_manager {
         $result = [];
         foreach ($steps as $id => $step) {
             if ($id == 'opencast') {
-                if (lifecycle_is_plugin_installed('opencast', 'tool') === false) {
+                if (lifecycle_is_plugin_installed('opencast', 'block') === false) {
                     continue;
                 }
             }
