@@ -350,7 +350,15 @@ class process_manager {
     public static function abort_process($process) {
         if (($process->stepindex ?? false) && ($process->workflowid ?? false)) {
             $step = step_manager::get_step_instance_by_workflow_index($process->workflowid, $process->stepindex);
+            if (null === $step) {
+                self::remove_process($process);
+            }
+            
             $steplib = lib_manager::get_step_lib($step->subpluginname);
+            if (null === $steplib) {
+                self::remove_process($process);
+            }
+            
             $steplib->abort_course($process);
         }
         self::remove_process($process);
