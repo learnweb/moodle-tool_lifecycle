@@ -353,12 +353,12 @@ class process_manager {
             if (null === $step) {
                 self::remove_process($process);
             }
-            
+
             $steplib = lib_manager::get_step_lib($step->subpluginname);
             if (null === $steplib) {
                 self::remove_process($process);
             }
-            
+
             $steplib->abort_course($process);
         }
         self::remove_process($process);
