@@ -51,7 +51,8 @@ class courses_in_step_table extends \table_sql {
     /** @var string search string to filter courses list */
     private $search = "";
 
-    private $delay = null;
+    /** @var int setting delay in email step */
+    private $delay = 0;
 
     /**
      * Constructor for courses_in_step_table.
