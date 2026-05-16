@@ -164,6 +164,7 @@ $string['dontshowextendeddetails'] = 'Zeige detaillierte Workflow-Informationen 
 $string['download'] = 'Herunterladen';
 $string['downloadworkflow'] = 'Workflow-Definition herunterladen';
 $string['draft'] = 'Entwurf';
+$string['due'] = 'fällig';
 $string['duplicateworkflow'] = 'Workflow duplizieren';
 $string['edit_step'] = 'Step bearbeiten';
 $string['edit_trigger'] = 'Trigger bearbeiten';

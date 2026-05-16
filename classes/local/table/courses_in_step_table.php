@@ -27,6 +27,7 @@ namespace tool_lifecycle\local\table;
 use core\output\single_button;
 use core_date;
 use tool_lifecycle\local\entity\step_subplugin;
+use tool_lifecycle\local\manager\process_manager;
 use tool_lifecycle\local\manager\settings_manager;
 use tool_lifecycle\local\manager\step_manager;
 use tool_lifecycle\settings_type;
@@ -50,6 +51,8 @@ class courses_in_step_table extends \table_sql {
     /** @var string search string to filter courses list */
     private $search = "";
 
+    private $delay = null;
+
     /**
      * Constructor for courses_in_step_table.
      * @param step_subplugin $step step to show courses of
@@ -72,13 +75,19 @@ class courses_in_step_table extends \table_sql {
         $this->captionattributes = ['class' => 'ml-2'];
 
         $this->define_baseurl($PAGE->url);
-        $this->define_columns(['courseid', 'coursefullname', 'startdate', 'tools']);
-        $this->define_headers([
+        $cols = ['courseid', 'coursefullname', 'tools'];
+        $headers = [
             get_string('courseid', 'tool_lifecycle'),
             get_string('coursename', 'tool_lifecycle'),
-            get_string('startdate'),
             get_string('tools', 'tool_lifecycle'),
-        ]);
+        ];
+        if ($step->subpluginname == "email") {
+            $cols[] = 'duedate';
+            $headers[] = get_string('due', 'tool_lifecycle');
+            $this->delay = settings_manager::get_settings($step->id, settings_type::STEP)['responsetimeout'];
+        }
+        $this->define_columns($cols);
+        $this->define_headers($headers);
 
         $fields = "p.id as processid, c.id as courseid, c.fullname as coursefullname, c.startdate, " .
             "c.shortname as courseshortname, s.id as stepinstanceid, s.instancename as stepinstancename, s.subpluginname";
@@ -156,18 +165,18 @@ class courses_in_step_table extends \table_sql {
     }
 
     /**
-     * Render startdate column.
+     * Render duedate column.
      * @param object $row Row data.
      * @return string human readable date
      * @throws \coding_exception
      */
-    public function col_startdate($row) {
+    public function col_duedate($row) {
         global $USER;
 
-        if ($row->startdate) {
+        $process = process_manager::get_process_by_id($row->id);
+        if (null !== $process && $duedate = $process->timestepchanged + $this->delay) {
             $dateformat = get_string('strftimedate', 'langconfig');
-            return userdate($row->startdate, $dateformat,
-                core_date::get_user_timezone($USER));
+            return userdate($duedate, $dateformat, core_date::get_user_timezone($USER));
         } else {
             return "-";
         }

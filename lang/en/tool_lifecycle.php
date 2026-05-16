@@ -165,6 +165,7 @@ $string['dontshowextendeddetails'] = 'Do not show extended workflow details';
 $string['download'] = 'Download';
 $string['downloadworkflow'] = 'Download workflow definition';
 $string['draft'] = 'Draft';
+$string['due'] = 'due';
 $string['duplicateworkflow'] = 'Duplicate workflow';
 $string['edit_step'] = 'Edit step';
 $string['edit_trigger'] = 'Edit trigger';
