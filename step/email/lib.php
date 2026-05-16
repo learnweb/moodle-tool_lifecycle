@@ -211,6 +211,7 @@ class email extends libbase {
      */
     public function instance_settings() {
         return [
+            new instance_setting('status', PARAM_INT, true),
             new instance_setting('responsetimeout', PARAM_INT, false),
             new instance_setting('subject', PARAM_TEXT, true),
             new instance_setting('content', PARAM_RAW, true),
@@ -233,6 +234,15 @@ class email extends libbase {
      * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
+        $elementname = 'status';
+        $options = [
+            self::STEPACTIVE => get_string('active', 'tool_lifecycle'),
+            self::STEPSTOPPED => get_string('stopped', 'tool_lifecycle'),
+        ];
+        $mform->addElement('select', $elementname, get_string('status', 'tool_lifecycle'), $options);
+        $mform->addHelpButton($elementname, 'stopped', 'tool_lifecycle');
+        $mform->setType($elementname, PARAM_INT);
+        $mform->setDefault($elementname, self::STEPACTIVE);
         $elementname = 'responsetimeout';
         $mform->addElement('duration', $elementname, get_string('email_responsetimeout', 'lifecyclestep_email'));
         $mform->setType($elementname, PARAM_INT);
@@ -269,5 +279,13 @@ class email extends libbase {
      */
     public function get_icon() {
         return 'i/email';
+    }
+
+    /**
+     * Returns if this step type is stoppable.
+     * @return bool
+     */
+    public function is_stoppable() {
+        return true;
     }
 }
