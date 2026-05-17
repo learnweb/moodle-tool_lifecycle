@@ -116,7 +116,6 @@ class email extends libbase {
                 $mailentries = $DB->get_records('lifecyclestep_email',
                     ['instanceid' => $step->id,
                         'touser' => $user->id, ]);
-
                 $parsedsettings = $this->replace_placeholders($settings, $user, $mailentries);
                 $subject = $parsedsettings['subject'];
                 $content = $parsedsettings['content'];
@@ -247,7 +246,7 @@ class email extends libbase {
         $mform->addElement('duration', $elementname, get_string('email_responsetimeout', 'lifecyclestep_email'));
         $mform->setType($elementname, PARAM_INT);
         $elementname = 'subject';
-        $mform->addElement('text', $elementname, get_string('email_subject', 'lifecyclestep_email'));
+        $mform->addElement('text', $elementname, get_string('email_subject', 'lifecyclestep_email'), ['size' => '80']);
         $mform->addHelpButton($elementname, 'email_subject', 'lifecyclestep_email');
         $mform->setType($elementname, PARAM_TEXT);
 

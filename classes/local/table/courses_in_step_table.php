@@ -174,7 +174,7 @@ class courses_in_step_table extends \table_sql {
     public function col_duedate($row) {
         global $USER;
 
-        $process = process_manager::get_process_by_id($row->id);
+        $process = process_manager::get_process_by_id($row->processid);
         if (null !== $process && $duedate = $process->timestepchanged + $this->delay) {
             $dateformat = get_string('strftimedate', 'langconfig');
             return userdate($duedate, $dateformat, core_date::get_user_timezone($USER));
