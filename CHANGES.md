@@ -1,6 +1,22 @@
 CHANGELOG
 =========
 
+5.1.5 (v5.1-r6, 2026-05-20)
+---------------------------
+* [FEATURE] Introduce new step opencast
+* [FEATURE] Support multilang course titles in the backup table. (#300)
+* [FEATURE] Manual trigger: add a run-link to workflowoverview page
+* [FEATURE] Make manual trigger settings editable
+* [FEATURE] MBS-10781: Add noenrolments trigger (#302)
+* [FEATURE] Make step email stoppable
+* [FEATURE] courses_in_step-table: add due date when email-step
+* [FIXED] is_uninstall_allowed: make get_instances work even if the table does not exist
+* [FIXED] Remove customfieldsemester dependency
+* [FIXED] Fix lifecycle_is_plugin_installed-call in restore_workflow
+* [FIXED] Fix missing internal-check in restore_workflow
+* [FIXED] Fix: add handling of potential null returns (#303)
+
+
 5.1.4 (v5.1-r5, 2026-03-23)
 ---------------------------
 * [FEATURE] Introduce new trigger: Neverused
