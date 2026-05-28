@@ -1,5 +1,5 @@
 {
-  "moodle-plugin-ci": "4.5.8",
+  "moodle-plugin-ci": "4.5.9",
   "main-moodle": "MOODLE_500_STABLE",
   "main-php": "8.3",
   "main-db": "pgsql",
@@ -7,10 +7,10 @@
     "MOODLE_405_STABLE": {
       "php": ["8.1", "8.2", "8.3"]
     },
-    "MOODLE_500_STABLE": {
+    "MOODLE_501_STABLE": {
       "php": ["8.2", "8.3", "8.4"]
     },
-    "MOODLE_501_STABLE": {
+    "MOODLE_502_STABLE": {
       "php": ["8.2", "8.3", "8.4"],
       "db": ["pgsql", "mariadb", "mysqli"]
     }
