@@ -136,9 +136,10 @@ class createbackup extends libbase {
         $elementname = 'maximumbackupspercron';
         $mform->addElement('text', $elementname,
             get_string('maximumbackupspercron', 'lifecyclestep_createbackup'),
-            ['size' => 3]);
+            ['size' => 3]
+        );
         $mform->setType($elementname, PARAM_INT);
-	$mform->setDefault($elementname, 10);
+        $mform->setDefault($elementname, 10);
     }
 
     /**
