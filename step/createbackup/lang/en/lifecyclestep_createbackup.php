@@ -23,7 +23,7 @@
  */
 
 $string['backupsettings'] = 'Backup Settings';
-$string['backupsettingsstatictext'] = 'The configuration of the created backups is controlled by the automated backup settings: {$a}';
+$string['backupsettingsstatictext'] = 'The configuration of the created backups is controlled by the automated backup settings: <a href="{$a->url}">{$a->label}</a>';
 $string['coursebackups'] = 'Course Backups';
 $string['deleteallbuttonlabel'] = 'Delete all';
 $string['deleteselectedbuttonlabel'] = 'Delete selected';

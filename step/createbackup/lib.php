@@ -118,10 +118,11 @@ class createbackup extends libbase {
      */
     public function extend_add_instance_form_definition($mform) {
         $elementname = 'backupsettings';
-        $backupsettingsurl = new \moodle_url('/admin/settings.php', ['section' => 'automated']);
-        $backupsettingslink = html_writer::link($backupsettingsurl, get_string('automatedsetup', 'backup'));
+        $backupsettings = new stdClass;
+        $backupsettings->url = (new \moodle_url('/admin/settings.php', ['section' => 'automated']))->out();
+        $backupsettings->label = get_string('automatedsetup', 'backup');
         $mform->addElement('static', $elementname, get_string('backupsettings', 'lifecyclestep_createbackup'),
-            get_string('backupsettingsstatictext', 'lifecyclestep_createbackup', $backupsettingslink)
+            get_string('backupsettingsstatictext', 'lifecyclestep_createbackup', $backupsettings)
         );
         $elementname = 'status';
         $options = [
