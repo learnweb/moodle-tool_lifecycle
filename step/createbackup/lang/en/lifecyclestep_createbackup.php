@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['backupsettings'] = 'Backup Settings';
+$string['backupsettingsstatictext'] = 'The configuration of the created backups is controlled by the automated backup settings: {$a}';
 $string['coursebackups'] = 'Course Backups';
 $string['deleteallbuttonlabel'] = 'Delete all';
 $string['deleteselectedbuttonlabel'] = 'Delete selected';
@@ -30,4 +32,3 @@ $string['nobackups'] = 'No backups found.';
 $string['plugindescription'] = 'Initiates a backup of the triggered courses.';
 $string['pluginname'] = 'Create Backup Step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
-
