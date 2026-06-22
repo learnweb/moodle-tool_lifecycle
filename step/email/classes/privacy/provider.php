@@ -56,6 +56,15 @@ class provider implements \core_privacy\local\metadata\provider,
             ],
             'privacy:metadata:lifecyclestep_email:summary'
         );
+        $collection->add_database_table(
+            'lifecyclestep_email_notified',
+            [
+                'userid' => 'privacy:metadata:lifecyclestep_email_notified:userid',
+                'courseid' => 'privacy:metadata:lifecyclestep_email_notified:courseid',
+                'timemailsent' => 'privacy:metadata:lifecyclestep_email_notified:timemailsent',
+            ],
+            'privacy:metadata:lifecyclestep_email_notified:summary'
+        );
         return $collection;
     }
 
