@@ -15,23 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for opencast trigger
+ * Plugin strings for lifecycletrigger_opencast.
  *
  * @package     lifecycletrigger_opencast
- * @copyright   2025 Thomas Niedermaier University Münster
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @category    string
+ * @copyright   2024 Michael Schink <michael.schink@jku.at>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['activity'] = 'Aktivität';
-$string['activity_help'] = 'Hier geben Sie an, ob Kurse getriggert werden sollen, die mindestens eine Episode oder Serie enthalten, die über die Opencast-Aktivität eingebunden ist.';
-$string['exclude'] = 'Ausschließen';
-$string['exclude_help'] = 'Falls ausgewählt, werden Kurse mit den definierten Opencast-Videos NICHT ausgelöst.';
-$string['lti'] = 'LTI';
-$string['lti_do_not_exist'] = 'Es gibt keine LTI-Tools mit den folgenden IDs: {$a}.';
-$string['lti_help'] = 'Inkludiere Kurse, die mindestens eine Opencast Episode und/oder Serie via LTI-Tool eingebunden haben.';
-$string['lti_noselection'] = 'Bitte wählen Sie mindestens einen LTI-Typ aus.';
-$string['ltitools'] = 'LTI-Tools';
-$string['ltitools_help'] = 'Wählen Sie die LTI-Tools, welche die Episoden und/oder Serien aus Opencast zur Verfügung stellen.';
-$string['plugindescription'] = 'Selektiert alle Kurse mit mindestens einer Opencast Video-Einbindung.';
-$string['pluginname'] = 'Opencast-Trigger';
+defined('MOODLE_INTERNAL') || die();
+
+$string['pluginname'] = 'Opencast Block Trigger';
+$string['plugindescription'] = 'Opencast Block Trigger';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
+
+// For filtering opencast courses
+$string['opencast_courses'] = 'Kursfilter per "Opencast Videos" Block';
+$string['no_opencast'] = 'Nur Kurse ohne "Opencast Videos" Block';
+$string['only_opencast'] = 'Nur Kurse mit "Opencast Videos" Block';

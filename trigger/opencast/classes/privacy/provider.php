@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,26 +12,29 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace lifecycletrigger_opencast\privacy;
 
 use core_privacy\local\metadata\null_provider;
+//use core_privacy\local\metadata\collection;
 
-/**
- * Privacy subsystem implementation for lifecycletrigger_opencast.
- *
- * @package     lifecycletrigger_opencast
- * @copyright   2025 Thomas Niedermaier University Münster
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+ /**
+  * Privacy subsystem implementation for lifecycletrigger_opencast.
+  *
+  * @package    lifecycletrigger_opencast
+  * @copyright  2024 Michael Schink JKU
+  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+  */
 class provider implements null_provider {
+    // This plugin does not store any personal user data.
+    //\core_privacy\local\metadata\null_provider {
 
     /**
      * Get the language string identifier with the component's language
      * file to explain why this plugin stores no data.
      *
-     * @return string the reason
+     * @return  string
      */
     public static function get_reason(): string {
         return 'privacy:metadata';
