@@ -345,6 +345,225 @@ class processor {
      * @throws \coding_exception
      * @throws \dml_exception
      */
+     public function get_course_recordset($triggers, $nositecourse = true, $forcounting = false) {
+         global $DB, $SESSION;
+     
+         // Mike
+         $where = [];
+         $whereparams = [];
+         $recordsets = [];
+         $workflow = false;
+         foreach ($triggers as $trigger) {            
+             $where_tmp2 = " TRUE ";
+             $whereparams_tmp2 = [];
+             if (!$workflow) {
+                 $workflow = workflow_manager::get_workflow($trigger->workflowid);
+                 $andor = ($workflow->andor ?? 0) == 0 ? 'AND' : 'OR';
+                 $where_tmp2 = $andor == 'AND' ? 'true ' : 'false ';
+             }
+             $lib = lib_manager::get_automatic_trigger_lib($trigger->subpluginname);
+             // Exclude specificdate trigger when counting.
+             if (!($forcounting && $lib->default_response() == trigger_response::triggertime())) {
+                 [$sql, $params] = $lib->get_course_recordset_where($trigger->id);
+                 $sql = preg_replace("/{course}/", "c", $sql, 1);
+                 if (!empty($sql)) {
+                     $where_tmp2 .= " $andor " . $sql;
+                     $whereparams[] = array_merge($whereparams_tmp2, $params);
+                 } else { $whereparams[] = []; }
+             } else { $whereparams[] = []; }
+             $where[] = $where_tmp2;
+         }
+     
+         $maxparams = 65535;
+         //$maxparams = 1000;
+         mtrace('');
+         mtrace('Start - MAX params: '.$maxparams.', trigger where parts: '.count($where)/*.' '.print_r($where, true)*/.' & params: '.count($whereparams)/*.' '.print_r($whereparams, true)*/);
+         foreach($whereparams as $key => $whereparam) {
+             if(count($whereparam) > $maxparams) {
+                 mtrace('More than '.$maxparams.' params with key '.$key.': '.count($whereparam));
+                 // Get where part of params array
+                 $wherepart = $where[$key];
+                 // Get first & last param
+                 $first = ':'.array_key_first($whereparam);
+                 $last = ':'.array_key_last($whereparam);
+                 mtrace('   1. Get first param '.$first.' & last param '.$last);
+                 // Get where part before first param & after last param (to re-create where part)
+                 $position = strpos($wherepart, $first);
+                 $before = substr($wherepart, 0, $position);
+                 $position = strpos($wherepart, $last);
+                 $after = substr($wherepart, $position + strlen($last));
+                 mtrace('   2. Re-create where part: '.$before.' <enter-params> '.$after);
+                 // Remove original where part & params
+                 //unset($where[$key]);
+                 //unset($whereparams[$key]);
+                 $where[$key] = [];
+                 $whereparams[$key] = [];
+                 mtrace('   3. Remove where part & params with key: '.$key);
+                 // Chunk params
+                 $whereparam_chunks = array_chunk($whereparam, $maxparams, true);
+                 mtrace('   4. Chunk params: '.count($whereparam_chunks)/*.print_r($whereparam_chunks, true))*/.' ('.count($whereparam).'/'.$maxparams.')');
+                 // For each chunk of params
+                 $counter = 0;
+                 foreach($whereparam_chunks as $whereparam_chunk) {
+                     $counter++;
+                     // Create param string of chunk params
+                     $whereparam_chunk_string = implode(',', array_map(function($value) { return ':' . $value; }, array_keys($whereparam_chunk)));
+                     // Re-create where part for chunk
+                     $where_chunk = $before.$whereparam_chunk_string.$after;
+                     if(count($whereparam_chunks) > 10 && $counter == 10 ) { mtrace('   ...'); }
+                     if($counter < 5 || $counter >= (count($whereparam_chunks) - 5)) { mtrace('   5.'.$counter.' Add chunk query: '.(strlen($where_chunk) > 150 ? substr($where_chunk, 0, 150) . '...' : $where_chunk).' & params: '.count($whereparam_chunk)/*.print_r($whereparam_chunk, true)*/); }
+                     // Add where part & params of chunk
+                     if(count($where) && count($whereparams)) {
+                         $where[$key][] = $where_chunk;
+                         $whereparams[$key][] = $whereparam_chunk;
+                     } else { mtrace('ERROR: Amount of where parts & params are not the same!'); }
+                 }
+             }
+         }
+         mtrace('End - MAX params: '.$maxparams.', trigger where parts: '.count($where)/*.' '.print_r($where, true)*/.' & params '.count($whereparams)/*.' '.print_r($whereparams, true)*/);
+         mtrace('');
+         //die();
+     
+         if ($forcounting) {
+             foreach ($where as $key => $where_tmp) {
+                 $whereparams_tmp = $whereparams[$key];    
+                 // Get course hasprocess and delay with the sql.
+                 $sql = "SELECT c.id,
+                         COALESCE(p.courseid, pe.courseid, 0) as hasprocess,
+                         COALESCE(po.workflowid, peo.workflowid, 0) as hasotherwfprocess,
+                         CASE
+                             WHEN COALESCE(d.delayeduntil, 0) > COALESCE(dw.delayeduntil, 0) THEN d.delayeduntil
+                             WHEN COALESCE(d.delayeduntil, 0) < COALESCE(dw.delayeduntil, 0) THEN dw.delayeduntil
+                             ELSE 0
+                         END as delaycourse
+                         FROM {course} c
+                         LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid AND p.workflowid = $workflow->id
+                         LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid AND pe.workflowid = $workflow->id
+                         LEFT JOIN {tool_lifecycle_process} po ON c.id = po.courseid AND po.workflowid <> $workflow->id
+                         LEFT JOIN {tool_lifecycle_proc_error} peo ON c.id = peo.courseid AND peo.workflowid <> $workflow->id
+                         LEFT JOIN {tool_lifecycle_delayed} d ON c.id = d.courseid
+                         LEFT JOIN {tool_lifecycle_delayed_workf} dw ON
+                             c.id = dw.courseid AND dw.workflowid = $workflow->id
+                         WHERE ";
+                 if(is_array($where_tmp)) {
+                     //mtrace('Chunked recordset: '.count($where_tmp)/*.' '.print_r($where_tmp, true)*/.', params: '.count($whereparams_tmp)/*.' '.print_r($whereparams_tmp, true)*/);
+                     $tmp = [];
+                     foreach($where_tmp as $chunk_key => $chunk_where_tmp) {
+                         // We include delayed courses here anyway, so we only take the site course into account.
+                         if ($nositecourse) {
+                             $chunk_where_tmp = "($chunk_where_tmp) AND c.id <> 1 ";
+                         }
+                         $sql_tmp = $sql.$chunk_where_tmp;
+                         $debugsql = $sql_tmp;
+                         foreach ($whereparams_tmp as $key => $value) {
+                             $debugsql = str_replace(":".$key, $value, $debugsql);
+                         }
+                         // v5.0-r3
+                         //$SESSION->debugtriggersql = $debugsql;
+                         // v5.2-r1
+                         $SESSION->debugprocesssql = $debugsql;
+                         $tmp[] = $DB->get_recordset_sql($sql_tmp, $whereparams_tmp[$chunk_key]);
+                     }
+                     $recordsets[] = $tmp;
+                 } else {
+                     //mtrace('Nomrmal recordset: '.$where_tmp.', params: '.count($whereparams_tmp)/*.' '.print_r($whereparams_tmp, true)*/);
+                     // We include delayed courses here anyway, so we only take the site course into account.
+                     if ($nositecourse) {
+                         $where_tmp = "($where_tmp) AND c.id <> 1 ";
+                     }
+                     $sql_tmp = $sql.$where_tmp;
+                     $debugsql = $sql_tmp;
+                     foreach ($whereparams_tmp as $key => $value) {
+                         $debugsql = str_replace(":".$key, $value, $debugsql);
+                     }
+                     // v5.0-r3
+                     //$SESSION->debugtriggersql = $debugsql;
+                     // v5.2-r1
+                     $SESSION->debugprocesssql = $debugsql;
+                     $recordsets[] = $DB->get_recordset_sql($sql_tmp, $whereparams_tmp);
+                 }
+             }
+     
+             //use tool_lifecycle\local\intersectedRecordset;
+             $recordsets = new \tool_lifecycle\local\intersectedRecordset($recordsets);
+             //mtrace('Intersected record sets (for counting): '.count($recordsets));
+         } else {
+             foreach ($where as $key => $where_tmp) {
+                 $whereparams_tmp = $whereparams[$key];        
+                 // Get only courses which are not part of an existing process.
+                 $sql = "SELECT c.id from {course} c
+                         LEFT JOIN {tool_lifecycle_process} p ON c.id = p.courseid
+                         LEFT JOIN {tool_lifecycle_proc_error} pe ON c.id = pe.courseid
+                         WHERE p.courseid is null AND pe.courseid IS NULL AND ";
+                 if(is_array($where_tmp)) {
+                     //mtrace('Chunked recordset: '.count($where_tmp)/*.' '.print_r($where_tmp, true)*/.', params: '.count($whereparams_tmp)/*.' '.print_r($whereparams_tmp, true)*/);
+                     $tmp = [];
+                     foreach($where_tmp as $chunk_key => $chunk_where_tmp) {
+                         if ($workflow) {
+                             if (!$workflow->includesitecourse) {
+                                 $chunk_where_tmp = "($chunk_where_tmp) AND c.id <> 1 ";
+                             }
+                             if (!$workflow->includedelayedcourses) {
+                                 $chunk_where_tmp = "($chunk_where_tmp) AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf}
+                             WHERE delayeduntil > :time1 AND workflowid = :workflowid)
+                             AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
+                                 $inparams = ['time1' => time(), 'time2' => time(), 'workflowid' => $workflow->id];
+                                 $whereparams_tmp = array_merge($whereparams_tmp, $inparams);
+                             }
+                         }
+                         $sql_tmp = $sql.$chunk_where_tmp;
+                         $debugsql = $sql_tmp;
+                         foreach ($whereparams_tmp as $key => $value) {
+                             $debugsql = str_replace(":".$key, $value, $debugsql);
+                         }
+                         // v5.0-r3
+                         //$SESSION->debugtriggersql = $debugsql;
+                         // v5.2-r1
+                         $SESSION->debugprocesssql = $debugsql;
+                         $tmp[] = $DB->get_recordset_sql($sql_tmp, $whereparams_tmp[$chunk_key]);
+                     }
+                     $recordsets[] = $tmp;
+                 } else {
+                     //mtrace('Nomrmal recordset: '.$where_tmp.', params: '.count($whereparams_tmp)/*.' '.print_r($whereparams_tmp, true)*/);
+                     if ($workflow) {
+                         if (!$workflow->includesitecourse) {
+                             $where_tmp = "($where_tmp) AND c.id <> 1 ";
+                         }
+                         if (!$workflow->includedelayedcourses) {
+                             $where_tmp = "($where_tmp) AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed_workf}
+                         WHERE delayeduntil > :time1 AND workflowid = :workflowid)
+                         AND NOT c.id in (select courseid FROM {tool_lifecycle_delayed} WHERE delayeduntil > :time2) ";
+                             $inparams = ['time1' => time(), 'time2' => time(), 'workflowid' => $workflow->id];
+                             $whereparams_tmp = array_merge($whereparams_tmp, $inparams);
+                         }
+                     }
+                     $sql_tmp = $sql.$where_tmp;
+                     $debugsql = $sql_tmp;
+                     foreach ($whereparams_tmp as $key => $value) {
+                         $debugsql = str_replace(":".$key, $value, $debugsql);
+                     }
+                     // v5.0-r3
+                     //$SESSION->debugtriggersql = $debugsql;
+                     // v5.2-r1
+                     $SESSION->debugprocesssql = $debugsql;
+                     $recordsets[] = $DB->get_recordset_sql($sql_tmp, $whereparams_tmp);
+                 }
+             }
+     
+             //use tool_lifecycle\local\intersectedRecordset;
+             $recordsets = new \tool_lifecycle\local\intersectedRecordset($recordsets);
+             //mtrace('Intersected record sets: '.count($recordsets));
+         }
+     
+         mtrace('');
+         mtrace('FINAL recordsets: '.$recordsets->count()/*.' '.print_r($recordsets, true)*/);
+         mtrace('');
+         //die();
+     
+         return $recordsets;
+     }
+    
+    /* 
     public function get_course_recordset($triggers, $nositecourse = true, $forcounting = false) {
         global $DB, $SESSION;
 
@@ -419,6 +638,7 @@ class processor {
 
         return $DB->get_recordset_sql($sql, $whereparams);
     }
+    */
 
     /**
      * Returns the number of courses for a trigger for counting.
