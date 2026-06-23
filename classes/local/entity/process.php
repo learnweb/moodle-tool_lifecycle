@@ -114,10 +114,23 @@ class process {
         }
 
         if (!$coursedeleted) {
-            $context = \context_course::instance($record->courseid);
+            /* Use IGNORE_MISSING so that if a course has been deleted outside of lifecycle
+            (e.g. manually or by a previous failed cron run) this never throws a
+            dml_missing_record_exception. Callers that need a valid context should check
+            that $process->context is not empty before proceeding */
+            $context = \context_course::instance($record->courseid, IGNORE_MISSING);
+            if ($context === false) {
+                debugging(
+                    'tool_lifecycle process::from_record: course ' . $record->courseid .
+                    ' has no context — treating as deleted.',
+                    DEBUG_DEVELOPER
+                );
+                $context = '';
+            }
         } else {
-            $context = "";
+            $context = '';
         }
+
         $instance = new self($record->id,
                 $record->workflowid,
                 $record->courseid,
