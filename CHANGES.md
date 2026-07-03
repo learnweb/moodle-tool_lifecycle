@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+5.2.0 (2026-06-01)
+------------------
+* Moodle 5.2 compatible version
+
 5.1.5 (v5.1-r6, 2026-05-20)
 ---------------------------
 * [FEATURE] Introduce new step opencast

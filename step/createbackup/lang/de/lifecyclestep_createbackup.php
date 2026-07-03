@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['backupsettings'] = 'Backup Einstellungen';
+$string['backupsettingsstatictext'] = 'Die Konfiguration der erstellten Backups wird durch die Einstellungen für automatisierte Backups gesteuert: <a href="{$a->url}">{$a->label}</a>';
 $string['coursebackups'] = 'Kurs-Sicherungen';
 $string['deleteallbuttonlabel'] = 'Alle löschen';
 $string['deleteselectedbuttonlabel'] = 'Selektierte löschen';
@@ -30,4 +32,3 @@ $string['nobackups'] = 'Keine Backups gefunden.';
 $string['plugindescription'] = 'Stößt ein Backup der getriggerten Kurse an.';
 $string['pluginname'] = 'Kurssicherungs-Schritt';
 $string['privacy:metadata'] = 'Dieses Subplugin speichert keine persönlichen Daten.';
-

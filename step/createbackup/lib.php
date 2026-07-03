@@ -117,6 +117,13 @@ class createbackup extends libbase {
      * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
+        $elementname = 'backupsettings';
+        $backupsettings = new stdClass;
+        $backupsettings->url = (new \moodle_url('/admin/settings.php', ['section' => 'automated']))->out();
+        $backupsettings->label = get_string('automatedsetup', 'backup');
+        $mform->addElement('static', $elementname, get_string('backupsettings', 'lifecyclestep_createbackup'),
+            get_string('backupsettingsstatictext', 'lifecyclestep_createbackup', $backupsettings)
+        );
         $elementname = 'status';
         $options = [
             self::STEPACTIVE => get_string('active', 'tool_lifecycle'),
@@ -130,7 +137,8 @@ class createbackup extends libbase {
         $elementname = 'maximumbackupspercron';
         $mform->addElement('text', $elementname,
             get_string('maximumbackupspercron', 'lifecyclestep_createbackup'),
-            ['size' => 3]);
+            ['size' => 3]
+        );
         $mform->setType($elementname, PARAM_INT);
         $mform->setDefault($elementname, 10);
     }
