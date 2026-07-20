@@ -28,7 +28,9 @@ namespace lifecyclestep_opencast;
 use core_cache\cache;
 use tool_lifecycle\local\response\step_response;
 use lifecyclestep_opencast\notification_helper;
+use lifecyclestep_opencast\report_helper;
 use lifecyclestep_opencast\log_helper;
+use tool_lifecycle\step\opencast;
 
 /**
  * Helper class to handle notifications in Opencast Step for default processes
@@ -58,6 +60,9 @@ class opencaststep_process_default {
         $ratelimiterenabled,
         $ocdryrunenabled
     ) {
+        // Report.
+        $report = new report_helper($course->id, $ocinstanceid, $instanceid);
+
         // Prepare series videos cache.
         $seriesvideoscache = cache::make('lifecyclestep_opencast', 'seriesvideos');
 
@@ -126,6 +131,10 @@ class opencaststep_process_default {
                 continue;
             }
 
+            $report->add_info_line(
+                "Trying to process Videos in Series (ID: {$series->series}) in Course (ID: {$course->id})"
+            );
+
             // Iterate over the videos.
             foreach ($seriesvideos->videos as $video) {
                 // Skip the video if already being processed.
@@ -183,10 +192,14 @@ class opencaststep_process_default {
                         $ocworkflow
                     );
 
-                    return step_response::WAITING;
+                    $a = (object) [
+                        'wf' => $ocworkflow,
+                        'eid' => $video->identifier,
+                    ];
 
-                    // Otherwise.
-                } else {
+                    $message = get_string('interaction_state_info_workflow_error', 'lifecyclestep_opencast', $a);
+                    return opencast::return_result(step_response::WAITING, $report, $message);
+                } else { // Otherwise.
                     // Trace.
                     $logtrace->print_mtrace(
                         get_string('mtrace_success_workflow_started', 'lifecyclestep_opencast'),
@@ -200,6 +213,8 @@ class opencaststep_process_default {
                     $processedvideoscacheobj->stepprocessedvideos = $stepprocessedvideos;
                     $processedvideoscache->set($instanceid, $processedvideoscacheobj);
 
+                    $report->add_info_line("Video (ID: $video->identifier}) has been processed by default processing.");
+
                     // If the rate limiter is enabled.
                     if ($ratelimiterenabled == true) {
                         // Trace.
@@ -210,7 +225,9 @@ class opencaststep_process_default {
                         );
 
                         // Return waiting so that the processing will continue on the next run of this scheduled task.
-                        return step_response::WAITING;
+
+                        $message = get_string('interaction_state_info_rate_limiter', 'lifecyclestep_opencast');
+                        return opencast::return_result(step_response::WAITING, $report, $message);
                     }
                 }
             }
@@ -231,6 +248,6 @@ class opencaststep_process_default {
             }
         }
 
-        return '';
+        return opencast::return_result(step_response::PROCEED, $report);
     }
 }

@@ -27,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 $string['cachedef_ocworkflows'] = 'Gecachte Opencast-Workflow-Definitionen für den Lifecycle-Opencast-Schritt';
 $string['cachedef_processedvideos'] = 'Gecachte Opencast-Videos, deren Verarbeitung im Lifecycle-Opencast-Schritt abgeschlossen ist';
 $string['cachedef_seriesvideos'] = 'Gecachte Opencast-Serienvideos für den Lifecycle-Opencast-Schritt';
+$string['confirmationmode'] = 'Bestätigungs-Modus';
+$string['confirmationmode_help'] = 'Jeder Kurs mit Opencast Videos muss einzeln von Kursteilnehmer:innen mit Lehrenden-Rechten zur weiteren Verarbeitung freigegeben werden.';
 $string['coursefullnameunknown'] = 'Unbekannter Kursname';
 $string['error_removeseriesmapping'] = 'Der Serien-Zuordnungsdatensatz konnte nicht entfernt werden.';
 $string['error_removeseriestacl'] = 'Die Kurs-ACLs konnten nicht ordnungsgemäß aus der Serie und ihren Ereignissen entfernt werden.';

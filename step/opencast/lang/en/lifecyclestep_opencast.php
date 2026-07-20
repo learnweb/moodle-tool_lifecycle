@@ -27,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 $string['cachedef_ocworkflows'] = 'Cached Opencast Workflow Definitions for Lifecycle Opencast Step';
 $string['cachedef_processedvideos'] = 'Cached Opencast Videos that are done processing for Lifecycle Opencast Step';
 $string['cachedef_seriesvideos'] = 'Cached Opencast Series Videos for Lifecycle Opencast Step';
+$string['confirmationmode'] = 'Confirmation mode';
+$string['confirmationmode_help'] = 'Every course including opencast videos has to be confirmed by users with teacher rights to be subject to further processing.';
 $string['coursefullnameunknown'] = 'Unkown coursename';
 $string['error_removeseriesmapping'] = 'Unable to remove series mapping record.';
 $string['error_removeseriestacl'] = 'Unable to remove course ACLs from the series and its events properly.';
