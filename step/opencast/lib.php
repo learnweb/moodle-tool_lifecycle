@@ -285,8 +285,8 @@ class opencast extends libbase {
 
         // Confirmation mode active: Every course including opencast videos has to be confirmed by users with...
         // ...teacher rights to be processed.
-        $mform->addElement('advcheckbox', 'comfirmationmode', get_string('confirmationmode', 'lifecyclestep_opencast'));
-        $mform->addHelpButton('comfirmationmode', 'comfirmationmode', 'lifecyclestep_opencast');
+        $mform->addElement('advcheckbox', 'confirmationmode', get_string('confirmationmode', 'lifecyclestep_opencast'));
+        $mform->addHelpButton('confirmationmode', 'confirmationmode', 'lifecyclestep_opencast');
         $mform->setType('comfirmationmode', PARAM_BOOL);
         $mform->setDefault('comfirmationmode', false);
 
