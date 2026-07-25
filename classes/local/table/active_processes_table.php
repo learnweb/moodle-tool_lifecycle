@@ -67,7 +67,7 @@ class active_processes_table extends \table_sql {
                 $params['courseid'] = $filterdata->courseid;
             }
 
-            if (count($where) > 1) {
+            if (count($where) > 2) {
                 $separator = ' OR ';
             } else {
                 $separator = ' OR ';
