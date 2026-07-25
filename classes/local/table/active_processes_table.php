@@ -66,6 +66,12 @@ class active_processes_table extends \table_sql {
                 $where[] = 'c.id = :courseid';
                 $params['courseid'] = $filterdata->courseid;
             }
+
+            if (count($where) > 1) {
+                $separator = ' OR ';
+            } else {
+                $separator = ' OR ';
+            }
         }
 
         $this->set_sql('c.id as courseid, ' .
@@ -80,7 +86,7 @@ class active_processes_table extends \table_sql {
             'JOIN {course} c ON p.courseid = c.id ' .
             'JOIN {tool_lifecycle_step} s ON p.workflowid = s.workflowid AND p.stepindex = s.sortindex ' .
             'JOIN {tool_lifecycle_workflow} w ON p.workflowid = w.id',
-            join(' AND ', $where), $params);
+            join($separator, $where), $params);
         $this->define_baseurl($PAGE->url);
         $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'workflow', 'instancename', 'tools']);
         $this->define_headers([
