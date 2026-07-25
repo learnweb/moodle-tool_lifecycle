@@ -70,7 +70,7 @@ class active_processes_table extends \table_sql {
             if (count($where) > 2) {
                 $separator = ' OR ';
             } else {
-                $separator = ' OR ';
+                $separator = ' AND ';
             }
         }
 
