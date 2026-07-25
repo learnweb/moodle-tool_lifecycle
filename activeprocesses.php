@@ -47,9 +47,15 @@ $cachekey = 'activeprocesses_filter';
 $cache = cache::make('tool_lifecycle', 'mformdata');
 if ($search = optional_param('search', null, PARAM_RAW)) {
     $obj = new stdClass();
-    $obj->fullname = $search;
-    $obj->courseid = $search;
-    $obj->shortname = $search;
+    if (is_numeric($search)) {
+        $obj->courseid = $search;
+        $obj->shortname = null;
+        $obj->fullname = null;
+    } else {
+        $obj->courseid = null;
+        $obj->shortname = $search;
+        $obj->fullname = $search;
+    }
     $cache->set($cachekey, $obj);
     redirect($PAGE->url);
 }
