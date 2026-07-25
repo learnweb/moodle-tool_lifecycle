@@ -98,6 +98,9 @@ class active_processes_table extends \table_sql {
             get_string('tools', 'tool_lifecycle'), ]);
 
         $this->column_nosort = ['tools'];
+        if (debugging('', DEBUG_DEVELOPER, false)) {
+            echo \html_writer::div(var_dump($this->sql));
+        }
     }
 
     /**
