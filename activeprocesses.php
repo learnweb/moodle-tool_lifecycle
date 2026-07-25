@@ -48,8 +48,8 @@ $cache = cache::make('tool_lifecycle', 'mformdata');
 if ($search = optional_param('search', null, PARAM_RAW)) {
     $obj = new stdClass();
     $obj->fullname = $search;
-    $obj->courseid = null;
-    $obj->shortname = null;
+    $obj->courseid = $search;
+    $obj->shortname = $search;
     $cache->set($cachekey, $obj);
     redirect($PAGE->url);
 }
