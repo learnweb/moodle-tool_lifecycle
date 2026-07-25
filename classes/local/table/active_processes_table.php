@@ -63,7 +63,7 @@ class active_processes_table extends \table_sql {
             }
 
             if ($filterdata->courseid) {
-                $where[] = 'c.courseid = :courseid';
+                $where[] = 'c.id = :courseid';
                 $params['courseid'] = $filterdata->courseid;
             }
         }
