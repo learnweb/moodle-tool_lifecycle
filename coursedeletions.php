@@ -33,7 +33,7 @@ require_once($CFG->libdir . '/adminlib.php');
 require_admin();
 
 $syscontext = context_system::instance();
-$PAGE->set_url(new \moodle_url(urls::COURSE_BACKUPS));
+$PAGE->set_url(new \moodle_url(urls::COURSEDELETIONS));
 $PAGE->set_context($syscontext);
 
 $filterform = new form_coursedeletions_filter();

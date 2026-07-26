@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Table listing course backups
+ * Table listing course deletions by tool lifecycle
  *
  * @package tool_lifecycle
  * @copyright  2017 Tobias Reischmann WWU
