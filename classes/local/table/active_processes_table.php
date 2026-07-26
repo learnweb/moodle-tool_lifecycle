@@ -48,29 +48,25 @@ class active_processes_table extends \table_sql {
         global $PAGE, $DB;
         $this->set_attribute('class', $this->attributes['class'] . ' lifecycle-table ' . $uniqueid);
 
-        $where = ['TRUE'];
+        $where = [];
         $params = [];
+        $separator = ' AND ';
 
         if ($filterdata) {
-            if ($filterdata->shortname) {
-                $where[] = $DB->sql_like('c.shortname', ':shortname', false, false);
-                $params['shortname'] = '%' . $DB->sql_like_escape($filterdata->shortname) . '%';
-            }
-
-            if ($filterdata->fullname) {
-                $where[] = $DB->sql_like('c.fullname', ':fullname', false, false);
-                $params['fullname'] = '%' . $DB->sql_like_escape($filterdata->fullname) . '%';
-            }
 
             if ($filterdata->courseid) {
                 $where[] = 'c.id = :courseid';
                 $params['courseid'] = $filterdata->courseid;
-            }
-
-            if (count($where) > 2) {
-                $separator = ' OR ';
             } else {
-                $separator = ' AND ';
+                if ($filterdata->shortname) {
+                    $where[] = $DB->sql_like('c.shortname', ':shortname', false, false);
+                    $params['shortname'] = '%' . $DB->sql_like_escape($filterdata->shortname) . '%';
+                }
+                if ($filterdata->fullname) {
+                    $where[] = $DB->sql_like('c.fullname', ':fullname', false, false);
+                    $params['fullname'] = '%' . $DB->sql_like_escape($filterdata->fullname) . '%';
+                }
+                $separator = ' OR ';
             }
         }
 
@@ -98,7 +94,7 @@ class active_processes_table extends \table_sql {
             get_string('tools', 'tool_lifecycle'), ]);
 
         $this->column_nosort = ['tools'];
-        if (debugging('', DEBUG_DEVELOPER, false)) {
+        if (false && debugging('', DEBUG_DEVELOPER, false)) {
             echo \html_writer::div(var_dump($this->sql));
         }
     }
