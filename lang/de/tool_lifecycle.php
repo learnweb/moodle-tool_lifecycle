@@ -87,7 +87,9 @@ $string['config_showcoursecounts_desc'] = 'Die Workflow-Konfigurationsseite zeig
 die konfigurierten Trigger getriggert werden, was Performance-Probleme verursachen kann. Bei Performance-Problemen kann dies hiermit
 deaktiviert werden';
 $string['course_backups_list_header'] = 'Sicherungen';
-$string['course_backups_list_header_title'] = 'Liste der lifecycle-Kurssicherungen';
+$string['course_backups_list_header_title'] = 'Liste der Lifecycle-Kurssicherungen';
+$string['course_deletions_list_header'] = 'Gelöschte Kurse';
+$string['course_backups_list_header_title'] = 'Protokoll der Lifecycle-Kurslöschungen';
 $string['courseid'] = 'Kurs-ID';
 $string['coursename'] = 'Kursname';
 $string['coursenotfound'] = 'Kurs konnte nicht (mehr) gefunden werden';
@@ -210,12 +212,14 @@ $string['manual_trigger_process_existed'] = 'Es existiert bereits ein Workflow f
 $string['manual_trigger_success'] = 'Workflow erfolgreich gestartet.';
 $string['manualtriggerenvolved'] = 'Ein manueller Trigger ist vorhanden.';
 $string['manualtriggerenvolved_help'] = 'Kurse können erst getriggert werden wenn der Workflow manuell gestgartet wurde.';
+$string['modules'] = 'Kurselemente';
 $string['move_down'] = 'Nach unten bewegen';
 $string['move_up'] = 'Nach oben bewegen';
 $string['name_until_date'] = '"{$a->name}" bis {$a->date}';
 $string['nextrun'] = 'Nächste Durchführung: {$a}';
 $string['noactionsavailable'] = 'Sie können derzeit keine Aktion zu diesem Kurs ausführen.';
 $string['noactiontools'] = 'Keine Aktionen verfügbar';
+$string['nocoursesdeleted'] = 'Keine gelöschten Kurse gefunden!';
 $string['nocoursestodisplay'] = 'Es gibt derzeit keine Kurse, die Ihre Aufmerksamkeit erfordern!';
 $string['noentriesselected'] = 'Es wurden keine Tabellen-Einträge markiert.';
 $string['nointeractioninterface'] = 'Keine Interaktionsschnittstelle verfügbar!';
@@ -228,6 +232,7 @@ $string['notifyerrorsemailcontent'] = '{$a->amount} neue fehlerhafte tool_lifecy
 Bitte besuchen Sie {$a->url}.';
 $string['notifyerrorsemailcontenthtml'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!<br>Bitte besuchen Sie <a href="{$a->url}">die Übersichtsseite</a>.';
 $string['notifyerrorsemailsubject'] = '{$a->amount} neue fehlerhafte tool_lifecycle Prozesse warten darauf, behandelt zu werden!';
+$string['numberofcoursedeletions'] = 'Kurslöschungen angezeigt';
 $string['numbersotherwfordelayed'] = 'Diese Seite: {$a->tablerows} Kurse / {$a->triggered} getriggert / {$a->otherwf} in anderem Workflow / {$a->delayed} verzögert';
 $string['overview:add_trigger'] = 'Trigger hinzufügen';
 $string['overview:add_trigger_help'] = 'Es kann nur eine Instanz jedes Triggertyps hinzugefügt werden.';
@@ -308,6 +313,7 @@ $string['switchworkflow'] = 'Gehe zu Workflow';
 $string['tablecourseslog'] = 'Vergangene Aktionen';
 $string['tablecoursesremaining'] = 'Restliche Kurse';
 $string['tablecoursesrequiringattention'] = 'Kurse, die Ihre Aufmerksamkeit erfordern!';
+$string['timedeleted'] = 'gelöscht';
 $string['tools'] = 'Aktionen';
 $string['trigger'] = 'Trigger';
 $string['trigger_does_not_exist'] = 'Der Trigger existiert nicht.';

@@ -59,6 +59,8 @@ echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $renderer->tabs($tabrow, 'activeworkflows');
 
+$linktocoursedeletions = html_writer::link(new \moodle_url(urls::COURSEDELETIONS), get_string('course_deletions_list_header', 'tool_lifecycle'));
+
 echo $renderer->render_from_template('tool_lifecycle/search_input', [
     'action' => (new moodle_url(urls::ACTIVE_PROCESSES))->out(false),
     'uniqid' => 'tool_lifecycle-search-courses',
@@ -66,6 +68,7 @@ echo $renderer->render_from_template('tool_lifecycle/search_input', [
     'extraclasses' => 'mb-3',
     'inform' => false,
     'searchstring' => get_string('searchcourses', 'tool_lifecycle'),
+    'otherfields' => $linktocoursedeletions,
 ]);
 
 echo $OUTPUT->heading(get_string('active_automatic_workflows_heading', 'tool_lifecycle'));
