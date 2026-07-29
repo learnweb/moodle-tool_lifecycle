@@ -176,7 +176,7 @@
         <KEY NAME="workflowid_fk" TYPE="foreign" FIELDS="workflowid" REFTABLE="tool_lifecycle_workflow" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="lifecyclestep_opencast_process_status" COMMENT="This table contains status information about processes, including decisions made by administrators">
+    <TABLE NAME="tool_lifecycle_opencast_process_status" COMMENT="This table contains status information about processes, including decisions made by administrators">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

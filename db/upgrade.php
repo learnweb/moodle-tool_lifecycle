@@ -715,5 +715,17 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026012003, 'tool', 'lifecycle');
     }
 
+    if ($oldversion < 2026060101) {
+
+        // Rename step opencast table.
+        if ($dbman->table_exists('lifecyclestep_opencast_process_status')) {
+            $oldtable = new xmldb_table('lifecyclestep_opencast_process_status');
+            $dbman->rename_table($oldtable, 'tool_lifecycle_opencast_process_status');
+        }
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2026060101, 'tool', 'lifecycle');
+    }
+
     return true;
 }

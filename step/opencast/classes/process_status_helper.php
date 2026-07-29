@@ -35,7 +35,7 @@ namespace lifecyclestep_opencast;
  */
 class process_status_helper {
     /** @var string Table name for process status records. */
-    const TABLE_NAME = 'lifecyclestep_opencast_process_status';
+    const TABLE_NAME = 'tool_lifecycle_opencast_process_status';
 
     // DECISIONS.
     /** @var string Decision value for aborting the process. */
