@@ -23,12 +23,12 @@
  */
 
 use tool_lifecycle\local\form\form_coursedeletions_filter;
-use tool_lifecycle\local\form\form_courses_filter;
 use tool_lifecycle\tabs;
 use tool_lifecycle\urls;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+require_once($CFG->libdir . '/csvlib.class.php');
 
 require_admin();
 
@@ -54,13 +54,25 @@ if ($filterform->is_cancelled()) {
 
 $table = new tool_lifecycle\local\table\course_deletions_table('tool_lifecycle_course_deletions', $data);
 
+$download = optional_param('download', false, PARAM_TEXT);
+if ($download == 'csv') {
+    $table->is_downloading('csv', 'coursedeletions');
+    $table->out(0, false);
+}
+/* Does not work yet.
+if ($download == 'xlsx') {
+    $table->is_downloading('xlsx', 'coursedeletions');
+    $table->out(0, false);
+}
+*/
+
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('course_deletions_list_header', 'tool_lifecycle');
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
-$renderer->tabs($tabrow, 'activeworkflows');
+$renderer->tabs($tabrow, '');
 
 $where = ['TRUE'];
 $params = [];
@@ -71,20 +83,41 @@ if ($data) {
     }
 }
 
-$sql = 'SELECT count(d.id) FROM {lifecyclestep_deletecourse} d WHERE ' . implode(' AND ', $where);
-$records = $DB->count_records_sql($sql, $params);
+$sql = "SELECT COUNT(id) AS records,
+            COALESCE(SUM(modules), 0) AS modules,
+            COALESCE(SUM(participants), 0) AS participants
+          FROM {lifecyclestep_deletecourse} d ";
+$sql .= " WHERE " . implode(' AND ', $where);
+
+$records = 0;
+if ($sums = $DB->get_record_sql($sql, $params)) {
+    $records = (int)$sums->records;
+    $modules = (int)$sums->modules;
+    $participants = (int)$sums->participants;
+}
 
 $filterform->display();
 
 if ($records) {
 
-    echo '<div class="mt-2">';
-    echo \html_writer::span($records, 'totalrows badge badge-primary badge-pill mr-1 mb-1',
-        ['id' => 'coursedeletions_totalrows']);
-    echo \html_writer::span(get_string('numberofcoursedeletions', 'tool_lifecycle'));
-    echo '</div>';
+    $data = [
+        'records' => $records,
+        'modules' => $modules,
+        'participants' => $participants,
 
-    $table->out(100, false);
+        'numberofcoursedeletions' => get_string('numberofcoursedeletions', 'tool_lifecycle'),
+        'numberofmodules' => get_string('numberofmodules', 'tool_lifecycle'),
+        'numberofparticipants' => get_string('numberofparticipants', 'tool_lifecycle'),
+        'downloadlinkcsv' => html_writer::link($PAGE->url->out(false, ['download' => 'csv']), get_string('downloadcsv', 'tool_lifecycle')),
+        'downloadlinkxlsx' => html_writer::link($PAGE->url->out(false, ['download' => 'xlsx']), get_string('downloadxlsx', 'tool_lifecycle')),
+    ];
+
+    echo $OUTPUT->render_from_template(
+        'tool_lifecycle/coursedeletions_summary',
+        $data
+    );
+
+    $table->out(100, true);
 
 } else {
 
@@ -93,5 +126,7 @@ if ($records) {
 }
 
 echo $renderer->footer();
+
+
 
 
