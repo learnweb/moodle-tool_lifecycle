@@ -59,12 +59,6 @@ if ($download == 'csv') {
     $table->is_downloading('csv', 'coursedeletions');
     $table->out(0, false);
 }
-/* Does not work yet.
-if ($download == 'xlsx') {
-    $table->is_downloading('xlsx', 'coursedeletions');
-    $table->out(0, false);
-}
-*/
 
 $PAGE->set_pagetype('admin-setting-' . 'tool_lifecycle');
 $PAGE->set_pagelayout('admin');
@@ -108,8 +102,10 @@ if ($records) {
         'numberofcoursedeletions' => get_string('numberofcoursedeletions', 'tool_lifecycle'),
         'numberofmodules' => get_string('numberofmodules', 'tool_lifecycle'),
         'numberofparticipants' => get_string('numberofparticipants', 'tool_lifecycle'),
-        'downloadlinkcsv' => html_writer::link($PAGE->url->out(false, ['download' => 'csv']), get_string('downloadcsv', 'tool_lifecycle')),
-        'downloadlinkxlsx' => html_writer::link($PAGE->url->out(false, ['download' => 'xlsx']), get_string('downloadxlsx', 'tool_lifecycle')),
+        'downloadlinkcsv' => html_writer::link($PAGE->url->out(false, ['download' => 'csv']),
+            get_string('downloadcsv', 'tool_lifecycle')),
+        'downloadlinkxlsx' => html_writer::link($PAGE->url->out(false, ['download' => 'xlsx']),
+            get_string('downloadxlsx', 'tool_lifecycle')),
     ];
 
     echo $OUTPUT->render_from_template(

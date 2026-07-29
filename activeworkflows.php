@@ -54,12 +54,14 @@ $PAGE->set_pagelayout('admin');
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
-$heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('active_workflows_header', 'tool_lifecycle');
+$heading = get_string('pluginname', 'tool_lifecycle')." / ".
+    get_string('active_workflows_header', 'tool_lifecycle');
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $renderer->tabs($tabrow, 'activeworkflows');
 
-$linktocoursedeletions = html_writer::link(new \moodle_url(urls::COURSEDELETIONS), get_string('course_deletions_list_header', 'tool_lifecycle'));
+$linktocoursedeletions = html_writer::link(new \moodle_url(urls::COURSEDELETIONS),
+    get_string('course_deletions_list_header', 'tool_lifecycle'));
 
 echo $renderer->render_from_template('tool_lifecycle/search_input', [
     'action' => (new moodle_url(urls::ACTIVE_PROCESSES))->out(false),
