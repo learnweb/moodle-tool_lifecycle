@@ -16,7 +16,7 @@
     }
   },
   "additional_plugins": [
-    "learnweb/moodle-customfield_semester"
+    "learnweb/moodle-customfield_semester:lifecycle"
   ]
 
 }
