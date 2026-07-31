@@ -63,6 +63,7 @@ class course_deletions_table extends \table_sql {
             }
         }
 
+        $this->sortable(true, 'timedeleted', 'DESC');
         $this->set_sql('d.courseid, s.instancename as step, s.workflowid, d.modules,
         d.participants, d.timedeleted',
             '{lifecyclestep_deletecourse} d LEFT JOIN
