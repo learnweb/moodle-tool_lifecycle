@@ -65,6 +65,7 @@ if ($form->is_cancelled()) {
         redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $restore->get_workflow()->id]));
     }
 }
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $renderer->tabs($tabrow, '');

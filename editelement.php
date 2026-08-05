@@ -154,6 +154,7 @@ if ($data = $form->get_data()) {
 }
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".$workflow->title;
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $renderer->tabs($tabrow, '');

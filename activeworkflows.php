@@ -56,6 +56,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".
     get_string('active_workflows_header', 'tool_lifecycle');
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $renderer->tabs($tabrow, 'activeworkflows');

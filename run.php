@@ -44,6 +44,7 @@ $PAGE->set_pagelayout('admin');
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('runtask', 'tool_lifecycle');
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $id = 'settings';

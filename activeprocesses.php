@@ -75,6 +75,7 @@ if ($mform->is_cancelled()) {
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('find_course_list_header', 'tool_lifecycle');
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabparams = new stdClass();
 $tabparams->activelink = true;

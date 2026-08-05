@@ -97,6 +97,7 @@ if ($bulkedit) {
     $PAGE->requires->js_call_amd('tool_lifecycle/tablebulkactions_view', 'init');
 }
 
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header();
 
 $filterform = new form_courses_filter('', ['bulkedit' => $bulkedit]);

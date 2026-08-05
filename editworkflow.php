@@ -89,6 +89,7 @@ if ($data = $form->get_data()) {
     // New Workflow created, redirect to details page.
     redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $workflow->id]));
 }
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $renderer->tabs($tabrow, '');
