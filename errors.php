@@ -117,7 +117,8 @@ $step = optional_param('step', 0, PARAM_INT);
 $course = optional_param('course', 0, PARAM_INT);
 $courseid = optional_param('courseid', 0, PARAM_INT);
 // Load filter form.
-$mform = new form_errors_filter($PAGE->url, ['workflow' => $workflow, 'step' => $step, 'course' => $course, 'courseid' => $courseid]);
+$mform = new form_errors_filter($PAGE->url, ['workflow' => $workflow, 'step' => $step,
+    'course' => $course, 'courseid' => $courseid]);
 
 // Cache handling.
 $cache = cache::make('tool_lifecycle', 'mformdata');
