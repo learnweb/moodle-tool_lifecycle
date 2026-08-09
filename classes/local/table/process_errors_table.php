@@ -61,10 +61,10 @@ class process_errors_table extends \table_sql {
                 'delete' => get_string('deleteprocesserror', 'tool_lifecycle'),
         ];
 
-        $fields = 'c.id, c.fullname as course,
+        $fields = 'pe.id as errorid, c.id, c.fullname as course,
             w.id as workflowid, w.title as workflow,
             s.id as stepid, s.instancename as step,
-            pe.id as errorid, pe.courseid, pe.errormessage, pe.errortrace, pe.errortimecreated';
+            pe.courseid, pe.errormessage, pe.errortrace, pe.errortimecreated';
 
         $from = '{tool_lifecycle_proc_error} pe ' .
             'LEFT JOIN {tool_lifecycle_workflow} w ON pe.workflowid = w.id ' .
@@ -82,8 +82,12 @@ class process_errors_table extends \table_sql {
             $where .= ' AND s.id = :step';
             $params['step'] = $step;
         }
-        $course = $filterdata->course ?? null;
-        if ($course) {
+        if (!$course = $filterdata->course ?? null) {
+            if ($courseid = $filterdata->courseid ?? null) {
+                $where .= ' AND pe.courseid = :courseid';
+                $params['courseid'] = $courseid;
+            }
+        } else {
             $where .= ' AND c.id = :course';
             $params['course'] = $course;
         }

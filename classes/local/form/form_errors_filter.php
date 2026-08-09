@@ -101,6 +101,9 @@ class form_errors_filter extends \moodleform {
                 $coursesoptions[$course->id] = $course->fullname;
             }
             $mform->addElement('select', 'course', get_string('course'), $coursesoptions);
+            $mform->addElement('text', 'courseid', get_string('courseid', 'tool_lifecycle'),
+                ['size' => 7]);
+            $mform->setType('courseid', PARAM_ALPHANUM);
             $addbuttons = true;
         }
 
