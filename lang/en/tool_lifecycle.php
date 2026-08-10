@@ -176,7 +176,7 @@ $string['edit_trigger'] = 'Edit trigger';
 $string['editworkflow'] = 'Edit workflow';
 $string['error_wrong_trigger_selected'] = 'You tried to request a non-manual trigger.';
 $string['errorbackuppath'] = 'Error while trying to create the backup directory. You might be missing the permission to do so.
-Please check your path at Site administration/Plugins/Admin tools/Life Cycle/General & subplugins/backup_path.';
+Please check your path at Site administration/Courses/Life Cycle/General & subplugins/backup_path.';
 $string['errornobackup'] = 'No backup was created at the specified directory, reasons unknown.';
 $string['errors_deleted_fail'] = '{$a} errors could not be deleted.';
 $string['errors_deleted_success'] = '{$a} errors successfully deleted.';
