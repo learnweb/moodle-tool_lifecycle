@@ -60,7 +60,7 @@ class interactionopencast extends interactionlibbase {
      * @return string capability string.
      */
     public function get_relevant_capability() {
-        return 'tool/lifecycle:managecourses';
+        return 'tool/lifecycle:deletecourses';
     }
 
     /**
