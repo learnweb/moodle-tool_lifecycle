@@ -52,7 +52,7 @@ class lifecycle_task extends \core\task\scheduled_task {
      */
     public function execute($wfid = null) {
         $processor = new processor();
-        $processor->call_trigger();
+        $processor->call_trigger($wfid);
 
         $steps = step_manager::get_step_types();
         /* @var \tool_lifecycle\step\libbase[] $steplibs stores the lib classes of all step subplugins.*/

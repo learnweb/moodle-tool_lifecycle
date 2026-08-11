@@ -58,8 +58,9 @@ class processor {
 
     /**
      * Processes the trigger plugins for all relevant courses.
+     * @param int $wfid Id of the current workflow
      */
-    public function call_trigger() {
+    public function call_trigger($wfid = null) {
         global $FULLSCRIPT, $USER;
 
         $automatictest = (defined('PHPUNIT_TEST') && PHPUNIT_TEST) ||
@@ -76,12 +77,20 @@ class processor {
 
         // Print debug message if this is not a behat test.
         if (!$automatictest) {
-            mtrace(get_string ('active_automatic_workflows_heading', 'tool_lifecycle').
-                ": ".count($activeworkflows), $eol);
+            if (!$wfid) {
+                mtrace(get_string ('active_automatic_workflows_heading', 'tool_lifecycle').
+                    ": ".count($activeworkflows), $eol);
+            }
+
         }
 
         // Walk through the active workflows.
         foreach ($activeworkflows as $workflow) {
+
+            if ($wfid && $wfid != $workflow->id) {
+                continue;
+            }
+
             $countcourses = 0;
             $counttriggered = 0;
             $countexcluded = 0;
