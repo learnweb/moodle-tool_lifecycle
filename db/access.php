@@ -35,17 +35,6 @@ $capabilities = [
         ],
         'clonepermissionsfrom' => 'moodle/course:update',
     ],
-
-    'tool/lifecycle:deletecourses' => [
-        'contextlevel' => CONTEXT_COURSE,
-        'captype' => 'write',
-        'archetypes' => [
-            'manager' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW,
-            'students' => CAP_PREVENT,
-        ],
-    ],
 ];
 
 
