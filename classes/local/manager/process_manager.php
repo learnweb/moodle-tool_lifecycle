@@ -86,6 +86,7 @@ class process_manager {
 
     /**
      * Returns all current active processes.
+     * @param int $wfid Id of the current workflow*
      * @return process[]
      * @throws \dml_exception
      */

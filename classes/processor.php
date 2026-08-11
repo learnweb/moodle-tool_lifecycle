@@ -183,6 +183,7 @@ class processor {
 
     /**
      * Calls the process_course() method of each step submodule currently responsible for a given course.
+     * @param int $wfid Id of the current workflow
      */
     public function process_courses($wfid = null) {
         global $FULLSCRIPT, $CFG;

@@ -47,7 +47,8 @@ class lifecycle_task extends \core\task\scheduled_task {
     }
 
     /**
-     * Do the job.
+     * Do the job
+     * @param int $wfid Id of the current workflow
      */
     public function execute($wfid = null) {
         $processor = new processor();
