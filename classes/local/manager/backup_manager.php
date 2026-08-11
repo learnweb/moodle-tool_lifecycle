@@ -182,7 +182,7 @@ class backup_manager {
         } else {
             mtrace('!!! backup_destination is NOT present in backup results !!!');
             mtrace('Complete backup results:');
-            mtrace(print_r($results, true));
+            var_dump($results);
 
             $bc->destroy();
             unset($bc);
