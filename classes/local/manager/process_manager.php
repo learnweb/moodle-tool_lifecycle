@@ -89,7 +89,7 @@ class process_manager {
      * @return process[]
      * @throws \dml_exception
      */
-    public static function get_processes() {
+    public static function get_processes($wfid = null) {
         global $DB;
         // Detect processes of not existing courses and move them to the proc_error table.
         $processeswithoutcourse = $DB->get_fieldset_select('tool_lifecycle_process', 'id',
@@ -102,6 +102,9 @@ class process_manager {
         $sql = "SELECT p.*
                 FROM {tool_lifecycle_process} p INNER JOIN {tool_lifecycle_workflow} w ON p.workflowid = w.id
                 WHERE w.timedeactive IS NULL";
+        if (is_number($wfid)) {
+            $sql .= " AND p.workflowid = " . $wfid;
+        }
         $records = $DB->get_records_sql($sql);
         $processes = [];
         foreach ($records as $record) {

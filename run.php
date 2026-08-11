@@ -53,7 +53,7 @@ $renderer->tabs($tabrow, $id);
 echo \html_writer::start_div('');
 
 $task = new lifecycle_task();
-$task->execute();
+$task->execute($workflowid);
 
 echo \html_writer::end_div();
 

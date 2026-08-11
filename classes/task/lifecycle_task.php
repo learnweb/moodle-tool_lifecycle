@@ -49,7 +49,7 @@ class lifecycle_task extends \core\task\scheduled_task {
     /**
      * Do the job.
      */
-    public function execute() {
+    public function execute($wfid = null) {
         $processor = new processor();
         $processor->call_trigger();
 
@@ -60,7 +60,7 @@ class lifecycle_task extends \core\task\scheduled_task {
             $steplibs[$id] = lib_manager::get_step_lib($id);
             $steplibs[$id]->pre_processing_bulk_operation();
         }
-        $processor->process_courses();
+        $processor->process_courses($wfid);
         foreach ($steps as $id => $step) {
             $steplibs[$id]->post_processing_bulk_operation();
         }

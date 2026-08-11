@@ -184,7 +184,7 @@ class processor {
     /**
      * Calls the process_course() method of each step submodule currently responsible for a given course.
      */
-    public function process_courses() {
+    public function process_courses($wfid = null) {
         global $FULLSCRIPT, $CFG;
 
         /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
@@ -204,17 +204,24 @@ class processor {
             defined('BEHAT_SITE_RUNNING');
 
         if (!$automatictest) {
-            mtrace(get_string ('lifecycle_task', 'tool_lifecycle'), $eol);
+            if ($wfid) {
+                $workflow = workflow_manager::get_workflow($wfid);
+                $a = $workflow->title;
+                mtrace(get_string('lifecycle_task_wf', 'tool_lifecycle', $a), $eol);
+            } else {
+                mtrace(get_string('lifecycle_task_all', 'tool_lifecycle'), $eol);
+            }
         }
         $coursesprocessed = 0;
         $coursesprocesserrors = 0;
 
-        foreach (process_manager::get_processes() as $process) {
+        foreach (process_manager::get_processes($wfid) as $process) {
             while (true) {
 
                 $course = get_course($process->courseid);
 
                 if ($process->stepindex == 0) {
+                    mtrace("Stepindex 0 : $course->id", $eol);
                     if (!process_manager::proceed_process($process)) {
                         // Happens for a workflow with no step.
                         delayed_courses_manager::set_course_delayed_for_workflow($course->id,
