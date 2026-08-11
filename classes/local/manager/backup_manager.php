@@ -58,197 +58,197 @@ class backup_manager {
         $recordid = $DB->insert_record('tool_lifecycle_backups', $record, true);
         $record->id = $recordid;
 
-// Build filename.
-$archivefile = date("Y-m-d") . "-ID-{$recordid}-COURSE-{$courseid}.mbz";
+        // Build filename.
+        $archivefile = date("Y-m-d") . "-ID-{$recordid}-COURSE-{$courseid}.mbz";
 
-mtrace('=== LIFECYCLE COURSE BACKUP START ===');
-mtrace('Course ID: ' . $courseid);
-mtrace('Record ID: ' . $recordid);
-mtrace('Archive filename: ' . $archivefile);
+        mtrace('=== LIFECYCLE COURSE BACKUP START ===');
+        mtrace('Course ID: ' . $courseid);
+        mtrace('Record ID: ' . $recordid);
+        mtrace('Archive filename: ' . $archivefile);
 
-// Path of backup folder.
-$path = get_config('tool_lifecycle', 'backup_path');
-mtrace('Backup path: ' . $path);
+        // Path of backup folder.
+        $path = get_config('tool_lifecycle', 'backup_path');
+        mtrace('Backup path: ' . $path);
 
-// Check backup path.
-if (!is_dir($path)) {
-    mtrace('Backup path does not exist. Creating directory...');
+        // Check backup path.
+        if (!is_dir($path)) {
+            mtrace('Backup path does not exist. Creating directory...');
 
-    umask(0000);
+            umask(0000);
 
-    // Create the directory for Backups.
-    if (!mkdir($path, $CFG->directorypermissions, true)) {
-        mtrace('ERROR: Could not create backup directory.');
-        throw new \moodle_exception(get_string('errorbackuppath', 'tool_lifecycle'));
-    }
+            // Create the directory for Backups.
+            if (!mkdir($path, $CFG->directorypermissions, true)) {
+                mtrace('ERROR: Could not create backup directory.');
+                throw new \moodle_exception(get_string('errorbackuppath', 'tool_lifecycle'));
+            }
 
-    mtrace('Backup directory successfully created.');
-} else {
-    mtrace('Backup directory already exists.');
-}
+            mtrace('Backup directory successfully created.');
+        } else {
+            mtrace('Backup directory already exists.');
+        }
 
-// Check whether directory is writable.
-if (!is_writable($path)) {
-    mtrace('ERROR: Backup directory is not writable: ' . $path);
-    throw new \moodle_exception(get_string('errorbackuppath', 'tool_lifecycle'));
-}
+        // Check whether directory is writable.
+        if (!is_writable($path)) {
+            mtrace('ERROR: Backup directory is not writable: ' . $path);
+            throw new \moodle_exception(get_string('errorbackuppath', 'tool_lifecycle'));
+        }
 
-mtrace('Backup directory is writable.');
+        mtrace('Backup directory is writable.');
 
-// Create backup controller.
-mtrace('Creating backup controller...');
+        // Create backup controller.
+        mtrace('Creating backup controller...');
 
-$bc = new \backup_controller(
-    \backup::TYPE_1COURSE,
-    $courseid,
-    \backup::FORMAT_MOODLE,
-    \backup::INTERACTIVE_NO,
-    \backup::MODE_AUTOMATED,
-    get_admin()->id
-);
+        $bc = new \backup_controller(
+            \backup::TYPE_1COURSE,
+            $courseid,
+            \backup::FORMAT_MOODLE,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_AUTOMATED,
+            get_admin()->id
+        );
 
-mtrace('Backup controller created.');
+        mtrace('Backup controller created.');
 
-// Get initial controller status.
-mtrace('Initial backup controller status: ' . $bc->get_status());
+        // Get initial controller status.
+        mtrace('Initial backup controller status: ' . $bc->get_status());
 
-// Execute backup plan.
-mtrace('Starting backup plan...');
+        // Execute backup plan.
+        mtrace('Starting backup plan...');
 
-try {
-    $bc->execute_plan();
-    mtrace('Backup plan finished successfully.');
-} catch (\Throwable $e) {
-    mtrace('!!! BACKUP FAILED DURING execute_plan() !!!');
-    mtrace('Exception class: ' . get_class($e));
-    mtrace('Exception message: ' . $e->getMessage());
-    mtrace('Exception code: ' . $e->getCode());
-    mtrace('Exception file: ' . $e->getFile());
-    mtrace('Exception line: ' . $e->getLine());
-    mtrace('Stack trace:');
-    mtrace($e->getTraceAsString());
+        try {
+            $bc->execute_plan();
+            mtrace('Backup plan finished successfully.');
+        } catch (\Throwable $e) {
+            mtrace('!!! BACKUP FAILED DURING execute_plan() !!!');
+            mtrace('Exception class: ' . get_class($e));
+            mtrace('Exception message: ' . $e->getMessage());
+            mtrace('Exception code: ' . $e->getCode());
+            mtrace('Exception file: ' . $e->getFile());
+            mtrace('Exception line: ' . $e->getLine());
+            mtrace('Stack trace:');
+            mtrace($e->getTraceAsString());
 
-    $bc->destroy();
-    unset($bc);
+            $bc->destroy();
+            unset($bc);
 
-    throw $e;
-}
+            throw $e;
+        }
 
-// Get controller status after execution.
-mtrace('Backup controller status after execute_plan(): ' . $bc->get_status());
+        // Get controller status after execution.
+        mtrace('Backup controller status after execute_plan(): ' . $bc->get_status());
 
-// Get backup results.
-mtrace('Getting backup results...');
+        // Get backup results.
+        mtrace('Getting backup results...');
 
-try {
-    $results = $bc->get_results();
-    mtrace('Backup results successfully retrieved.');
-} catch (\Throwable $e) {
-    mtrace('!!! ERROR WHILE GETTING BACKUP RESULTS !!!');
-    mtrace('Exception class: ' . get_class($e));
-    mtrace('Exception message: ' . $e->getMessage());
-    mtrace('Exception code: ' . $e->getCode());
-    mtrace('Exception file: ' . $e->getFile());
-    mtrace('Exception line: ' . $e->getLine());
-    mtrace('Stack trace:');
-    mtrace($e->getTraceAsString());
+        try {
+            $results = $bc->get_results();
+            mtrace('Backup results successfully retrieved.');
+        } catch (\Throwable $e) {
+            mtrace('!!! ERROR WHILE GETTING BACKUP RESULTS !!!');
+            mtrace('Exception class: ' . get_class($e));
+            mtrace('Exception message: ' . $e->getMessage());
+            mtrace('Exception code: ' . $e->getCode());
+            mtrace('Exception file: ' . $e->getFile());
+            mtrace('Exception line: ' . $e->getLine());
+            mtrace('Stack trace:');
+            mtrace($e->getTraceAsString());
 
-    $bc->destroy();
-    unset($bc);
+            $bc->destroy();
+            unset($bc);
 
-    throw $e;
-}
+            throw $e;
+        }
 
-// Log result information.
-mtrace('Backup result keys: ' . implode(', ', array_keys($results)));
+        // Log result information.
+        mtrace('Backup result keys: ' . implode(', ', array_keys($results)));
 
-if (isset($results['backup_destination'])) {
-    mtrace('backup_destination is present.');
+        if (isset($results['backup_destination'])) {
+            mtrace('backup_destination is present.');
 
-    $file = $results['backup_destination'];
+            $file = $results['backup_destination'];
 
-    if ($file instanceof \stored_file) {
-        mtrace('backup_destination is a stored_file.');
-        mtrace('Filename: ' . $file->get_filename());
-        mtrace('Filesize: ' . $file->get_filesize());
-        mtrace('Content hash: ' . $file->get_contenthash());
-        mtrace('Component: ' . $file->get_component());
-        mtrace('File area: ' . $file->get_filearea());
-        mtrace('Item ID: ' . $file->get_itemid());
-    } else {
-        mtrace('WARNING: backup_destination is not a stored_file.');
-        mtrace('Actual type: ' . get_debug_type($file));
-    }
-} else {
-    mtrace('!!! backup_destination is NOT present in backup results !!!');
-    mtrace('Complete backup results:');
-    mtrace(print_r($results, true));
+            if ($file instanceof \stored_file) {
+                mtrace('backup_destination is a stored_file.');
+                mtrace('Filename: ' . $file->get_filename());
+                mtrace('Filesize: ' . $file->get_filesize());
+                mtrace('Content hash: ' . $file->get_contenthash());
+                mtrace('Component: ' . $file->get_component());
+                mtrace('File area: ' . $file->get_filearea());
+                mtrace('Item ID: ' . $file->get_itemid());
+            } else {
+                mtrace('WARNING: backup_destination is not a stored_file.');
+                mtrace('Actual type: ' . get_debug_type($file));
+            }
+        } else {
+            mtrace('!!! backup_destination is NOT present in backup results !!!');
+            mtrace('Complete backup results:');
+            mtrace(print_r($results, true));
 
-    $bc->destroy();
-    unset($bc);
+            $bc->destroy();
+            unset($bc);
 
-    throw new \moodle_exception(get_string('errornobackup', 'tool_lifecycle'));
-}
+            throw new \moodle_exception(get_string('errornobackup', 'tool_lifecycle'));
+        }
 
-// Copy backup file to target directory.
-$targetfile = $path . DIRECTORY_SEPARATOR . $archivefile;
+        // Copy backup file to target directory.
+        $targetfile = $path . DIRECTORY_SEPARATOR . $archivefile;
 
-mtrace('Target backup file: ' . $targetfile);
-mtrace('Copying backup file...');
+        mtrace('Target backup file: ' . $targetfile);
+        mtrace('Copying backup file...');
 
-try {
-    $file->copy_content_to($targetfile);
-    mtrace('Backup file copied successfully.');
-} catch (\Throwable $e) {
-    mtrace('!!! ERROR WHILE COPYING BACKUP FILE !!!');
-    mtrace('Exception class: ' . get_class($e));
-    mtrace('Exception message: ' . $e->getMessage());
-    mtrace('Exception file: ' . $e->getFile());
-    mtrace('Exception line: ' . $e->getLine());
-    mtrace('Stack trace:');
-    mtrace($e->getTraceAsString());
+        try {
+            $file->copy_content_to($targetfile);
+            mtrace('Backup file copied successfully.');
+        } catch (\Throwable $e) {
+            mtrace('!!! ERROR WHILE COPYING BACKUP FILE !!!');
+            mtrace('Exception class: ' . get_class($e));
+            mtrace('Exception message: ' . $e->getMessage());
+            mtrace('Exception file: ' . $e->getFile());
+            mtrace('Exception line: ' . $e->getLine());
+            mtrace('Stack trace:');
+            mtrace($e->getTraceAsString());
 
-    $bc->destroy();
-    unset($bc);
+            $bc->destroy();
+            unset($bc);
 
-    throw $e;
-}
+            throw $e;
+        }
 
-// Check resulting file.
-mtrace('Checking whether backup file was created...');
+        // Check resulting file.
+        mtrace('Checking whether backup file was created...');
 
-if (file_exists($targetfile)) {
-    mtrace('Backup file exists.');
-    mtrace('Backup file size: ' . filesize($targetfile) . ' bytes.');
-} else {
-    mtrace('!!! ERROR: Backup file does NOT exist after copy_content_to() !!!');
+        if (file_exists($targetfile)) {
+            mtrace('Backup file exists.');
+            mtrace('Backup file size: ' . filesize($targetfile) . ' bytes.');
+        } else {
+            mtrace('!!! ERROR: Backup file does NOT exist after copy_content_to() !!!');
 
-    $bc->destroy();
-    unset($bc);
+            $bc->destroy();
+            unset($bc);
 
-    throw new \moodle_exception(get_string('errornobackup', 'tool_lifecycle'));
-}
+            throw new \moodle_exception(get_string('errornobackup', 'tool_lifecycle'));
+        }
 
-// Delete temporary stored file.
-mtrace('Deleting temporary stored backup file...');
+        // Delete temporary stored file.
+        mtrace('Deleting temporary stored backup file...');
 
-try {
-    $file->delete();
-    mtrace('Temporary stored backup file deleted.');
-} catch (\Throwable $e) {
-    mtrace('WARNING: Could not delete temporary stored backup file.');
-    mtrace('Exception: ' . $e->getMessage());
-}
+        try {
+            $file->delete();
+            mtrace('Temporary stored backup file deleted.');
+        } catch (\Throwable $e) {
+            mtrace('WARNING: Could not delete temporary stored backup file.');
+            mtrace('Exception: ' . $e->getMessage());
+        }
 
-// Destroy backup controller.
-mtrace('Destroying backup controller...');
+        // Destroy backup controller.
+        mtrace('Destroying backup controller...');
 
-$bc->destroy();
-unset($bc);
+        $bc->destroy();
+        unset($bc);
 
-mtrace('Backup controller destroyed.');
+        mtrace('Backup controller destroyed.');
 
-mtrace('=== LIFECYCLE COURSE BACKUP END ===');
+        mtrace('=== LIFECYCLE COURSE BACKUP END ===');
 
         $record->backupfile = $archivefile;
         $record->backupcreated = time();
