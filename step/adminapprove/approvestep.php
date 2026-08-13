@@ -151,7 +151,8 @@ if ($action) {
         }
     }
 
-    redirect($PAGE->url, $message);
+    $url = new \moodle_url("/admin/tool/lifecycle/step/adminapprove/index.php");
+    redirect($url, $message);
 }
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');

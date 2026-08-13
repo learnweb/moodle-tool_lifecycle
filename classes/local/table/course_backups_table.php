@@ -170,7 +170,7 @@ class course_backups_table extends \table_sql {
             $out = format_string($row->coursefullname);
         }
         if ($row->coursefullname != $row->courseshortname) {
-            $out .= \html_writer::div(format_string($row->courseshortname), 'text-info');
+            $out .= \html_writer::div(format_string($row->courseshortname));
         }
         return $out;
     }
