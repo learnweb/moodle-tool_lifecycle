@@ -231,7 +231,6 @@ class processor {
                 $course = get_course($process->courseid);
 
                 if ($process->stepindex == 0) {
-                    mtrace("Stepindex 0 : $course->id", $eol);
                     if (!process_manager::proceed_process($process)) {
                         // Happens for a workflow with no step.
                         delayed_courses_manager::set_course_delayed_for_workflow($course->id,
