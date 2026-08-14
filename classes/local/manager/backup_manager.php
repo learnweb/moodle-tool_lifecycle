@@ -53,7 +53,12 @@ class backup_manager {
         global $CFG, $DB;
 
         // Get setting backupmode for the step.
-        $backupmode = settings_manager::get_settings($stepid, settings_type::STEP)['backupmode'] ?? 50;
+        if (step_manager::get_step_instance($stepid)) {
+            $backupmode = settings_manager::get_settings($stepid,
+                settings_type::STEP)['backupmode'] ?? \backup::MODE_AUTOMATED;
+        } else {
+            $backupmode = \backup::MODE_AUTOMATED;
+        }
 
         $course = get_course($courseid);
         $record = new \stdClass();
