@@ -17,7 +17,7 @@
 /**
  * Messages
  *
- * @package    lifecyclestep_opencast
+ * @package    tool_lifecycle
  * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,13 +25,13 @@
 defined('MOODLE_INTERNAL') || die();
 
 $messageproviders = [
-    'report' => [
+    'step_opencast_report' => [
         'defaults' => [
-            'git pu' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
         ],
     ],
-    'error' => [
+    'step_opencast_error' => [
         'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
