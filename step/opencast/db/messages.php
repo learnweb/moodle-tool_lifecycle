@@ -25,13 +25,13 @@
 defined('MOODLE_INTERNAL') || die();
 
 $messageproviders = [
-    'step_opencast_report' => [
+    'report' => [
         'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
         ],
     ],
-    'step_opencast_error' => [
+    'error' => [
         'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,

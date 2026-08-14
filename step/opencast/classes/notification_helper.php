@@ -62,7 +62,7 @@ class notification_helper {
         $body = get_string('notifycourseprocessed_body', 'lifecyclestep_opencast', $a);
 
         $admin = get_admin();
-        $this->send_message('step_opencast_error', $admin, $subject, $body);
+        $this->send_message('error', $admin, $subject, $body);
     }
 
     /**
@@ -94,7 +94,7 @@ class notification_helper {
         $body = get_string('errorfailedworkflow_body', 'lifecyclestep_opencast', $a);
 
         $admin = get_admin();
-        $this->send_message('step_opencast_error', $admin, $subject, $body);
+        $this->send_message('error', $admin, $subject, $body);
     }
 
     /**
@@ -126,7 +126,7 @@ class notification_helper {
         $body = get_string('errorexception_body', 'lifecyclestep_opencast', $a);
 
         $admin = get_admin();
-        $this->send_message('step_opencast_error', $admin, $subject, $body);
+        $this->send_message('error', $admin, $subject, $body);
     }
 
     /**
@@ -156,7 +156,7 @@ class notification_helper {
         $body = get_string('errorworkflownotexists_body', 'lifecyclestep_opencast', $a);
 
         $admin = get_admin();
-        $this->send_message('step_opencast_error', $admin, $subject, $body);
+        $this->send_message('error', $admin, $subject, $body);
     }
 
     /**
@@ -169,7 +169,7 @@ class notification_helper {
         $body = get_string('report_body', 'lifecyclestep_opencast', $info);
 
         $admin = get_admin();
-        $this->send_message('step_opencast_report', $admin, $subject, $body);
+        $this->send_message('report', $admin, $subject, $body);
     }
 
     /**
