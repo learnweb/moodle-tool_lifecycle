@@ -107,3 +107,5 @@ $string['notifycourseprocessed_subj'] = 'Life Cycle Opencast step course process
 $string['plugindescription'] = 'Manages what to do with Opencast videos when the step conditions are met!';
 $string['pluginname'] = 'Opencast step';
 $string['privacy:metadata'] = 'The "Opencast step" subplugin of the admin tool "Course Life Cycle" does not store any personal data.';
+$string['report_body'] = 'Report: <br><br> {$a}';
+$string['report_subj'] = 'Opencast-Step – Processing report';
