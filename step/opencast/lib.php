@@ -708,14 +708,7 @@ class opencast extends libbase {
         }
 
         // At this point, all videos have been processed and the step is done.
-        if ($ocstepsettings['confirmationmode'] ?? false) {
-            if (empty($stepresponse)) {
-                $stepresponse[self::RESPONSE_STATUS] = step_response::PROCEED;
-            }
-            return $stepresponse;
-        } else {
-            return step_response::proceed();
-        }
+        return step_response::proceed();
     }
 
     /**
