@@ -17,7 +17,7 @@
 /**
  * Messages
  *
- * @package    tool_lifecycle
+ * @package    lifecyclestep_opencast
  * @copyright  2026 Thomas Niedermaier University Münster
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
