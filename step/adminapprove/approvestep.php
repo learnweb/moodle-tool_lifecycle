@@ -162,6 +162,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('adminapprovals',
         'lifecyclestep_adminapprove') . ': ' . get_string('step', 'tool_lifecycle') . ' ' . $step->instancename;
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabparams = new stdClass();
 $tabparams->approvelink = true;
