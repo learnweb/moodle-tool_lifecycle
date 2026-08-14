@@ -433,9 +433,9 @@ class process_manager {
             unset($process->errortrace);
             unset($process->errorhash);
             unset($process->errortimecreated);
-            // In case something went wrong before during deleting an error so that the process is already active again.
+            // Push back to process table only if no other course process exists.
             if (!$processid = $DB->get_field('tool_lifecycle_process', 'id',
-                ['courseid' => $process->courseid, 'workflowid' => $process->workflowid])) {
+                ['courseid' => $process->courseid])) {
                 $process->id = $DB->insert_record('tool_lifecycle_process', $process, true);
             } else {
                 $process->id = $processid;
