@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 $messageproviders = [
     'report' => [
         'defaults' => [
-            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'git pu' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
         ],
     ],

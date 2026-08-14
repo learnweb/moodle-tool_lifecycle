@@ -106,6 +106,7 @@ class createbackup extends libbase {
     public function instance_settings() {
         return [
             new instance_setting('status', PARAM_INT, true),
+            new instance_setting('backupmode', PARAM_INT, true),
             new instance_setting('maximumbackupspercron', PARAM_INT, true),
         ];
     }
@@ -117,13 +118,8 @@ class createbackup extends libbase {
      * @throws \coding_exception
      */
     public function extend_add_instance_form_definition($mform) {
-        $elementname = 'backupsettings';
-        $backupsettings = new stdClass;
-        $backupsettings->url = (new \moodle_url('/admin/settings.php', ['section' => 'automated']))->out();
-        $backupsettings->label = get_string('automatedsetup', 'backup');
-        $mform->addElement('static', $elementname, get_string('backupsettings', 'lifecyclestep_createbackup'),
-            get_string('backupsettingsstatictext', 'lifecyclestep_createbackup', $backupsettings)
-        );
+
+        // Status of the step (on/off).
         $elementname = 'status';
         $options = [
             self::STEPACTIVE => get_string('active', 'tool_lifecycle'),
@@ -133,6 +129,19 @@ class createbackup extends libbase {
         $mform->addHelpButton($elementname, 'stopped', 'tool_lifecycle');
         $mform->setType($elementname, PARAM_INT);
         $mform->setDefault($elementname, self::STEPACTIVE);
+
+        // Backupmode.
+        $elementname = 'backupmode';
+        $options = [
+            \backup::MODE_AUTOMATED => get_string('automated', 'lifecyclestep_createbackup'),
+            \backup::MODE_GENERAL => get_string('general', 'lifecyclestep_createbackup'),
+        ];
+        $mform->addElement('select', $elementname, get_string('backupmode',
+            'lifecyclestep_createbackup'), $options);
+        $mform->addHelpButton($elementname, 'backupmode', 'lifecyclestep_createbackup');
+        $mform->setType($elementname, PARAM_INT);
+        $mform->setDefault($elementname, \backup::MODE_AUTOMATED);
+
         // Maximum courses processed by a single task run.
         $elementname = 'maximumbackupspercron';
         $mform->addElement('text', $elementname,

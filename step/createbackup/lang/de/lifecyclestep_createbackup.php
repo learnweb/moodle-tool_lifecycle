@@ -22,11 +22,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['backupsettings'] = 'Backup Einstellungen';
-$string['backupsettingsstatictext'] = 'Die Konfiguration der erstellten Backups wird durch die Einstellungen für automatisierte Backups gesteuert: <a href="{$a->url}">{$a->label}</a>';
+$string['automated'] = 'Automatisiert';
+$string['backupmode'] = 'Backup Modus';
+$string['backupmode_help'] = 'AUTOMATED: Die Kurssicherung wird im Rahmen der automatischen Kurssicherungen durchgeführt. GENERAL: Eine Adhoc-Task zur Archivierung der Kurssicherung wird erstellt.';
+$string['backupmodestatictext'] = 'Die Konfiguration für automatische Kurssicherungen finden Sie hier:';
 $string['coursebackups'] = 'Kurs-Sicherungen';
 $string['deleteallbuttonlabel'] = 'Alle löschen';
 $string['deleteselectedbuttonlabel'] = 'Selektierte löschen';
+$string['general'] = 'Standard - Adhoc-Task';
 $string['maximumbackupspercron'] = 'Maximale Anzahl an Sicherungen per cron';
 $string['nobackups'] = 'Keine Backups gefunden.';
 $string['plugindescription'] = 'Stößt ein Backup der getriggerten Kurse an.';
