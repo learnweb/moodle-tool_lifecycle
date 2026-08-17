@@ -160,6 +160,19 @@ class notification_helper {
     }
 
     /**
+     * Notifies admins report.
+     *
+     * @param string $info the course object.
+     */
+    public function notify_report($info) {
+        $subject = get_string('report_subj', 'lifecyclestep_opencast');
+        $body = get_string('report_body', 'lifecyclestep_opencast', $info);
+
+        $admin = get_admin();
+        $this->send_message('report', $admin, $subject, $body);
+    }
+
+    /**
      * Sends moodle internal message.
      *
      * @param string $messagetype Message type
@@ -171,7 +184,7 @@ class notification_helper {
     private function send_message($messagetype, $touser, $subject, $body, $format = FORMAT_PLAIN) {
         $message = new \core\message\message();
         $message->courseid = SITEID;
-        $message->component = 'tool_opencast';
+        $message->component = 'lifecyclestep_opencast';
         $message->name = $messagetype;
         $message->userfrom = \core_user::get_user(\core_user::NOREPLY_USER);
         $message->userto = $touser;

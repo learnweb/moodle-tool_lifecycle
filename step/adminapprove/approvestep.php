@@ -108,6 +108,7 @@ if ($mform->is_validated()) {
 if ($action) {
     require_sesskey();
     $message = "";
+    $redurl = $PAGE->url;
 
     if ($action == PROCEED_ALL || $action == ROLLBACK_ALL) {
         $subselect = 'SELECT id FROM {tool_lifecycle_process} WHERE workflowid = :wfid AND stepindex = :stepindex';
@@ -133,6 +134,9 @@ if ($action) {
         } else if ($action == ROLLBACK_ALL) {
             $message = get_string('allstepapprovalsrollback', 'lifecyclestep_adminapprove', $a);
         }
+
+        $redurl = new \moodle_url("/admin/tool/lifecycle/step/adminapprove/index.php");
+
     } else if ($action == PROCEED || $action == ROLLBACK) {
         if (is_array($ids) && count($ids) > 0 && ($action == PROCEED || $action == ROLLBACK)) {
             [$insql, $inparams] = $DB->get_in_or_equal($ids);
@@ -151,13 +155,14 @@ if ($action) {
         }
     }
 
-    redirect($PAGE->url, $message);
+    redirect($redurl, $message);
 }
 
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('adminapprovals',
         'lifecyclestep_adminapprove') . ': ' . get_string('step', 'tool_lifecycle') . ' ' . $step->instancename;
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabparams = new stdClass();
 $tabparams->approvelink = true;

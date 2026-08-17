@@ -172,6 +172,7 @@ $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".
     get_string('workflowoverview', 'tool_lifecycle').": ". $workflow->title;
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 
 $tabparams = new stdClass();

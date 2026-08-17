@@ -65,5 +65,6 @@ class urls {
     const SHOWCASE = '/admin/tool/lifecycle/workflowshowcase.php';
     /** @var string run page for execute the scheduled lifecycle task ad hoc */
     const RUN = '/admin/tool/lifecycle/run.php?id=run';
-
+    /** @var string page with a protocol of lifecycle course deletions */
+    const COURSEDELETIONS = '/admin/tool/lifecycle/coursedeletions.php';
 }

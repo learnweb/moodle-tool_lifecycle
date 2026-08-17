@@ -58,8 +58,9 @@ class processor {
 
     /**
      * Processes the trigger plugins for all relevant courses.
+     * @param int $wfid Id of the current workflow
      */
-    public function call_trigger() {
+    public function call_trigger($wfid = null) {
         global $FULLSCRIPT, $USER;
 
         $automatictest = (defined('PHPUNIT_TEST') && PHPUNIT_TEST) ||
@@ -76,12 +77,20 @@ class processor {
 
         // Print debug message if this is not a behat test.
         if (!$automatictest) {
-            mtrace(get_string ('active_automatic_workflows_heading', 'tool_lifecycle').
-                ": ".count($activeworkflows), $eol);
+            if (!$wfid) {
+                mtrace(get_string ('active_automatic_workflows_heading', 'tool_lifecycle').
+                    ": ".count($activeworkflows), $eol);
+            }
+
         }
 
         // Walk through the active workflows.
         foreach ($activeworkflows as $workflow) {
+
+            if ($wfid && $wfid != $workflow->id) {
+                continue;
+            }
+
             $countcourses = 0;
             $counttriggered = 0;
             $countexcluded = 0;
@@ -183,8 +192,9 @@ class processor {
 
     /**
      * Calls the process_course() method of each step submodule currently responsible for a given course.
+     * @param int $wfid Id of the current workflow
      */
-    public function process_courses() {
+    public function process_courses($wfid = null) {
         global $FULLSCRIPT, $CFG;
 
         /* Fix 'delete & backup (other) course aftwerwards' error, which is created by moodle core issue
@@ -204,12 +214,18 @@ class processor {
             defined('BEHAT_SITE_RUNNING');
 
         if (!$automatictest) {
-            mtrace(get_string ('lifecycle_task', 'tool_lifecycle'), $eol);
+            if ($wfid) {
+                $workflow = workflow_manager::get_workflow($wfid);
+                $a = $workflow->title;
+                mtrace(get_string('lifecycle_task_wf', 'tool_lifecycle', $a), $eol);
+            } else {
+                mtrace(get_string('lifecycle_task_all', 'tool_lifecycle'), $eol);
+            }
         }
         $coursesprocessed = 0;
         $coursesprocesserrors = 0;
 
-        foreach (process_manager::get_processes() as $process) {
+        foreach (process_manager::get_processes($wfid) as $process) {
             while (true) {
 
                 $course = get_course($process->courseid);

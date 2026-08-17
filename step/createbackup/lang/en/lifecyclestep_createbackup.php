@@ -22,12 +22,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['automated'] = 'Automated';
+$string['backupmode'] = 'Backup Mode';
+$string['backupmode_help'] = 'AUTOMATED: The backup is controlled by the automated backup settings. GENERAL: An Ad-hoc-task for creating a backup for archival purposes is build.';
+$string['backupmodestatictext'] = 'You find the configuration of the automated backup settings here:';
 $string['coursebackups'] = 'Course Backups';
 $string['deleteallbuttonlabel'] = 'Delete all';
 $string['deleteselectedbuttonlabel'] = 'Delete selected';
+$string['general'] = 'General';
 $string['maximumbackupspercron'] = 'Maximum number of backups per cron';
 $string['nobackups'] = 'No backups found.';
 $string['plugindescription'] = 'Initiates a backup of the triggered courses.';
 $string['pluginname'] = 'Create Backup Step';
 $string['privacy:metadata'] = 'This subplugin does not store any personal data.';
-

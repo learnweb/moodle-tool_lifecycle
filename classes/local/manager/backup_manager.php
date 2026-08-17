@@ -23,6 +23,8 @@
  */
 namespace tool_lifecycle\local\manager;
 
+use tool_lifecycle\settings_type;
+
 defined('MOODLE_INTERNAL') || die();
 
 // Get the necessary files to perform backup and restore.
@@ -49,6 +51,15 @@ class backup_manager {
      */
     public static function create_course_backup($courseid, $stepid) {
         global $CFG, $DB;
+
+        // Get setting backupmode for the step.
+        if (step_manager::get_step_instance($stepid)) {
+            $backupmode = settings_manager::get_settings($stepid,
+                settings_type::STEP)['backupmode'] ?? \backup::MODE_AUTOMATED;
+        } else {
+            $backupmode = \backup::MODE_AUTOMATED;
+        }
+
         $course = get_course($courseid);
         $record = new \stdClass();
         $record->courseid = $courseid;
@@ -73,7 +84,7 @@ class backup_manager {
         }
         // Perform Backup.
         $bc = new \backup_controller(\backup::TYPE_1COURSE, $courseid, \backup::FORMAT_MOODLE,
-            \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, get_admin()->id);
+            \backup::INTERACTIVE_NO, $backupmode, get_admin()->id);
         $bc->execute_plan(); // Execute backup.
         $results = $bc->get_results(); // Get the file information needed.
         /* @var $file \stored_file instance of the backup file*/

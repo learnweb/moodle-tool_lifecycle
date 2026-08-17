@@ -715,5 +715,33 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026012003, 'tool', 'lifecycle');
     }
 
+    if ($oldversion < 2026060101) {
+
+        // Rename step opencast table.
+        if ($dbman->table_exists('lifecyclestep_opencast_process_status')) {
+            $oldtable = new xmldb_table('lifecyclestep_opencast_process_status');
+            $dbman->rename_table($oldtable, 'tool_lifecycle_opencast_process_status');
+        } else {
+            if (!$dbman->table_exists('tool_lifecycle_opencast_process_status')) {
+                $table = new xmldb_table('tool_lifecycle_opencast_process_status');
+                // Adding fields to table tool_lifecycle_opencast_process_status.
+                $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+                $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+                $table->add_field('processid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+                $table->add_field('stepid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+                $table->add_field('status', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+                $table->add_field('decision', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+                $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+                // Adding keys to table tool_lifecycle_opencast_process_status.
+                $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+                $dbman->create_table($table);
+            }
+        }
+
+        // Lifecycle savepoint reached.
+        upgrade_plugin_savepoint(true, 2026060101, 'tool', 'lifecycle');
+    }
+
     return true;
 }

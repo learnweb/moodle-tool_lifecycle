@@ -48,23 +48,25 @@ class active_processes_table extends \table_sql {
         global $PAGE, $DB;
         $this->set_attribute('class', $this->attributes['class'] . ' lifecycle-table ' . $uniqueid);
 
-        $where = ['TRUE'];
+        $where = [];
         $params = [];
+        $separator = ' AND ';
 
         if ($filterdata) {
-            if ($filterdata->shortname) {
-                $where[] = $DB->sql_like('c.shortname', ':shortname', false, false);
-                $params['shortname'] = '%' . $DB->sql_like_escape($filterdata->shortname) . '%';
-            }
-
-            if ($filterdata->fullname) {
-                $where[] = $DB->sql_like('c.fullname', ':fullname', false, false);
-                $params['fullname'] = '%' . $DB->sql_like_escape($filterdata->fullname) . '%';
-            }
 
             if ($filterdata->courseid) {
-                $where[] = 'c.courseid = :courseid';
+                $where[] = 'c.id = :courseid';
                 $params['courseid'] = $filterdata->courseid;
+            } else {
+                if ($filterdata->shortname) {
+                    $where[] = $DB->sql_like('c.shortname', ':shortname', false, false);
+                    $params['shortname'] = '%' . $DB->sql_like_escape($filterdata->shortname) . '%';
+                }
+                if ($filterdata->fullname) {
+                    $where[] = $DB->sql_like('c.fullname', ':fullname', false, false);
+                    $params['fullname'] = '%' . $DB->sql_like_escape($filterdata->fullname) . '%';
+                }
+                $separator = ' OR ';
             }
         }
 
@@ -80,7 +82,7 @@ class active_processes_table extends \table_sql {
             'JOIN {course} c ON p.courseid = c.id ' .
             'JOIN {tool_lifecycle_step} s ON p.workflowid = s.workflowid AND p.stepindex = s.sortindex ' .
             'JOIN {tool_lifecycle_workflow} w ON p.workflowid = w.id',
-            join(' AND ', $where), $params);
+            join($separator, $where), $params);
         $this->define_baseurl($PAGE->url);
         $this->define_columns(['courseid', 'courseshortname', 'coursefullname', 'workflow', 'instancename', 'tools']);
         $this->define_headers([
@@ -92,6 +94,9 @@ class active_processes_table extends \table_sql {
             get_string('tools', 'tool_lifecycle'), ]);
 
         $this->column_nosort = ['tools'];
+        if (false && debugging('', DEBUG_DEVELOPER, false)) {
+            echo \html_writer::div(var_dump($this->sql));
+        }
     }
 
     /**

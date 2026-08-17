@@ -47,9 +47,15 @@ $cachekey = 'activeprocesses_filter';
 $cache = cache::make('tool_lifecycle', 'mformdata');
 if ($search = optional_param('search', null, PARAM_RAW)) {
     $obj = new stdClass();
-    $obj->fullname = $search;
-    $obj->courseid = null;
-    $obj->shortname = null;
+    if (is_numeric($search)) {
+        $obj->courseid = $search;
+        $obj->shortname = null;
+        $obj->fullname = null;
+    } else {
+        $obj->courseid = null;
+        $obj->shortname = $search;
+        $obj->fullname = $search;
+    }
     $cache->set($cachekey, $obj);
     redirect($PAGE->url);
 }
@@ -69,6 +75,7 @@ if ($mform->is_cancelled()) {
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('find_course_list_header', 'tool_lifecycle');
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabparams = new stdClass();
 $tabparams->activelink = true;

@@ -73,12 +73,14 @@ if ($workflowid) {
         // Workflow created, redirect to workflow detail page.
         redirect(new moodle_url(urls::WORKFLOW_DETAILS, ['wf' => $newworkflow->id]));
     }
+    $PAGE->set_heading($SITE->fullname);
     echo $renderer->header($heading);
     $tabrow = tabs::get_tabrow();
     $renderer->tabs($tabrow, '');
     $form->display();
     echo $renderer->footer();
 } else {
+    $PAGE->set_heading($SITE->fullname);
     echo $renderer->header($heading);
     $tabrow = tabs::get_tabrow();
     $renderer->tabs($tabrow, '');

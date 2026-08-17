@@ -86,10 +86,11 @@ class process_manager {
 
     /**
      * Returns all current active processes.
+     * @param int $wfid Id of the current workflow*
      * @return process[]
      * @throws \dml_exception
      */
-    public static function get_processes() {
+    public static function get_processes($wfid = null) {
         global $DB;
         // Detect processes of not existing courses and move them to the proc_error table.
         $processeswithoutcourse = $DB->get_fieldset_select('tool_lifecycle_process', 'id',
@@ -102,6 +103,9 @@ class process_manager {
         $sql = "SELECT p.*
                 FROM {tool_lifecycle_process} p INNER JOIN {tool_lifecycle_workflow} w ON p.workflowid = w.id
                 WHERE w.timedeactive IS NULL";
+        if (is_number($wfid)) {
+            $sql .= " AND p.workflowid = " . $wfid;
+        }
         $records = $DB->get_records_sql($sql);
         $processes = [];
         foreach ($records as $record) {
@@ -429,9 +433,9 @@ class process_manager {
             unset($process->errortrace);
             unset($process->errorhash);
             unset($process->errortimecreated);
-            // In case something went wrong before during deleting an error so that the process is already active again.
+            // Push back to process table only if no other course process exists.
             if (!$processid = $DB->get_field('tool_lifecycle_process', 'id',
-                ['courseid' => $process->courseid, 'workflowid' => $process->workflowid])) {
+                ['courseid' => $process->courseid])) {
                 $process->id = $DB->insert_record('tool_lifecycle_process', $process, true);
             } else {
                 $process->id = $processid;

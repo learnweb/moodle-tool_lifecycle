@@ -89,5 +89,5 @@ if ($hassiteconfig) {
         get_string('config_forum_desc', 'tool_lifecycle'),
         null, PARAM_INT));
 
-    $ADMIN->add('tools', $settings);
+    $ADMIN->add('courses', $settings);
 }

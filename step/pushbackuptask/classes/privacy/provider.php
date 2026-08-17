@@ -14,19 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace lifecyclestep_pushbackuptask\privacy;
+
+use core_privacy\local\metadata\null_provider;
+
 /**
- * Admin tool "Course Life Cycle" - Subplugin "Opencast step" - Version file
+ * Privacy subsystem implementation for lifecyclestep_pushbackuptask.
  *
- * @package    lifecyclestep_opencast
- * @copyright  2022 Alexander Bias, lern.link GmbH <alexander.bias@lernlink.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     lifecyclestep_pushbackuptask
+ * @copyright   2024 Johannes Burk (HTW Berlin)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class provider implements null_provider {
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->component = 'lifecyclestep_opencast';
-$plugin->version = 2026031801;
-$plugin->release = 'v5.0-r2';
-$plugin->requires = 2024100700;
-$plugin->supported = [500, 501];
-$plugin->maturity = MATURITY_STABLE;
+    /**
+     * Get the language string identifier explaining why this plugin stores no data.
+     *
+     * @return string the reason
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}

@@ -44,6 +44,7 @@ $PAGE->set_pagelayout('admin');
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('runtask', 'tool_lifecycle');
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $id = 'settings';
@@ -52,7 +53,7 @@ $renderer->tabs($tabrow, $id);
 echo \html_writer::start_div('');
 
 $task = new lifecycle_task();
-$task->execute();
+$task->execute($workflowid);
 
 echo \html_writer::end_div();
 

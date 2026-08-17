@@ -113,10 +113,12 @@ $PAGE->set_pagelayout('admin');
 
 // Get selected filter form options if there are any.
 $workflow = optional_param('workflow', 0, PARAM_INT);
-$course = optional_param('course', 0, PARAM_INT);
 $step = optional_param('step', 0, PARAM_INT);
+$course = optional_param('course', 0, PARAM_INT);
+$courseid = optional_param('courseid', 0, PARAM_INT);
 // Load filter form.
-$mform = new form_errors_filter($PAGE->url, ['workflow' => $workflow, 'course' => $course, 'step' => $step]);
+$mform = new form_errors_filter($PAGE->url, ['workflow' => $workflow, 'step' => $step,
+    'course' => $course, 'courseid' => $courseid]);
 
 // Cache handling.
 $cache = cache::make('tool_lifecycle', 'mformdata');
@@ -135,6 +137,7 @@ if ($mform->is_cancelled()) {
 $renderer = $PAGE->get_renderer('tool_lifecycle');
 
 $heading = get_string('pluginname', 'tool_lifecycle')." / ".get_string('process_errors_header', 'tool_lifecycle');
+$PAGE->set_heading($SITE->fullname);
 echo $renderer->header($heading);
 $tabrow = tabs::get_tabrow();
 $renderer->tabs($tabrow, 'errors');

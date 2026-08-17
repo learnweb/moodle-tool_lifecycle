@@ -1,9 +1,33 @@
 CHANGELOG
 =========
 
+5.2.1 (2026-08-17)
+------------------
+* [FEATURE] Opencast step: new setting confirmation mode
+* [FEATURE] Course search: search only for id if search item is numeric
+* [FEATURE] Introduce first simple table of course deletions
+* [FEATURE] Introduce course deletion log list
+* [FEATURE] Course deletions table: sort by timedelete descending default
+* [FEATURE] Lifecycle pages: add site fullname to page header
+* [FEATURE] Website Administration: Move Lifecycle from Tools to Courses
+* [FEATURE] Errors page: add search for course id
+* [FEATURE] run.php called by workflowoverview: execute processes of the current workflow only
+* [FEATURE] Step adminapprove: redirect to index.php after proceed/rollback all
+* [FEATURE] Step createbackup: make backup mode an instance setting
+* [FIXED] Add privacy provider for step_pushbackuptask subplugin (PR #307)
+* [FIXED] Email step: add new table with userid field to privacy provider (PR #309)
+* [FIXED] Fix course search sql error
+* [FIXED] Opencast step: add message providers in/and message.php
+* [FIXED] Push back course from proc_error to proc table: fix double entry error
+* [FIXED] Fix showcase warning
+* [FIXED] Opencast step:add missing lang strings
+* [FIXED] Opencast step: process_ocvideos: return step_response proceed
+
+
 5.2.0 (2026-06-01)
 ------------------
 * Moodle 5.2 compatible version
+
 
 5.1.5 (v5.1-r6, 2026-05-20)
 ---------------------------
