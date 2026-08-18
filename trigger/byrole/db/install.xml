@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <XMLDB PATH="admin/tool/lifecycle/trigger/byrole/db" VERSION="2019082300" COMMENT="XMLDB file for Moodle lifecycle_trigger/byrole"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+       xsi:noNamespaceSchemaLocation="../../../../../../lib/xmldb/xmldb.xsd">
     <TABLES>
         <TABLE NAME="lifecycletrigger_byrole" COMMENT="table containing all mails which still have to be sent">
             <FIELDS>
