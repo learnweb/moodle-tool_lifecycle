@@ -1,16 +1,10 @@
 # Course Life Cycle (moodle-tool_lifecycle)
 
-[![Build Status](https://travis-ci.org/learnweb/moodle-tool_lifecycle.svg?branch=master)](https://travis-ci.org/learnweb/moodle-tool_lifecycle)
 [![codecov](https://codecov.io/gh/learnweb/moodle-tool_lifecycle/branch/master/graph/badge.svg)](https://codecov.io/gh/learnweb/moodle-tool_lifecycle)
 
-[Presentation Video Moodle Moot 2022](https://www.youtube.com/watch?v=7IduhrBMve4) | 
-[Slides](https://moodle.academy/pluginfile.php/42164/mod_data/content/2470/04-9-Finally_%20Deleting%20Courses%20Automatically.pdf)
+You find the documentation for this Moodle community plugin in the wiki section of this github repository!
 
-This plugin provides a modular framework, similar to a workflow engine, which allows the to execute recurring tasks within moodle associated with courses. 
-Possible use cases are (not limited to):
-   - Deleting courses at end of life (including asking teachers for permission).
-   - Doing a rollover at the end of a semester.
-   - Automatically setting an end date for courses.
+Course Life Cycle is a Moodle plugin that enables the automatic processing and removal of courses during and after their active period. It offers a wide range of selection criteria and processing steps for this purpose.
    
 To be adaptable to the needs of different institutions the plugin provides two subplugin types:
 
