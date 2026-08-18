@@ -21,10 +21,6 @@ Installation
 ============
 This is an admin plugin and should go into ``admin/tool/lifecycle``.
 
-In the current Lifecycle version 4.5.5 (v4.5-r6), it may be necessary to delete the old directory admin/tool/lifecycle and
-clone the new version with Git. This should be possible without any issues, as no user data is stored in that directory.  ==> But be aware: If you are using the customfieldsemester trigger or other special triggers and steps, or if you have made local
-changes to the included triggers or steps you would need to save them before installation and copy them into the new directory afterwards.
-
 Obtain this plugin from https://moodle.org/plugins/view/tool_lifecycle.
 
 Moodle version
