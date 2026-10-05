@@ -113,6 +113,7 @@ final class persist_step_test extends \advanced_testcase {
             'instance3',
             'subpluginname',
             $this->workflow->id);
+        $_POST['sesskey'] = sesskey();
         // Delete first step.
         step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step1->id, $this->workflow->id);
         $step1 = step_manager::get_step_instance($step1->id);
@@ -129,6 +130,23 @@ final class persist_step_test extends \advanced_testcase {
         $this->assertEquals(2, $step2->sortindex);
     }
 
+    #[\PHPUnit\Framework\Attributes\Group('baseline')]
+    /**
+     * Test that a step action without sesskey is rejected and leaves the step untouched.
+     * @covers \tool_lifecycle\local\manager\step_manager
+     */
+    public function test_remove_step_requires_sesskey(): void {
+        $step = $this->generator->create_step('instance1', 'subpluginname', $this->workflow->id);
+
+        try {
+            step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step->id, $this->workflow->id);
+            $this->fail('Step action without sesskey was not rejected.');
+        } catch (\moodle_exception $e) {
+            $this->assertEquals('missingparam', $e->errorcode);
+        }
+        $this->assertNotNull(step_manager::get_step_instance($step->id));
+    }
+
     /**
      * Test that sortindizes are still created correctly, when some steps were already removed.
      * @covers \tool_lifecycle\local\manager\step_manager
@@ -142,6 +160,7 @@ final class persist_step_test extends \advanced_testcase {
             'instance2',
             'subpluginname',
             $this->workflow->id);
+        $_POST['sesskey'] = sesskey();
 
         // Delete first step.
         step_manager::handle_action(action::STEP_INSTANCE_DELETE, $step1->id, $this->workflow->id);
