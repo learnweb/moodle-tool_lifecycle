@@ -75,10 +75,11 @@ class duplicate extends libbase {
                     $course->visible,
                     []);
             } catch (\moodle_exception $e) {
-                if ($e->getCode() == 'shortnametaken') {
+                if ($e->errorcode === 'shortnametaken') {
                     process_data_manager::set_process_data($processid, $instanceid, self::PROC_DATA_COURSESHORTNAME, '');
                     return step_response::waiting();
                 }
+                throw $e;
             }
             return step_response::proceed();
         }
