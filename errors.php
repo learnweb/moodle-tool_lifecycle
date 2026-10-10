@@ -41,7 +41,7 @@ $PAGE->set_context($syscontext);
 // Action handling (delete, bulk-delete).
 $action = optional_param('action', null, PARAM_ALPHANUMEXT);
 if ($reportparam = optional_param('report', null, PARAM_TEXT)) {
-    $reportparam = explode("__", urldecode($reportparam));
+    $reportparam = explode("__", $reportparam);
 }
 if ($action) {
     $report = [];
@@ -144,7 +144,7 @@ $renderer->tabs($tabrow, 'errors');
 
 if ($reportparam) {
     foreach ($reportparam as $message) {
-        echo $message;
+        echo s($message);
     }
     echo '<br>';
 }

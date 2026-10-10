@@ -48,7 +48,7 @@ $courseid = optional_param('courseid', null, PARAM_INT);
 $bulkedit = optional_param('bulkedit', 0, PARAM_INT);
 $bulkactions = optional_param_array('bulkactions', [], PARAM_TEXT);
 if ($reportparam = optional_param('report', null, PARAM_TEXT)) {
-    $reportparam = explode("__", urldecode($reportparam));
+    $reportparam = explode("__", $reportparam);
 }
 
 $controller = new view_controller();
@@ -118,7 +118,7 @@ if ($filterform->is_cancelled()) {
 
 if ($reportparam) {
     foreach ($reportparam as $message) {
-        echo $message;
+        echo s($message);
     }
     echo '<br>';
 }
