@@ -233,7 +233,7 @@ class triggered_courses_table_workflow extends \table_sql {
     public function col_coursefullname($row) {
         $courselink = \html_writer::link(course_get_url($row->courseid),
             format_string($row->coursefullname), ['target' => '_blank']);
-        return $courselink . '<br><span class="secondary-info">' . $row->courseshortname . '</span>';
+        return $courselink . '<br><span class="secondary-info">' . format_string($row->courseshortname) . '</span>';
     }
 
     /**

@@ -281,6 +281,7 @@ class step_manager extends subplugin_manager {
      * @throws \dml_transaction_exception
      */
     public static function handle_action($action, $subpluginid, $workflowid) {
+        require_sesskey();
         $step = self::get_step_instance($subpluginid);
         if ($step && $step->workflowid == $workflowid ) {
             if (!workflow_manager::is_active($workflowid)) {

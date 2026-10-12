@@ -151,7 +151,7 @@ class opencast extends base_automatic {
         $ltitypes = lti_filter_get_types(false);
         $ltis = [];
         foreach ($ltitypes as $key => $type) {
-            $ltis[$key] = $type->name." (".$type->baseurl.")";
+            $ltis[$key] = s($type->name) . " (" . s($type->baseurl) . ")";
         }
         if ($ltis) {
             $mform->addElement('advcheckbox', 'lti',
@@ -192,7 +192,10 @@ class opencast extends base_automatic {
             $ltitoolshtml = "";
             foreach ($configuredtools as $key => $tool) {
                 if (in_array($key, $triggerltitools)) {
-                    $ltitoolshtml .= \html_writer::div($tool->name." (".$tool->baseurl.")", "badge badge-secondary mr-1");
+                    $ltitoolshtml .= \html_writer::div(
+                        s($tool->name) . " (" . s($tool->baseurl) . ")",
+                        "badge badge-secondary mr-1"
+                    );
                 }
             }
             $mform->insertElementBefore($mform->createElement(
