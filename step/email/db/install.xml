@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <XMLDB PATH="admin/tool/lifecycle/step/email/db" VERSION="2017052300" COMMENT="XMLDB file for Moodle lifecycle_step/email"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+    xsi:noNamespaceSchemaLocation="../../../../../../lib/xmldb/xmldb.xsd">
   <TABLES>
     <TABLE NAME="lifecyclestep_email" COMMENT="table containing all mails which still have to be sent">
       <FIELDS>

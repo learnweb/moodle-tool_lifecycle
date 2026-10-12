@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <XMLDB PATH="admin/tool/lifecycle/step/deletebackup/db" VERSION="20260123" COMMENT="XMLDB file for Moodle tool/lifecycle"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
+    xsi:noNamespaceSchemaLocation="../../../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
     <TABLE NAME="tool_lifecycle_deletebackup_log" COMMENT="Saves log data about course backup deletions.">

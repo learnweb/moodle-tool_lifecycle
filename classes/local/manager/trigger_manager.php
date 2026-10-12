@@ -295,6 +295,7 @@ class trigger_manager extends subplugin_manager {
      * @throws \dml_transaction_exception
      */
     public static function handle_action($action, $subpluginid, $workflowid) {
+        require_sesskey();
         $trigger = self::get_instance($subpluginid);
         if ($trigger && $trigger->workflowid == $workflowid ) {
             if (!workflow_manager::is_active($workflowid)) {

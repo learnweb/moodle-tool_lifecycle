@@ -1,7 +1,17 @@
 CHANGELOG
 =========
 
-5.2.1 (2026-08-17)
+5.2.3 (2026-10-12)
+------------------
+* [FIXED] Escape LTI tool names in the Opencast trigger settings (#327)
+* [FIXED] MBS-11132: Escape untrusted output to prevent XSS (#325)
+* [FIXED] MBS-11131: Escape untrusted output to prevent XSS (#324)
+* [FIXED] Add missing field "forum_discussion" (#321)
+* [FIXED] MBS-11567: Validate sesskey for workflow step and trigger actions (#330)
+* [FIXED] Do not report failed course duplications as success (#329)
+
+
+5.2.1 and 5.2.2 (2026-08-17)
 ------------------
 * [FEATURE] Opencast step: new setting confirmation mode
 * [FEATURE] Course search: search only for id if search item is numeric

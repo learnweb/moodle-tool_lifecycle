@@ -127,6 +127,7 @@ $showdetailslink = new moodle_url(urls::WORKFLOW_DETAILS, $params);
 $action = optional_param('action', null, PARAM_TEXT);
 $msg = "";
 if ($action) {
+    require_sesskey();
     if ($action == 'select') {
         $cid = required_param('cid', PARAM_INT);
         $process = process_manager::create_process($cid, $workflow->id);
