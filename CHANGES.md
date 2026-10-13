@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+5.2.3 (2026-10-12)
+------------------
+* [FIXED] Fix wrong requires in version.php
+
 5.2.2 (2026-10-12)
 ------------------
 * [FIXED] Escape LTI tool names in the Opencast trigger settings (#327)
