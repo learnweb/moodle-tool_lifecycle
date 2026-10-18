@@ -216,8 +216,6 @@ class deletebackup extends libbase {
                 if ($counter < $maxdeletions) {
                     // If file exists.
                     if (is_file("$path/$record->backupfile")) {
-                        // Set permissions to 777 of course backup file.
-                        chmod("$path/$record->backupfile", 0777);
                         // Clears file status cache.
                         clearstatcache();
                         // Delete course backup file first.
