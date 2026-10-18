@@ -67,4 +67,28 @@ final class lib_test extends \advanced_testcase {
         $this->assertEquals("Jane\nDoe\nCourse 1\r\nCourse 2\nC1\r\nC2", $response[0]);
         $this->assertEquals("Jane<br>Doe<br>Course 1<br>Course 2<br>C1<br>C2", $response[1]);
     }
+
+    /**
+     * Course names must be escaped in the html placeholders, but not in the plain text ones.
+     */
+    public function test_replace_placeholders_escapes_course_names_in_html(): void {
+        $this->resetAfterTest();
+
+        $user = $this->getDataGenerator()->create_user();
+        $course = $this->getDataGenerator()->create_course([
+            'fullname' => '<a href="https://example.com/">Keep</a>',
+            'shortname' => '<b>short</b>',
+        ]);
+        $lib = new email();
+        $response = $lib->replace_placeholders(
+            ["##courses##", "##courses-html##<br>##shortcourses-html##"],
+            $user,
+            [(object) ['courseid' => $course->id]]
+        );
+        $this->assertEquals('<a href="https://example.com/">Keep</a>', $response[0]);
+        $this->assertStringNotContainsString('<a', $response[1]);
+        $this->assertStringNotContainsString('<b>', $response[1]);
+        $this->assertStringContainsString('Keep', $response[1]);
+        $this->assertStringContainsString('short', $response[1]);
+    }
 }
