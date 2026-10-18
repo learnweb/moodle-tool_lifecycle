@@ -307,4 +307,64 @@ final class provider_test extends provider_testcase {
         $this->assertEquals(0, count($DB->get_records('lifecyclestep_email',
             ['courseid' => $this->course2->id, 'touser' => $this->user1->id])));
     }
+
+    /**
+     * Inserts rows into the log of sent notifications: two for user3 and one for user2.
+     */
+    private function insert_notified_log(): void {
+        global $DB;
+        $rows = [[$this->user3, $this->course1], [$this->user3, $this->course2], [$this->user2, $this->course1]];
+        foreach ($rows as [$user, $course]) {
+            $DB->insert_record('lifecyclestep_email_notified', [
+                'userid' => $user->id,
+                'courseid' => $course->id,
+                'timemailsent' => time(),
+            ]);
+        }
+    }
+
+    /**
+     * Tests that the log of sent notifications is deleted together with the queue entries of a user.
+     *
+     * @covers \lifecyclestep_email\privacy\provider::delete_data_for_user
+     * @return void
+     * @throws dml_exception
+     */
+    public function test_delete_data_for_user_deletes_notified_log(): void {
+        global $DB;
+        $this->insert_notified_log();
+        $contextids = [context_system::instance()->id];
+        $approvedcontextlist = new approved_contextlist($this->user3, 'lifecyclestep_email', $contextids);
+        provider::delete_data_for_user($approvedcontextlist);
+        $this->assertEquals(0, $DB->count_records('lifecyclestep_email_notified', ['userid' => $this->user3->id]));
+        $this->assertEquals(1, $DB->count_records('lifecyclestep_email_notified', ['userid' => $this->user2->id]));
+    }
+
+    /**
+     * Tests that the log of sent notifications is found and exported for a user.
+     *
+     * @covers \lifecyclestep_email\privacy\provider::get_contexts_for_userid
+     * @covers \lifecyclestep_email\privacy\provider::export_user_data
+     * @return void
+     * @throws dml_exception
+     */
+    public function test_export_user_data_includes_notified_log(): void {
+        global $DB;
+        $this->insert_notified_log();
+        // User3 has queue entries for course3 only, the log adds course1 and course2.
+        $contexts = provider::get_contexts_for_userid($this->user3->id)->get_contexts();
+        $this->assertTrue(in_array(context_course::instance($this->course1->id), $contexts));
+        $this->assertTrue(in_array(context_course::instance($this->course2->id), $contexts));
+
+        $contextids = [context_system::instance()->id];
+        $approvedcontextlist = new approved_contextlist($this->user3, 'lifecyclestep_email', $contextids);
+        provider::export_user_data($approvedcontextlist);
+        $writer = writer::with_context(context_system::instance());
+        $records = $DB->get_records('lifecyclestep_email_notified', ['userid' => $this->user3->id]);
+        $this->assertCount(2, $records);
+        foreach ($records as $record) {
+            $exportedrecord = $writer->get_data(['lifecyclestep_email_notified-' . $record->id]);
+            $this->assertEquals($this->user3->id, $exportedrecord->userid);
+        }
+    }
 }

@@ -82,6 +82,11 @@ class provider implements \core_privacy\local\metadata\provider,
             . "WHERE contextlevel = :coursecontextlevel "
             . "AND e.touser = :touser";
         $contextlist->add_from_sql($sql, ['coursecontextlevel' => CONTEXT_COURSE, 'touser' => $userid]);
+
+        $sql = "SELECT c.id FROM {context} c JOIN {lifecyclestep_email_notified} n ON c.instanceid = n.courseid "
+            . "WHERE contextlevel = :coursecontextlevel "
+            . "AND n.userid = :userid";
+        $contextlist->add_from_sql($sql, ['coursecontextlevel' => CONTEXT_COURSE, 'userid' => $userid]);
         return $contextlist;
     }
 
@@ -102,12 +107,23 @@ class provider implements \core_privacy\local\metadata\provider,
                     $subcontext = ['lifecyclestep_email-' . $record->id];
                     $writer->export_data($subcontext, $record);
                 }
+                $records = $DB->get_records('lifecyclestep_email_notified', ['userid' => $contextlist->get_user()->id]);
+                foreach ($records as $record) {
+                    $subcontext = ['lifecyclestep_email_notified-' . $record->id];
+                    $writer->export_data($subcontext, $record);
+                }
             } else if ($context instanceof context_course) {
                 $records = $DB->get_records('lifecyclestep_email',
                     ['courseid' => $context->instanceid, 'touser' => $contextlist->get_user()->id]);
                 $writer = writer::with_context($context);
                 foreach ($records as $record) {
                     $subcontext = ['lifecyclestep_email-' . $record->id];
+                    $writer->export_data($subcontext, $record);
+                }
+                $conditions = ['courseid' => $context->instanceid, 'userid' => $contextlist->get_user()->id];
+                $records = $DB->get_records('lifecyclestep_email_notified', $conditions);
+                foreach ($records as $record) {
+                    $subcontext = ['lifecyclestep_email_notified-' . $record->id];
                     $writer->export_data($subcontext, $record);
                 }
             }
@@ -123,9 +139,13 @@ class provider implements \core_privacy\local\metadata\provider,
         if ($userlist->get_context() instanceof context_system) {
             $sql = "SELECT touser FROM {lifecyclestep_email}";
             $userlist->add_from_sql('touser', $sql, []);
+            $sql = "SELECT userid FROM {lifecyclestep_email_notified}";
+            $userlist->add_from_sql('userid', $sql, []);
         } else if ($userlist->get_context() instanceof context_course) {
             $sql = "SELECT touser FROM {lifecyclestep_email} WHERE courseid = :courseid";
             $userlist->add_from_sql('touser', $sql, ['courseid' => $userlist->get_context()->instanceid]);
+            $sql = "SELECT userid FROM {lifecyclestep_email_notified} WHERE courseid = :courseid";
+            $userlist->add_from_sql('userid', $sql, ['courseid' => $userlist->get_context()->instanceid]);
         }
     }
 
@@ -140,8 +160,11 @@ class provider implements \core_privacy\local\metadata\provider,
         foreach ($userlist->get_userids() as $userid) {
             if ($userlist->get_context() instanceof context_system) {
                 $DB->delete_records('lifecyclestep_email', ['touser' => $userid]);
+                $DB->delete_records('lifecyclestep_email_notified', ['userid' => $userid]);
             } else if ($userlist->get_context() instanceof context_course) {
                 $DB->delete_records('lifecyclestep_email', ['touser' => $userid,
+                    'courseid' => $userlist->get_context()->instanceid, ]);
+                $DB->delete_records('lifecyclestep_email_notified', ['userid' => $userid,
                     'courseid' => $userlist->get_context()->instanceid, ]);
             }
         }
@@ -157,8 +180,10 @@ class provider implements \core_privacy\local\metadata\provider,
         global $DB;
         if ($context instanceof context_system) {
             $DB->delete_records('lifecyclestep_email');
+            $DB->delete_records('lifecyclestep_email_notified');
         } else if ($context instanceof context_course) {
             $DB->delete_records('lifecyclestep_email', ['courseid' => $context->instanceid]);
+            $DB->delete_records('lifecyclestep_email_notified', ['courseid' => $context->instanceid]);
         }
     }
 
@@ -174,8 +199,10 @@ class provider implements \core_privacy\local\metadata\provider,
         foreach ($contextlist as $context) {
             if ($context instanceof context_system) {
                 $DB->delete_records('lifecyclestep_email', ['touser' => $user->id]);
+                $DB->delete_records('lifecyclestep_email_notified', ['userid' => $user->id]);
             } else if ($context instanceof context_course) {
                 $DB->delete_records('lifecyclestep_email', ['touser' => $user->id, 'courseid' => $context->instanceid]);
+                $DB->delete_records('lifecyclestep_email_notified', ['userid' => $user->id, 'courseid' => $context->instanceid]);
             }
         }
     }
