@@ -192,6 +192,15 @@ abstract class base_automatic extends base {
     public function get_course_recordset_where($triggerid) {
         return ['', []];
     }
+
+    /**
+     * Called by the lifecycle cron after the where clause of this trigger was used to select the courses of a workflow.
+     * Triggers which need to remember that they ran have to do so here and not in get_course_recordset_where(),
+     * since that method is also called when pages are displayed.
+     * @param int $triggerid Id of the trigger.
+     */
+    public function after_cron_selection($triggerid) {
+    }
 }
 
 /**
