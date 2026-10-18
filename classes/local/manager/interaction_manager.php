@@ -69,6 +69,10 @@ class interaction_manager {
         if (!$process) {
             throw new \invalid_parameter_exception(get_string('noprocessfound', 'tool_lifecycle'));
         }
+        // The step has to be the one the process is currently at.
+        if ($step->workflowid != $process->workflowid || $step->sortindex != $process->stepindex) {
+            throw new \invalid_parameter_exception(get_string('nostepfound', 'tool_lifecycle'));
+        }
         $interactionlib = lib_manager::get_step_interactionlib($step->subpluginname);
         $response = $interactionlib->handle_interaction($process, $step, $action);
 
