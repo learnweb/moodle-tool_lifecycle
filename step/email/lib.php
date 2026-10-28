@@ -100,6 +100,12 @@ class email extends libbase {
      */
     public function post_processing_bulk_operation() {
         global $DB, $PAGE;
+        /* Sending emails for deleted courses has never worked. We therefore fix this bug by removing entries for
+           deleted courses from the step email table. */
+        $DB->delete_records_select(
+            'lifecyclestep_email',
+            'courseid NOT IN (SELECT id FROM {course})'
+        );
         $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
         foreach ($stepinstances as $step) {
             $settings = settings_manager::get_settings($step->id, settings_type::STEP);
