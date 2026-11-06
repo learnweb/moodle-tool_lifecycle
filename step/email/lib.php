@@ -197,6 +197,10 @@ class email extends libbase {
         $patterns[] = '##courses-html##';
         $replacements[] = join("<br>", $coursesstrings);
 
+        // Replace courses table (same columns as the first three of the table on view.php).
+        $patterns[] = '##courses-table##';
+        $replacements[] = (new \lifecyclestep_email\courses_table())->render(array_column($courses, 'id'));
+
         // Replace short courses list.
         $coursesstrings = [];
         foreach ($courses as $course) {
