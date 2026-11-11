@@ -286,4 +286,82 @@ final class privacy_test extends provider_testcase {
         $this->assertEquals(1, $DB->count_records_select('tool_lifecycle_action_log', "userid = -1"));
     }
 
+    /**
+     * Create a status record of the Opencast step for the given course and user.
+     *
+     * @param int $courseid The course ID.
+     * @param int $userid The user ID.
+     * @return \stdClass The created record.
+     */
+    private function create_opencast_process_status(int $courseid, int $userid): \stdClass {
+        global $DB;
+        $process = $this->generator->create_process($courseid, $this->workflow->id);
+        $record = (object) [
+            'courseid' => $courseid,
+            'processid' => $process->id,
+            'stepid' => $this->emailstep->id,
+            'status' => 'waiting',
+            'decision' => 'pending',
+            'userid' => $userid,
+        ];
+        $record->id = $DB->insert_record('tool_lifecycle_opencast_process_status', $record);
+        return $record;
+    }
+
+    /**
+     * Opencast step status records are found, listed and exported for their user.
+     * @covers \tool_lifecycle\privacy\provider
+     */
+    public function test_opencast_process_status_export(): void {
+        $c1 = $this->getDataGenerator()->create_course();
+        $u1 = $this->getDataGenerator()->create_user();
+        $u2 = $this->getDataGenerator()->create_user();
+        $record = $this->create_opencast_process_status($c1->id, $u1->id);
+
+        $contextlist = provider::get_contexts_for_userid($u1->id);
+        $this->assertEquals(1, $contextlist->count());
+        $this->assertTrue($contextlist->current() instanceof \context_system);
+        $this->assertEquals(0, provider::get_contexts_for_userid($u2->id)->count());
+
+        $userlist = new userlist(\context_system::instance(), 'tool_lifecycle');
+        provider::get_users_in_context($userlist);
+        $this->assertEquals([$u1->id], $userlist->get_userids());
+
+        $contextlist = new approved_contextlist($u1, 'tool_lifecycle', [\context_system::instance()->id]);
+        provider::export_user_data($contextlist);
+        $writer = writer::with_context(\context_system::instance());
+        $subcontext = ['tool_lifecycle', 'opencast_process_status', "process_$record->processid",
+                "step_$record->stepid", ];
+        $data = $writer->get_data($subcontext);
+        $this->assertEquals($u1->id, $data->userid);
+        $this->assertEquals('pending', $data->decision);
+    }
+
+    /**
+     * Opencast step status records are anonymised when user data is deleted.
+     * @covers \tool_lifecycle\privacy\provider
+     */
+    public function test_opencast_process_status_delete(): void {
+        global $DB;
+        $table = 'tool_lifecycle_opencast_process_status';
+        $u1 = $this->getDataGenerator()->create_user();
+        $u2 = $this->getDataGenerator()->create_user();
+        $u3 = $this->getDataGenerator()->create_user();
+        $this->create_opencast_process_status($this->getDataGenerator()->create_course()->id, $u1->id);
+        $this->create_opencast_process_status($this->getDataGenerator()->create_course()->id, $u2->id);
+        $this->create_opencast_process_status($this->getDataGenerator()->create_course()->id, $u3->id);
+
+        provider::delete_data_for_user(new approved_contextlist($u1, 'tool_lifecycle', [\context_system::instance()->id]));
+        $this->assertEquals(0, $DB->count_records($table, ['userid' => $u1->id]));
+        $this->assertEquals(1, $DB->count_records($table, ['userid' => $u2->id]));
+
+        provider::delete_data_for_users(new approved_userlist(\context_system::instance(), 'tool_lifecycle', [$u2->id]));
+        $this->assertEquals(0, $DB->count_records($table, ['userid' => $u2->id]));
+        $this->assertEquals(1, $DB->count_records($table, ['userid' => $u3->id]));
+
+        provider::delete_data_for_all_users_in_context(\context_system::instance());
+        $this->assertFalse($DB->record_exists_select($table, 'userid != -1'));
+        $this->assertEquals(3, $DB->count_records($table, ['userid' => -1]));
+    }
+
 }

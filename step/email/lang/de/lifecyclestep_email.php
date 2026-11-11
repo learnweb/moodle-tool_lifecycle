@@ -38,6 +38,7 @@ $string['email_content_html_help'] = 'Stellen sie die HTML-Vorlage für Emails e
         . '<br>' . 'Nachname des Empfängers: ##lastname##'
         . '<br>' . 'Link zur Antwortseite: ##link-html##'
         . '<br>' . 'Betroffene Kurse: ##courses-html##'
+        . '<br>' . 'Tabelle der betroffenen Kurse (Name, Kursbeginn, Kursbereich): ##courses-table##'
         . '</p>';
 $string['email_responsetimeout'] = 'Zeit, die der Nutzer hat, um zu reagieren';
 $string['email_subject'] = 'Betreffvorlage';
