@@ -69,6 +69,18 @@ class provider implements
                         'action' => 'privacy:metadata:tool_lifecycle_action_log:action',
                 ],
                 'privacy:metadata:tool_lifecycle_action_log');
+        $collection->add_database_table(
+            'tool_lifecycle_opencast_process_status',
+            [
+                'courseid' => 'privacy:metadata:tool_lifecycle_opencast_process_status:courseid',
+                'processid' => 'privacy:metadata:tool_lifecycle_opencast_process_status:processid',
+                'stepid' => 'privacy:metadata:tool_lifecycle_opencast_process_status:stepid',
+                'status' => 'privacy:metadata:tool_lifecycle_opencast_process_status:status',
+                'decision' => 'privacy:metadata:tool_lifecycle_opencast_process_status:decision',
+                'userid' => 'privacy:metadata:tool_lifecycle_opencast_process_status:userid',
+            ],
+            'privacy:metadata:tool_lifecycle_opencast_process_status'
+        );
         return $collection;
     }
 
@@ -81,7 +93,10 @@ class provider implements
     public static function get_contexts_for_userid(int $userid): contextlist {
         global $DB;
         $contextlist = new contextlist();
-        if ($DB->record_exists('tool_lifecycle_action_log', ['userid' => $userid])) {
+        if (
+            $DB->record_exists('tool_lifecycle_action_log', ['userid' => $userid]) ||
+            $DB->record_exists('tool_lifecycle_opencast_process_status', ['userid' => $userid])
+        ) {
             $contextlist->add_system_context();
         }
         return $contextlist;
@@ -108,6 +123,12 @@ class provider implements
                             "action_$record->action", ];
                     $writer->export_data($subcontext, $record);
                 }
+                $records = $DB->get_records('tool_lifecycle_opencast_process_status', ['userid' => $contextlist->get_user()->id]);
+                foreach ($records as $record) {
+                    $subcontext = ['tool_lifecycle', 'opencast_process_status', "process_$record->processid",
+                            "step_$record->stepid", ];
+                    $writer->export_data($subcontext, $record);
+                }
             }
         }
 
@@ -122,6 +143,9 @@ class provider implements
         global $DB;
         if ($context instanceof context_system) {
             $sql = "UPDATE {tool_lifecycle_action_log}
+                    SET userid = -1";
+            $DB->execute($sql);
+            $sql = "UPDATE {tool_lifecycle_opencast_process_status}
                     SET userid = -1";
             $DB->execute($sql);
         }
@@ -140,6 +164,10 @@ class provider implements
                     SET userid = -1
                     WHERE userid = :userid";
                 $DB->execute($sql, ['userid' => $contextlist->get_user()->id]);
+                $sql = "UPDATE {tool_lifecycle_opencast_process_status}
+                    SET userid = -1
+                    WHERE userid = :userid";
+                $DB->execute($sql, ['userid' => $contextlist->get_user()->id]);
             }
         }
     }
@@ -154,6 +182,9 @@ class provider implements
         if ($context instanceof context_system) {
             $sql = "SELECT userid
                     FROM {tool_lifecycle_action_log}";
+            $userlist->add_from_sql('userid', $sql, []);
+            $sql = "SELECT userid
+                    FROM {tool_lifecycle_opencast_process_status}";
             $userlist->add_from_sql('userid', $sql, []);
         }
     }
@@ -172,6 +203,10 @@ class provider implements
                     SET userid = -1
                     WHERE userid " . $insql;
 
+            $DB->execute($sql, $params);
+            $sql = "UPDATE {tool_lifecycle_opencast_process_status}
+                    SET userid = -1
+                    WHERE userid " . $insql;
             $DB->execute($sql, $params);
         }
     }

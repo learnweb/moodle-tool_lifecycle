@@ -38,6 +38,7 @@ $string['email_content_html_help'] = 'Stellen sie die HTML-Vorlage für Emails e
         . '<br>' . 'Nachname des Empfängers: ##lastname##'
         . '<br>' . 'Link zur Antwortseite: ##link-html##'
         . '<br>' . 'Betroffene Kurse: ##courses-html##'
+        . '<br>' . 'Tabelle der betroffenen Kurse (Name, Kursbeginn, Kursbereich): ##courses-table##'
         . '</p>';
 $string['email_responsetimeout'] = 'Zeit, die der Nutzer hat, um zu reagieren';
 $string['email_subject'] = 'Betreffvorlage';
@@ -55,4 +56,8 @@ $string['privacy:metadata:lifecyclestep_email:courseid'] = 'Die ID des Kurses, z
 $string['privacy:metadata:lifecyclestep_email:instanceid'] = 'Die ID der Schritt-Instanz, der E-Mails verschickt';
 $string['privacy:metadata:lifecyclestep_email:summary'] = 'Informationen, welche Benutzer per E-Mail benachrichtigt werden';
 $string['privacy:metadata:lifecyclestep_email:touser'] = 'Die ID des Benutzers, an den eine E-Mail verschickt wird';
+$string['privacy:metadata:lifecyclestep_email_notified:courseid'] = 'Die ID des Kurses, zu dem die Benachrichtigung verschickt wurde';
+$string['privacy:metadata:lifecyclestep_email_notified:summary'] = 'Protokoll der Benutzer, die per E-Mail zu einem Kurs benachrichtigt wurden';
+$string['privacy:metadata:lifecyclestep_email_notified:timemailsent'] = 'Zeitpunkt, zu dem die Benachrichtigung verschickt wurde';
+$string['privacy:metadata:lifecyclestep_email_notified:userid'] = 'Die ID des Benutzers, der per E-Mail benachrichtigt wurde';
 $string['status_message_requiresattention'] = 'Kurs ist zum Löschen vorgemerkt';
