@@ -138,6 +138,9 @@ class processor {
 
             // Get recordset of triggered courses.
             $recordset = $this->get_course_recordset($triggers);
+            foreach ($triggers as $trigger) {
+                lib_manager::get_automatic_trigger_lib($trigger->subpluginname)->after_cron_selection($trigger->id);
+            }
             // Compute max number of courses to be processed by this cron run.
             $maxprocesses = PHP_INT_MAX;
             if ($workflow->triggeredpercron) {
