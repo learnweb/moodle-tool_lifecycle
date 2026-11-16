@@ -67,4 +67,39 @@ final class lib_test extends \advanced_testcase {
         $this->assertEquals("Jane\nDoe\nCourse 1\r\nCourse 2\nC1\r\nC2", $response[0]);
         $this->assertEquals("Jane<br>Doe<br>Course 1<br>Course 2<br>C1<br>C2", $response[1]);
     }
+
+    /**
+     * Tests the ##courses-table## placeholder of \tool_lifecycle\step\email::replace_placeholders.
+     */
+    public function test_replace_placeholders_courses_table(): void {
+        $this->resetAfterTest();
+
+        $user = $this->getDataGenerator()->create_user();
+        $category = $this->getDataGenerator()->create_category(['name' => 'Cat A']);
+        $course1 = $this->getDataGenerator()->create_course(['fullname' => 'Course 1', 'shortname' => 'C1',
+            'category' => $category->id, 'startdate' => make_timestamp(2026, 2, 16)]);
+        $course2 = $this->getDataGenerator()->create_course(['fullname' => 'Course 2', 'shortname' => 'C2',
+            'startdate' => 0]);
+        $lib = new email();
+
+        [$html] = $lib->replace_placeholders(['<p>Hi</p>##courses-table##'], $user, [
+            (object) ['courseid' => $course2->id],
+            (object) ['courseid' => $course1->id],
+        ]);
+
+        $this->assertStringNotContainsString('##courses-table##', $html);
+        $this->assertStringStartsWith('<p>Hi</p>', $html);
+        $this->assertEquals(1, substr_count($html, '<table'));
+        $this->assertEquals(1, substr_count($html, '<thead>'));
+        $this->assertEquals(2, substr_count($html, '<tr class="')); // Two data rows, ordered by name.
+        $this->assertLessThan(strpos($html, 'Course 2'), strpos($html, 'Course 1'));
+        $this->assertStringContainsString(course_get_url($course1->id)->out(), $html);
+        $this->assertStringContainsString(userdate($course1->startdate, get_string('strftimedate', 'langconfig')), $html);
+        $this->assertStringContainsString('Cat A', $html);
+        $this->assertStringNotContainsString(get_string('tools', 'tool_lifecycle'), $html);
+
+        // No courses: placeholder is removed.
+        [$empty] = $lib->replace_placeholders(['x##courses-table##y'], $user, []);
+        $this->assertEquals('xy', $empty);
+    }
 }
