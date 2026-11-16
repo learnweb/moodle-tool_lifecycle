@@ -69,6 +69,30 @@ final class lib_test extends \advanced_testcase {
     }
 
     /**
+     * Course names must be escaped in the html placeholders, but not in the plain text ones.
+     */
+    public function test_replace_placeholders_escapes_course_names_in_html(): void {
+        $this->resetAfterTest();
+
+        $user = $this->getDataGenerator()->create_user();
+        $course = $this->getDataGenerator()->create_course([
+            'fullname' => '<a href="https://example.com/">Keep</a>',
+            'shortname' => '<b>short</b>',
+        ]);
+        $lib = new email();
+        $response = $lib->replace_placeholders(
+            ["##courses##", "##courses-html##<br>##shortcourses-html##"],
+            $user,
+            [(object) ['courseid' => $course->id]]
+        );
+        $this->assertEquals('<a href="https://example.com/">Keep</a>', $response[0]);
+        $this->assertStringNotContainsString('<a', $response[1]);
+        $this->assertStringNotContainsString('<b>', $response[1]);
+        $this->assertStringContainsString('Keep', $response[1]);
+        $this->assertStringContainsString('short', $response[1]);
+    }
+
+    /**
      * Tests the ##courses-table## placeholder of \tool_lifecycle\step\email::replace_placeholders.
      */
     public function test_replace_placeholders_courses_table(): void {

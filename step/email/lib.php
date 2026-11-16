@@ -189,13 +189,16 @@ class email extends libbase {
 
         // Replace courses list.
         $coursesstrings = [];
+        $coursesstringshtml = [];
         foreach ($courses as $course) {
+            $context = \context_course::instance($course->id);
             $coursesstrings[] = $course->fullname;
+            $coursesstringshtml[] = format_string($course->fullname, true, ['context' => $context]);
         }
         $patterns[] = '##courses##';
         $replacements[] = join("\r\n", $coursesstrings);
         $patterns[] = '##courses-html##';
-        $replacements[] = join("<br>", $coursesstrings);
+        $replacements[] = join("<br>", $coursesstringshtml);
 
         // Replace courses table (same columns as the first three of the table on view.php).
         $patterns[] = '##courses-table##';
@@ -203,13 +206,16 @@ class email extends libbase {
 
         // Replace short courses list.
         $coursesstrings = [];
+        $coursesstringshtml = [];
         foreach ($courses as $course) {
+            $context = \context_course::instance($course->id);
             $coursesstrings[] = $course->shortname;
+            $coursesstringshtml[] = format_string($course->shortname, true, ['context' => $context]);
         }
         $patterns[] = '##shortcourses##';
         $replacements[] = join("\r\n", $coursesstrings);
         $patterns[] = '##shortcourses-html##';
-        $replacements[] = join("<br>", $coursesstrings);
+        $replacements[] = join("<br>", $coursesstringshtml);
 
         return str_ireplace($patterns, $replacements, $strings);
     }
