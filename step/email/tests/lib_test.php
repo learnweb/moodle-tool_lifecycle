@@ -91,7 +91,7 @@ final class lib_test extends \advanced_testcase {
         $this->assertStringContainsString('Keep', $response[1]);
         $this->assertStringContainsString('short', $response[1]);
     }
-    
+
     /**
      * Tests the ##courses-table## placeholder of \tool_lifecycle\step\email::replace_placeholders.
      */
