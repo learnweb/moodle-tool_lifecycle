@@ -592,7 +592,7 @@ $data = [
     'abortdisableworkflowlink' => $abortdisableworkflowlink,
     'workflowprocesseslink'  => $workflowprocesseslink,
     'runnable' => $isactive,
-    'runlink' => new \moodle_url(urls::RUN, ['wf' => $workflow->id]),
+    'runlink' => new \moodle_url(urls::RUN, ['wf' => $workflow->id, 'sesskey' => sesskey()]),
 ];
 
 if ($showdetails) {
