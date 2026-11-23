@@ -100,6 +100,12 @@ class email extends libbase {
      */
     public function post_processing_bulk_operation() {
         global $DB, $PAGE;
+        /* Sending emails for deleted courses has never worked. We therefore fix this bug by removing entries for
+           deleted courses from the step email table. */
+        $DB->delete_records_select(
+            'lifecyclestep_email',
+            'courseid NOT IN (SELECT id FROM {course})'
+        );
         $stepinstances = step_manager::get_step_instances_by_subpluginname($this->get_subpluginname());
         foreach ($stepinstances as $step) {
             $settings = settings_manager::get_settings($step->id, settings_type::STEP);
@@ -183,23 +189,33 @@ class email extends libbase {
 
         // Replace courses list.
         $coursesstrings = [];
+        $coursesstringshtml = [];
         foreach ($courses as $course) {
+            $context = \context_course::instance($course->id);
             $coursesstrings[] = $course->fullname;
+            $coursesstringshtml[] = format_string($course->fullname, true, ['context' => $context]);
         }
         $patterns[] = '##courses##';
         $replacements[] = join("\r\n", $coursesstrings);
         $patterns[] = '##courses-html##';
-        $replacements[] = join("<br>", $coursesstrings);
+        $replacements[] = join("<br>", $coursesstringshtml);
+
+        // Replace courses table (same columns as the first three of the table on view.php).
+        $patterns[] = '##courses-table##';
+        $replacements[] = (new \lifecyclestep_email\courses_table())->render(array_column($courses, 'id'));
 
         // Replace short courses list.
         $coursesstrings = [];
+        $coursesstringshtml = [];
         foreach ($courses as $course) {
+            $context = \context_course::instance($course->id);
             $coursesstrings[] = $course->shortname;
+            $coursesstringshtml[] = format_string($course->shortname, true, ['context' => $context]);
         }
         $patterns[] = '##shortcourses##';
         $replacements[] = join("\r\n", $coursesstrings);
         $patterns[] = '##shortcourses-html##';
-        $replacements[] = join("<br>", $coursesstrings);
+        $replacements[] = join("<br>", $coursesstringshtml);
 
         return str_ireplace($patterns, $replacements, $strings);
     }
