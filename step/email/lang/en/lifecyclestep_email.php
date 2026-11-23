@@ -38,6 +38,7 @@ $string['email_content_html_help'] = 'Set the html template for the content of t
         . '<br>' . 'Last name of recipient: ##lastname##'
         . '<br>' . 'Link to response page: ##link-html##'
         . '<br>' . 'Impacted courses: ##courses-html##'
+        . '<br>' . 'Table of impacted courses (name, start date, category): ##courses-table##'
         . '<br>' . 'Short names of impacted courses: ##shortcourses-html##'
         . '</p>';
 $string['email_responsetimeout'] = 'Time the user has for the response';

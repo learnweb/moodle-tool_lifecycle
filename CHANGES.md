@@ -1,9 +1,24 @@
 CHANGELOG
 =========
 
+5.2.4 (2026-11-23)
+------------------
+* [FIXED] Fix the step email bug regarding deleted courses
+* [FIXED] Add missing message provider strings of the Opencast step (#340)
+* [FIXED] Email step: added placeholder creating a table (#342)
+* [FIXED] Cover the Opencast process status table in the privacy provider (#341)
+* [FIXED] Export and delete the notification log in the email step privacy provider (#339)
+* [FIXED] Save the last run of the specificdate trigger only from the lifecycle task (#337)
+* [FIXED] Format course names in the HTML placeholders of the email step (#338)
+* [FIXED] Do not change the permissions of backup files before deleting them (#336)
+* [FIXED] Check that the interaction step is the step the process is at (#335)
+* [FIXED] Require sesskey before running the lifecycle task (#334)
+
+
 5.2.3 (2026-10-12)
 ------------------
 * [FIXED] Fix wrong requires in version.php
+
 
 5.2.2 (2026-10-12)
 ------------------

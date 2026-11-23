@@ -86,14 +86,29 @@ class specificdate extends base_automatic {
                 if ($timelastrunactive && $lastrun['yday'] == $today['yday'] && $lastrun['year'] == $today['year']) {
                     continue;
                 } else {
-                    $settings['timelastrun'] = $current;
-                    $trigger = trigger_manager::get_instance($triggerid);
-                    settings_manager::save_settings($triggerid, settings_type::TRIGGER, $trigger->subpluginname, $settings);
                     return ['true', []];
                 }
             }
         }
         return ['false', []];
+    }
+
+    /**
+     * Remembers that the trigger ran today, if the lifecycle cron selected courses with it.
+     * Has to be done here and not in get_course_recordset_where(), because that is also called when pages are displayed.
+     * @param int $triggerid Id of the trigger.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     */
+    public function after_cron_selection($triggerid) {
+        [$sql, ] = $this->get_course_recordset_where($triggerid);
+        if ($sql === 'true') {
+            $settings = settings_manager::get_settings($triggerid, settings_type::TRIGGER);
+            $settings['timelastrun'] = time();
+            $trigger = trigger_manager::get_instance($triggerid);
+            settings_manager::save_settings($triggerid, settings_type::TRIGGER, $trigger->subpluginname, $settings);
+        }
     }
 
     /**

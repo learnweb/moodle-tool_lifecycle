@@ -31,6 +31,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 require_admin();
+require_sesskey();
 
 $workflowid = optional_param('wf', null, PARAM_INT);
 
