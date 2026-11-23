@@ -613,6 +613,7 @@ function xmldb_tool_lifecycle_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025050405, 'tool', 'lifecycle');
 
     }
+
     if ($oldversion < 2025102302) {
         $table = new xmldb_table('tool_lifecycle_workflow');
 
